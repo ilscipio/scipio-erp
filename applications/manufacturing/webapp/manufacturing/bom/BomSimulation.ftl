@@ -41,16 +41,14 @@ under the License.
   <div class="screenlet-body">
 </#if>
       <table class="basic-table" cellspacing="0">
-       <thead>
         <tr class="header-row">
-          <th width="10%">${uiLabelMap.ManufacturingProductLevel}</th>
-          <th width="20%">${uiLabelMap.ProductProductId}</th>
-          <th width="10%">${uiLabelMap.ManufacturingProductVirtual}</th>
-          <th width="40%">${uiLabelMap.ProductProductName}</th>
-          <th width="10%" align="right">${uiLabelMap.CommonQuantity}</th>
-          <th width="10%" align="right">&nbsp;</th>
+          <td width="10%">${uiLabelMap.ManufacturingProductLevel}</td>
+          <td width="20%">${uiLabelMap.ProductProductId}</td>
+          <td width="10%">${uiLabelMap.ManufacturingProductVirtual}</td>
+          <td width="40%">${uiLabelMap.ProductProductName}</td>
+          <td width="10%" align="right">${uiLabelMap.CommonQuantity}</td>
+          <td width="10%" align="right">&nbsp;</td>
         </tr>
-        </thead>
         <#if tree?has_content>
           <#assign alt_row = false>
           <#list tree as node>
@@ -85,7 +83,7 @@ under the License.
               </td>
               <td>${node.product.internalName?default("&nbsp;")}</td>
               <td align="right">${node.quantity}</td>
-              <td align="right"><a href="<@ofbizUrl>EditProductBom?productId=${(node.product.productId)!}&amp;productAssocTypeId=${(node.bomTypeId)!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a></td>
+              <td align="right"><a href="<@ofbizUrl>EditProductBom?productId=${(node.product.productId)!}&amp;productAssocTypeId=${(node.bomTypeId)!}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a></td>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>
@@ -98,23 +96,21 @@ under the License.
       </table>
       <br />
       <table class="basic-table" cellspacing="0">
-       <thead>
         <tr class="header-row">
-          <th width="20%">${uiLabelMap.ProductProductId}</th>
-          <th width="50%">${uiLabelMap.ProductProductName}</th>
-          <th width="6%" align="right">${uiLabelMap.CommonQuantity}</th>
-          <th width="6%" align="right">${uiLabelMap.ProductQoh}</th>
-          <th width="6%" align="right">${uiLabelMap.ProductWeight}</th>
-          <th width="6%" align="right">${uiLabelMap.FormFieldTitle_cost}</th>
-          <th width="6%" align="right">${uiLabelMap.CommonTotalCost}</th>
+          <td width="20%">${uiLabelMap.ProductProductId}</td>
+          <td width="50%">${uiLabelMap.ProductProductName}</td>
+          <td width="6%" align="right">${uiLabelMap.CommonQuantity}</td>
+          <td width="6%" align="right">${uiLabelMap.ProductQoh}</td>
+          <td width="6%" align="right">${uiLabelMap.ProductWeight}</td>
+          <td width="6%" align="right">${uiLabelMap.FormFieldTitle_cost}</td>
+          <td width="6%" align="right">${uiLabelMap.CommonTotalCost}</td>
         </tr>
-        </thead>
         <#if productsData?has_content>
           <#assign alt_row = false>
           <#list productsData as productData>
             <#assign node = productData.node>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a href="/catalog/control/EditProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${node.product.productId}</a></td>
+              <td><a href="/catalog/control/EditProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="buttontext">${node.product.productId}</a></td>
               <td>${node.product.internalName?default("&nbsp;")}</td>
               <td align="right">${node.quantity}</td>
               <td align="right">${productData.qoh!}</td>
@@ -122,7 +118,7 @@ under the License.
               <#if productData.unitCost?? && (productData.unitCost > 0)>
               <td align="right">${productData.unitCost!}</td>
               <#else>
-              <td align="right"><a href="/catalog/control/EditProductCosts?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">NA</a></td>
+              <td align="right"><a href="/catalog/control/EditProductCosts?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="buttontext">NA</a></td>
               </#if>
               <td align="right">${productData.totalCost!}</td>
             </tr>

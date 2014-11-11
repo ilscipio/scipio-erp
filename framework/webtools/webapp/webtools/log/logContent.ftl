@@ -17,8 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<pre><code class="language-java"><div class="code-container">
 <#list logLines as logLine>
-  <#--<div class="${logLine.type}">-->${logLine.line}<#--</div>-->
+  <div class="${logLine.type}">${logLine.line}</div>
 </#list>
-</div></code></pre>

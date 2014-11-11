@@ -18,7 +18,14 @@ under the License.
 -->
 
 <#if inProcess??>
-<@section title="${uiLabelMap.OrderProcessingStatus}">
+<div class="screenlet">
+  <div class="screenlet-title-bar">
+    <ul>
+      <li class="h3">${uiLabelMap.OrderProcessingStatus}</li>
+    </ul>
+    <br class="clear"/>
+  </div>
+  <div class="screenlet-body">
     <table class="basic-table" cellspacing='0'>
       <tr>
         <td>
@@ -30,7 +37,7 @@ under the License.
                 <tr>
                   <td>${uiLabelMap.OrderProcessingInHold}&nbsp;${uiLabelMap.OrderProcessingInHoldNote}</td>
                   <td align="right" valign="center">
-                    <a href="javascript:document.activityForm.submit()" class="button tiny">${uiLabelMap.OrderRelease}</a>
+                    <a href="javascript:document.activityForm.submit()" class="buttontext">${uiLabelMap.OrderRelease}</a>
                   </td>
                 </tr>
               </table>
@@ -44,7 +51,7 @@ under the License.
                 <tr>
                   <td>${uiLabelMap.OrderProcessingInActive}</td>
                   <td align="right" valign="center">
-                    <a href="javascript:document.activityForm.submit()" class="button tiny">${uiLabelMap.OrderHold}</a>
+                    <a href="javascript:document.activityForm.submit()" class="buttontext">${uiLabelMap.OrderHold}</a>
                   </td>
                 </tr>
               </table>
@@ -53,11 +60,19 @@ under the License.
         </td>
       </tr>
     </table>
-  </@section>
+  </div>
+</div>
 </#if>
 <br />
 <#if wfTransitions?? && wfTransitions?has_content>
-<@section title="${uiLabelMap.OrderProcessingTransitions}">
+<div class="screenlet">
+  <div class="screenlet-title-bar">
+    <ul>
+      <li class="h3">${uiLabelMap.OrderProcessingTransitions}</li>
+    </ul>
+    <br class="clear"/>
+  </div>
+  <div class="screenlet-body">
     <table class="basic-table" cellspacing='0'>
       <tr>
         <td>
@@ -81,7 +96,7 @@ under the License.
                   </select>
                 </td>
                 <td valign="center">
-                  <a href="javascript:document.transitionForm.submit()" class="button tiny">${uiLabelMap.CommonContinue}</a>
+                  <a href="javascript:document.transitionForm.submit()" class="buttontext">${uiLabelMap.CommonContinue}</a>
                 </td>
               </tr>
             </table>
@@ -89,5 +104,4 @@ under the License.
         </td>
       </tr>
     </table>
-  </@section>
 </#if>

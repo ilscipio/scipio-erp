@@ -71,15 +71,13 @@ under the License.
   <div class="screenlet-body">
       <#if addressMatchMaps?has_content>
         <table class="basic-table hover-bar" cellspacing="0">
-          <thead>
           <tr class="header-row">
-            <th>${uiLabelMap.PartyAddressMatchKey}</th>
-            <th>=></th>
-            <th>${uiLabelMap.PartyAddressMatchValue}</th>
-            <th>${uiLabelMap.CommonSequence}</th>
-            <th class="button-col"><a href="<@ofbizUrl>clearAddressMatchMap</@ofbizUrl>">${uiLabelMap.CommonClear} ${uiLabelMap.CommonAll}</a></th>
+            <td>${uiLabelMap.PartyAddressMatchKey}</td>
+            <td>=></td>
+            <td>${uiLabelMap.PartyAddressMatchValue}</td>
+            <td>${uiLabelMap.CommonSequence}</td>
+            <td class="button-col"><a href="<@ofbizUrl>clearAddressMatchMap</@ofbizUrl>">${uiLabelMap.CommonClear} ${uiLabelMap.CommonAll}</a></td>
           </tr>
-          </thead>
           <#assign alt_row = false>
           <#list addressMatchMaps as map>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>

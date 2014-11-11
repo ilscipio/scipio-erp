@@ -45,26 +45,22 @@
 <table class="basic-table hover-bar" cellspacing="0">
 <#if tabButtonItem=="ListContentTree">
 <#--Form ListContentTree-->
-<thead>
   <tr class="header-row">
-    <th>${uiLabelMap.FormFieldTitle_contentId}</th>
-    <th>${uiLabelMap.FormFieldTitle_coContentName}</th>
-    <th>${uiLabelMap.FormFieldTitle_mimeTypeId}</th>
+    <td>${uiLabelMap.FormFieldTitle_contentId}</td>
+    <td>${uiLabelMap.FormFieldTitle_coContentName}</td>
+    <td>${uiLabelMap.FormFieldTitle_mimeTypeId}</td>
   </tr>
-</thead>
 <#elseif tabButtonItem=="ListDocument">
 <#--Form ListDocument-->
-<thead>
  <tr class="header-row">
-    <th>${uiLabelMap.FormFieldTitle_contentId}</th>
-    <th>${uiLabelMap.CommonView}</th>
-    <th>${uiLabelMap.FormFieldTitle_contentTypeId}</th>
-    <th>${uiLabelMap.FormFieldTitle_mimeTypeId}</th>
-    <th>${uiLabelMap.FormFieldTitle_contentStatusId}</th>
-    <th>${uiLabelMap.FormFieldTitle_caCratedDate}</th>
-    <th>${uiLabelMap.CommonDelete}</th>
+    <td>${uiLabelMap.FormFieldTitle_contentId}</td>
+    <td>${uiLabelMap.CommonView}</td>
+    <td>${uiLabelMap.FormFieldTitle_contentTypeId}</td>
+    <td>${uiLabelMap.FormFieldTitle_mimeTypeId}</td>
+    <td>${uiLabelMap.FormFieldTitle_contentStatusId}</td>
+    <td>${uiLabelMap.FormFieldTitle_caCratedDate}</td>
+    <td>${uiLabelMap.CommonDelete}</td>
   </tr>
-</thead>
 </#if>
 <#if contentAssoc?has_content>  
        <#assign alt_row = false/>

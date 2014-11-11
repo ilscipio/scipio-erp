@@ -35,7 +35,7 @@ under the License.
 <#else>
   <#assign createUrl = "createnew"/>
 </#if>
-<div class="button-bar"><a href="<@ofbizUrl>${createUrl}</@ofbizUrl>" class="button tiny create">${uiLabelMap.CommonCreateNew}</a></div>
+<div class="button-bar"><a href="<@ofbizUrl>${createUrl}</@ofbizUrl>" class="buttontext create">${uiLabelMap.CommonCreateNew}</a></div>
 <div class="screenlet">
   <div class="screenlet-title-bar">
 <#if partyList?has_content>
@@ -218,45 +218,43 @@ under the License.
     <#assign commonDisplaying = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)/>
     <@nextPrev commonUrl=commonUrl ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=partyListSize viewSize=viewSize ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying=commonDisplaying paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" />
     <table class="basic-table hover-bar" cellspacing="0">
-     <thead>
       <tr class="header-row-2">
-        <th>${uiLabelMap.PartyPartyId}</th>
-        <th>${uiLabelMap.PartyUserLogin}</th>
-        <th>${uiLabelMap.PartyName}</th>
+        <td>${uiLabelMap.PartyPartyId}</td>
+        <td>${uiLabelMap.PartyUserLogin}</td>
+        <td>${uiLabelMap.PartyName}</td>
     <#if extInfo?default("") == "P" >
-        <th>${uiLabelMap.PartyCity}</th>
+        <td>${uiLabelMap.PartyCity}</td>
     </#if>
     <#if extInfo?default("") == "P">
-        <th>${uiLabelMap.PartyPostalCode}</th>
+        <td>${uiLabelMap.PartyPostalCode}</td>
     </#if>
     <#if extInfo?default("") == "T">
-        <th>${uiLabelMap.PartyAreaCode}</th>
+        <td>${uiLabelMap.PartyAreaCode}</td>
     </#if>
     <#if inventoryItemId?default("") != "">
-        <th>${uiLabelMap.ProductInventoryItemId}</th>
+        <td>${uiLabelMap.ProductInventoryItemId}</td>
     </#if>
     <#if serialNumber?default("") != "">
-        <th>${uiLabelMap.ProductSerialNumber}</th>
+        <td>${uiLabelMap.ProductSerialNumber}</td>
     </#if>
     <#if softIdentifier?default("") != "">
-        <th>${uiLabelMap.ProductSoftIdentifier}</th>
+        <td>${uiLabelMap.ProductSoftIdentifier}</td>
     </#if>
-        <th>${uiLabelMap.PartyRelatedCompany}</th>
-        <th>${uiLabelMap.PartyType}</th>
-        <th>${uiLabelMap.PartyMainRole}</th>
-        <th>
+        <td>${uiLabelMap.PartyRelatedCompany}</td>
+        <td>${uiLabelMap.PartyType}</td>
+        <td>${uiLabelMap.PartyMainRole}</td>
+        <td>
             <a href="<@ofbizUrl>findparty</@ofbizUrl>?<#if sortField?has_content><#if sortField == "createdDate">sortField=-createdDate<#elseif sortField == "-createdDate">sortField=createdDate<#else>sortField=createdDate</#if><#else>sortField=createdDate</#if>${paramList!}&VIEW_SIZE=${viewSize!}&VIEW_INDEX=${viewIndex!}" 
                 <#if sortField?has_content><#if sortField == "createdDate">class="sort-order-desc"<#elseif sortField == "-createdDate">class="sort-order-asc"<#else>class="sort-order"</#if><#else>class="sort-order"</#if>>${uiLabelMap.FormFieldTitle_createdDate}
             </a>
-        </th>
-        <th>
+        </td>
+        <td>
             <a href="<@ofbizUrl>findparty</@ofbizUrl>?<#if sortField?has_content><#if sortField == "lastModifiedDate">sortField=-lastModifiedDate<#elseif sortField == "-lastModifiedDate">sortField=lastModifiedDate<#else>sortField=lastModifiedDate</#if><#else>sortField=lastModifiedDate</#if>${paramList!}&VIEW_SIZE=${viewSize!}&VIEW_INDEX=${viewIndex!}" 
                 <#if sortField?has_content><#if sortField == "lastModifiedDate">class="sort-order-desc"<#elseif sortField == "-lastModifiedDate">class="sort-order-asc"<#else>class="sort-order"</#if><#else>class="sort-order"</#if>>${uiLabelMap.FormFieldTitle_lastModifiedDate}
             </a>
-        </th>
-        <th>&nbsp;</th>
+        </td>
+        <td>&nbsp;</td>
       </tr>
-    </thead>
     <#assign alt_row = false>
     <#assign rowCount = 0>
     <#list partyList as partyRow>

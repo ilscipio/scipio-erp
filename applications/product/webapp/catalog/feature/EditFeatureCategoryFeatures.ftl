@@ -22,7 +22,7 @@ under the License.
     </div>
     <div class="screenlet-body">
         <div class="button-bar">
-          <a href="<@ofbizUrl>CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}</@ofbizUrl>" class="button tiny create">${uiLabelMap.ProductCreateNewFeature}</a>
+          <a href="<@ofbizUrl>CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}</@ofbizUrl>" class="buttontext create">${uiLabelMap.ProductCreateNewFeature}</a>
         </div>
         <br/>
         <form action="<@ofbizUrl>QuickAddProductFeatures</@ofbizUrl>" method="post">
@@ -52,11 +52,11 @@ under the License.
                     <span class="label">
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="button tiny">[${uiLabelMap.CommonPrevious}]</a> |
+                    <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
                     <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}</@ofbizUrl>" class="button tiny">[${uiLabelMap.CommonNext}]</a>
+                    | <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                     </span>
@@ -70,21 +70,19 @@ under the License.
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
         <table cellspacing="0" class="basic-table">
-           <thead>
               <tr class="header-row">
-                <th>${uiLabelMap.CommonId}</th>
-                <th>${uiLabelMap.CommonDescription}</th>
-                <th>${uiLabelMap.ProductFeatureType}</th>
-                <th>${uiLabelMap.ProductFeatureCategory}</th>
-                <th>${uiLabelMap.ProductUnitOfMeasureId}</th>
-                <th>${uiLabelMap.ProductQuantity}</th>
-                <th>${uiLabelMap.ProductAmount}</th>
-                <th>${uiLabelMap.ProductIdSeqNum}</th>
-                <th>${uiLabelMap.ProductIdCode}</th>
-                <th>${uiLabelMap.ProductAbbrev}</th>
-                <th align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureId_tableRow_', 'selectAllForm');" /></th>
+                <td><b>${uiLabelMap.CommonId}</b></td>
+                <td><b>${uiLabelMap.CommonDescription}</b></td>
+                <td><b>${uiLabelMap.ProductFeatureType}</b></td>
+                <td><b>${uiLabelMap.ProductFeatureCategory}</b></td>
+                <td><b>${uiLabelMap.ProductUnitOfMeasureId}</b></td>
+                <td><b>${uiLabelMap.ProductQuantity}</b></td>
+                <td><b>${uiLabelMap.ProductAmount}</b></td>
+                <td><b>${uiLabelMap.ProductIdSeqNum}</b></td>
+                <td><b>${uiLabelMap.ProductIdCode}</b></td>
+                <td><b>${uiLabelMap.ProductAbbrev}</b></td>
+                <td align="right"><b>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureId_tableRow_', 'selectAllForm');" /></b></td>
              </tr>
-           </thead>
         <#if (listSize > 0)>
             <#assign rowCount = 0>
             <#assign rowClass = "2">
@@ -92,7 +90,7 @@ under the License.
             <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
             <tr id="productFeatureId_tableRow_${rowCount}" valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
               <td><input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
-              <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="button tiny">${productFeature.productFeatureId}</a></td>
+              <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="buttontext">${productFeature.productFeatureId}</a></td>
               <td><input type="text" size='15' name="description_o_${rowCount}" value="${productFeature.description}" /></td>
               <td><select name='productFeatureTypeId_o_${rowCount}' size="1">
                 <#if productFeature.productFeatureTypeId?has_content>

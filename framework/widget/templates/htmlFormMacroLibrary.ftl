@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 <#macro renderField text>
   <#if text??>
     ${text}<#lt/>
@@ -47,14 +48,13 @@ under the License.
 </#macro>
 <#macro renderHyperlinkField></#macro>
 
-<#macro renderTextField name className alert value textSize maxlength id event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false mask=false clientAutocomplete="" placeholder="" tooltip="">
-  <#if mask?has_content && mask>
+<#macro renderTextField name className alert value textSize maxlength id event action disabled clientAutocomplete ajaxUrl ajaxEnabled mask placeholder="">
+  <#if mask?has_content>
     <script type="text/javascript">
-      jQuery(function($){jQuery("#${id}").mask("${mask!}");});
+      jQuery(function($){jQuery("#${id}").mask("${mask}");});
     </script>
   </#if>
   <input type="text" name="${name?default("")?html}"<#t/>
-    <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
     <@renderClass className alert />
     <#if value?has_content> value="${value}"</#if><#rt/>
     <#if textSize?has_content> size="${textSize}"</#if><#rt/>
@@ -65,28 +65,24 @@ under the License.
     <#if clientAutocomplete?has_content && clientAutocomplete=="false"> autocomplete="off"</#if><#rt/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#rt/>
   /><#t/>
-  <#if ajaxUrl?has_content>
+  <#if ajaxEnabled?has_content && ajaxEnabled>
     <#assign defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
     <#assign defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
     <script language="JavaScript" type="text/javascript">ajaxAutoCompleter('${ajaxUrl}', false, ${defaultMinLength!2}, ${defaultDelay!300});</script><#lt/>
   </#if>
 </#macro>
 
-<#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable=true buttons="" language="" tooltip="">
+<#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable buttons language="">
   <textarea name="${name}"<#t/>
-    <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
     <@renderClass className alert />
     <#if cols?has_content> cols="${cols}"</#if><#rt/>
     <#if rows?has_content> rows="${rows}"</#if><#rt/>
     <#if id?has_content> id="${id}"</#if><#rt/>
-    <#if readonly?has_content> readonly="readonly"</#if><#rt/>
+    <#if readonly?has_content && readonly=='readonly'> readonly="readonly"</#if><#rt/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
     ><#t/>
     <#if value?has_content>${value}</#if><#t/>
   </textarea><#lt/>
-  
-  <#--
-  ToDo: Remove
   <#if visualEditorEnable?has_content>
     <script language="javascript" src="/images/jquery/plugins/elrte-1.3/js/elrte.min.js" type="text/javascript"></script><#rt/>
     <#if language?has_content && language != "en">
@@ -104,34 +100,9 @@ under the License.
       jQuery('#${id?default("")}').elrte(opts);
     </script>
   </#if>
-  -->
 </#macro>
 
-<#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip="">
-  <div class="row collapse date" data-date="" data-date-format="<#if shortDateInput?? && shortDateInput>yyyy-MM-dd<#else>yyyy-MM-dd HH:mm:ss</#if>">
-        <div class="small-11 columns">
-            <input type="text" name="${name}_i18n" <@renderClass className alert /><#rt/>
-            <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-            <#if title?has_content> title="${title}"</#if>
-            <#if value?has_content> value="${value}"</#if>
-            <#if size?has_content> size="${size}"</#if><#rt/>
-            <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
-            <#if id?has_content> id="${id}_i18n"</#if> class="small-3 columns"/><#rt/>
-        </div>
-        <div class="small-1 columns">
-        <span class="postfix"><i class="fa fa-calendar"></i></span>
-        </div>
-        <script type="text/javascript">
-            $(function() {
-                <#if name??>$("input[name='${name?html}_i18n']").fdatepicker();<#else>$("input").last().fdatepicker();</#if>
-            });
-        </script>
-  </div>
-  
-
-
-  
-  <#-- Old DateTimeField
+<#macro renderDateTimeField name className alert title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName mask="" event="" action="" step="" timeValues="">
   <span class="view-calendar">
     <#if dateType!="time" >
       <input type="text" name="${name}_i18n" <@renderClass className alert /><#rt/>
@@ -141,6 +112,7 @@ under the License.
         <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
         <#if id?has_content> id="${id}_i18n"</#if>/><#rt/>
     </#if>
+    <#-- the style attribute is a little bit messy but when using disply:none the timepicker is shown on a wrong place -->
     <input type="text" name="${name}" style="height:1px;width:1px;border:none;background-color:transparent" <#if event?has_content && action?has_content> ${event}="${action}"</#if> <@renderClass className alert /><#rt/>
       <#if title?has_content> title="${title}"</#if>
       <#if value?has_content> value="${value}"</#if>
@@ -149,10 +121,12 @@ under the License.
       <#if id?has_content> id="${id}"</#if>/><#rt/>
     <#if dateType!="time" >
       <script type="text/javascript">
+        <#-- If language specific lib is found, use date / time converter else just copy the value fields -->
         if (Date.CultureInfo != undefined) {
           var initDate = <#if value?has_content>jQuery("#${id}_i18n").val()<#else>""</#if>;
           if (initDate != "") {
             var dateFormat = Date.CultureInfo.formatPatterns.shortDate<#if shortDateInput?? && !shortDateInput> + " " + Date.CultureInfo.formatPatterns.longTime</#if>;
+            <#-- bad hack because the JS date parser doesn't understand dots in the date / time string -->
             if (initDate.indexOf('.') != -1) {
               initDate = initDate.substring(0, initDate.indexOf('.'));
             }
@@ -187,6 +161,7 @@ under the License.
             jQuery("#${id}").val(newValue);
           });
         } else {
+          <#-- fallback if no language specific js date file is found -->
           jQuery("#${id}").change(function() {
           jQuery("#${id}_i18n").val(this.value);
         });
@@ -200,6 +175,7 @@ under the License.
       <#else>
         jQuery("#${id}").datetimepicker({
           showSecond: true,
+          <#-- showMillisec: true, -->
           timeFormat: 'HH:mm:ss',
           stepHour: 1,
           stepMinute: 1,
@@ -207,7 +183,7 @@ under the License.
       </#if>
           showOn: 'button',
           buttonImage: '',
-          button tiny: '',
+          buttonText: '',
           buttonImageOnly: false,
           dateFormat: 'yy-mm-dd'
         })
@@ -245,14 +221,11 @@ under the License.
     </#if>
     <input type="hidden" name="${compositeType}" value="Timestamp"/>
   </span>
-  -->
 </#macro>
 
-
-<#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="">
+<#macro renderDropDownField name className alert id multiple formName otherFieldName event action size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent ajaxEnabled noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch>
   <span class="ui-widget">
-    <select name="${name?default("")}<#rt/>" <@renderClass className alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
-    <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
+    <select name="${name?default("")}<#rt/>" <@renderClass className alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#if size?has_content> size="${size}"</#if>>
       <#if firstInList?has_content && currentValue?has_content && !multiple?has_content>
         <option selected="selected" value="${currentValue}">${explicitDescription}</option><#rt/>
         <option value="${currentValue}">---</option><#rt/>
@@ -267,7 +240,6 @@ under the License.
           <option<#if currentValue?has_content && currentValue == item.key && dDFCurrent?has_content && "selected" == dDFCurrent> selected="selected"<#elseif !currentValue?has_content && noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> selected="selected"</#if> value="${item.key}">${item.description}</option><#rt/>
         </#if>
       </#list>
-      <#nested>
     </select>
   </span>
   <#if otherFieldName?has_content>
@@ -292,36 +264,22 @@ under the License.
   </#if>
 </#macro>
 
-<#macro renderCheckBox id="" checked=false currentValue="N" name="" action="" tooltip="">
-    <div class="switch">
-    <input type="checkbox"<#if id??> id="${id}"</#if><#rt/>
-      <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-      <#if checked?has_content && checked> checked="checked"
-      <#elseif currentValue?has_content && currentValue=="Y"> checked="checked"</#if> 
-      name="${name?default("")?html}" value="${currentValue!}"<#if action?has_content> onClick="${action}"</#if>/><#rt/>
-    </div>
-</#macro>
-
-<#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="">
+<#macro renderCheckField items className alert id allChecked currentValue name event action>
   <#list items as item>
-    <div class="switch">
     <span <@renderClass className alert />><#rt/>
       <input type="checkbox"<#if (item_index == 0)> id="${id}"</#if><#rt/>
-        <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
         <#if allChecked?has_content && allChecked> checked="checked" <#elseif allChecked?has_content && !allChecked>
           <#elseif currentValue?has_content && currentValue==item.value> checked="checked"</#if> 
           name="${name?default("")?html}" value="${item.value?default("")?html}"<#if event?has_content> ${event}="${action}"</#if>/><#rt/>
         ${item.description?default("")}
     </span>
-    </div>
   </#list>
 </#macro>
 
-<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="">
+<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action>
   <#list items as item>
     <span <@renderClass className alert />><#rt/>
       <input type="radio"<#if currentValue?has_content><#if currentValue==item.key> checked="checked"</#if>
-        <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
         <#elseif noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> checked="checked"</#if> 
         name="${name?default("")?html}" value="${item.key?default("")?html}"<#if event?has_content> ${event}="${action}"</#if>/><#rt/>
       ${item.description}
@@ -356,9 +314,9 @@ under the License.
 <#macro renderIgnoredField></#macro>
 
 <#macro renderFieldTitle style title id fieldHelpText="" for="">
-  <#--<label <#if for?has_content>for="${for}"</#if> <#if fieldHelpText?has_content> title="${fieldHelpText}"</#if><#if style?has_content> class="${style}"</#if><#if id?has_content> id="${id}"</#if>><#t/>-->
+  <label <#if for?has_content>for="${for}"</#if> <#if fieldHelpText?has_content> title="${fieldHelpText}"</#if><#if style?has_content> class="${style}"</#if><#if id?has_content> id="${id}"</#if>><#t/>
     ${title}<#t/>
-  <#--</label><#t/>-->
+  </label><#t/>
 </#macro>
 
 <#macro renderSingleFormFieldTitle></#macro>
@@ -412,25 +370,23 @@ under the License.
 </#macro>
 
 <#macro renderFormatHeaderRowOpen style>
-<thead>
   <tr class="<#if style?has_content>${style}<#else>header-row</#if>">
 </#macro>
 <#macro renderFormatHeaderRowClose>
   </tr>
-  </thead>
 </#macro>
 <#macro renderFormatHeaderRowCellOpen style positionSpan>
-  <th <#if positionSpan?has_content && positionSpan gt 1 >colspan="${positionSpan}"</#if><#if style?has_content>class="${style}"</#if>>
+  <td <#if positionSpan?has_content && positionSpan gt 1 >colspan="${positionSpan}"</#if><#if style?has_content>class="${style}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowCellClose>
-  </th>
+  </td>
 </#macro>
 
 <#macro renderFormatHeaderRowFormCellOpen style>
-  <th <#if style?has_content>class="${style}"</#if>>
+  <td <#if style?has_content>class="${style}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowFormCellClose>
-  </th>
+  </td>
 </#macro>
 <#macro renderFormatHeaderRowFormCellTitleSeparator style isLast>
   <#if style?has_content><span class="${style}"></#if> - <#if style?has_content></span></#if>
@@ -448,52 +404,38 @@ under the License.
 <#macro renderFormatItemRowCellClose fieldName>
   </td>
 </#macro>
-<#macro renderFormatItemRowFormCellOpen style="">
+<#macro renderFormatItemRowFormCellOpen style>
   <td<#if style?has_content> class="${style}"</#if>>
 </#macro>
 <#macro renderFormatItemRowFormCellClose>
   </td>
 </#macro>
 
-<#macro renderFormatSingleWrapperOpen formName style="">
-  <#--<table cellspacing="0" <#if style?has_content>class="${style}"</#if>>-->
+<#macro renderFormatSingleWrapperOpen formName style>
+  <table cellspacing="0" <#if style?has_content>class="${style}"</#if>>
 </#macro>
 <#macro renderFormatSingleWrapperClose formName>
-  <#--</table>-->
+  </table>
 </#macro>
 
-<#macro renderFormatFieldRowOpen collapse=false style="">
-  <#--<tr>-->
-   <div class="row">
-    <div class="<#if style?has_content>${style}<#else>large-6</#if> columns">
-      <div class="row <#if collapse>collapse</#if>">
+<#macro renderFormatFieldRowOpen>
+  <tr>
 </#macro>
 <#macro renderFormatFieldRowClose>
-  <#--</tr>-->
-        </div>
-    </div>
-  </div>
+  </tr>
 </#macro>
-<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
-  <#--<td class="<#if style?has_content>${style}<#else>label</#if>">-->
-  <div class="<#if style?has_content>${style}<#else>small-3 large-2</#if> columns ">
-      <#if collapse><span class="prefix"><#else><label></#if>
+<#macro renderFormatFieldRowTitleCellOpen style>
+  <td class="<#if style?has_content>${style}<#else>label</#if>">
 </#macro>
-<#macro renderFormatFieldRowTitleCellClose collapse=false>
-  <#--</td>-->
-      <#if collapse></span><#else></label></#if>
-    </div>
+<#macro renderFormatFieldRowTitleCellClose>
+  </td>
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="">
-  <#--<td<#if positionSpan?has_content && positionSpan gt 0> colspan="${1+positionSpan*3}"</#if><#if style?has_content> class="${style}"</#if>>-->
-  <div class="<#if style?has_content>${style}<#else>small-9 large-10</#if> columns">
-    <span>
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan style>
+  <td<#if positionSpan?has_content && positionSpan gt 0> colspan="${1+positionSpan*3}"</#if><#if style?has_content> class="${style}"</#if>>
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>
-  <#--</td>-->
-    </span>
-  </div>
+  </td>
 </#macro>
 
 <#--
@@ -515,75 +457,29 @@ under the License.
 <#macro renderFormatEmptySpace>&nbsp;</#macro>
 
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase>
-  <@row collapse=collapse!false>
-      <#if opEquals?has_content>
-            <#assign class1="small-3 large-3"/>
-            <#assign class2="small-6 large-6"/>
-            <#assign class3="small-3 large-3"/>
-            
-        <#else>
-            <#assign class1=""/>
-            <#assign class2="small-9 large-9"/>
-            <#assign class3="small-3 large-3"/>
-      </#if>      
-      <#if opEquals?has_content>
-        <#assign newName = "${name}"/>
-        <@cell class="${class1!}">
-        <select <#if name?has_content>name="${name}_op"</#if>    class="selectBox"><#rt/>
-          <option value="equals"<#if defaultOption=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
-          <option value="like"<#if defaultOption=="like"> selected="selected"</#if>>${opBeginsWith}</option><#rt/>
-          <option value="contains"<#if defaultOption=="contains"> selected="selected"</#if>>${opContains}</option><#rt/>
-          <option value="empty"<#rt/><#if defaultOption=="empty"> selected="selected"</#if>>${opIsEmpty}</option><#rt/>
-          <option value="notEqual"<#if defaultOption=="notEqual"> selected="selected"</#if>>${opNotEqual}</option><#rt/>
-        </select>
-        </@cell>
-      <#else>
-        <input type="hidden" name=<#if name?has_content> "${name}_op"</#if>    value="${defaultOption}"/><#rt/>
-      </#if>
-      <@cell class="${class2!}">
-        <input type="text" <@renderClass className alert /> name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
-       
-      </@cell>
-      <@cell class="${class3!}"> 
-        <#if hideIgnoreCase>
-          <input type="hidden" name="${name}_ic" value=<#if ignCase>"Y"<#else> ""</#if>/><#rt/>
-        <#else>
-            <div class="">
-                <input type="checkbox" id="${name}_ic" name="${name}_ic" value="Y" <#if ignCase> checked="checked"</#if> />
-                <label for="${name}_ic">${ignoreCase!}</label>
-                <#rt/>
-            </div>
-        </#if>
-      </@cell>
-  </@row>
+  <#if opEquals?has_content>
+    <select <#if name?has_content>name="${name}_op"</#if>    class="selectBox"><#rt/>
+      <option value="equals"<#if defaultOption=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
+      <option value="like"<#if defaultOption=="like"> selected="selected"</#if>>${opBeginsWith}</option><#rt/>
+      <option value="contains"<#if defaultOption=="contains"> selected="selected"</#if>>${opContains}</option><#rt/>
+      <option value="empty"<#rt/><#if defaultOption=="empty"> selected="selected"</#if>>${opIsEmpty}</option><#rt/>
+      <option value="notEqual"<#if defaultOption=="notEqual"> selected="selected"</#if>>${opNotEqual}</option><#rt/>
+    </select>
+  <#else>
+    <input type="hidden" name=<#if name?has_content> "${name}_op"</#if>    value="${defaultOption}"/><#rt/>
+  </#if>
+    <input type="text" <@renderClass className alert /> name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+    <#if titleStyle?has_content><span class="${titleStyle}" ><#rt/></#if>
+    <#if hideIgnoreCase>
+      <input type="hidden" name="${name}_ic" value=<#if ignCase>"Y"<#else> ""</#if>/><#rt/>
+    <#else>
+      <input type="checkbox" name="${name}_ic" value="Y" <#if ignCase> checked="checked"</#if> /> ${ignoreCase}<#rt/>
+    </#if>
+    <#if titleStyle?has_content></span>
+  </#if>
 </#macro>
 
 <#macro renderDateFindField className alert name localizedInputTitle value size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty>
-  <div class="row collapse date" data-date="" 
-    data-date-format="<#if dateType == "date">dd-mm-yyyy<#else>HH:mm:ss</#if>">
-        <div class="small-5 columns">
-        <input class="small-3 columns" id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
-        </div>
-        <div class="small-1 columns">
-        <span class="postfix"><i class="fa fa-calendar"></i></span>
-        </div>
-        <div class="small-5 columns small-offset-1">
-        <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
-          <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
-          <option value="sameDay"<#if defaultOptionFrom=="sameDay"> selected="selected"</#if>>${opSameDay}</option><#rt/>
-          <option value="greaterThanFromDayStart"<#if defaultOptionFrom=="greaterThanFromDayStart"> selected="selected"</#if>>${opGreaterThanFromDayStart}</option><#rt/>
-          <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
-        </select><#rt/>
-        </div>
-        <script type="text/javascript">
-            $(function() {
-                <#if name??>$('#${name?html}_fld0_value').fdatepicker();<#else>$('input').last().fdatepicker();</#if>
-            });
-        </script>
-  </div>
-  
-  
-  <#--
   <span class="view-calendar">
     <input id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
     <#if dateType != "time">
@@ -593,6 +489,7 @@ under the License.
         <#else>
           jQuery("#${name?html}_fld0_value").datetimepicker({
             showSecond: true,
+            <#-- showMillisec: true, -->
             timeFormat: 'HH:mm:ss',
             stepHour: 1,
             stepMinute: 5,
@@ -600,7 +497,7 @@ under the License.
         </#if>
             showOn: 'button',
             buttonImage: '',
-            button tiny: '',
+            buttonText: '',
             buttonImageOnly: false,
             dateFormat: 'yy-mm-dd'
           });
@@ -628,6 +525,7 @@ under the License.
         <#else>
           jQuery("#${name?html}_fld1_value").datetimepicker({
             showSecond: true,
+            <#-- showMillisec: true, -->
             timeFormat: 'HH:mm:ss',
             stepHour: 1,
             stepMinute: 5,
@@ -635,7 +533,7 @@ under the License.
         </#if>
             showOn: 'button',
             buttonImage: '',
-            button tiny: '',
+            buttonText: '',
             buttonImageOnly: false,
             dateFormat: 'yy-mm-dd'
           });
@@ -655,8 +553,6 @@ under the License.
       </span>
     </#if>
   </span>
-  -->
-    
 </#macro>
 
 <#macro renderRangeFindField className alert name value size maxlength autocomplete titleStyle defaultOptionFrom opEquals opGreaterThan opGreaterThanEquals opLessThan opLessThanEquals value2 defaultOptionThru>
@@ -842,35 +738,28 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel>
   <#if listSize gt viewSize>
-   <div class="row">
-   <div class="large-12 columns">
-        <div class="pagination-centered ${paginateStyle}">
-          <ul class="pagination">
-            <li class="${paginateFirstStyle}<#if viewIndex gt 0>"><a href="${firstUrl}">${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
-            <li class="${paginatePreviousStyle}<#if viewIndex gt 0>"><a href="${previousUrl}">${paginatePreviousLabel}</a><#else> unavailable">${paginatePreviousLabel}</#if></li>
-            <#if listSize gt 0 && javaScriptEnabled>
-              
-              <#assign x=(listSize/viewSize)?ceiling>
-                <#list 1..x as i>
-                    <li class="<#if i == (viewIndex+1)>current</#if>"><a href="${selectUrl}${i-1}">${i}</a></li>
-                  </li>
-                </#list>
-            </#if>
-            <li class="${paginateNextStyle}<#if highIndex lt listSize>"><a href="${nextUrl}"">${paginateNextLabel}</a><#else> unavailable">${paginateNextLabel}</#if></li>
-            <li class="${paginateLastStyle}<#if highIndex lt listSize>"><a href="${lastUrl}">${paginateLastLabel}</a><#else> unavailable">${paginateLastLabel}</#if></li>
-            <li class="nav-displaying">${commonDisplaying}</li>
-             <#if javaScriptEnabled><li class=""><label for="pageSize">${paginateViewSizeLabel} <select name="pageSize" size="1" onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else>submitPagination(this, '${selectSizeUrl}')</#if>"><#rt/>
-                <#assign availPageSizes = [20, 30, 50, 100, 200]>
-              <#list availPageSizes as ps>
-                <option <#if viewSize == ps> selected="selected" </#if> value="${ps}">${ps}</option>
-              </#list>
-              </select></label></li>
-            </#if>
-            
-          </ul>
-        </div>
-        
-      </div>
+    <div class="${paginateStyle}">&nbsp; 
+      <ul>
+        <li class="${paginateFirstStyle}<#if viewIndex gt 0>"><a href="javascript:void(0)" onclick="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxFirstUrl}')<#else>submitPagination(this, '${firstUrl}')</#if>">${paginateFirstLabel}</a><#else>-disabled"><span>${paginateFirstLabel}</span></#if></li>
+        <li class="${paginatePreviousStyle}<#if viewIndex gt 0>"><a href="javascript:void(0)" onclick="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxPreviousUrl}')<#else>submitPagination(this, '${previousUrl}')</#if>">${paginatePreviousLabel}</a><#else>-disabled"><span>${paginatePreviousLabel}</span></#if></li>
+        <#if listSize gt 0 && javaScriptEnabled><li class="nav-page-select">${pageLabel} <select name="page" size="1" onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectUrl}')<#else>submitPagination(this, '${selectUrl}'+this.value)</#if>"><#rt/>
+          <#assign x=(listSize/viewSize)?ceiling>
+            <#list 1..x as i>
+              <#if i == (viewIndex+1)><option selected="selected" value="<#else><option value="</#if>${i-1}">${i}</option>
+            </#list>
+          </select></li>
+        </#if>
+        <li class="${paginateNextStyle}<#if highIndex lt listSize>"><a href="javascript:void(0)" onclick="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxNextUrl}')<#else>submitPagination(this, '${nextUrl}')</#if>">${paginateNextLabel}</a><#else>-disabled"><span>${paginateNextLabel}</span></#if></li>
+        <li class="${paginateLastStyle}<#if highIndex lt listSize>"><a href="javascript:void(0)" onclick="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxLastUrl}')<#else>submitPagination(this, '${lastUrl}')</#if>">${paginateLastLabel}</a><#else>-disabled"><span>${paginateLastLabel}</span></#if></li>
+        <#if javaScriptEnabled><li class="nav-pagesize"><select name="pageSize" size="1" onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else>submitPagination(this, '${selectSizeUrl}')</#if>"><#rt/>
+            <#assign availPageSizes = [20, 30, 50, 100, 200]>
+          <#list availPageSizes as ps>
+            <option <#if viewSize == ps> selected="selected" </#if> value="${ps}">${ps}</option>
+          </#list>
+          </select> ${paginateViewSizeLabel}</li>
+        </#if>
+        <li class="nav-displaying">${commonDisplaying}</li>
+      </ul>
     </div>
   </#if>
 </#macro>
@@ -896,9 +785,9 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#macro renderContainerField id className><div id="${id}" class="${className}"/></#macro>
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId collapsible expandToolTip collapseToolTip>
-  <#if style?has_content || id?has_content || title?has_content><div class="fieldgroup<#if style?has_content> ${style}</#if><#if collapsed> toggleField</#if>"<#if id?has_content> id="${id}"</#if>>
-    <fieldset <#if style?has_content || collapsed>class="<#if style?has_content>${style!} </#if>"</#if>>
-      <#--<#if collapsible>
+  <#if style?has_content || id?has_content || title?has_content><div class="fieldgroup<#if style?has_content> ${style}</#if>"<#if id?has_content> id="${id}"</#if>>
+    <div class="fieldgroup-title-bar">
+      <#if collapsible>
         <ul>
           <li class="<#if collapsed>collapsed">
                       <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${expandToolTip}', '${collapseToolTip}');">
@@ -913,15 +802,10 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
       </#if><#rt/>
     </div>
     <div id="${collapsibleAreaId}" class="fieldgroup-body" <#if collapsed && collapsible> style="display: none;"</#if>>
-    -->
-    <#if title?has_content><legend><i class="fa fa-arrow-right"></i> ${title}</legend></#if>
   </#if>
 </#macro>
 
-<#macro renderFieldGroupClose style id title>
-    <#--<#if style?has_content || id?has_content || title?has_content></div></div></#if>-->
-    </fieldset>
-</#macro>
+<#macro renderFieldGroupClose style id title><#if style?has_content || id?has_content || title?has_content></div></div></#if></#macro>
 
 <#macro renderHyperlinkTitle name title showSelectAll="N">
   <#if title?has_content>${title}<br /></#if>
@@ -938,8 +822,8 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#if tooltip?has_content><span class="<#if tooltipStyle?has_content>${tooltipStyle}<#else>tooltip</#if>">${tooltip}</span><#rt/></#if>
 </#macro>
 
-<#macro renderClass className alert="false">
-  <#if className?? || (alert?has_content && alert=="true")> class="${className!}<#if alert?? && alert?string=="false"> alert</#if>" </#if>
+<#macro renderClass className="" alert="">
+  <#if className?has_content || (alert?has_content && alert=="true")> class="${className}<#if alert?has_content && alert=="true"> alert</#if>" </#if>
 </#macro>
 
 <#macro renderAsterisks requiredField requiredStyle>

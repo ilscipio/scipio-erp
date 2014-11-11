@@ -17,9 +17,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")> 
+<#assign docLangAttr = locale.toString()?replace("_", "-")>
+<#assign langDir = "ltr">
+<#if "ar.iw"?contains(docLangAttr?substring(0, 2))>
+    <#assign langDir = "rtl">
+</#if>
 
-<@renderScreenBegin />
+<html lang="${docLangAttr}" dir="${langDir}" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${layoutSettings.companyName!}: <#if (page.titleProperty)?has_content>${uiLabelMap[page.titleProperty]}<#else>${(page.title)!}</#if></title>
     <#if layoutSettings.shortcutIcon?has_content>
       <link rel="shortcut icon" href="<@ofbizContentUrl>${layoutSettings.shortcutIcon}</@ofbizContentUrl>" />

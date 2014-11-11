@@ -18,17 +18,18 @@ under the License.
 -->
 <h1>${uiLabelMap.WebtoolsLabelManagerViewReferences}</h1>
         <table class="basic-table" cellspacing="0">
-        <thead>
             <tr>
-                <th class="label">${uiLabelMap.WebtoolsLabelManagerKey}</th>
-                <th colspan="2">${parameters.sourceKey!}</th>
+                <td class="label">${uiLabelMap.WebtoolsLabelManagerKey}</td>
+                <td colspan="2">${parameters.sourceKey!}</td>
+            </tr>
+            <tr>
+                <td colspan="3">&nbsp;</td>
             </tr>
             <tr class="header-row">
-                <th>${uiLabelMap.WebtoolsLabelManagerRow}</th>
-                <th>${uiLabelMap.WebtoolsLabelManagerFileName}</th>
-                <th>${uiLabelMap.WebtoolsLabelManagerReferences}</th>
+                <td>${uiLabelMap.WebtoolsLabelManagerRow}</td>
+                <td>${uiLabelMap.WebtoolsLabelManagerFileName}</td>
+                <td>${uiLabelMap.WebtoolsLabelManagerReferences}</td>
             </tr>
-         </thead>
             <#if parameters.sourceKey?? && parameters.sourceKey?has_content>
               <#assign rowNum = "2">
               <#assign rowNumber = 1>

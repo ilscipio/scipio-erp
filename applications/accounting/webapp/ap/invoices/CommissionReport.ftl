@@ -19,11 +19,10 @@ under the License.
 
 <#if commissionReportList?has_content>
   <div>
-    <a href="<@ofbizUrl>CommissionReport.pdf?isSearch=Y&amp;productId=${parameters.productId!}&amp;partyId=${parameters.partyId!}&amp;fromDate=${parameters.fromDate!}&amp;thruDate=${parameters.thruDate!}</@ofbizUrl>" target="_BLANK" class="button tiny">${uiLabelMap.AccountingInvoicePDF}</a>
+    <a href="<@ofbizUrl>CommissionReport.pdf?isSearch=Y&amp;productId=${parameters.productId!}&amp;partyId=${parameters.partyId!}&amp;fromDate=${parameters.fromDate!}&amp;thruDate=${parameters.thruDate!}</@ofbizUrl>" target="_BLANK" class="buttontext">${uiLabelMap.AccountingInvoicePDF}</a>
   </div>
   <table class="basic-table hover-bar" cellspacing="0">
     <#-- Header Begins -->
-    <thead>
     <tr class="header-row-2">
       <th>${uiLabelMap.AccountingLicensedProduct}</th>
       <th>${uiLabelMap.AccountingQuantity}</th>
@@ -32,7 +31,6 @@ under the License.
       <th>${uiLabelMap.AccountingNetSale}</th>
       <th>${uiLabelMap.AccountingSalesAgents} / ${uiLabelMap.AccountingTermAmount}</th>
     </tr>
-    </thead>
     <#-- Header Ends-->
     <#assign alt_row = false>
     <#list commissionReportList as commissionReport>

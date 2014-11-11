@@ -22,20 +22,20 @@ under the License.
 <p>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</p>
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
-    <a href="<@ofbizUrl>xmldsrawdump</@ofbizUrl>" class="button tiny" target="_blank">Click Here to Get Data (or save to file)</a>
+    <a href="<@ofbizUrl>xmldsrawdump</@ofbizUrl>" class="buttontext" target="_blank">Click Here to Get Data (or save to file)</a>
 <#else>
     <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
 </#if>
 <#else>
 <#macro displayButtonBar>
-  <ul class="button-group">
-    <li><input type="submit" value="${uiLabelMap.WebtoolsExport}"/></li>
-    <li><a href="<@ofbizUrl>xmldsdump?checkAll=true</@ofbizUrl>" class="button tiny">${uiLabelMap.WebtoolsCheckAll}</a></li>
-    <li><a href="<@ofbizUrl>xmldsdump</@ofbizUrl>" class="button tiny">${uiLabelMap.WebtoolsUnCheckAll}</a></li>
-  </ul>
+  <div class="button-bar">
+    <input type="submit" value="${uiLabelMap.WebtoolsExport}"/>
+    <a href="<@ofbizUrl>xmldsdump?checkAll=true</@ofbizUrl>" class="smallSubmit">${uiLabelMap.WebtoolsCheckAll}</a>
+    <a href="<@ofbizUrl>xmldsdump</@ofbizUrl>" class="smallSubmit">${uiLabelMap.WebtoolsUnCheckAll}</a>
+  </div>
 </#macro>
 
-<h2>${uiLabelMap.PageTitleEntityExport}</h2>
+<div class="page-title"><span>${uiLabelMap.PageTitleEntityExport}</span></div>
 <p>${uiLabelMap.WebtoolsXMLExportInfo}</p>
 <hr />
 
@@ -54,27 +54,40 @@ under the License.
 
   <hr />
 
-
-  
   <h2>${uiLabelMap.WebtoolsExport}:</h2>
   <form method="post" action="<@ofbizUrl>xmldsdump</@ofbizUrl>" name="entityExport">
-   <@row>
-    <@cell class="large-6 columns">
-  
-    <@field type="input" label="${uiLabelMap.WebtoolsOutputDirectory}" size="60" name="outpath" value="${parameters.outpath!}"/>
-    <@field type="input" label="${uiLabelMap.WebtoolsMaxRecordsPerFile}" size="10" name="maxrecords"/></td>
-    <@field type="input" label="${uiLabelMap.WebtoolsSingleFilename}" size="60" name="filename" value="${parameters.filename!}"/></td>
-    <@field type="datetime" dateType="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedSince}" name="entityFrom"  value="" size="25" maxlength="30" id="entityFrom1" dateType="date" />
-    <@field type="datetime" dateType="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedBefore}" name="entityThru" value="" size="25" maxlength="30" id="entityThru1" dateType="date" />
-    <@row>
-        <@cell class="large-12">
-            <@renderCheckBox name="tobrowser" checked=tobrowser?default("N")/> ${StringUtil.wrapString(uiLabelMap.WebtoolsOutToBrowser)}
-        </@cell>
-    </@row>
-     </@cell>
-    </@row>
-    <hr>
-    <h3>${uiLabelMap.WebtoolsEntityNames}:</h3>
+    <table class="basic-table">
+      <tr>
+        <td class="label">${uiLabelMap.WebtoolsOutputDirectory}</td>
+        <td><input type="text" size="60" name="outpath" value="${parameters.outpath!}"/></td>
+      </tr>
+      <tr>
+        <td class="label">${uiLabelMap.WebtoolsMaxRecordsPerFile}</td>
+        <td><input type="text" size="10" name="maxrecords"/></td>
+      </tr>
+      <tr>
+        <td class="label">${uiLabelMap.WebtoolsSingleFilename}</td>
+        <td><input type="text" size="60" name="filename" value="${parameters.filename!}"/></td>
+      </tr>
+      <tr>
+        <td class="label">${uiLabelMap.WebtoolsRecordsUpdatedSince}</td>
+        <td>
+        <@htmlTemplate.renderDateTimeField name="entityFrom" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="entityFrom1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">${uiLabelMap.WebtoolsRecordsUpdatedBefore} </td>
+        <td>
+            <@htmlTemplate.renderDateTimeField name="entityThru" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="entityThru1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">${StringUtil.wrapString(uiLabelMap.WebtoolsOutToBrowser)}</td>
+        <td><input type="checkbox" name="tobrowser"<#if tobrowser?has_content> checked="checked"</#if> /></td>
+      </tr>
+    </table>
+    <br />
+    <p>${uiLabelMap.WebtoolsEntityNames}:</p>
     <@displayButtonBar/>
       <div>${uiLabelMap.WebtoolsEntitySyncDump}:
         <input name="entitySyncId" size="30" value="${entitySyncId!}"/>
@@ -111,7 +124,6 @@ under the License.
 
       <@displayButtonBar/>
     </form>
-
 <#else>
     <div>${uiLabelMap.WebtoolsPermissionMaint}</div>
 </#if>

@@ -269,17 +269,17 @@
             <entity-one entity-name="PartyAcctgPreference" value-field="partyAcctgPreference"/>
             <entity-one entity-name="PartyGroup" value-field="partyGroup"/>
         </row-actions>
-        <field name="partyId" title="${uiLabelMap.AccountingCompanies}" use-when="partyAcctgPreference==null" widget-style="button tiny">
+        <field name="partyId" title="${uiLabelMap.AccountingCompanies}" use-when="partyAcctgPreference==null" widget-style="buttontext">
             <hyperlink target="viewprofile" description="${partyGroup.groupName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="partyId" title="${uiLabelMap.AccountingCompanies}" use-when="partyAcctgPreference!=null" widget-style="button tiny">
+        <field name="partyId" title="${uiLabelMap.AccountingCompanies}" use-when="partyAcctgPreference!=null" widget-style="buttontext">
             <hyperlink target="showMessage" description="${partyGroup.groupName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="setToComplete" title=" " use-when="partyAcctgPreference==null" widget-style="button tiny">
+        <field name="setToComplete" title=" " use-when="partyAcctgPreference==null" widget-style="buttontext">
             <hyperlink target="OrganizationToComplete" description="${uiLabelMap.SetupSetToComplete}">
                 <parameter param-name="partyId"/>
             </hyperlink>

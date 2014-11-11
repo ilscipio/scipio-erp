@@ -51,7 +51,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditTask" text="${uiLabelMap.ScrumNewTask}" style="button tiny create"/>
+                                            <link target="EditTask" text="${uiLabelMap.ScrumNewTask}" style="buttontext create"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -332,11 +332,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTaskDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="large-6">
+                        <container style="lefthalf">
                             <include-screen name="ViewTask"/>
                             <include-screen name="RevisionList"/>
                         </container>
-                        <container style="large-6">
+                        <container style="righthalf">
                             <screenlet title="${uiLabelMap.ScrumTaskAttachements}">
                                 <include-form location="component://scrum/widget/OpenTestForms.xml" name="contentTask"/>
                             </screenlet>

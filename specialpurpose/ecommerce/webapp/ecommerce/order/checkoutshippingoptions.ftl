@@ -178,7 +178,7 @@ function submitForm(form, mode, value) {
                       </#list>
                     </b>
                   </div>
-                  <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="button tiny">${uiLabelMap.PartyProfile}</a>.</div>
+                  <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
                   <br />
                   <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                   <input type="text" class="inputBox" size="30" name="order_additional_emails" value="${shoppingCart.getOrderAdditionalEmails()!}"/>
@@ -192,10 +192,10 @@ function submitForm(form, mode, value) {
 <table width="100%">
   <tr valign="top">
     <td>
-      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="button tiny">${uiLabelMap.OrderBacktoShoppingCart}</a>
+      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">${uiLabelMap.OrderBacktoShoppingCart}</a>
     </td>
     <td align="right">
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="button tiny">${uiLabelMap.CommonNext}</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">${uiLabelMap.CommonNext}</a>
     </td>
   </tr>
 </table>

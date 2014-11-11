@@ -31,7 +31,8 @@ under the License.
 <#else>
   <#assign target="getProductInventoryAvailable">
 </#if>
-<@section>
+<div class="screenlet">
+    <div class="screenlet-body">
       <#if shoppingCart.getOrderType() == "SALES_ORDER">
         <div>
           <#if quantityOnHandTotal?? && availableToPromiseTotal?? && (productId)??>
@@ -89,10 +90,10 @@ under the License.
                         <#assign fieldFormName="LookupProduct">
                       </#if>
                       <@htmlTemplate.lookupField formName="quickaddform" name="add_product_id" id="add_product_id" fieldFormName="${fieldFormName}"/>
-                      <a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="button tiny">${uiLabelMap.OrderQuickLookup}</a>
-                      <a href="javascript:quicklookupGiftCertificate()" class="button tiny">${uiLabelMap.OrderAddGiftCertificate}</a>
+                      <a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="buttontext">${uiLabelMap.OrderQuickLookup}</a>
+                      <a href="javascript:quicklookupGiftCertificate()" class="buttontext">${uiLabelMap.OrderAddGiftCertificate}</a>
                       <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>
-                        <a href="javascript:showQohAtp()" class="button tiny">${uiLabelMap.ProductAtpQoh}</a>
+                        <a href="javascript:showQohAtp()" class="buttontext">${uiLabelMap.ProductAtpQoh}</a>
                       </#if>
                     </span>
                   </td>
@@ -184,7 +185,8 @@ under the License.
         </tr>
         </#if>
       </table>
-</@section>
+    </div>
+</div>
 
 <script language="JavaScript" type="text/javascript">
   document.quickaddform.add_product_id.focus();

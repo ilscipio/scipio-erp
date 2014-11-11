@@ -57,7 +57,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="partyInvitationId" widget-style="button tiny">
+        <field name="partyInvitationId" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${partyInvitationId}" target="editPartyInvitation">
                 <parameter param-name="partyInvitationId"/>
             </hyperlink>
@@ -68,7 +68,7 @@ under the License.
         <field name="emailAddress" title="${uiLabelMap.PartyEmailAddress}"><display/></field>
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="lastInviteDate"><display/></field>
-        <field name="remove" title=" " widget-style="button tiny">
+        <field name="remove" title=" " widget-style="buttontext">
             <hyperlink target="deletePartyInvitation" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="partyInvitationId" value="partyInvitationId"/>
             </hyperlink>
@@ -106,19 +106,19 @@ under the License.
                 <order-by field-name="partyInvitationId"/>
             </entity-condition>
         </actions>
-        <field name="partyInvitationId" widget-style="button tiny">
+        <field name="partyInvitationId" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${partyInvitationId}" target="editPartyInvitation">
                 <parameter param-name="partyInvitationId"/>
             </hyperlink>
         </field>
-        <field name="partyId" widget-style="button tiny" entry-name="partyIdTo">
+        <field name="partyId" widget-style="buttontext" entry-name="partyIdTo">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyIdTo}" link-style="button tiny">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyIdTo}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="remove" title=" " widget-style="button tiny">
+        <field name="remove" title=" " widget-style="buttontext">
             <hyperlink target="deletePartyInvitationGroupAssoc" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="partyInvitationId"/>
                 <parameter param-name="partyIdTo"/>
@@ -149,13 +149,13 @@ under the License.
                 <order-by field-name="partyInvitationId"/>
             </entity-condition>
         </actions>
-        <field name="partyInvitationId" widget-style="button tiny">
+        <field name="partyInvitationId" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${partyInvitationId}" target="editPartyInvitation">
                 <parameter param-name="partyInvitationId"/>
             </hyperlink>
         </field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}"><display-entity entity-name="RoleType"/></field>
-        <field name="remove" title=" " widget-style="button tiny">
+        <field name="remove" title=" " widget-style="buttontext">
             <hyperlink target="deletePartyInvitationRoleAssoc" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="partyInvitationId"/>
                 <parameter param-name="roleTypeId"/>

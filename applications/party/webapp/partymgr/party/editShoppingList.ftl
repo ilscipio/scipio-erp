@@ -25,7 +25,7 @@ under the License.
       <li>
         <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
           <input type="hidden" name="partyId" value="${partyId!}" />
-          <a href="javascript:document.getElementById('createEmptyShoppingList').submit();" class="button tiny">${uiLabelMap.CommonCreateNew}</a>
+          <a href="javascript:document.getElementById('createEmptyShoppingList').submit();" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
         </form>
       </li>
     </ul>
@@ -147,12 +147,10 @@ under the License.
   </div>
   <div class="screenlet-body">
     <table class="basic-table" cellspacing="0">
-     <thead>
       <tr class="header-row">
-        <th>${uiLabelMap.PartyListName}</th>
-        <th>&nbsp;</th>
+        <td>${uiLabelMap.PartyListName}</td>
+        <td>&nbsp;</td>
       </tr>
-      </thead>
       <#list childShoppingListDatas as childShoppingListData>
         <#assign childShoppingList = childShoppingListData.childShoppingList>
         <tr>
@@ -189,16 +187,14 @@ under the License.
         <#assign commonDisplaying = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)/>
         <@nextPrev commonUrl=commonUrl ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying=commonDisplaying paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" />
       <table class="basic-table" cellspacing="0">
-       <thead>
         <tr class="header-row">
-          <th>${uiLabelMap.PartyProduct}</th>
-          <th>${uiLabelMap.PartyQuantity}</th>
-          <th>${uiLabelMap.PartyQuantityPurchased}</th>
-          <th>${uiLabelMap.PartyPrice}</th>
-          <th>${uiLabelMap.PartyTotal}</th>
-          <th>&nbsp;</th>
+          <td>${uiLabelMap.PartyProduct}</td>
+          <td>${uiLabelMap.PartyQuantity}</td>
+          <td>${uiLabelMap.PartyQuantityPurchased}</td>
+          <td>${uiLabelMap.PartyPrice}</td>
+          <td>${uiLabelMap.PartyTotal}</td>
+          <td>&nbsp;</td>
         </tr>
-        </thead>
         <#assign alt_row = false>
         <#list shoppingListItemDatas[lowIndex-1..highIndex-1] as shoppingListItemData>
           <#assign shoppingListItem = shoppingListItemData.shoppingListItem>

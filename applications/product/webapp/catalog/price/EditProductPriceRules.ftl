@@ -21,15 +21,13 @@ under the License.
         <h3>${uiLabelMap.ProductGlobalPriceRule}</h3>
     </div>
     <div class="screenlet-body">
-        <a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductFindRule}</a>
+        <a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductFindRule}</a>
         <table cellspacing="0" class="basic-table">
-         <thead>
           <tr class="header-row">
-            <th width="10%">${uiLabelMap.ProductRuleId}</th>
-            <th width="80%">${uiLabelMap.ProductRuleNameFromDateThruDate}</th>
-            <th width="10%">&nbsp;</th>
+            <td width="10%"><b>${uiLabelMap.ProductRuleId}</b></td>
+            <td width="80%"><b>${uiLabelMap.ProductRuleNameFromDateThruDate}</b></td>
+            <td width="10%"><b>&nbsp;</b></td>
           </tr>
-        </thead>
         <#if productPriceRule??>
           <#assign productPriceConds = productPriceRule.getRelated("ProductPriceCond", null, null, false)>
           <#assign productPriceActions = productPriceRule.getRelated("ProductPriceAction", null, null, false)>
@@ -40,8 +38,8 @@ under the License.
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                     <input type="text" size="15" name="ruleName" value="${productPriceRule.ruleName}" />
                     <input type="text" size="15" name="description" value="${productPriceRule.description!}" />
-                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${productPriceRule.fromDate!}" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${productPriceRule.thruDate!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${productPriceRule.fromDate!}" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${productPriceRule.thruDate!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     &nbsp;&nbsp;
                     <#assign saleRule = productPriceRule.isSale?? && productPriceRule.isSale == "Y">
                     <div>
@@ -66,13 +64,11 @@ under the License.
             <td align="right" class="label">${uiLabelMap.ProductConditions}</td>
             <td colspan="2">
                 <table cellspacing="0" class="basic-table">
-                <thead>
                   <tr class="header-row">
-                    <th width="5%">${uiLabelMap.ProductSeqId}</th>
-                    <th width="85%">${uiLabelMap.ProductInputOperatorValue}</th>
-                    <th width="10%">&nbsp;</th>
+                    <td width="5%"><b>${uiLabelMap.ProductSeqId}</b></td>
+                    <td width="85%"><b>${uiLabelMap.ProductInputOperatorValue}</b></td>
+                    <td width="10%"><b>&nbsp;</b></td>
                   </tr>
-                  </thead>
                   <#assign maxCondSeqId = 1>
                   <#assign rowClass = "2">
                   <#list productPriceConds as productPriceCond>
@@ -117,7 +113,7 @@ under the License.
                          <form name="deleteProductPriceCond_${productPriceCond_index}" method= "post" action= "<@ofbizUrl>deleteProductPriceCond</@ofbizUrl>">
                            <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}" />
                            <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}" />
-                           <a href="javascript:document.deleteProductPriceCond_${productPriceCond_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                           <a href="javascript:document.deleteProductPriceCond_${productPriceCond_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
                          </form>
                         </td>
                       </tr>
@@ -156,9 +152,9 @@ under the License.
             <td colspan="2">
                 <table cellspacing="0" class="basic-table">
                   <tr class="header-row">
-                    <th width="5%">${uiLabelMap.ProductSeqId}</th>
-                    <th width="85%">${uiLabelMap.ProductActionTypeAmount}</th>
-                    <th width="10%">&nbsp;</th>
+                    <td width="5%"><b>${uiLabelMap.ProductSeqId}</b></td>
+                    <td width="85%"><b>${uiLabelMap.ProductActionTypeAmount}</b></td>
+                    <td width="10%"><b>&nbsp;</b></td>
                   </tr>
                   <#assign rowClass = "2">
                   <#list productPriceActions as productPriceAction>
@@ -188,7 +184,7 @@ under the License.
                           <form name="deleteProductPriceAction_${productPriceAction_index}" method="post" action="<@ofbizUrl>deleteProductPriceAction</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                             <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
-                            <a href="javascript:document.deleteProductPriceAction_${productPriceAction_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                            <a href="javascript:document.deleteProductPriceAction_${productPriceAction_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
                           </form>
                         </td>
                       </tr>

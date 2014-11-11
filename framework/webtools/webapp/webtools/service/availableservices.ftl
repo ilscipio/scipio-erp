@@ -97,14 +97,12 @@ under the License.
         <h3>${uiLabelMap.SecurityGroups}</h3>
       </div>
       <#if selectedServiceMap.permissionGroups != 'NA'>
-        <table class="basic-table" cellspacing="0">
-         <thead>
+        <table class="basic-table" cellspacing='0'>
           <tr class="header-row">
-            <th>${uiLabelMap.WebtoolsNameOrRole}</th>
-            <th>${uiLabelMap.WebtoolsPermissionType}</th>
-            <th>${uiLabelMap.WebtoolsAction}</th>
+            <td>${uiLabelMap.WebtoolsNameOrRole}</td>
+            <td>${uiLabelMap.WebtoolsPermissionType}</td>
+            <td>${uiLabelMap.WebtoolsAction}</td>
           </tr>
-         </thead> 
           <#list selectedServiceMap.permissionGroups as permGrp>
             <tr>
               <td>${permGrp.nameOrRole?default(uiLabelMap.CommonNA)}</td>
@@ -151,21 +149,19 @@ under the License.
         <div class="screenlet-title-bar">
           <h3>${uiLabelMap.WebtoolsServiceECA}</h3>
         </div>
-        <table class="basic-table" cellspacing="0">
-          <thead>
+        <table class="basic-table" cellspacing='0'>
           <tr class="header-row">
-            <th>${uiLabelMap.WebtoolsEventName}</th>
+            <td>${uiLabelMap.WebtoolsEventName}</td>
             <#if ecaMapList.runOnError??>
-              <th>${uiLabelMap.WebtoolsRunOnError}</th>
+              <td>${uiLabelMap.WebtoolsRunOnError}</td>
             </#if>
             <#if ecaMapList.runOnFailure??>
-              <th>${uiLabelMap.WebtoolsRunOnFailure}</th>
+              <td>${uiLabelMap.WebtoolsRunOnFailure}</td>
             </#if>
-            <th>${uiLabelMap.WebtoolsActions}</th>
-            <th>${uiLabelMap.WebtoolsConditions}</th>
-            <th>${uiLabelMap.WebtoolsSet}</th>
+            <td>${uiLabelMap.WebtoolsActions}</td>
+            <td>${uiLabelMap.WebtoolsConditions}</td>
+            <td>${uiLabelMap.WebtoolsSet}</td>
           </tr>
-          </thead>
           <#list ecaMapList as ecaMap>
             <tr>
               <td>${ecaMap.eventName!}</td>
@@ -287,20 +283,18 @@ under the License.
           <h3>${paramList.title}</h3>
         </div>
         <#if paramList.paramList?? && paramList.paramList?has_content>
-          <table class="basic-table param-table" cellspacing="0">
-            <thead>
+          <table class="basic-table param-table" cellspacing='0'>
               <tr class="header-row">
-                <th>${uiLabelMap.WebtoolsParameterName}</th>
-                <th>${uiLabelMap.CommonDescription}</th>
-                <th>${uiLabelMap.WebtoolsOptional}</th>
-                <th>${uiLabelMap.CommonType}</th>
-                <#-- <th>Default Value</th> -->
-                <th>${uiLabelMap.WebtoolsMode}</th>
-                <th>${uiLabelMap.WebtoolsIsSetInternally}</th>
-                <th>${uiLabelMap.WebtoolsEntityName}</th>
-                <th>${uiLabelMap.WebtoolsFieldName}</th>
+                <td>${uiLabelMap.WebtoolsParameterName}</td>
+                <td>${uiLabelMap.CommonDescription}</td>
+                <td>${uiLabelMap.WebtoolsOptional}</td>
+                <td>${uiLabelMap.CommonType}</td>
+                <#-- <td>Default Value</td> -->
+                <td>${uiLabelMap.WebtoolsMode}</td>
+                <td>${uiLabelMap.WebtoolsIsSetInternally}</td>
+                <td>${uiLabelMap.WebtoolsEntityName}</td>
+                <td>${uiLabelMap.WebtoolsFieldName}</td>
               </tr>
-            </thead>
               <#list paramList.paramList as modelParam>
                 <tr>
                   <td>${modelParam.name!}</td>
@@ -354,17 +348,15 @@ under the License.
   <div class="screenlet">
     <div class="screenlet-body">
       <label>${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})</label>
-      <table class="basic-table hover-bar" cellspacing="0">
-        <thead>
+      <table class="basic-table hover-bar" cellspacing='0'>
         <tr class="header-row">
-          <th>${uiLabelMap.WebtoolsServiceName}</th>
-          <th>${uiLabelMap.WebtoolsEngineName}</th>
-          <th>${uiLabelMap.WebtoolsDefaultEntityName}</th>
-          <th>${uiLabelMap.WebtoolsInvoke}</th>
-          <th>${uiLabelMap.WebtoolsLocation}</th>
-          <th>${uiLabelMap.WebtoolsDefinitionLocation}</th>
+          <td>${uiLabelMap.WebtoolsServiceName}</td>
+          <td>${uiLabelMap.WebtoolsEngineName}</td>
+          <td>${uiLabelMap.WebtoolsDefaultEntityName}</td>
+          <td>${uiLabelMap.WebtoolsInvoke}</td>
+          <td>${uiLabelMap.WebtoolsLocation}</td>
+          <td>${uiLabelMap.WebtoolsDefinitionLocation}</td>
         </tr>
-        </thead>
         <#assign alt_row = false>
         <#list servicesList as service>
           <tr<#if alt_row> class="alternate-row"</#if>>

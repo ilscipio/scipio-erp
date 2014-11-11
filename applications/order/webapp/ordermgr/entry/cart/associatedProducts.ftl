@@ -22,7 +22,11 @@ under the License.
 </#if>
 
 <#if associatedProducts?has_content>
-  <@section title="${uiLabelMap.OrderHelpAlsoInterestedIn}">
+  <div class="screenlet">
+    <div class="screenlet-title-bar">
+      <div class="h3">${uiLabelMap.OrderHelpAlsoInterestedIn}</div>
+    </div>
+    <div class="screenlet-body">
       <table cellspacing="0" cellpadding="1" border="0">
         <#-- random complementary products -->
         <#list associatedProducts as assocProduct>
@@ -38,5 +42,6 @@ under the License.
           </#if>
         </#list>
       </table>
-    </@section>
+    </div>
+  </div>
 </#if>

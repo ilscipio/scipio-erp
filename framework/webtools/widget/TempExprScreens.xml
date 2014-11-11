@@ -65,7 +65,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="editTemporalExpression" text="${uiLabelMap.CommonCreate}" style="button tiny create"/>
+                                            <link target="editTemporalExpression" text="${uiLabelMap.CommonCreate}" style="buttontext create"/>
                                         </container>
                                     </widgets>
                                 </section>

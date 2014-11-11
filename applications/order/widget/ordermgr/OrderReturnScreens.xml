@@ -50,10 +50,9 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.PageTitleFindReturn}" style="h1"/>
-                        <screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleFindReturn}">
                             <container>
-                                <link style="button tiny" target="returnMain" text="${uiLabelMap.OrderCreateNewReturn}"/>
+                                <link style="buttontext" target="returnMain" text="${uiLabelMap.OrderCreateNewReturn}"/>
                             </container>
                             <include-form name="FindReturns" location="component://order/widget/ordermgr/ReturnForms.xml"/>
                             <include-form name="ListReturns" location="component://order/widget/ordermgr/ReturnForms.xml"/>

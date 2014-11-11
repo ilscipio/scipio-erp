@@ -37,7 +37,7 @@ under the License.
         <field name="workReqFulfTypeDescription"><display/></field>
         <field name="statusItemDescription"><display/></field>
         <field name="requirementDescription"><display/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteWorkEffortRequirement" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="requirementId"/>
@@ -55,7 +55,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="button tiny"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
         <sort-order>
             <banner left-text="${uiLabelMap.WorkEffortBanner5}"/>
             <sort-field name="requirementId"/>

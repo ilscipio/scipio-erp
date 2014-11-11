@@ -19,7 +19,11 @@ under the License.
 
 <#-- ==================== Party Listing dialog box ========================= -->
 <#if additionalPartyRoleMap?has_content>
-<@section title="${uiLabelMap.PartyAdditionalPartyListing}">
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+        <div class="h3">${uiLabelMap.PartyAdditionalPartyListing}</div>
+    </div>
+    <div class="screenlet-body">
       <table border="0" width="100%" cellpadding="0">
         <#list roleList as role>
           <tr>
@@ -48,12 +52,13 @@ under the License.
                 </div>
               </td>
               <td align="right">
-                <a href="<@ofbizUrl>removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRemove}</a>
+                <a href="<@ofbizUrl>removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
               </td>
             </tr>
           </#list>
           <tr><td>&nbsp;</td></tr>
         </#list>
       </table>
-    </@section>
+    </div>
+</div>
 </#if>

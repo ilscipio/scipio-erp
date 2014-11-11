@@ -16,9 +16,14 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")> 
-
-<@renderScreenBegin />
+<#assign docLangAttr = locale.toString()?replace("_", "-")>
+<#assign langDir = "ltr">
+<#if "ar.iw"?contains(docLangAttr?substring(0, 2))>
+    <#assign langDir = "rtl">
+</#if>
+<html lang="${docLangAttr}" dir="${langDir}" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   </head>
   <body>
 <#--<br class="clear" />-->

@@ -18,11 +18,9 @@ under the License.
 -->
 <form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="post" name="quickCreateVirtualWithVariants">
 <table cellspacing="0" class="basic-table">
-    <thead>
     <tr class="header-row">
-        <th>${uiLabelMap.ProductQuickCreateVirtualFromVariants}</th>
+        <td><b>${uiLabelMap.ProductQuickCreateVirtualFromVariants}</b></td>
     </tr>
-    </thead>
     <tr>
         <td>
             <br />

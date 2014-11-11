@@ -19,7 +19,11 @@ under the License.
 
 <#-- Only show if there is more than 1 (one) catalog, no sense selecting when there is only one option... -->
 <#if (catalogCol?size > 1)>
-    <@section title="${uiLabelMap.ProductChooseCatalog}">
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+        <div class="h3">${uiLabelMap.ProductChooseCatalog}</div>
+    </div>
+    <div class="screenlet-body" style="text-align: center;">
         <form name="choosecatalogform" method="post" action="<@ofbizUrl>choosecatalog</@ofbizUrl>" style='margin: 0;'>
           <select name='CURRENT_CATALOG_ID'>
             <option value='${currentCatalogId}'>${currentCatalogName}</option>
@@ -29,7 +33,8 @@ under the License.
               <option value='${catalogId}'>${thisCatalogName}</option>
             </#list>
           </select>
-          <div><a href="javascript:document.choosecatalogform.submit()" class="button tiny">${uiLabelMap.CommonChange}</a></div>
+          <div><a href="javascript:document.choosecatalogform.submit()" class="buttontext">${uiLabelMap.CommonChange}</a></div>
         </form>
-    </@section>
+    </div>
+</div>
 </#if>

@@ -149,7 +149,7 @@ under the License.
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar button-style-2">
-                                                    <link target="EditProductStore"  text="${uiLabelMap.ProductNewProductStore}" style="button tiny create" url-mode="plain"/>
+                                                    <link target="EditProductStore"  text="${uiLabelMap.ProductNewProductStore}" style="buttontext create" url-mode="plain"/>
                                                 </container>
                                             </widgets>
                                         </section>
@@ -312,7 +312,7 @@ under the License.
                     </decorator-section>                    
                     <decorator-section name="body">
                         <container style="button-bar">
-                            <link target="EditCategory" text="${uiLabelMap.ProductNewCategory}" style="button tiny create"/>
+                            <link target="EditCategory" text="${uiLabelMap.ProductNewCategory}" style="buttontext create"/>
                         </container>
                         <screenlet title="${uiLabelMap.ProductCategoryWithNoParent}">
                             <include-form name="ListTopCategory" location="component://product/widget/catalog/CategoryForms.xml"/>

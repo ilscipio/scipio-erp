@@ -99,26 +99,25 @@ under the License.
                 <input type="hidden" name="shipmentId" value="${shipmentId}" />
                 <input type="hidden" name="_useRowSubmit" value="Y"/>
                 <table cellspacing="0" class="basic-table">
-                    <thead>
                     <tr class="header-row">
-                        <th>${uiLabelMap.ProductProduct}</th>
+                        <td>${uiLabelMap.ProductProduct}</td>
+
                         <#-- Must use the uiLabelMap[""] notation since the label key has . in it -->
-                        <th>${uiLabelMap["GoodIdentificationType.description.UPCA"]}</th>
-                        <th>${uiLabelMap.OrderOrder}</th>
-                        <th>${uiLabelMap.OrderCancelled}</th>
-                        <th>${uiLabelMap.OrderBackOrdered}</th>
-                        <th>${uiLabelMap.CommonReceived}</th>
-                        <th>${uiLabelMap.ProductOpenQuantity}</th>
-                        <th>${uiLabelMap.ProductBackOrders}</th>
+                        <td>${uiLabelMap["GoodIdentificationType.description.UPCA"]}</td>
+                        <td>${uiLabelMap.OrderOrder}</td>
+                        <td>${uiLabelMap.OrderCancelled}</td>
+                        <td>${uiLabelMap.OrderBackOrdered}</td>
+                        <td>${uiLabelMap.CommonReceived}</td>
+                        <td>${uiLabelMap.ProductOpenQuantity}</td>
+                        <td>${uiLabelMap.ProductBackOrders}</td>
                         <#if itemsAvailableToReceive>
-                            <th>${uiLabelMap.CommonReceive}</th>
-                            <th>${uiLabelMap.ProductInventoryItemType}</th>
-                            <th colspan="2" align="right">
+                            <td>${uiLabelMap.CommonReceive}</td>
+                            <td>${uiLabelMap.ProductInventoryItemType}</td>
+                            <td colspan="2" align="right">
                                 <div>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'orderItemData_tableRow_', 'selectAllForm');" /></div>
-                            </th>
+                            </td>
                         </#if>
                     </tr>
-                    </thead>
                     <#assign alt_row = false>
                     <#list orderItemDatas! as orderItemData>
                         <#assign orderItem = orderItemData.orderItem>
@@ -192,7 +191,7 @@ under the License.
                                     </select>
                                 </td>
                                 <td align="right">
-                                    <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonClear}</a>
+                                    <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClear}</a>
                                 </td>
                                 <td align="right">
                                   <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
@@ -206,7 +205,7 @@ under the License.
                     <#if itemsAvailableToReceive>
                         <tr>
                             <td colspan="11" align="right">
-                                <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonClearAll}</a>
+                                <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClearAll}</a>
                             </td>
                             <td align="right">
                                 <a class="smallSubmit" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();">${uiLabelMap.ProductReceiveItem}</a>

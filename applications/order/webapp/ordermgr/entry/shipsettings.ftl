@@ -30,7 +30,7 @@ under the License.
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class="boxboutside">
         <tr>
           <td>
-          <a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateShipGroup}</a>
+          <a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateShipGroup}</a>
           
 
 <#list 1..cart.getShipGroupSize() as currIndex>
@@ -84,7 +84,7 @@ under the License.
                       </div>
                     </td>
                     <td>
-                      <div><a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></div>
+                      <div><a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></div>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
@@ -98,7 +98,7 @@ under the License.
                     <td colspan="4">
                       <div>
                         ${uiLabelMap.CommonNoContactInformationOnFile}:
-                        <a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS" target="_blank" class="button tiny">${uiLabelMap.CommonNew}</a>
+                        <a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS" target="_blank" class="buttontext">${uiLabelMap.CommonNew}</a>
                       </div>
                     </td>
                 </#if>
@@ -122,8 +122,8 @@ under the License.
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class="boxoutside">
         <tr>
           <td>
-<a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}</a>
-<a href="<@ofbizUrl>EditShipAddress</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateShippingAddress}</a>
+<a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}</a>
+<a href="<@ofbizUrl>EditShipAddress</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateShippingAddress}</a>
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
 
@@ -193,7 +193,7 @@ under the License.
                       </div>
                     </td>
                     <td>
-                      <div><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></div>
+                      <div><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></div>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
@@ -246,7 +246,14 @@ under the License.
 
     <br />
     <form method="post" action="setShipping" name="partyshipform">
-        <@section title="${uiLabelMap.OrderShipToAnotherParty}">
+      <div class="screenlet">
+        <div class="screenlet-title-bar">
+          <ul>
+            <li class="h3">${uiLabelMap.OrderShipToAnotherParty}</li>
+          </ul>
+          <br class="clear" />
+        </div>
+        <div class="screenlet-body">
           <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
             <tr><td colspan="4">&nbsp;</td></tr>
             <tr>
@@ -261,8 +268,9 @@ under the License.
               </td>
             </tr>
           </table>
-         </@section> 
+        </div>
+      </div>
     </form>
 <#else>
- <@section title="${uiLabelMap.OrderViewPermissionError}"/>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

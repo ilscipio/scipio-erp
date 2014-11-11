@@ -72,7 +72,7 @@ function lookupInventory() {
                     <td width='20%' align='right' class="label">${uiLabelMap.CommonFromDate}</td>
                     <td width='5%'>&nbsp;</td>
                     <td>
-                      <@htmlTemplate.renderDateTimeField name="eventDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                      <@htmlTemplate.renderDateTimeField name="eventDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     </td>
                   </tr>
                   <tr>
@@ -133,17 +133,15 @@ document.lookupinventory.productId.focus();
       </table>
 
       <table class="basic-table" cellspacing="0">
-       <thead>
         <tr class="header-row">
-          <th>${uiLabelMap.CommonType}</th>
-          <th align="center">&nbsp;</th>
-          <th>${uiLabelMap.CommonDescription}</th>
-          <th>${uiLabelMap.CommonDate}</th>
-          <th align="center">&nbsp;</th>
-          <th align="right">${uiLabelMap.CommonQuantity}</th>
-          <th align="right">${uiLabelMap.ManufacturingTotalQuantity}</th>
+          <td>${uiLabelMap.CommonType}</td>
+          <td align="center">&nbsp;</td>
+          <td>${uiLabelMap.CommonDescription}</td>
+          <td>${uiLabelMap.CommonDate}</td>
+          <td align="center">&nbsp;</td>
+          <td align="right">${uiLabelMap.CommonQuantity}</td>
+          <td align="right">${uiLabelMap.ManufacturingTotalQuantity}</td>
         </tr>
-        </thead>
         <tr>
           <td colspan="7"><hr /></td>
         </tr>

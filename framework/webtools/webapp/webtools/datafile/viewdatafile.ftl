@@ -123,16 +123,14 @@ under the License.
       <#if dataFile?has_content && modelDataFile?has_content && (!parameters.ENTITYXML_FILE_SAVE?has_content || parameters.ENTITYXML_FILE_SAVE.length() == 0) && (parameters.DATAFILE_SAVE == null || parameters.DATAFILE_SAVE.length() == 0)>
         <hr />
         <table class="basic-table" cellspacing="0">
-         <thead>
           <tr class="header-row">
-            <th>Name</th>
-            <th>Type-Code</th>
-            <th>Sender</th>
-            <th>Receiver</th>
-            <th>Record Length</th>
-            <th>Separator Style</th>
+            <td>Name</td>
+            <td>Type-Code</td>
+            <td>Sender</td>
+            <td>Receiver</td>
+            <td>Record Length</td>
+            <td>Separator Style</td>
           </tr>
-          </thead>
           <tr>
             <td>${modelDataFile.name}</td>
             <td>${modelDataFile.typeCode}</td>

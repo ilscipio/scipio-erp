@@ -63,16 +63,16 @@ under the License.
     <table cellspacing="0" cellpadding="2" class="basic-table">
       <thead class="searchPartiesResultsHead">
         <tr class="header-row">
-          <th>&nbsp;</th>
-          <th>${uiLabelMap.PartyPartyId}</th>
-          <th>${uiLabelMap.PartyLastName}</th>
-          <th>${uiLabelMap.PartyFirstName}</th>
-          <th>${uiLabelMap.PartyAddressLine1}</th>
-          <th>${uiLabelMap.PartyCity}</th>
-          <th>${uiLabelMap.PartyPostalCode}</th>
-          <th>${uiLabelMap.PartyState}</th>
-          <th>${uiLabelMap.CommonCountry}</th>
-          <th>B/S</th>
+          <td>&nbsp;</td>
+          <td><b>${uiLabelMap.PartyPartyId}</b></td>
+          <td><b>${uiLabelMap.PartyLastName}</b></td>
+          <td><b>${uiLabelMap.PartyFirstName}</b></td>
+          <td><b>${uiLabelMap.PartyAddressLine1}</b></td>
+          <td><b>${uiLabelMap.PartyCity}</b></td>
+          <td><b>${uiLabelMap.PartyPostalCode}</b></td>
+          <td><b>${uiLabelMap.PartyState}</b></td>
+          <td><b>${uiLabelMap.CommonCountry}</b></td>
+          <td><b>B/S</b></td>
         </tr>
       </thead>
       <tbody id="searchPartiesResultsList" class="searchPartiesResultsCartBody">

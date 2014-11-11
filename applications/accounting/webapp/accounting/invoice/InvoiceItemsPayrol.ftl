@@ -22,24 +22,23 @@ under the License.
 
 <#if PayrolGroup?has_content>
 <#list PayrolGroup as payrolGroup>
-<thead>
 <tr class="header-row" >
-    <th>
+    <td>
     [${payrolGroup.description}]
-    </th>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
+    </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
 </tr>
 <tr class="header-row">
-    <th width="50%" align="center">Description</th>
-    <th width="10px" align="center">Quantity</th>
-    <th width="10px" align="center">Amount</th>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
+
+<td width="50%" align="center">Description</td>
+<td width="10px" align="center">Quantity</td>
+<td width="10px" align="center">Amount</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
 </tr>
-</thead>
     <#if PayrolList?has_content>
         <#list PayrolList as payrolList>
             <#if payrolList.parentTypeId! == payrolGroup.invoiceItemTypeId!>
@@ -57,7 +56,6 @@ under the License.
     </#if>
 </#list>
 </#if>
-<tfoot>
 <tr class="header-row">
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -72,6 +70,5 @@ under the License.
     <td>&nbsp;</td>
     <td>&nbsp;</td>
 </tr>
-</tfoot>
 </table>
 </form>

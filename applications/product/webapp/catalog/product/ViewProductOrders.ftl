@@ -61,23 +61,21 @@ under the License.
       </#if>
     </form>
     <table class="basic-table hover-bar" cellspacing='0'>
-     <thead>
       <tr class="header-row">
-        <th>${uiLabelMap.OrderOrderId}</th>
-        <th>${uiLabelMap.FormFieldTitle_itemStatusId}</th>
-        <th>${uiLabelMap.FormFieldTitle_orderItemSeqId}</th>
-        <th>${uiLabelMap.OrderDate}</th>
-        <th>${uiLabelMap.OrderUnitPrice}</th>
-        <th>${uiLabelMap.OrderQuantity}</th>
-        <th>${uiLabelMap.OrderOrderType}</th>
+        <td>${uiLabelMap.OrderOrderId}</td>
+        <td>${uiLabelMap.FormFieldTitle_itemStatusId}</td>
+        <td>${uiLabelMap.FormFieldTitle_orderItemSeqId}</td>
+        <td>${uiLabelMap.OrderDate}</td>
+        <td>${uiLabelMap.OrderUnitPrice}</td>
+        <td>${uiLabelMap.OrderQuantity}</td>
+        <td>${uiLabelMap.OrderOrderType}</td>
       </tr>
-      </thead>
       <#if orderList?has_content && productId??>
         <#list orderList as order>
           <#assign orderItems = delegator.findByAnd("OrderItem", {"orderId" : order.orderId, "productId" : productId}, null, false)/>
           <#list orderItems as orderItem>
             <tr>
-              <td><a href="/ordermgr/control/orderview?orderId=${orderItem.orderId}" class='button tiny'>${orderItem.orderId}</a></td>
+              <td><a href="/ordermgr/control/orderview?orderId=${orderItem.orderId}" class='buttontext'>${orderItem.orderId}</a></td>
               <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)/>
               <td>${currentItemStatus.get("description",locale)?default(currentItemStatus.statusId)}</td>
               <td>${orderItem.orderItemSeqId}</td>

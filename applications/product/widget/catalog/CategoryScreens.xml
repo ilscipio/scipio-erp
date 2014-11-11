@@ -260,7 +260,7 @@ under the License.
                         <section>
                             <condition><not><if-empty field="contentId"/></not></condition>
                             <widgets>
-                                <link target="/content/control/gotoContent" text="${uiLabelMap.ContentContent} ${uiLabelMap.CommonPage}" url-mode="inter-app" style="button tiny">
+                                <link target="/content/control/gotoContent" text="${uiLabelMap.ContentContent} ${uiLabelMap.CommonPage}" url-mode="inter-app" style="buttontext">
                                     <parameter param-name="contentId"/>
                                 </link>
                             </widgets>

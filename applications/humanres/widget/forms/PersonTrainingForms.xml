@@ -73,15 +73,15 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PersonTraining" default-field-type="hidden"/>
-        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="button tiny">
+        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="buttontext">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="button tiny">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
-        <field name="trainingRequestId" widget-style="button tiny"><display/></field>
+        <field name="trainingRequestId" widget-style="buttontext"><display/></field>
         <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
     </form>
     <form name="FindTrainingApprovals" target="FindTrainingApprovals" title="" type="single" default-title-style="tableheadtext" default-widget-style="inputBox">
@@ -109,24 +109,24 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PersonTraining" default-field-type="display"/>
-        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="button tiny">
+        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="buttontext">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="button tiny">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="approverId" widget-style="button tiny">
+        <field name="approverId" widget-style="buttontext">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverId}" link-style="button tiny">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="approverId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
-        <field name="trainingRequestId" widget-style="button tiny"/>
+        <field name="trainingRequestId" widget-style="buttontext"/>
         <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}"><display description="Update"/></field>
-        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="button tiny" use-when="(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPLIED&quot;))||(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPROVED&quot;))">
+        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" use-when="(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPLIED&quot;))||(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPROVED&quot;))">
             <hyperlink description="${uiLabelMap.CommonUpdate}" target="EditTrainingApprovals">
                 <parameter param-name="partyId"/>
                 <parameter param-name="trainingClassTypeId"/>
@@ -179,21 +179,21 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PersonTraining" default-field-type="display"/>
-        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="button tiny">
+        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="buttontext">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="button tiny">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="approverId" widget-style="button tiny">
+        <field name="approverId" widget-style="buttontext">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverId}" link-style="button tiny">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="approverId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="trainingRequestId" widget-style="button tiny"/>
+        <field name="trainingRequestId" widget-style="buttontext"/>
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
         <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
@@ -214,7 +214,7 @@ under the License.
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
         <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
-        <field name="approverId" widget-style="button tiny">
+        <field name="approverId" widget-style="buttontext">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
     </form>

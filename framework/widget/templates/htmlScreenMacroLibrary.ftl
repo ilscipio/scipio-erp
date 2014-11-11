@@ -18,17 +18,7 @@ under the License.
 -->
 
 <#macro renderScreenBegin>
-<#if locale??><#assign docLangAttr = locale.toString()?replace("_", "-")></#if>
-<#assign langDir = "ltr">
-<#if docLangAttr?? && "ar.iw"?contains(docLangAttr?substring(0, 2))>
-    <#assign langDir = "rtl">
-</#if>
 <!DOCTYPE html>
-<!--[if IE 9]><html class="lt-ie10" lang="${docLangAttr!"en"}" <#if langDir??>dir="${langDir}"</#if>> <![endif]-->
-<html class="no-js" lang="en" >
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </#macro>
 
 <#macro renderScreenEnd>
@@ -50,31 +40,23 @@ under the License.
 <#if autoUpdateLink?has_content>
 <script type="text/javascript">ajaxUpdateAreaPeriodic('${id}', '${autoUpdateLink}', '', '${autoUpdateInterval}');</script>
 </#if>
-<div class="<#if style?has_content>${style}</#if>" <#if id?has_content>id="${id!}"</#if>>
+<div<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if>>
 </#macro>
-
 <#macro renderContainerEnd></div></#macro>
-
 <#macro renderContentBegin editRequest enableEditValue editContainerStyle><#if editRequest?has_content && enableEditValue == "true"><div class=${editContainerStyle}></#if></#macro>
-
 <#macro renderContentBody></#macro>
-
 <#macro renderContentEnd urlString editMode editContainerStyle editRequest enableEditValue>
-
-<#if editRequest?exists && enableEditValue == "true">
-<#if urlString?exists><a href="${urlString}">${editMode}</a><#rt/></#if>
-<#if editContainerStyle?exists></div><#rt/></#if>
+<#if editRequest?? && enableEditValue == "true">
+<#if urlString??><a href="${urlString}">${editMode}</a><#rt/></#if>
+<#if editContainerStyle??></div><#rt/></#if>
 </#if>
 </#macro>
-
-<#macro renderSubContentBegin editContainerStyle editRequest enableEditValue><#if editRequest?exists && enableEditValue == "true"><div class="${editContainerStyle}"></#if></#macro>
-
+<#macro renderSubContentBegin editContainerStyle editRequest enableEditValue><#if editRequest?? && enableEditValue == "true"><div class="${editContainerStyle}"></#if></#macro>
 <#macro renderSubContentBody></#macro>
-
 <#macro renderSubContentEnd urlString editMode editContainerStyle editRequest enableEditValue>
-<#if editRequest?exists && enableEditValue == "true">
-<#if urlString?exists><a href="${urlString}">${editMode}</a><#rt/></#if>
-<#if editContainerStyle?exists></div><#rt/></#if>
+<#if editRequest?? && enableEditValue == "true">
+<#if urlString??><a href="${urlString}">${editMode}</a><#rt/></#if>
+<#if editContainerStyle??></div><#rt/></#if>
 </#if>
 </#macro>
 
@@ -99,11 +81,6 @@ under the License.
         <h5${idText}>${text}</h5>
       <#elseif style=="h6">
         <h6${idText}>${text}</h6>
-        <#elseif style=="message">
-        <div class="panel callout">
-          <p>${text}</p>
-        </div>
-        
       <#else>
         <span${idText} class="${style}">${text}</span>
       </#if>
@@ -175,37 +152,31 @@ under the License.
 </#macro>
 
 <#macro renderContentFrame fullUrl width height border><iframe src="${fullUrl}" width="${width}" height="${height}" <#if border?has_content>border="${border}"</#if> /></#macro>
-
-
-<#macro renderScreenletBegin id="" title="" classes="">
-<@renderScreenletBegin id=id title=title classes=classes/>
-</#macro>
-
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true>
-<div class="row"<#if id?has_content> id="${id}"</#if>><#rt/>
-<div class="<#if classes?has_content>${classes}<#else>large-12</#if> columns">
+<#macro renderScreenletBegin id title collapsible saveCollapsed collapsibleAreaId expandToolTip collapseToolTip fullUrlString padded menuString showMore collapsed javaScriptEnabled>
+<div class="screenlet"<#if id?has_content> id="${id}"</#if>><#rt/>
 <#if showMore>
-    <#if title?has_content><h2>${title}</h2></#if>
-    <#--
-        <#if collapsible>
-        <li class="<#rt/>
-        <#if collapsed>
-        collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if expandToolTip?has_content> title="${expandToolTip}"</#if>
-        <#else>
-        expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
-        </#if>
-        >&nbsp;</a></li>
-        </#if>
-    -->
-    ${menuString}
-    </#if>
-    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"<#if collapsed> style="display: none;"</#if></#if><#if padded> class="offset-by-one"<#else></#if>>
+<div class="screenlet-title-bar"><ul><#if title?has_content><li class="h3">${title}</li></#if>
+<#if collapsible>
+<li class="<#rt/>
+<#if collapsed>
+collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if expandToolTip?has_content> title="${expandToolTip}"</#if>
+<#else>
+expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
+</#if>
+>&nbsp;</a></li>
+</#if>
+<#--
+<#if !collapsed>
+${menuString}
+</#if>
+ -->
+${menuString}
+</ul><br class="clear" /></div>
+</#if>
+<div <#if collapsibleAreaId?has_content> id="${collapsibleAreaId}" <#if collapsed> style="display: none;"</#if></#if><#if padded> class="screenlet-body"<#else> class="screenlet-body no-padding"</#if>>
 </#macro>
-
 <#macro renderScreenletSubWidget></#macro>
-
-<#macro renderScreenletEnd></div></div></div></#macro>
-
+<#macro renderScreenletEnd></div></div></#macro>
 <#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl>
     <li class="${paginateLastStyle}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${lastLinkUrl}">${paginateLastLabel}</a><#else>${paginateLastLabel}</#if></li>
     <li class="${paginateNextStyle}<#if !nextLinkUrl?has_content> disabled</#if>"><#if nextLinkUrl?has_content><a href="${nextLinkUrl}">${paginateNextLabel}</a><#else>${paginateNextLabel}</#if></li>
@@ -215,26 +186,23 @@ under the License.
 </#macro>
 
 <#macro renderPortalPageBegin originalPortalPageId portalPageId confMode="false" addColumnLabel="Add column" addColumnHint="Add a new column to this portal">
-  <#--
   <#if confMode == "true">
-    <a class="button tiny" href="javascript:document.addColumn_${portalPageId}.submit()" title="${addColumnHint}">${addColumnLabel}</a> <b>PortalPageId: ${portalPageId}</b>
+    <a class="buttontext" href="javascript:document.addColumn_${portalPageId}.submit()" title="${addColumnHint}">${addColumnLabel}</a> <b>PortalPageId: ${portalPageId}</b>
     <form method="post" action="addPortalPageColumn" name="addColumn_${portalPageId}">
       <input name="portalPageId" value="${portalPageId}" type="hidden"/>
     </form>
   </#if>
-  -->
-  <div class="row"><#rt/>
-<div class="large-12 columns">
+  <table width="100%">
+    <tr>
 </#macro>
 
 <#macro renderPortalPageEnd>
-    </div>
-  </div>
+    </tr>
+  </table>
 </#macro>
 
 <#macro renderPortalPageColumnBegin originalPortalPageId portalPageId columnSeqId confMode="false" width="auto" delColumnLabel="Delete column" delColumnHint="Delete this column" addPortletLabel="Add portlet" addPortletHint="Add a new portlet to this column" colWidthLabel="Col. width:" setColumnSizeHint="Set column size">
   <#assign columnKey = portalPageId+columnSeqId>
-  <#--
   <#assign columnKeyFields = '<input name="portalPageId" value="' + portalPageId + '" type="hidden"/><input name="columnSeqId" value="' + columnSeqId + '" type="hidden"/>'>
   <script type="text/javascript">
     if (typeof SORTABLE_COLUMN_LIST != "undefined") {
@@ -245,10 +213,7 @@ under the License.
       }
     }
   </script>
-    <td class="portal-column<#if confMode == "true">-config</#if> connectedSortable" style="vertical-align: top; <#if width?has_content> width:${width};</#if>" id="portalColumn_${columnSeqId}">
-  
-  -->
-    <div class="row">
+  <td class="portal-column<#if confMode == "true">-config</#if> connectedSortable" style="vertical-align: top; <#if width?has_content> width:${width};</#if>" id="portalColumn_${columnSeqId}">
     <#if confMode == "true">
       <div class="portal-column-config-title-bar">
         <ul>
@@ -256,19 +221,19 @@ under the License.
             <form method="post" action="deletePortalPageColumn" name="delColumn_${columnKey}">
               ${columnKeyFields}
             </form>
-            <a class="button tiny" href="javascript:document.delColumn_${columnKey}.submit()" title="${delColumnHint}">${delColumnLabel}</a>
+            <a class="buttontext" href="javascript:document.delColumn_${columnKey}.submit()" title="${delColumnHint}">${delColumnLabel}</a>
           </li>
           <li>
             <form method="post" action="addPortlet" name="addPortlet_${columnKey}">
               ${columnKeyFields}
             </form>
-            <a class="button tiny" href="javascript:document.addPortlet_${columnKey}.submit()" title="${addPortletHint}">${addPortletLabel}</a>
+            <a class="buttontext" href="javascript:document.addPortlet_${columnKey}.submit()" title="${addPortletHint}">${addPortletLabel}</a>
           </li>
           <li>
             <form method="post" action="editPortalPageColumnWidth" name="setColumnSize_${columnKey}">
               ${columnKeyFields}
             </form>
-            <a class="button tiny" href="javascript:document.setColumnSize_${columnKey}.submit()" title="${setColumnSizeHint}">${colWidthLabel}: ${width}</a>
+            <a class="buttontext" href="javascript:document.setColumnSize_${columnKey}.submit()" title="${setColumnSizeHint}">${colWidthLabel}: ${width}</a>
           </li>
         </ul>
       </div>
@@ -277,7 +242,7 @@ under the License.
 </#macro>
 
 <#macro renderPortalPageColumnEnd>
-  </div>
+  </td>
 </#macro>
 
 <#macro renderPortalPagePortletBegin originalPortalPageId portalPageId portalPortletId portletSeqId prevPortletId="" prevPortletSeqId="" nextPortletId="" nextPortletSeqId="" columnSeqId="" prevColumnSeqId="" nextColumnSeqId="" confMode="false" delPortletHint="Remove this portlet" editAttribute="false" editAttributeHint="Edit portlet parameters">
@@ -381,5 +346,3 @@ under the License.
 <#macro renderColumnEnd>
   </td>
 </#macro>
-
-<#-- TODO: Macro for pagination -->

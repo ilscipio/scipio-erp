@@ -80,7 +80,7 @@ under the License.
                 <field-map field-name="orderBy" value="estimatedStartDate"/>
             </service>
         </actions>
-        <field name="workEffortId" title=" " widget-style="button tiny">
+        <field name="workEffortId" title=" " widget-style="buttontext">
             <hyperlink target="ShowProductionRun" description="${workEffortId}" also-hidden="false">
                 <parameter param-name="productionRunId" from-field="workEffortId"/>
             </hyperlink>
@@ -122,7 +122,7 @@ under the License.
     </form>
     <form name="ListProductionRunOrderItems" type="list" target="EditProductionRun" title="" list-name="orderItems"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="orderId" widget-style="button tiny">
+        <field name="orderId" widget-style="buttontext">
             <hyperlink target="/ordermgr/control/orderview" description="${orderId}/${orderItemSeqId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -148,7 +148,7 @@ under the License.
             </entity-condition>
             <set field="quantityOnHandDiff" from-field="inventoryItemDetails[0].quantityOnHandDiff"/>
         </row-actions>
-        <field name="inventoryItemId" widget-style="button tiny">
+        <field name="inventoryItemId" widget-style="buttontext">
             <hyperlink target="/facility/control/EditInventoryItem"  description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="inventoryItemId"/>
             </hyperlink>
@@ -558,7 +558,7 @@ under the License.
     </form>
     <form name="ProductionRunTaskInventoryProducedList" type="list" title="" list-name="prunInventoryProduced"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="inventoryItemId" title="${uiLabelMap.ProductInventoryItem}" widget-style="button tiny">
+        <field name="inventoryItemId" title="${uiLabelMap.ProductInventoryItem}" widget-style="buttontext">
             <hyperlink target="/facility/control/EditInventoryItem"  description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="inventoryItemId"/>
             </hyperlink>
@@ -772,7 +772,7 @@ under the License.
     <!-- List for Shipment Plan -->
     <form name="listShipmentPlan" type="list" target="" title="" list-name="shipmentPlan"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="orderId" widget-style="button tiny">
+        <field name="orderId" widget-style="buttontext">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}">
                 <parameter param-name="orderId" from-field="orderId"/>
             </hyperlink>
@@ -791,7 +791,7 @@ under the License.
         <field name="totPlannedQuantity"><display/></field>
         <!-- total issued quantity -->
         <field name="totIssuedQuantity"><display/></field>
-        <field name="productionRunId" widget-style="button tiny">
+        <field name="productionRunId" widget-style="buttontext">
             <hyperlink target="ShowProductionRun" description="${productionRunId}" also-hidden="false">
                 <parameter param-name="productionRunId" from-field="productionRunId"/>
             </hyperlink>
@@ -803,7 +803,7 @@ under the License.
 
     <form name="listShipmentPlans" type="list" target="" title="" list-name="shipmentPlans"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
-        <field name="shipmentId" widget-style="button tiny" sort-field="true">
+        <field name="shipmentId" widget-style="buttontext" sort-field="true">
             <hyperlink target="/facility/control/ViewShipment" target-type="inter-app" description="${shipmentId}">
                 <parameter param-name="shipmentId" from-field="shipmentId"/>
             </hyperlink>
@@ -812,7 +812,7 @@ under the License.
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
         <field name="estimatedShipDate" sort-field="true"><display/></field>
-        <field name="viewShipmentPlanLink" title=" " widget-style="button tiny">
+        <field name="viewShipmentPlanLink" title=" " widget-style="buttontext">
             <hyperlink target="WorkWithShipmentPlans" description="${uiLabelMap.CommonView}" also-hidden="false">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
@@ -851,7 +851,7 @@ under the License.
     </form>
     <form name="mandatoryWorkEfforts" type="list" target="" title="" list-name="mandatoryWorkEfforts"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="workEffortIdFrom" title=" " widget-style="button tiny">
+        <field name="workEffortIdFrom" title=" " widget-style="buttontext">
             <hyperlink target="ShowProductionRun" description="${workEffortIdFrom}" also-hidden="false" link-type="anchor">
                 <parameter param-name="productionRunId" from-field="workEffortIdFrom"/>
             </hyperlink>
@@ -880,7 +880,7 @@ under the License.
     </form>
     <form name="dependentWorkEfforts" type="list" target="" title="" list-name="dependentWorkEfforts"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="workEffortIdTo" title=" " widget-style="button tiny">
+        <field name="workEffortIdTo" title=" " widget-style="buttontext">
             <hyperlink target="ShowProductionRun" description="${workEffortIdTo}" also-hidden="false" link-type="anchor">
                 <parameter param-name="productionRunId" from-field="workEffortIdTo"/>
             </hyperlink>
@@ -964,7 +964,7 @@ under the License.
         <row-actions>
             <set field="quantityOnHandDiff" value="${groovy:-1*quantityOnHandDiff}" type="BigDecimal"/>
         </row-actions>
-        <field name="inventoryItemId" widget-style="button tiny">
+        <field name="inventoryItemId" widget-style="buttontext">
             <hyperlink target="/facility/control/EditInventoryItem" description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="inventoryItemId"/>
             </hyperlink>

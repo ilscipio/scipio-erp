@@ -47,7 +47,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="Survey" default-field-type="display"/>
-        <field name="surveyId" title="${uiLabelMap.ContentSurveySurveyId}" widget-style="button tiny" sort-field="true">
+        <field name="surveyId" title="${uiLabelMap.ContentSurveySurveyId}" widget-style="buttontext" sort-field="true">
             <hyperlink description="${surveyId}" target="EditSurvey" also-hidden="false">
                 <parameter param-name="surveyId"/>
             </hyperlink>
@@ -269,7 +269,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="SurveyResponse" default-field-type="display"/>
-        <field name="surveyResponseId" widget-style="button tiny">
+        <field name="surveyResponseId" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${surveyResponseId}" target="EditSurveyResponse">
                 <parameter param-name="surveyResponseId"/>
             </hyperlink>
@@ -298,7 +298,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="Survey" default-field-type="display"/>
-        <field name="surveyId" title=" " widget-style="button tiny">
+        <field name="surveyId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${surveyId}" target="javascript:set_value('${surveyId}')"/>
         </field>
     </form>
@@ -321,7 +321,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="SurveyResponse" default-field-type="display"/>
-        <field name="surveyResponseId" title=" " widget-style="button tiny">
+        <field name="surveyResponseId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${surveyResponseId}" target="javascript:set_value('${surveyResponseId}')"/>
         </field>
     </form>

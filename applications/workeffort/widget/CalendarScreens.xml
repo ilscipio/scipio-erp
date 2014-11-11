@@ -180,7 +180,7 @@ under the License.
                         <if-compare field="useEditForm" operator="equals" value="true" />
                     </condition>
                     <widgets>
-                        <container style="large-6">
+                        <container style="lefthalf">
                             <screenlet title="${uiLabelMap.WorkEffortAddCalendarEvent}">
                                 <section>
                                     <condition>
@@ -193,7 +193,7 @@ under the License.
                                 <include-form name="editCalEvent" location="component://workeffort/widget/CalendarForms.xml" />
                             </screenlet>
                         </container>
-                        <container style="large-6">
+                        <container style="righthalf">
                             <screenlet title="${uiLabelMap.WorkEffortParticipants}">
                                 <include-form name="showCalEventRolesDel" location="component://workeffort/widget/CalendarForms.xml" />
                                 <section>
@@ -214,12 +214,12 @@ under the License.
                         <container style="clear" />
                     </widgets>
                     <fail-widgets>
-                        <container style="large-6">
+                        <container style="lefthalf">
                             <screenlet title="${uiLabelMap.WorkEffortSummary}">
                                 <include-form name="showCalEvent" location="component://workeffort/widget/CalendarForms.xml" />
                             </screenlet>
                         </container>
-                        <container style="large-6">
+                        <container style="righthalf">
                             <screenlet title="${uiLabelMap.WorkEffortParticipants}">
                                 <include-form name="showCalEventRoles" location="component://workeffort/widget/CalendarForms.xml" />
                             </screenlet>

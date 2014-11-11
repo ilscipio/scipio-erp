@@ -81,7 +81,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
                     <decorator-section name="body">
-                        <container style="large-6">
+                        <container style="lefthalf">
                             <platform-specific>
                                 <html><html-template location="component://ecommerce/webapp/ecommerce/request/requestInfo.ftl"/></html>
                             </platform-specific>
@@ -89,7 +89,7 @@ under the License.
                                 <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestItemInfo.ftl"/></html>
                             </platform-specific>
                         </container>
-                        <container style="large-6">
+                        <container style="righthalf">
                             <platform-specific>
                                 <html><html-template location="component://order/webapp/ordermgr/request/requestDate.ftl"/></html>
                             </platform-specific>

@@ -21,7 +21,7 @@ under the License.
         <div>
             <form name="glAccountTrialBalanceReport" id="glAccountTrialBalanceReport">
                 <div>
-                    <a href="<@ofbizUrl>GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}</@ofbizUrl>" target="_BLANK" class="button tiny">${uiLabelMap.AccountingInvoicePDF}</a>
+                    <a href="<@ofbizUrl>GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}</@ofbizUrl>" target="_BLANK" class="buttontext">${uiLabelMap.AccountingInvoicePDF}</a>
                 </div>
                 <h3>${uiLabelMap.AccountingSubsidiaryLedger}</h3>
                 <h3>${uiLabelMap.FormFieldTitle_companyName} : ${(currentOrganization.groupName)!}</h3>
@@ -29,26 +29,24 @@ under the License.
                 <h3>${uiLabelMap.AccountingGlAccountNameAndGlAccountCode} : ${(glAccount.accountCode)!} - ${(glAccount.accountName)!}</h3>
                 <div style="width: 1210px;">
                     <table border=2>
-                      <thead>
                         <tr>
-                            <th align="left"><b>${uiLabelMap.FormFieldTitle_transactionDate}</b></th>
-                            <th align="left"><b>${uiLabelMap.AccountingAccountTransactionId}</b></th>
-                            <th align="left"><b>${uiLabelMap.CommonDescription}</b></th>
-                            <th align="left"><b>${uiLabelMap.AccountingTypeOfTheCurrency}</b></th>
-                            <th align="left"><b>${uiLabelMap.AccountingOriginalCurrency}</b></th>
-                            <th align="right"><b>${uiLabelMap.AccountingDebitAmount}</b></th>
-                            <th align="right"><b>${uiLabelMap.AccountingCreditAmount}</b></th>
-                            <th align="right"><b>${uiLabelMap.AccountingDebitOrCreditOfBalance}</b></th>
-                            <th align="right"><b>${uiLabelMap.AccountingBalanceOfTheAccount}</b></th>
+                            <td align="left"><b>${uiLabelMap.FormFieldTitle_transactionDate}</b></td>
+                            <td align="left"><b>${uiLabelMap.AccountingAccountTransactionId}</b></td>
+                            <td align="left"><b>${uiLabelMap.CommonDescription}</b></td>
+                            <td align="left"><b>${uiLabelMap.AccountingTypeOfTheCurrency}</b></td>
+                            <td align="left"><b>${uiLabelMap.AccountingOriginalCurrency}</b></td>
+                            <td align="right"><b>${uiLabelMap.AccountingDebitAmount}</b></td>
+                            <td align="right"><b>${uiLabelMap.AccountingCreditAmount}</b></td>
+                            <td align="right"><b>${uiLabelMap.AccountingDebitOrCreditOfBalance}</b></td>
+                            <td align="right"><b>${uiLabelMap.AccountingBalanceOfTheAccount}</b></td>
                         </tr>
                         <tr class="header-row">
-                            <th colspan=2></th>
-                            <th colspan=3 align="center"><b>${uiLabelMap.AccountingTheBalanceOfLastYear}</b></th>
-                            <th colspan=2></th>
-                            <th ALIGN="right"><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></th>
-                            <th ALIGN="right">${(openingBalance)!}</th>
+                            <td colspan=2></td>
+                            <td colspan=3 align="center"><b>${uiLabelMap.AccountingTheBalanceOfLastYear}</b></td>
+                            <td colspan=2></td>
+                            <td ALIGN="right"><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></td>
+                            <td ALIGN="right">${(openingBalance)!}</td>
                         </tr>
-                        </thead>
                         <#list glAcctgTrialBalanceList as glAcctgTrialBalance>
                         
                             <#assign acctgTransAndEntries = glAcctgTrialBalance.acctgTransAndEntries/>
@@ -66,7 +64,6 @@ under the License.
                                     <td ALIGN="right"></td>
                                 </tr>
                                 </#list>
-                                <tfoot>
                                 <tr class="header-row">
                                     <td colspan=2></td>
                                     <td colspan=3 ALIGN="center"><b>${uiLabelMap.AccountingTotalOfTheCurrentMonth}</b></td>
@@ -83,7 +80,6 @@ under the License.
                                     <td ALIGN="right"><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></td>
                                     <td ALIGN="right"><b>${(glAcctgTrialBalance.balanceOfTheAcctgForYear)!}</b></td>
                                 </tr>
-                                </tfoot>
                             </#if>
                         </#list>
                     </table>

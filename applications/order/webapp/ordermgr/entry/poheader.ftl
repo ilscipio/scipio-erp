@@ -17,7 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="PO For ${partyId!}" classes="large-6">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <#-- left side -->
+    <td width="50%" valign="top">
+
+      <#-- header box -->
+        <div class="screenlet">
+            <div class="screenlet-title-bar">
+                <div class="h3">PO For ${partyId!}</div>
+            </div>
+            <div class="screenlet-body">
                 <table width="100%" border="0" cellpadding="1" cellspacing="0">
                     <tr><td><div>Supplier Information Here</div></td></tr>
                 </table>
@@ -36,14 +46,45 @@ under the License.
                   </table>
             </div>
         </div>
-</@section>
+      <#-- end of payment box -->
 
-<#-- content box -->
-<@section title="Place Holder" classes="large-3">
+    </td>
+    <#-- end of left side -->
 
-</@section>
+    <#-- left/right spacer -->
+    <td width="1">&nbsp;&nbsp;</td>
+    <#-- end of left/right spacer -->
 
-<#-- shipping info box -->
-<@section title="Place Holder" classes="large-3">
+    <#-- right side -->
+    <td width="50%" valign="top">
 
-</@section>
+      <#-- contact box -->
+        <div class="screenlet">
+            <div class="screenlet-title-bar">
+                <div class="h3">Place Holder</div>
+            </div>
+            <div class="screenlet-body">
+                  <table width="100%" border="0" cellpadding="1" cellspacing="0">
+
+                  </table>
+            </div>
+        </div>
+      <#-- end of contact box -->
+
+      <#-- shipping info box -->
+        <div class="screenlet">
+            <div class="screenlet-title-bar">
+                <div class="h3">Place Holder</div>
+            </div>
+            <div class="screenlet-body">
+                  <table width="100%" border="0" cellpadding="1" cellspacing="0">
+
+                  </table>
+            </div>
+        </div>
+      <#-- end of shipping info box -->
+
+    </td>
+    <#-- end of right side -->
+  </tr>
+</table>

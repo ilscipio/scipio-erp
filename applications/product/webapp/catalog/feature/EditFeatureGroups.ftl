@@ -23,18 +23,16 @@ under the License.
     <div class="screenlet-body">
         <br />
         <table cellspacing="0" class="basic-table">
-         <thead>
           <tr class="header-row">
-            <td>${uiLabelMap.CommonId}</th>
-            <th>${uiLabelMap.CommonDescription}</th>
-            <th>&nbsp;</th>
-            <th>&nbsp;</th>
+            <td><b>${uiLabelMap.CommonId}</b></td>
+            <td><b>${uiLabelMap.CommonDescription}</b></td>
+            <td><b>&nbsp;</b></td>
+            <td><b>&nbsp;</b></td>
           </tr>
-          </thead>
           <#assign rowClass = "2">
           <#list productFeatureGroups as productFeatureGroup>
             <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                <td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="button tiny">${productFeatureGroup.productFeatureGroupId}</a></td>
+                <td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="buttontext">${productFeatureGroup.productFeatureGroupId}</a></td>
                 <td>
                     <form method='post' action='<@ofbizUrl>UpdateProductFeatureGroup</@ofbizUrl>'>
                     <input type='hidden' name="productFeatureGroupId" value="${productFeatureGroup.productFeatureGroupId}" />
@@ -42,7 +40,7 @@ under the License.
                     <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                     </form>
                 </td>
-                <td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="button tiny">${uiLabelMap.ProductFeatureGroupAppls}</a></td>
+                <td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="buttontext">${uiLabelMap.ProductFeatureGroupAppls}</a></td>
             </tr>
             <#-- toggle the row color -->
             <#if rowClass == "2">

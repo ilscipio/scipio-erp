@@ -5823,5 +5823,5 @@
         <value xml:lang="vi">Bạn có thể tạo Thực thể ${entityName} sau khi nhập các giá trị mong muốn và bấm vào Tạo mới.</value>
         <value xml:lang="zh">创建一个实体 ${entityName} ：输入值，然后点击新建.</value>
         <value xml:lang="zh_TW">創建一個實體 ${entityName} ：輸入值，然後點擊新建.</value>
-    </property>    
+    </property>
 </resource>

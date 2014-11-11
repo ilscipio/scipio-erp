@@ -43,7 +43,7 @@ under the License.
                 <entity-options entity-name="ProductStore" description="${storeName}">
                     <entity-order-by field-name="storeName"/>
                 </entity-options>
-                <sub-hyperlink use-when="&quot;${webSite.productStoreId}&quot;.length()>0" link-style="button tiny" target-type="inter-app" target="/catalog/control/EditProductStore" description="${uiLabelMap.ContentEditProductStore}">
+                <sub-hyperlink use-when="&quot;${webSite.productStoreId}&quot;.length()>0" link-style="buttontext" target-type="inter-app" target="/catalog/control/EditProductStore" description="${uiLabelMap.ContentEditProductStore}">
                 <parameter param-name="productStoreId" from-field="webSite.productStoreId"/>
             </sub-hyperlink>
             </drop-down>
@@ -65,7 +65,7 @@ under the License.
                 <order-by field-name="${parameters.sortField}"/>
             </entity-condition>
         </actions>
-        <field name="webSiteId" title="${uiLabelMap.CommonId}" widget-style="button tiny" sort-field="true">
+        <field name="webSiteId" title="${uiLabelMap.CommonId}" widget-style="buttontext" sort-field="true">
             <hyperlink description="${webSiteId}" target="EditWebSite" also-hidden="false">
                 <parameter param-name="webSiteId"/>
             </hyperlink>
@@ -135,7 +135,7 @@ under the License.
         <field name="fromDate"><display/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="RemoveWebSiteContent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="contentId"/>
@@ -188,7 +188,7 @@ under the License.
         <auto-fields-service service-name="updateWebSiteRole" map-name="webSiteRole"/>
         <field name="webSiteId"><hidden/></field>
         <!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
-        <field name="partyId" widget-style="button tiny">
+        <field name="partyId" widget-style="buttontext">
             <hyperlink target-type="inter-app" target="/partymgr/control/viewprofile" description="${person.personalTitle} ${person.firstName} ${person.middleName} ${person.lastName} ${person.suffix} ${partyGroup.groupName} [${webSiteRole.partyId}]">
                 <parameter param-name="partyId" from-field="webSiteRole.partyId"/>
             </hyperlink>
@@ -199,7 +199,7 @@ under the License.
         <field name="fromDate"><display/></field>
         <field name="thruDate"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="removeWebSiteRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="webSiteId" from-field="webSiteRole.webSiteId"/>
                 <parameter param-name="partyId" from-field="webSiteRole.partyId"/>
@@ -283,7 +283,7 @@ under the License.
         <field name="fromDate"><display type="date-time"/></field>
         <field name="thruDate"><date-time/></field>
         <field name="updateButton" title="${uiLabelMap.CommonUpdate}"><submit/></field>
-        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
+        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteWebSiteContactList" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="contactListId"/>

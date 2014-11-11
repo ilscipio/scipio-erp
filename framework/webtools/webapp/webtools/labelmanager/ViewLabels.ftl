@@ -17,13 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div class="screenlet-body">
-  <table class="basic-table hover-bar">
-   <thead>
+  <table class="basic-table hover-bar" cellspacing="3">
     <tr class="header-row">
-      <th>${uiLabelMap.WebtoolsLabelManagerRow}</th>
-      <th>${uiLabelMap.WebtoolsLabelManagerKey}</th>
-      <th>${uiLabelMap.WebtoolsLabelManagerFileName}</th>
-      <th>${uiLabelMap.WebtoolsLabelManagerReferences}</th>
+      <td>${uiLabelMap.WebtoolsLabelManagerRow}</td>
+      <td>${uiLabelMap.WebtoolsLabelManagerKey}</td>
+      <td>${uiLabelMap.WebtoolsLabelManagerFileName}</td>
+      <td>${uiLabelMap.WebtoolsLabelManagerReferences}</td>
       <#list localesFound as localeFound>
         <#assign showLocale = true>
         <#if parameters.labelLocaleName?? && parameters.labelLocaleName != "" && parameters.labelLocaleName != localeFound>
@@ -37,16 +36,15 @@ under the License.
             <#if "ar.iw"?contains(langAttr?substring(0, 2))>
               <#assign langDir = "rtl">
             </#if>
-            <th lang="${langAttr}" dir="${langDir}">
+            <td lang="${langAttr}" dir="${langDir}">
               ${locale.getDisplayName(locale)}
-            </th>
+            </td>
           <#else>
-            <th>${localeFound}</th>
+            <td>${localeFound}</td>
           </#if>
         </#if>
       </#list>
     </tr>
-    </thead>
     <#if parameters.searchLabels??>
       <#assign rowNum = "2">
       <#assign rowNumber = 1>
@@ -117,20 +115,18 @@ under the License.
           <#assign rowNumber = rowNumber + 1>
         </#if>
       </#list>
-      </tfoot>
-          <tr class="header-row">
-            <td/>
-            <td>${uiLabelMap.WebtoolsLabelStatsTotal}: ${totalLabels}</td>
-            <td colspan="2">
-              ${uiLabelMap.WebtoolsLabelStatsExist}:<br />
-              ${uiLabelMap.WebtoolsLabelStatsMissing}:
-            </td>
-            <td>
-              ${existingLabels}<br />
-              ${missingLabels}
-            </td>
-          </tr>
-      </tfoot>
+      <tr class="header-row">
+        <td/>
+        <td>${uiLabelMap.WebtoolsLabelStatsTotal}: ${totalLabels}</td>
+        <td colspan="2">
+          ${uiLabelMap.WebtoolsLabelStatsExist}:<br />
+          ${uiLabelMap.WebtoolsLabelStatsMissing}:
+        </td>
+        <td>
+          ${existingLabels}<br />
+          ${missingLabels}
+        </td>
+      </tr>
     </#if>
   </table>
 </div>

@@ -153,11 +153,11 @@
                                 </or>
                             </condition>
                             <widgets><!-- edit section -->
-                                <container style="large-6">
+                                <container style="lefthalf">
                                     <label style="h1" text="${uiLabelMap.WorkEffortAddCalendarEvent}"/>
                                     <include-form name="editTrainingCalendar" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
                                 </container>
-                                <container style="large-6">
+                                <container style="righthalf">
                                     <label style="h1" text="${uiLabelMap.WorkEffortParticipants}"/>
                                     <include-form name="ListTrainingParticipants" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
                                     <section>
@@ -177,7 +177,7 @@
                                 </container>
                             </widgets>
                             <fail-widgets><!-- view section -->
-                                <container style="large-6">
+                                <container style="lefthalf">
                                     <label style="h1" text="${uiLabelMap.WorkEffortSummary}"/>
                                     <include-form name="showTrainingCalendar" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
                                 </container>

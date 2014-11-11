@@ -65,7 +65,7 @@ under the License.
                       <#if contactMechPurposeType?has_content>
                         <#assign popUptitle = contactMechPurposeType.get("description", locale) + uiLabelMap.CommonGeoLocation>
                       </#if>
-                      <a href="javascript:popUp('<@ofbizUrl>PartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${partyId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="button tiny">${uiLabelMap.CommonGeoLocation}</a>
+                      <a href="javascript:popUp('<@ofbizUrl>PartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${partyId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="buttontext">${uiLabelMap.CommonGeoLocation}</a>
                     </#if>
                   </#if>
                 <#elseif "TELECOM_NUMBER" = contactMech.contactMechTypeId>
@@ -76,8 +76,8 @@ under the License.
                       <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode?default("000")}-</#if><#if telecomNumber.contactNumber?has_content>${telecomNumber.contactNumber?default("000-0000")}</#if>
                       <#if partyContactMech.extension?has_content>${uiLabelMap.PartyContactExt}&nbsp;${partyContactMech.extension}</#if>
                         <#if !telecomNumber.countryCode?has_content || telecomNumber.countryCode = "011">
-                          <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="button tiny">${uiLabelMap.CommonLookupAnywho}</a>
-                          <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="button tiny">${uiLabelMap.CommonLookupWhitepages}</a>
+                          <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="buttontext">${uiLabelMap.CommonLookupAnywho}</a>
+                          <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="buttontext">${uiLabelMap.CommonLookupWhitepages}</a>
                         </#if>
                     </div>
                   </#if>
@@ -93,14 +93,14 @@ under the License.
                       <input name="my" value="My" type="hidden"/>
                       <input name="statusId" value="COM_PENDING" type="hidden"/>
                       <input name="communicationEventTypeId" value="EMAIL_COMMUNICATION" type="hidden"/>
-                    </form><a class="button tiny" href="javascript:document.createEmail${contactMech.infoString?replace("&#64;","")?replace(".","")}.submit()">${uiLabelMap.CommonSendEmail}</a>
+                    </form><a class="buttontext" href="javascript:document.createEmail${contactMech.infoString?replace("&#64;","")?replace(".","")}.submit()">${uiLabelMap.CommonSendEmail}</a>
                   </div>
                 <#elseif "WEB_ADDRESS" = contactMech.contactMechTypeId>
                   <div>
                     ${contactMech.infoString!}
                     <#assign openAddress = contactMech.infoString?default("")>
                     <#if !openAddress?starts_with("http") && !openAddress?starts_with("HTTP")><#assign openAddress = "http://" + openAddress></#if>
-                    <a target="_blank" href="${openAddress}" class="button tiny">${uiLabelMap.CommonOpenPageNewWindow}</a>
+                    <a target="_blank" href="${openAddress}" class="buttontext">${uiLabelMap.CommonOpenPageNewWindow}</a>
                   </div>
                 <#else>
                   <div>${contactMech.infoString!}</div>

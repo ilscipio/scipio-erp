@@ -27,12 +27,10 @@ under the License.
     <#assign entryWidth = (100 / (maxConcurrentEntries))>
   </#if>
 <table cellspacing="0" class="basic-table calendar">
- <thead>
   <tr class="header-row">
-    <th>${uiLabelMap.CommonTime}</th>
-    <th colspan="${maxConcurrentEntries}">${uiLabelMap.WorkEffortCalendarEntries}</th>
+    <td>${uiLabelMap.CommonTime}</td>
+    <td colspan="${maxConcurrentEntries}">${uiLabelMap.WorkEffortCalendarEntries}</td>
   </tr>
-  </thead>
   <#list periods as period>
     <#assign currentPeriod = false/>
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>

@@ -89,7 +89,7 @@
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="OrganizationToComplete" text="${uiLabelMap.SetupSetToComplete}" style="button tiny">
+                                    <link target="OrganizationToComplete" text="${uiLabelMap.SetupSetToComplete}" style="buttontext">
                                         <parameter param-name="partyId" from-field="organizationPartyId"/>
                                         <parameter param-name="roleTypeId" value="ORGANIZATION_ROLE"/>
                                     </link>

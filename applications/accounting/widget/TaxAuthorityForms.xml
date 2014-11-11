@@ -33,13 +33,13 @@ under the License.
         <field name="taxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoCode}] [${geoId}]"/></field>
         <field name="taxAuthPartyId">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="button tiny">
+                <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="buttontext">
                     <parameter param-name="partyId" from-field="taxAuthPartyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
 
-        <field name="taxAuthorityEdit" title=" " widget-style="button tiny">
+        <field name="taxAuthorityEdit" title=" " widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="EditTaxAuthority" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -87,13 +87,13 @@ under the License.
         <field name="taxAuthGeoId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
             <display-entity entity-name="ProductCategory" description="${description}">
-                <sub-hyperlink description="${productCategoryId}" target="/catalog/control/EditCategory" target-type="inter-app" link-style="button tiny">
+                <sub-hyperlink description="${productCategoryId}" target="/catalog/control/EditCategory" target-type="inter-app" link-style="buttontext">
                     <parameter param-name="productCategoryId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
 
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteTaxAuthorityCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -128,7 +128,7 @@ under the License.
 
         <field name="toTaxAuthPartyId">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${toTaxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="button tiny">
+                <sub-hyperlink description="${toTaxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="buttontext">
                     <parameter param-name="partyId" from-field="toTaxAuthPartyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -145,7 +145,7 @@ under the License.
         </field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteTaxAuthorityAssoc" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -190,20 +190,20 @@ under the License.
         <field name="taxAuthGeoId"><hidden/></field>
         <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}">
             <display-entity entity-name="GlAccount" description="${accountName}">
-                <sub-hyperlink description="${glAccountId}" target="EditGlobalGlAccount" link-style="button tiny">
+                <sub-hyperlink description="${glAccountId}" target="EditGlobalGlAccount" link-style="buttontext">
                     <parameter param-name="glAccountId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="organizationPartyId" title="${uiLabelMap.PartyOrganizationParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${organizationPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="button tiny">
+                <sub-hyperlink description="${organizationPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="buttontext">
                     <parameter param-name="partyId" from-field="organizationPartyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
 
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteTaxAuthorityGlAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -266,7 +266,7 @@ under the License.
         </field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteTaxAuthorityRateProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -330,7 +330,7 @@ under the License.
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="button tiny"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
     <form name="ListTaxAuthorityParties" type="list" title="" list-name="listIt"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -349,7 +349,7 @@ under the License.
 
         <field name="partyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="button tiny">
+                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="buttontext">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -361,7 +361,7 @@ under the License.
         <field name="isExempt"><display/></field>
         <field name="isNexus"><display/></field>
 
-        <field name="editLink" title=" " widget-style="button tiny">
+        <field name="editLink" title=" " widget-style="buttontext">
             <hyperlink target="EditTaxAuthorityPartyInfo" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -369,7 +369,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteTaxAuthorityPartyInfo" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -387,7 +387,7 @@ under the License.
 
         <field use-when="partyTaxAuthInfo!=null" name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="button tiny">
+                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="buttontext">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -402,7 +402,7 @@ under the License.
         <field name="isExempt" widget-style="smallSelect"><drop-down no-current-selected-key="N"><option key="Y"  description="${uiLabelMap.CommonY}"/><option key="N"  description="${uiLabelMap.CommonN}"/></drop-down></field>
         <field name="isNexus" widget-style="smallSelect"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
 
-        <field use-when="partyTaxAuthInfo!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="button tiny"><submit button-type="text-link"/></field>
-        <field use-when="partyTaxAuthInfo==null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="button tiny"><submit button-type="text-link"/></field>
+        <field use-when="partyTaxAuthInfo!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="partyTaxAuthInfo==null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 </forms>

@@ -37,7 +37,7 @@ under the License.
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleListWebSite}">
                                     <container style="button-bar">
-                                        <link  text="${uiLabelMap.ContentCreateNewWebSite}" target="EditWebSite" style="button tiny create"/>
+                                        <link  text="${uiLabelMap.ContentCreateNewWebSite}" target="EditWebSite" style="buttontext create"/>
                                     </container>
                                     <include-form name="ListWebSites" location="component://content/widget/website/WebSiteForms.xml"/>
                                 </screenlet>

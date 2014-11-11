@@ -49,7 +49,7 @@ under the License.
         <actions>
             <entity-condition entity-name="PartyClassificationGroup"/>
         </actions>
-        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroupId}" widget-style="button tiny">
+        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroupId}" widget-style="buttontext">
             <hyperlink target="EditPartyClassificationGroup" description="${partyClassificationGroupId}" also-hidden="false">
                 <parameter param-name="partyClassificationGroupId"/>
             </hyperlink>
@@ -59,7 +59,7 @@ under the License.
         </field>
         <field name="parentGroupId"><display/></field>
         <field name="description" title=" "><display/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deletePartyClassificationGroup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyClassificationGroupId"/>
             </hyperlink>
@@ -81,7 +81,7 @@ under the License.
         </field>
         <field name="parentGroupId"><lookup target-form-name="LookupPartyClassificationGroup"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="55"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="button tiny"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 
     <form name="AddPartyClassification" type="single" target="createPartyClassification" default-map-name="partyClassification"

@@ -53,7 +53,7 @@ under the License.
         </actions>
         <alt-row-style use-when="&quot;EXST_APPROVED&quot;.equals(statusId)" style="Validate"/>
         <alt-row-style use-when="&quot;EXST_CANCELLED&quot;.equals(statusId)" style="Warn"/>
-        <field name="exampleId" title="${uiLabelMap.ExampleExampleId}" widget-style="button tiny">
+        <field name="exampleId" title="${uiLabelMap.ExampleExampleId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${exampleId}" target="EditExample">
                 <parameter param-name="exampleId"/>
             </hyperlink>
@@ -175,7 +175,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteExampleItem" description="${uiLabelMap.CommonDelete}" also-hidden="false" confirmation-message="${uiLabelMap.CommonConfirmDelete}" image-location="${iconsLocation}/delete.png">
                 <parameter param-name="exampleId"/>
                 <parameter param-name="exampleItemSeqId"/>
@@ -211,7 +211,7 @@ under the License.
         <field name="exampleId"><hidden/></field>
         <field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}">
             <display-entity entity-name="ExampleFeature" description="${description}">
-                <sub-hyperlink target="EditExampleFeature" description="${exampleFeatureId}" link-style="button tiny">
+                <sub-hyperlink target="EditExampleFeature" description="${exampleFeatureId}" link-style="buttontext">
                     <parameter param-name="exampleFeatureId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -225,7 +225,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="example_deleteExampleFeatureAppl" description="${uiLabelMap.CommonDelete}" also-hidden="false" image-location="${iconsLocation}/delete.png">
                 <parameter param-name="exampleId"/>
                 <parameter param-name="exampleFeatureId"/>

@@ -30,7 +30,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}" widget-style="button tiny">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${partyId}" target="editVendor">
                 <parameter param-name="partyId"/>
             </hyperlink>

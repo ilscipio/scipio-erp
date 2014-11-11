@@ -17,7 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.OrderPromotionDetails}">
-    <div>${StringUtil.wrapString(productPromo.promoText!)}</div>
-    <div>${uiLabelMap.EcommerceGeneratedDescription}  ${promoAutoDescription!}</div>
-</@section>
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+        <div class="h3">${uiLabelMap.OrderPromotionDetails}:</div>
+    </div>
+    <div class="screenlet-body">
+        <div>${StringUtil.wrapString(productPromo.promoText!)}</div>
+        <div>${uiLabelMap.EcommerceGeneratedDescription}  ${promoAutoDescription!}</div>
+    </div>
+</div>

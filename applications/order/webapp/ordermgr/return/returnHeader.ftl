@@ -17,7 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.PageTitleReturnHeader}">
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+        <ul>
+            <li class="h3">${uiLabelMap.PageTitleReturnHeader}</li>
+        </ul>
+        <br class="clear"/>
+    </div>
+    <div class="screenlet-body">
         <#if returnHeader??>
             <form name="returnhead" method="post" action="<@ofbizUrl>updateReturn</@ofbizUrl>">
             <input type="hidden" name="returnId" value="${returnHeader.returnId}" />
@@ -70,7 +77,7 @@ under the License.
               <#if returnInfo.entryDate??>
                 <#assign entryDate = returnInfo.get("entryDate").toString()>
               </#if>
-              <@htmlTemplate.renderDateTimeField name="entryDate" event="" action="" value="${entryDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="entryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+              <@htmlTemplate.renderDateTimeField name="entryDate" event="" action="" value="${entryDate!}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="entryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
             </td>
           </tr>
           <tr>
@@ -263,4 +270,5 @@ under the License.
                     </div>
             </#if>
         </#macro>
-    </@section>
+    </div>
+</div>

@@ -83,26 +83,24 @@ under the License.
         <input type="hidden" name="shipmentId" value="${shipmentId}" />
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <table cellspacing="0" cellpadding="2" class="basic-table hover-bar">
-          <thead>
             <tr class="header-row">
-                <th>${uiLabelMap.ProductOrderId}<br />${uiLabelMap.ProductOrderShipGroupId}<br />${uiLabelMap.ProductOrderItem}</th>
-                <th>${uiLabelMap.ProductProduct}</th>
+                <td>${uiLabelMap.ProductOrderId}<br />${uiLabelMap.ProductOrderShipGroupId}<br />${uiLabelMap.ProductOrderItem}</td>
+                <td>${uiLabelMap.ProductProduct}</td>
                 <#if isSalesOrder>
-                    <th>${uiLabelMap.ProductItemsIssuedReserved}</th>
-                    <th>${uiLabelMap.ProductIssuedReservedTotalOrdered}</th>
-                    <th>${uiLabelMap.ProductReserved}</th>
-                    <th>${uiLabelMap.ProductNotAvailable}</th>
+                    <td>${uiLabelMap.ProductItemsIssuedReserved}</td>
+                    <td>${uiLabelMap.ProductIssuedReservedTotalOrdered}</td>
+                    <td>${uiLabelMap.ProductReserved}</td>
+                    <td>${uiLabelMap.ProductNotAvailable}</td>
                 <#else>
-                    <th>${uiLabelMap.ProductItemsIssued}</th>
-                    <th>${uiLabelMap.ProductIssuedOrdered}</th>
+                    <td>${uiLabelMap.ProductItemsIssued}</td>
+                    <td>${uiLabelMap.ProductIssuedOrdered}</td>
                 </#if>
-                <th>${uiLabelMap.ProductIssue}</th>
-                <th align="right">
+                <td>${uiLabelMap.ProductIssue}</td>
+                <td align="right">
                     <div>${uiLabelMap.CommonSubmit} ?</div>
                     <div>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'orderItemData_tableRow_', 'selectAllForm');" /></div>
-                </th>
+                </td>
             </tr>
-            </thead>
             <#assign alt_row = false>
             <#list orderItemDatas! as orderItemData>
                 <#assign orderItemAndShipGroupAssoc = orderItemData.orderItemAndShipGroupAssoc>

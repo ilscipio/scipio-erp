@@ -28,12 +28,12 @@ under the License.
         <table id="serialized-inventory" class="basic-table" cellspacing="0" cellpadding="2">
             <thead>
                 <tr class="header-row">
-                    <th>${uiLabelMap.ProductInventoryItemId}</th>
-                    <th>${uiLabelMap.ProductProductName}</th>
-                    <th>${uiLabelMap.ProductSerialNumber}</th>
-                    <th>${uiLabelMap.ProductSoftIdentifier}</th>
-                    <th>${uiLabelMap.ProductActivationNumber}</th>
-                    <th>${uiLabelMap.ProductActivationNumber} ${uiLabelMap.CommonValidThruDate}</th>
+                    <td>${uiLabelMap.ProductInventoryItemId}</td>
+                    <td>${uiLabelMap.ProductProductName}</td>
+                    <td>${uiLabelMap.ProductSerialNumber}</td>
+                    <td>${uiLabelMap.ProductSoftIdentifier}</td>
+                    <td>${uiLabelMap.ProductActivationNumber}</td>
+                    <td>${uiLabelMap.ProductActivationNumber} ${uiLabelMap.CommonValidThruDate}</td>
                 </tr>
             </thead>
             <tbody>

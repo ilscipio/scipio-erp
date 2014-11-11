@@ -73,7 +73,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
         </tr>
         <tr>
          <td >
-            <a class="button tiny" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${rootForumId}</@ofbizUrl>" >Add Top Level Forum</a>
+            <a class="buttontext" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${rootForumId}</@ofbizUrl>" >Add Top Level Forum</a>
          </td >
         </tr>
 
@@ -127,19 +127,19 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
             ${plusMinus} ${content.contentName!}
          </td >
          <td >
-            <a class="button tiny" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
+            <a class="buttontext" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >
-            <a class="button tiny" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
+            <a class="buttontext" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >
-            <a class="button tiny" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${content.contentId}</@ofbizUrl>" >Add Child Forum</a>
+            <a class="buttontext" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${content.contentId}</@ofbizUrl>" >Add Child Forum</a>
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >
-            <a class="button tiny" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@ofbizUrl>">RemoveSite</a>
+            <a class="buttontext" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@ofbizUrl>">RemoveSite</a>
          </td >
        </tr>
        <#assign rowCount = rowCount + 1 />

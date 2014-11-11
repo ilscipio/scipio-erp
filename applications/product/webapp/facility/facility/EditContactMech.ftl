@@ -19,14 +19,14 @@ under the License.
 
 <#if !mechMap.facilityContactMech?? && mechMap.contactMech??>
   <p><h3>${uiLabelMap.PartyContactInfoNotBelongToYou}.</h3></p>
-  &nbsp;<a href="<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonGoBack}</a>
+  &nbsp;<a href="<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGoBack}</a>
 <#else>
   <#if !mechMap.contactMech??>
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !preContactMechTypeId?has_content>
     <h1>${title}</h1>
     <div class="button-bar">
-      <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='button tiny'>${uiLabelMap.CommonGoBack}</a>
+      <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonGoBack}</a>
     </div>
     <form method="post" action='<@ofbizUrl>EditContactMech</@ofbizUrl>' name="createcontactmechform">
       <input type='hidden' name='facilityId' value='${facilityId}' />
@@ -39,7 +39,7 @@ under the License.
               <#list mechMap.contactMechTypes as contactMechType>
                 <option value='${contactMechType.contactMechTypeId}'>${contactMechType.get("description",locale)}</option>
               </#list>
-            </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="button tiny">${uiLabelMap.CommonCreate}</a>
+            </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="buttontext">${uiLabelMap.CommonCreate}</a>
           </td>
         </tr>
       </table>
@@ -51,7 +51,7 @@ under the License.
     <#if !mechMap.contactMech?has_content>
       <h1>${title}</h1>
       <div class="button-bar">
-        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='button tiny'>${uiLabelMap.CommonGoBack}</a>
+        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonGoBack}</a>
       </div>
       <#if contactMechPurposeType??>
         <div><span class="label">(${uiLabelMap.PartyMsgContactHavePurpose}</span>"${contactMechPurposeType.get("description",locale)!}")</div>
@@ -80,8 +80,8 @@ under the License.
     <#else>
       <h1>${title}</h1>
       <div class="button-bar">
-        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='button tiny'>${uiLabelMap.CommonGoBack}</a>
-        <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductNewContactMech}</a>
+        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonGoBack}</a>
+        <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductNewContactMech}</a>
       </div>
       <table class="basic-table" cellspacing="0">
         <#if mechMap.purposeTypes?has_content>
@@ -102,7 +102,7 @@ under the License.
                       </#if>
                       (${uiLabelMap.CommonSince}: ${facilityContactMechPurpose.fromDate})
                       <#if facilityContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpires}: ${facilityContactMechPurpose.thruDate.toString()}</#if>
-                      <a href="javascript:document.getElementById('deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}').submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                      <a href="javascript:document.getElementById('deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}').submit();" class="buttontext">${uiLabelMap.CommonDelete}</a>
                   </td>
                 </tr>
                 <#-- toggle the row color -->
@@ -128,7 +128,7 @@ under the License.
                         <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
                       </#list>
                     </select>
-                    &nbsp;<a href='javascript:document.newpurposeform.submit()' class='button tiny'>${uiLabelMap.PartyAddPurpose}</a>
+                    &nbsp;<a href='javascript:document.newpurposeform.submit()' class='buttontext'>${uiLabelMap.PartyAddPurpose}</a>
                   </form>
                 </td>
               </tr>
@@ -235,7 +235,7 @@ under the License.
     <tr>
       <td>&nbsp;</td>
       <td>
-        <a href="javascript:document.editcontactmechform.submit()" class="button tiny">${uiLabelMap.CommonSave}</a>
+        <a href="javascript:document.editcontactmechform.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
       </td>
     </tr>
   </form>

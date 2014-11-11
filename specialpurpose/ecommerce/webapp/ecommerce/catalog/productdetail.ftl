@@ -344,11 +344,11 @@ $(function(){
       <#if category??>
           <div id="paginationBox">
             <#if previousProductId??>
-              <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=previousProductId!/>" class="button tiny">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
+              <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=previousProductId!/>" class="buttontext">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
             </#if>
             <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId!/>" class="linktext">${(category.categoryName)?default(category.description)!}</a>
             <#if nextProductId??>
-              &nbsp;|&nbsp;<a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=nextProductId!/>" class="button tiny">${uiLabelMap.CommonNext}</a>
+              &nbsp;|&nbsp;<a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=nextProductId!/>" class="buttontext">${uiLabelMap.CommonNext}</a>
             </#if>
           </div>
       </#if>
@@ -532,7 +532,7 @@ $(function(){
           <#-- show tell a friend details only in ecommerce application -->
           <div>&nbsp;</div>
           <div>
-              <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}<#if categoryId??>&categoryId=${categoryId}/</#if></@ofbizUrl>','tellafriend');" class="button tiny">${uiLabelMap.CommonTellAFriend}</a>
+              <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}<#if categoryId??>&categoryId=${categoryId}/</#if></@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
           </div>
     
           <#if disFeatureList?? && 0 &lt; disFeatureList.size()>
@@ -575,13 +575,13 @@ $(function(){
                 <div id="addCart1" style="display:none;">
                   <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
                   <input type="text" size="5" name="quantity" value="1" />
-                  <a href="javascript:javascript:addItem();" class="button tiny"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:javascript:addItem();" class="buttontext"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                   &nbsp;
                 </div>
                 <div id="addCart2" style="display:block;">
                   <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
                   <input type="text" size="5" value="1" disabled="disabled" />
-                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="button tiny"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="buttontext"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                   &nbsp;
                 </div>
               </#if>
@@ -646,7 +646,7 @@ $(function(){
                 </div>
                 <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
                   <div>
-                    <label>Start Date(yyyy-mm-dd)</label><@htmlTemplate.renderDateTimeField event="" action="" name="reservStart" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${startDate}" size="25" maxlength="30" id="reservStart1" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <label>Start Date(yyyy-mm-dd)</label><@htmlTemplate.renderDateTimeField event="" action="" name="reservStart" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${startDate}" size="25" maxlength="30" id="reservStart1" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                   </div>
                   <div>
                     <#--td nowrap="nowrap" align="right">Number<br />of days</td><td><input type="textt" size="4" name="reservLength"/></td></tr><tr><td>&nbsp;</td><td align="right" nowrap="nowrap">&nbsp;</td-->
@@ -654,18 +654,18 @@ $(function(){
                     Number of persons<input type="text" size="4" name="reservPersons" value="2"/>
                     Number of rooms<input type="text" size="5" name="quantity" value="1"/>
                   </div>
-                  <a href="javascript:addItem()" class="button tiny"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:addItem()" class="buttontext"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                 <#else>
-                  <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="button tiny">${uiLabelMap.OrderAddToCart}</a>
+                  <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="buttontext">${uiLabelMap.OrderAddToCart}</a>
                   <@showUnavailableVarients/>
                 </#if>
                 <#else>
                   <#if productStore??>
                     <#if productStore.requireInventory?? && productStore.requireInventory == "N">
-                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="button tiny">${uiLabelMap.OrderAddToCart}</a>
+                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="buttontext">${uiLabelMap.OrderAddToCart}</a>
                       <@showUnavailableVarients/>
                     <#else>
-                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" disabled="disabled" /></span><a href="javascript:void(0);" disabled="disabled" class="button tiny">${uiLabelMap.OrderAddToCart}</a><br />
+                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" disabled="disabled" /></span><a href="javascript:void(0);" disabled="disabled" class="buttontext">${uiLabelMap.OrderAddToCart}</a><br />
                       <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage??>&mdash; ${product.inventoryMessage}</#if></span>
                     </#if>
                   </#if>
@@ -707,19 +707,19 @@ $(function(){
               &nbsp;&nbsp;
               <#--assign nowDate = Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("yyyy-MM-dd")-->
               <#if product.productTypeId! == "ASSET_USAGE">
-                  &nbsp;${uiLabelMap.CommonStartDate} (yyyy-mm-dd)<@htmlTemplate.renderDateTimeField name="reservStartStr" event="" action="" value="${startDate}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="15" maxlength="30" id="reservStartStr" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>&nbsp;Number of&nbsp;days&nbsp;&nbsp;<input type="text" size="4" name="reservLength" />&nbsp;<br/>Number of&nbsp;persons&nbsp;&nbsp;<input type="text" size="4" name="reservPersons" value="1" />&nbsp;&nbsp;Qty&nbsp;&nbsp;<input type="text" size="5" name="quantity" value="1" />
+                  &nbsp;${uiLabelMap.CommonStartDate} (yyyy-mm-dd)<@htmlTemplate.renderDateTimeField name="reservStartStr" event="" action="" value="${startDate}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="15" maxlength="30" id="reservStartStr" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>&nbsp;Number of&nbsp;days&nbsp;&nbsp;<input type="text" size="4" name="reservLength" />&nbsp;<br/>Number of&nbsp;persons&nbsp;&nbsp;<input type="text" size="4" name="reservPersons" value="1" />&nbsp;&nbsp;Qty&nbsp;&nbsp;<input type="text" size="5" name="quantity" value="1" />
               <#elseif product.productTypeId! == "ASSET_USAGE_OUT_IN">
-                &nbsp;${uiLabelMap.CommonStartDate} (yyyy-mm-dd)&nbsp;&nbsp;&nbsp;<@htmlTemplate.renderDateTimeField name="reservStartStr" event="" action="" value="${startDate}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="15" maxlength="30" id="reservStartStr" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>&nbsp;&nbsp;Number of&nbsp;days&nbsp;&nbsp;<input type="text" size="4" name="reservLength" /><input type="hidden" size="4" name="reservPersons" value="1" /><br/>
+                &nbsp;${uiLabelMap.CommonStartDate} (yyyy-mm-dd)&nbsp;&nbsp;&nbsp;<@htmlTemplate.renderDateTimeField name="reservStartStr" event="" action="" value="${startDate}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="15" maxlength="30" id="reservStartStr" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>&nbsp;&nbsp;Number of&nbsp;days&nbsp;&nbsp;<input type="text" size="4" name="reservLength" /><input type="hidden" size="4" name="reservPersons" value="1" /><br/>
                 Qty&nbsp;<input type="text" size="5" name="quantity" value="1" />
               <#else>
                   <input type="text" size="5" name="quantity" value="1" />
                   <input type="hidden" name="reservStartStr" value= "" />
               </#if>
-              <a href="javascript:addShoplistSubmit();" class="button tiny">${uiLabelMap.OrderAddToShoppingList}</a>
+              <a href="javascript:addShoplistSubmit();" class="buttontext">${uiLabelMap.OrderAddToShoppingList}</a>
               </fieldset>
             </form>
           <#else> <br />
-            ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonBeLogged}</a>
+            ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonBeLogged}</a>
             ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
           </#if>
           </div>
@@ -820,7 +820,7 @@ $(function(){
                 <#assign assocProductId = productAssoc.productId />
             </#if>
             <div>
-              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>" class="button tiny">
+              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>" class="buttontext">
                 ${assocProductId}
               </a>
             <#if productAssoc.reason?has_content>

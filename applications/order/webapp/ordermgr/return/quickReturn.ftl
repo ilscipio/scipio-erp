@@ -17,7 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.OrderReturnItems}">
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+        <div class="h3">${uiLabelMap.OrderReturnItems}</div>
+    </div>
+    <div class="screenlet-body">
         <#-- DO NOT CHANGE THE NAME OF THIS FORM, it will break the some of the multi-service pattern features -->
         <#assign selectAllFormName = "selectAllForm"/>
         <form name="selectAllForm" method="post" action="<@ofbizUrl>makeQuickReturn</@ofbizUrl>">
@@ -86,7 +90,7 @@ under the License.
                           <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                           <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                           <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                          <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="button tiny">[${uiLabelMap.CommonUpdate}]</a>-->
+                          <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>-->
                         </div>
                       </td>
                     </tr>
@@ -96,4 +100,5 @@ under the License.
             </tr>
           </table>
         </form>
-    </@section>
+    </div>
+</div>

@@ -119,7 +119,7 @@
                 </tr>
                 <tr>
                     <td align="center" colspan="2">
-                        <a href="javascript:void(0);" onclick="javascript:selectDataType('${contentIdFrom?default(contentRoot)}');" class="button tiny">${uiLabelMap.CommonContinue}</a>
+                        <a href="javascript:void(0);" onclick="javascript:selectDataType('${contentIdFrom?default(contentRoot)}');" class="buttontext">${uiLabelMap.CommonContinue}</a>
                     </td>
                 </tr>
                 <#list 0..15 as x>
@@ -385,7 +385,7 @@
 
           <tr>
             <td align="center" colspan="2">
-                <a href="javascript:void(0);" onclick="javascript:cmsSave();" class="button tiny">${uiLabelMap.CommonSave}</a>
+                <a href="javascript:void(0);" onclick="javascript:cmsSave();" class="buttontext">${uiLabelMap.CommonSave}</a>
             </td>
           </tr>
         </table>

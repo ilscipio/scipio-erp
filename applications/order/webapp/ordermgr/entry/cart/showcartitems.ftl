@@ -22,11 +22,15 @@ under the License.
   <#assign productAssocType = (delegator.findOne("ProductAssocType", {"productAssocTypeId" : productAssoc.productAssocTypeId}, false))/>
   <#assign assocProduct = (delegator.findOne("Product", {"productId" : productAssoc.productIdTo}, false))/>
   <#if assocProduct?has_content>
-    <td><a href="<@ofbizUrl>/product?product_id=${productAssoc.productIdTo}</@ofbizUrl>"class="button tiny">${productAssoc.productIdTo}</a></td>
+    <td><a href="<@ofbizUrl>/product?product_id=${productAssoc.productIdTo}</@ofbizUrl>"class="buttontext">${productAssoc.productIdTo}</a></td>
     <td>- ${(assocProduct.productName)!}<i>(${(productAssocType.description)?default("Unknown")})</i></td>
   </#if>
 </#macro>
-<@section title="${uiLabelMap.OrderOrderItems}">
+<div class="screenlet">
+    <div class="screenlet-title-bar">    
+        <div class='h3'>${uiLabelMap.OrderOrderItems}</div>
+    </div>
+    <div class="screenlet-body">
   <#if (shoppingCartSize > 0)>
     <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
       <input type="hidden" name="removeSelected" value="false"/>
@@ -75,7 +79,7 @@ under the License.
                 <div>
                   <#if cartLine.getProductId()??>
                     <#-- product item -->
-                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="button tiny">${cartLine.getProductId()}</a> -
+                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()}</a> -
                     <input size="60" type="text" name="description_${cartLineIndex}" value="${cartLine.getName()?default("")}"/><br />
                     <i>${cartLine.getDescription()!}</i>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
@@ -105,7 +109,7 @@ under the License.
                     <#if cartLine.getAttribute("surveyResponses")?has_content>
                         <br />Surveys:
                        <#list cartLine.getAttribute("surveyResponses") as surveyResponseId>
-                        <a href="/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" style="font-size: xx-small;">${surveyResponseId}</a>
+                        <a href="/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${StringUtil.wrapString(externalKeyParam)}" class="buttontext" style="font-size: xx-small;">${surveyResponseId}</a>
                        </#list>
                     </#if>
                 </div>
@@ -143,7 +147,7 @@ under the License.
               <tr>
                 <td colspan="2">
                   <div>
-                    <a href="/catalog/control/EditProductInventoryItems?productId=${productId}" class="button tiny"><b>${uiLabelMap.ProductInventory}</b></a>:
+                    <a href="/catalog/control/EditProductInventoryItems?productId=${productId}" class="buttontext"><b>${uiLabelMap.ProductInventory}</b></a>:
                     ${uiLabelMap.ProductAtp} = ${availableToPromiseMap.get(productId)}, ${uiLabelMap.ProductQoh} = ${quantityOnHandMap.get(productId)}
                     <#if Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG")>
                     ${uiLabelMap.ProductMarketingPackageATP} = ${mktgPkgATPMap.get(productId)}, ${uiLabelMap.ProductMarketingPackageQOH} = ${mktgPkgQOHMap.get(productId)}
@@ -192,13 +196,13 @@ under the License.
                <tr>
                 <td>
                   <div>${uiLabelMap.OrderShipAfterDate}
-                    <@htmlTemplate.renderDateTimeField name="shipAfterDate_${cartLineIndex}" value="${cartLine.getShipAfterDate()?default('')}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipAfterDate_${cartLineIndex}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="shipAfterDate_${cartLineIndex}" value="${cartLine.getShipAfterDate()?default('')}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipAfterDate_${cartLineIndex}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                   </div>
                 </td>
                 <td>&nbsp;</td>
                 <td>
                   <div>${uiLabelMap.OrderShipBeforeDate}
-                    <@htmlTemplate.renderDateTimeField name="shipBeforeDate_${cartLineIndex}" value="${cartLine.getShipBeforeDate()?default('')}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipBeforeDate_${cartLineIndex}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="shipBeforeDate_${cartLineIndex}" value="${cartLine.getShipBeforeDate()?default('')}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipBeforeDate_${cartLineIndex}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                   </div>
                 </td>
                </tr>
@@ -214,7 +218,7 @@ under the License.
               <tr><td colspan="8"><hr /></td></tr>
               <tr>
                 <td>${uiLabelMap.OrderAssociatedProducts}</td>
-                <td><a href="<@ofbizUrl>LookupAssociatedProducts?productId=${cartLine.getProductId()!}</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderQuickLookup}</a></td>
+                <td><a href="<@ofbizUrl>LookupAssociatedProducts?productId=${cartLine.getProductId()!}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderQuickLookup}</a></td>
               </tr>
               <#assign relatedProdCount = 0/>
               <#list itemProductAssocList! as itemProductAssoc>
@@ -235,7 +239,7 @@ under the License.
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionProduct = delegator.findOne("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", alternativeOptionProductId), true)>
                     <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher)!>
-                    <div><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="button tiny">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
+                    <div><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="buttontext">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
                   </#list>
                 </#if>
             </td>
@@ -306,7 +310,7 @@ under the License.
                 <td colspan="4" nowrap="nowrap" align="right">
                   <div>
                     <i>${uiLabelMap.OrderAdjustment}</i> - ${adjustmentType.get("description",locale)!}
-                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonDetails}</a></#if>:
+                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a></#if>:
                   </div>
                 </td>
                 <td nowrap="nowrap" align="right"><div><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=currencyUomId/></div></td>
@@ -330,7 +334,8 @@ under the License.
       </table>
     </form>
   <#else>
-    <@section title="${uiLabelMap.OrderNoOrderItemsToDisplay}"/>
+    <div>${uiLabelMap.OrderNoOrderItemsToDisplay}</div>
   </#if>
-</@section>
+    </div>
+</div>
 

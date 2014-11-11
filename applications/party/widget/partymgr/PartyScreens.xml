@@ -283,7 +283,7 @@ under the License.
                         <screenlet title="${uiLabelMap.PartyRelationships}" navigation-form-name="ListPartyRelationships">
                             <include-form name="ListPartyRelationships" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
-                        <container style="large-6">
+                        <container style="lefthalf">
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
@@ -295,7 +295,7 @@ under the License.
                             </widgets>
                         </section>
                         </container>
-                        <container style="large-6">
+                        <container style="righthalf">
                         <screenlet title="${uiLabelMap.PartyAddOtherRelationship}">
                             <include-form name="AddOtherPartyRelationship" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
@@ -1158,7 +1158,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="addGeoLocation" text="${uiLabelMap.CommonUpdate}" style="button tiny">
+                                    <link target="addGeoLocation" text="${uiLabelMap.CommonUpdate}" style="buttontext">
                                         <parameter param-name="partyId" from-field="parameters.partyId"/>
                                     </link>
                                 </container>
@@ -1169,7 +1169,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container style="button-bar">
-                                    <link target="addGeoLocation" text="${uiLabelMap.CommonCreateNew}" style="button tiny create">
+                                    <link target="addGeoLocation" text="${uiLabelMap.CommonCreateNew}" style="buttontext create">
                                         <parameter param-name="partyId" from-field="parameters.partyId"/>
                                     </link>
                                 </container>
@@ -1314,11 +1314,11 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyParty} ${uiLabelMap.CommonImportExport} ID Name, single role (employee, customer, supplier) and contactmechs">
-                            <container style="large-6">
+                            <container style="lefthalf">
                                 <label style="h2">${uiLabelMap.CommonImport}</label>
                                 <include-form name="ImportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
                             </container>
-                            <container style="large-6">
+                            <container style="righthalf">
                                 <label style="h2">${uiLabelMap.CommonExport}</label>
                                 <include-form name="ExportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
                             </container>

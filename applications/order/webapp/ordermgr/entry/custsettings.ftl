@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
-<@section>
+  <div class="screenlet-body">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <form name="checkoutsetupform" method="post" action="<@ofbizUrl>createCustomer</@ofbizUrl>">
         <input type="hidden" name="finalizeMode" value="cust" />
@@ -133,7 +133,8 @@ under the License.
           </td>
         </tr>
       </table>
-   </@section>
+   </div>
+<br />
 <#else>
-  <@section title="${uiLabelMap.OrderViewPermissionError}"/>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

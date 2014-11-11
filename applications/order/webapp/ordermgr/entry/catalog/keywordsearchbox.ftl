@@ -17,7 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.ProductSearchCatalog}" id="keywordsearchbox">
+<div id="keywordsearchbox" class="screenlet">
+  <div class="screenlet-title-bar">
+    <ul>
+      <li class="h3">${uiLabelMap.ProductSearchCatalog}</li>
+    </ul>
+    <br class="clear"/>
+  </div>
+  <div class="screenlet-body">
     <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
       <fieldset class="inline">
         <input type="hidden" name="VIEW_SIZE" value="10" />
@@ -66,4 +73,5 @@ under the License.
           <input type="submit" value="${uiLabelMap.ProductAdvancedSearch}" class="button" />
       </fieldset>
     </form>
-</@section>
+  </div>
+</div>

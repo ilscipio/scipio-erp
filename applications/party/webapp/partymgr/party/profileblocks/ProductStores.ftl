@@ -27,12 +27,10 @@ under the License.
   <div class="screenlet-body">
     <#if productStoreRoles?has_content>
       <table class="basic-table" cellspacing="0">
-       <thead>
         <tr class="header-row">
-          <th>${uiLabelMap.ProductStoreNameId}</th>
-          <th>${uiLabelMap.PartyRoleType}</th>
+          <td>${uiLabelMap.ProductStoreNameId}</td>
+          <td>${uiLabelMap.PartyRoleType}</td>
         </tr>
-        </thead>
         <#list productStoreRoles as productStoreRole>
           <#assign productStore = delegator.findOne("ProductStore", {"productStoreId" : productStoreRole.productStoreId}, true) />
           <#assign roleType = delegator.findOne("RoleType", {"roleTypeId" : productStoreRole.roleTypeId}, true) />

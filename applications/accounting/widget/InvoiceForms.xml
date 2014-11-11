@@ -76,7 +76,7 @@ under the License.
             <set field="currencyUomId" from-field="defaultOrganizationPartyCurrencyUomId"/>
         </row-actions>
 
-        <field name="invoiceId" widget-style="button tiny" sort-field="true">
+        <field name="invoiceId" widget-style="buttontext" sort-field="true">
             <hyperlink description="${invoiceId}" target="invoiceOverview">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -175,7 +175,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
         <field name="invoiceId"><hidden/></field>
-        <field name="partyId" widget-style="button tiny">
+        <field name="partyId" widget-style="buttontext">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -355,7 +355,7 @@ under the License.
        <field name="invoiceId"><hidden/></field>
        <field name="uomId"><hidden/></field>
        <field name="taxableFlag"><hidden/></field>
-       <field name="invoiceItemSeqId" widget-style="button tiny">
+       <field name="invoiceItemSeqId" widget-style="buttontext">
            <hyperlink target="listInvoiceItems"  description="${invoiceItemSeqId}">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="invoiceItemSeqId"/>
@@ -376,8 +376,8 @@ under the License.
        </field>
        <field name="amount" title="${uiLabelMap.AccountingUnitPrice}"><text size="10"/></field>
        <field name="total" widget-area-style="align-text"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence display -->
-       <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="button tiny" ><submit button-type="text-link"/></field>
-       <field name="removeButton" title=" " widget-style="button tiny">
+       <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" ><submit button-type="text-link"/></field>
+       <field name="removeButton" title=" " widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceItem">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="invoiceItemSeqId"/>
@@ -461,8 +461,8 @@ under the License.
         <field name="paymentId"><lookup target-form-name="LookupPayment"/></field>
         <field name="billingAccountId"><hidden/></field>
         <field name="amountToApply"><text size="10" disabled="true"/></field>
-        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="button tiny"><submit button-type="text-link"/></field>
-        <field name="removeButton" title=" " widget-style="button tiny" use-when="paymentApplicationId!=null">
+        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="removeButton" title=" " widget-style="buttontext" use-when="paymentApplicationId!=null">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceApplication">
                 <parameter param-name="paymentApplicationId"/>
                 <parameter param-name="invoiceId"/>
@@ -486,7 +486,7 @@ under the License.
     <form name="ListPaymentsNotApplied" type="list" list-name="payments" target="updateInvoiceApplication" title=""
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="invoiceId"><hidden/></field>
-        <field name="paymentId" widget-style="button tiny">
+        <field name="paymentId" widget-style="buttontext">
             <hyperlink target="paymentOverview" description="[${paymentId}]">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -506,7 +506,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
         <field name="invoiceId"><hidden/></field>
-        <field name="partyId" widget-style="button tiny">
+        <field name="partyId" widget-style="buttontext">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -519,7 +519,7 @@ under the License.
         </field>
         <field name="percentage"><display/></field>
         <field name="datetimePerformed"><display/></field>
-        <field name="removeButton" widget-style="button tiny">
+        <field name="removeButton" widget-style="buttontext">
            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceRole">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="partyId"/>
@@ -570,7 +570,7 @@ under the License.
 
         <field name="invoiceId"><hidden/></field>
 
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="unlinkInvoiceFromTimeEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="timeEntryId"/>
                 <parameter param-name="invoiceId"/>

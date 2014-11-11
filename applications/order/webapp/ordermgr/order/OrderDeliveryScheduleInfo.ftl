@@ -18,18 +18,24 @@ under the License.
 -->
 
 <#if hasPermission>
-<@section title="${uiLabelMap.OrderScheduleDelivery}">
+<div class="screenlet">
+    <div class="screenlet-title-bar">
       <ul>
+        <li class="h3">${uiLabelMap.OrderScheduleDelivery}</li>
         <#if orderId??>
           <li><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>">${uiLabelMap.OrderViewOrder}</a></li>
         </#if>
       </ul>
+      <br class="clear"/>
+    </div>
+    <div class="screenlet-body">
         <#if orderId?has_content>
           ${updatePODeliveryInfoWrapper.renderFormString(context)}
         <#else>
           ${uiLabelMap.OrderNoPurchaseSpecified}
         </#if>
-    </@section>
+    </div>
+</div>
 <#else>
- <@section title="${uiLabelMap.OrderViewPermissionError}"/>
+ <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

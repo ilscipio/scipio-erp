@@ -18,14 +18,19 @@ under the License.
 -->
 
 <#if salesReps?has_content>
-<@section title="${uiLabelMap.OrderSalesReps}">
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+        <ul>
+            <li class="h3">&nbsp;${uiLabelMap.OrderSalesReps}</li>
+        </ul>
+        <br class="clear"/>
+    </div>
+    <div class="screenlet-body">
       <table class="basic-table" cellspacing='0'>
-      <thead>
       <tr class="header-row">
-        <th width="50%">${uiLabelMap.PartyLastName}</th>
-        <th width="50%">${uiLabelMap.PartyFirstName}</th>
+        <td width="50%">${uiLabelMap.PartyLastName}</td>
+        <td width="50%">${uiLabelMap.PartyFirstName}</td>
       </tr>
-      </thead>
     <#list salesReps as salesRep>
       <#assign party = salesRep.getRelatedOne("Party", false)!/>
       <#assign person = party.getRelatedOne("Person", false)!/>
@@ -37,5 +42,6 @@ under the License.
       </#if>
     </#list>
       </table>
-    </@section>
+    </div>
+</div>
 </#if>

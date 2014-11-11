@@ -136,12 +136,12 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">                        
-                        <container style="large-6">
+                        <container style="lefthalf">
                             <screenlet title="${uiLabelMap.OrderRequestInformation}">
                                 <include-form name="requestInfo" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
                             </screenlet>
                         </container>
-                        <container style="large-6">
+                        <container style="righthalf">
                             <platform-specific>
                                 <html><html-template location="component://order/webapp/ordermgr/request/requestContactMech.ftl"/></html>
                             </platform-specific>

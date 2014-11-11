@@ -55,17 +55,16 @@ function clickAll(e) {
             <input type="hidden" name="_checkGlobalScope" value="Y" />
         <table cellspacing="0" class="basic-table">
         <#assign rowCount = 0>
-        <thead>
         <tr class="header-row">
             <#list featureTypes as featureType>
-                <th>${featureType}</th>
+                <td><b>${featureType}</b></td>
             </#list>
-            <th>${uiLabelMap.ProductNewProductCreate} !</th>
-            <th>${uiLabelMap.ProductSequenceNum}</th>
-            <th>${uiLabelMap.ProductExistingVariant} :</th>
-            <th align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:clickAll(this);" /></th>
+            <td><b>${uiLabelMap.ProductNewProductCreate} !</b></td>
+            <td><b>${uiLabelMap.ProductSequenceNum}</b></td>
+            <td><b>${uiLabelMap.ProductExistingVariant} :</b></td>
+            <td align="right"><b>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:clickAll(this);" /></b></td>
         </tr>
-        </thead>
+
         <#assign defaultSequenceNum = 10>
         <#assign rowClass = "2">
         <#list featureCombinationInfos as featureCombinationInfo>
@@ -90,7 +89,7 @@ function clickAll(e) {
                 <td>
                     <div>
                     <#list existingVariantProductIds as existingVariantProductId>
-                        <a href="<@ofbizUrl>EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="button tiny">${existingVariantProductId}</a>
+                        <a href="<@ofbizUrl>EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="buttontext">${existingVariantProductId}</a>
                     </#list>
                     </div>
                 </td>

@@ -24,18 +24,16 @@ under the License.
         <br class="clear"/>
     </div>
     <table class="basic-table hover-bar" cellspacing="0" >
-    <thead>
     <tr class="header-row">
-           <th>
+           <td>
               ${uiLabelMap.CommonNbr}
-           </th>
-           <th colspan="2">
+           </td>
+           <td colspan="2">
               ${uiLabelMap.CommonDescription}
-           </th>
-           <th>
-           </th>
+           </td>
+           <td>
+           </td>
        </tr>
-       </thead>
     <#list custRequestItems as custRequestItemList>
     <#if custRequestItemList.custRequestItemSeqId?has_content>
        <tr class="header-row">
@@ -60,24 +58,22 @@ under the License.
             <td colspan="1" align="right" valign="top" width="50%" nowrap="nowrap" style="background-color:white; vertical-align: top;">
                 <#if custRequestItemNoteViews?has_content>
                     <table class="basic-table hover-bar" cellspacing="0">
-                        <thead>
                         <tr class="header-row">
-                            <th>
-                            </th>
-                            <th>
+                            <td>
+                            </td>
+                            <td>
                                 ${uiLabelMap.CommonNbr}
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 ${uiLabelMap.CommonNote}
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 ${uiLabelMap.PartyParty} ${uiLabelMap.PartyName}
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 ${uiLabelMap.CommonDate}
-                            </th>
+                            </td>
                         </tr>
-                        </thead>
                         <#list custRequestItemNoteViews as custRequestItemNoteViewList>
                             <#if custRequestItemNoteViewList.custRequestItemSeqId == custRequestItemList.custRequestItemSeqId>
                             <#if row?has_content>

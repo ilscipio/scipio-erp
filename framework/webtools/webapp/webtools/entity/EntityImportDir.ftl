@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>${uiLabelMap.WebtoolsImportToDataSource}</h1>
+<div class="page-title"><span>${uiLabelMap.WebtoolsImportToDataSource}</span></div>
 <p>${uiLabelMap.WebtoolsXMLImportInfo}</p>
 <hr />
 

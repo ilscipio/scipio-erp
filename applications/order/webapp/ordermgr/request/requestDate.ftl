@@ -16,7 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.CommonDate}">
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+        <div class="h3">${uiLabelMap.CommonDate}</div>
+    </div>
+    <div class="screenlet-body">
         <table cellspacing="0" class="basic-table">
             <tr>
                 <td align="right" valign="top" width="25%" class="label">
@@ -48,4 +52,5 @@ under the License.
                 </td>
             </tr>
         </table>
-    </@section>
+    </div>
+</div>

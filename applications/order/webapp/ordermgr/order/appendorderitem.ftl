@@ -24,7 +24,14 @@ under the License.
 </script>
 
 <#if orderHeader?has_content>
-<@section title="${uiLabelMap.OrderAddToOrder}">
+<div class="screenlet">
+  <div class="screenlet-title-bar">
+    <ul>
+      <li class="h3">&nbsp;${uiLabelMap.OrderAddToOrder}</li>
+    </ul>
+    <br class="clear"/>
+  </div>
+  <div class="screenlet-body">
         <form method="post" action="<@ofbizUrl>appendItemToOrder</@ofbizUrl>" name="appendItemForm">
             <input type="hidden" size="25" name="orderId" value="${orderId!}"/>
             <#if !catalogCol?has_content>
@@ -36,7 +43,6 @@ under the License.
             <#if shipGroups?size == 1>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroups.first.shipGroupSeqId}"/>
             </#if>
-             
             <table class="basic-table" cellspacing="0">
               <#if catalogCol?has_content && (catalogCol?size > 1)>
                 <tr>
@@ -56,7 +62,7 @@ under the License.
                       <#-- FIXME Problem here: the input field is shared -->
                       <@htmlTemplate.lookupField formName="appendItemForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
                       <#if "PURCHASE_ORDER" == orderHeader.orderTypeId>
-                          <a href="javascript:quicklookup(document.appendItemForm.orderId)" class="button tiny">${uiLabelMap.OrderQuickLookup}</a>
+                          <a href="javascript:quicklookup(document.appendItemForm.orderId)" class="buttontext">${uiLabelMap.OrderQuickLookup}</a>
                       </#if>
                   </td>
                 </tr>
@@ -85,7 +91,7 @@ under the License.
                 <tr>
                   <td class="label">${uiLabelMap.OrderDesiredDeliveryDate}</td>
                   <td>
-                        <@htmlTemplate.renderDateTimeField name="itemDesiredDeliveryDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="itemDesiredDeliveryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                        <@htmlTemplate.renderDateTimeField name="itemDesiredDeliveryDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="itemDesiredDeliveryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                   </td>
                 </tr>
                 <tr>
@@ -124,5 +130,6 @@ under the License.
                 </tr>
             </table>
         </form>
-    </@section>
+    </div>
+</div>
 </#if>

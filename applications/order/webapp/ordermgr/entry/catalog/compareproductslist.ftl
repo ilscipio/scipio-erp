@@ -16,7 +16,14 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.ProductCompareProducts}">
+<div id="productcomparelist" class="screenlet">
+  <div class="screenlet-title-bar">
+    <ul>
+      <li class="h3">${uiLabelMap.ProductCompareProducts}</li>
+    </ul>
+    <br class="clear"/>
+  </div>
+  <div class="screenlet-body">
   <#assign productCompareList = Static["org.ofbiz.product.product.ProductEvents"].getProductCompareList(request)/>
   <#if productCompareList?has_content>
     <table>
@@ -29,18 +36,21 @@ under the License.
           <form method="post" action="<@ofbizUrl>removeFromCompare</@ofbizUrl>" name="removeFromCompare${product_index}form">
             <input type="hidden" name="productId" value="${product.productId}"/>
           </form>
-          <a href="javascript:document.removeFromCompare${product_index}form.submit()" class="button tiny">${uiLabelMap.CommonRemove}</a>
+          <a href="javascript:document.removeFromCompare${product_index}form.submit()" class="buttontext">${uiLabelMap.CommonRemove}</a>
         </td>
       </tr>
     </#list>
   </table>
   <div>
-    <a href="<@ofbizUrl>clearCompareList</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonClearAll}</a>
+    <a href="<@ofbizUrl>clearCompareList</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClearAll}</a>
   </div>
   <div>
-    <a href="javascript:popUp('<@ofbizUrl secure="${request.isSecure()?string}">compareProducts</@ofbizUrl>', 'compareProducts', '650', '750')" class="button tiny">${uiLabelMap.ProductCompareProducts}</a>
+    <a href="javascript:popUp('<@ofbizUrl secure="${request.isSecure()?string}">compareProducts</@ofbizUrl>', 'compareProducts', '650', '750')" class="buttontext">${uiLabelMap.ProductCompareProducts}</a>
   </div>
 <#else/>
-  <@section title="${uiLabelMap.ProductNoProductsToCompare}"/>
+  <div>
+    ${uiLabelMap.ProductNoProductsToCompare}
+  </div>
 </#if>
-</@section>
+  </div>
+</div>

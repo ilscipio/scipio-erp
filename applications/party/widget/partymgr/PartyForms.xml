@@ -765,7 +765,7 @@ under the License.
         <field name="description"><display/></field>
         <field name="productId">
             <display-entity entity-name="Product" description="${productName}">
-                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}" link-style="button tiny">
+                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}" link-style="buttontext">
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -1183,7 +1183,7 @@ under the License.
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
         <field name="sequenceNum"><display/></field>
-        <field name="editLink" widget-style="button tiny" title="${uiLabelMap.CommonEdit}">
+        <field name="editLink" widget-style="buttontext" title="${uiLabelMap.CommonEdit}">
            <hyperlink target="FindProductStoreRoles" description="${uiLabelMap.CommonEdit}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="productStoreId"/>
@@ -1191,7 +1191,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" widget-style="button tiny" title="${uiLabelMap.CommonDelete}">
+        <field name="deleteLink" widget-style="buttontext" title="${uiLabelMap.CommonDelete}">
             <hyperlink target="storeRemoveRole" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="productStoreId"/>

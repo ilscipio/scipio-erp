@@ -18,14 +18,12 @@ under the License.
 -->
 <div class="screenlet-body">
   <#if parameters.searchLabels??>
-  <table class="basic-table hover-bar">
-   <thead>
-        <tr class="header-row">
-          <th>${uiLabelMap.WebtoolsLabelManagerRow}</th>
-          <th>${uiLabelMap.WebtoolsLabelManagerKey}</th>
-          <th>${uiLabelMap.WebtoolsLabelManagerReferences}</th>
-        </tr>
-    </thead>
+  <table class="basic-table hover-bar" cellspacing="3">
+    <tr class="header-row">
+      <td>${uiLabelMap.WebtoolsLabelManagerRow}</td>
+      <td>${uiLabelMap.WebtoolsLabelManagerKey}</td>
+      <td>${uiLabelMap.WebtoolsLabelManagerReferences}</td>
+    </tr>
     <#assign rowNumber = 1>
     <#assign rowNum = "2">
     <#list referencesList as reference>

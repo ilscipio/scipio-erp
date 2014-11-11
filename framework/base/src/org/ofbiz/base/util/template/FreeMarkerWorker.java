@@ -99,9 +99,6 @@ public class FreeMarkerWorker {
         newConfig.setSharedVariable("StringUtil", new BeanModel(StringUtil.INSTANCE, wrapper));
         newConfig.setTemplateLoader(new FlexibleTemplateLoader());
         newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));
-        Properties includeProperties = UtilProperties.getProperties("freemarkerIncludes");
-        List includeFreemarkerTemplates = new ArrayList(includeProperties.values()); 
-        if(includeFreemarkerTemplates.size()>0) newConfig.setAutoIncludes(includeFreemarkerTemplates);
         newConfig.setTemplateExceptionHandler(new FreeMarkerWorker.OFBizTemplateExceptionHandler());
         try {
             newConfig.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");

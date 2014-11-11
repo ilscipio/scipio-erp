@@ -18,21 +18,20 @@ under the License.
 -->
 
 <table class="basic-table hover-bar" cellspacing="0">
- <thead>
   <tr class="header-row-2">
-    <th>${uiLabelMap.ProductInventoryItemId}</th>
-    <th>${uiLabelMap.ProductFacilityId}</th>
-    <th>${uiLabelMap.ProductLocationSeqId}</th>
-    <th>${uiLabelMap.ProductQoh}</th>
-    <th>${uiLabelMap.ProductAtp}</th>
-    <th>${uiLabelMap.FormFieldTitle_unitCost}</th>
+    <td>${uiLabelMap.ProductInventoryItemId}</td>
+    <td>${uiLabelMap.ProductFacilityId}</td>
+    <td>${uiLabelMap.ProductLocationSeqId}</td>
+    <td>${uiLabelMap.ProductQoh}</td>
+    <td>${uiLabelMap.ProductAtp}</td>
+    <td>${uiLabelMap.FormFieldTitle_unitCost}</td>
   </tr>
-  </thead>
+  <tr><td colspan="6"><hr /></td></tr>
   <#if (inventoryItemsForPo?? && inventoryItemsForPo?has_content)>
     <tr class="header-row-2"><td colspan="6"><span class="label">&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductPurchaseOrder} - ${orderId}</span></td></tr>
     <#list inventoryItemsForPo as inventoryItem>
       <tr>
-        <td><a class="button tiny" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
+        <td><a class="buttontext" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
         <td>${inventoryItem.facilityId!}</td>
         <td>${inventoryItem.locationSeqId!}</td>
         <td>${inventoryItem.quantityOnHandTotal!}</td>
@@ -45,7 +44,7 @@ under the License.
     <tr class="header-row-2"><td colspan="6"><span class="label centered">&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductSupplier} - ${partyId}</span></td></tr>
     <#list inventoryItemsForSupplier as inventoryItem>
       <tr>
-        <td><a class="button tiny" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
+        <td><a class="buttontext" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
         <td>${inventoryItem.facilityId!}</td>
         <td>${inventoryItem.locationSeqId!}</td>
         <td>${inventoryItem.quantityOnHandTotal!}</td>
@@ -58,7 +57,7 @@ under the License.
     <tr class="header-row-2"><td colspan="6"><span class="label">&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductProduct} - ${internalName!} [${productId}]</span></td></tr>
     <#list inventoryItemsForProduct as inventoryItem>
       <tr>
-        <td><a class="button tiny" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
+        <td><a class="buttontext" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
         <td>${inventoryItem.facilityId!}</td>
         <td>${inventoryItem.locationSeqId!}</td>
         <td>${inventoryItem.quantityOnHandTotal!}</td>

@@ -26,10 +26,9 @@ under the License.
     </div>
     <div class="screenlet-body">
         <table cellspacing="0" class="basic-table">
-        <thead> 
-          <tr class="header-row">
-            <th valign="top">${uiLabelMap.ProductSegment}</th>
-            <th valign="top">
+        <tr class="header-row">
+            <td valign="top">${uiLabelMap.ProductSegment}</td>
+            <td valign="top">
                 <div>${uiLabelMap.ProductCarrierShipmentMethod}</div>
                 <div>${uiLabelMap.ProductOriginDestinationFacility}</div>
                 <div>${uiLabelMap.ProductOriginDestinationAddressId}</div>
@@ -37,24 +36,23 @@ under the License.
                 <div>${uiLabelMap.ProductShipmentThirdPartyAccountNumber}</div>
                 <div>${uiLabelMap.ProductShipmentThirdPartyPostalCode}</div>
                 <div>${uiLabelMap.ProductShipmentThirdCommonCountryCode}</div>
-            </th>
-            <th valign="top">
+            </td>
+            <td valign="top">
                 <div>${uiLabelMap.ProductShipmentFedexHomeDeliveryTypeDate}</div>
                 <div>${uiLabelMap.ProductCarrierStatus}</div>
                 <div>${uiLabelMap.ProductTrackingNumber}</div>
                 <div>${uiLabelMap.ProductEstimatedStartArrive}</div>
                 <div>${uiLabelMap.ProductActualStartArrive}</div>
-            </th>
-            <th valign="top">
+            </td>
+            <td valign="top">
                 <div>${uiLabelMap.ProductBillingWeightUom}</div>
                 <div>${uiLabelMap.ProductCurrencyUom}</div>
                 <div>${uiLabelMap.ProductActualTransport}</div>
                 <div>${uiLabelMap.ProductActualServices}</div>
                 <div>${uiLabelMap.ProductActualOther}</div>
                 <div>${uiLabelMap.ProductActualTotal}</div>
-            </th>
+            </td>
         </tr>
-        </thead>
     <#assign alt_row = false>
     <#list shipmentRouteSegmentDatas as shipmentRouteSegmentData>
         <#assign shipmentRouteSegment = shipmentRouteSegmentData.shipmentRouteSegment>
@@ -88,11 +86,11 @@ under the License.
                 <div>
                     ${shipmentRouteSegment.shipmentRouteSegmentId}
                     <br />
-                    <a href="javascript:document.updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}.submit();" class="button tiny">${uiLabelMap.CommonUpdate}</a>
+                    <a href="javascript:document.updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}.submit();" class="buttontext">${uiLabelMap.CommonUpdate}</a>
                     <br />
-                    <a href="javascript:document.duplicateShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="button tiny">${uiLabelMap.CommonDuplicate}</a>
+                    <a href="javascript:document.duplicateShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="buttontext">${uiLabelMap.CommonDuplicate}</a>
                     <br />
-                    <a href="javascript:document.deleteShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="buttontext">${uiLabelMap.CommonDelete}</a>
                 </div>
             </td>
             <td valign="top">
@@ -174,28 +172,28 @@ under the License.
                 <div>
                     <#if "UPS" == shipmentRouteSegment.carrierPartyId!>
                         <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
-                            <a href="javascript:document.upsShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="button tiny">${uiLabelMap.ProductConfirmShipmentUps}</a>
+                            <a href="javascript:document.upsShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="buttontext">${uiLabelMap.ProductConfirmShipmentUps}</a>
                             <br />
                             ${uiLabelMap.ProductShipmentUpsResidential}:
                             <input type="checkbox" name="homeDeliveryType" value="Y" ${(shipmentRouteSegment.homeDeliveryType?has_content)?string("checked=\"checked\"","")} />
                         <#elseif "SHRSCS_CONFIRMED" == shipmentRouteSegment.carrierServiceStatusId!>
-                            <a href="javascript:document.upsShipmentAccept_${shipmentRouteSegmentData_index}.submit()" class="button tiny">${uiLabelMap.ProductAcceptUpsShipmentConfirmation}</a>
+                            <a href="javascript:document.upsShipmentAccept_${shipmentRouteSegmentData_index}.submit()" class="buttontext">${uiLabelMap.ProductAcceptUpsShipmentConfirmation}</a>
                             <br />
-                            <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="button tiny">${uiLabelMap.ProductVoidUpsShipmentConfirmation}</a>
+                            <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="buttontext">${uiLabelMap.ProductVoidUpsShipmentConfirmation}</a>
                         <#elseif "SHRSCS_ACCEPTED" == shipmentRouteSegment.carrierServiceStatusId!>
-                            <a href="javascript:document.upsTrackShipment_${shipmentRouteSegmentData_index}.submit()" class="button tiny">${uiLabelMap.ProductTrackUpsShipment}</a>
+                            <a href="javascript:document.upsTrackShipment_${shipmentRouteSegmentData_index}.submit()" class="buttontext">${uiLabelMap.ProductTrackUpsShipment}</a>
                             <br />
-                            <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="button tiny">${uiLabelMap.ProductVoidUpsShipment}</a>
+                            <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="buttontext">${uiLabelMap.ProductVoidUpsShipment}</a>
                         </#if>
                     </#if>
                     <#if "DHL" == shipmentRouteSegment.carrierPartyId!>
                         <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
-                            <a href="javascript:document.dhlShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="button tiny">${uiLabelMap.ProductConfirmShipmentDHL}</a>
+                            <a href="javascript:document.dhlShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="buttontext">${uiLabelMap.ProductConfirmShipmentDHL}</a>
                         </#if>
                     </#if>
                     <#if "FEDEX" == shipmentRouteSegment.carrierPartyId!>
                         <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
-                            <a href="javascript:document.fedexShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="button tiny">${uiLabelMap.ProductConfirmShipmentFedex}</a>
+                            <a href="javascript:document.fedexShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="buttontext">${uiLabelMap.ProductConfirmShipmentFedex}</a>
                             <br />
                             <#if shipmentMethodType?? && shipmentMethodType.shipmentMethodTypeId=="GROUND_HOME">
                                 <select name="homeDeliveryType">
@@ -204,7 +202,7 @@ under the License.
                                     <option ${(shipmentRouteSegment.homeDeliveryType?default("")=="EVENING")?string("selected=\"selected\"","")} value="EVENING">${uiLabelMap.ProductShipmentFedexHomeEvening}</option>
                                     <option ${(shipmentRouteSegment.homeDeliveryType?default("")=="APPOINTMENT")?string("selected=\"selected\"","")} value="APPOINTMENT">${uiLabelMap.ProductShipmentFedexHomeAppointment}</option>
                                 </select>
-                                <@htmlTemplate.renderDateTimeField name="homeDeliveryDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.homeDeliveryDate.toString())!}" size="25" maxlength="30" id="homeDeliveryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                                <@htmlTemplate.renderDateTimeField name="homeDeliveryDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.homeDeliveryDate.toString())!}" size="25" maxlength="30" id="homeDeliveryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                             </#if>
                         <#else>
                             <#-- Todo: implement closeout with Fedex -->
@@ -232,11 +230,11 @@ under the License.
                     <br />
                     <input type="text" size="24" name="trackingIdNumber" value="${shipmentRouteSegment.trackingIdNumber!}"/>
                     <br />
-                    <@htmlTemplate.renderDateTimeField name="estimatedStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.estimatedStartDate.toString())!}" size="25" maxlength="30" id="estimatedStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="estimatedArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.estimatedArrivalDate.toString())!}" size="25" maxlength="30" id="estimatedArrivalDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="estimatedStartDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.estimatedStartDate.toString())!}" size="25" maxlength="30" id="estimatedStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="estimatedArrivalDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.estimatedArrivalDate.toString())!}" size="25" maxlength="30" id="estimatedArrivalDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <br />
-                    <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.actualStartDate.toString())!}" size="25" maxlength="30" id="actualStartDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="actualArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.actualArrivalDate.toString())!}" size="25" maxlength="30" id="actualArrivalDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.actualStartDate.toString())!}" size="25" maxlength="30" id="actualStartDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="actualArrivalDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.actualArrivalDate.toString())!}" size="25" maxlength="30" id="actualArrivalDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 </div>
             </td>
             <td valign="top">
@@ -312,7 +310,7 @@ under the License.
                 <div>
                     <span class="label">${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}
                     <#if shipmentPackageRouteSeg.labelImage??>
-                        <a href="javascript:document.viewShipmentPackageRouteSegLabelImage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="button tiny">${uiLabelMap.ProductViewLabelImage}</a>
+                        <a href="javascript:document.viewShipmentPackageRouteSegLabelImage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="buttontext">${uiLabelMap.ProductViewLabelImage}</a>
                     </#if>
                     <span class="label">${uiLabelMap.ProductTrack} ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/>
                 </div>
@@ -325,8 +323,8 @@ under the License.
             </td>
             <td valign="top">
                 <div>
-                    <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}.submit();" class="button tiny">${uiLabelMap.CommonUpdate}</a>
-                    <a href="javascript:document.deleteRouteSegmentShipmentPackage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}.submit();" class="buttontext">${uiLabelMap.CommonUpdate}</a>
+                    <a href="javascript:document.deleteRouteSegmentShipmentPackage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="buttontext">${uiLabelMap.CommonDelete}</a>
                 </div>
             </td>
         </tr>
@@ -359,7 +357,7 @@ under the License.
             </td>
             <td><span class="label">Track#:</span><input type="text" size="22" name="trackingCode"/></td>
             <td><span class="label">Box#:</span><input type="text" size="5" name="boxNumber"/></td>
-            <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}.submit()" class="button tiny">${uiLabelMap.CommonAdd}</a></td>
+            <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}.submit()" class="buttontext">${uiLabelMap.CommonAdd}</a></td>
             <td>&nbsp;</td>
             </form>
         </tr>
@@ -386,7 +384,7 @@ under the License.
                     <div>
                         <span class="label">${uiLabelMap.ProductNewSegment}</span>
                         <br />
-                        <a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="button tiny">${uiLabelMap.CommonCreate}</a>
+                        <a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="buttontext">${uiLabelMap.CommonCreate}</a>
                     </div>
                 </td>
                 <td valign="top">
@@ -433,11 +431,11 @@ under the License.
                     <br />
                     <input type="text" size="24" name="trackingIdNumber" value=""/>
                     <br />
-                    <@htmlTemplate.renderDateTimeField name="estimatedStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="estimatedStartDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="estimatedArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="estimatedArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="estimatedStartDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="estimatedStartDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="estimatedArrivalDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="estimatedArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <br />
-                    <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="actualArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="actualArrivalDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 </td>
                 <td valign="top">
                     <input type="text" size="5" name="billingWeight" value="${(shipmentRouteSegment.billingWeight)!}"/>

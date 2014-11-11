@@ -27,7 +27,7 @@
                     <if-entity-permission entity-id="${blog.contentId}" entity-name="Content" target-operation="CONTENT_UPDATE"/>
                 </or>
             </condition>
-            <link text="${uiLabelMap.CommonEdit}" target="EditBlogArticle" style="button tiny">
+            <link text="${uiLabelMap.CommonEdit}" target="EditBlogArticle" style="buttontext">
                 <parameter param-name="contentId" from-field="blog.contentId"/>
                 <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
             </link>

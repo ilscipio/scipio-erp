@@ -41,10 +41,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.OrderManager}" style="h1"/>
-                        <container style="large-12 columns">
                         <include-portal-page id="OrderPortalPage"/>
-                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -65,19 +62,16 @@ under the License.
                 <decorator-screen name="CommonOrderViewDecorator">
                     <decorator-section name="body">
                         <include-screen name="orderHeader"/>
-                        <container style="row">
-                            <container style="large-12 columns">
-                            <platform-specific>
-                                <html><html-template location="component://order/webapp/ordermgr/order/orderitems.ftl"/></html>
-                            </platform-specific>
-                            <platform-specific>
-                                <html><html-template location="component://order/webapp/ordermgr/order/ordernotes.ftl"/></html>
-                            </platform-specific>
-                            <platform-specific>
-                                <html><html-template location="component://order/webapp/ordermgr/order/transitions.ftl"/></html>
-                            </platform-specific>
-                            </container>
-                        </container>
+                        <container style="clear"/>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/order/orderitems.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/order/ordernotes.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/order/transitions.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -89,32 +83,19 @@ under the License.
                 <not><if-empty field="orderHeader"/></not>
             </condition>
             <widgets>
-                    <container style="row">
-                        <container style="large-12 columns">
-                            <label style="h1" text="${uiLabelMap.OrderInfo}"/>
-                            <include-screen name="orderactions"/>
-                        </container>
+                <container id="split50">
+                    <container style="lefthalf">
+                        <include-screen name="orderinfo"/>
+                        <include-screen name="orderterms"/>
+                        <include-screen name="orderpaymentinfo"/>
+                        <include-screen name="projectAssoOrder"/>
                     </container>
-                   <container style="row ">
-                        <container style="large-6 columns">
-                            <include-screen name="orderinfo"/>
-                            <include-screen name="orderterms"/>
-                        </container>
-                        <container style="large-6 columns">
-                            <include-screen name="ordercontactinfo"/>
-                        </container>
+                    <container style="righthalf">
+                        <include-screen name="ordercontactinfo"/>
+                        <include-screen name="ordershippinginfo"/>
+                        <include-screen name="OrderSalesReps"/>
                     </container>
-                    <container style="row">
-                        <container style="large-6 columns">
-                            <include-screen name="orderpaymentinfo"/>
-                            <include-screen name="projectAssoOrder"/>
-                        </container>
-                        <container style="large-6 columns">
-                            <include-screen name="ordershippinginfo"/>
-                            <include-screen name="OrderSalesReps"/>
-                        </container>
-                    </container>
-
+                </container>
             </widgets>
             <fail-widgets>
                 <label style="h2" text="${uiLabelMap.OrderNoOrderFound}: [${orderId}]"></label>
@@ -192,15 +173,6 @@ under the License.
             <widgets>
                 <platform-specific>
                     <html><html-template location="component://order/webapp/ordermgr/order/ordershippinginfo.ftl"/></html>
-                </platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="orderactions">
-        <section>
-            <widgets>
-                <platform-specific>
-                    <html><html-template location="component://order/webapp/ordermgr/order/orderactions.ftl"/></html>
                 </platform-specific>
             </widgets>
         </section>
@@ -303,7 +275,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderAddNote}">
                             <container>
-                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="button tiny"/>
+                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="buttontext"/>
                             </container>
                             <include-form name="OrderNewNote" location="component://order/widget/ordermgr/OrderForms.xml"/>
                         </screenlet>
@@ -460,10 +432,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderViewDecorator">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.OrderOrderHistory} #${orderId}" style="h1"/>
-                        <screenlet>
+                        <screenlet title="${uiLabelMap.OrderOrderHistory} #${orderId}">
                             <container>
-                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="button tiny"/>
+                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="buttontext"/>
                             </container>
                             <include-screen name="OrderShipmentMethodHistory"/>
                             <include-screen name="OrderUnitPriceHistory"/>

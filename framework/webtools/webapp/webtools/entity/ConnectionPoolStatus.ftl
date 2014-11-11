@@ -20,19 +20,17 @@ under the License.
 
 <#assign groups = delegator.getModelGroupReader().getGroupNames(delegator.getDelegatorName())!/>
 <table class="basic-table light-grid hover-bar">
-  <thead>
     <tr class="header-row">
-        <th>Helper Name</th>
-        <th>Num Active</th>
-        <th>Num Idle</th>
-        <th>Num Total</th>
-        <th>Max Active</th>
-        <th>Max Idle</th>
-        <th>Min Idle</th>
-        <th>Min Evictable Idle Time</th>
-        <th>Max Wait</th>
+        <td>Helper Name</td>
+        <td>Num Active</td>
+        <td>Num Idle</td>
+        <td>Num Total</td>
+        <td>Max Active</td>
+        <td>Max Idle</td>
+        <td>Min Idle</td>
+        <td>Min Evictable Idle Time</td>
+        <td>Max Wait</td>
     </tr>
-    </thead>
     <#assign alt_row = false>
     <#if (groups?has_content)>
         <#list groups as group>

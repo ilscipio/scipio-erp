@@ -20,14 +20,12 @@ under the License.
 <div class="screenlet">
     <div class="screenlet-body">
       <table cellspacing="0" cellpadding="2" class="basic-table">
-       <thead>
         <tr class="header-row">
-          <th>${uiLabelMap.ProductPackage}</th>
-          <th>${uiLabelMap.CommonCreated}</th>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
+          <td>${uiLabelMap.ProductPackage}</td>
+          <td>${uiLabelMap.CommonCreated}</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
         </tr>
-        </thead>
         <#assign alt_row = false>
         <#list shipmentPackageDatas as shipmentPackageData>
           <#assign shipmentPackage = shipmentPackageData.shipmentPackage>

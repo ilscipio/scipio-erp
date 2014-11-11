@@ -22,18 +22,16 @@ under the License.
     </div>
     <div class="screenlet-body">
         <table cellspacing="0" class="basic-table">
-          <thead>
             <tr class="header-row">
-              <th>${uiLabelMap.CommonType}</th>
-              <th>${uiLabelMap.CommonName}</th>
-              <th>${uiLabelMap.CommonSurveys}</th>
-              <th>${uiLabelMap.ProductProduct}</th>
-              <th>${uiLabelMap.ProductCategory}</th>
-              <th>${uiLabelMap.CommonFromDate}</th>
-              <th>${uiLabelMap.CommonSequenceNum}</th>
-              <th>&nbsp;</th>
+              <td><b>${uiLabelMap.CommonType}</b></td>
+              <td><b>${uiLabelMap.CommonName}</b></td>
+              <td><b>${uiLabelMap.CommonSurveys}</b></td>
+              <td><b>${uiLabelMap.ProductProduct}</b></td>
+              <td><b>${uiLabelMap.ProductCategory}</b></td>
+              <td><b>${uiLabelMap.CommonFromDate}</b></td>
+              <td><b>${uiLabelMap.CommonSequenceNum}</b></td>
+              <td><b>&nbsp;</b></td>
             </tr>
-          </thead>
             <#assign alt_row = false>
             <#list productStoreSurveys as storeSurvey>
               <#assign surveyType = storeSurvey.getRelatedOne("SurveyApplType", false)>
@@ -41,7 +39,7 @@ under the License.
               <tr valign="middle"<#if alt_row>class="alternate-row"</#if>>
                 <td>${surveyType.get("description",locale)}</td>
                 <td>${storeSurvey.groupName!}</td>
-                <td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="button tiny">${survey.description?default("[" + survey.surveyId + "]")}</a></td>
+                <td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="buttontext">${survey.description?default("[" + survey.surveyId + "]")}</a></td>
                 <td>${storeSurvey.productId?default("${uiLabelMap.CommonNA}")}</td>
                 <td>${storeSurvey.productCategoryId?default("${uiLabelMap.CommonNA}")}</td>
                 <td>${storeSurvey.fromDate!?string}</td>
@@ -50,7 +48,7 @@ under the License.
                   <form name="deleteProductStoreSurveyAppl_${storeSurvey_index}" method="post" action="<@ofbizUrl>deleteProductStoreSurveyAppl</@ofbizUrl>">
                     <input type="hidden" name="productStoreId" value="${productStoreId}" />
                     <input type="hidden" name="productStoreSurveyId" value="${storeSurvey.productStoreSurveyId}" />
-                    <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </td>
               </tr>
@@ -109,13 +107,13 @@ under the License.
               <tr>
                 <td class="label">${uiLabelMap.CommonFromDate}</td>
                 <td>
-                  <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                  <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 </td>
               </tr>
               <tr>
                 <td class="label">${uiLabelMap.CommonThruDate}</td>
                 <td>
-                  <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                  <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 </td>
               </tr>
               <tr>

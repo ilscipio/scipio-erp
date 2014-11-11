@@ -25,12 +25,12 @@ under the License.
         <table width="100%" cellspacing="0" cellpadding="2">
             <thead>
                 <tr class="header-row">
-                    <th>${uiLabelMap.ProductSubscription} ${uiLabelMap.CommonId}</th>
-                    <th>${uiLabelMap.ProductSubscription} ${uiLabelMap.CommonType}</th>
-                    <th>${uiLabelMap.CommonDescription}</th>
-                    <th>${uiLabelMap.ProductProductName}</th>
-                    <th>${uiLabelMap.CommonFromDate}</th>
-                    <th>${uiLabelMap.CommonThruDate}</th>
+                    <td><div class="tableheadtext">${uiLabelMap.ProductSubscription} ${uiLabelMap.CommonId}</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.ProductSubscription} ${uiLabelMap.CommonType}</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.ProductProductName}</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonFromDate}</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonThruDate}</div></td>
                 </tr>
                 <tr><td colspan="6"><hr /></td></tr>
             </thead>

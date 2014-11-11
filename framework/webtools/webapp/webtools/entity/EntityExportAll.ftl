@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>${uiLabelMap.WebtoolsExportFromDataSource}</h1>
+<div class="page-title"><span>${uiLabelMap.WebtoolsExportFromDataSource}</span></div>
 <p>${uiLabelMap.WebtoolsXMLExportInfo}</p>
 <#if results?has_content>
     <hr />
@@ -29,7 +29,7 @@ under the License.
 <hr />
 <form method="post" action="<@ofbizUrl>entityExportAll</@ofbizUrl>">
     ${uiLabelMap.WebtoolsOutputDirectory}: <input type="text" size="60" name="outpath" value="${outpath!}" /><br />
-    ${uiLabelMap.CommonFromDate}: <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/><br/>
+    ${uiLabelMap.CommonFromDate}: <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/><br/>
     ${uiLabelMap.WebtoolsTimeoutSeconds}: <input type="text" size="6" value="${txTimeout?default('7200')}" name="txTimeout"/><br />
     <br />
     <input type="submit" value="${uiLabelMap.WebtoolsExport}" />

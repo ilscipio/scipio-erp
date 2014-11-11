@@ -43,8 +43,8 @@ under the License.
             <widgets>
                 <platform-specific><html><html-template location="component://common/webcommon/includes/lookup.ftl"/></html></platform-specific>
                 <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
-                <container style="row">
-                    <container id="large-12 columns">
+                <container style="contentarea">
+                    <container id="column-container">
                         <!-- by default will render left-bar only if leftbarScreen value not empty -->
                         <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
                         <container id="content-main-section" style="${MainColumnStyle}">

@@ -191,7 +191,7 @@ function setServiceName(selection) {
                     <#assign alt_row = false>
                     <#list paymentList as payment>
                       <tr <#if alt_row> class="alternate-row"</#if>>
-                        <td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="button tiny">${payment.paymentId}</a></td>
+                        <td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="buttontext">${payment.paymentId}</a></td>
                         <td>
                           ${payment.paymentTypeDesc?default(payment.paymentTypeId)}
                         </td>

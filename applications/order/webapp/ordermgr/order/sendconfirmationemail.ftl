@@ -18,9 +18,16 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
-<@section title="${uiLabelMap.OrderSendConfirmationEmail}">
-      <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonGoBack}</a>
-      <a href="javascript:document.sendConfirmationForm.submit()" class="button tiny">${uiLabelMap.CommonSend}</a>      
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+      <ul>
+        <li class="h3">${uiLabelMap.OrderSendConfirmationEmail}</li>
+      </ul>
+      <br class="clear"/>
+    </div>
+    <div class="screenlet-body">
+      <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGoBack}</a>
+      <a href="javascript:document.sendConfirmationForm.submit()" class="buttontext">${uiLabelMap.CommonSend}</a>      
       <br />
       <form method="post" action="<@ofbizUrl>sendconfirmationmail/${donePage}</@ofbizUrl>" name="sendConfirmationForm">
         <input type="hidden" name="orderId" value="${orderId!}" />
@@ -78,9 +85,10 @@ under the License.
         </table>
       </form>
       <br />
-      <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonGoBack}</a>
-      <a href="javascript:document.sendConfirmationForm.submit()" class="button tiny">${uiLabelMap.CommonSend}</a>
-    </@section>
+      <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGoBack}</a>
+      <a href="javascript:document.sendConfirmationForm.submit()" class="buttontext">${uiLabelMap.CommonSend}</a>
+    </div>
+</div>
 <#else>
-  <@section title="${uiLabelMap.OrderViewPermissionError}"/>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

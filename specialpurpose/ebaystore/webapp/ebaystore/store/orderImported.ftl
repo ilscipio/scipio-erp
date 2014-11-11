@@ -39,28 +39,26 @@ function uploadTrackingCode(orderId, productStoreId) {
   <form name="listOrdersImported" method="post">
       <input type="hidden" name="viewSize"/>
       <input type="hidden" name="viewIndex"/>
-      <table class="basic-table hover-bar" cellspacing="0">
-       <thead>
+      <table class="basic-table hover-bar" cellspacing='0'>
         <tr class="header-row">
-          <th width="5%">${uiLabelMap.OrderOrderType}</th>
-          <th width="5%">${uiLabelMap.OrderOrderId}</th>
-          <th width="20%">${uiLabelMap.PartyName}</th>
-          <th width="5%" align="right">${uiLabelMap.OrderSurvey}</th>
-          <th width="5%" align="right">${uiLabelMap.OrderItemsOrdered}</th>
-          <th width="5%" align="right">${uiLabelMap.OrderItemsBackOrdered}</th>
-          <th width="5%" align="right">${uiLabelMap.OrderItemsReturned}</th>
-          <th width="10%" align="right">${uiLabelMap.OrderRemainingSubTotal}</th>
-          <th width="10%" align="right">${uiLabelMap.OrderOrderTotal}</th>
-          <th width="5%">&nbsp;</th>
+          <td width="5%">${uiLabelMap.OrderOrderType}</td>
+          <td width="5%">${uiLabelMap.OrderOrderId}</td>
+          <td width="20%">${uiLabelMap.PartyName}</td>
+          <td width="5%" align="right">${uiLabelMap.OrderSurvey}</td>
+          <td width="5%" align="right">${uiLabelMap.OrderItemsOrdered}</td>
+          <td width="5%" align="right">${uiLabelMap.OrderItemsBackOrdered}</td>
+          <td width="5%" align="right">${uiLabelMap.OrderItemsReturned}</td>
+          <td width="10%" align="right">${uiLabelMap.OrderRemainingSubTotal}</td>
+          <td width="10%" align="right">${uiLabelMap.OrderOrderTotal}</td>
+          <td width="5%">&nbsp;</td>
             <#if (requestParameters.filterInventoryProblems?default("N") == "Y") || (requestParameters.filterPOsOpenPastTheirETA?default("N") == "Y") || (requestParameters.filterPOsWithRejectedItems?default("N") == "Y") || (requestParameters.filterPartiallyReceivedPOs?default("N") == "Y")>
-              <th width="15%">${uiLabelMap.CommonStatus}</th>
-              <th width="5%">${uiLabelMap.CommonFilter}</th>
+              <td width="15%">${uiLabelMap.CommonStatus}</td>
+              <td width="5%">${uiLabelMap.CommonFilter}</td>
             <#else>
-              <th width="20%">${uiLabelMap.CommonStatus}</th>
+              <td width="20%">${uiLabelMap.CommonStatus}</td>
             </#if>
-          <th width="20%">${uiLabelMap.CommonDate}</th>
+          <td width="20%">${uiLabelMap.CommonDate}</td>
         </tr>
-        </thead>
         <#if orderList?has_content>
           <#assign alt_row = false>
           <#list orderList as orderHeader>
@@ -75,7 +73,7 @@ function uploadTrackingCode(orderId, productStoreId) {
             <#assign partyId = displayParty.partyId?default("_NA_")>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
               <td>${orderType.get("description",locale)?default(orderType.orderTypeId?default(""))}</td>
-              <td><a href="#" onclick="javascript:uploadTrackingCode('${orderHeader.orderId}','${productStoreId}')" class='button tiny'>${orderHeader.orderId}</a></td>
+              <td><a href="#" onclick="javascript:uploadTrackingCode('${orderHeader.orderId}','${productStoreId}')" class='buttontext'>${orderHeader.orderId}</a></td>
               <td>
                 <div>
                   <#if displayParty?has_content>

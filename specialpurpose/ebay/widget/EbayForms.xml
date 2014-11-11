@@ -145,12 +145,12 @@ under the License.
         <field name="certId"><display/></field>
         <field name="compatibilityLevel"><display/></field> 
         <field name="webSiteId" title="${uiLabelMap.ProductWebSite}"><display-entity entity-name="WebSite" description="${siteName} [${webSiteId}]"/></field>
-        <field name="editEbayConfiguration" title="${uiLabelMap.CommonEdit}" widget-style="button tiny">
+        <field name="editEbayConfiguration" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
             <hyperlink target="EditEbayConfiguration" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="productStoreId"/>
             </hyperlink>
         </field>
-        <field name="deleteEbayConfiguration" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
+        <field name="deleteEbayConfiguration" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEbayConfiguration" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productStoreId"/>
             </hyperlink>
@@ -214,7 +214,7 @@ under the License.
                 <entity-options entity-name="ShipmentMethodType" key-field-name="shipmentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="deleteEbayShippingMethod" title="" widget-style="button tiny">
+        <field name="deleteEbayShippingMethod" title="" widget-style="buttontext">
             <hyperlink target="deleteEbayShippingMethod" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="shipmentMethodName"/>
                 <parameter param-name="productStoreId"/>

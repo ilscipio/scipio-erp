@@ -211,10 +211,10 @@ under the License.
     <menu name="blogSub" menu-container-style="button-bar" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-        <menu-item name="NewBlog" title="${uiLabelMap.ContentCreateNewBlog}" widget-style=" create">
+        <menu-item name="NewBlog" title="${uiLabelMap.ContentCreateNewBlog}" widget-style="buttontext create">
             <link target="editBlog"/>
         </menu-item>
-        <menu-item name="NewBlogArticle" title="${uiLabelMap.ContentCreateNewBlogArticle}" widget-style=" create">
+        <menu-item name="NewBlogArticle" title="${uiLabelMap.ContentCreateNewBlogArticle}" widget-style="buttontext create">
             <condition>
                 <if-compare field="tabButtonItem" operator="equals" value="Articles"/>
             </condition>
@@ -276,30 +276,30 @@ under the License.
         </menu-item>
     </menu>
     <menu name="contentMenu" menu-container-style="button-bar button-style-2" default-selected-style="selected">
-        <menu-item name="EditContent" title="${uiLabelMap.CommonCreateNew}" widget-style=" create">
+        <menu-item name="EditContent" title="${uiLabelMap.CommonCreateNew}" widget-style="buttontext create">
             <link target="EditContent"/>
         </menu-item>
-        <menu-item name="ContentSearchOptions" title="${uiLabelMap.CommonAdvancedSearch}" widget-style="">
+        <menu-item name="ContentSearchOptions" title="${uiLabelMap.CommonAdvancedSearch}" widget-style="buttontext">
             <link target="ContentSearchOptions"/>
         </menu-item>
-        <menu-item name="UpdateContentAllKeywords" title="${uiLabelMap.ContentAutoCreateKeywords}" widget-style="">
+        <menu-item name="UpdateContentAllKeywords" title="${uiLabelMap.ContentAutoCreateKeywords}" widget-style="buttontext">
             <link target="updateContentAllKeywords"/>
         </menu-item>
     </menu>
     <menu name="websiteMenu" menu-container-style="button-bar button-style-2" default-selected-style="selected">
-        <menu-item name="EditWebSite" title="${uiLabelMap.ContentCreateNewWebSite}" widget-style=" create">
+        <menu-item name="EditWebSite" title="${uiLabelMap.ContentCreateNewWebSite}" widget-style="buttontext create">
             <link target="EditWebSite"/>
         </menu-item>
     </menu>
     <!-- Web Analytics -->
     <menu name="WebAnalyticsConfigButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="EditWebAnalyticsConfig" title="${uiLabelMap.CommonCreate}">
-            <link target="EditWebAnalyticsConfig" style="button tiny create">
+            <link target="EditWebAnalyticsConfig" style="buttontext create">
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>
         <!--<menu-item name="WebAnalyticsTypes" title="Create ${uiLabelMap.CatalogWebAnalyticsTypes}">
-            <link target="EditWebAnalyticsType" style="button tiny create">
+            <link target="EditWebAnalyticsType" style="buttontext create">
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>-->

@@ -51,7 +51,7 @@ under the License.
       <input type="radio" name="SEARCH_OPERATOR" id="keywordSearchOperatorAnd" value="AND" <#if requestParameters.SEARCH_OPERATOR! == "AND">checked="checked"</#if> />
     </div>
     <div>
-      <input type="submit" name="find" value="${uiLabelMap.CommonFind}" class="button tiny" />
+      <input type="submit" name="find" value="${uiLabelMap.CommonFind}" class="buttontext" />
     </div>
     </fieldset>
 </form>
@@ -62,7 +62,7 @@ under the License.
       <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="advancedsearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
     </div>
     <div>
-    <a href="javascript:document.getElementById('advancedSearchForm').submit()" class="button tiny">${uiLabelMap.ProductAdvancedSearch}</a>
+    <a href="javascript:document.getElementById('advancedSearchForm').submit()" class="buttontext">${uiLabelMap.ProductAdvancedSearch}</a>
     </div>
   </fieldset>
 </form>

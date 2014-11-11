@@ -18,9 +18,16 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-<@section title="${uiLabelMap.OrderReceiveOfflinePayments}">
-      <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonBack}</a>
-      <a href="javascript:document.paysetupform.submit()" class="button tiny">${uiLabelMap.CommonSave}</a>
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+      <ul>
+        <li class="h3">${uiLabelMap.OrderReceiveOfflinePayments}</li>
+      </ul>
+      <br class="clear"/>
+    </div>
+    <div class="screenlet-body">
+      <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonBack}</a>
+      <a href="javascript:document.paysetupform.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
 
       <form method="post" action="<@ofbizUrl>receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">
         <#if requestParameters.workEffortId??>
@@ -30,22 +37,20 @@ under the License.
 
         <#if paymentMethods?has_content>
         <table class="basic-table" cellspacing='0'>
-         <thead>
           <tr class="header-row">
-            <th width="30%" align="right">${uiLabelMap.PaymentMethod}</th>
-            <th>&nbsp;&nbsp;&nbsp;</th>
-            <th>${uiLabelMap.OrderAmount}</th>
-            <th>&nbsp;&nbsp;&nbsp;</th>
-            <th width="60%">${uiLabelMap.OrderReference}</th>
+            <td width="30%" align="right">${uiLabelMap.PaymentMethod}</td>
+            <td width="1">&nbsp;&nbsp;&nbsp;</td>
+            <td width="1">${uiLabelMap.OrderAmount}</td>
+            <td width="1">&nbsp;&nbsp;&nbsp;</td>
+            <td width="70%">${uiLabelMap.OrderReference}</td>
           </tr>
-          </thead>
           <#list paymentMethods as payMethod>
           <tr>
-            <td align="right">${payMethod.get("description",locale)?default(payMethod.paymentMethodId)}</td>
-            <td>&nbsp;&nbsp;&nbsp;</td>
-            <td><input type="text" size="7" name="${payMethod.paymentMethodId}_amount" /></td>
-            <td>&nbsp;&nbsp;&nbsp;</td>
-            <td><input type="text" size="15" name="${payMethod.paymentMethodId}_reference" /></td>
+            <td width="30%" align="right">${payMethod.get("description",locale)?default(payMethod.paymentMethodId)}</td>
+            <td width="1">&nbsp;&nbsp;&nbsp;</td>
+            <td width="1"><input type="text" size="7" name="${payMethod.paymentMethodId}_amount" /></td>
+            <td width="1">&nbsp;&nbsp;&nbsp;</td>
+            <td width="70%"><input type="text" size="15" name="${payMethod.paymentMethodId}_reference" /></td>
           </tr>
           </#list>
         </table>
@@ -53,30 +58,31 @@ under the License.
         <br /> <br />
         <#if paymentMethodTypes?has_content>
         <table class="basic-table" cellspacing='0'>
-         <thead>
           <tr class="header-row">
-            <th width="30%" align="right">${uiLabelMap.OrderPaymentType}</th>
-            <th >&nbsp;&nbsp;&nbsp;</th>
-            <th >${uiLabelMap.OrderAmount}</th>
-            <th >&nbsp;&nbsp;&nbsp;</th>
-            <th width="60%">${uiLabelMap.OrderReference}</th>
+            <td width="30%" align="right">${uiLabelMap.OrderPaymentType}</td>
+            <td width="1">&nbsp;&nbsp;&nbsp;</td>
+            <td width="1">${uiLabelMap.OrderAmount}</td>
+            <td width="1">&nbsp;&nbsp;&nbsp;</td>
+            <td width="70%">${uiLabelMap.OrderReference}</td>
           </tr>
           <#list paymentMethodTypes as payType>
           <tr>
-            <td align="right">${payType.get("description",locale)?default(payType.paymentMethodTypeId)}</td>
-            <td >&nbsp;&nbsp;&nbsp;</td>
-            <td ><input type="text" size="7" name="${payType.paymentMethodTypeId}_amount" /></td>
-            <td >&nbsp;&nbsp;&nbsp;</td>
-            <td ><input type="text" size="15" name="${payType.paymentMethodTypeId}_reference" /></td>
+            <td width="30%" align="right">${payType.get("description",locale)?default(payType.paymentMethodTypeId)}</td>
+            <td width="1">&nbsp;&nbsp;&nbsp;</td>
+            <td width="1"><input type="text" size="7" name="${payType.paymentMethodTypeId}_amount" /></td>
+            <td width="1">&nbsp;&nbsp;&nbsp;</td>
+            <td width="70%"><input type="text" size="15" name="${payType.paymentMethodTypeId}_reference" /></td>
           </tr>
           </#list>
         </table>
         </#if>
       </form>
 
-      <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonBack}</a>
-      <a href="javascript:document.paysetupform.submit()" class="button tiny">${uiLabelMap.CommonSave}</a>
-    </@section>
+      <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonBack}</a>
+      <a href="javascript:document.paysetupform.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
+    </div>
+</div>
+<br />
 <#else>
-  <@section title="${uiLabelMap.OrderViewPermissionError}"/>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

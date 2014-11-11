@@ -18,16 +18,14 @@ under the License.
 -->
 
 <table cellspacing="0" class="basic-table hover-bar">
-  <thead>
     <tr class="header-row">
         <#assign firstRecord = records[0]!/>
         <#list columnNames as columnName>
-        <th<#if firstRecord?? && firstRecord[columnName]?default("")?is_number> class="align-text"</#if>>
+        <td<#if firstRecord?? && firstRecord[columnName]?default("")?is_number> class="align-text"</#if>>
             ${columnName}
-        </th>
+        </td>
         </#list>
     </tr>
-   </thead>
     <#assign alt_row = false>
     <#list records as record>
     <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>

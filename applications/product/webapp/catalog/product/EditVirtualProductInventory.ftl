@@ -22,21 +22,19 @@ under the License.
     </div>
     <div class="screenlet-body">
         <table cellspacing="0" class="basic-table">
-          <thead>
             <tr class="header-row">
-                <th>${uiLabelMap.ProductProductId}</th>
+                <td>${uiLabelMap.ProductProductId}</td>
                     <#list featureTypeIds as featureTypeId>
                         <#assign featureType = delegator.findOne("ProductFeatureType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", featureTypeId), false)>
-                        <th>${featureType.description}&nbsp;</th>
+                        <td>${featureType.description}&nbsp;</td>
                     </#list>
-                <th>${uiLabelMap.ProductQoh}</th>
-                <th>${uiLabelMap.ProductAtp}</th>
+                <td>${uiLabelMap.ProductQoh}</td>
+                <td>${uiLabelMap.ProductAtp}</td>
             </tr>
-            </thead>
             <#assign rowClass = "2">
             <#list variantInventorySummaries as variantSummary>
             <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                <td><a href="<@ofbizUrl>EditProductInventoryItems?productId=${variantSummary.productId}</@ofbizUrl>" class="button tiny">${variantSummary.productId}</a></td>
+                <td><a href="<@ofbizUrl>EditProductInventoryItems?productId=${variantSummary.productId}</@ofbizUrl>" class="buttontext">${variantSummary.productId}</a></td>
                     <#list featureTypeIds as featureTypeId>
                         <td>${(variantSummary[featureTypeId].description)?default(featureTypeId)}</td>
                     </#list>

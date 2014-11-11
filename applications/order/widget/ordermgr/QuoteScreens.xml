@@ -48,7 +48,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.OrderViewPermissionError}</label>
+                                <label style="h3">${uiLabelMap.OrderViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -70,10 +70,9 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.OrderOrderQuotes}" style="h1" />
-                        <screenlet>
+                        <screenlet title="${uiLabelMap.OrderOrderQuotes}">
                             <container>
-                                <link target="EditQuote" text="${uiLabelMap.OrderCreateOrderQuote}" style="button tiny"/>
+                                <link target="EditQuote" text="${uiLabelMap.OrderCreateOrderQuote}" style="buttontext"/>
                             </container>
                             <include-form name="FindQuotes" location="component://order/widget/ordermgr/QuoteForms.xml"/>
                             <include-form name="ListQuotes" location="component://order/widget/ordermgr/QuoteForms.xml"/>
@@ -258,7 +257,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderOrderQuoteListRoles}">
                             <container>
-                                <link target="EditQuoteRole" text="${uiLabelMap.OrderCreateOrderQuoteRole}" style="button tiny">
+                                <link target="EditQuoteRole" text="${uiLabelMap.OrderCreateOrderQuoteRole}" style="buttontext">
                                     <parameter param-name="quoteId" from-field="quote.quoteId"/>
                                 </link>
                             </container>
@@ -286,7 +285,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderOrderQuoteEditRoles}">
                             <container>
-                                <link target="EditQuoteRole" text="${uiLabelMap.OrderCreateOrderQuoteRole}" style="button tiny">
+                                <link target="EditQuoteRole" text="${uiLabelMap.OrderCreateOrderQuoteRole}" style="buttontext">
                                     <parameter param-name="quoteId" from-field="quote.quoteId"/>
                                 </link>
                             </container>
@@ -347,12 +346,12 @@ under the License.
                         <container>
                             <include-menu name="quoteTermSubTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                         </container>
-                        <container style="large-6">
+                        <container style="lefthalf">
                             <screenlet title="${uiLabelMap.OrderOrderQuoteEditItems}" >
                                 <include-form name="EditQuoteItem" location="component://order/widget/ordermgr/QuoteForms.xml"/>
                             </screenlet>
                         </container>
-                        <container style="large-6">
+                        <container style="righthalf">
                             <section>
                                 <condition>
                                     <not><if-empty field="quoteItemSeqId"/></not>
@@ -385,7 +384,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderOrderQuoteListAttributes}">
                             <container>
-                                <link target="EditQuoteAttribute" text="${uiLabelMap.OrderCreateOrderQuoteAttribute}" style="button tiny">
+                                <link target="EditQuoteAttribute" text="${uiLabelMap.OrderCreateOrderQuoteAttribute}" style="buttontext">
                                     <parameter param-name="quoteId" from-field="quote.quoteId"/>
                                 </link>
                             </container>
@@ -413,7 +412,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderOrderQuoteEditAttributes}">
                             <container>
-                                <link target="EditQuoteAttribute" text="${uiLabelMap.OrderCreateOrderQuoteAttribute}" style="button tiny">
+                                <link target="EditQuoteAttribute" text="${uiLabelMap.OrderCreateOrderQuoteAttribute}" style="buttontext">
                                     <parameter param-name="quoteId" from-field="quote.quoteId"/>
                                 </link>
                             </container>
@@ -440,7 +439,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderOrderQuoteListCoefficients}">
                             <container>
-                                <link target="EditQuoteCoefficient" text="${uiLabelMap.OrderCreateOrderQuoteCoefficient}" style="button tiny">
+                                <link target="EditQuoteCoefficient" text="${uiLabelMap.OrderCreateOrderQuoteCoefficient}" style="buttontext">
                                     <parameter param-name="quoteId" from-field="quote.quoteId"/>
                                 </link>
                             </container>
@@ -468,7 +467,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderOrderQuoteEditCoefficients}">
                             <container>
-                                <link target="EditQuoteCoefficient" text="${uiLabelMap.OrderCreateOrderQuoteCoefficient}" style="button tiny">
+                                <link target="EditQuoteCoefficient" text="${uiLabelMap.OrderCreateOrderQuoteCoefficient}" style="buttontext">
                                     <parameter param-name="quoteId" from-field="quote.quoteId"/>
                                 </link>
                             </container>
@@ -541,10 +540,10 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderOrderQuoteListAdjustments}">
                             <container>
-                                <link target="autoCreateQuoteAdjustments" text="${uiLabelMap.OrderRunStorePromotions}" style="button tiny">
+                                <link target="autoCreateQuoteAdjustments" text="${uiLabelMap.OrderRunStorePromotions}" style="buttontext">
                                     <parameter param-name="quoteId"/>
                                 </link>
-                                <link target="EditQuoteAdjustment" text="${uiLabelMap.OrderCreateOrderQuoteAdjustment}" style="button tiny">
+                                <link target="EditQuoteAdjustment" text="${uiLabelMap.OrderCreateOrderQuoteAdjustment}" style="buttontext">
                                     <parameter param-name="quoteId" from-field="quote.quoteId"/>
                                 </link>
                             </container>
@@ -572,7 +571,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderOrderQuoteEditAdjustments}">
                             <container>
-                                <link target="EditQuoteAdjustment" text="${uiLabelMap.OrderCreateOrderQuoteAdjustment}" style="button tiny">
+                                <link target="EditQuoteAdjustment" text="${uiLabelMap.OrderCreateOrderQuoteAdjustment}" style="buttontext">
                                     <parameter param-name="quoteId" from-field="quote.quoteId"/>
                                 </link>
                             </container>
@@ -671,10 +670,10 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <container style="large-6">
+                <container style="lefthalf">
                     <include-screen name="quoteInfo"/>
                 </container>
-                <container style="large-6">
+                <container style="righthalf">
                     <include-screen name="quoteDate"/>
                     <include-screen name="quoteRoles"/>
                     <include-screen name="ListQuoteInfo"/>

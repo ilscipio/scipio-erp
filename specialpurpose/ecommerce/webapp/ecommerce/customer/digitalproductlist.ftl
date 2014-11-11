@@ -22,7 +22,7 @@ under the License.
         <div class="h3">${uiLabelMap.PageTitleDigitalProductList}</div>
     </div>
     <div class="screenlet-body">
-       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="button tiny">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
+       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
         <table width="100%" cellpadding="1" cellspacing="0" border="0">
           <tr>
             <td width="30%">
@@ -48,7 +48,7 @@ under the License.
               </td>
               <td width="5">&nbsp;</td>
               <td align="right">
-                <a href="<@ofbizUrl>digitalproductedit?productId=${supplierProduct.productId}&amp;currencyUomId=${supplierProduct.currencyUomId}&amp;minimumOrderQuantity=${supplierProduct.minimumOrderQuantity}&amp;availableFromDate=${supplierProduct.availableFromDate}</@ofbizUrl>" class="button tiny">Edit</a>
+                <a href="<@ofbizUrl>digitalproductedit?productId=${supplierProduct.productId}&amp;currencyUomId=${supplierProduct.currencyUomId}&amp;minimumOrderQuantity=${supplierProduct.minimumOrderQuantity}&amp;availableFromDate=${supplierProduct.availableFromDate}</@ofbizUrl>" class="buttontext">Edit</a>
               </td>
             </tr>
           </#list>
@@ -64,6 +64,6 @@ under the License.
         <div class="h3">${uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission}</div>
     </div>
     <div class="screenlet-body">
-       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="button tiny">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
+       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
     </div>
 </div>

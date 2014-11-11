@@ -18,7 +18,11 @@ under the License.
 -->
 
 <#if productIds?has_content>
-    <@section title="${uiLabelMap.OrderProductsForPromotion}">
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+        <div class="h3">${uiLabelMap.OrderProductsForPromotion}:</div>
+    </div>
+    <div class="screenlet-body">
         <#if (listSize > 0)>
             <table border="0" width="100%" cellpadding="2">
                 <tr>
@@ -26,11 +30,11 @@ under the License.
                     <span>
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a> |
+                    <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
                     </#if>
                     ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
                     <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNext}</a>
+                    | <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
                     </#if>
                     </b>
                     </span>
@@ -59,5 +63,6 @@ under the License.
           </#list>
         </#if>
         </table>
-    </@section>
+    </div>
+</div>
 </#if>

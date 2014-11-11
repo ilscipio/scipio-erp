@@ -34,7 +34,8 @@ function makeExpDate() {
 </script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
-<@section>
+<div class="screenlet">
+    <div class="screenlet-body">
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
           <#-- initial screen when we have a associated party -->
           <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
@@ -42,7 +43,7 @@ function makeExpDate() {
             <table width="100%" cellpadding="1" cellspacing="0" border="0">
               <tr>
                 <td colspan="2">
-                  <a href="<@ofbizUrl>setBilling?createNew=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a>
+                  <a href="<@ofbizUrl>setBilling?createNew=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
                 </td>
               </tr>
               <tr><td colspan="3"><hr /></td></tr>
@@ -113,7 +114,7 @@ function makeExpDate() {
                           ${uiLabelMap.OrderCardSecurityCode}&nbsp;<input type="text" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value=""/>
                         </span>
                       </td>
-                      <td align="right"><a href="/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></td>
+                      <td align="right"><a href="/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
                     </tr>
                   <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                     <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
@@ -127,7 +128,7 @@ function makeExpDate() {
                           <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                         </label>
                       </td>
-                      <td align="right"><a href="/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></td>
+                      <td align="right"><a href="/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
                     </tr>
                     <tr><td colspan="2"><hr /></td></tr>
                   </#if>
@@ -514,7 +515,8 @@ function makeExpDate() {
             </table>
           </form>
         </#if>
-    </@section>
+    </div>
+</div>
 <#else>
-  <@section title="${uiLabelMap.OrderViewPermissionError}"/>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

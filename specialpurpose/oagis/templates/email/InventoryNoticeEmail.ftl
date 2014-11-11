@@ -31,20 +31,18 @@
     <#-- custom logo or text can be inserted here -->
     <br />
     <div class="screenlet-title-bar">
-      <div class="h3">${uiLabelMap.OagisInventoryDescription}</div>
+      <div class="h3">${uiLabelMap.OagisInventoryDescription}<b></b></div>
     </div>
     <div class="screenlet-body">
       <table class="basic-table" cellspacing="0">
-        <thead>
         <tr valign="bottom" class="header-row">
-          <th width="10%">${uiLabelMap.ProductProduct}</th>
-          <th width="10%" align="center">${uiLabelMap.OagisInventoryLevelDateTime}</th>
-          <th width="10%" align="right">${uiLabelMap.OrderReturnItemInventoryStatus}</th>
-          <th width="10%" align="right">${uiLabelMap.OrderQuantity} (Inventory)</th>
-          <th width="10%" align="right">${uiLabelMap.OrderQuantity} (Message)</th>
-          <th width="10%" align="right">${uiLabelMap.OagisQuantityDiff}.</th>
+          <td width="10%"><b>${uiLabelMap.ProductProduct}</b></td>
+          <td width="10%" align="center"><b>${uiLabelMap.OagisInventoryLevelDateTime}</b></td>
+          <td width="10%" align="right"><b>${uiLabelMap.OrderReturnItemInventoryStatus}</b></td>
+          <td width="10%" align="right"><b>${uiLabelMap.OrderQuantity} (Inventory)</b></td>
+          <td width="10%" align="right"><b>${uiLabelMap.OrderQuantity} (Message)</b></td>
+          <td width="10%" align="right"><b>${uiLabelMap.OagisQuantityDiff}.</b></td>
         </tr>
-        </thead>
         <tr><td colspan="10"><hr /></td></tr>
         <#assign alt_row = false>
         <#list inventoryMapList as inventoryMap>

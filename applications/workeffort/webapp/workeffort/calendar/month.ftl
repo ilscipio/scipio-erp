@@ -25,13 +25,15 @@ under the License.
     <#assign newCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
 <table cellspacing="0" class="basic-table calendar">
+  <thead>
   <tr class="header-row">
-    <td width="1%">&nbsp;</td>
+    <th width="1%">&nbsp;</th>
     <#list periods as day>
-      <td>${day.start?date?string("EEEE")?cap_first}</td>
+      <th>${day.start?date?string("EEEE")?cap_first}</th>
       <#if (day_index > 5)><#break></#if>
     </#list>
   </tr>
+  </thead>
   <#list periods as period>
     <#assign currentPeriod = false/>
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>

@@ -62,7 +62,7 @@ under the License.
         <row-actions>
             <set field="amountToApply" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>
         </row-actions>
-        <field name="paymentId" widget-style="buttontext">
+        <field name="paymentId" widget-style="button tiny">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -307,7 +307,7 @@ under the License.
     <form name="listInvoicesNotApplied" type="list" list-name="invoices" target="createPaymentApplication" title=""
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="paymentId"><hidden/></field>
-        <field name="invoiceId" widget-style="buttontext">
+        <field name="invoiceId" widget-style="button tiny">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -329,7 +329,7 @@ under the License.
     <form name="listPaymentsNotApplied" type="list" list-name="payments" target="createPaymentApplication" title=""
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="paymentId"><hidden/></field>
-        <field name="toPaymentId" widget-style="buttontext">
+        <field name="toPaymentId" widget-style="button tiny">
             <hyperlink target="paymentOverview" description="[${toPaymentId}]">
                 <parameter param-name="paymentId" from-field="toPaymentId"/>
             </hyperlink>
@@ -420,23 +420,23 @@ under the License.
         <auto-fields-entity entity-name="PaymentApplication" default-field-type="display"/>
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
-        <field name="invoiceId" widget-style="buttontext">
+        <field name="invoiceId" widget-style="button tiny">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="invoiceItemSeqId" widget-style="buttontext">
+        <field name="invoiceItemSeqId" widget-style="button tiny">
             <hyperlink target="listInvoiceItems" description="${invoiceItemSeqId}">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="invoiceItemSeqId"/>
             </hyperlink>
         </field>
-        <field name="toPaymentId" widget-style="buttontext">
+        <field name="toPaymentId" widget-style="button tiny">
             <hyperlink target="paymentOverview" description="${toPaymentId}">
                 <parameter param-name="paymentId" from-field="toPaymentId"/>
             </hyperlink>
         </field>
-        <field name="billingAccountId" widget-style="buttontext">
+        <field name="billingAccountId" widget-style="button tiny">
             <hyperlink target="EditBillingAccount" description="${billingAccountId}">
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
@@ -521,7 +521,7 @@ under the License.
     </form>
     <form name="ListInvoicesByDueDate" type="list" list-name="invoicePaymentInfoList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="invoiceId" widget-style="buttontext">
+        <field name="invoiceId" widget-style="button tiny">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>

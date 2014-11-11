@@ -18,8 +18,7 @@ under the License.
 -->
 
 <#-- ==================== Party Selection dialog box ========================= -->
-<div class="screenlet">
-    <div class="screenlet-body">
+<@section >
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
     <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
@@ -86,7 +85,7 @@ under the License.
             <@htmlTemplate.lookupField value="${additionalPartyId!}" formName="quickAddPartyForm" name="additionalPartyId" id="additionalPartyId" fieldFormName="${lookupPartyView}"/>
           </td>
           <td>
-            &nbsp;<a href="javascript:document.quickAddPartyForm.submit()" class="buttontext">${uiLabelMap.CommonApply}</a>
+            &nbsp;<a href="javascript:document.quickAddPartyForm.submit()" class="button tiny">${uiLabelMap.CommonApply}</a>
           </td>
         </tr>
       </table>
@@ -132,5 +131,4 @@ under the License.
   </form>
   </#if> <#-- additionalPartyType?has_content -->
 </table>
-    </div>
-</div>
+</@section>

@@ -30,11 +30,7 @@ under the License.
   <#assign telecomNumber = fulfillContactMech.getRelatedOne("TelecomNumber", true)!>
 </#if>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.PartyContactInformation}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.PartyContactInformation}">
         <table cellspacing="0" class="basic-table">
             <tr>
                 <td align="right" valign="top" width="25%" class="label">
@@ -66,14 +62,13 @@ under the License.
                         ${telecomNumber.countryCode!}
                         <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode?default("000")}-</#if>${telecomNumber.contactNumber?default("000-0000")}
                         <#if (telecomNumber?has_content && !telecomNumber.countryCode?has_content) || telecomNumber.countryCode = "011">
-                          <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="buttontext">${uiLabelMap.CommonLookupAnywho}</a>
-                          <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="buttontext">${uiLabelMap.CommonLookupWhitepages}</a>
+                          <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="button tiny">${uiLabelMap.CommonLookupAnywho}</a>
+                          <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="button tiny">${uiLabelMap.CommonLookupWhitepages}</a>
                         </#if>
                       </#if>
                     </div>
                 </td>
             </tr>
         </table>
-    </div>
-</div>
+    </@section>
 </#if>

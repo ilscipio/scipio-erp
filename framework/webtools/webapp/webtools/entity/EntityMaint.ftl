@@ -16,20 +16,31 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-    <div>
+<#include StringUtil.wrapString("component://widget/templates/htmlFormMacroLibrary.ftl")> 
+
        <form action="<@ofbizUrl>/entitymaint</@ofbizUrl>">
-          <b>${uiLabelMap.CommonGroup}:</b>
-          <select name="filterByGroupName">
-             <option value="">${uiLabelMap.CommonAll}</option>
-             <#list entityGroups as group>
-                <option value="${group}" <#if filterByGroupName??><#if group = filterByGroupName>selected="selected"</#if></#if>>${group}</option>
-             </#list>
-          </select>
-          <b>${uiLabelMap.WebtoolsEntityName}:</b>
-          <input type= "text" name= "filterByEntityName" value="${parameters.filterByEntityName!}"/>
-          <input type="submit" value="${uiLabelMap.CommonApply}"/>
+          <@renderFormatFieldRowOpen collapse=true/>
+            <@renderFormatFieldRowTitleCellOpen collapse=true />${uiLabelMap.CommonGroup}
+            <@renderFormatFieldRowTitleCellClose collapse=true />
+            <@renderFormatFieldRowWidgetCellOpen/>
+                  <select name="filterByGroupName">
+                     <option value="">${uiLabelMap.CommonAll}</option>
+                     <#list entityGroups as group>
+                        <option value="${group}" <#if filterByGroupName??><#if group = filterByGroupName>selected="selected"</#if></#if>>${group}</option>
+                     </#list>
+                  </select>
+                  <@renderFormatFieldRowWidgetCellClose />
+            <@renderFormatFieldRowClose />
+            <@renderFormatFieldRowOpen collapse=true/>
+              <@renderFormatFieldRowTitleCellOpen collapse=true />${uiLabelMap.WebtoolsEntityName}
+                <@renderFormatFieldRowTitleCellClose collapse=true />
+                <@renderFormatFieldRowWidgetCellOpen/>
+                    <input type= "text" name= "filterByEntityName" value="${parameters.filterByEntityName!}"/>
+                <@renderFormatFieldRowWidgetCellClose /> 
+              <input type="submit" value="${uiLabelMap.CommonApply}"/>
+              <@renderFormatFieldRowWidgetCellClose />
+            <@renderFormatFieldRowClose />
        </form>
-    </div>
     <#assign firstChar = "x">
     <#assign anchor="">
     <#assign alt_row = false>
@@ -52,12 +63,14 @@ under the License.
       <div class="screenlet-body">
         <#assign firstChar = "*">
         <table class="basic-table hover-bar" cellspacing='0'>
+          <thead>
           <tr class="header-row">
-            <td>${uiLabelMap.WebtoolsEntityName}</td>
-            <td>&nbsp;</td>
-            <td>${uiLabelMap.WebtoolsEntityName}</td>
-            <td>&nbsp;</td>
+            <th>${uiLabelMap.WebtoolsEntityName}</th>
+            <th>&nbsp;</th>
+            <th>${uiLabelMap.WebtoolsEntityName}</th>
+            <th>&nbsp;</th>
           </tr>
+          </thead>
           <#list entitiesList as entity>
             <#if entity.entityName?substring(0, 1) != firstChar>
               <#if right_col>

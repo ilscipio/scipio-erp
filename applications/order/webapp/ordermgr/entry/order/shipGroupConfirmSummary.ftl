@@ -27,11 +27,7 @@ standard order confirmation page and to be re-usable by other screens.
 <#if !(cart??)><#assign cart = shoppingCart!/></#if>
 
 <#if cart??>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <div class="h3">${uiLabelMap.OrderShippingInformation}</div>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.OrderShippingInformation}">
     <table width="100%">
 
       <#-- header -->
@@ -116,6 +112,5 @@ standard order confirmation page and to be re-usable by other screens.
       <#-- END LIST SHIP GROUPS -->
 
     </table>
-  </div>
-</div>
+  </@section>
 </#if>

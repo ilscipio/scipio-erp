@@ -116,14 +116,14 @@ under the License.
               <td><input type="text" name="withSurveyQuestionId" size="5" value="${surveyQuestionAndAppl.withSurveyQuestionId!}"/></td>
               <td><input type="text" name="withSurveyOptionSeqId" size="5" value="${surveyQuestionAndAppl.withSurveyOptionSeqId!}"/></td>
               <td><input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/></td>
-              <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.ContentSurveyQuestion}</a></td>
+              <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.ContentSurveyQuestion}</a></td>
               </form>
               <td>
                 <form id="removeSurveyQuestion_${surveyQuestionAndAppl.surveyQuestionId}" action="<@ofbizUrl>removeSurveyQuestionAppl</@ofbizUrl>" method="post">
                   <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}" />
                   <input type="hidden" name="surveyQuestionId" value="${surveyQuestionAndAppl.surveyQuestionId}" />
                   <input type="hidden" name="fromDate" value="${surveyQuestionAndAppl.fromDate}" />
-                  <a href="javascript:document.getElementById('removeSurveyQuestion_${surveyQuestionAndAppl.surveyQuestionId}').submit();"" class="buttontext">${uiLabelMap.CommonRemove}</a>
+                  <a href="javascript:document.getElementById('removeSurveyQuestion_${surveyQuestionAndAppl.surveyQuestionId}').submit();"" class="button tiny">${uiLabelMap.CommonRemove}</a>
                 </form>
               </td>
             </tr>
@@ -144,20 +144,22 @@ under the License.
       <div class="screenlet-body">
         <a name="appl">
         <table class="basic-table hover-bar" cellspacing="0">
+          <thead>
             <tr class="header-row">
-                <td>${uiLabelMap.CommonId}</td>
-                <td>${uiLabelMap.CommonDescription}</td>
-                <td>${uiLabelMap.CommonType}</td>
-                <td>${uiLabelMap.ContentSurveyQuestion}</td>
-                <td>${uiLabelMap.CommonPage}</td>
-                <td>${uiLabelMap.ContentSurveyMultiResp}</td>
-                <td>${uiLabelMap.ContentSurveyMultiRespColumn}</td>
-                <td>${uiLabelMap.CommonRequired}</td>
-                <td>${uiLabelMap.CommonSequenceNum}</td>
-                <td>${uiLabelMap.ContentSurveyWithQuestion}</td>
-                <td>${uiLabelMap.ContentSurveyWithOption}</td>
-                <td>&nbsp;</td>
+                <th>${uiLabelMap.CommonId}</th>
+                <th>${uiLabelMap.CommonDescription}</th>
+                <th>${uiLabelMap.CommonType}</th>
+                <th>${uiLabelMap.ContentSurveyQuestion}</th>
+                <th>${uiLabelMap.CommonPage}</th>
+                <th>${uiLabelMap.ContentSurveyMultiResp}</th>
+                <th>${uiLabelMap.ContentSurveyMultiRespColumn}</th>
+                <th>${uiLabelMap.CommonRequired}</th>
+                <th>${uiLabelMap.CommonSequenceNum}</th>
+                <th>${uiLabelMap.ContentSurveyWithQuestion}</th>
+                <th>${uiLabelMap.ContentSurveyWithOption}</th>
+                <th>&nbsp;</th>
               </tr>
+            </thead>
           <#assign alt_row = false>
           <#list categoryQuestions as question>
             <#assign questionType = question.getRelatedOne("SurveyQuestionType", false)>
@@ -166,7 +168,7 @@ under the License.
               <input type="hidden" name="surveyQuestionId" value="${question.surveyQuestionId}" />
               <input type="hidden" name="surveyQuestionCategoryId" value="${requestParameters.surveyQuestionCategoryId}" />
               <tr<#if alt_row> class="alternate-row"</#if>>
-                <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${question.surveyQuestionId}&amp;surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="buttontext">${question.surveyQuestionId}</a></td>
+                <th><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${question.surveyQuestionId}&amp;surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="button tiny">${question.surveyQuestionId}</a></td>
                 <td>${question.description!}</td>
                 <td>${questionType.get("description",locale)}</td>
                 <td>${question.question!}</td>
@@ -235,7 +237,7 @@ under the License.
       <br class="clear"/>
     </div>
     <div class="screenlet-body">
-      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}</a>
+      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}</a>
       <br /><br />
       ${createSurveyQuestionCategoryWrapper.renderFormString(context)}
   <#else>
@@ -247,7 +249,7 @@ under the License.
       <br class="clear"/>
     </div>
     <div class="screenlet-body">
-      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}</a>
+      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}</a>
     <#else>
     <div class="screenlet-title-bar">
       <ul>
@@ -257,7 +259,7 @@ under the License.
     </div>
     <div class="screenlet-body">
     </#if>
-    <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}</a>
+    <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}</a>
     <br /><br />
     ${createSurveyQuestionWrapper.renderFormString(context)}
   </#if>
@@ -273,24 +275,26 @@ under the License.
   </div>
   <div class="screenlet-body">
     <table class="basic-table hover-bar" cellspacing="0">
+     <thead>
       <tr class="header-row">
-        <td>${uiLabelMap.CommonDescription}</td>
-        <td>${uiLabelMap.CommonSequenceNum}</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
+        <th>${uiLabelMap.CommonDescription}</th>
+        <th>${uiLabelMap.CommonSequenceNum}</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
       </tr>
+      </thead>
       <#assign alt_row = false>
       <#list questionOptions as option>
         <tr<#if alt_row> class="alternate-row"</#if>>
           <td>${option.description!}</td>
           <td>${option.sequenceNum!}</td>
-          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${option.surveyQuestionId}&amp;surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a></td>
+          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${option.surveyQuestionId}&amp;surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a></td>
           <td>
             <form id="deleteSurveyQuestionOption_${option_index}" action="<@ofbizUrl>deleteSurveyQuestionOption</@ofbizUrl>" method="post">
               <input type="hidden" name="surveyId" value="${requestParameters.surveyId}" />
               <input type="hidden" name="surveyQuestionId" value="${option.surveyQuestionId}" />
               <input type="hidden" name="surveyOptionSeqId" value="${option.surveyOptionSeqId}" />
-              <a href="javascript:document.getElementById('deleteSurveyQuestionOption_${option_index}').submit();"" class="buttontext">${uiLabelMap.CommonRemove}</a>
+              <a href="javascript:document.getElementById('deleteSurveyQuestionOption_${option_index}').submit();"" class="button tiny">${uiLabelMap.CommonRemove}</a>
             </form>
           </td>
         </tr>
@@ -316,7 +320,7 @@ under the License.
       <br class="clear"/>
     </div>
     <div class="screenlet-body">
-      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]</a>
+      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}</@ofbizUrl>" class="button tiny">[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]</a>
     </#if>
     ${createSurveyOptionWrapper.renderFormString()}
     </div>

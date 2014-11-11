@@ -70,11 +70,13 @@ under the License.
 
     <#if columns?has_content>
         <table class="basic-table hover-bar" cellspacing="0">
+          <thead>
             <tr class="header-row">
             <#list columns as column>
-                <td>${column}</td>
+                <th>${column}</th>
             </#list>
             </tr>
+           </thead>
             <#if records?has_content>
             <#assign alt_row = false>
             <#list records as record>

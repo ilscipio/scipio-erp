@@ -21,13 +21,15 @@ under the License.
     <h3>${uiLabelMap.PageTitleScheduleJob}</h3>
   </div>
   <div class="screenlet-body" align="center">
-    <form method="post" action="<@ofbizUrl>saveServiceResultsToSession</@ofbizUrl>"
+    <form method="post" action="<@ofbizUrl>saveServiceResultsToSession</@ofbizUrl>">
         <table class="basic-table" cellspacing="0">
+          <thead>
           <tr class="header-row">
-            <td>${uiLabelMap.WebtoolsParameterName}</td>
-            <td>${uiLabelMap.WebtoolsParameterValue}</td>
-            <td>${uiLabelMap.WebtoolsServiceSaveValue} ?</td>
+            <th>${uiLabelMap.WebtoolsParameterName}</th>
+            <th>${uiLabelMap.WebtoolsParameterValue}</th>
+            <th>${uiLabelMap.WebtoolsServiceSaveValue} ?</th>
           </tr>
+          </thead>
             <#if serviceResultList?has_content>
               <#list serviceResultList as srl>
                 <tr>

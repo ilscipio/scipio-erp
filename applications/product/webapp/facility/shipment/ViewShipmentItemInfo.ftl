@@ -20,14 +20,16 @@ under the License.
 <div class="screenlet">
     <div class="screenlet-body">
       <table cellspacing="0" cellpadding="2" class="basic-table">
+       <thead>
         <tr class="header-row">
-          <td>${uiLabelMap.ProductItem}</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>${uiLabelMap.ProductQuantity}</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
+          <th>${uiLabelMap.ProductItem}</th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
+          <th>${uiLabelMap.ProductQuantity}</th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
         </tr>
+       </thead>
         <#assign alt_row = false>
         <#list shipmentItemDatas as shipmentItemData>
             <#assign shipmentItem = shipmentItemData.shipmentItem>
@@ -37,14 +39,14 @@ under the License.
             <#assign product = shipmentItemData.product!>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                 <td>${shipmentItem.shipmentItemSeqId}</td>
-                <td colspan="2">${(product.internalName)!} <a href="/catalog/control/EditProduct?productId=${shipmentItem.productId!}" class="buttontext">${shipmentItem.productId!}</a></td>
+                <td colspan="2">${(product.internalName)!} <a href="/catalog/control/EditProduct?productId=${shipmentItem.productId!}" class="button tiny">${shipmentItem.productId!}</a></td>
                 <td>${shipmentItem.quantity?default("&nbsp;")}</td>
                 <td colspan="2">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</td>
             </tr>
             <#list orderShipments as orderShipment>
                 <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                     <td>&nbsp;</td>
-                    <td><span class="label">${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${orderShipment.orderId!}</a>${orderShipment.orderItemSeqId!}</td>
+                    <td><span class="label">${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="button tiny">${orderShipment.orderId!}</a>${orderShipment.orderItemSeqId!}</td>
                     <td>&nbsp;</td>
                     <td>${orderShipment.quantity!}</td>
                     <td>&nbsp;</td>
@@ -54,8 +56,8 @@ under the License.
             <#list itemIssuances as itemIssuance>
                 <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                     <td>&nbsp;</td>
-                    <td><span class="label">${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${itemIssuance.orderId!}</a>${itemIssuance.orderItemSeqId!}</td>
-                    <td><span class="label">${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId!}</a></td>
+                    <td><span class="label">${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="button tiny">${itemIssuance.orderId!}</a>${itemIssuance.orderItemSeqId!}</td>
+                    <td><span class="label">${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" class="button tiny">${itemIssuance.inventoryItemId!}</a></td>
                     <td>${itemIssuance.quantity!}</td>
                     <td>${itemIssuance.issuedDateTime!}</td>
                     <td class="label">${uiLabelMap.ProductFuturePartyRoleList}</td>

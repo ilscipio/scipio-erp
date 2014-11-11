@@ -16,11 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.OrderOrderQuoteRoles}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.OrderOrderQuoteRoles}">
       <#if quoteRoles?has_content>
         <table cellspacing="0" class="basic-table">
             <#assign row = 1>
@@ -46,5 +42,4 @@ under the License.
       <#else>
         &nbsp;
       </#if>
-    </div>
-</div>
+    </@section>

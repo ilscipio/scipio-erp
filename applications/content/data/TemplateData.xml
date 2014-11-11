@@ -163,7 +163,7 @@ under the License.
 <div id="divTwo" class="wrapOuter">
     <div>
     ${mapKey?if_exists}
-    <a class="buttontext" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}')"
+    <a class="button tiny" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}')"
 >[Find]</a>
     <#assign ofbizRequest=""/>
     <#assign httpParams="contentIdTo=" + contentIdTo?if_exists + "&mapKey=" + mapKey?if_exists />
@@ -176,9 +176,9 @@ under the License.
             <#assign ofbizRequest="EditLayoutSubContent"/>
         </#if>
     </#if>
-    <a class="buttontext" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>">[New]</a>
+    <a class="button tiny" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>">[New]</a>
     <#if subContentId?exists && (0 < subContentId?length)>
-        <a class="buttontext" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drData
+        <a class="button tiny" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drData
 ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
     </#if>
     </div>
@@ -304,7 +304,7 @@ ${wrappedContent?if_exists}
 <div id="divTwo" class="wrapOuter">
     <div>
     ${mapKey?if_exists}
-    <a class="buttontext" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}')"
+    <a class="button tiny" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}')"
 >[Find]</a>
     <#assign ofbizRequest=""/>
     <#assign httpParams="contentIdTo=" + contentIdTo?if_exists + "&mapKey=" + mapKey?if_exists />
@@ -317,9 +317,9 @@ ${wrappedContent?if_exists}
             <#assign ofbizRequest="EditLayoutSubContent"/>
         </#if>
     </#if>
-    <a class="buttontext" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>">[New]</a>
+    <a class="button tiny" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>">[New]</a>
     <#if subContentId?exists && (0 < subContentId?length)>
-        <a class="buttontext" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drData
+        <a class="button tiny" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drData
 ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
     </#if>
     </div>

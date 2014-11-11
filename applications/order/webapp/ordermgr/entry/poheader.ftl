@@ -17,17 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <#-- left side -->
-    <td width="50%" valign="top">
-
-      <#-- header box -->
-        <div class="screenlet">
-            <div class="screenlet-title-bar">
-                <div class="h3">PO For ${partyId!}</div>
-            </div>
-            <div class="screenlet-body">
+<@section title="PO For ${partyId!}" classes="large-6">
                 <table width="100%" border="0" cellpadding="1" cellspacing="0">
                     <tr><td><div>Supplier Information Here</div></td></tr>
                 </table>
@@ -46,45 +36,14 @@ under the License.
                   </table>
             </div>
         </div>
-      <#-- end of payment box -->
+</@section>
 
-    </td>
-    <#-- end of left side -->
+<#-- content box -->
+<@section title="Place Holder" classes="large-3">
 
-    <#-- left/right spacer -->
-    <td width="1">&nbsp;&nbsp;</td>
-    <#-- end of left/right spacer -->
+</@section>
 
-    <#-- right side -->
-    <td width="50%" valign="top">
+<#-- shipping info box -->
+<@section title="Place Holder" classes="large-3">
 
-      <#-- contact box -->
-        <div class="screenlet">
-            <div class="screenlet-title-bar">
-                <div class="h3">Place Holder</div>
-            </div>
-            <div class="screenlet-body">
-                  <table width="100%" border="0" cellpadding="1" cellspacing="0">
-
-                  </table>
-            </div>
-        </div>
-      <#-- end of contact box -->
-
-      <#-- shipping info box -->
-        <div class="screenlet">
-            <div class="screenlet-title-bar">
-                <div class="h3">Place Holder</div>
-            </div>
-            <div class="screenlet-body">
-                  <table width="100%" border="0" cellpadding="1" cellspacing="0">
-
-                  </table>
-            </div>
-        </div>
-      <#-- end of shipping info box -->
-
-    </td>
-    <#-- end of right side -->
-  </tr>
-</table>
+</@section>

@@ -40,7 +40,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link  text="${uiLabelMap.ScrumCreateProject}" target="editScrumProject" style="buttontext create"/>
+                                    <link  text="${uiLabelMap.ScrumCreateProject}" target="editScrumProject" style="button tiny create"/>
                                 </container>
                             </widgets>
                         </section>
@@ -136,12 +136,12 @@ under the License.
                                 </entity-one>
                             </actions>
                             <widgets>
-                                <container style="lefthalf">
+                                <container style="large-6">
                                     <screenlet title="${uiLabelMap.ScrumSprintInformation}">
                                         <include-form location="component://scrum/widget/scrumForms.xml" name="showSprintInfo"/>
                                     </screenlet>
                                 </container>
-                                <container style="righthalf">
+                                <container style="large-6">
                                     <include-screen name="sprintMemberList"/>
                                 </container>
                                 <container style="clear"/>
@@ -290,7 +290,7 @@ under the License.
                         </widgets>
                         <fail-widgets>
                             <container style="button-bar">
-                                <link target="SprintList" text="Back" style="buttontext">
+                                <link target="SprintList" text="Back" style="button tiny">
                                     <parameter param-name="projectId" from-field="parameters.projectId"/>
                                 </link>
                             </container>
@@ -424,13 +424,13 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProjectScreenDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="lefthalf">
+                        <container style="large-6">
                             <screenlet name="ScrumProject" title="${uiLabelMap.ScrumProject} : ${project.workEffortName}">
                                 <include-form location="component://scrum/widget/scrumForms.xml" name="ScrumProject"/>
                             </screenlet>
                             <include-screen name="sprintListInfo"/>
                         </container>
-                        <container style="righthalf">
+                        <container style="large-6">
                             <include-screen name="ListProjectContent"/>
                         </container>
                     </decorator-section>
@@ -771,7 +771,7 @@ under the License.
                                 <set field="isTeamMember" value="false" type="Boolean"/>
                             </actions>
                             <widgets>
-                                <container style="lefthalf">
+                                <container style="large-6">
                                     <screenlet title="${uiLabelMap.ScrumProductBacklogItemInfo}">
                                         <include-form location="component://scrum/widget/scrumForms.xml" name="ViewEditProdBacklog"/>
                                     </screenlet>
@@ -822,7 +822,7 @@ under the License.
                                         </section>
                                     </screenlet>
                                 </container>
-                                <container style="righthalf">
+                                <container style="large-6">
                                     <screenlet title="${uiLabelMap.ScrumBacklogItemStatusList}" navigation-form-name="ViewRequest">
                                         <include-form name="ViewBacklogStatus" location="component://scrum/widget/scrumForms.xml"/>
                                     </screenlet>
@@ -1338,7 +1338,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <link target="DailyScrumMeetingMinute" text="${uiLabelMap.CommonBack}" style="buttontext">
+                                <link target="DailyScrumMeetingMinute" text="${uiLabelMap.CommonBack}" style="button tiny">
                                     <parameter param-name="projectId" from-field="parameters.projectId"/>
                                     <parameter param-name="custRequestId" from-field="parameters.custRequestId"/>
                                 </link>
@@ -1372,7 +1372,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="DailyScrumMeetingMinute" text="${uiLabelMap.CommonBack}" style="buttontext">
+                                    <link target="DailyScrumMeetingMinute" text="${uiLabelMap.CommonBack}" style="button tiny">
                                         <parameter param-name="projectId" from-field="parameters.projectId"/>
                                         <parameter param-name="custRequestId" from-field="parameters.custRequestId"/>
                                     </link>
@@ -1407,7 +1407,7 @@ under the License.
                         <section>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="ViewSprint" text="${uiLabelMap.CommonBack}" style="buttontext" link-type="hidden-form">
+                                    <link target="ViewSprint" text="${uiLabelMap.CommonBack}" style="button tiny" link-type="hidden-form">
                                         <parameter param-name="projectId" from-field="parameters.projectId"/>
                                         <parameter param-name="sprintId" from-field="parameters.sprintId"/>
                                     </link>
@@ -1678,7 +1678,7 @@ under the License.
                         <section>
                             <widgets>
                                 <container style="clear"/>
-                                <container style="lefthalf">
+                                <container style="large-6">
                                     <screenlet title="${uiLabelMap.ScrumProductInformation}">
                                         <include-form location="component://scrum/widget/scrumForms.xml" name="ViewProduct"/>
                                     </screenlet>
@@ -1746,7 +1746,7 @@ under the License.
                                         </section>
                                     </screenlet>
                                 </container>
-                                <container style="righthalf">
+                                <container style="large-6">
                                     <screenlet id="listResources" title="${uiLabelMap.ScrumProductMembersList}" collapsible="true">
                                         <include-form name="ProductMemberInfo" location="component://scrum/widget/ResourceForms.xml"/>
                                     </screenlet>
@@ -2127,12 +2127,12 @@ under the License.
                             </actions>
                             <widgets/> 
                         </section>
-                        <container style="lefthalf">
+                        <container style="large-6">
                             <screenlet title="${uiLabelMap.ScrumNewEmail}">
                                 <include-form name="EditEmailForProduct" location="component://scrum/widget/CommunicationEventForms.xml" />
                             </screenlet>
                         </container>
-                        <container style="righthalf">
+                        <container style="large-6">
                             <screenlet title="${uiLabelMap.ScrumEmailContents}">
                                 <include-form name="listCommContentForProduct" location="component://scrum/widget/CommunicationEventForms.xml" />
                                 <section>
@@ -2295,12 +2295,12 @@ under the License.
                                 <set field="communicationEvent.partyIdTo" value="${partyIdTo}" />
                             </actions>
                            <widgets>
-                                <container style="lefthalf">
+                                <container style="large-6">
                                     <screenlet title="${uiLabelMap.ScrumNewProductBacklogEmail}">
                                         <include-form name="EditEmail" location="component://scrum/widget/CommunicationEventForms.xml" />
                                     </screenlet>
                                 </container>
-                                <container style="righthalf">
+                                <container style="large-6">
                                     <screenlet title="${uiLabelMap.ScrumEmailContents}">
                                         <include-form name="listCommContent" location="component://scrum/widget/CommunicationEventForms.xml" />
                                         <include-form name="uploadContent" location="component://scrum/widget/CommunicationEventForms.xml" />
@@ -2377,7 +2377,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditSprintTask" text="${uiLabelMap.ScrumNewTask}" style="buttontext create" link-type="hidden-form">
+                                            <link target="EditSprintTask" text="${uiLabelMap.ScrumNewTask}" style="button tiny create" link-type="hidden-form">
                                                 <parameter param-name="sprintId" from-field="parameters.sprintId"/>
                                             </link>
                                         </container>
@@ -2460,7 +2460,7 @@ under the License.
    <screen name="commOverview">
         <section>
             <widgets>
-                <container style="lefthalf">
+                <container style="large-6">
                     <section>
                         <widgets>
                             <label style="h1" text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
@@ -2468,7 +2468,7 @@ under the License.
                         </widgets>
                     </section>
                 </container>
-                <container style="righthalf">
+                <container style="large-6">
                     <label style="h1" text="${uiLabelMap.CommonRelatedInformation}"/>
                     <section>
                         <condition>
@@ -2739,12 +2739,12 @@ under the License.
                                     <widgets>
                                         <!-- project and sprint -->
                                         <screenlet id="projectAndSprintStatistics" title="${uiLabelMap.ScrumProjectAndSprintInformationChart}" collapsible="true">
-                                            <container style="lefthalf">
+                                            <container style="large-6">
                                                 <platform-specific>
                                                     <html><html-template location="component://scrum/webapp/scrum/includes/projectByStatusChart.ftl"/></html>
                                                 </platform-specific>
                                             </container>
-                                            <container style="righthalf">
+                                            <container style="large-6">
                                                 <platform-specific>
                                                     <html><html-template location="component://scrum/webapp/scrum/includes/projectAndSprintChart.ftl"/></html>
                                                 </platform-specific>
@@ -2752,12 +2752,12 @@ under the License.
                                         </screenlet>
                                         <!-- backlog -->
                                         <screenlet id="backlogStatistics" title="${uiLabelMap.ScrumBacklogInformationChart}" collapsible="true">
-                                            <container style="lefthalf">
+                                            <container style="large-6">
                                                 <platform-specific>
                                                     <html><html-template location="component://scrum/webapp/scrum/includes/backlogByTypeChart.ftl"/></html>
                                                 </platform-specific>
                                             </container>
-                                            <container style="righthalf">
+                                            <container style="large-6">
                                                 <platform-specific>
                                                     <html><html-template location="component://scrum/webapp/scrum/includes/backlogByStatusChart.ftl"/></html>
                                                 </platform-specific>
@@ -2765,12 +2765,12 @@ under the License.
                                         </screenlet>
                                         <!-- tasks -->
                                         <screenlet id="taskStatistics" title="${uiLabelMap.ScrumTaskInformationChart}" collapsible="true">
-                                            <container style="lefthalf">
+                                            <container style="large-6">
                                                 <platform-specific>
                                                     <html><html-template location="component://scrum/webapp/scrum/includes/taskByTypeChart.ftl"/></html>
                                                 </platform-specific>
                                            </container>
-                                           <container style="righthalf">
+                                           <container style="large-6">
                                                 <platform-specific>
                                                     <html><html-template location="component://scrum/webapp/scrum/includes/taskByStatusChart.ftl"/></html>
                                                 </platform-specific>

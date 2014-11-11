@@ -16,27 +16,56 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#global isSubMenu=false/>
 
 <#macro renderMenuBegin boundaryComment="" id="" style="" title="">
-  <#if boundaryComment?has_content>
-<!-- ${boundaryComment} -->
-  </#if>
-  <#-- FIXME: A menu could have an ID and a style, but some visual themes break if both are used. -->
-  <div<#if id?has_content> id="${id}"<#elseif style?has_content> class="${style}"</#if>>
-  <#if title?has_content>
-  <h2>${title}</h2>
-  </#if>
-  <ul>
-    <li>
-      <ul>
+      <#if style?has_content><#global isSubMenu=true/><#else><#global isSubMenu=false/></#if>
+      <#if boundaryComment?has_content>
+      <!-- ${boundaryComment} -->
+      </#if>
+      
+      <#if isSubMenu>
+      <div class="large-12 columns">
+          <nav class="sub-top-bar hide-for-small" data-topbar role="navigation">          
+              <section>
+                <ul class="inline-list sub-nav" role="menu" title="${title!"App Navigation"}">
+                        <#--
+                        <li class="has-dropdown not-click"><a href="#"><#if title?has_content>${title!}<#else>Menu</#if></a>
+                        <ul class="dropdown">-->
+      
+      <#else>
+          <#-- Render main navigation-->
+          <div class="row fullWidth">
+          <#-- FIXME: A menu could have an ID and a style, but some visual themes break if both are used. -->
+          <div<#if id?has_content> id="${id}"</#if> class="large-2 columns <#if style?has_content>${style}</#if> hide-for-small">
+              <div class="section-container vertical-nav sidebar" data-section="vertical-nav" data-options="one_up: false;">
+              <section>
+              <ul class="side-nav">
+                 <#if title?has_content>
+                  <li class="heading">${title}</li>
+                </#if>
+                <li>
+       </#if>
 </#macro>
 
-<#macro renderMenuEnd boundaryComment="">
-      </ul>
-    </li>
-  </ul>
-  <br class="clear"/>
-  </div>
+<#macro renderMenuEnd boundaryComment="" style="">
+    <#if isSubMenu>
+                    <#--</ul></li>-->
+             </ul>
+          </section>
+    </nav>
+      </div>
+      </div>
+      <div class="row">
+      <div class="large-12 columns">    
+    <#else>
+            </li>
+          </ul>
+          </section>
+          </div>
+        </div>
+      <div class="large-10 columns" id="main-content">
+    </#if>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>

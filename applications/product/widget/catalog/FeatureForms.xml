@@ -47,7 +47,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field use-when="productFeature!=null&amp;&amp;productFeature.getString(&quot;productFeatureCategoryId&quot;)!=null" name="categoryLink" title=" " widget-style="buttontext">
+        <field use-when="productFeature!=null&amp;&amp;productFeature.getString(&quot;productFeatureCategoryId&quot;)!=null" name="categoryLink" title=" " widget-style="button tiny">
             <hyperlink target="/EditFeatureCategoryFeatures" target-type="intra-app" description="${uiLabelMap.ProductGoToFeatureCategory} ${productFeature.productFeatureCategoryId}" also-hidden="false">
                 <parameter param-name="productFeatureCategoryId" from-field="productFeature.productFeatureCategoryId"/>
             </hyperlink>
@@ -101,7 +101,7 @@
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="button tiny">
             <hyperlink target="removeSupplierProductFeature" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productFeatureId"/>
                 <parameter param-name="partyId"/>
@@ -126,7 +126,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productFeatureTypeId" widget-style="buttontext">
+        <field name="productFeatureTypeId" widget-style="button tiny">
             <hyperlink target="EditFeatureType" description="${productFeatureTypeId}">
                 <parameter param-name="productFeatureTypeId"/>
             </hyperlink>
@@ -139,7 +139,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="removeFeatureType" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="removeFeatureType" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
             <hyperlink target="removeProductFeatureType" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productFeatureTypeId"/>
             </hyperlink>
@@ -196,7 +196,7 @@
         </field>
         <field name="productFeatureIactnTypeId"><display-entity entity-name="ProductFeatureIactnType"/></field>
 
-        <field name="removeFeatureInterAction" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="removeFeatureInterAction" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
             <hyperlink target="removeProductFeatureIactn" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productFeatureId"/>
                 <parameter param-name="productFeatureIdTo"/>
@@ -243,7 +243,7 @@
             <display-entity entity-name="ProductFeatureCategory"/>
         </field>
         <field name="sequenceNum"><text size="3"/></field>
-        <field name="removeFeatureGroupAppl" title="${uiLabelMap.CommonRemove}" widget-style="buttontext">
+        <field name="removeFeatureGroupAppl" title="${uiLabelMap.CommonRemove}" widget-style="button tiny">
             <hyperlink target="RemoveProductFeatureGroupAppl" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="productFeatureGroupId"/>
                 <parameter param-name="productFeatureId"/>
@@ -309,7 +309,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}" widget-style="buttontext">
+        <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}" widget-style="button tiny">
             <hyperlink target="EditFeatureCategoryFeatures" description="${productFeatureCategoryId}">
                 <parameter param-name="productFeatureCategoryId"/>
             </hyperlink>
@@ -344,7 +344,7 @@
         <field name="price" title="${uiLabelMap.ProductPrice}" widget-style="required"><text size="25" default-value="${price}"/></field>
         <field name="updateFeaturePrice" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="lastModifiedBy" title="${uiLabelMap.ProductLastModifiedBy}"><display description="[${lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${lastModifiedDate}"/></field>
-        <field name="deleteFeaturePrice" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="deleteFeaturePrice" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
             <hyperlink target="deleteFeaturePrice" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productFeatureId"/>
                 <parameter param-name="productPriceTypeId"/>

@@ -50,14 +50,16 @@ under the License.
 <br />
 <#if variantProducts??>
     <table cellspacing="0" class="basic-table">
+       <thead>
         <tr class="header-row">
-            <td><b>${uiLabelMap.ProductProductId}</b></td>
-            <td><b>${uiLabelMap.ProductBrandName}</b></td>
-            <td><b>${uiLabelMap.ProductInternalName}</b></td>
+            <td>${uiLabelMap.ProductProductId}</td>
+            <td>${uiLabelMap.ProductBrandName}</td>
+            <td>${uiLabelMap.ProductInternalName}</td>
         </tr>
+        </thead>
         <#list variantProducts as variant>
             <tr>
-                <td><a class="buttontext" href="javascript:set_value('${variant.productId}')">${variant.productId}</a></td>
+                <td><a class="button tiny" href="javascript:set_value('${variant.productId}')">${variant.productId}</a></td>
                 <td>${variant.brandName!}</td>
                 <td>${variant.internalName!}</td>
             </tr>

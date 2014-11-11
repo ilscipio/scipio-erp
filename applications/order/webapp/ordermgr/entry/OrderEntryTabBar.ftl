@@ -16,18 +16,19 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#assign title>
+    ${uiLabelMap.CommonCreate}&nbsp;
+    <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+        ${uiLabelMap.OrderPurchaseOrder}
+    <#else>
+        ${uiLabelMap.OrderSalesOrder}
+    </#if>
+</#assign>
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">
-        ${uiLabelMap.CommonCreate}&nbsp;
-        <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-            ${uiLabelMap.OrderPurchaseOrder}
-        <#else>
-            ${uiLabelMap.OrderSalesOrder}
-        </#if>
-      </li>
+
+<@section title=title!>
+        
+      <ul>
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <#if shoppingCart.getOrderPartyId() == "_NA_" || (shoppingCart.size() = 0)>
           <li class="disabled">${uiLabelMap.OrderFinalizeOrder}</li>
@@ -56,5 +57,4 @@ under the License.
       <li><a href="<@ofbizUrl>emptycart</@ofbizUrl>">${uiLabelMap.OrderClearOrder}</a></li>
     </ul>
     <br class="clear">
-  </div>
-</div>
+</@section>

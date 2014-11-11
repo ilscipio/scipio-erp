@@ -50,18 +50,20 @@ under the License.
         <form method="post" action="<@ofbizUrl>updateCustomTimePeriod</@ofbizUrl>" name="updateCustomTimePeriodForm">
           <input type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}" />
           <input type="hidden" name="customTimePeriodId" value="${currentCustomTimePeriodId!}" />
-      <table class="basic-table" cellspacing="0">
+      <table class="basic-table">
+       <thead>
         <tr class="header-row">
-          <td>${uiLabelMap.CommonId}</td>
-          <td>${uiLabelMap.CommonParent}</td>
-          <td>${uiLabelMap.AccountingOrgPartyId}</td>
-          <td>${uiLabelMap.AccountingPeriodType}</td>
-          <td>${uiLabelMap.CommonNbr}</td>
-          <td>${uiLabelMap.AccountingPeriodName}</td>
-          <td>${uiLabelMap.CommonFromDate}</td>
-          <td>${uiLabelMap.CommonThruDate}</td>
-          <td>&nbsp;</td>
+          <th>${uiLabelMap.CommonId}</th>
+          <th>${uiLabelMap.CommonParent}</th>
+          <th>${uiLabelMap.AccountingOrgPartyId}</th>
+          <th>${uiLabelMap.AccountingPeriodType}</th>
+          <th>${uiLabelMap.CommonNbr}</th>
+          <th>${uiLabelMap.AccountingPeriodName}</th>
+          <th>${uiLabelMap.CommonFromDate}</th>
+          <th>${uiLabelMap.CommonThruDate}</th>
+          <th>&nbsp;</th>
         </tr>
+        </thead>
           <tr>
             <td>${currentCustomTimePeriod.customTimePeriodId}</td>
             <td>
@@ -142,18 +144,20 @@ under the License.
       <br class="clear"/>
     </div>
     <#if customTimePeriods?has_content>
-      <table class="basic-table" cellspacing="0">
+      <table class="basic-table">
+       <thead>
         <tr class="header-row">
-          <td>${uiLabelMap.CommonId}</td>
-          <td>${uiLabelMap.CommonParent}</td>
-          <td>${uiLabelMap.AccountingOrgPartyId}</td>
-          <td>${uiLabelMap.AccountingPeriodType}</td>
-          <td>${uiLabelMap.CommonNbr}</td>
-          <td>${uiLabelMap.AccountingPeriodName}</td>
-          <td>${uiLabelMap.CommonFromDate}</td>
-          <td>${uiLabelMap.CommonThruDate}</td>
-          <td>&nbsp;</td>
+          <th>${uiLabelMap.CommonId}</th>
+          <th>${uiLabelMap.CommonParent}</th>
+          <th>${uiLabelMap.AccountingOrgPartyId}</th>
+          <th>${uiLabelMap.AccountingPeriodType}</th>
+          <th>${uiLabelMap.CommonNbr}</th>
+          <th>${uiLabelMap.AccountingPeriodName}</th>
+          <th>${uiLabelMap.CommonFromDate}</th>
+          <th>${uiLabelMap.CommonThruDate}</th>
+          <th>&nbsp;</th>
         </tr>
+        </thead>
         <#assign line = 0>
         <#list customTimePeriods as customTimePeriod>
           <#assign line = line + 1>

@@ -153,22 +153,24 @@ under the License.
         </div>
     <#if partyList?has_content>
         <table class="basic-table" cellspacing="0">
+          <thead>
             <tr class="header-row">
-                <td>${uiLabelMap.PartyPartyId}</td>
-                <td>${uiLabelMap.PartyUserLogin}</td>
-                <td>${uiLabelMap.PartyName}</td>
+                <th>${uiLabelMap.PartyPartyId}</th>
+                <th>${uiLabelMap.PartyUserLogin}</th>
+                <th>${uiLabelMap.PartyName}</th>
                 <#if extInfo?default("") == "P" >
-                    <td>${uiLabelMap.PartyCity}</td>
+                    <th>${uiLabelMap.PartyCity}</th>
                 </#if>
                 <#if extInfo?default("") == "P">
-                    <td>${uiLabelMap.PartyPostalCode}</td>
+                    <th>${uiLabelMap.PartyPostalCode}</th>
                 </#if>
                 <#if extInfo?default("") == "T">
-                    <td>${uiLabelMap.PartyAreaCode}</td>
+                    <th>${uiLabelMap.PartyAreaCode}</th>
                 </#if>
-                <td>${uiLabelMap.PartyType}</td>
-                <td>&nbsp;</td>
+                <th>${uiLabelMap.PartyType}</th>
+                <th>&nbsp;</th>
             </tr>
+            </thead>
             <#assign alt_row = false>
             <#list partyList as partyRow>
             <#assign partyType = partyRow.getRelatedOne("PartyType", false)!>

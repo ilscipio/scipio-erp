@@ -116,7 +116,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="buttontext create"/>
+                                            <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="button tiny create"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -148,7 +148,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditRouting}">
                             <container style="button-bar">
-                                <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="buttontext create"/>
+                                <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="button tiny create"/>
                             </container>
                             <include-form name="EditRouting" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
                         </screenlet>
@@ -175,7 +175,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="buttontext create"/>
+                                            <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="button tiny create"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -207,7 +207,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditRoutingTask}">
                             <container style="button-bar">
-                                <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="buttontext create"/>
+                                <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="button tiny create"/>
                             </container>
                             <include-form name="EditRoutingTask" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
                         </screenlet>
@@ -283,7 +283,7 @@ under the License.
                 <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
                         <screenlet id="EditRoutingTaskProductPanel" title="${uiLabelMap.PageTitleListRoutingTaskProducts}">
-                            <link target="EditRoutingTaskProduct" text="${uiLabelMap.ManufacturingNewRoutingTaskProduct}" style="buttontext">
+                            <link target="EditRoutingTaskProduct" text="${uiLabelMap.ManufacturingNewRoutingTaskProduct}" style="button tiny">
                                 <parameter param-name="workEffortId"/>
                             </link>
                             <include-form name="ListRoutingTaskProducts" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>

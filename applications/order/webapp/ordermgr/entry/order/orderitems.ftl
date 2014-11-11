@@ -17,17 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
+<@section title="${uiLabelMap.OrderOrderItems}">
         <div class="boxlink">
             <#if maySelectItems?default(false)>
-                <a href="javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()" class="lightbuttontext">${uiLabelMap.OrderAddAllToCart}</a>
-                <a href="javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()" class="lightbuttontext">${uiLabelMap.OrderAddCheckedToCart}</a>
+                <a href="javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()" class="button tiny">${uiLabelMap.OrderAddAllToCart}</a>
+                <a href="javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()" class="button tiny">${uiLabelMap.OrderAddCheckedToCart}</a>
             </#if>
         </div>
-        <div class="h3">${uiLabelMap.OrderOrderItems}</div>
-    </div>
-    <div class="screenlet-body">
         <table width="100%" border="0" cellpadding="0">
           <tr valign="bottom">
             <td width="65%"><span><b>${uiLabelMap.ProductProduct}</b></span></td>
@@ -48,7 +44,7 @@ under the License.
                 <td valign="top">
                   <div>
                     <#if orderItem.productId??>
-                      <a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
+                      <a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="button tiny">${orderItem.productId} - ${orderItem.itemDescription}</a>
                     <#else>
                       <b>${(itemType.description)!}</b> : ${orderItem.itemDescription!}
                     </#if>
@@ -155,5 +151,4 @@ under the License.
             </td>
           </tr>
         </table>
-    </div>
-</div>
+</@section>

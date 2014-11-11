@@ -34,16 +34,18 @@ under the License.
 <div>NOTE: each set of numbers is: &lt;quantity&gt;:&lt;total amount&gt;:&lt;average amount&gt;</div>
 <table class="basic-table" cellspacing="0">
     <#-- Create the header row -->
+    <thead>
     <tr class="header-row">
-        <td>Day</td>
-        <td>[No Product]</td>
+        <th>Day</th>
+        <th>[No Product]</th>
     <#list productList as product>
-        <td>${product.internalName?default((Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "PRODUCT_NAME", locale, dispatcher))!)}<br />P:[${product.productId}]</td>
+        <th>${product.internalName?default((Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "PRODUCT_NAME", locale, dispatcher))!)}<br />P:[${product.productId}]</th>
     </#list>
     <#list productCategoryList as productCategory>
-        <td>${(Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher))!}<br />C:[${productCategory.productCategoryId}]</td>
+        <th>${(Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher))!}<br />C:[${productCategory.productCategoryId}]</th>
     </#list>
     </tr>
+    </thead>
     <#-- Days of the month -->
     <#list productNullResultByDayList as productNullResult>
         <#assign productResultMap = productResultMapByDayList.get(productNullResult_index)/>

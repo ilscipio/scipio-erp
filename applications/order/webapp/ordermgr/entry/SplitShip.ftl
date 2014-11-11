@@ -45,11 +45,7 @@ function submitForm(form, mode, value) {
 //]]>
 </script>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.OrderItemGroups}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.OrderItemGroups}">
         <table width="100%" cellspacing="0" cellpadding="1" border="0">
           <#assign shipGroups = cart.getShipGroups()>
           <#if (shipGroups.size() > 0)>
@@ -71,7 +67,7 @@ function submitForm(form, mode, value) {
                   <td>
                     <div>
                       <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
-                      <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="buttontext">${uiLabelMap.PartyAddNewAddress}</a>
+                      <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="button tiny">${uiLabelMap.PartyAddNewAddress}</a>
                     </div>
                     <div>
                       <#assign selectedContactMechId = cart.getShippingContactMechId(groupIdx)?default("")>
@@ -148,14 +144,9 @@ function submitForm(form, mode, value) {
             <div class="tabletext">${uiLabelMap.OrderNoShipGroupsDefined}.</div>
           </#if>
         </table>
-    </div>
-</div>
+    </@section>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.OrderAssignItems}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.OrderAssignItems}">
         <table width="100%" cellspacing="0" cellpadding="1" border="0">
           <tr>
             <td><div class="tabletext"><b>${uiLabelMap.OrderProduct}</b></div></td>
@@ -184,7 +175,7 @@ function submitForm(form, mode, value) {
                         </a>
                       </#if>
                       <#-- end code to display a small image of the product -->
-                      <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} -
+                      <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="button tiny">${cartLine.getProductId()} -
                       ${cartLine.getName()!}</a> : ${cartLine.getDescription()!}
 
                       <#-- display the registered ship groups and quantity -->
@@ -248,16 +239,9 @@ function submitForm(form, mode, value) {
             </tr>
           </#list>
         </table>
-    </div>
-</div>
+</@section>
 
-<table>
-  <tr valign="top">
-    <td>
-      &nbsp;<a href="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>" class="buttontextbig">${uiLabelMap.OrderBacktoShoppingCart}</a>
-    </td>
-    <td align="right">
-      <a href="<@ofbizUrl>setBilling</@ofbizUrl>" class="buttontextbig">${uiLabelMap.CommonContinue}</a>
-    </td>
-  </tr>
-</table>
+<@section>
+      <a href="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderBacktoShoppingCart}</a>
+      <a href="<@ofbizUrl>setBilling</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonContinue}</a>
+</@section>

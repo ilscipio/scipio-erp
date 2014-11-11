@@ -139,11 +139,11 @@
                         <screenlet title="${uiLabelMap.ProductInventoryDetails} ${uiLabelMap.ProductStoreNameId} : ${productStore.storeName}[${productStore.productStoreId}] ${uiLabelMap.FacilityFacility} : ${facility.facilityName}">
                             <section>
                                 <widgets>
-                                    <link name="updateEbayInventoryStatus" secure="true" target="updateEbayInventoryStatus"  style="buttontext" text="${uiLabelMap.EbayUpdateInventoryStatus}">
+                                    <link name="updateEbayInventoryStatus" secure="true" target="updateEbayInventoryStatus"  style="button tiny" text="${uiLabelMap.EbayUpdateInventoryStatus}">
                                         <parameter param-name="productStoreId" from-field="productStoreId"/>
                                         <parameter param-name="facilityId" from-field="facilityId"/>
                                     </link>
-                                    <link name="reserveEbayProductInventory" target="reserveEbayProductInventory"  style="buttontext" text="${uiLabelMap.EbayReserveProductInventory}">
+                                    <link name="reserveEbayProductInventory" target="reserveEbayProductInventory"  style="button tiny" text="${uiLabelMap.EbayReserveProductInventory}">
                                         <parameter param-name="productStoreId" from-field="productStoreId"/>
                                         <parameter param-name="facilityId" from-field="facilityId"/>
                                     </link>

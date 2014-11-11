@@ -24,31 +24,33 @@ under the License.
     </div>
     <div class="screenlet-body">
         <#if productId?has_content>
-            <a href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="buttontext">${uiLabelMap.ProductCreateNewInventoryItemProduct}</a>
+            <a href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${uiLabelMap.ProductCreateNewInventoryItemProduct}</a>
             <#if showEmpty>
-                <a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductHideEmptyItems}</a>
+                <a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductHideEmptyItems}</a>
             <#else>
-                <a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}&amp;showEmpty=true</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductShowEmptyItems}</a>
+                <a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}&amp;showEmpty=true</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductShowEmptyItems}</a>
             </#if>
         </#if>
         <br />
         <#if productId??>
             <table cellspacing="0" class="basic-table">
+            <thead>
             <tr class="header-row">
-                <td><b>${uiLabelMap.ProductItemId}</b></td>
-                <td><b>${uiLabelMap.ProductItemType}</b></td>
-                <td><b>${uiLabelMap.CommonStatus}</b></td>
-                <td><b>${uiLabelMap.CommonReceived}</b></td>
-                <td><b>${uiLabelMap.CommonExpire}</b></td>
-                <td><b>${uiLabelMap.ProductFacilityContainerId}</b></td>
-                <td><b>${uiLabelMap.ProductLocation}</b></td>
-                <td><b>${uiLabelMap.ProductLotId}</b></td>
-                <td><b>${uiLabelMap.ProductBinNum}</b></td>
-                <td align="right"><b>${uiLabelMap.ProductPerUnitPrice}</b></td>
-                <td>&nbsp;</td>
-                <td align="right"><b>${uiLabelMap.ProductInventoryItemInitialQuantity}</b></td>
-                <td align="right"><b>${uiLabelMap.ProductAtpQohSerial}</b></td>
+                <th>${uiLabelMap.ProductItemId}</th>
+                <th>${uiLabelMap.ProductItemType}</th>
+                <th>${uiLabelMap.CommonStatus}</th>
+                <th>${uiLabelMap.CommonReceived}</th>
+                <th>${uiLabelMap.CommonExpire}</th>
+                <th>${uiLabelMap.ProductFacilityContainerId}</th>
+                <th>${uiLabelMap.ProductLocation}</th>
+                <th>${uiLabelMap.ProductLotId}</th>
+                <th>${uiLabelMap.ProductBinNum}</th>
+                <th align="right">${uiLabelMap.ProductPerUnitPrice}</th>
+                <th>&nbsp;</th>
+                <th align="right">${uiLabelMap.ProductInventoryItemInitialQuantity}</th>
+                <th align="right">${uiLabelMap.ProductAtpQohSerial}</th>
             </tr>
+            </thead>
             <#assign rowClass = "2">
             <#list productInventoryItems as inventoryItem>
                <#-- NOTE: Delivered for serialized inventory means shipped to customer so they should not be displayed here any more -->
@@ -61,7 +63,7 @@ under the License.
                     <#assign inventoryItemDetailFirst = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(inventoryItem.getRelated("InventoryItemDetail", null, Static["org.ofbiz.base.util.UtilMisc"].toList("effectiveDate"), false))!>
                     <#if curInventoryItemType??>
                         <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                            <td><a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)!}${StringUtil.wrapString(externalKeyParam)}" class="buttontext">${(inventoryItem.inventoryItemId)!}</a></td>
+                            <td><a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)!}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${(inventoryItem.inventoryItemId)!}</a></td>
                             <td>&nbsp;${(curInventoryItemType.get("description",locale))!}</td>
                             <td>
                                 <div>

@@ -18,7 +18,8 @@ under the License.
 -->
 <#if glAcctgAndAmountPercentageList?has_content && glAccountCategories?has_content>
   <form id="costCenters" method="post" action="<@ofbizUrl>createUpdateCostCenter</@ofbizUrl>">
-    <table class="basic-table hover-bar" cellspacing="0">
+    <table class="basic-table hover-bar">
+     <thead>
       <tr class="header-row">
         <th>${uiLabelMap.FormFieldTitle_organizationPartyId}</th>
         <th>${uiLabelMap.FormFieldTitle_glAccountId}</th>
@@ -28,7 +29,7 @@ under the License.
           <th>${glAccountCategory.description!}</th>
         </#list>
       </tr>
-
+    </thead>
     <#assign alt_row = false>
       <#list glAcctgAndAmountPercentageList as glAcctgAndAmountPercentage>
         <tr id="row_${glAcctgAndAmountPercentage.glAccountId}" class="alternate-row">

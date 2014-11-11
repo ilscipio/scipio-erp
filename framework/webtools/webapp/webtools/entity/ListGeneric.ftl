@@ -21,12 +21,14 @@ under the License.
             <@htmlTemplate.nextPrev commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex highIndex=highIndex commonDisplaying=commonDisplaying/>
         </#if>
           <table class="basic-table hover-bar" cellspacing="0">
-            <tr class="header-row-2">
-                <td>&nbsp;</td>
-                <#list fieldList as field>
-                    <td>${field.name}</td>
-                </#list>
-            </tr>
+           <thead>
+                <tr class="header-row-2">
+                    <th>&nbsp;</th>
+                    <#list fieldList as field>
+                        <th>${field.name}</th>
+                    </#list>
+                </tr>
+            </thead>
             <#if resultPartialList?has_content>
                 <#assign alt_row = false>
                 <#list records as record>

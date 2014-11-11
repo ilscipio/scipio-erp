@@ -17,20 +17,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.OrderRequestItems}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.OrderRequestItems}">
         <table cellspacing="0" class="basic-table">
+          <thead>
             <tr valign="bottom" class="header-row">
-                <td width="10%">${uiLabelMap.ProductItem}</td>
-                <td width="35%">${uiLabelMap.OrderProduct}</td>
-                <td width="10%" align="right">${uiLabelMap.ProductQuantity}</td>
-                <td width="10%" align="right">${uiLabelMap.OrderAmount}</td>
-                <td width="10%" align="right">${uiLabelMap.OrderRequestMaximumAmount}</td>
-                <td width="5%" align="right">&nbsp;</td>
+                <th width="10%">${uiLabelMap.ProductItem}</th>
+                <th width="35%">${uiLabelMap.OrderProduct}</th>
+                <th width="10%" align="right">${uiLabelMap.ProductQuantity}</th>
+                <th width="10%" align="right">${uiLabelMap.OrderAmount}</th>
+                <th width="10%" align="right">${uiLabelMap.OrderRequestMaximumAmount}</th>
+                <th width="5%" align="right">&nbsp;</th>
             </tr>
+            </thead>
             <#assign alt_row = false>
             <#list requestItems as requestItem>
                 <#if requestItem.productId??>
@@ -40,7 +38,7 @@ under the License.
                     <td valign="top">
                         <div>
                             <#if showRequestManagementLinks??>
-                                <a href="<@ofbizUrl>EditRequestItem?custRequestId=${requestItem.custRequestId}&amp;custRequestItemSeqId=${requestItem.custRequestItemSeqId}</@ofbizUrl>" class="buttontext">${requestItem.custRequestItemSeqId}</a>
+                                <a href="<@ofbizUrl>EditRequestItem?custRequestId=${requestItem.custRequestId}&amp;custRequestItemSeqId=${requestItem.custRequestItemSeqId}</@ofbizUrl>" class="button tiny">${requestItem.custRequestItemSeqId}</a>
                             <#else>
                                 ${requestItem.custRequestItemSeqId}
                             </#if>
@@ -50,9 +48,9 @@ under the License.
                         <div>
                             ${(product.internalName)!}&nbsp;
                             <#if showRequestManagementLinks??>
-                                <a href="/catalog/control/EditProduct?productId=${requestItem.productId!}" class="buttontext">${requestItem.productId!}</a>
+                                <a href="/catalog/control/EditProduct?productId=${requestItem.productId!}" class="button tiny">${requestItem.productId!}</a>
                             <#else>
-                                <a href="<@ofbizUrl>product?product_id=${requestItem.productId!}</@ofbizUrl>" class="buttontext">${requestItem.productId!}</a>
+                                <a href="<@ofbizUrl>product?product_id=${requestItem.productId!}</@ofbizUrl>" class="button tiny">${requestItem.productId!}</a>
                             </#if>
                         </div>
                     </td>
@@ -64,5 +62,4 @@ under the License.
                 <#assign alt_row = !alt_row>
             </#list>
         </table>
-    </div>
-</div>
+    </@section>

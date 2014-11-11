@@ -172,7 +172,7 @@
                 <field-map field-name="projectId" value="${workEffortId}"/>
             </service>
         </row-actions>
-        <field name="projectName" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="buttontext">
+        <field name="projectName" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="button tiny">
             <hyperlink description="${resultProject.projectInfo.projectName}" target="projectView">
                 <parameter param-name="projectId" from-field="resultProject.projectInfo.projectId"/>
             </hyperlink>
@@ -194,7 +194,7 @@
         <row-actions>
             <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/ProjectIsBillable.groovy"/>
         </row-actions>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="buttontext">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="button tiny">
             <hyperlink description="${projectName}" target="projectView">
                 <parameter param-name="projectId"/>
             </hyperlink>
@@ -220,7 +220,7 @@
         <field name="projectId"><hidden/></field>
         <field name="workEffortParentId"><hidden value=""/></field>
         <field name="workEffortId"><hidden value="${projectId}"/></field>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="buttontext">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="button tiny">
             <hyperlink also-hidden="false" description="${workEffortName}" target="projectView">
                 <parameter param-name="projectId" from-field="workEffortId"/>
             </hyperlink>
@@ -245,7 +245,7 @@
         <field name="priority" title="${uiLabelMap.CommonPriority}"><display/></field>
         <field name="parentProjectId" title="${uiLabelMap.ProjectMgrParentProjectName}">
             <display-entity entity-name="WorkEffort" description="${workEffortName} ${workEffortId}" key-field-name="workEffortId">
-                <sub-hyperlink target="projectView" description="${project.parentProjectId}" link-style="buttontext">
+                <sub-hyperlink target="projectView" description="${project.parentProjectId}" link-style="button tiny">
                     <parameter param-name="projectId" from-field="project.parentProjectId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -466,7 +466,7 @@
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="orderDate"><display/></field>
         <field name="entryDate"><display/></field>
-        <field name="linkProjectOrder" title=" " widget-style="buttontext" use-when="headerItem.equals(&quot;editProjectOrders&quot;)">
+        <field name="linkProjectOrder" title=" " widget-style="button tiny" use-when="headerItem.equals(&quot;editProjectOrders&quot;)">
             <hyperlink target="unLinkProjectOrder" description="${uiLabelMap.ProjectMgrRemoveLinkFromProject}">
                 <parameter param-name="workEffortId" from-field="projectId"/>
                 <parameter param-name="orderId"/>
@@ -481,7 +481,7 @@
                 <field-map field-name="projectId" value="${workEffortId}"/>
             </service>
         </row-actions>
-        <field name="projectName" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="buttontext">
+        <field name="projectName" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="button tiny">
             <hyperlink description="${resultProject.projectInfo.projectName}" target-type="inter-app" target="/projectmgr/control/projectView">
                 <parameter param-name="projectId" from-field="resultProject.projectInfo.projectId"/>
             </hyperlink>
@@ -567,7 +567,7 @@
         </actions>
         <field name="workEffortId"><hidden/></field>
         <field name="projectId"><hidden/></field>
-        <field name="partyId" widget-style="buttontext">
+        <field name="partyId" widget-style="button tiny">
             <hyperlink target="viewprofile"  description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -690,7 +690,7 @@
             <set field="actualHours" from-field="result.taskInfo.actualHours"/>
             <set field="statusId" from-field="result.statusId"/>
         </row-actions>
-        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="buttontext">
+        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="button tiny">
             <hyperlink also-hidden="false" description="${workEffortName}" target="taskView">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
@@ -748,7 +748,7 @@
             <set field="ActualStartDate" from-field="result.projectInfo.actualStartDate"/>
             <set field="ActualCompletionDate" from-field="result.projectInfo.actualCompletionDate"/>
         </row-actions>
-        <field entry-name="workEffortName" name="projectName" parameter-name="workEffortName" title="${uiLabelMap.CommonName}" widget-style="buttontext">
+        <field entry-name="workEffortName" name="projectName" parameter-name="workEffortName" title="${uiLabelMap.CommonName}" widget-style="button tiny">
             <hyperlink target="projectView" description="${workEffortName}[${workEffortId}]">
                 <parameter param-name="projectId" from-field="workEffortId"/>
             </hyperlink>
@@ -851,7 +851,7 @@
     <form name="ListContents" extends="ListWorkEffortContents" extends-resource="component://workeffort/widget/WorkEffortForms.xml">
         <field name="contentId" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
             <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
-                <sub-hyperlink target="EditProjectContents" description="${contentId}" link-style="buttontext" target-type="inter-app">
+                <sub-hyperlink target="EditProjectContents" description="${contentId}" link-style="button tiny" target-type="inter-app">
                     <parameter param-name="contentId"/>
                     <parameter param-name="projectId"/>
                     <parameter param-name="workEffortContentTypeId"/>
@@ -860,7 +860,7 @@
         </field>
         <field name="contentId" use-when="headerItem.equals(&quot;EditTaskContents&quot;)">
             <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
-                <sub-hyperlink target="EditTaskContents" description="${contentId}" link-style="buttontext" target-type="inter-app">
+                <sub-hyperlink target="EditTaskContents" description="${contentId}" link-style="button tiny" target-type="inter-app">
                     <parameter param-name="contentId"/>
                     <parameter param-name="workEffortId"/>
                     <parameter param-name="workEffortContentTypeId"/>
@@ -869,7 +869,7 @@
         </field>
         <field name="thruDate"><ignored/></field>
         <field name="submitButton"><ignored/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
+        <field name="deleteLink" title=" " widget-style="button tiny" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteProjectContent">
                 <parameter param-name="contentId"/>
                 <parameter param-name="workEffortId"/>
@@ -877,10 +877,10 @@
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="downloadLink" title=" " widget-style="buttontext">
+        <field name="downloadLink" title=" " widget-style="button tiny">
             <hyperlink description="${uiLabelMap.ContentDownload}" target="ViewSimpleContent?contentId=${contentId}"/>
         </field>
-        <field name="deleteLink" title=" " widget-style="buttontext" use-when="headerItem.equals(&quot;EditTaskContents&quot;)">
+        <field name="deleteLink" title=" " widget-style="button tiny" use-when="headerItem.equals(&quot;EditTaskContents&quot;)">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteTaskContent">
                 <parameter param-name="contentId"/>
                 <parameter param-name="workEffortId"/>

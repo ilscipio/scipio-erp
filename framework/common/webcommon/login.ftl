@@ -26,35 +26,60 @@ under the License.
 <#else>
   <#assign focusName = true>
 </#if>
-<center>
-  <div class="screenlet login-screenlet">
-    <div class="screenlet-title-bar">
-      <h3>${uiLabelMap.CommonRegistered}</h3>
-    </div>
-    <div class="screenlet-body">
+
+
+
+
+  <div class="row">
+    <div class="large-12 columns">
+      <h1>${uiLabelMap.CommonRegistered}</h1>
+    <div class="panel">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
-        <table class="basic-table" cellspacing="0">
-          <tr>
-            <td class="label">${uiLabelMap.CommonUsername}</td>
-            <td><input type="text" name="USERNAME" value="${username}" size="20"/></td>
-          </tr>
-          <tr>
-            <td class="label">${uiLabelMap.CommonPassword}</td>
-            <td><input type="password" name="PASSWORD" value="" size="20"/></td>
-          </tr>
+       <div class="row">
+        <div class="large-6 columns">
+          <div class="row collapse prefix-radius">
+            <div class="small-3 columns">
+              <span class="prefix">${uiLabelMap.CommonUsername}</span>
+            </div>
+            <div class="small-9 columns">
+              <input type="text" name="USERNAME" value="${username}" size="20" placeholder="admin"/>
+            </div>
+          </div>
+        </div>
+       </div>
+      <div class="row">
+        <div class="large-6 columns">
+          <div class="row collapse prefix-radius">
+            <div class="small-3 columns">
+              <span class="prefix">${uiLabelMap.CommonPassword}</span>
+            </div>
+            <div class="small-9 columns">
+              <input type="password" name="PASSWORD" value="" size="20" placeholder="ofbiz"/>
+            </div>
+          </div>
+        </div>
+       </div>
           <#if ("Y" == useMultitenant) >
               <#if !requestAttributes.tenantId??>
-                  <tr>
-                      <td class="label">${uiLabelMap.CommonTenantId}</td>
-                      <td><input type="text" name="tenantId" value="${parameters.tenantId!}" size="20"/></td>
-                  </tr>
+              <div class="row">
+                <div class="large-6 columns">
+                  <div class="row collapse prefix-radius">
+                    <div class="small-3 columns">
+                      <span class="prefix">${uiLabelMap.CommonTenantId}</span>
+                    </div>
+                    <div class="small-9 columns">
+                      <input type="text" name="tenantId" value="${parameters.tenantId!}" size="20"/>
+                    </div>
+                  </div>
+                </div>
+               </div>
               <#else>
                   <input type="hidden" name="tenantId" value="${requestAttributes.tenantId!}"/>
               </#if>
           </#if>
           <tr>
             <td colspan="2" align="center">
-              <input type="submit" value="${uiLabelMap.CommonLogin}"/>
+              <input type="submit" value="${uiLabelMap.CommonLogin}" class="button"/>
             </td>
           </tr>
         </table>
@@ -64,8 +89,7 @@ under the License.
       </form>
     </div>
   </div>
-</center>
-
+</div>
 <script language="JavaScript" type="text/javascript">
   document.loginform.JavaScriptEnabled.value = "Y";
   <#if focusName>

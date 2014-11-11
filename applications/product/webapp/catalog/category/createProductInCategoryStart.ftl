@@ -20,7 +20,7 @@ under the License.
 <#assign productFeaturesByTypeMap = Static["org.ofbiz.product.feature.ParametricSearch"].makeCategoryFeatureLists(productCategoryId, delegator)>
 
 <#if productCategoryId?has_content>
-    <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductBackToEditCategory}]</a>
+    <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="button tiny">[${uiLabelMap.ProductBackToEditCategory}]</a>
 </#if>
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -82,7 +82,7 @@ under the License.
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <a href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="buttontext">${uiLabelMap.ProductCheckExisting}</a>
+                        <a href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="button tiny">${uiLabelMap.ProductCheckExisting}</a>
                     </td>
                 </tr>
             </table>

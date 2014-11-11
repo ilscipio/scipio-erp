@@ -20,12 +20,14 @@ under the License.
           <input type="hidden" name="find" value="true"/>
           <input type="hidden" name="searchOptions_collapsed" value="true"/>
           <table class="basic-table" cellspacing="0">
-            <tr class="header-row-2">
-              <td>${uiLabelMap.WebtoolsFieldName}</td>
-              <td>${uiLabelMap.WebtoolsPk}</td>
-              <td>${uiLabelMap.WebtoolsFieldType}</td>
-              <td>&nbsp;</td>
-            </tr>
+           <thead>
+                <tr class="header-row-2">
+                  <th>${uiLabelMap.WebtoolsFieldName}</th>
+                  <th>${uiLabelMap.WebtoolsPk}</th>
+                  <th>${uiLabelMap.WebtoolsFieldType}</th>
+                  <th>&nbsp;</th>
+                </tr>
+            </thead>
             <#list fieldList as field>
                 <tr>
                     <td>${field.name}</td>

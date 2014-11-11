@@ -124,5 +124,5 @@ under the License.
       </table>
    </div>
 <#else>
-  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
+  <@section title="${uiLabelMap.OrderViewPermissionError}"/>
 </#if>

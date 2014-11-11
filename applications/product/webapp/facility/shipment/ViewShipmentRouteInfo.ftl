@@ -20,29 +20,31 @@ under the License.
 <div class="screenlet">
     <div class="screenlet-body">
         <table cellspacing="0" cellpadding="2"  class="basic-table">
+         <thead>
             <tr class="header-row">
-                <td>${uiLabelMap.ProductSegment}</td>
-                <td>
+                <th>${uiLabelMap.ProductSegment}</th>
+                <th>
                     <div>${uiLabelMap.ProductCarrierShipmentMethod}</div>
                     <div>${uiLabelMap.ProductOriginDestinationFacility}</div>
                     <div>${uiLabelMap.ProductOriginDestinationAddressId}</div>
                     <div>${uiLabelMap.ProductOriginDestinationPhoneId}</div>
-                </td>
-                <td>
+                </th>
+                <th>
                     <div>${uiLabelMap.ProductCarrierStatus}</div>
                     <div>${uiLabelMap.ProductTrackingNumber}</div>
                     <div>${uiLabelMap.ProductEstimatedStartArrive}</div>
                     <div>${uiLabelMap.ProductActualStartArrive}</div>
-                </td>
-                <td>
+                </th>
+                <th>
                     <div>${uiLabelMap.ProductBillingWeightUom}</div>
                     <div>${uiLabelMap.ProductCurrencyUom}</div>
                     <div>${uiLabelMap.ProductActualTransport}</div>
                     <div>${uiLabelMap.ProductActualServices}</div>
                     <div>${uiLabelMap.ProductActualOther}</div>
                     <div>${uiLabelMap.ProductActualTotal}</div>
-                </td>
+                </th>
             </tr>
+            </thead>
         <#assign alt_row = false>
         <#list shipmentRouteSegmentDatas as shipmentRouteSegmentData>
             <#assign shipmentRouteSegment = shipmentRouteSegmentData.shipmentRouteSegment>

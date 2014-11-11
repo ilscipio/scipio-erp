@@ -55,8 +55,8 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="editPartyInvitation" text="${uiLabelMap.PartyInvitationNewPartyInvitation}" style="buttontext create"/>
-                                            <link target="/ordermgr/control/orderentry?partyId=${partyInvitation.partyIdFrom}" text="${uiLabelMap.PartyInvitationNewOrder}" style="buttontext create" url-mode="inter-app"/>
+                                            <link target="editPartyInvitation" text="${uiLabelMap.PartyInvitationNewPartyInvitation}" style="button tiny create"/>
+                                            <link target="/ordermgr/control/orderentry?partyId=${partyInvitation.partyIdFrom}" text="${uiLabelMap.PartyInvitationNewOrder}" style="button tiny create" url-mode="inter-app"/>
                                         </container>
                                         <container style="button-bar"><label style="h1">${uiLabelMap[titleProperty]}</label><label style="h2"> ${uiLabelMap.CommonFor} "${partyInvitation.partyIdFrom}" [${partyInvitationId}]</label></container>
                                     </widgets>
@@ -89,7 +89,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="/editPartyInvitation" text="${uiLabelMap.PartyInvitationNewPartyInvitation}" style="buttontext create"/>
+                                            <link target="/editPartyInvitation" text="${uiLabelMap.PartyInvitationNewPartyInvitation}" style="button tiny create"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -125,7 +125,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap[titleProperty]}}">
-                                    <container style="button-bar"><link target="/editPartyInvitation" text="${uiLabelMap.PartyInvitationNewPartyInvitation}" style="buttontext"/></container>
+                                    <container style="button-bar"><link target="/editPartyInvitation" text="${uiLabelMap.PartyInvitationNewPartyInvitation}" style="button tiny"/></container>
                                     <include-form name="ListPartyInvitations" location="component://party/widget/partymgr/PartyInvitationForms.xml"/>
                                 </screenlet>
                             </widgets>

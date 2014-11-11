@@ -30,11 +30,7 @@ under the License.
     <#assign shoppingCartSize = 0>
 </#if>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.OrderOrderHeaderInfo}</h3>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.OrderOrderHeaderInfo}">
               <form method="post" action="setOrderName" name="setCartOrderNameForm">
                 <fieldset>
                   <label for="orderName"><strong>${uiLabelMap.OrderOrderName}</strong>:</label>
@@ -44,7 +40,7 @@ under the License.
               </form>
               <p>
               <strong>${uiLabelMap.Party}</strong>:
-                  <a href="${customerDetailLink}${partyId}${externalKeyParam!}" target="partymgr" class="buttontext">${partyId}</a>
+                  <a href="${customerDetailLink}${partyId}${externalKeyParam!}" target="partymgr" class="button tiny">${partyId}</a>
                   <#if partyMap.person??>
                     ${partyMap.person.firstName!}&nbsp;${partyMap.person.lastName!}
                   </#if>
@@ -78,6 +74,4 @@ under the License.
             </p>
             </#if>
             <p><strong>${uiLabelMap.CommonTotal}</strong>: <@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></p>
-    </div>
-</div>
-<br />
+</@section>

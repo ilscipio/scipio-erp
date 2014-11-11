@@ -167,7 +167,7 @@ under the License.
     </form>
     <form name="ListAccounts" extends="listAccounts">
         <field name="assignToMe" use-when="existRelationship==null&amp;&amp;!&quot;false&quot;.equals(parameters.get(&quot;all&quot;))"
-                title="${uiLabelMap.SfaAssignToMe}" widget-style="buttontext">
+                title="${uiLabelMap.SfaAssignToMe}" widget-style="button tiny">
             <hyperlink target="createPartyRelationshipAndRole" description="${uiLabelMap.SfaAssignToMe}">
                 <parameter param-name="partyId" from-field="userLogin.partyId"/>
                 <parameter param-name="roleTypeId" from-field="roleTypeIdFrom"/>

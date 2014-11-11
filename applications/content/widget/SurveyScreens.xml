@@ -37,7 +37,7 @@ under the License.
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
-                                        <container style="button-bar"><link  text="${uiLabelMap.ContentSurveyCreate}" target="EditSurvey" style="buttontext create"/></container>
+                                        <container style="button-bar"><link  text="${uiLabelMap.ContentSurveyCreate}" target="EditSurvey" style="button tiny create"/></container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
                                         <include-form name="FindSurvey" location="component://content/widget/survey/SurveyForms.xml"/>
@@ -75,7 +75,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <include-menu name="SurveyTabBar" location="component://content/widget/SurveyMenus.xml"/>
-                                <container><link  text="${uiLabelMap.ContentSurveyCreate}" target="EditSurvey" style="buttontext"/></container>
+                                <container><link  text="${uiLabelMap.ContentSurveyCreate}" target="EditSurvey" style="button tiny"/></container>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -222,7 +222,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleFindSurveyResponse} ${uiLabelMap.ContentSurveySurveyId} ${surveyId}">
                             <container>
-                                <link  text="${uiLabelMap.ContentSurveyCreateResponse}" target="EditSurveyResponse" style="buttontext">
+                                <link  text="${uiLabelMap.ContentSurveyCreateResponse}" target="EditSurveyResponse" style="button tiny">
                                     <parameter param-name="surveyId"/>
                                 </link>
                             </container>
@@ -255,7 +255,7 @@ under the License.
                 <decorator-screen name="CommonSurveyDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link  text="${uiLabelMap.ContentSurveyCreateResponse}" target="EditSurveyResponse" style="buttontext">
+                            <link  text="${uiLabelMap.ContentSurveyCreateResponse}" target="EditSurveyResponse" style="button tiny">
                                 <parameter param-name="surveyId"/>
                             </link>
                         </container>
@@ -264,7 +264,7 @@ under the License.
                                 <condition><not><if-empty field="parameters.rootContentId"/></not></condition>
                                 <widgets>
                                     <container>
-                                        <link text="${uiLabelMap.ContentCompDocGoBack} [${parameters.rootContentId}]" target="ViewCompDocInstanceTree" style="buttontext">
+                                        <link text="${uiLabelMap.ContentCompDocGoBack} [${parameters.rootContentId}]" target="ViewCompDocInstanceTree" style="button tiny">
                                             <parameter param-name="rootContentId" from-field="parameters.rootContentId"/>
                                         </link>
                                     </container>

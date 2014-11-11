@@ -46,14 +46,16 @@ under the License.
     <br class="clear" />
   </div>
   <div class="screenlet-body">
-    <table cellspacing="0" class="basic-table">
+    <table cellspacing="0">
+    <thead>
       <tr class="header-row">
-        <td>${uiLabelMap.PartyCertComponent}</td>
-        <td>${uiLabelMap.PartyCertKeyStore}</td>
-        <td>${uiLabelMap.PartyCertImportIssuer}</td>
-        <td>${uiLabelMap.PartyCertKeyAlias}</td>
-        <td>&nbsp;</td>
+        <th>${uiLabelMap.PartyCertComponent}</th>
+        <th>${uiLabelMap.PartyCertKeyStore}</th>
+        <th>${uiLabelMap.PartyCertImportIssuer}</th>
+        <th>${uiLabelMap.PartyCertKeyAlias}</th>
+        <th>&nbsp;</th>
       </tr>
+      </thead>
       <#list components as component>
         <#assign keystores = component.getKeystoreInfos()!/>
           <#list keystores as store>

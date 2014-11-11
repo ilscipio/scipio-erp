@@ -45,23 +45,25 @@ under the License.
               <input type="hidden" name="_useRowSubmit" value="Y" />
               <#assign rowCount = 0>
               <table cellspacing="0" class="basic-table hover-bar">
+               <thead>
                 <tr class="header-row">
-                    <td>${uiLabelMap.ProductProductId}</td>
-                    <td>${uiLabelMap.ProductProduct}</td>
-                    <td>${uiLabelMap.ProductFromLocation}</td>
-                    <td>${uiLabelMap.ProductQoh}</td>
-                    <td>${uiLabelMap.ProductAtp}</td>
-                    <td>${uiLabelMap.ProductToLocation}</td>
-                    <td>${uiLabelMap.ProductQoh}</td>
-                    <td>${uiLabelMap.ProductAtp}</td>
-                    <td>${uiLabelMap.ProductMinimumStock}</td>
-                    <td>${uiLabelMap.ProductMoveQuantity}</td>
-                    <td>${uiLabelMap.CommonConfirm}</td>
-                    <td align="right">
+                    <th>${uiLabelMap.ProductProductId}</th>
+                    <th>${uiLabelMap.ProductProduct}</th>
+                    <th>${uiLabelMap.ProductFromLocation}</th>
+                    <th>${uiLabelMap.ProductQoh}</th>
+                    <th>${uiLabelMap.ProductAtp}</th>
+                    <th>${uiLabelMap.ProductToLocation}</th>
+                    <th>${uiLabelMap.ProductQoh}</th>
+                    <th>${uiLabelMap.ProductAtp}</th>
+                    <th>${uiLabelMap.ProductMinimumStock}</th>
+                    <th>${uiLabelMap.ProductMoveQuantity}</th>
+                    <th>${uiLabelMap.CommonConfirm}</th>
+                    <th align="right">
                         ${uiLabelMap.ProductSelectAll}&nbsp;
                         <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'moveInfoId_tableRow_', 'selectAllForm');" />
-                    </td>
+                    </th>
                 </tr>
+                </thead>
                 <#if moveByOisgirInfoList?has_content || moveByPflInfoList?has_content>
                     <#assign alt_row = false>
                     <#list moveByOisgirInfoList! as moveByOisgirInfo>
@@ -132,7 +134,7 @@ under the License.
                     </#list>
                     <tr>
                         <td colspan="13" align="right">
-                            <a href="javascript:document.selectAllForm.submit();" class="buttontext">${uiLabelMap.ProductConfirmSelectedMoves}</a>
+                            <a href="javascript:document.selectAllForm.submit();" class="button tiny">${uiLabelMap.ProductConfirmSelectedMoves}</a>
                         </td>
                     </tr>
                 <#else>
@@ -181,7 +183,7 @@ under the License.
                 </tr>
                 <tr>
                   <td colspan="13" align="right">
-                    <a href="javascript:document.quickStockMove.submit();" class="buttontext">${uiLabelMap.ProductQuickStockMove}</a>
+                    <a href="javascript:document.quickStockMove.submit();" class="button tiny">${uiLabelMap.ProductQuickStockMove}</a>
                   </td>
                 </tr>
             </table>

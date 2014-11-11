@@ -26,21 +26,16 @@ under the License.
     <#assign allowPriceChange = true/>
 </#if>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-          <li class="h3">&nbsp;${uiLabelMap.OrderOrderItems}</li>
+<@section title="${uiLabelMap.OrderOrderItems}">
+        <ul class="button-group">
           <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
               <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-                  <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelSelectedOrderItems</@ofbizUrl>';document.updateItemInfo.submit()">${uiLabelMap.OrderCancelSelectedItems}</a></li>
-                  <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.submit()">${uiLabelMap.OrderCancelAllItems}</a></li>
-                  <li><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>">${uiLabelMap.OrderViewOrder}</a></li>
+                  <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelSelectedOrderItems</@ofbizUrl>';document.updateItemInfo.submit()" class="button tiny">${uiLabelMap.OrderCancelSelectedItems}</a></li>
+                  <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.submit()" class="button tiny">${uiLabelMap.OrderCancelAllItems}</a></li>
+                  <li><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderViewOrder}</a></li>
               </#if>
           </#if>
         </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
         <#if !orderItemList?has_content>
             <span class="alert">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</span>
         <#else>
@@ -53,26 +48,28 @@ under the License.
               <input type="hidden" name="orderTypeId" value="PURCHASE_ORDER"/>
             </#if>
             <table class="basic-table order-items" cellspacing="0">
+              <thead>
                 <tr class="header-row">
-                    <td width="30%" style="border-bottom:none;">${uiLabelMap.ProductProduct}</td>
-                    <td width="30%" style="border-bottom:none;">${uiLabelMap.CommonStatus}</td>
-                    <td width="5%" style="border-bottom:none;" class="align-text">${uiLabelMap.OrderQuantity}</td>
-                    <td width="10%" style="border-bottom:none;" class="align-text">${uiLabelMap.OrderUnitPrice}</td>
-                    <td width="10%" style="border-bottom:none;" class="align-text">${uiLabelMap.OrderAdjustments}</td>
-                    <td width="10%" style="border-bottom:none;" class="align-text">${uiLabelMap.OrderSubTotal}</td>
-                    <td width="2%" style="border-bottom:none;">&nbsp;</td>
-                    <td width="3%" style="border-bottom:none;">&nbsp;</td>
+                    <th width="30%" style="border-bottom:none;">${uiLabelMap.ProductProduct}</th>
+                    <th width="30%" style="border-bottom:none;">${uiLabelMap.CommonStatus}</th>
+                    <th width="5%" style="border-bottom:none;" class="align-text">${uiLabelMap.OrderQuantity}</th>
+                    <th width="10%" style="border-bottom:none;" class="align-text">${uiLabelMap.OrderUnitPrice}</th>
+                    <th width="10%" style="border-bottom:none;" class="align-text">${uiLabelMap.OrderAdjustments}</th>
+                    <th width="10%" style="border-bottom:none;" class="align-text">${uiLabelMap.OrderSubTotal}</th>
+                    <th width="2%" style="border-bottom:none;">&nbsp;</th>
+                    <th width="3%" style="border-bottom:none;">&nbsp;</th>
                 </tr>
+                </thead>
                 <#list orderItemList as orderItem>
                     <#if orderItem.productId??> <#-- a null product may come from a quote -->
                       <#assign orderItemContentWrapper = Static["org.ofbiz.order.order.OrderContentWrapper"].makeOrderContentWrapper(orderItem, request)>
-                      <tr><td colspan="8"><hr /></td></tr>
+                      
                       <tr>
                           <#assign orderItemType = orderItem.getRelatedOne("OrderItemType", false)!>
                           <#assign productId = orderItem.productId!>
                           <#if productId?? && productId == "shoppingcart.CommentLine">
                               <td colspan="8" valign="top">
-                                  <span class="label">&gt;&gt; ${orderItem.itemDescription}</span>
+                                  &gt;&gt; ${orderItem.itemDescription}
                               </td>
                           <#else>
                               <td valign="top">
@@ -104,10 +101,10 @@ under the License.
                                   </div>
                                   <#if productId??>
                                   <div>
-                                      <a href="/catalog/control/EditProduct?productId=${productId}" class="buttontext" target="_blank">${uiLabelMap.ProductCatalog}</a>
-                                      <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">${uiLabelMap.OrderEcommerce}</a>
+                                      <a href="/catalog/control/EditProduct?productId=${productId}" class="button tiny" target="_blank">${uiLabelMap.ProductCatalog}</a>
+                                      <a href="/ecommerce/control/product?product_id=${productId}" class="button tiny" target="_blank">${uiLabelMap.OrderEcommerce}</a>
                                       <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
-                                      <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">${uiLabelMap.OrderViewImage}</a>
+                                      <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="button tiny">${uiLabelMap.OrderViewImage}</a>
                                       </#if>
                                   </div>
                                   </#if>
@@ -129,7 +126,7 @@ under the License.
                                   <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
                                   <#if returnHeader.statusId != "RETURN_CANCELLED">
                                   <div class="alert">
-                                      <span class="label">${uiLabelMap.OrderReturned}</span> ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="buttontext">${returnItem.returnId}</a>
+                                      ${uiLabelMap.OrderReturned} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="button tiny">${returnItem.returnId}</a>
                                   </div>
                                   </#if>
                                   </#list>
@@ -185,20 +182,20 @@ under the License.
 
                       <#-- now update/cancel reason and comment field -->
                       <#if orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && ("Y" != orderItem.isPromo!)>
-                        <tr><td colspan="8"><span class="label">${uiLabelMap.OrderReturnReason}</span>
+                        <tr><td colspan="8">${uiLabelMap.OrderReturnReason}
                             <select name="irm_${orderItem.orderItemSeqId}">
                               <option value="">&nbsp;</option>
                               <#list orderItemChangeReasons as reason>
                                 <option value="${reason.enumId}">${reason.get("description",locale)?default(reason.enumId)}</option>
                               </#list>
                             </select>
-                            <span class="label">${uiLabelMap.CommonComments}</span>
+                            ${uiLabelMap.CommonComments}
                             <input type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60"/>
                             <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER')>
-                              <span class="label">${uiLabelMap.OrderEstimatedShipDate}</span>
-                              <@htmlTemplate.renderDateTimeField name="isdm_${orderItem.orderItemSeqId}" value="${orderItem.estimatedShipDate!}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="isdm_${orderItem.orderItemSeqId}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                              <span class="label">${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}</span>
-                              <@htmlTemplate.renderDateTimeField name="iddm_${orderItem.orderItemSeqId}" value="${orderItem.estimatedDeliveryDate!}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="iddm_${orderItem.orderItemSeqId}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                              ${uiLabelMap.OrderEstimatedShipDate}
+                              <@htmlTemplate.renderDateTimeField name="isdm_${orderItem.orderItemSeqId}" value="${orderItem.estimatedShipDate!}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="isdm_${orderItem.orderItemSeqId}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                              ${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}
+                              <@htmlTemplate.renderDateTimeField name="iddm_${orderItem.orderItemSeqId}" value="${orderItem.estimatedDeliveryDate!}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="iddm_${orderItem.orderItemSeqId}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                             </#if>
                             </td>
                         </tr>
@@ -210,21 +207,21 @@ under the License.
                               <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType", true)>
                               <tr>
                                   <td class="align-text" colspan="2">
-                                      <span class="label">${uiLabelMap.OrderAdjustment}</span>&nbsp;${adjustmentType.get("description",locale)}&nbsp;
+                                      ${uiLabelMap.OrderAdjustment}&nbsp;${adjustmentType.get("description",locale)}&nbsp;
                                       ${orderItemAdjustment.get("description",locale)!} (${orderItemAdjustment.comments?default("")})
 
                                       <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                                       <#if orderItemAdjustment.primaryGeoId?has_content>
                                       <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>
-                                      <span class="label">${uiLabelMap.OrderJurisdiction}</span>&nbsp;${primaryGeo.geoName} [${primaryGeo.abbreviation!}]
+                                      ${uiLabelMap.OrderJurisdiction}&nbsp;${primaryGeo.geoName} [${primaryGeo.abbreviation!}]
                                       <#if orderItemAdjustment.secondaryGeoId?has_content>
                                       <#assign secondaryGeo = orderItemAdjustment.getRelatedOne("SecondaryGeo", true)/>
-                                      (<span class="label">${uiLabelMap.CommonIn}</span>&nbsp;${secondaryGeo.geoName} [${secondaryGeo.abbreviation!}])
+                                      (${uiLabelMap.CommonIn}&nbsp;${secondaryGeo.geoName} [${secondaryGeo.abbreviation!}])
                                       </#if>
                                       </#if>
-                                      <#if orderItemAdjustment.sourcePercentage??><span class="label">Rate</span>&nbsp;${orderItemAdjustment.sourcePercentage}</#if>
-                                      <#if orderItemAdjustment.customerReferenceId?has_content><span class="label">Customer Tax ID</span>&nbsp;${orderItemAdjustment.customerReferenceId}</#if>
-                                      <#if orderItemAdjustment.exemptAmount??><span class="label">Exempt Amount</span>&nbsp;${orderItemAdjustment.exemptAmount}</#if>
+                                      <#if orderItemAdjustment.sourcePercentage??>Rate&nbsp;${orderItemAdjustment.sourcePercentage}</#if>
+                                      <#if orderItemAdjustment.customerReferenceId?has_content>Customer Tax ID&nbsp;${orderItemAdjustment.customerReferenceId}</#if>
+                                      <#if orderItemAdjustment.exemptAmount??>Exempt Amount&nbsp;${orderItemAdjustment.exemptAmount}</#if>
                                       </#if>
                                   </td>
                                   <td>&nbsp;</td>
@@ -249,7 +246,7 @@ under the License.
                               <#assign itemSelectable = (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
                               <tr>
                                   <td class="align-text" colspan="2">
-                                      <span class="label">${uiLabelMap.OrderShipGroup}</span>&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
+                                      ${uiLabelMap.OrderShipGroup}&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
                                   </td>
                                   <td align="center">
                                       <input type="text" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shipGroupQty?string.number}"/>
@@ -260,7 +257,7 @@ under the License.
                                   <td colspan="4">&nbsp;</td>
                                   <td>
                                       <#if itemSelectable>
-                                          <a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" class="buttontext">${uiLabelMap.CommonCancel}</a>
+                                          <a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" class="button tiny">${uiLabelMap.CommonCancel}</a>
                                       <#else>
                                           &nbsp;
                                       </#if>
@@ -273,10 +270,10 @@ under the License.
                 <tr>
                     <td colspan="7">&nbsp;</td>
                     <td>
-                        <input type="submit" value="${uiLabelMap.OrderUpdateItems}" class="buttontext"/>
+                        <input type="submit" value="${uiLabelMap.OrderUpdateItems}" class="button tiny"/>
                     </td>
                 </tr>
-                <tr><td colspan="8"><hr /></td></tr>
+                
             </table>
             </form>
         </#if>
@@ -305,7 +302,7 @@ under the License.
                     <table class="basic-table" cellspacing="0">
                         <tr>
                             <td class="align-text" width="55%">
-                                <span class="label">${adjustmentType.get("description",locale)}</span>&nbsp;${orderHeaderAdjustment.comments!}
+                                ${adjustmentType.get("description",locale)}&nbsp;${orderHeaderAdjustment.comments!}
                             </td>
                             <td nowrap="nowrap" width="30%">
                                 <#if (allowPriceChange)>
@@ -318,7 +315,7 @@ under the License.
                                 <#if (allowPriceChange)>
                                     <input type="text" name="amount" size="6" value="<@ofbizAmount amount=adjustmentAmount/>"/>
                                     <input class="smallSubmit" type="submit" value="${uiLabelMap.CommonUpdate}"/>
-                                    <a href="javascript:document.deleteOrderAdjustment${orderAdjustmentId}.submit();" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                                    <a href="javascript:document.deleteOrderAdjustment${orderAdjustmentId}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
                                 <#else>
                                     <@ofbizAmount amount=adjustmentAmount/>
                                 </#if>
@@ -345,7 +342,7 @@ under the License.
                     <tr><td colspan="3"><hr /></td></tr>
                     <tr>
                         <td class="align-text" width="55%">
-                            <span class="label">${uiLabelMap.OrderAdjustment}</span>&nbsp;
+                            ${uiLabelMap.OrderAdjustment}&nbsp;
                             <select name="orderAdjustmentTypeId">
                                 <#list orderAdjustmentTypes as type>
                                 <option value="${type.orderAdjustmentTypeId}">${type.get("description",locale)?default(type.orderAdjustmentTypeId)}</option>
@@ -372,39 +369,38 @@ under the License.
         <table class="basic-table" cellspacing="0">
             <tr><td colspan="4"><hr /></td></tr>
             <tr class="align-text">
-              <td width="80%"><span class="label">${uiLabelMap.OrderItemsSubTotal}</span></td>
+              <td width="80%">${uiLabelMap.OrderItemsSubTotal}</td>
               <td width="10%" nowrap="nowrap"><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></td>
               <td width="10%" colspan="2">&nbsp;</td>
             </tr>
 
             <#-- other adjustments -->
             <tr class="align-text">
-              <td><span class="label">${uiLabelMap.OrderTotalOtherOrderAdjustments}</span></td>
+              <td>${uiLabelMap.OrderTotalOtherOrderAdjustments}</td>
               <td nowrap="nowrap"><@ofbizCurrency amount=otherAdjAmount isoCode=currencyUomId/></td>
               <td colspan="2">&nbsp;</td>
             </tr>
 
             <#-- shipping adjustments -->
             <tr class="align-text">
-              <td><span class="label">${uiLabelMap.OrderTotalShippingAndHandling}</span></td>
+              <td>${uiLabelMap.OrderTotalShippingAndHandling}</td>
               <td nowrap="nowrap"><@ofbizCurrency amount=shippingAmount isoCode=currencyUomId/></td>
               <td colspan="2">&nbsp;</td>
             </tr>
 
             <#-- tax adjustments -->
             <tr class="align-text">
-              <td><span class="label">${uiLabelMap.OrderTotalSalesTax}</span></td>
+              <td>${uiLabelMap.OrderTotalSalesTax}</td>
               <td nowrap="nowrap"><@ofbizCurrency amount=taxAmount isoCode=currencyUomId/></td>
               <td colspan="2">&nbsp;</td>
             </tr>
 
             <#-- grand total -->
             <tr class="align-text">
-              <td><span class="label">${uiLabelMap.OrderTotalDue}</span></td>
+              <td>${uiLabelMap.OrderTotalDue}</td>
               <td nowrap="nowrap"><@ofbizCurrency amount=grandTotal isoCode=currencyUomId/></td>
               <td colspan="2">&nbsp;</td>
             </tr>
         </table>
-    </div>
-</div>
+    </@section>
 </#if>

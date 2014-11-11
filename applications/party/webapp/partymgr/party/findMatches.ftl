@@ -76,18 +76,20 @@ under the License.
           <td colspan="2">
             <#if matches?has_content>
               <table cellspacing="0" class="basic-table">
+                <thead>
                 <tr>
                   <td class="label" colspan="7">${uiLabelMap.PartyAddressMatching} ${lastName} / ${firstName} @ ${addressString}</td>
                 </tr>
                 <tr class="header-row">
-                  <td>${uiLabelMap.PartyLastName}</td>
-                  <td>${uiLabelMap.PartyFirstName}</td>
-                  <td>${uiLabelMap.CommonAddress1}</td>
-                  <td>${uiLabelMap.CommonAddress2}</td>
-                  <td>${uiLabelMap.CommonCity}</td>
-                  <td>${uiLabelMap.PartyZipCode}</td>
-                  <td>${uiLabelMap.PartyPartyId}</td>
+                  <th>${uiLabelMap.PartyLastName}</th>
+                  <th>${uiLabelMap.PartyFirstName}</th>
+                  <th>${uiLabelMap.CommonAddress1}</th>
+                  <th>${uiLabelMap.CommonAddress2}</th>
+                  <th>${uiLabelMap.CommonCity}</th>
+                  <th>${uiLabelMap.PartyZipCode}</th>
+                  <th>${uiLabelMap.PartyPartyId}</th>
                 </tr>
+                </thead>
                 <#list matches as match>
                   <#assign person = match.getRelatedOne("Party", false).getRelatedOne("Person", false)!>
                   <#assign group = match.getRelatedOne("Party", false).getRelatedOne("PartyGroup", false)!>

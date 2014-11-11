@@ -86,15 +86,17 @@ function getPaymentRunningTotal() {
                     <span class="label" id="showPaymentRunningTotal"></span>
                 </div>
                 <table class="basic-table">
+                  <thead>
                     <tr class="header-row-2">
-                        <td>${uiLabelMap.FormFieldTitle_paymentId}</td>
-                        <td>${uiLabelMap.AccountingPaymentType}</td>
-                        <td>${uiLabelMap.AccountingFromParty}</td>
-                        <td>${uiLabelMap.AccountingToParty}</td>
-                        <td>${uiLabelMap.CommonAmount}</td>
-                        <td>${uiLabelMap.CommonDate}</td>
-                        <td align="right">${uiLabelMap.CommonSelectAll}<input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>
+                        <th>${uiLabelMap.FormFieldTitle_paymentId}</th>
+                        <th>${uiLabelMap.AccountingPaymentType}</th>
+                        <th>${uiLabelMap.AccountingFromParty}</th>
+                        <th>${uiLabelMap.AccountingToParty}</th>
+                        <th>${uiLabelMap.CommonAmount}</th>
+                        <th>${uiLabelMap.CommonDate}</th>
+                        <th align="right">${uiLabelMap.CommonSelectAll}<input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></th>
                     </tr>
+                    </thead>
                     <#assign alt_row = false>
                     <#list paymentList as payment>
                         <tr <#if alt_row> class="alternate-row"</#if>>

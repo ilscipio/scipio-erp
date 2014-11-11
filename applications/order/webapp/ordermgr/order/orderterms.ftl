@@ -18,21 +18,16 @@ under the License.
 -->
 
 <#if orderTerms?has_content>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">&nbsp;${uiLabelMap.OrderOrderTerms}</li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+    <@section title="${uiLabelMap.OrderOrderTerms}">
       <table class="basic-table" cellspacing='0'>
+      <thead> 
       <tr class="header-row">
-        <td width="35%">${uiLabelMap.OrderOrderTermType}</td>
-        <td width="15%" align="center">${uiLabelMap.OrderOrderTermValue}</td>
-        <td width="15%" align="center">${uiLabelMap.OrderOrderTermDays}</td>
-        <td width="35%" align="center">${uiLabelMap.CommonDescription}</td>
+        <th width="35%">${uiLabelMap.OrderOrderTermType}</th>
+        <th width="15%" align="center">${uiLabelMap.OrderOrderTermValue}</th>
+        <th width="15%" align="center">${uiLabelMap.OrderOrderTermDays}</th>
+        <th width="35%" align="center">${uiLabelMap.CommonDescription}</th>
       </tr>
+     </thead>
     <#list orderTerms as orderTerm>
       <tr>
         <td width="35%">${orderTerm.getRelatedOne("TermType", false).get("description", locale)}</td>
@@ -42,6 +37,5 @@ under the License.
       </tr>
     </#list>
       </table>
-    </div>
-</div>
+    </@section>
 </#if>

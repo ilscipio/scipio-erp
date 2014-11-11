@@ -28,7 +28,7 @@ under the License.
                 <condition-expr field-name="caContentIdTo" value="TEMPLATE_MASTER"/>
             </entity-condition>
         </actions>
-        <field name="contentId" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
+        <field name="contentId" title="${uiLabelMap.CommonEdit}" widget-style="button tiny">
             <hyperlink also-hidden="false" description="${contentId}" target-type="plain" target="javascript:execRemoteCall('cloneLayout', '${drDataResourceId}', '${contentId}', 'TEMPLATE_MASTER', '')"/>
         </field>
         <field name="contentName"><display/></field>
@@ -83,19 +83,19 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="replace" widget-style="buttontext" >
+        <field name="replace" widget-style="button tiny" >
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.FormFieldTitle_replace} [${dataResourceId}/${coContentId}]"
                target="javascript:execRemoteCall('replaceSubContent','${dataResourceId}','${coContentId}', '${contentIdTo}', '${mapKey}')"
             />
         </field>
-        <field name="pasteContent" widget-style="buttontext" >
+        <field name="pasteContent" widget-style="button tiny" >
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ContentPaste} [${dataResourceId}/${coContentId}]"
                target="javascript:execRemoteCall('pasteContent','${dataResourceId}','${coContentId}')"/>
         </field>
-        <field name="dataResourceName" widget-style="buttontext">
+        <field name="dataResourceName" widget-style="button tiny">
             <display/>
         </field>
-        <field name="dataCategoryId" widget-style="buttontext">
+        <field name="dataCategoryId" widget-style="button tiny">
             <display/>
         </field>
     </form>

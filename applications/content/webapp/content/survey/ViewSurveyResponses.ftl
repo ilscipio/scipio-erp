@@ -100,7 +100,7 @@ under the License.
                     <#elseif question.surveyQuestionTypeId == "CONTENT">
                        <#if answer.contentId?has_content>
                          <#assign content = answer.getRelatedOne("Content", false)>
-                         <a href="<@ofbizUrl>img?imgId=${content.dataResourceId}</@ofbizUrl>" class="buttontext">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}
+                         <a href="<@ofbizUrl>img?imgId=${content.dataResourceId}</@ofbizUrl>" class="button tiny">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}
                        </#if>
                     </#if>
                   </#list>

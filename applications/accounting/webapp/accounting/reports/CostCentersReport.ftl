@@ -19,6 +19,7 @@ under the License.
 -->
 <#if glAcctBalancesByCostCenter?has_content && glAccountCategories?has_content>
   <table class="basic-table hover-bar" cellspacing="0">
+    <thead>
     <tr class="header-row">
       <th>${uiLabelMap.FormFieldTitle_glAccountId}</th>
       <th>${uiLabelMap.FormFieldTitle_accountCode}</th>
@@ -28,6 +29,7 @@ under the License.
         <th>${glAccountCategory.description!} - (${currencyUomId})</th>
       </#list>
     </tr>
+    </thead>
     <#assign alt_row = false>
     <#list glAcctBalancesByCostCenter as glAcctBalanceByCostCenter>
         <tr <#if alt_row> class="alternate-row"</#if>>

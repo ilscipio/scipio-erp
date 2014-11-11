@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <div class="screenlet-body">
+<@section>
         <table width="100%" border="0" cellpadding="1">
         <#-- order name -->
         <#if (orderName?has_content)>
@@ -183,5 +182,4 @@ under the License.
             </tr>
         </#if>
         </table>
-    </div>
-</div>
+</@section>

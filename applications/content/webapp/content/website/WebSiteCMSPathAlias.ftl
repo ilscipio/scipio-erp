@@ -32,17 +32,18 @@
     </div>
 </#if>
 
-<table>
-  <tr><td>
+
     <table border="1" cellpadding="2" cellspacing="0" class="calendarTable">
+     <thead>
       <tr class="header-row">
-        <td>Web Site ID</td>
-        <td>Path Alias</td>
-        <td>Alias To</td>
-        <td>Content ID</td>
-        <td>Map Key</td>
-        <td>&nbsp;</td>
+        <th>Web Site ID</th>
+        <th>Path Alias</th>
+        <th>Alias To</th>
+        <th>Content ID</th>
+        <th>Map Key</th>
+        <th>&nbsp;</th>
       </tr>
+      </thead>
       <#if (aliases?has_content)>
         <#list aliases as alias>
             <tr>
@@ -51,7 +52,7 @@
               <td>${alias.aliasTo?default("N/A")}</td>
               <td>${alias.contentId?default("N/A")}</td>
               <td>${alias.mapKey?default("N/A")}</td>
-              <td><a href="javascript:void(0);" onclick="javascript:pathRemove('${webSiteId}', '${alias.pathAlias}', '${contentId}');" class="buttontext">Remove</a></td>
+              <td><a href="javascript:void(0);" onclick="javascript:pathRemove('${webSiteId}', '${alias.pathAlias}', '${contentId}');" class="button tiny">Remove</a></td>
             </tr>
         </#list>
       <#else>
@@ -60,9 +61,9 @@
         </tr>
       </#if>
     </table>
-  </td></tr>
 
-  <tr><td>
+
+
     <form name="cmspathform" method="post" action="<@ofbizUrl>/createWebSitePathAliasJson</@ofbizUrl>" style="margin: 0;">
         <table>
             <tr><td colspan="2">&nbsp;</td></tr>
@@ -90,5 +91,3 @@
             </tr>
         </table>
     </form>
-  </td></tr>
-</table>

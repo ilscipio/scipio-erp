@@ -111,14 +111,16 @@ under the License.
         <br class="clear"/>
       </#if>
       <table class="basic-table hover-bar" cellspacing="0">
+       <thead>
         <tr class="header-row">
-          <td>${uiLabelMap.PartyContentId}</td>
-          <td>${uiLabelMap.PartyType}</td>
-          <td>${uiLabelMap.PartySize}</td>
-          <td>${uiLabelMap.PartyStartTime}</td>
-          <td>${uiLabelMap.PartyTime}</td>
-          <td>${uiLabelMap.PartyURI}</td>
+          <th>${uiLabelMap.PartyContentId}</th>
+          <th>${uiLabelMap.PartyType}</th>
+          <th>${uiLabelMap.PartySize}</th>
+          <th>${uiLabelMap.PartyStartTime}</th>
+          <th>${uiLabelMap.PartyTime}</th>
+          <th>${uiLabelMap.PartyURI}</th>
         </tr>
+        </thead>
         <#-- set initial row color -->
         <#assign alt_row = false>
         <#if serverHits?has_content>

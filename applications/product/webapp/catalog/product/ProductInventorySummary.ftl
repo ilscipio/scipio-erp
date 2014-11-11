@@ -17,9 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if parameters.showAllFacilities??>
-<a href="EditProductInventoryItems?productId=${productId}" class="buttontext">${uiLabelMap.ProductShowProductFacilities}</a>
+<a href="EditProductInventoryItems?productId=${productId}" class="button tiny">${uiLabelMap.ProductShowProductFacilities}</a>
 <#else>
-<a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="buttontext">${uiLabelMap.ProductShowAllFacilities}</a>
+<a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="button tiny">${uiLabelMap.ProductShowAllFacilities}</a>
 </#if>
 <div class="screenlet">
   <#if product??>
@@ -28,18 +28,20 @@ under the License.
     </div>
     <div class="screenlet-body">
         <table cellspacing="0" class="basic-table">
+          <thead>
             <tr class="header-row">
-                <td><b>${uiLabelMap.ProductFacility}</b></td>
-                <td><b>${uiLabelMap.ProductAtp}</b></td>
-                <td><b>${uiLabelMap.ProductQoh}</b></td>
+                <th>${uiLabelMap.ProductFacility}</th>
+                <th>${uiLabelMap.ProductAtp}</th>
+                <th>${uiLabelMap.ProductQoh}</th>
                 <#if isMarketingPackage == "true">
-                <td><b>${uiLabelMap.ProductMarketingPackageATP}</b></td>
-                <td><b>${uiLabelMap.ProductMarketingPackageQOH}</b></td>
+                <th>${uiLabelMap.ProductMarketingPackageATP}</th>
+                <th>${uiLabelMap.ProductMarketingPackageQOH}</th>
                 </#if>
-                <td><b>${uiLabelMap.ProductIncomingShipments}</b></td>
-                <td><b>${uiLabelMap.ProductIncomingProductionRuns}</b></td>
-                <td><b>${uiLabelMap.ProductOutgoingProductionRuns}</b></td>
+                <th>${uiLabelMap.ProductIncomingShipments}</th>
+                <th>${uiLabelMap.ProductIncomingProductionRuns}</th>
+                <th>${uiLabelMap.ProductOutgoingProductionRuns}</th>
             </tr>
+            </thead>
             <#assign rowClass = "2">
             <#list quantitySummaryByFacility.values() as quantitySummary>
                 <#if quantitySummary.facilityId??>
@@ -58,7 +60,7 @@ under the License.
                     <#assign outgoingQuantityTotal = manufacturingOutQuantitySummary.estimatedQuantityTotal!>
                     <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
                         <td>${(facility.facilityName)!} [${facilityId?default("[No Facility]")}]
-                        <a href="/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externLoginKey=${externalLoginKey}" class="buttontext">${uiLabelMap.ProductInventoryReceive}</a></td>
+                        <a href="/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externLoginKey=${externalLoginKey}" class="button tiny">${uiLabelMap.ProductInventoryReceive}</a></td>
                         <td><#if totalAvailableToPromise??>${totalAvailableToPromise}<#else>&nbsp;</#if></td>
                         <td><#if totalQuantityOnHand??>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
                         <#if isMarketingPackage == "true">

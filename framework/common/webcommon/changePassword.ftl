@@ -23,7 +23,7 @@ under the License.
 <center>
 <div class="screenlet login-screenlet">
   <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.CommonPasswordChange}</h3>
+    <h1>${uiLabelMap.CommonPasswordChange}</h1>
   </div>
   <div class="screenlet-body">
     <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">

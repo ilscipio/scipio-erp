@@ -81,13 +81,13 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingAcctgTrans}">
                             <container>
-                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}" style="buttontext" target="newAcctgTrans">
+                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}" style="button tiny" target="newAcctgTrans">
                                     <parameter param-name="organizationPartyId"/>
                                 </link>
-                                <link text="${uiLabelMap.AccountingCreateAcctgTransAndEntries}" style="buttontext" target="CreateAcctgTransAndEntries">
+                                <link text="${uiLabelMap.AccountingCreateAcctgTransAndEntries}" style="button tiny" target="CreateAcctgTransAndEntries">
                                     <parameter param-name="organizationPartyId"/>
                                 </link>
-                                <link text="${uiLabelMap.PageTitleUnpostedTransactions}" style="buttontext" target="ListUnpostedAcctgTrans">
+                                <link text="${uiLabelMap.PageTitleUnpostedTransactions}" style="button tiny" target="ListUnpostedAcctgTrans">
                                     <parameter param-name="organizationPartyId"/>
                                 </link>
                             </container>
@@ -99,7 +99,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.AccountingAcctgTrans}">
-                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext" target="AcctgTransSearchResultsCsv.csv">
+                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="button tiny" target="AcctgTransSearchResultsCsv.csv">
                                         <parameter param-name="organizationPartyId"/>
                                         <parameter param-name="acctgTransId" from-field="parameters.acctgTransId"/>
                                         <parameter param-name="productId" from-field="parameters.productId"/>
@@ -114,7 +114,7 @@ under the License.
                                         <parameter param-name="fromDate" from-field="parameters.fromDate"/>
                                         <parameter param-name="thruDate" from-field="parameters.thruDate"/>
                                     </link>
-                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext" target="AcctgTransSearchResultPdf.pdf" target-window="_BLANK">
+                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="button tiny" target="AcctgTransSearchResultPdf.pdf" target-window="_BLANK">
                                         <parameter param-name="organizationPartyId"/>
                                         <parameter param-name="acctgTransId" from-field="parameters.acctgTransId"/>
                                         <parameter param-name="productId" from-field="parameters.productId"/>
@@ -161,7 +161,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.AccountingAcctgTransEntries} ${uiLabelMap.AccountingByAccount}">
-                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext" target="AcctgTransEntriesSearchResultsCsv.csv">
+                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="button tiny" target="AcctgTransEntriesSearchResultsCsv.csv">
                                         <parameter param-name="organizationPartyId"/>
                                         <parameter param-name="productId" from-field="parameters.productId"/>
                                         <parameter param-name="isPosted" from-field="parameters.isPosted"/>
@@ -178,7 +178,7 @@ under the License.
                                         <parameter param-name="thruDate" from-field="parameters.thruDate"/>
                                         <parameter param-name="paymentId" from-field="parameters.paymentId"/>
                                     </link>
-                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext" target="AcctgTransEntriesSearchResultsPdf.pdf" target-window="_BLANK">
+                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="button tiny" target="AcctgTransEntriesSearchResultsPdf.pdf" target-window="_BLANK">
                                         <parameter param-name="organizationPartyId"/>
                                         <parameter param-name="productId" from-field="parameters.productId"/>
                                         <parameter param-name="isPosted" from-field="parameters.isPosted"/>
@@ -195,7 +195,7 @@ under the License.
                                         <parameter param-name="thruDate" from-field="parameters.thruDate"/>
                                         <parameter param-name="paymentId" from-field="parameters.paymentId"/>
                                     </link>
-                                    <link text="${uiLabelMap.AccountingExportWithInvoiceAndPaymentAsPdf}" style="buttontext" target="AcctgTransEntriesSearchResultsInvoiceAndPaymentPdf.pdf" target-window="_BLANK">
+                                    <link text="${uiLabelMap.AccountingExportWithInvoiceAndPaymentAsPdf}" style="button tiny" target="AcctgTransEntriesSearchResultsInvoiceAndPaymentPdf.pdf" target-window="_BLANK">
                                         <parameter param-name="organizationPartyId"/>
                                         <parameter param-name="productId" from-field="parameters.productId"/>
                                         <parameter param-name="isPosted" from-field="parameters.isPosted"/>
@@ -225,7 +225,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.AccountingAcctgTransEntries} ${uiLabelMap.AccountingByDate}">
-                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext" target="AcctgTransEntriesSearchResultsCsv.csv">
+                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="button tiny" target="AcctgTransEntriesSearchResultsCsv.csv">
                                         <parameter param-name="organizationPartyId"/>
                                         <parameter param-name="productId" from-field="parameters.productId"/>
                                         <parameter param-name="isPosted" from-field="parameters.isPosted"/>
@@ -242,7 +242,7 @@ under the License.
                                         <parameter param-name="thruDate" from-field="parameters.thruDate"/>
                                         <parameter param-name="paymentId" from-field="parameters.paymentId"/>
                                     </link>
-                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext" target="AcctgTransEntriesSearchResultsPdf.pdf" target-window="_BLANK">
+                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="button tiny" target="AcctgTransEntriesSearchResultsPdf.pdf" target-window="_BLANK">
                                         <parameter param-name="organizationPartyId"/>
                                         <parameter param-name="productId" from-field="parameters.productId"/>
                                         <parameter param-name="isPosted" from-field="parameters.isPosted"/>

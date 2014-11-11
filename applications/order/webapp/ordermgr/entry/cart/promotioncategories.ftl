@@ -17,17 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoCategoryIncludeList?has_content || productPromoCategoryExcludeList?has_content || productPromoCategoryAlwaysList?has_content>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.OrderPromotionCategories}:</div>
-    </div>
-    <div class="screenlet-body">
+    <@section title="${uiLabelMap.OrderPromotionCategories}">
         <#if productPromoCategoryIncludeList?has_content>
           <div>${uiLabelMap.OrderPromotionProductsInCategories}:</div>
           <#list productPromoCategoryIncludeList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOne("ProductCategory", true)>
             <div>
-                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
+                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="button tiny">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
                 <#if productPromoCategory.includeSubCategories! = "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
             </div>
           </#list>
@@ -37,7 +33,7 @@ under the License.
           <#list productPromoCategoryExcludeList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOne("ProductCategory", true)>
             <div>
-                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
+                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="button tiny">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
                 <#if productPromoCategory.includeSubCategories! = "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
             </div>
           </#list>
@@ -47,11 +43,10 @@ under the License.
           <#list productPromoCategoryAlwaysList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOne("ProductCategory", true)>
             <div>
-                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
+                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="button tiny">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
                 <#if productPromoCategory.includeSubCategories! = "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
             </div>
           </#list>
         </#if>
-    </div>
-</div>
+    </@section>
 </#if>

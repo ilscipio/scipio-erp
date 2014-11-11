@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if productCategoryId?has_content>
-    <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductBackToEditCategory}]</a>
+    <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="button tiny">[${uiLabelMap.ProductBackToEditCategory}]</a>
 </#if>
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -47,7 +47,7 @@ under the License.
             <tr>
                 <td>${product.internalName?default("-no internal name-")} [${product.productId}]</td>
                 <td>${product.productName?default("-no name-")} [${product.productId}]</td>
-                <td width="10%"><a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductThisIsIt}]</a></td>
+                <td width="10%"><a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="button tiny">[${uiLabelMap.ProductThisIsIt}]</a></td>
             </tr>
         </#list>
         </table>

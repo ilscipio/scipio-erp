@@ -20,17 +20,19 @@ under the License.
 <form action="<@ofbizUrl>ReportBuilderRenderStarSchemaReport</@ofbizUrl>">
     <input type="hidden" name="starSchemaName" value="${starSchemaName}"/>
     <table cellspacing="0" class="basic-table hover-bar">
+      <thead>
         <tr class="header-row">
-            <td>
+            <th>
                 ${uiLabelMap.CommonSelect}
-            </td>
-            <td>
+            </th>
+            <th>
                 ${uiLabelMap.BusinessIntelligenceFieldName}
-            </td>
-            <td>
+            </th>
+            <th>
                 ${uiLabelMap.BusinessIntelligenceFieldDescription}
-            </td>
+            </th>
         </tr>
+        </thead>
         <#assign alt_row = false>
         <#list starSchemaFields as starSchemaField>
         <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>

@@ -53,11 +53,13 @@ under the License.
     <input type="hidden" value="${parameters.productStoreId}" name="productStoreId"/>
 <table cellspacing="0" class="basic-table">
     <tbody>
+      <thead>
         <tr class="header-row">
-            <td>Item</td>
-            <td width="600">Rate this transaction</td>
-            <td>Role</td>
+            <th>Item</th>
+            <th width="600">Rate this transaction</th>
+            <th>Role</th>
         </tr>
+       </thead>
         <#assign row = "alternate-row">
         <#assign FeedbackSize = 0>
         <#assign feedbackCounter = 0>

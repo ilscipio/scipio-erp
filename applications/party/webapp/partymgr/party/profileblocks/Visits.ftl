@@ -28,15 +28,17 @@ under the License.
     <div class="screenlet-body">
       <#if visits?has_content>
         <table class="basic-table" cellspacing="0">
+         <thead>
           <tr class="header-row">
-            <td>${uiLabelMap.PartyVisitId}</td>
-            <td>${uiLabelMap.PartyUserLogin}</td>
-            <td>${uiLabelMap.PartyNewUser}</td>
-            <td>${uiLabelMap.PartyWebApp}</td>
-            <td>${uiLabelMap.PartyClientIP}</td>
-            <td>${uiLabelMap.CommonFromDate}</td>
-            <td>${uiLabelMap.CommonThruDate}</td>
+            <th>${uiLabelMap.PartyVisitId}</th>
+            <th>${uiLabelMap.PartyUserLogin}</th>
+            <th>${uiLabelMap.PartyNewUser}</th>
+            <th>${uiLabelMap.PartyWebApp}</th>
+            <th>${uiLabelMap.PartyClientIP}</th>
+            <th>${uiLabelMap.CommonFromDate}</th>
+            <th>${uiLabelMap.CommonThruDate}</th>
           </tr>
+          </thead>
           <#list visits as visitObj>
             <#if (visitObj_index > 4)><#break></#if>
               <tr>

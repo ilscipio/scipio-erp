@@ -42,25 +42,27 @@ function insertImageName(size,nameValue) {
     <h3>${uiLabelMap.ProductCouldNotFindProductConfigItem} "${configItemId}".</h3>
 <#else>
     <table cellspacing="0" class="basic-table">
+       <thead>
         <tr class="header-row">
-            <td><b>${uiLabelMap.ProductContent}</b></td>
-            <td><b>${uiLabelMap.ProductType}</b></td>
-            <td><b>${uiLabelMap.CommonFrom}</b></td>
-            <td><b>${uiLabelMap.CommonThru}</b></td>
-            <td><b>&nbsp;</b></td>
-            <td><b>&nbsp;</b></td>
+            <th>${uiLabelMap.ProductContent}</th>
+            <th>${uiLabelMap.ProductType}</th>
+            <th>${uiLabelMap.CommonFrom}</th>
+            <th>${uiLabelMap.CommonThru}</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
         </tr>
+        </thead>
         <#assign rowClass = "2">
         <#list productContentList as entry>
         <#assign productContent=entry.productContent/>
         <#assign productContentType=productContent.getRelatedOne("ProdConfItemContentType", true)/>
         <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-            <td><a href="<@ofbizUrl>EditProductConfigItemContentContent?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</td>
+            <td><a href="<@ofbizUrl>EditProductConfigItemContentContent?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="button tiny">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</td>
             <td>${productContentType.description?default(productContent.confItemContentTypeId)}</td>
             <td>${productContent.fromDate?default("N/A")}</td>
             <td>${productContent.thruDate?default("N/A")}</td>
-            <td><a href="<@ofbizUrl>removeContentFromProductConfigItem?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></td>
-            <td><a href="/content/control/EditContent?contentId=${productContent.contentId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}" class="buttontext">${uiLabelMap.ProductEditContent} ${entry.content.contentId}</td>
+            <td><a href="<@ofbizUrl>removeContentFromProductConfigItem?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonDelete}</a></td>
+            <td><a href="/content/control/EditContent?contentId=${productContent.contentId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}" class="button tiny">${uiLabelMap.ProductEditContent} ${entry.content.contentId}</td>
          </tr>
          <#-- toggle the row color -->
          <#if rowClass == "2">
@@ -124,9 +126,9 @@ function insertImageName(size,nameValue) {
                     <#if configItemId?has_content>
                         <div>
                         <span class="label">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="buttontext">.jpg</a>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="buttontext">.gif</a>
-                        <a href="javascript:insertImageName('small','');" class="buttontext">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="button tiny">.jpg</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="button tiny">.gif</a>
+                        <a href="javascript:insertImageName('small','');" class="button tiny">${uiLabelMap.CommonClear}</a>
                         </div>
                     </#if>
                     </td>

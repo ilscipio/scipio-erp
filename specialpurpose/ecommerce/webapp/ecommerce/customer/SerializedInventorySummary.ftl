@@ -25,12 +25,12 @@ under the License.
         <table width="100%" cellspacing="0" cellpadding="2">
             <thead>
                 <tr class="header-row">
-                    <td><div class="tableheadtext">${uiLabelMap.ProductInventoryItemId}</div></td>
-                    <td><div class="tableheadtext">${uiLabelMap.ProductProductName}</div></td>
-                    <td><div class="tableheadtext">${uiLabelMap.ProductSerialNumber}</div></td>
-                    <td><div class="tableheadtext">${uiLabelMap.ProductSoftIdentifier}</div></td>
-                    <td><div class="tableheadtext">${uiLabelMap.ProductActivationNumber}</div></td>
-                    <td><div class="tableheadtext">${uiLabelMap.ProductActivationNumber} ${uiLabelMap.CommonValidThruDate}</div></td>
+                    <th>${uiLabelMap.ProductInventoryItemId}</th>
+                    <th>${uiLabelMap.ProductProductName}</th>
+                    <th>${uiLabelMap.ProductSerialNumber}</th>
+                    <th>${uiLabelMap.ProductSoftIdentifier}</th>
+                    <th>${uiLabelMap.ProductActivationNumber}</th>
+                    <th>${uiLabelMap.ProductActivationNumber} ${uiLabelMap.CommonValidThruDate}</th>
                 </tr>
             </thead>
             <tbody>

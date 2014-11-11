@@ -64,7 +64,7 @@ under the License.
             <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}" />
           </#if>
           <input type="button" id="submitOrderReview" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="processOrder();" class="mediumSubmit" />
-        <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="buttontextbig">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
+        <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="button tiny">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
       </td>
     </tr>
   </table>

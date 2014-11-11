@@ -101,7 +101,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet id="PortalPagesList" title="${uiLabelMap.CommonPortalPagesForApplication}: ${parameters.parentPortalPageId}" collapsible="true">
                             <container style="button-bar">
-                                <link target="NewPortalPage" text="${uiLabelMap.CommonNewPortalPage}" style="buttontext create">
+                                <link target="NewPortalPage" text="${uiLabelMap.CommonNewPortalPage}" style="button tiny create">
                                     <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>
                                 </link>
                             </container>
@@ -133,7 +133,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="button-bar"><link target="backLast" text="${uiLabelMap.CommonBack}" style="buttontext"/></container>
+                        <container style="button-bar"><link target="backLast" text="${uiLabelMap.CommonBack}" style="button tiny"/></container>
                         <screenlet title="${uiLabelMap.CommonPortalCategoryPage}: ${parameters.parentPortalPageId}">
                             <include-form name="PortletCategoryAndPortlet" location="component://common/widget/PortalPageForms.xml"/>
                         </screenlet>
@@ -200,7 +200,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="button-bar"><link target="backLast" text="${uiLabelMap.CommonBack}" style="buttontext"/></container>
+                        <container style="button-bar"><link target="backLast" text="${uiLabelMap.CommonBack}" style="button tiny"/></container>
                         <screenlet title="${uiLabelMap.CommonEditPortletAttributes}: ${portalPortlet.portletName}">
                             <include-form name="${portalPortlet.editFormName}" location="${portalPortlet.editFormLocation}"/>
                         </screenlet>
@@ -217,7 +217,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="button-bar"><link target="backLast" text="${uiLabelMap.CommonBack}" style="buttontext"/></container>
+                        <container style="button-bar"><link target="backLast" text="${uiLabelMap.CommonBack}" style="button tiny"/></container>
                         <screenlet title="Set column width: ${portalPortlet.portletName}">
                             <include-form name="EditPortalPageColumnWidth" location="component://common/widget/PortalPageForms.xml"/>
                         </screenlet>
@@ -232,7 +232,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
-                            <link target="ManagePortalPages" text="${uiLabelMap.CommonBack}" style="buttontext">
+                            <link target="ManagePortalPages" text="${uiLabelMap.CommonBack}" style="button tiny">
                                 <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>
                             </link>
                         </container>

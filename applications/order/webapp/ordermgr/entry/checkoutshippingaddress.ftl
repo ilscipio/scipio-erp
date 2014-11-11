@@ -56,16 +56,12 @@ function toggleBillingAccount(box) {
 <#assign cart = shoppingCart!/>
 <form method="post" name="checkoutInfoForm" style="margin:0;">
     <input type="hidden" name="checkoutpage" value="shippingaddress"/>
-    <div class="screenlet" style="height: 100%;">
-        <div class="screenlet-title-bar">
-            <div class="h3">1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?</div>
-        </div>
-        <div class="screenlet-body" style="height: 100%;">
+        <@section title="1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?">
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
                 <td colspan="2">
-                  <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderSplitShipment}</a>
-                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">${uiLabelMap.PartyAddNewAddress}</a>
+                  <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderSplitShipment}</a>
+                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="button tiny">${uiLabelMap.PartyAddNewAddress}</a>
                   <#if (cart.getShipGroupSize() > 1)>
                     <div style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</div>
                   </#if>
@@ -90,7 +86,7 @@ function toggleBillingAccount(box) {
                          <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                          <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                          <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                         <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
+                         <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="button tiny">${uiLabelMap.CommonUpdate}</a>
                        </div>
                      </td>
                    </tr>
@@ -131,17 +127,10 @@ function toggleBillingAccount(box) {
             <#-- Party Tax Info -->
             <div>&nbsp;${uiLabelMap.PartyTaxIdentification}</div>
             ${screens.render("component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo")}
-        </div>
-    </div>
+        </@section>
 </form>
 
-<table width="100%">
-  <tr valign="top">
-    <td>
-      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">${uiLabelMap.OrderBacktoShoppingCart}</a>
-    </td>
-    <td align="right">
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">${uiLabelMap.CommonNext}</a>
-    </td>
-  </tr>
-</table>
+<@section>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="button tiny">${uiLabelMap.OrderBacktoShoppingCart}</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="button tiny">${uiLabelMap.CommonNext}</a>
+</@section>

@@ -77,17 +77,19 @@ under the License.
         <h3>${uiLabelMap.CommonFound}:&nbsp;${foundLocations.size()}&nbsp;${uiLabelMap.ProductLocationsFor}&nbsp;<#if facility??>${(facility.facilityName)!}</#if> [ID:${facilityId!}]</h3>
         <br />
         <table class="basic-table hover-bar" cellspacing="0">
+        <thead>
         <tr class="header-row-2">
-            <td>${uiLabelMap.ProductFacility}</td>
-            <td>${uiLabelMap.ProductLocationSeqId}</td>
-            <td>${uiLabelMap.ProductType}</td>
-            <td>${uiLabelMap.CommonArea}</td>
-            <td>${uiLabelMap.ProductAisle}</td>
-            <td>${uiLabelMap.ProductSection}</td>
-            <td>${uiLabelMap.ProductLevel}</td>
-            <td>${uiLabelMap.ProductPosition}</td>
-            <td>&nbsp;</td>
+            <th>${uiLabelMap.ProductFacility}</th>
+            <th>${uiLabelMap.ProductLocationSeqId}</th>
+            <th>${uiLabelMap.ProductType}</th>
+            <th>${uiLabelMap.CommonArea}</th>
+            <th>${uiLabelMap.ProductAisle}</th>
+            <th>${uiLabelMap.ProductSection}</th>
+            <th>${uiLabelMap.ProductLevel}</th>
+            <th>${uiLabelMap.ProductPosition}</th>
+            <th>&nbsp;</th>
         </tr>
+        </thead>
         <#assign rowClass = "2">
         <#list foundLocations as location>
         <#assign locationTypeEnum = location.getRelatedOne("TypeEnumeration", true)!>

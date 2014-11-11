@@ -41,13 +41,15 @@ under the License.
   </div>
   <div class="screenlet-body">
     <table cellspacing="0" class="basic-table">
-      <tr class="header-row">
-        <td>${uiLabelMap.CertComponent}</td>
-        <td>${uiLabelMap.CertKeyStore}</td>
-        <td>${uiLabelMap.CertImportIssuer}</td>
-        <td>${uiLabelMap.CertKeyAlias}</td>
-        <td>&nbsp;</td>
-      </tr>
+      <thead>
+          <tr class="header-row">
+            <th>${uiLabelMap.CertComponent}</th>
+            <th>${uiLabelMap.CertKeyStore}</th>
+            <th>${uiLabelMap.CertImportIssuer}</th>
+            <th>${uiLabelMap.CertKeyAlias}</th>
+            <th>&nbsp;</th>
+          </tr>
+      </thead>
       <#list components as component>
         <#assign keystores = component.getKeystoreInfos()!/>
           <#list keystores as store>

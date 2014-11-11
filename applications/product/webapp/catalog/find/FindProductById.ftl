@@ -24,7 +24,7 @@ under the License.
     </div>
     <div class="screenlet-body">
         <form name="idsearchform" method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>" style="margin: 0;">
-          <span class="label">${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}:</span> <input type="text" name="idValue" size="20" maxlength="50" value="${idValue!}" />&nbsp;<a href="javascript:document.idsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
+          <span class="label">${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}:</span> <input type="text" name="idValue" size="20" maxlength="50" value="${idValue!}" />&nbsp;<a href="javascript:document.idsearchform.submit()" class="button tiny">${uiLabelMap.CommonFind}</a>
         </form>
         <br />
         <h1>${uiLabelMap.ProductSearchResultsWithIdValue}: ${idValue!}</h1>
@@ -41,7 +41,7 @@ under the License.
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td>
-                    <a href="<@ofbizUrl>EditProduct?productId=${idProduct.productId}</@ofbizUrl>" class="buttontext">${(idProduct.internalName)!}</a>
+                    <a href="<@ofbizUrl>EditProduct?productId=${idProduct.productId}</@ofbizUrl>" class="button tiny">${(idProduct.internalName)!}</a>
                     (${uiLabelMap.ProductSearchResultsFound})
                 </td>
             </tr>
@@ -61,7 +61,7 @@ under the License.
                     </td>
                     <td>&nbsp;&nbsp;</td>
                     <td>
-                        <a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">${(product.internalName)!}</a>
+                        <a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="button tiny">${(product.internalName)!}</a>
                         (${uiLabelMap.ProductSearchResultsFound} ${goodIdentificationType.get("description",locale)?default(goodIdentification.goodIdentificationTypeId)}.)
                     </td>
                 </tr>

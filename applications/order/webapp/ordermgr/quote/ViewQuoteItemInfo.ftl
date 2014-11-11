@@ -16,37 +16,34 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="boxlink">
-            <#if maySelectItems?default("N") == "Y">
-                <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="buttontext">${uiLabelMap.OrderAddAllToCart}</a>
-            </#if>
-        </div>
-        <div class="h3">${uiLabelMap.OrderOrderQuoteItems}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.OrderOrderQuoteItems}">
+    <#if maySelectItems?default("N") == "Y">
+        <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="button tiny">${uiLabelMap.OrderAddAllToCart}</a>
+    </#if>
+
         <table cellspacing="0" class="basic-table">
+          <thead>
             <tr valign="bottom" class="header-row">
-                <td width="15%">${uiLabelMap.ProductItem}</td>
-                <td width="20%">${uiLabelMap.ProductProduct}</td>
-                <td width="10%" align="right">${uiLabelMap.ProductQuantity}</td>
-                <td width="10%" align="right">${uiLabelMap.OrderSelAmount}</td>
-                <td width="5%" align="right">&nbsp;</td>
-                <td width="10%" align="right">${uiLabelMap.OrderOrderQuoteUnitPrice}</td>
-                <td width="10%" align="right">${uiLabelMap.OrderAdjustments}</td>
-                <td width="10%" align="right">${uiLabelMap.CommonSubtotal}</td>
+                <th width="15%">${uiLabelMap.ProductItem}</th>
+                <th width="20%">${uiLabelMap.ProductProduct}</th>
+                <th width="10%" align="right">${uiLabelMap.ProductQuantity}</th>
+                <th width="10%" align="right">${uiLabelMap.OrderSelAmount}</th>
+                <th width="5%" align="right">&nbsp;</th>
+                <th width="10%" align="right">${uiLabelMap.OrderOrderQuoteUnitPrice}</th>
+                <th width="10%" align="right">${uiLabelMap.OrderAdjustments}</th>
+                <th width="10%" align="right">${uiLabelMap.CommonSubtotal}</th>
             </tr>
             <tr valign="bottom" class="header-row">
-                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermType}</td>
-                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermValue}</td>
-                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermDays}</td>
-                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderQuoteTermDescription}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td align="right">&nbsp;</td>
+                <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermType}</th>
+                <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermValue}</th>
+                <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermDays}</th>
+                <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderQuoteTermDescription}</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th align="right">&nbsp;</th>
             </tr>
+            </thead>
             <#assign totalQuoteAmount = 0.0>
             <#assign alt_row = false/>
             <#list quoteItems as quoteItem>
@@ -72,7 +69,7 @@ under the License.
                     <td >
                         <div>
                         <#if showQuoteManagementLinks?? && quoteItem.isPromo?default("N") == "N" && quote.statusId=="QUO_CREATED">
-                            <a href="<@ofbizUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@ofbizUrl>" class="buttontext">${quoteItem.quoteItemSeqId}</a>
+                            <a href="<@ofbizUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@ofbizUrl>" class="button tiny">${quoteItem.quoteItemSeqId}</a>
                         <#else>
                             ${quoteItem.quoteItemSeqId}
                         </#if>
@@ -83,7 +80,7 @@ under the License.
                         <div>
                             ${(product.internalName)!}&nbsp;
                             <#if showQuoteManagementLinks??>
-                                <a href="/catalog/control/EditProduct?productId=${quoteItem.productId!}" class="buttontext">
+                                <a href="/catalog/control/EditProduct?productId=${quoteItem.productId!}" class="button tiny">
                                   <#if quoteItem.productId??>
                                     ${quoteItem.productId}
                                   <#else>
@@ -91,7 +88,7 @@ under the License.
                                   </#if>
                                 </a>
                             <#else>
-                                <a href="<@ofbizUrl>product?product_id=${quoteItem.productId!}</@ofbizUrl>" class="buttontext">${quoteItem.productId!}</a>
+                                <a href="<@ofbizUrl>product?product_id=${quoteItem.productId!}</@ofbizUrl>" class="button tiny">${quoteItem.productId!}</a>
                             </#if>
                         </div>
                     </td>
@@ -157,5 +154,4 @@ under the License.
                 </td>
             </tr>
         </table>
-    </div>
-</div>
+    </@section>

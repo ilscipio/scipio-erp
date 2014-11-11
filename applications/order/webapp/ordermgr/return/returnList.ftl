@@ -18,34 +18,40 @@ under the License.
 -->
 
 <h1>${uiLabelMap.OrderReturnsCurrent}</h1>
-<div><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateReturn}</a></div>
+<div><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateReturn}</a></div>
 
-<br />
-<table cellspacing="0" class="basic-table">
-  <tr class="header-row">
-    <td>${uiLabelMap.OrderReturnId} ${uiLabelMap.CommonNbr}</td>
-    <td>${uiLabelMap.FormFieldTitle_entryDate}</td>
-    <td>${uiLabelMap.PartyParty}</td>
-    <td>${uiLabelMap.FacilityFacility}</td>
-    <td>${uiLabelMap.CommonStatus}</td>
-  </tr>
-  <#list returnList as returnHeader>
-  <#assign statusItem = returnHeader.getRelatedOne("StatusItem", false)>
-  <#if returnHeader.destinationFacilityId??>
-    <#assign facility = returnHeader.getRelatedOne("Facility", false)>
-  </#if>
-  <tr>
-    <td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${returnHeader.returnId}</a></td>
-    <td><div>${returnHeader.entryDate.toString()}</div></td>
-    <td>
-      <#if returnHeader.fromPartyId??>
-        <a href="${customerDetailLink}${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" class='buttontext'>${returnHeader.fromPartyId}</a>
-      <#else>
-        <span class="label">${uiLabelMap.CommonNA}</span>
+
+<#if returnList?has_content>
+<@section>
+    <table cellspacing="0" class="basic-table">
+     <thead>
+      <tr class="header-row">
+        <th>${uiLabelMap.OrderReturnId} ${uiLabelMap.CommonNbr}</th>
+        <th>${uiLabelMap.FormFieldTitle_entryDate}</th>
+        <th>${uiLabelMap.PartyParty}</th>
+        <th>${uiLabelMap.FacilityFacility}</th>
+        <th>${uiLabelMap.CommonStatus}</th>
+      </tr>
+      </thead>
+      <#list returnList as returnHeader>
+      <#assign statusItem = returnHeader.getRelatedOne("StatusItem", false)>
+      <#if returnHeader.destinationFacilityId??>
+        <#assign facility = returnHeader.getRelatedOne("Facility", false)>
       </#if>
-    </td>
-    <td><#if facility??>${facility.facilityName?default(facility.facilityId)}<#else>${uiLabelMap.CommonNone}</#if></td>
-    <td>${statusItem.get("description",locale)}</td>
-  </tr>
-  </#list>
-</table>
+      <tr>
+        <td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="button tiny">${returnHeader.returnId}</a></td>
+        <td><div>${returnHeader.entryDate.toString()}</div></td>
+        <td>
+          <#if returnHeader.fromPartyId??>
+            <a href="${customerDetailLink}${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" class='button tiny'>${returnHeader.fromPartyId}</a>
+          <#else>
+            <span class="label">${uiLabelMap.CommonNA}</span>
+          </#if>
+        </td>
+        <td><#if facility??>${facility.facilityName?default(facility.facilityId)}<#else>${uiLabelMap.CommonNone}</#if></td>
+        <td>${statusItem.get("description",locale)}</td>
+      </tr>
+      </#list>
+    </table>
+</@section>
+</#if>

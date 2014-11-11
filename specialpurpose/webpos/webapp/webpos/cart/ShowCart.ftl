@@ -79,12 +79,12 @@ under the License.
   <table class="basic-table" cellspacing="0">
     <thead class="CartHead">
       <tr class="header-row">
-        <td nowrap><b>${uiLabelMap.OrderProduct}</b></td>
-        <td nowrap align="center"><b>${uiLabelMap.CommonQuantity}</b></td>
-        <td nowrap align="right"><b>${uiLabelMap.WebPosUnitPrice}</b></td>
-        <td nowrap align="right"><b>${uiLabelMap.WebPosAdjustments}</b></td>
-        <td nowrap align="right"><b>${uiLabelMap.WebPosItemTotal}</b></td>
-        <td nowrap align="center"><b>${uiLabelMap.CommonRemove}</b></td>
+        <th nowrap>${uiLabelMap.OrderProduct}</th>
+        <th nowrap align="center">${uiLabelMap.CommonQuantity}</th>
+        <th nowrap align="right">${uiLabelMap.WebPosUnitPrice}</th>
+        <th nowrap align="right">${uiLabelMap.WebPosAdjustments}</th>
+        <th nowrap align="right">${uiLabelMap.WebPosItemTotal}</th>
+        <th nowrap align="center">${uiLabelMap.CommonRemove}</th>
       </tr>
     </thead>
     <#if (shoppingCartSize > 0)>
@@ -113,7 +113,7 @@ under the License.
                 ${cartLine.getProductId()} - ${cartLine.getName()!} : ${cartLine.getDescription()!}
               <#else>
                 <#-- this is a non-product item -->
-                <b>${cartLine.getItemTypeDescription()!}</b> : ${cartLine.getName()!}
+                <b>${cartLine.getItemTypeDestion()!}</b> : ${cartLine.getName()!}
               </#if>
             </div>
           </td>

@@ -36,12 +36,12 @@ under the License.
     <table id="fa-transactions" class="basic-table" cellspacing="0" cellpadding="2">
         <thead>
             <tr class="header-row">
-                <td>${uiLabelMap.FormFieldTitle_transactionDate}</td>
-                <td>${uiLabelMap.CommonId}</td>
-                <td>${uiLabelMap.OrderItem}</td>
-                <td>${uiLabelMap.AccountingPayment}</td>
-                <td>${uiLabelMap.AccountingType}</td>
-                <td>${uiLabelMap.AccountingAmount}</td>
+                <th>${uiLabelMap.FormFieldTitle_transactionDate}</th>
+                <th>${uiLabelMap.CommonId}</th>
+                <th>${uiLabelMap.OrderItem}</th>
+                <th>${uiLabelMap.AccountingPayment}</th>
+                <th>${uiLabelMap.AccountingType}</th>
+                <th>${uiLabelMap.AccountingAmount}</th>
             </tr>
         </thead>
         <tbody>
@@ -76,10 +76,10 @@ under the License.
         <table id="fa-authorizations" class="basic-table" cellspacing="0" cellpadding="2">
             <thead>
                 <tr class="header-row">
-                    <td>${uiLabelMap.FormFieldTitle_authorizationDate}</td>
-                    <td>${uiLabelMap.CommonId}</td>
-                    <td>${uiLabelMap.CommonExpires}</td>
-                    <td>${uiLabelMap.AccountingAmount}</td>
+                    <th>${uiLabelMap.FormFieldTitle_authorizationDate}</th>
+                    <th>${uiLabelMap.CommonId}</th>
+                    <th>${uiLabelMap.CommonExpires}</th>
+                    <th>${uiLabelMap.AccountingAmount}</th>
                 </tr>
             </thead>
             <tbody>

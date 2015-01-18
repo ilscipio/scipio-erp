@@ -19,6 +19,9 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
 <@section title="${uiLabelMap.OrderSendConfirmationEmail}">
+    <@row>
+    <@cell class="large-6 columns">
+
       <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonGoBack}</a>
       <a href="javascript:document.sendConfirmationForm.submit()" class="button tiny">${uiLabelMap.CommonSend}</a>      
       <br />
@@ -31,33 +34,33 @@ under the License.
         <input type="hidden" name="contentType" value="${productStoreEmailSetting.contentType?default("")}" />
         <table class="basic-table" cellspacing='0'>
             <tr>
-                <td width="2%" align="right" class="label">${uiLabelMap.OrderSendConfirmationEmailSubject}&nbsp;</td>
-                <td width="54%">
+                <td scope="row" class="large-3">${uiLabelMap.OrderSendConfirmationEmailSubject}&nbsp;</td>
+                <td>
                     <input type="text" size="40" name="subject" value="${productStoreEmailSetting.subject?default(uiLabelMap.OrderOrderConfirmation + " " + uiLabelMap.OrderNbr + orderId)?replace("\\$\\{orderId\\}",orderId,"r")}" />
                 </td>
             </tr>
             </tr>
-                <td width="26%" align="right" class="label">${uiLabelMap.OrderSendConfirmationEmailSendTo}&nbsp;</td>
-                <td width="54%">
+                <td scope="row" class="large-3">${uiLabelMap.OrderSendConfirmationEmailSendTo}&nbsp;</td>
+                <td>
                     <input type="text" size="40" name="sendTo" value="${sendTo}"/>
                 </td>
             <tr>
             </tr>
             <tr>
-                <td width="26%" align="right" class="label">${uiLabelMap.OrderSendConfirmationEmailCCTo}&nbsp;</td>
-                <td width="54%">
+                <td  scope="row" class="large-3">${uiLabelMap.OrderSendConfirmationEmailCCTo}&nbsp;</td>
+                <td>
                     <input type="text" size="40" name="sendCc" value="${productStoreEmailSetting.ccAddress?default("")}" />
                 </td>
             </tr>
             <tr>
-                <td width="26%" align="right" class="label">${uiLabelMap.OrderSendConfirmationEmailBCCTo}&nbsp;</td>
-                <td width="54%">
+                <td scope="row" class="large-3">${uiLabelMap.OrderSendConfirmationEmailBCCTo}&nbsp;</td>
+                <td>
                     <input type="text" size="40" name="sendBcc" value="${productStoreEmailSetting.bccAddress?default("")}" />
                 </td>
             </tr>
             <tr>
-                <td width="26%" align="right" class="label">${uiLabelMap.CommonFrom}&nbsp;</td>
-                <td width="54%">
+                <td scope="row" class="large-3">${uiLabelMap.CommonFrom}&nbsp;</td>
+                <td>
                     <#if productStoreEmailSetting.fromAddress??>
                         <input type="hidden" name="sendFrom" value="${productStoreEmailSetting.fromAddress}" />
                     <#else>
@@ -66,12 +69,12 @@ under the License.
                 </td>
             <tr>
             <tr>
-                <td width="26%" align="right" class="label">${uiLabelMap.OrderSendConfirmationEmailContentType}&nbsp;</td>
-                <td width="54%">${productStoreEmailSetting.contentType?default("text/html")}</td>
+                <td  scope="row" class="large-3">${uiLabelMap.OrderSendConfirmationEmailContentType}&nbsp;</td>
+                <td>${productStoreEmailSetting.contentType?default("text/html")}</td>
             </tr>
             <tr>
-                <td width="26%" align="right" class="label">${uiLabelMap.OrderSendConfirmationEmailBody}&nbsp;</td>
-                <td width="54%">
+                <td scope="row" class="large-3">${uiLabelMap.OrderSendConfirmationEmailBody}&nbsp;</td>
+                <td>
                     <textarea name="body" rows="30" cols="80">${screens.render(productStoreEmailSetting.bodyScreenLocation?default(""))}</textarea>
                 </td>
             </tr>
@@ -80,6 +83,8 @@ under the License.
       <br />
       <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonGoBack}</a>
       <a href="javascript:document.sendConfirmationForm.submit()" class="button tiny">${uiLabelMap.CommonSend}</a>
+      </@cell>
+      </@row>
     </@section>
 <#else>
   <@section title="${uiLabelMap.OrderViewPermissionError}"/>

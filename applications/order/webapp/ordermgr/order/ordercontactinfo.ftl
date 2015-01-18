@@ -70,7 +70,7 @@ under the License.
 <@section title="${uiLabelMap.OrderContactInformation}">
       <table class="basic-table" cellspacing='0'>
         <tr>
-          <td align="right" valign="top" width="19%">${uiLabelMap.CommonName}</td>
+          <td scope="row" class="large-3">${uiLabelMap.CommonName}</td>
           <td width="1%">&nbsp;</td>
           <td valign="top" width="80%">
             <div>
@@ -102,7 +102,7 @@ under the License.
           <#assign contactMech = orderContactMechValueMap.contactMech>
           <#assign contactMechPurpose = orderContactMechValueMap.contactMechPurposeType>
           <tr>
-            <td align="right" valign="top" width="19%">
+            <td scope="row" class="large-3">
               ${contactMechPurpose.get("description",locale)}
             </td>
             <td width="1%">&nbsp;</td>

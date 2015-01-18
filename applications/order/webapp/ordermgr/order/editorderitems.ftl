@@ -113,24 +113,37 @@ under the License.
                               <#-- now show status details per line item -->
                               <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)>
                               <td>
-                                  ${uiLabelMap.CommonCurrent}&nbsp;${currentItemStatus.get("description",locale)?default(currentItemStatus.statusId)}<br />
-                                  <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
-                                  <#list orderItemStatuses as orderItemStatus>
-                                  <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem", false)>
-                                  <#if orderItemStatus.statusDatetime?has_content>${orderItemStatus.statusDatetime.toString()}</#if>
-                                  &nbsp;${loopStatusItem.get("description",locale)?default(orderItemStatus.statusId)}<br />
-                                  </#list>
-                                  <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
-                                  <#if returns?has_content>
-                                  <#list returns as returnItem>
-                                  <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
-                                  <#if returnHeader.statusId != "RETURN_CANCELLED">
-                                  <div class="alert">
-                                      ${uiLabelMap.OrderReturned} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="button tiny">${returnItem.returnId}</a>
-                                  </div>
-                                  </#if>
-                                  </#list>
-                                  </#if>
+                                  <@modal id="${productId}_st" label="${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}">
+                                   
+                                            <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+                                                
+                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="button tiny">${uiLabelMap.OrderApproveOrder}</a>
+                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
+                                                        <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
+                                                        <input type="hidden" name="orderId" value="${orderId!}"/>
+                                                        <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
+                                                    </form>
+                                                <br/>
+                                            </#if>
+                                            <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
+                                            <#list orderItemStatuses as orderItemStatus>
+                                                
+                                                <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem", false)>
+                                                <#if orderItemStatus.statusDatetime?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderItemStatus.statusDatetime, "", locale, timeZone)!}&nbsp;&nbsp;</#if>${loopStatusItem.get("description",locale)?default(orderItemStatus.statusId)}
+                                                <br/>
+                                            </#list>
+                                        
+                                    <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
+                                    <#if returns?has_content>
+                                        <#list returns as returnItem>
+                                            <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
+                                            <#if returnHeader.statusId != "RETURN_CANCELLED">
+                                                <font color="red">${uiLabelMap.OrderReturned}</font>
+                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="">${returnItem.returnId}</a>
+                                            </#if>
+                                        </#list>
+                                    </#if>
+                                   </@modal>
                               </td>
                               <td class="align-text" valign="top" nowrap="nowrap">
                                 <#assign shippedQuantity = orderReadHelper.getItemShippedQuantity(orderItem)>
@@ -153,9 +166,52 @@ under the License.
                                 <#else>
                                   <#assign remainingQuantity = ((orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - shippedQuantity?double)>
                                 </#if>
-                                  ${uiLabelMap.OrderOrdered}&nbsp;${orderItem.quantity?default(0)?string.number}&nbsp;&nbsp;<br />
-                                  ${uiLabelMap.OrderCancelled}:&nbsp;${orderItem.cancelQuantity?default(0)?string.number}&nbsp;&nbsp;<br />
-                                  ${uiLabelMap.OrderRemaining}:&nbsp;${remainingQuantity}&nbsp;&nbsp;<br />
+                                <@modal id="${productId}_q" label="${orderItem.quantity?default(0)?string.number}">    
+                                            <table>
+                                                <tr valign="top">
+                                                    
+                                                    <td><b>${uiLabelMap.OrderOrdered}</b></td>
+                                                    <td>${orderItem.quantity?default(0)?string.number}</td>
+                                                    <td><b>${uiLabelMap.OrderShipRequest}</b></td>
+                                                    <td>${orderReadHelper.getItemReservedQuantity(orderItem)}</td>
+                                                </tr>
+                                                <tr valign="top">
+                                                    <td><b>${uiLabelMap.OrderCancelled}</b></td>
+                                                    <td>${orderItem.cancelQuantity?default(0)?string.number}</td>
+                                                </tr>
+                                                <tr valign="top">
+                                                    <td><b>${uiLabelMap.OrderRemaining}</b></td>
+                                                    <td>${remainingQuantity}</td>
+                                                    <#if orderHeader.orderTypeId == "PURCHASE_ORDER">
+                                                        <td><b>${uiLabelMap.OrderPlannedInReceive}</b></td>
+                                                        <td>${totalReceived}</td>
+                                                    <#else>
+                                                        <td><b>${uiLabelMap.OrderQtyShipped}</b></td>
+                                                        <td>${shippedQuantity}</td>
+                                                    </#if>
+                                                </tr>
+                                                <tr valign="top">
+                                                    <td><b>${uiLabelMap.OrderOutstanding}</b></td>
+                                                    <td>
+                                                        <#-- Make sure digital goods without shipments don't always remainn "outstanding": if item is completed, it must have no outstanding quantity.  -->
+                                                        <#if (orderItem.statusId?has_content) && (orderItem.statusId == "ITEM_COMPLETED")>
+                                                            0
+                                                        <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER">
+                                                            ${(orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - totalReceived?double}
+                                                        <#elseif orderHeader.orderTypeId == "SALES_ORDER">
+                                                            ${(orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - shippedQuantity?double}
+                                                        </#if>
+                                                    </td>
+                                                </tr>
+                                                <tr valign="top">
+                                                    <td><b>${uiLabelMap.OrderInvoiced}</b></td>
+                                                    <td>${orderReadHelper.getOrderItemInvoicedQuantity(orderItem)}</td>
+                                                    <td><b>${uiLabelMap.OrderReturned}</b></td>
+                                                    <td>${returnQuantityMap.get(orderItem.orderItemSeqId)?default(0)}</td>
+                                                </tr>
+                                            </table>
+                                        </@modal>
+                                  
                               </td>
                               <td class="align-text" valign="top" nowrap="nowrap">
                                   <#-- check for permission to modify price -->
@@ -339,7 +395,6 @@ under the License.
                 <input type="hidden" name="comments" value="Added manually by [${userLogin.userLoginId}]"/>
                 <input type="hidden" name="orderId" value="${orderId!}"/>
                 <table class="basic-table" cellspacing="0">
-                    <tr><td colspan="3"><hr /></td></tr>
                     <tr>
                         <td class="align-text" width="55%">
                             ${uiLabelMap.OrderAdjustment}&nbsp;
@@ -367,7 +422,6 @@ under the License.
 
         <#-- subtotal -->
         <table class="basic-table" cellspacing="0">
-            <tr><td colspan="4"><hr /></td></tr>
             <tr class="align-text">
               <td width="80%">${uiLabelMap.OrderItemsSubTotal}</td>
               <td width="10%" nowrap="nowrap"><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></td>

@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")> 
+<#--<#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")>--> 
 
 <#escape x as x?html>
   <#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>

@@ -25,6 +25,8 @@ under the License.
 
 <#if orderHeader?has_content>
 <@section title="${uiLabelMap.OrderAddToOrder}">
+    <@row>
+    <@cell class="large-6 columns">
         <form method="post" action="<@ofbizUrl>appendItemToOrder</@ofbizUrl>" name="appendItemForm">
             <input type="hidden" size="25" name="orderId" value="${orderId!}"/>
             <#if !catalogCol?has_content>
@@ -40,7 +42,7 @@ under the License.
             <table class="basic-table" cellspacing="0">
               <#if catalogCol?has_content && (catalogCol?size > 1)>
                 <tr>
-                  <td class="label">${uiLabelMap.ProductChooseCatalog}</td>
+                  <td scope="row" class="large-3">${uiLabelMap.ProductChooseCatalog}</td>
                   <td><select name='prodCatalogId'>
                     <#list catalogCol as catalogId>
                       <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
@@ -51,7 +53,7 @@ under the License.
                 </tr>
               </#if>
                 <tr>
-                  <td class="label">${uiLabelMap.ProductProductId}</td>
+                  <td scope="row" class="large-3">${uiLabelMap.ProductProductId}</td>
                   <td>
                       <#-- FIXME Problem here: the input field is shared -->
                       <@htmlTemplate.lookupField formName="appendItemForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
@@ -61,19 +63,19 @@ under the License.
                   </td>
                 </tr>
                 <tr>
-                  <td class="label">${uiLabelMap.OrderPrice}</td>
+                  <td scope="row" class="large-3">${uiLabelMap.OrderPrice}</td>
                   <td>
                     <input type="text" size="6" name="basePrice" value="${requestParameters.price!}"/>
                     <input type="checkbox" name="overridePrice" value="Y"/>&nbsp;${uiLabelMap.OrderOverridePrice}
                   </td>
                 </tr>
                 <tr>
-                  <td class="label">${uiLabelMap.OrderQuantity}</td>
+                  <td scope="row" class="large-3">${uiLabelMap.OrderQuantity}</td>
                   <td><input type="text" size="6" name="quantity" value="${requestParameters.quantity?default("1")}"/></td>
                 </tr>
               <#if (shipGroups?size > 1)>
                 <tr>
-                  <td class="label">${uiLabelMap.OrderShipGroup}</td>
+                  <td scope="row" class="large-3">${uiLabelMap.OrderShipGroup}</td>
                   <td><select name="shipGroupSeqId">
                       <#list shipGroups as shipGroup>
                          <option value="${shipGroup.shipGroupSeqId}">${shipGroup.shipGroupSeqId}</option>
@@ -83,13 +85,13 @@ under the License.
                 </tr>
               </#if>
                 <tr>
-                  <td class="label">${uiLabelMap.OrderDesiredDeliveryDate}</td>
+                  <td scope="row" class="large-3">${uiLabelMap.OrderDesiredDeliveryDate}</td>
                   <td>
                         <@htmlTemplate.renderDateTimeField name="itemDesiredDeliveryDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="itemDesiredDeliveryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                   </td>
                 </tr>
                 <tr>
-                  <td class="label">${uiLabelMap.OrderReturnReason}</td>
+                  <td scope="row" class="large-3">${uiLabelMap.OrderReturnReason}</td>
                   <td>
                     <select name="reasonEnumId">
                         <option value="">&nbsp;</option>
@@ -101,7 +103,7 @@ under the License.
                 </tr>
                 <#if orderHeader.orderTypeId == "PURCHASE_ORDER" && purchaseOrderItemTypeList?has_content>
                 <tr>
-                  <td class="label">${uiLabelMap.OrderOrderItemType}</td>
+                  <td scope="row" class="large-3">${uiLabelMap.OrderOrderItemType}</td>
                   <td>
                     <select name="orderItemTypeId">
                       <option value="">&nbsp;</option>
@@ -113,16 +115,18 @@ under the License.
                 </tr>
                 </#if>
                 <tr>
-                  <td class="label">${uiLabelMap.CommonComment}</td>
+                  <td scope="row" class="large-3">${uiLabelMap.CommonComment}</td>
                   <td>
                       <input type="text" size="25" name="changeComments"/>
                   </td>
                 </tr>
                 <tr>
-                  <td class="label">&nbsp;</td>
+                  <td scope="row" class="large-3">&nbsp;</td>
                   <td><input type="submit" value="${uiLabelMap.OrderAddToOrder}"/></td>
                 </tr>
             </table>
         </form>
-    </@section>
+    </@cell>
+    </@row>
+</@section>
 </#if>

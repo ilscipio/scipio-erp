@@ -30,8 +30,7 @@ under the License.
 
 
 
-  <div class="row">
-    <div class="large-12 columns">
+  <@row>
       <h1>${uiLabelMap.CommonRegistered}</h1>
     <div class="panel">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
@@ -88,8 +87,7 @@ under the License.
         <a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a>
       </form>
     </div>
-  </div>
-</div>
+  </@row>
 <script language="JavaScript" type="text/javascript">
   document.loginform.JavaScriptEnabled.value = "Y";
   <#if focusName>

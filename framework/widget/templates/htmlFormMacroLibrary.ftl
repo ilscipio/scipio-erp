@@ -475,7 +475,6 @@ under the License.
   </div>
 </#macro>
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
-  <#--<td class="<#if style?has_content>${style}<#else>label</#if>">-->
   <div class="<#if style?has_content>${style}<#else>small-3 large-2</#if> columns ">
       <#if collapse><span class="prefix"><#else><label></#if>
 </#macro>
@@ -486,7 +485,6 @@ under the License.
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="">
-  <#--<td<#if positionSpan?has_content && positionSpan gt 0> colspan="${1+positionSpan*3}"</#if><#if style?has_content> class="${style}"</#if>>-->
   <div class="<#if style?has_content>${style}<#else>small-9 large-10</#if> columns">
     <span>
 </#macro>

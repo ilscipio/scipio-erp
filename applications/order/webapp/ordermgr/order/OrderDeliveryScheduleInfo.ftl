@@ -19,9 +19,9 @@ under the License.
 
 <#if hasPermission>
 <@section title="${uiLabelMap.OrderScheduleDelivery}">
-      <ul>
+      <ul class="button-group">
         <#if orderId??>
-          <li><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>">${uiLabelMap.OrderViewOrder}</a></li>
+          <li><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderViewOrder}</a></li>
         </#if>
       </ul>
         <#if orderId?has_content>

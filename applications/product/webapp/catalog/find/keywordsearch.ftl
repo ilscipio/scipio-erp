@@ -24,7 +24,7 @@ under the License.
     <#list searchConstraintStrings as searchConstraintString>
       <div>&nbsp;<a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="button tiny">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
-    <span class="label">${uiLabelMap.CommonSortedBy}:</span>${searchSortOrderString}
+    <span >${uiLabelMap.CommonSortedBy}:</span>${searchSortOrderString}
     <div><a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !productIds?has_content>

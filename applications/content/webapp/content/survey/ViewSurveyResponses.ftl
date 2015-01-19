@@ -28,13 +28,13 @@ under the License.
         <tr>
           <#-- seperator options -->
           <#if question.surveyQuestionTypeId == "SEPERATOR_TEXT">
-            <td colspan="5" class="label">${question.question!}</td>
+            <td colspan="5" >${question.question!}</td>
           <#elseif question.surveyQuestionTypeId == "SEPERATOR_LINE">
             <td colspan="5"><hr/></td>
           <#else>
 
             <#-- standard questions -->
-            <td align='right' nowrap="nowrap" class="label">
+            <td align='right' nowrap="nowrap" >
               <#assign answerString = "${uiLabelMap.ContentAnswers}">
               <#if (results._total?default(0) == 1)>
                 <#assign answerString = "${uiLabelMap.ContentAnswer}">
@@ -114,7 +114,7 @@ under the License.
       </#list>
     <#else>
       <tr>
-        <td class="label">${uiLabelMap.ContentSurveyNoQuestions}</div></td>
+        <td >${uiLabelMap.ContentSurveyNoQuestions}</div></td>
       </tr>
     </#if>
   </table>

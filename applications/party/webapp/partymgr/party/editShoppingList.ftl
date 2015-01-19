@@ -76,15 +76,15 @@ under the License.
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
       <table class="basic-table" cellspacing='0'>
         <tr>
-          <td class="label">${uiLabelMap.PartyListName}</td>
+          <td >${uiLabelMap.PartyListName}</td>
           <td><input type="text" size="25" name="listName" value="${shoppingList.listName}" <#if shoppingList.listName?default("") == "auto-save">disabled="disabled"</#if> />
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.CommonDescription}</td>
+          <td >${uiLabelMap.CommonDescription}</td>
           <td><input type="text" size="70" name="description" value="${shoppingList.description!}" <#if shoppingList.listName?default("") == "auto-save">disabled="disabled"</#if> />
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyListType}</td>
+          <td >${uiLabelMap.PartyListType}</td>
           <td>
             <select name="shoppingListTypeId" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
               <#if shoppingListType??>
@@ -98,7 +98,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyPublic}?</td>
+          <td >${uiLabelMap.PartyPublic}?</td>
           <td>
             <select name="isPublic" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
               <option>${shoppingList.isPublic}</option>
@@ -109,7 +109,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyParentList}</td>
+          <td >${uiLabelMap.PartyParentList}</td>
           <td>
             <select name="parentShoppingListId" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
               <#if parentShoppingList??>

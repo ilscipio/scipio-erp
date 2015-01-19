@@ -29,7 +29,7 @@ under the License.
      </div>
      <form method="post" action="<@ofbizUrl>EditCustomTimePeriod</@ofbizUrl>" name="setOrganizationPartyIdForm">
          <input type="hidden" name="currentCustomTimePeriodId" value="${currentCustomTimePeriodId!}" />
-         <span class="label">${uiLabelMap.AccountingShowOnlyPeriodsWithOrganization}</span>
+         <span >${uiLabelMap.AccountingShowOnlyPeriodsWithOrganization}</span>
          <input type="text" size="20" name="findOrganizationPartyId" value="${findOrganizationPartyId!}" />
          <input type="submit" value='${uiLabelMap.CommonUpdate}' />
      </form>
@@ -246,7 +246,7 @@ under the License.
         <input type="hidden" name="currentCustomTimePeriodId" value="${currentCustomTimePeriodId!}" />
         <input type="hidden" name="useValues" value="true" />
         <div>
-          <span class="label">${uiLabelMap.CommonParent}</span>
+          <span >${uiLabelMap.CommonParent}</span>
           <select name="parentPeriodId">
             <option value=''>&nbsp;</option>
             <#list allCustomTimePeriods as allCustomTimePeriod>
@@ -268,9 +268,9 @@ under the License.
           </select>
         </div>
         <div>
-          <span class="label">${uiLabelMap.AccountingOrgPartyId}</span>
+          <span >${uiLabelMap.AccountingOrgPartyId}</span>
           <input type="text" size='20' name='organizationPartyId' />
-          <span class="label">${uiLabelMap.AccountingPeriodType}</span>
+          <span >${uiLabelMap.AccountingPeriodType}</span>
           <select name="periodTypeId">
             <#list periodTypes as periodType>
               <#assign isDefault = false>
@@ -282,15 +282,15 @@ under the License.
               <option value="${periodType.periodTypeId}" <#if isDefault>selected="selected"</#if>>${periodType.description} [${periodType.periodTypeId}]</option>
             </#list>
           </select>
-          <span class="label">${uiLabelMap.AccountingPeriodNumber}</span>
+          <span >${uiLabelMap.AccountingPeriodNumber}</span>
           <input type="text" size='4' name='periodNum' />
-          <span class="label">${uiLabelMap.AccountingPeriodName}</span>
+          <span >${uiLabelMap.AccountingPeriodName}</span>
           <input type="text" size='10' name='periodName' />
         </div>
         <div>
-          <span class="label">${uiLabelMap.CommonFromDate}</span>
+          <span >${uiLabelMap.CommonFromDate}</span>
           <input type="text" size='14' name='fromDate' />
-          <span class="label">${uiLabelMap.CommonThruDate}</span>
+          <span >${uiLabelMap.CommonThruDate}</span>
           <input type="text" size='14' name='thruDate' />
           <input type="submit" value="${uiLabelMap.CommonAdd}" />
         </div>

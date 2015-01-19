@@ -26,9 +26,9 @@ under the License.
     <tr>
         <td>
             <br />
-            <span class="label">${uiLabelMap.ProductVariantProductIds}:</span>
+            <span >${uiLabelMap.ProductVariantProductIds}:</span>
             <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
-            <span class="label">Hazmat:</span>
+            <span >Hazmat:</span>
             <select name="productFeatureIdOne">
                 <option value="">- ${uiLabelMap.CommonNone} -</option>
                 <#list hazmatFeatures as hazmatFeature>

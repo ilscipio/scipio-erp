@@ -30,15 +30,15 @@ under the License.
     <tr><td colspan="10">
         <table cellspacing="0" class="basic-table">
           <tr>
-            <td class="label" width="25%">${uiLabelMap.OrderOrderTotal}</td>
+            <td  width="25%">${uiLabelMap.OrderOrderTotal}</td>
             <td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></td>
           </tr>
           <tr>
-            <td class="label" width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</td>
+            <td  width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</td>
             <td><@ofbizCurrency amount=orh.getOrderReturnedCreditTotalBd() isoCode=orh.getCurrency()/></td>
           </tr>
           <tr>
-            <td class="label" width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</td>
+            <td  width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</td>
             <td><@ofbizCurrency amount=orh.getOrderReturnedRefundTotalBd() isoCode=orh.getCurrency()/></td>
           </tr>
         </table>
@@ -254,7 +254,7 @@ under the License.
     </tr>
     <#else>
     <tr>
-      <td colspan="9" class="label">${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</td>
+      <td colspan="9" >${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</td>
     </tr>
     </#if>
     <tr>

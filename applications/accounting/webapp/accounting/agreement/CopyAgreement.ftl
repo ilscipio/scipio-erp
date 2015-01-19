@@ -28,7 +28,7 @@ under the License.
     <form action="<@ofbizUrl>copyAgreement</@ofbizUrl>" method="post">
         <input type="hidden" name="agreementId" value="${agreementId}"/>
         <div>
-            <span class="label">${uiLabelMap.AccountingCopyAgreement}</span>
+            <span >${uiLabelMap.AccountingCopyAgreement}</span>
             ${uiLabelMap.AccountingAgreementTerms}&nbsp;<input type="checkbox" name="copyAgreementTerms" value="Y" checked="checked" />
             ${uiLabelMap.ProductProducts}&nbsp;<input type="checkbox" name="copyAgreementProducts" value="Y" checked="checked" />
             ${uiLabelMap.Party}&nbsp;<input type="checkbox" name="copyAgreementParties" value="Y" checked="checked" />

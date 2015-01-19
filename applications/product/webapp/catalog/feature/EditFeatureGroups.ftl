@@ -64,7 +64,7 @@ under the License.
           <br />
           <table cellspacing="0" class="basic-table">
             <tr>
-              <td class="label">${uiLabelMap.CommonDescription}:</td>
+              <td >${uiLabelMap.CommonDescription}:</td>
               <td><input type="text" size='30' name='description' value='' /></td>
             </tr>
             <tr>

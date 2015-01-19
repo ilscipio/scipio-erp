@@ -100,21 +100,21 @@ function insertImageName(size,nameValue) {
                 <input type="hidden" name="configItemId" value="${configItemId!}" />
                 <table cellspacing="0" class="basic-table">
                 <tr>
-                    <td width="20%" align="right" valign="top" class="label">${uiLabelMap.CommonDescription}</td>
+                    <td width="20%" align="right" valign="top" >${uiLabelMap.CommonDescription}</td>
                     <td>&nbsp;</td>
                     <td width="80%" colspan="4" valign="top">
                         <textarea name="description" cols="60" rows="2">${(configItem.description)!}</textarea>
                     </td>
                 </tr>
                 <tr>
-                    <td width="20%" align="right" valign="top" class="label">${uiLabelMap.ProductLongDescription}</td>
+                    <td width="20%" align="right" valign="top" >${uiLabelMap.ProductLongDescription}</td>
                     <td>&nbsp;</td>
                     <td width="80%" colspan="4" valign="top">
                         <textarea name="longDescription" cols="60" rows="7">${(configItem.longDescription)!}</textarea>
                     </td>
                 </tr>
                 <tr>
-                    <td width="20%" align="right" valign="top" class="label">
+                    <td width="20%" align="right" valign="top" >
                         ${uiLabelMap.ProductSmallImage}
                         <#if (configItem.imageUrl)??>
                             <a href="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Image" src="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" class="cssImgSmall" /></a>
@@ -125,7 +125,7 @@ function insertImageName(size,nameValue) {
                     <input type="text" name="imageUrl" value="${(configItem.imageUrl)?default(imageNameSmall + '.jpg')}" size="60" maxlength="255" />
                     <#if configItemId?has_content>
                         <div>
-                        <span class="label">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
+                        <span >${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                         <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="button tiny">.jpg</a>
                         <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="button tiny">.gif</a>
                         <a href="javascript:insertImageName('small','');" class="button tiny">${uiLabelMap.CommonClear}</a>

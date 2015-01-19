@@ -46,12 +46,12 @@ function lookupShipments() {
             <input type="hidden" name="lookupFlag" value="Y" />
             <table cellspacing="0" cellpadding="2" class="basic-table">
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.ProductShipmentId}</td>
+                <td width="25%" align="right" >${uiLabelMap.ProductShipmentId}</td>
                 <td width="5%">&nbsp;</td>
                 <td><input type="text" name="shipmentId" value="${shipmentId!}" /></td>
               </tr>
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.ProductShipmentType}</td>
+                <td width="25%" align="right" >${uiLabelMap.ProductShipmentType}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="shipmentTypeId">
@@ -67,7 +67,7 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.ProductOriginFacility}</td>
+                <td width="25%" align="right" >${uiLabelMap.ProductOriginFacility}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="originFacilityId">
@@ -83,7 +83,7 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.ProductDestinationFacility}</td>
+                <td width="25%" align="right" >${uiLabelMap.ProductDestinationFacility}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="destinationFacilityId">
@@ -99,7 +99,7 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.CommonStatus}</td>
+                <td width="25%" align="right" >${uiLabelMap.CommonStatus}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="statusId">
@@ -127,20 +127,20 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.ProductDateFilter}</td>
+                <td width="25%" align="right" >${uiLabelMap.ProductDateFilter}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <table cellspacing="0" class="basic-table">
                     <tr>
                       <td>
                         <@htmlTemplate.renderDateTimeField name="minDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <span class="label">${uiLabelMap.CommonFrom}</span>
+                        <span >${uiLabelMap.CommonFrom}</span>
                       </td>
                     </tr>
                     <tr>
                       <td>
                         <@htmlTemplate.renderDateTimeField name="maxDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <span class="label">${uiLabelMap.CommonThru}</span>
+                        <span >${uiLabelMap.CommonThru}</span>
                       </td>
                     </tr>
                   </table>

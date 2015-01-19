@@ -37,33 +37,33 @@ under the License.
       <#if currentGlReconciliation?has_content>
         <table>
           <tr>
-            <td><span class="label">${uiLabelMap.FormFieldTitle_glReconciliationName}</span></td>
+            <td><span >${uiLabelMap.FormFieldTitle_glReconciliationName}</span></td>
             <td>${currentGlReconciliation.glReconciliationName!}</td>
           </tr>
           <#if currentGlReconciliation.statusId??>
             <tr>
-              <td><span class="label">${uiLabelMap.CommonStatus}</span></td>
+              <td><span >${uiLabelMap.CommonStatus}</span></td>
               <#assign currentStatus = currentGlReconciliation.getRelatedOne("StatusItem", true)>
               <td>${currentStatus.description!}</td>
             </tr>
           </#if>
           <tr>
-            <td><span class="label">${uiLabelMap.FormFieldTitle_reconciledDate}</span></td>
+            <td><span >${uiLabelMap.FormFieldTitle_reconciledDate}</span></td>
             <td>${currentGlReconciliation.reconciledDate!}</td>
           </tr>
           <tr>
-            <td><span class="label">${uiLabelMap.AccountingOpeningBalance}</span></td>
+            <td><span >${uiLabelMap.AccountingOpeningBalance}</span></td>
             <td><@ofbizCurrency amount=currentGlReconciliation.openingBalance?default('0')/></td>
           </tr>
           <#if currentGlReconciliation.reconciledBalance??>
             <tr>
-              <td><span class="label">${uiLabelMap.FormFieldTitle_reconciledBalance}</span></td>
+              <td><span >${uiLabelMap.FormFieldTitle_reconciledBalance}</span></td>
               <td><@ofbizCurrency amount=currentGlReconciliation.reconciledBalance?default('0')/></td>
             </tr>
           </#if>
           <#if currentClosingBalance??>
             <tr>
-              <td><span class="label">${uiLabelMap.FormFieldTitle_closingBalance}</span></td>
+              <td><span >${uiLabelMap.FormFieldTitle_closingBalance}</span></td>
               <td><@ofbizCurrency amount=currentClosingBalance/></td>
             </tr>
           </#if>
@@ -82,33 +82,33 @@ under the License.
       <#if previousGlReconciliation?has_content>
         <table>
           <tr>
-            <td><span class="label">${uiLabelMap.FormFieldTitle_glReconciliationName}</span></td>
+            <td><span >${uiLabelMap.FormFieldTitle_glReconciliationName}</span></td>
             <td>${previousGlReconciliation.glReconciliationName!}</td>
           </tr>
           <#if previousGlReconciliation.statusId??>
             <tr>
-              <td><span class="label">${uiLabelMap.CommonStatus}</span></td>
+              <td><span >${uiLabelMap.CommonStatus}</span></td>
               <#assign previousStatus = previousGlReconciliation.getRelatedOne("StatusItem", true)>
               <td>${previousStatus.description!}</td>
             </tr>
           </#if>
           <tr>
-            <td><span class="label">${uiLabelMap.FormFieldTitle_reconciledDate}</span></td>
+            <td><span >${uiLabelMap.FormFieldTitle_reconciledDate}</span></td>
             <td>${previousGlReconciliation.reconciledDate!}</td>
           </tr>
           <tr>
-            <td><span class="label">${uiLabelMap.AccountingOpeningBalance}</span></td>
+            <td><span >${uiLabelMap.AccountingOpeningBalance}</span></td>
             <td><@ofbizCurrency amount=previousGlReconciliation.openingBalance?default('0')/></td>
           </tr>
           <#if previousGlReconciliation.reconciledBalance??>
             <tr>
-              <td><span class="label">${uiLabelMap.FormFieldTitle_reconciledBalance}</span></td>
+              <td><span >${uiLabelMap.FormFieldTitle_reconciledBalance}</span></td>
               <td><@ofbizCurrency amount=previousGlReconciliation.reconciledBalance?default('0')/></td>
             </tr>
           </#if>
           <#if previousClosingBalance??>
             <tr>
-              <td><span class="label">${uiLabelMap.FormFieldTitle_closingBalance}</span></td>
+              <td><span >${uiLabelMap.FormFieldTitle_closingBalance}</span></td>
               <td><@ofbizCurrency amount=previousClosingBalance/></td>
             </tr>
           </#if>
@@ -219,7 +219,7 @@ under the License.
       </#if>
     </div>
     <div class="right">
-      <span class="label">${uiLabelMap.AccountingTotalCapital} </span><@ofbizCurrency amount=transactionTotalAmount.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/>
+      <span >${uiLabelMap.AccountingTotalCapital} </span><@ofbizCurrency amount=transactionTotalAmount.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/>
       <#if isReconciled == false>
         <input type="submit" value="${uiLabelMap.AccountingReconcile}"/>
       </#if>

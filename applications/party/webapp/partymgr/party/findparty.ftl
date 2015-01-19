@@ -62,7 +62,7 @@ under the License.
         <input type="hidden" name="hideFields" value="Y"/>
         <table class="basic-table" cellspacing="0">
           <tr>
-            <td class="label">${uiLabelMap.PartyContactInformation}</td>
+            <td >${uiLabelMap.PartyContactInformation}</td>
             <td>
               <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked="checked"</#if>/>${uiLabelMap.CommonNone}&nbsp;
               <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked="checked"</#if>/>${uiLabelMap.PartyPostal}&nbsp;
@@ -71,27 +71,27 @@ under the License.
             </td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyPartyId}</td>
+            <td >${uiLabelMap.PartyPartyId}</td>
             <td><input type="text" name="partyId" value="${parameters.partyId!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyUserLogin}</td>
+            <td >${uiLabelMap.PartyUserLogin}</td>
             <td><input type="text" name="userLoginId" value="${parameters.userLoginId!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyLastName}</td>
+            <td >${uiLabelMap.PartyLastName}</td>
             <td><input type="text" name="lastName" value="${parameters.lastName!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyFirstName}</td>
+            <td >${uiLabelMap.PartyFirstName}</td>
             <td><input type="text" name="firstName" value="${parameters.firstName!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyPartyGroupName}</td>
+            <td >${uiLabelMap.PartyPartyGroupName}</td>
             <td><input type="text" name="groupName" value="${parameters.groupName!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyRoleType}</td>
+            <td >${uiLabelMap.PartyRoleType}</td>
             <td>
               <select name="roleTypeId">
 <#if currentRole?has_content>
@@ -106,7 +106,7 @@ under the License.
             </td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyType}</td>
+            <td >${uiLabelMap.PartyType}</td>
             <td>
               <select name="partyTypeId">
 <#if currentPartyType?has_content>
@@ -121,33 +121,33 @@ under the License.
             </td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.ProductInventoryItemId}</td>
+            <td >${uiLabelMap.ProductInventoryItemId}</td>
             <td><input type="text" name="inventoryItemId" value="${parameters.inventoryItemId!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.ProductSerialNumber}</td>
+            <td >${uiLabelMap.ProductSerialNumber}</td>
             <td><input type="text" name="serialNumber" value="${parameters.serialNumber!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.ProductSoftIdentifier}</td>
+            <td >${uiLabelMap.ProductSoftIdentifier}</td>
             <td><input type="text" name="softIdentifier" value="${parameters.softIdentifier!}"/></td>
           </tr>
 <#if extInfo == "P">
           <tr><td colspan="3"><hr /></td></tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonAddress1}</td>
+            <td >${uiLabelMap.CommonAddress1}</td>
             <td><input type="text" name="address1" value="${parameters.address1!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonAddress2}</td>
+            <td >${uiLabelMap.CommonAddress2}</td>
             <td><input type="text" name="address2" value="${parameters.address2!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonCity}</td>
+            <td >${uiLabelMap.CommonCity}</td>
             <td><input type="text" name="city" value="${parameters.city!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonStateProvince}</td>
+            <td >${uiLabelMap.CommonStateProvince}</td>
             <td>
               <select name="stateProvinceGeoId">
   <#if currentStateGeo?has_content>
@@ -160,29 +160,29 @@ under the License.
             </td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyPostalCode}</td>
+            <td >${uiLabelMap.PartyPostalCode}</td>
             <td><input type="text" name="postalCode" value="${parameters.postalCode!}"/></td>
           </tr>
 </#if>
 <#if extInfo == "T">
           <tr><td colspan="3"><hr /></td></tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonCountryCode}</td>
+            <td >${uiLabelMap.CommonCountryCode}</td>
             <td><input type="text" name="countryCode" value="${parameters.countryCode!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyAreaCode}</td>
+            <td >${uiLabelMap.PartyAreaCode}</td>
             <td><input type="text" name="areaCode" value="${parameters.areaCode!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyContactNumber}</td>
+            <td >${uiLabelMap.PartyContactNumber}</td>
             <td><input type="text" name="contactNumber" value="${parameters.contactNumber!}"/></td>
           </tr>
 </#if>
 <#if extInfo == "O">
           <tr><td colspan="3"><hr /></td></tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyContactInformation}</td>
+            <td >${uiLabelMap.PartyContactInformation}</td>
             <td><input type="text" name="infoString" value="${parameters.infoString!}"/></td>
           </tr>
 </#if>

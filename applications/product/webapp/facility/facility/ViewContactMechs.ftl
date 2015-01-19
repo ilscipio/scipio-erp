@@ -25,7 +25,7 @@ under the License.
           <#assign facilityContactMech = contactMechMap.facilityContactMech>
           <tr><td colspan="3"><hr/></td></tr>
           <tr>
-            <td class="label" valign="top">
+            <td  valign="top">
               ${contactMechMap.contactMechType.get("description",locale)}
             </td>
             <td valign="top">

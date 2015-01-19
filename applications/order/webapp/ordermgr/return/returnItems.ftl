@@ -26,7 +26,7 @@ under the License.
     </#if>
     <tr>
         <td colspan="2">&nbsp;</td>
-        <td colspan="3" align="right"><span class="label">${returnAdjustment.get("description",locale)?default("N/A")}</span>
+        <td colspan="3" align="right"><span >${returnAdjustment.get("description",locale)?default("N/A")}</span>
             <#if returnAdjustment.comments?has_content>: ${returnAdjustment.comments}</#if>
         </div></td>
         <#if (adjEditable)>
@@ -99,15 +99,15 @@ under the License.
           <tr><td colspan="10">
               <table cellspacing="0" class="basic-table">
                 <tr>
-                  <td class="label" width="25%">${uiLabelMap.OrderOrderTotal}</td>
+                  <td  width="25%">${uiLabelMap.OrderOrderTotal}</td>
                   <td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></td>
                 </tr>
                 <tr>
-                  <td class="label" width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</td>
+                  <td  width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</td>
                   <td><@ofbizCurrency amount=orh.getReturnedCreditTotalWithBillingAccountBd() isoCode=orh.getCurrency()/></td>
                 </tr>
                 <tr>
-                  <td class="label" width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</td>
+                  <td  width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</td>
                   <td><@ofbizCurrency amount=orh.getReturnedRefundTotalWithBillingAccountBd() isoCode=orh.getCurrency()/></td>
                 </tr>
               </table>
@@ -294,7 +294,7 @@ under the License.
             <tr><td colspan="5"></td><td><hr /></td></tr>
             <tr>
               <td colspan="2">&nbsp;</td>
-              <td colspan="3" class="label">${uiLabelMap.OrderReturnTotal}</td>
+              <td colspan="3" >${uiLabelMap.OrderReturnTotal}</td>
               <td align="right"><@ofbizCurrency amount=returnTotal isoCode=returnHeader.currencyUomId/></td>
             </tr>
             <#if (!readOnly) && (rowCount > 0)>
@@ -347,7 +347,7 @@ under the License.
             <tr><td colspan="4"><h3>${uiLabelMap.OrderReturnItems}</h3></td></tr>
             <#if partyOrders?has_content>
               <tr>
-                <td width='25%' align='right' nowrap="nowrap" class="label">${uiLabelMap.OrderOrderId}</td>
+                <td width='25%' align='right' nowrap="nowrap" >${uiLabelMap.OrderOrderId}</td>
                 <td>&nbsp;</td>
                 <td width='25%'>
                   <select name="orderId">

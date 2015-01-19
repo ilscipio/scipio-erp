@@ -40,7 +40,7 @@ under the License.
     <#assign indexMod7 = period_index % 7>
     <#if indexMod7 = 0>
       <tr>
-        <td class="label" ${styleTd}>
+        <td  ${styleTd}>
           <a href='<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>'>${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
         </td>
     </#if>

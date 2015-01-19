@@ -36,7 +36,7 @@ under the License.
   <div class="screenlet-body">
       <br />
         <div class="align-float">
-            <span class="label">
+            <span >
             <#if (visitSize > 0)>
                 <#if (viewIndex > 1)>
                   <a href="<@ofbizUrl>showvisits?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}<#if sort?has_content>&amp;sort=${sort}</#if><#if partyId?has_content>&amp;partyId=${partyId}</#if>&amp;showAll=${showAll}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonPrevious}</a> |
@@ -82,7 +82,7 @@ under the License.
       </table>
       <br />
       <div class="align-float">
-          <span class="label">
+          <span >
           <#if (visitSize > 0)>
               <#if (viewIndex > 1)>
                 <a href="<@ofbizUrl>showvisits?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}<#if sort?has_content>&amp;sort=${sort}</#if><#if partyId?has_content>&amp;partyId=${partyId}</#if>&amp;showAll=${showAll}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonPrevious}</a> |

@@ -83,8 +83,8 @@ function getFinAccountTransRunningTotalAndBalances() {
   <#if finAccountTransList?has_content && parameters.noConditionFind?? && parameters.noConditionFind == 'Y'>
     <#if !grandTotal??>
       <div>
-        <span class="label">${uiLabelMap.AccountingRunningTotal} :</span>
-        <span class="label" id="showFinAccountTransRunningTotal"></span>
+        <span >${uiLabelMap.AccountingRunningTotal} :</span>
+        <span  id="showFinAccountTransRunningTotal"></span>
       </div>
     </#if>
     <form id="listFinAccTra" name="selectAllForm" method="post" action="<@ofbizUrl><#if !grandTotal??>reconcileFinAccountTrans?clearAll=Y<#else>assignGlRecToFinAccTrans?clearAll=Y</#if></@ofbizUrl>">

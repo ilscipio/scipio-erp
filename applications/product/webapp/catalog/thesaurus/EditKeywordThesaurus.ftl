@@ -23,9 +23,9 @@ under the License.
     <div class="screenlet-body">
         <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
             <div>
-                <span class="label">${uiLabelMap.ProductKeyword}</span><input type="text" name="enteredKeyword" size="10"/>
-                <span class="label">${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10"/>
-                <span class="label">${uiLabelMap.ProductRelationship}</span><select name="relationshipEnumId">
+                <span >${uiLabelMap.ProductKeyword}</span><input type="text" name="enteredKeyword" size="10"/>
+                <span >${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10"/>
+                <span >${uiLabelMap.ProductRelationship}</span><select name="relationshipEnumId">
                 <#list relationshipEnums as relationshipEnum>
                 <option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option>
                 </#list>
@@ -65,8 +65,8 @@ under the License.
                       </div>
                       <div>
                         <input type="hidden" name="enteredKeyword" value="${keyword.enteredKeyword}" />
-                        <span class="label">${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10" />
-                        <span class="label">${uiLabelMap.ProductRelationship}</span><select name="relationshipEnumId"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option></#list></select>
+                        <span >${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10" />
+                        <span >${uiLabelMap.ProductRelationship}</span><select name="relationshipEnumId"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option></#list></select>
                         <input type="submit" value="${uiLabelMap.CommonAdd}" />
                       </div>
                     </form>

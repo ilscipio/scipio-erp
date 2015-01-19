@@ -56,7 +56,7 @@ under the License.
             <tr>
               <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && paymentMethodValueMap.creditCard?has_content>
                 <#assign creditCard = paymentMethodValueMap.creditCard/>
-                <td class="label">
+                <td >
                   ${uiLabelMap.AccountingCreditCard}
                 </td>
                 <td>
@@ -89,7 +89,7 @@ under the License.
                 <#-- </td> -->
               <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
                 <#assign giftCard = paymentMethodValueMap.giftCard>
-                <td class="label" valign="top">
+                <td  valign="top">
                   ${uiLabelMap.AccountingGiftCard}
                 </td>
                 <td>
@@ -111,7 +111,7 @@ under the License.
                 <#-- </td> -->
               <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
                 <#assign eftAccount = paymentMethodValueMap.eftAccount>
-                <td class="label" valign="top">
+                <td  valign="top">
                     ${uiLabelMap.PartyEftAccount}
                 </td>
                 <td>
@@ -126,7 +126,7 @@ under the License.
                   </#if>
                 <#-- </td> -->
               <#elseif "COMPANY_CHECK" == paymentMethod.paymentMethodTypeId>
-                <td class="label" valign="top">
+                <td  valign="top">
                   <#-- TODO: Convert hard-coded text to UI label properties -->
                   Company Check
                 </td>
@@ -156,7 +156,7 @@ under the License.
         <#if billingAccounts?has_content>
             <#list billingAccounts as billing>
             <tr>
-              <td class="label" valign="top">${uiLabelMap.AccountingBilling}</td>
+              <td  valign="top">${uiLabelMap.AccountingBilling}</td>
               <td>
                   <#if billing.billingAccountId?has_content>${billing.billingAccountId}</#if>
                   <#if billing.description?has_content>(${billing.description})</#if>

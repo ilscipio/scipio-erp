@@ -82,8 +82,8 @@ function getPaymentRunningTotal() {
                 <input type="hidden" name='thruDate' value="${thruDate!}" />
                 <input type="hidden" name='paymentGroupTypeId' value="BATCH_PAYMENT" />
                 <div>
-                    <span class="label">${uiLabelMap.AccountingRunningTotal} :</span>
-                    <span class="label" id="showPaymentRunningTotal"></span>
+                    <span >${uiLabelMap.AccountingRunningTotal} :</span>
+                    <span  id="showPaymentRunningTotal"></span>
                 </div>
                 <table class="basic-table">
                   <thead>
@@ -111,15 +111,15 @@ function getPaymentRunningTotal() {
                         <#assign alt_row = !alt_row>
                     </#list>
                     <div align="right">
-                        <span class="label">${uiLabelMap.AccountingPayment} ${uiLabelMap.PartyPartyGroupName}</span>
+                        <span >${uiLabelMap.AccountingPayment} ${uiLabelMap.PartyPartyGroupName}</span>
                         <input type="text" size='25' id="paymentGroupName" name='paymentGroupName' />
-                        <span class="label">${uiLabelMap.AccountingGroupInOneTransaction}</span>
+                        <span >${uiLabelMap.AccountingGroupInOneTransaction}</span>
                         <input type="checkbox" name="groupInOneTransaction" value="Y" checked="checked" />
                         <input id="submitButton" type="button"  onclick="javascript:document.depositWithdrawPaymentsForm.submit();" value="${uiLabelMap.AccountingDepositWithdraw}" disabled="disabled"/>
                     </div>
                 </table>
             <#else>
-                <span class="label">${uiLabelMap.CommonNoRecordFound}</span>
+                <span >${uiLabelMap.CommonNoRecordFound}</span>
             </#if>
         </form>
     </div>

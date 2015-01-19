@@ -125,8 +125,8 @@ function runAction() {
 
 <#if invoices?has_content >
   <div>
-    <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} :</span>
-    <span class="label" id="showInvoiceRunningTotal"></span>
+    <span >${uiLabelMap.AccountingRunningTotalOutstanding} :</span>
+    <span  id="showInvoiceRunningTotal"></span>
   </div>
   <form name="listPurchaseInvoices" id="listPurchaseInvoices"  method="post" action="javascript:void(0);">
     <div align="right">
@@ -153,7 +153,7 @@ function runAction() {
     <input type="hidden" name="fromDueDate" value="${parameters.fromDueDate!}"/>
     <input type="hidden" name="thruDueDate" value="${parameters.thruDueDate!}"/>
     <div id="issueChecks" style="display: none;" align="right">
-      <span class="label">${uiLabelMap.AccountingVendorPaymentMethod}</span>
+      <span >${uiLabelMap.AccountingVendorPaymentMethod}</span>
       <select name="paymentMethodId">
         <#if paymentMethods?has_content>
           <#list paymentMethods as paymentMethod>
@@ -168,7 +168,7 @@ function runAction() {
           </#list>
         </#if>
       </select>
-      <span class="label">${uiLabelMap.AccountingCheckNumber}</span>
+      <span >${uiLabelMap.AccountingCheckNumber}</span>
       <input type="text" name="checkStartNumber"/>
     </div>
     <table class="basic-table hover-bar" cellspacing="0">

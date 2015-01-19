@@ -69,7 +69,7 @@ under the License.
             <input type="hidden" name="productStoreId" value="${productStoreId}" />
             <table cellspacing="0" class="basic-table">
               <tr>
-                <td class="label">${uiLabelMap.CommonType}</td>
+                <td >${uiLabelMap.CommonType}</td>
                 <td>
                   <select name="surveyApplTypeId">
                     <#list surveyApplTypes as type>
@@ -79,13 +79,13 @@ under the License.
                 </td>
               </tr>
               <tr>
-                <td class="label">${uiLabelMap.CommonGroup} ${uiLabelMap.CommonName}</td>
+                <td >${uiLabelMap.CommonGroup} ${uiLabelMap.CommonName}</td>
                 <td>
                   <input type="text" size="20" name="groupName" />
                 </td>
               </tr>
               <tr>
-                <td class="label">${uiLabelMap.CommonSurveys}</td>
+                <td >${uiLabelMap.CommonSurveys}</td>
                 <td>
                   <select name="surveyId">
                     <#list surveys as survey>
@@ -95,43 +95,43 @@ under the License.
                 </td>
               </tr>
               <tr>
-                <td class="label">${uiLabelMap.ProductProductId}</td>
+                <td >${uiLabelMap.ProductProductId}</td>
                 <td>
                   <input type="text" size="20" name="productId" />
                 </td>
               </tr>
               <tr>
-                <td class="label">${uiLabelMap.ProductCategoryId}</td>
+                <td >${uiLabelMap.ProductCategoryId}</td>
                 <td>
                   <@htmlTemplate.lookupField formName="addSurvey" name="productCategoryId" id="productCategoryId" fieldFormName="LookupProductCategory"/>
                 </td>
               </tr>
               <tr>
-                <td class="label">${uiLabelMap.CommonFromDate}</td>
+                <td >${uiLabelMap.CommonFromDate}</td>
                 <td>
                   <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 </td>
               </tr>
               <tr>
-                <td class="label">${uiLabelMap.CommonThruDate}</td>
+                <td >${uiLabelMap.CommonThruDate}</td>
                 <td>
                   <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 </td>
               </tr>
               <tr>
-                <td class="label">${uiLabelMap.ProductStoreSurveyTemplatePath}</td>
+                <td >${uiLabelMap.ProductStoreSurveyTemplatePath}</td>
                 <td>
                   <input type="text" size="30" name="surveyTemplate" />
                 </td>
               </tr>
               <tr>
-                <td class="label">${uiLabelMap.ProductStoreSurveyResultTemplatePath}</td>
+                <td >${uiLabelMap.ProductStoreSurveyResultTemplatePath}</td>
                 <td>
                   <input type="text" size="30" name="resultTemplate" />
                 </td>
               </tr>
               <tr>
-                <td class="label">${uiLabelMap.CommonSequenceNum}</td>
+                <td >${uiLabelMap.CommonSequenceNum}</td>
                 <td>
                   <input type="text" size="5" name="sequenceNum" />
                 </td>

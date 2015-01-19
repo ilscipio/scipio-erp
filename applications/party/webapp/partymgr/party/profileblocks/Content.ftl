@@ -26,7 +26,7 @@ under the License.
     <div class="screenlet-body">
           ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentList")}
       <hr />
-      <div class="label">${uiLabelMap.PartyAttachContent}</div>
+      <div >${uiLabelMap.PartyAttachContent}</div>
       <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
@@ -41,7 +41,7 @@ under the License.
           </#list>
         </select>
         </div>
-        <div class="label">${uiLabelMap.PartyIsPublic}</div>
+        <div >${uiLabelMap.PartyIsPublic}</div>
         <select name="isPublic">
             <option value="N">${uiLabelMap.CommonNo}</option>
             <option value="Y">${uiLabelMap.CommonYes}</option>

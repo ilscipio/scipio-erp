@@ -50,9 +50,9 @@ under the License.
                 <td>${shipmentPackage.shipmentPackageSeqId}</td>
                 <td>${(shipmentPackage.dateCreated.toString())!}</td>
                 <td>
-                    <span class="label">${uiLabelMap.ProductWeight}</span>
+                    <span >${uiLabelMap.ProductWeight}</span>
                     <input type="text" size="5" name="weight" value="${shipmentPackage.weight!}"/>
-                    <span class="label">${uiLabelMap.ProductWeightUnit}</span>
+                    <span >${uiLabelMap.ProductWeightUnit}</span>
                     <select name="weightUomId">
                         <#if weightUom?has_content>
                             <option value="${weightUom.uomId}">${weightUom.get("description",locale)}</option>
@@ -66,14 +66,14 @@ under the License.
                     </select>
                 </td>
                 <td>
-                    <span class="label">${uiLabelMap.ProductShipmentBoxType}</span>
+                    <span >${uiLabelMap.ProductShipmentBoxType}</span>
                     <select name="shipmentBoxTypeId">
                         <option value="">&nbsp;</option>
                         <#list boxTypes as boxType>
                             <option value="${boxType.shipmentBoxTypeId}" <#if shipmentPackage.shipmentBoxTypeId?? && shipmentPackage.shipmentBoxTypeId == boxType.shipmentBoxTypeId>selected="selected"</#if>>${boxType.get("description",locale)}</option>
                         </#list>
                     </select>
-                    <span class="label">${uiLabelMap.ProductShipmentInsuredValuePackage}</span>
+                    <span >${uiLabelMap.ProductShipmentInsuredValuePackage}</span>
                     <input type="text" size="5" name="insuredValue" value="${shipmentPackage.insuredValue!}"/>
                 </td>
                 <td><a href="javascript:document.updateShipmentPackageForm${shipmentPackageData_index}.submit();" class="button tiny">${uiLabelMap.CommonUpdate}</a></td>
@@ -87,10 +87,10 @@ under the License.
         <#list shipmentPackageContents as shipmentPackageContent>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                 <td>&nbsp;</td>
-                <td><span class="label">${uiLabelMap.ProductItem}</span> ${shipmentPackageContent.shipmentItemSeqId}</td>
+                <td><span >${uiLabelMap.ProductItem}</span> ${shipmentPackageContent.shipmentItemSeqId}</td>
                 <td colspan="2">
                     <div>
-                        <span class="label">${uiLabelMap.ProductQuantity}</span>
+                        <span >${uiLabelMap.ProductQuantity}</span>
                         ${shipmentPackageContent.quantity!}
                         <a href="javascript:document.deleteShipmentPackageContent${shipmentPackageData_index}${shipmentPackageContent_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
                     </div>
@@ -111,7 +111,7 @@ under the License.
                 <td>&nbsp;</td>
                 <td>
                     <div>
-                        <span class="label">${uiLabelMap.ProductAddFromItem}</span>
+                        <span >${uiLabelMap.ProductAddFromItem}</span>
                         <select name="shipmentItemSeqId">
                             <#list shipmentItems as shipmentItem>
                                 <option>${shipmentItem.shipmentItemSeqId}</option>
@@ -121,7 +121,7 @@ under the License.
                 </td>
                 <td colspan="2">
                     <div>
-                        <span class="label">${uiLabelMap.ProductQuantity}</span>
+                        <span >${uiLabelMap.ProductQuantity}</span>
                         <input type="text" name="quantity" size="5" value="0"/>
                         <a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="button tiny">${uiLabelMap.CommonAdd}</a>
                     </div>
@@ -137,11 +137,11 @@ under the License.
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                 <td>&nbsp;</td>
-                <td><span class="label">${uiLabelMap.ProductRouteSegment}</span> ${shipmentPackageRouteSeg.shipmentRouteSegmentId}</td>
-                <td><span class="label">${uiLabelMap.ProductTrack}</span> <input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/></td>
+                <td><span >${uiLabelMap.ProductRouteSegment}</span> ${shipmentPackageRouteSeg.shipmentRouteSegmentId}</td>
+                <td><span >${uiLabelMap.ProductTrack}</span> <input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/></td>
                 <td colspan="2">
                     <div>
-                        <span class="label">${uiLabelMap.ProductBox}</span>
+                        <span >${uiLabelMap.ProductBox}</span>
                         <input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber!}"/>
                         <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="button tiny">${uiLabelMap.CommonUpdate}</a>
                         <a href="javascript:document.deleteShipmentPackageRouteSeg${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
@@ -163,7 +163,7 @@ under the License.
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
                 <td>&nbsp;</td>
                 <td>
-                    <div><span class="label">${uiLabelMap.ProductAddRouteSegmentInfo}</span>
+                    <div><span >${uiLabelMap.ProductAddRouteSegmentInfo}</span>
                     <select name="shipmentRouteSegmentId">
                         <#list shipmentRouteSegments as shipmentRouteSegment>
                             <option>${shipmentRouteSegment.shipmentRouteSegmentId}</option>
@@ -171,8 +171,8 @@ under the License.
                     </select>
                     </div>
                 </td>
-                <td><span class="label">Track ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode"/></td>
-                <td><span class="label">Box ${uiLabelMap.CommonNbr}</span><input type="text" size="5" name="boxNumber"/></td>
+                <td><span >Track ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode"/></td>
+                <td><span >Box ${uiLabelMap.CommonNbr}</span><input type="text" size="5" name="boxNumber"/></td>
                 <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentPackageData_index}.submit()" class="button tiny">${uiLabelMap.CommonAdd}</a></td>
                 <td>&nbsp;</td>
                 </form>
@@ -185,10 +185,10 @@ under the License.
         <form action="<@ofbizUrl>createShipmentPackage</@ofbizUrl>" name="createShipmentPackageForm">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <tr>
-                <td><span class="label">${uiLabelMap.ProductNewPackage}</span></td>
+                <td><span >${uiLabelMap.ProductNewPackage}</span></td>
                 <td>&nbsp;</td>
-                <td><span class="label">${uiLabelMap.ProductWeight}</span> <input type="text" size="5" name="weight"/></td>
-                <td><span class="label">${uiLabelMap.ProductWeightUnit}</span>
+                <td><span >${uiLabelMap.ProductWeight}</span> <input type="text" size="5" name="weight"/></td>
+                <td><span >${uiLabelMap.ProductWeightUnit}</span>
                     <select name="weightUomId">
                         <#list weightUoms as weightUomOption>
                             <option value="${weightUomOption.uomId}">${weightUomOption.get("description",locale)} [${weightUomOption.abbreviation}]</option>

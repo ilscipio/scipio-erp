@@ -66,13 +66,13 @@ under the License.
   </table>
   <div class="screenlet">
     <ul>
-      <li class="label"></li>
-      <li class="label"><h3>${uiLabelMap.CommonSummary} :</h3></li>
-      <li class="label"></li>
-      <li class="label">${uiLabelMap.ManufacturingTotalQuantity} : ${totalQuantity!}</li>
-      <li class="label">${uiLabelMap.AccountingTotalCommissionAmount} : <@ofbizCurrency amount = totalCommissionAmount!/></li>
-      <li class="label">${uiLabelMap.AccountingTotalNetSales} : <@ofbizCurrency amount = totalNetSales!/></li>
-      <li class="label">${uiLabelMap.AccountingTotalNumberOfOrders} : ${totalNumberOfOrders!}</li>
+      <li ></li>
+      <li ><h3>${uiLabelMap.CommonSummary} :</h3></li>
+      <li ></li>
+      <li >${uiLabelMap.ManufacturingTotalQuantity} : ${totalQuantity!}</li>
+      <li >${uiLabelMap.AccountingTotalCommissionAmount} : <@ofbizCurrency amount = totalCommissionAmount!/></li>
+      <li >${uiLabelMap.AccountingTotalNetSales} : <@ofbizCurrency amount = totalNetSales!/></li>
+      <li >${uiLabelMap.AccountingTotalNumberOfOrders} : ${totalNumberOfOrders!}</li>
     </ul>
   </div>
 <#else>

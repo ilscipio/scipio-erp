@@ -29,15 +29,15 @@ under the License.
     <form name="addaddrmap" method="post" action="<@ofbizUrl>createAddressMatchMap</@ofbizUrl>">
     <table class="basic-table" cellspacing="0">
         <tr>
-          <td class="label">${uiLabelMap.PartyAddressMatchKey}</td>
+          <td >${uiLabelMap.PartyAddressMatchKey}</td>
           <td><input type="text" name="mapKey"/></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyAddressMatchValue}</td>
+          <td >${uiLabelMap.PartyAddressMatchValue}</td>
           <td><input type="text" name="mapValue"/></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.CommonSequence}</td>
+          <td >${uiLabelMap.CommonSequence}</td>
           <td><input type="text" size="5" name="sequenceNum" value="0"/></td>
         </tr>
         <tr>

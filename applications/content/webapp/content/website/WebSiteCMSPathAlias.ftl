@@ -68,22 +68,22 @@
         <table>
             <tr><td colspan="2">&nbsp;</td></tr>
             <tr>
-                <td class="label">Web Site</td>
+                <td >Web Site</td>
                 <td>${webSite.siteName?default(webSite.webSiteId)}</td>
                 <input type="hidden" name="webSiteId" value="${webSiteId}"/>
             </tr>
             <tr>
-                <td class="label">Content</td>
+                <td >Content</td>
                 <td>${content.contentName?default(content.contentId)}</td>
                 <input type="hidden" name="contentId" value="${contentId}"/>
             </tr>
             <tr><td colspan="2">&nbsp;</td></tr>
             <tr>
-                <td class="label">Path Alias</td>
+                <td >Path Alias</td>
                 <td><input type="text" name="pathAlias" value="" /></td>
             </tr>
             <tr>
-                <td class="label">Map Key</td>
+                <td >Map Key</td>
                 <td><input type="text" name="mapKey" value="" /></td>
             </tr>
             <tr>

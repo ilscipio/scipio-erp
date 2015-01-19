@@ -60,7 +60,7 @@ function lookupInventory() {
               <td align='center' width='100%'>
                  <table class="basic-table" cellspacing="0">
                   <tr>
-                    <td width='20%' align='right' class="label">${uiLabelMap.ManufacturingProductId}</td>
+                    <td width='20%' align='right' >${uiLabelMap.ManufacturingProductId}</td>
                     <td width='5%'>&nbsp;</td>
                     <td>
                       <span>
@@ -69,7 +69,7 @@ function lookupInventory() {
                      </td>
                   </tr>
                   <tr>
-                    <td width='20%' align='right' class="label">${uiLabelMap.CommonFromDate}</td>
+                    <td width='20%' align='right' >${uiLabelMap.CommonFromDate}</td>
                     <td width='5%'>&nbsp;</td>
                     <td>
                       <@htmlTemplate.renderDateTimeField name="eventDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>

@@ -128,7 +128,7 @@ function clickAll(e) {
             <td>
                 <br />
                 <input type="hidden" name="productId" value="${productId}"/>
-                <span class="label">${uiLabelMap.ProductVariantProductIds}:</span>
+                <span >${uiLabelMap.ProductVariantProductIds}:</span>
                 <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
                 <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductVariantAdd}"/>
             </td>

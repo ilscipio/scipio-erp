@@ -53,7 +53,7 @@ under the License.
 
         <#-- now do the null product, then iterate through the products, then categories -->
         <tr>
-            <td class="label">${(productNullResult_index + 1)}</td>
+            <td >${(productNullResult_index + 1)}</td>
             <td><@resultSummary resultMap=productNullResult/></td>
         <#list productList as product>
             <#assign productResult = productResultMap[product.productId]!/>
@@ -68,7 +68,7 @@ under the License.
 
     <#-- Totals for the month -->
     <tr>
-        <td class="label">Month Total</td>
+        <td >Month Total</td>
         <td><@resultSummary resultMap=monthProductNullResult/></td>
     <#list productList as product>
         <#assign productResult = monthProductResultMap[product.productId]!/>

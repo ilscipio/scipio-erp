@@ -20,7 +20,7 @@ under the License.
 <form action="<@ofbizUrl>copyQuote</@ofbizUrl>" method="post">
     <input type="hidden" name="quoteId" value="${quoteId}"/>
     <div>
-        <span class="label">${uiLabelMap.OrderCopyQuote}</span>
+        <span >${uiLabelMap.OrderCopyQuote}</span>
         ${uiLabelMap.OrderOrderQuoteItems}&nbsp;<input type="checkbox" name="copyQuoteItems" value="Y" checked="checked" />
         ${uiLabelMap.OrderOrderQuoteAdjustments}&nbsp;<input type="checkbox" name="copyQuoteAdjustments" value="Y" checked="checked" />
         ${uiLabelMap.OrderOrderQuoteRoles}&nbsp;<input type="checkbox" name="copyQuoteRoles" value="Y" checked="checked" />

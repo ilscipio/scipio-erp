@@ -310,16 +310,16 @@ under the License.
             <td>&nbsp;</td>
             <td valign="top">
                 <div>
-                    <span class="label">${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}
+                    <span >${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}
                     <#if shipmentPackageRouteSeg.labelImage??>
                         <a href="javascript:document.viewShipmentPackageRouteSegLabelImage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="button tiny">${uiLabelMap.ProductViewLabelImage}</a>
                     </#if>
-                    <span class="label">${uiLabelMap.ProductTrack} ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/>
+                    <span >${uiLabelMap.ProductTrack} ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/>
                 </div>
             </td>
             <td valign="top">
                <div>
-                   <span class="label">${uiLabelMap.ProductBox} ${uiLabelMap.CommonNbr}</span>
+                   <span >${uiLabelMap.ProductBox} ${uiLabelMap.CommonNbr}</span>
                    <input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber!}"/>
                </div>
             </td>
@@ -357,8 +357,8 @@ under the License.
                 </select>
                 </div>
             </td>
-            <td><span class="label">Track#:</span><input type="text" size="22" name="trackingCode"/></td>
-            <td><span class="label">Box#:</span><input type="text" size="5" name="boxNumber"/></td>
+            <td><span >Track#:</span><input type="text" size="22" name="trackingCode"/></td>
+            <td><span >Box#:</span><input type="text" size="5" name="boxNumber"/></td>
             <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}.submit()" class="button tiny">${uiLabelMap.CommonAdd}</a></td>
             <td>&nbsp;</td>
             </form>
@@ -384,7 +384,7 @@ under the License.
             <tr>
                 <td valign="top">
                     <div>
-                        <span class="label">${uiLabelMap.ProductNewSegment}</span>
+                        <span >${uiLabelMap.ProductNewSegment}</span>
                         <br />
                         <a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="button tiny">${uiLabelMap.CommonCreate}</a>
                     </div>

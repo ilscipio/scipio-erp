@@ -88,7 +88,7 @@ function doPublish() {
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <table cellspacing="0" class="basic-table">
                 <tr>
-                    <td colspan="2"><span class="label">${uiLabelMap.CommonType}</span>
+                    <td colspan="2"><span >${uiLabelMap.CommonType}</span>
                         <select name="productFeatureTypeId" onchange="javascript:document.selectableFeatureTypeSelector.submit();">
                             <option value="~~any~~">${uiLabelMap.ProductAnyFeatureType}</option>
                             <#list featureTypes as featureType>

@@ -24,7 +24,7 @@ under the License.
     <#list searchConstraintStrings as searchConstraintString>
         <div>&nbsp;<a href="<@ofbizUrl>WorkEffortSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="button tiny">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
-    <div><span class="label">${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
+    <div><span >${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
     <div><a href="<@ofbizUrl>WorkEffortSearchOptions</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !workEffortIds?has_content>
@@ -34,7 +34,7 @@ under the License.
     <#if workEffortIds?has_content>
     <table class="basic-table" cellspacing="0">
         <tr>
-          <td align="right" class="label">
+          <td align="right" >
             <#if 0 < viewIndex?int>
               <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a>
             </#if>
@@ -69,7 +69,7 @@ under the License.
     <#if workEffortIds?has_content>
     <table class="basic-table" cellspacing="0">
         <tr>
-          <td align="right" class="label">
+          <td align="right" >
             <#if 0 < viewIndex?int>
               <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a> |
             </#if>

@@ -116,7 +116,7 @@ under the License.
                 <#list quoteItemAdjustments as quoteItemAdjustment>
                     <#assign adjustmentType = quoteItemAdjustment.getRelatedOne("OrderAdjustmentType", false)>
                     <tr class="alternate-row">
-                        <td align="right" colspan="4"><span class="label">${adjustmentType.get("description",locale)!}</span></td>
+                        <td align="right" colspan="4"><span >${adjustmentType.get("description",locale)!}</span></td>
                         <td align="right"><@ofbizCurrency amount=quoteItemAdjustment.amount isoCode=quote.currencyUomId/></td>
                         <td>&nbsp;</td>
                     </tr>
@@ -126,7 +126,7 @@ under the License.
             </#list>
             <tr><td colspan="10"><hr /></td></tr>
             <tr>
-                <td align="right" colspan="7" class="label">${uiLabelMap.CommonSubtotal}</td>
+                <td align="right" colspan="7" >${uiLabelMap.CommonSubtotal}</td>
                 <td align="right"><@ofbizCurrency amount=totalQuoteAmount isoCode=quote.currencyUomId/></td>
             </tr>
             <tr><td colspan="5"></td><td colspan="6"><hr /></td></tr>
@@ -137,7 +137,7 @@ under the License.
                 <#if !quoteAdjustment.quoteItemSeqId??>
                     <#assign totalQuoteHeaderAdjustmentAmount = quoteAdjustment.amount?default(0) + totalQuoteHeaderAdjustmentAmount>
                     <tr>
-                      <td align="right" colspan="6"><span class="label">${adjustmentType.get("description",locale)!}</span></td>
+                      <td align="right" colspan="6"><span >${adjustmentType.get("description",locale)!}</span></td>
                       <td align="right"><@ofbizCurrency amount=quoteAdjustment.amount isoCode=quote.currencyUomId/></td>
                     </tr>
                 </#if>
@@ -148,7 +148,7 @@ under the License.
             <tr><td colspan="5"></td><td colspan="6"><hr /></td></tr>
             </#if>
             <tr>
-                <td align="right" colspan="7" class="label">${uiLabelMap.OrderGrandTotal}</td>
+                <td align="right" colspan="7" >${uiLabelMap.OrderGrandTotal}</td>
                 <td align="right">
                     <@ofbizCurrency amount=grandTotalQuoteAmount isoCode=quote.currencyUomId/>
                 </td>

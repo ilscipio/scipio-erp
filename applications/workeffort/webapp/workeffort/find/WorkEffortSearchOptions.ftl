@@ -25,7 +25,7 @@ under the License.
       <input type="hidden" name="VIEW_SIZE" value="25"/>
       <table class="basic-table" cellspacing="0">
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.WorkEffortKeywords}</td>
+          <td align="right" valign="middle" >${uiLabelMap.WorkEffortKeywords}</td>
           <td valign="middle">
             <div>
               <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
@@ -35,7 +35,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.WorkEffortReviews}</td>
+          <td align="right" valign="middle" >${uiLabelMap.WorkEffortReviews}</td>
           <td valign="middle">
             <div>
               <input type="text" name="SEARCH_STRING_REVIEW_TEXT" size="40" value="${requestParameters.SEARCH_STRING_REVIEW_TEXT!}"/>&nbsp;
@@ -43,7 +43,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.FormFieldTitle_workEffortId}</td>
+          <td align="right" valign="middle" >${uiLabelMap.FormFieldTitle_workEffortId}</td>
           <td valign="middle">
             <div>
               <@htmlTemplate.lookupField value="${requestParameters.SEARCH_WORK_EFFORT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_WORK_EFFORT_ID" id="SEARCH_WORK_EFFORT_ID" fieldFormName="LookupWorkEffort"/>
@@ -51,7 +51,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" nowrap="nowrap" class="label">${uiLabelMap.FormFieldTitle_workEffortAssocTypeId}</td>
+          <td align="right" valign="middle" nowrap="nowrap" >${uiLabelMap.FormFieldTitle_workEffortAssocTypeId}</td>
           <td valign="middle" nowrap="nowrap">
             <div>
               <select name="workEffortAssocTypeId">
@@ -67,7 +67,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.PartyPartyId}</td>
+          <td align="right" valign="middle" >${uiLabelMap.PartyPartyId}</td>
           <td valign="middle">
             <div>
               <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
@@ -75,7 +75,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.PartyRoleTypeId}</td>
+          <td align="right" valign="middle" >${uiLabelMap.PartyRoleTypeId}</td>
           <td valign="middle">
             <div>
               <select name="partyRoleTypeId">
@@ -88,7 +88,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.WorkEffortProductId1}</td>
+          <td align="right" valign="middle" >${uiLabelMap.WorkEffortProductId1}</td>
           <td valign="middle">
             <div>
               <@htmlTemplate.lookupField value="${requestParameters.productId_1!}" formName="advToKeyWordSearchForm" name="productId_1" id="productId_1" fieldFormName="LookupProduct"/>
@@ -96,7 +96,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.WorkEffortProductId2}</td>
+          <td align="right" valign="middle" >${uiLabelMap.WorkEffortProductId2}</td>
           <td valign="middle">
             <div>
               <@htmlTemplate.lookupField value="${requestParameters.productId_2!}" formName="advToKeyWordSearchForm" name="productId_2" id="productId_2" fieldFormName="LookupProduct"/>
@@ -123,7 +123,7 @@ under the License.
           </td>
           </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.CommonSortedBy}</td>
+          <td align="right" valign="middle" >${uiLabelMap.CommonSortedBy}</td>
           <td valign="middle">
             <div>
               <select name="sortOrder">
@@ -137,12 +137,12 @@ under the License.
         </tr>
         <#if searchConstraintStrings?has_content>
           <tr>
-            <td align="right" valign="top" class="label">${uiLabelMap.ProductLastSearch}</td>
+            <td align="right" valign="top" >${uiLabelMap.ProductLastSearch}</td>
             <td valign="top">
                 <#list searchConstraintStrings as searchConstraintString>
                     <div>&nbsp;-&nbsp;${searchConstraintString}</div>
                 </#list>
-                <div class="label">${uiLabelMap.CommonSortedBy} ${searchSortOrderString}</div>
+                <div >${uiLabelMap.CommonSortedBy} ${searchSortOrderString}</div>
                 <div>
                   ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked="checked"/>
                   ${uiLabelMap.CommonRefineSearch}<input type="radio" name="clearSearch" value="N"/>

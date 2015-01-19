@@ -117,8 +117,8 @@ under the License.
 </#if>
 <#if invoiceList?has_content && (parameters.noConditionFind)! == 'Y'>
   <div>
-    <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} :</span>
-    <span class="label" id="showInvoiceRunningTotal"></span>
+    <span >${uiLabelMap.AccountingRunningTotalOutstanding} :</span>
+    <span  id="showInvoiceRunningTotal"></span>
   </div>
   <form name="listInvoices" id="listInvoices"  method="post" action="">
     <div align="right">

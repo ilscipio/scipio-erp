@@ -49,7 +49,7 @@ under the License.
             <table border="0" width="100%" cellpadding="2">
                 <tr>
                 <td align="right">
-                    <span class="label">
+                    <span >
                     <b>
                     <#if (viewIndex > 0)>
                     <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="button tiny">[${uiLabelMap.CommonPrevious}]</a> |

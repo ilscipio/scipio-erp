@@ -22,7 +22,7 @@ under the License.
   <input type="hidden" name="facilityId" value="${facilityId!}" />
   <table class="basic-table" cellspacing='0'>
   <tr>
-    <td class="label">${uiLabelMap.ProductFacilityId}</td>
+    <td >${uiLabelMap.ProductFacilityId}</td>
     <td>
       ${facilityId!} <span class="tooltip">${uiLabelMap.ProductNotModificationRecrationFacility}</span>
     </td>
@@ -35,7 +35,7 @@ under the License.
   <table class="basic-table" cellspacing='0'>
 </#if>
   <tr>
-    <td class="label">${uiLabelMap.ProductFacilityTypeId}</td>
+    <td >${uiLabelMap.ProductFacilityTypeId}</td>
     <td>
       <select name="facilityTypeId">
         <option selected="selected" value='${facilityType.facilityTypeId!}'>${facilityType.get("description",locale)!}</option>
@@ -47,20 +47,20 @@ under the License.
     </td>
   </tr>
   <tr>
-    <td class="label">${uiLabelMap.FormFieldTitle_parentFacilityId}</td>
+    <td >${uiLabelMap.FormFieldTitle_parentFacilityId}</td>
     <td>
       <@htmlTemplate.lookupField value="${facility.parentFacilityId!}" formName="EditFacilityForm" name="parentFacilityId" id="parentFacilityId" fieldFormName="LookupFacility"/>
     </td>
   </tr>
   <tr>
-    <td class="label">${uiLabelMap.ProductFacilityOwner}</td>
+    <td >${uiLabelMap.ProductFacilityOwner}</td>
     <td>
       <@htmlTemplate.lookupField value="${facility.ownerPartyId!}" formName="EditFacilityForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
       <span class="tooltip">${uiLabelMap.CommonRequired}</span>
     </td>
   </tr>
   <tr>
-    <td class="label">${uiLabelMap.ProductFacilityDefaultWeightUnit}</td>
+    <td >${uiLabelMap.ProductFacilityDefaultWeightUnit}</td>
     <td>
       <select name="defaultWeightUomId">
           <option value=''>${uiLabelMap.CommonNone}</option>
@@ -75,7 +75,7 @@ under the License.
     </td>
   </tr>
   <tr>
-    <td class="label">${uiLabelMap.ProductFacilityDefaultInventoryItemType}</td>
+    <td >${uiLabelMap.ProductFacilityDefaultInventoryItemType}</td>
     <td>
       <select name="defaultInventoryItemTypeId">
           <#list inventoryItemTypes as nextInventoryItemType>
@@ -89,18 +89,18 @@ under the License.
     </td>
   </tr>
   <tr>
-    <td class="label">${uiLabelMap.ProductName}</td>
+    <td >${uiLabelMap.ProductName}</td>
     <td>
       <input type="text" name="facilityName" value="${facility.facilityName!}" size="30" maxlength="60" />
       <span class="tooltip">${uiLabelMap.CommonRequired}</span>
     </td>
   </tr>
   <tr>
-    <td class="label">${uiLabelMap.ProductFacilitySize}</td>
+    <td >${uiLabelMap.ProductFacilitySize}</td>
     <td><input type="text" name="facilitySize" value="${facility.facilitySize!}" size="10" maxlength="20" /></td>
   </tr>
   <tr>
-   <td class="label">${uiLabelMap.ProductFacilityDefaultAreaUnit}</td>
+   <td >${uiLabelMap.ProductFacilityDefaultAreaUnit}</td>
     <td>
       <select name="facilitySizeUomId">
           <option value=''>${uiLabelMap.CommonNone}</option>
@@ -115,11 +115,11 @@ under the License.
     </td>
   </tr>  
   <tr>
-    <td class="label">${uiLabelMap.ProductProductDescription}</td>
+    <td >${uiLabelMap.ProductProductDescription}</td>
     <td ><input type="text" name="description" value="${facility.description!}" size="60" maxlength="250" /></td>
   </tr>
   <tr>
-    <td class="label">${uiLabelMap.ProductDefaultDaysToShip}</td>
+    <td >${uiLabelMap.ProductDefaultDaysToShip}</td>
     <td><input type="text" name="defaultDaysToShip" value="${facility.defaultDaysToShip!}" size="10" maxlength="20" /></td>
   </tr>
   <tr>

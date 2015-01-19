@@ -68,22 +68,22 @@ under the License.
                     <span>${(carrierPerson.firstName)!} ${(carrierPerson.middleName)!} ${(carrierPerson.lastName)!} ${(carrierPartyGroup.groupName)!} [${shipmentRouteSegment.carrierPartyId!}]</span>
                     <span>${shipmentMethodType.description?default(shipmentRouteSegment.shipmentMethodTypeId!)}</span>
                     <br />
-                    <span class="label">${uiLabelMap.ProductOrigin}</span>
+                    <span >${uiLabelMap.ProductOrigin}</span>
                     <span>${(originFacility.facilityName)!} [${originFacility.facilityId!}]</span>
                     <br />
-                    <span class="label">${uiLabelMap.ProductDest}</span>
+                    <span >${uiLabelMap.ProductDest}</span>
                     <span>${(destFacility.facilityName)!} [${destFacility.facilityId!}]</span>
                     <br />
-                    <span class="label">${uiLabelMap.ProductOrigin}</span>
+                    <span >${uiLabelMap.ProductOrigin}</span>
                     <span><#if originPostalAddress?has_content>${uiLabelMap.CommonTo} : ${originPostalAddress.toName!}, ${uiLabelMap.CommonAttn} : ${originPostalAddress.attnName!}, ${originPostalAddress.address1!}, ${originPostalAddress.address2!}, ${originPostalAddress.city!}, ${originPostalAddress.stateProvinceGeoId!}, ${originPostalAddress.postalCode!}, ${originPostalAddress.countryGeoId!}</#if> [${shipmentRouteSegment.originContactMechId!}]</span>
                     <br />
-                    <span class="label">${uiLabelMap.ProductDest}</span>
+                    <span >${uiLabelMap.ProductDest}</span>
                     <span><#if destPostalAddress?has_content>${uiLabelMap.CommonTo} : ${destPostalAddress.toName!}, ${uiLabelMap.CommonAttn} : ${destPostalAddress.attnName!}, ${destPostalAddress.address1!}, ${destPostalAddress.address2!}, ${destPostalAddress.city!}, ${destPostalAddress.stateProvinceGeoId!}, ${destPostalAddress.postalCode!}, ${destPostalAddress.countryGeoId!}</#if> [${shipmentRouteSegment.destContactMechId!}]</span>
                     <br />
-                    <span class="label">${uiLabelMap.ProductOrigin}</span>
+                    <span >${uiLabelMap.ProductOrigin}</span>
                     <span><#if originTelecomNumber?has_content>${originTelecomNumber.countryCode!}  ${originTelecomNumber.areaCode!} ${originTelecomNumber.contactNumber!}</#if> [${shipmentRouteSegment.originTelecomNumberId!}]</span>
                     <br />
-                    <span class="label">${uiLabelMap.ProductDest}</span>
+                    <span >${uiLabelMap.ProductDest}</span>
                     <span><#if destTelecomNumber?has_content>${destTelecomNumber.countryCode!}  ${destTelecomNumber.areaCode!} ${destTelecomNumber.contactNumber!}</#if> [${shipmentRouteSegment.destTelecomNumberId!}]</span>
                     <br />
                 </td>
@@ -105,9 +105,9 @@ under the License.
             <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                 <td>&nbsp;</td>
-                <td><span class="label">${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}</td>
-                <td><span class="label">${uiLabelMap.ProductTracking}</span> ${shipmentPackageRouteSeg.trackingCode!}</td>
-                <td><span class="label">${uiLabelMap.ProductBox}</span> ${shipmentPackageRouteSeg.boxNumber!}</td>
+                <td><span >${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}</td>
+                <td><span >${uiLabelMap.ProductTracking}</span> ${shipmentPackageRouteSeg.trackingCode!}</td>
+                <td><span >${uiLabelMap.ProductBox}</span> ${shipmentPackageRouteSeg.boxNumber!}</td>
             </tr>
             </#list>
             <#-- toggle the row color -->

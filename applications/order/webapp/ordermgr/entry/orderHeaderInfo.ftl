@@ -31,6 +31,7 @@ under the License.
 </#if>
 
 <@section title="${uiLabelMap.OrderOrderHeaderInfo}">
+        <table class="basic-table">
               <form method="post" action="setOrderName" name="setCartOrderNameForm">
                 <fieldset>
                   <label for="orderName"><strong>${uiLabelMap.OrderOrderName}</strong>:</label>
@@ -38,8 +39,9 @@ under the License.
                   <input type="submit" value="${uiLabelMap.CommonSet}" />
                 </fieldset>
               </form>
-              <p>
-              <strong>${uiLabelMap.Party}</strong>:
+              <tr>
+                <td class="large-3">${uiLabelMap.Party}</td>
+                <td>
                   <a href="${customerDetailLink}${partyId}${externalKeyParam!}" target="partymgr" class="button tiny">${partyId}</a>
                   <#if partyMap.person??>
                     ${partyMap.person.firstName!}&nbsp;${partyMap.person.lastName!}
@@ -47,7 +49,7 @@ under the License.
                   <#if partyMap.partyGroup??>
                     ${partyMap.partyGroup.groupName!}
                   </#if>
-              </p>
+              </td>
             <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
                 <form method="post" action="setPoNumber" name="setCartPoNumberForm">
                   <fieldset>
@@ -57,21 +59,26 @@ under the License.
                   </fieldset>
                 </form>
             </#if>
-            <p>
-              <strong>${uiLabelMap.CommonCurrency}</strong>:
-              ${currencyUomId}
-            </p>
+            <tr>
+                <td class="large-3">${uiLabelMap.CommonCurrency}</td>
+                <td>
+                    ${currencyUomId}
+                </td>
+            </tr>
             <#if agreementId?has_content>
-            <p>
-              <strong>${uiLabelMap.AccountingAgreement}</strong>:
-              ${agreementId}
-            </p>
+            <tr>
+                <td class="large-3">${uiLabelMap.AccountingAgreement}</td>
+                <td>${agreementId}</td>
+            </tr>
             </#if>
             <#if quoteId?has_content>
-            <p>
-              <strong>${uiLabelMap.OrderOrderQuote}</strong>:
-              ${quoteId}
-            </p>
+            <tr>
+                <td class="large-3">${uiLabelMap.OrderOrderQuote}</td>
+                <td>${quoteId}</td>
+            </tr>
             </#if>
-            <p><strong>${uiLabelMap.CommonTotal}</strong>: <@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></p>
+            <tr>
+                <td class="large-3">${uiLabelMap.CommonTotal}</td>
+                <td><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></td>
+            </tr>
 </@section>

@@ -20,40 +20,35 @@ under the License.
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 
 <#-- Purchase Orders -->
-
+<@section>
 <#if facilityMaps??>
             <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="ship"/>
             <#if (cart.getShipGroupSize() > 1)>
             <input type="hidden" name="finalizeReqShipGroups" value="true"/>
             </#if>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class="boxboutside">
-        <tr>
-          <td>
-          <a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateShipGroup}</a>
+        
+        <ul class="button-group">
+          <li><a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateShipGroup}</a></li>
+      </ul>         
           
 
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
-
-            <table width="100%" border="0" cellpadding="1" cellspacing="0">
-                <tr>
-                  <td colspan="4">
-                    <h1>${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}</h1>
-                  </td>
-                </tr>
+    <@section title="${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}">
+            <@row>
+            <@cell class="large-6">
+            <table class="basic-table">
                 <#assign i = 0>
                 <#assign shipGroup = cart.getShipInfo(shipGroupIndex)>
                 <#list facilityMaps as facilityMap>
                 <#assign facility = facilityMap.facility>
                 <#assign facilityContactMechList = facilityMap.facilityContactMechList>
                 <tr>
-                  <td colspan="4">
+                  <td colspan="3">
                     <div>${uiLabelMap.FacilityFacility}: ${facility.facilityName!} [${facility.facilityId}]</div>
                   </td>
                 </tr>
-                <tr><td colspan="4"><hr /></td></tr>
-
                 <#-- company postal addresses -->
 
                 <#if facilityContactMechList?has_content>
@@ -61,7 +56,7 @@ under the License.
                   <#if shippingContactMech.postalAddress??>
                   <#assign shippingAddress = shippingContactMech.postalAddress>
                   <tr>
-                    <td valign="top" nowrap="nowrap">
+                    <td class="large-3">
                       <#assign checked='' />
                       <#if shipGroup?has_content && (shipGroup.getFacilityId()?has_content && shipGroup.getFacilityId() == facility.facilityId) && (shipGroup.getContactMechId()?has_content && shipGroup.getContactMechId() == shippingAddress.contactMechId) >
                           <#assign checked='checked' />
@@ -70,9 +65,7 @@ under the License.
                       </#if>
                       <input type="radio" name="${shipGroupIndex?default("0")}_shipping_contact_mech_id" value="${shippingAddress.contactMechId}_@_${facility.facilityId}" ${checked} />
                     </td>
-                    <td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                    <td valign="top" width="100%" nowrap="nowrap">
-                      <div>
+                    <td>
                         <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                         <#if shippingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
                         <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
@@ -81,7 +74,6 @@ under the License.
                         <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                         <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                      </div>
                     </td>
                     <td>
                       <div><a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></div>
@@ -95,59 +87,59 @@ under the License.
                 </#list>
                 <#else>
                   <tr>
-                    <td colspan="4">
-                      <div>
-                        ${uiLabelMap.CommonNoContactInformationOnFile}:
+                    <td>${uiLabelMap.CommonNoContactInformationOnFile}
+                    </td>
+                    <td></td>
+                    <td>
                         <a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS" target="_blank" class="button tiny">${uiLabelMap.CommonNew}</a>
-                      </div>
                     </td>
                 </#if>
                 </#list>
             </table>
+        </@cell>
+        </@row>
+    </@section>
 </#list>
-          </td>
-        </tr>
-      </table>
-            </form>
+</form>
 
 <#else>
 
 <#-- Sales Orders -->
 
-            <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
-            <input type="hidden" name="finalizeMode" value="ship"/>
-            <#if (cart.getShipGroupSize() > 1)>
-            <input type="hidden" name="finalizeReqShipGroups" value="true"/>
-            </#if>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class="boxoutside">
-        <tr>
-          <td>
-<a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}</a>
-<a href="<@ofbizUrl>EditShipAddress</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateShippingAddress}</a>
+<form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+    <input type="hidden" name="finalizeMode" value="ship"/>
+    <#if (cart.getShipGroupSize() > 1)>
+        <input type="hidden" name="finalizeReqShipGroups" value="true"/>
+    </#if>
+    <ul class="button-group">
+        <li><a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}</a></li>
+        <li><a href="<@ofbizUrl>EditShipAddress</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateShippingAddress}</a></li>
+    </ul> 
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
 
 <#assign currShipContactMechId = cart.getShippingContactMechId(shipGroupIndex)!>
 <#assign supplierPartyId = cart.getSupplierPartyId(shipGroupIndex)!>
 <#assign facilityId = cart.getShipGroupFacilityId(shipGroupIndex)!>
-            <hr />
-            <table width="100%" border="0" cellpadding="1" cellspacing="0">
+    <@section title="${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}">
+        <@row>
+        <@cell class="large-6">
+            <table class="basic-table">
               <tr>
-                <td colspan="3">
-                    <h1>${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}</h1>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="3">
-                    <div>
-                      ${uiLabelMap.PartySupplier}:
+                <td class="large-3">${uiLabelMap.PartySupplier}</td>
+                <td class="large-6">
                       <select name="${shipGroupIndex?default("0")}_supplierPartyId">
                         <option value=""></option>
                         <#list suppliers as supplier>
                           <option value="${supplier.partyId}"<#if supplierPartyId??><#if supplier.partyId == supplierPartyId> selected="selected"</#if></#if>>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(supplier, true)}</option>
                         </#list>
                       </select>
-                      ${uiLabelMap.ProductReserveInventoryFromFacility}:
+                 </td>
+                 <td></td>
+              </tr>
+              <tr>
+                <td class="large-3">${uiLabelMap.ProductReserveInventoryFromFacility}</td>
+                <td class="large-6">
                       <select name="${shipGroupIndex?default("0")}_shipGroupFacilityId">
                         <option value=""></option>
                         <#list productStoreFacilities as productStoreFacility>
@@ -155,11 +147,10 @@ under the License.
                           <option value="${productStoreFacility.facilityId}"<#if facilityId??><#if productStoreFacility.facilityId == facilityId> selected="selected"</#if></#if>>${facility.facilityName!} </option>
                         </#list>
                       </select>
-                    </div>
                 </td>
-              </tr>
+                <td></td>              
+             </tr>
             <#if shippingContactMechList?has_content>
-                <tr><td colspan="3"><hr /></td></tr>
                 <#assign i = 0>
                 <#list shippingContactMechList as shippingContactMech>
                   <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
@@ -177,11 +168,10 @@ under the License.
                       </#if>
                   </#if>
                   <tr>
-                    <td valign="top" width="1%" nowrap="nowrap">
+                    <td class="large-3">
                       <input type="radio" name="${shipGroupIndex?default("0")}_shipping_contact_mech_id" value="${shippingAddress.contactMechId}" ${checkedValue} />
                     </td>
-                    <td valign="top" width="99%" nowrap="nowrap">
-                      <div>
+                    <td class="large-6">
                         <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                         <#if shippingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
                         <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
@@ -190,10 +180,9 @@ under the License.
                         <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                         <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                      </div>
                     </td>
-                    <td>
-                      <div><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></div>
+                    <td >
+                      <a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
@@ -203,16 +192,15 @@ under the License.
                 </#list>
             </#if>
             <#if shipToPartyShippingContactMechList?has_content>
-                <tr><td colspan="3"><hr /></td></tr>
                 <tr><td colspan="3">${uiLabelMap.OrderShipToAnotherParty}: <b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(shipToParty)}</b></td></tr>
                 <tr><td colspan="3"><hr /></td></tr>
                 <#list shipToPartyShippingContactMechList as shippingContactMech>
                   <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                   <tr>
-                    <td valign="top" width="1%" nowrap="nowrap">
+                    <td class="large-3">
                       <input type="radio" name="${shipGroupIndex?default("0")}_shipping_contact_mech_id" value="${shippingAddress.contactMechId}"/>
                     </td>
-                    <td valign="top" width="99%" nowrap="nowrap">
+                    <td class="large-6">
                       <div>
                         <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                         <#if shippingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
@@ -232,10 +220,10 @@ under the License.
                 </#list>
             </#if>
             </table>
+            </@cell>
+        </@row>
+       </@section>
 </#list>
-          </td>
-        </tr>
-      </table>
 
             </form>
 </#if>
@@ -247,22 +235,22 @@ under the License.
     <br />
     <form method="post" action="setShipping" name="partyshipform">
         <@section title="${uiLabelMap.OrderShipToAnotherParty}">
-          <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-            <tr><td colspan="4">&nbsp;</td></tr>
+          <@row>
+            <@cell class="large-6">
+          <table class='basic-table'>
             <tr>
-              <td>&nbsp;</td>
-              <td align='right' valign='middle' nowrap="nowrap"><div class='tableheadtext'>${uiLabelMap.PartyPartyId}</div></td>
-              <td>&nbsp;</td>
-              <td valign='middle'>
-                <div class='tabletext'>
-                  <@htmlTemplate.lookupField value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/>
-                  <input type="submit" class="smallSubmit" value="Continue" />
-                </div>
+              <td class="large-3">${uiLabelMap.PartyPartyId}</td>
+              <td class="large-6"><@htmlTemplate.lookupField value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/></td>
+              <td>                  
+                  <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonContinue}" />
               </td>
             </tr>
           </table>
+          </@cell>
+          </@row>
          </@section> 
     </form>
+ </@section>
 <#else>
  <@section title="${uiLabelMap.OrderViewPermissionError}"/>
 </#if>

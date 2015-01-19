@@ -9153,7 +9153,7 @@ table.basic-table tr {
 }
 /* line 100, ../scss/_base.scss */
 table.basic-table tr td {
-  vertical-align: middle;
+  vertical-align: top;
 }
 /* line 105, ../scss/_base.scss */
 table.basic-table tr.odd {

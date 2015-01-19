@@ -105,14 +105,16 @@ under the License.
             <#assign subclasses="small-${12-columns+1} large-${12-columns}"/>
             <#assign classes="small-${columns-1} large-${columns}"/>
         </#if>
-         
+        
+        <#if type!="radio">
         <@cell class=subclasses>
-            <#if type=="checkbox" || collapse==false>
-                <label class="">${label}</label>
-            <#else>
-                <span class="prefix">${label}</span>
-            </#if>
+                <#if type=="checkbox" || collapse==false>
+                    <label class="">${label}</label>
+                <#else>
+                    <span class="prefix">${label}</span>
+                </#if>           
         </@cell>
+        </#if>
     </#if>
     <@cell class="${classes!}">
         <#switch type>
@@ -213,7 +215,9 @@ under the License.
                 <@renderCheckBox id=id checked="checked" currentValue=value name=name action=action />
             <#break>
           <#case "radio">
-            <#-- TODO -->
+            <#assign items=[{"description",label}]/>
+                <@renderRadioField items=items className=class alert=alert currentValue=value noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+            
             <#break>
           <#default>
             <#if value?has_content>

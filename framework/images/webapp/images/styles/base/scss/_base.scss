@@ -94,6 +94,7 @@ input[type="button"], input[type="submit"],.buttontext  { @include button; @incl
 
 // tables
 table.basic-table {
+    width: 100%;
     tr{
         background: none;
         

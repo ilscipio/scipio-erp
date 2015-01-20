@@ -409,6 +409,55 @@ under the License.
 
 <#-- 
 *************
+* alert box
+************
+    Usage example:  
+    <@alert type="">
+        <#nested>
+    </@alert>            
+                    
+   * General Attributes *
+    type           = (info|success|warning|secondary|alert)
+    
+-->
+<#macro alert type="">
+<div class="row">
+        <div class="large-12 columns">
+        <div data-alert class="alert-box ${type}">
+           <div class="row">
+              <div class="large-12 columns">
+                  <#nested>
+                  <a href="#" class="close">&times;</a>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</#macro>
+
+<#--
+*************
+* panel box
+************
+    Usage example:  
+    <@panel type="">
+        <#nested>
+    </@panel>            
+                    
+   * General Attributes *
+    type           = (callout|) default:empty
+    title          = Title
+-->
+<#macro panel type="" title="">
+<div class="panel ${type}">
+  <#if title?has_content><h5>${title!}</h5></#if>
+  <p><#nested></p>
+</div>
+</#macro>
+
+
+<#-- 
+*************
 * pricing table
 ************
 Since this is very foundation specific, this function may be dropped in future installations

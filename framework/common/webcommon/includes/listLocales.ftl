@@ -16,15 +16,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="lists screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.CommonLanguageTitle}</li>
-      <li><a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonCancel}</a></li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <table cellspacing="0" class="basic-table hover-bar">
+<@section title="${uiLabelMap.CommonLanguageTitle}">
+
+  <table cellspacing="0" class="basic-table">
     <#assign altRow = true>
     <#assign availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocales()/>
     <#list availableLocales as availableLocale>
@@ -41,4 +35,4 @@ under the License.
         </tr>
     </#list>
   </table>
-</div>
+</@section>

@@ -39,11 +39,7 @@ under the License.
   
   <#-- display the error messages -->
   <#if (errorMessage?has_content || errorMessageList?has_content)>
-    <div class="row">
-    <div class="large-12 columns">
-        <div data-alert class="alert-box alert">
-           <div class="row">
-              <div class="large-12 columns">
+        <@alert type="alert">
                   <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
                   <#if errorMessage?has_content>
                     <p>${StringUtil.wrapString(errorMessage)}</p>
@@ -53,20 +49,11 @@ under the License.
                       <p>${StringUtil.wrapString(errorMsg)}</p>
                     </#list>
                    </#if>
-                   <a href="#" class="close">&times;</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        </@alert>
   </#if>
   <#-- display the event messages -->
   <#if (eventMessage?has_content || eventMessageList?has_content)>
-    <div class="row">
-        <div class="large-12 columns">
-        <div data-alert class="alert-box info">
-           <div class="row">
-              <div class="large-12 columns">
+    <@alert type="info">
                   <#noescape><p>${uiLabelMap.CommonFollowingOccurred}:</p></#noescape>
                   <#if eventMessage?has_content>
                     <p>${StringUtil.wrapString(eventMessage)}</p>
@@ -76,11 +63,6 @@ under the License.
                       <p>${StringUtil.wrapString(eventMsg)}</p>
                     </#list>
                   </#if>
-                  <a href="#" class="close">&times;</a>
-                </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </@alert>
   </#if>
 </#escape>

@@ -18,7 +18,7 @@ under the License.
 -->
 <#if showPromoText?? && showPromoText>
       <@section title="${uiLabelMap.OrderSpecialOffers}">
-        <table cellspacing="0" cellpadding="1" border="0">
+        <table class="basic-table">
           <#-- show promotions text -->
           <#list productPromos as productPromo>
             <tr>
@@ -27,15 +27,11 @@ under the License.
               </td>
             </tr>
             <#if productPromo_has_next>
-              <tr><td><hr /></td></tr>
             </#if>
           </#list>
-          <tr><td><hr /></td></tr>
-          <tr>
-            <td>
-              <div><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderViewAllPromotions}</a></div>
-            </td>
-          </tr>
         </table>
+        
+        <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderViewAllPromotions}</a>
+        
     </@section>
 </#if>

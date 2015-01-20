@@ -31,7 +31,17 @@ under the License.
 <#else>
   <#assign target="getProductInventoryAvailable">
 </#if>
-<@section>
+
+
+<ul class="button-group">
+    <li><a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="button tiny">${uiLabelMap.OrderQuickLookup}</a></li>
+    <li><a href="javascript:quicklookupGiftCertificate()" class="button tiny">${uiLabelMap.OrderAddGiftCertificate}</a></li>
+  <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>
+        <li><a href="javascript:showQohAtp()" class="button tiny">${uiLabelMap.ProductAtpQoh}</a></li>
+  </#if>
+</ul>
+
+<@section title="${uiLabelMap.CommonCreate} ${uiLabelMap.OrderOrder}">
       <#if shoppingCart.getOrderType() == "SALES_ORDER">
           <#if quantityOnHandTotal?? && availableToPromiseTotal?? && (productId)??>
             <@row>
@@ -78,8 +88,9 @@ under the License.
                 </form>
                 
                 
-                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
 
+              
+                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
                          <#if orderType=="PURCHASE_ORDER">                        
                             <#if partyId?has_content>                                               
                               <#assign fieldFormName="LookupSupplierProduct?partyId=${partyId}">
@@ -91,17 +102,6 @@ under the License.
                           </#if>
                           
                           <@field type="lookup" formName="quickaddform" name="add_product_id" id="add_product_id" fieldFormName=fieldFormName label="${uiLabelMap.ProductProductId}"/>
-                          
-                          <@row>
-                              <@cell>
-                              <ul class="button-group">
-                                <li><a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="button tiny">${uiLabelMap.OrderQuickLookup}</a></li>
-                                <li><a href="javascript:quicklookupGiftCertificate()" class="button tiny">${uiLabelMap.OrderAddGiftCertificate}</a></li>
-                              <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>
-                                <li><a href="javascript:showQohAtp()" class="button tiny">${uiLabelMap.ProductAtpQoh}</a></li>
-                              </#if>
-                              </@cell>
-                          </@row>
                           
                           <@field type="input" size="6" name="quantity" value="" label="${uiLabelMap.OrderQuantity}"/>
                           

@@ -31,15 +31,27 @@ under the License.
 </#if>
 
 <@section title="${uiLabelMap.OrderOrderHeaderInfo}">
+        <@row>
+            <@cell class="columns">
+                 <form method="post" action="setOrderName" name="setCartOrderNameForm">
+                      <@field type="input" id="orderName" name="orderName" size="12" maxlength="200" value="${shoppingCart.getOrderName()?default('')}" label="${uiLabelMap.OrderOrderName}"/>
+                      <input type="submit" value="${uiLabelMap.CommonSet}" />
+                </form>
+                 </@cell>
+            </@row>
+            <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
+                <@row>
+                    <@cell>
+                    <form method="post" action="setPoNumber" name="setCartPoNumberForm">
+                        <@field type="input" id="correspondingPoId" name="correspondingPoId" size="12" value="${shoppingCart.getPoNumber()?default('')}" label="${uiLabelMap.OrderPONumber}"/>
+                        <input type="submit" value="${uiLabelMap.CommonSet}" />
+                    </form>
+                    </@cell>
+                </@row>
+            </#if>
+            
         <table class="basic-table">
-              <form method="post" action="setOrderName" name="setCartOrderNameForm">
-                <fieldset>
-                  <label for="orderName"><strong>${uiLabelMap.OrderOrderName}</strong>:</label>
-                  <input type="text" id="orderName" name="orderName" size="12" maxlength="200" value="${shoppingCart.getOrderName()?default("")}" />
-                  <input type="submit" value="${uiLabelMap.CommonSet}" />
-                </fieldset>
-              </form>
-              <tr>
+            <tr>
                 <td class="large-3">${uiLabelMap.Party}</td>
                 <td>
                   <a href="${customerDetailLink}${partyId}${externalKeyParam!}" target="partymgr" class="button tiny">${partyId}</a>
@@ -50,15 +62,6 @@ under the License.
                     ${partyMap.partyGroup.groupName!}
                   </#if>
               </td>
-            <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
-                <form method="post" action="setPoNumber" name="setCartPoNumberForm">
-                  <fieldset>
-                    <label for="correspondingPoId"><strong>${uiLabelMap.OrderPONumber}</strong>:</label>
-                    <input type="text" id="correspondingPoId" name="correspondingPoId" size="12" value="${shoppingCart.getPoNumber()?default("")}" />
-                    <input type="submit" value="${uiLabelMap.CommonSet}" />
-                  </fieldset>
-                </form>
-            </#if>
             <tr>
                 <td class="large-3">${uiLabelMap.CommonCurrency}</td>
                 <td>
@@ -81,4 +84,5 @@ under the License.
                 <td class="large-3">${uiLabelMap.CommonTotal}</td>
                 <td><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></td>
             </tr>
+    </table>
 </@section>

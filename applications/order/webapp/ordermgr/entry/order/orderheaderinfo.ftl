@@ -54,24 +54,24 @@ under the License.
         <#if orderTerms?has_content>
             <tr>
                 <td class="large-3">
-                    <div>&nbsp;<b>${uiLabelMap.OrderOrderTerms}</b></div>
+                    &nbsp;<b>${uiLabelMap.OrderOrderTerms}</b>
                 </td>
                 <td colspan="2">
                     <table>
                         <tr>
-                            <td width="35%"><div><b>${uiLabelMap.OrderOrderTermType}</b></div></td>
-                            <td width="10%"><div><b>${uiLabelMap.OrderOrderTermValue}</b></div></td>
-                            <td width="10%"><div><b>${uiLabelMap.OrderOrderTermDays}</b></div></td>
-                            <td width="45%"><div><b>${uiLabelMap.CommonDescription}</b></div></td>
+                            <td width="35%"><b>${uiLabelMap.OrderOrderTermType}</b></td>
+                            <td width="10%"><b>${uiLabelMap.OrderOrderTermValue}</b></td>
+                            <td width="10%"><b>${uiLabelMap.OrderOrderTermDays}</b></td>
+                            <td width="45%"><b>${uiLabelMap.CommonDescription}</b></td>
                         </tr>
                         <tr><td colspan="4"><hr /></td></tr>
                         <#assign index=0/>
                         <#list orderTerms as orderTerm>
                         <tr>
-                            <td width="35%"><div>${orderTerm.getRelatedOne("TermType", false).get("description",locale)}</div></td>
-                            <td width="10%"><div>${orderTerm.termValue?default("")}</div></td>
-                            <td width="10%"><div>${orderTerm.termDays?default("")}</div></td>
-                            <td width="45%"><div>${orderTerm.textValue?default("")}</div></td>
+                            <td width="35%">${orderTerm.getRelatedOne("TermType", false).get("description",locale)}</td>
+                            <td width="10%">${orderTerm.termValue?default("")}</td>
+                            <td width="10%">${orderTerm.termDays?default("")}</td>
+                            <td width="45%">${orderTerm.textValue?default("")}</td>
                         </tr>
                             <#if orderTerms.size()&lt;index>
                         <tr><td colspan="4"><hr /></td></tr>
@@ -86,34 +86,34 @@ under the License.
         <#if trackingNumber?has_content>
             <tr>
                 <td class="large-3">
-                    <div>&nbsp;<b>${uiLabelMap.OrderTrackingNumber}</b></div>
+                    &nbsp;<b>${uiLabelMap.OrderTrackingNumber}</b>
                 </td>
                 <td colspan="2">
                     <#-- TODO: add links to UPS/FEDEX/etc based on carrier partyId  -->
-                    <div>${trackingNumber}</div>
+                    ${trackingNumber}
                 </td>
             </tr>
         </#if>
         <#-- splitting preference -->
             <tr>
                 <td class="large-3">
-                    <div>&nbsp;<b>${uiLabelMap.OrderSplittingPreference}</b></div>
+                    &nbsp;<b>${uiLabelMap.OrderSplittingPreference}</b>
                 </td>
                 <td colspan="2">
-                    <div>
+                    
                         <#if maySplit?default("N") == "N">${uiLabelMap.FacilityWaitEntireOrderReady}</#if>
                         <#if maySplit?default("Y") == "Y">${uiLabelMap.FacilityShipAvailable}</#if>
-                    </div>
+                    
                 </td>
             </tr>
         <#-- shipping instructions -->
         <#if shippingInstructions?has_content>
             <tr>
                 <td class="large-3">
-                    <div>&nbsp;<b>${uiLabelMap.OrderSpecialInstructions}</b></div>
+                    &nbsp;<b>${uiLabelMap.OrderSpecialInstructions}</b>
                 </td>
                 <td colspan="2">
-                    <div>${shippingInstructions}</div>
+                    ${shippingInstructions}
                 </td>
             </tr>
         </#if>
@@ -121,22 +121,22 @@ under the License.
         <#-- gift settings -->
             <tr>
                 <td class="large-3">
-                    <div>&nbsp;<b>${uiLabelMap.OrderGift}</b></div>
+                    &nbsp;<b>${uiLabelMap.OrderGift}</b>
                 </td>
                 <td colspan="2">
-                    <div>
+                    
                         <#if isGift?default("N") == "N">${uiLabelMap.OrderThisOrderNotGift}</#if>
                         <#if isGift?default("N") == "Y">${uiLabelMap.OrderThisOrderGift}</#if>
-                    </div>
+                    
                 </td>
             </tr>
             <#if giftMessage?has_content>
             <tr>
                 <td class="large-3">
-                    <div>&nbsp;<b>${uiLabelMap.OrderGiftMessage}</b></div>
+                    &nbsp;<b>${uiLabelMap.OrderGiftMessage}</b>
                 </td>
                 <td colspan="2">
-                    <div>${giftMessage}</div>
+                    ${giftMessage}
                 </td>
             </tr>
             </#if>
@@ -144,20 +144,20 @@ under the License.
         <#if shipAfterDate?has_content>
             <tr>
                 <td class="large-3">
-                    <div>&nbsp;<b>${uiLabelMap.OrderShipAfterDate}</b></div>
+                    &nbsp;<b>${uiLabelMap.OrderShipAfterDate}</b>
                 </td>
                 <td colspan="2">
-                    <div>${shipAfterDate}</div>
+                    ${shipAfterDate}
                 </td>
             </tr>
         </#if>
         <#if shipBeforeDate?has_content>
             <tr>
                 <td class="large-3">
-                    <div>&nbsp;<b>${uiLabelMap.OrderShipBeforeDate}</b></div>
+                    &nbsp;<b>${uiLabelMap.OrderShipBeforeDate}</b>
                 </td>
                 <td colspan="2">
-                  <div>${shipBeforeDate}</div>
+                  ${shipBeforeDate}
                 </td>
             </tr>
         </#if>

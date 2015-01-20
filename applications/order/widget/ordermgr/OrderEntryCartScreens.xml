@@ -80,10 +80,16 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/javascript.ftl"/></html></platform-specific>
-                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/showcart.ftl"/></html></platform-specific>
-                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/addItemsToShoppingList.ftl"/></html></platform-specific>
+                        <container style="row ">
+                            <container style="large-6 columns">
+                            <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/javascript.ftl"/></html></platform-specific>
+                            <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/showcart.ftl"/></html></platform-specific>
+                            <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/addItemsToShoppingList.ftl"/></html></platform-specific>
+                            </container>
+                        </container>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/showcartitems.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="sidebar">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/promoCodes.ftl"/></html></platform-specific>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/manualPromotions.ftl"/></html></platform-specific>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/promoText.ftl"/></html></platform-specific>

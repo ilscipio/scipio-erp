@@ -330,7 +330,7 @@ under the License.
       </table>
     </form>
   <#else>
-    <@section title="${uiLabelMap.OrderNoOrderItemsToDisplay}"/>
+    ${uiLabelMap.OrderNoOrderItemsToDisplay}
   </#if>
 </@section>
 

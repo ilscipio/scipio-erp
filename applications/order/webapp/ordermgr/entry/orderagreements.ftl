@@ -20,11 +20,10 @@ under the License.
 
 <form method="post" name="agreementForm" action="<@ofbizUrl>setOrderCurrencyAgreementShipDates</@ofbizUrl>">
 <@section title="${uiLabelMap.OrderOrderEntryCurrencyAgreementShipDates}">
-      <ul>
-        <li><a href="javascript:document.agreementForm.submit()">${uiLabelMap.CommonContinue}</a></li>
+      <ul class="button-group">
+        <li><a href="javascript:document.agreementForm.submit()" class="button tiny">${uiLabelMap.CommonContinue}</a></li>
       </ul>
-    <table>
-
+    <table class="basic-table">
       <#if agreements??>
       <tr><td colspan="4">&nbsp;<input type='hidden' name='hasAgreements' value='Y'/></td></tr>
       

@@ -56,7 +56,7 @@ $paragraph-text-rendering: optimizeLegibility !default;
 
 // We use these to style <code> tags
 $code-color: $oil !default;
-$code-font-family: Consolas, 'Liberation Mono', Courier, monospace !default;
+$code-font-family: $font-family-monospace !default;
 $code-font-weight: $font-weight-normal !default;
 $code-background-color: scale-color($secondary-color, $lightness: 70%) !default;
 $code-border-size: 1px !default;
@@ -386,11 +386,13 @@ $align-class-breakpoints:
       text-transform: uppercase;
       font-size: 90%;
       color: $body-font-color;
-      border-bottom: $acronym-underline;
       cursor: $cursor-help-value;
     }
     abbr {
       text-transform: none;
+      &[title] {
+        border-bottom: $acronym-underline;
+      }
     }
 
     /* Blockquotes */

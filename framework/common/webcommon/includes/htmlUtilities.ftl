@@ -75,6 +75,10 @@ under the License.
     multiple        = allow multiple select true/false
     currentValue    = currently selected value
     
+    * lookup *
+    formName        = The name of the form that contains the lookup field.
+    fieldForName    = Contains the lookup window form name.
+    
     * Checkbox *
     currentValue    = Y/N
     checked      = checked (true/false)
@@ -82,7 +86,8 @@ under the License.
 -->
 <#macro field type="" label="" name="" value="" class="large-12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
-        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false>
+        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false
+        fieldFormName="" formName="">
 
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum="${fieldIdNum!0+1}" />
@@ -211,11 +216,14 @@ under the License.
                                     fullSearch=""
                                     tooltip=tooltip><#nested></@renderDropDownField>
             <#break>
+          <#case "lookup">
+            <@renderLookupField name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
+          <#break>
           <#case "checkbox">
                 <@renderCheckBox id=id checked="checked" currentValue=value name=name action=action />
             <#break>
           <#case "radio">
-            <#assign items=[{"description",label}]/>
+            <#assign items=[{"description",label!""}]/>
                 <@renderRadioField items=items className=class alert=alert currentValue=value noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
             
             <#break>

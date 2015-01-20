@@ -67,7 +67,7 @@ under the License.
                             
                 <!-- Foundation Base CSS -->
                 <set field="layoutSettings.styleSheets[+0]" value="/images/styles/base/stylesheets/app.css" global="true"/>
-                <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/foundation/css/foundation-datepicker.css" global="true"/>  
+                <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/foundation-datepicker/stylesheets/foundation-datepicker.css" global="true"/>  
                 <set field="layoutSettings.styleSheets[]" value="https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" global="true"/>
                           
                 <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />
@@ -87,7 +87,7 @@ under the License.
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation.min.js" global="true" />
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.topbar.js" global="true" />
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.offcanvas.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation-datepicker.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation-datepicker/js/foundation-datepicker.js" global="true" />
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/js/app.js" global="true" />
                 
                 <!-- Legacy JS TODO: Remove once possible -->

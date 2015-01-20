@@ -19,15 +19,13 @@ under the License.
 
 <@section title="${uiLabelMap.ProductSearchCatalog}" id="keywordsearchbox">
     <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
-      <fieldset class="inline">
+      
         <input type="hidden" name="VIEW_SIZE" value="10" />
         <input type="hidden" name="PAGING" value="Y" />
-        <div>
-          <input type="text" name="SEARCH_STRING" size="14" maxlength="50" value="${requestParameters.SEARCH_STRING!}" />
-        </div>
+        <@field type="input" name="SEARCH_STRING" size="14" maxlength="50" value="${requestParameters.SEARCH_STRING!}" />
+        
         <#if 0 &lt; otherSearchProdCatalogCategories?size>
-          <div>
-            <select name="SEARCH_CATEGORY_ID" size="1">
+          <@field type="select" label="${uiLabelMap.ProductCategoryId}" name="SEARCH_CATEGORY_ID" size="1">
               <option value="${searchCategoryId!}">${uiLabelMap.ProductEntireCatalog}</option>
               <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
                 <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOne("ProductCategory", true)>
@@ -35,23 +33,18 @@ under the License.
                   <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?default("No Description " + searchProductCategory.productCategoryId)}</option>
                 </#if>
               </#list>
-            </select>
-          </div>
+          </@field>
         <#else>
           <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}" />
         </#if>
-        <div>
-          <input type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_OR" value="OR" <#if searchOperator == "OR">checked="checked"</#if> /><label for="SEARCH_OPERATOR_OR">${uiLabelMap.CommonAny}</label>
-          <input type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_AND" value="AND" <#if searchOperator == "AND">checked="checked"</#if> /><label for="SEARCH_OPERATOR_AND">${uiLabelMap.CommonAll}</label>
+          <@field type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_OR" value="OR" checked=(searchOperator == "OR") label="${uiLabelMap.CommonAny}"/>
+          <@field type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_AND" value="AND" checked=(searchOperator == "AND") label="${uiLabelMap.CommonAll}"/>
           <input type="submit" value="${uiLabelMap.CommonFind}" class="button" />
-        </div>
-      </fieldset>
     </form>
     <form name="advancedsearchform" id="keywordsearchbox_advancedsearchform" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>">
-      <fieldset>
+      <@fieldset title="${uiLabelMap.CommonAdvancedSearch}" collapsed=true>
         <#if 0 &lt; otherSearchProdCatalogCategories?size>
-            <label for="SEARCH_CATEGORY_ID">${uiLabelMap.ProductAdvancedSearchIn}: </label>
-            <select name="SEARCH_CATEGORY_ID" id="SEARCH_CATEGORY_ID" size="1">
+            <@field type="select" label="${uiLabelMap.ProductAdvancedSearchIn}" name="SEARCH_CATEGORY_ID" id="SEARCH_CATEGORY_ID">
               <option value="${searchCategoryId!}">${uiLabelMap.ProductEntireCatalog}</option>
               <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
                 <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOne("ProductCategory", true)>
@@ -59,11 +52,11 @@ under the License.
                   <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?default("No Description " + searchProductCategory.productCategoryId)}</option>
                 </#if>
               </#list>
-            </select>
+            </@field>
         <#else>
           <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}" />
         </#if>
           <input type="submit" value="${uiLabelMap.ProductAdvancedSearch}" class="button" />
-      </fieldset>
+      </@fieldset>
     </form>
 </@section>

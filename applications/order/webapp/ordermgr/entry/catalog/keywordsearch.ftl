@@ -17,17 +17,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>${uiLabelMap.ProductProductSearch}, <span class="h2">${uiLabelMap.ProductYouSearchedFor}:</span></h1>
-<br />
-<ul>
-<#list searchConstraintStrings as searchConstraintString>
-    <li><a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="button tiny">X</a>&nbsp;${searchConstraintString}</li>
-</#list>
-</ul>
-<br />
-<div>${uiLabelMap.CommonSortedBy}: ${searchSortOrderString}</div>
-<br />
-<div><a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRefineSearch}</a></div>
+<@section title="${uiLabelMap.ProductProductSearch}">
+
+<@row>
+    <@cell>
+    ${uiLabelMap.ProductYouSearchedFor}
+    <#list searchConstraintStrings as searchConstraintString>
+    <a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="button tiny">X</a>&nbsp;${searchConstraintString}</li>
+    </#list>
+    </@cell>
+</@row>
+
+
+<@row>
+    <@cell>
+        ${uiLabelMap.CommonSortedBy}: ${searchSortOrderString} <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRefineSearch}</a>
+    </@cell>
+</@row>
+
 
 <#if !productIds?has_content>
   <h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>
@@ -92,3 +99,4 @@ under the License.
         </b>
     </div>
 </#if>
+</@section>

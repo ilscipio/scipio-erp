@@ -132,7 +132,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -190,7 +190,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -229,7 +229,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -286,7 +286,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -349,7 +349,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -429,7 +429,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

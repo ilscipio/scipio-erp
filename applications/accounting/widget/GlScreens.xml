@@ -410,7 +410,7 @@ under the License.
                             </screenlet>
                         </widgets>
                         <fail-widgets>
-                            <label style="h3">${uiLabelMap.AccountingPrintChecksPermissionError}</label>
+                            <label >${uiLabelMap.AccountingPrintChecksPermissionError}</label>
                         </fail-widgets>
                       </section>
                     </decorator-section>
@@ -457,7 +457,7 @@ under the License.
                             </screenlet>
                         </widgets>
                         <fail-widgets>
-                            <label style="h3">${uiLabelMap.AccountingUpdatePaymentPermissionError}</label>
+                            <label >${uiLabelMap.AccountingUpdatePaymentPermissionError}</label>
                         </fail-widgets>
                       </section>
                     </decorator-section>

@@ -76,12 +76,12 @@ under the License.
                                         <include-menu name="FacilityTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h3">${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
+                                        <label >${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
                                     </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -102,12 +102,12 @@ under the License.
                                         <decorator-section-include name="body"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h3">${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
+                                        <label >${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
                                     </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -138,7 +138,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -171,12 +171,12 @@ under the License.
                                         <decorator-section-include name="body"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h3">${uiLabelMap.ProductErrorInventoryItemLabelIdNotFound}</label>
+                                        <label >${uiLabelMap.ProductErrorInventoryItemLabelIdNotFound}</label>
                                     </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

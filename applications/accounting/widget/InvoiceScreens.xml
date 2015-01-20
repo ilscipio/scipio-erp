@@ -60,7 +60,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.AccountingViewPermissionError}</label>
+                                <label >${uiLabelMap.AccountingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -366,7 +366,7 @@ under the License.
                                         <if-empty field="invoiceApplications"/>
                                     </condition>
                                     <widgets>
-                                        <container><label style="h3" text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
+                                        <container><label  text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
                                     </widgets>
                                 </section>
                                 <section>
@@ -410,7 +410,7 @@ under the License.
                                         <if-empty field="invoiceApplications"/>
                                     </condition>
                                     <widgets>
-                                        <container><label style="h3" text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
+                                        <container><label  text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
                                     </widgets>
                                 </section>
                             </fail-widgets>

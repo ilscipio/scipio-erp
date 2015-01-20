@@ -103,7 +103,7 @@
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

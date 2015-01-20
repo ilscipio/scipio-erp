@@ -43,7 +43,7 @@ under the License.
                             </widgets>
                             <!--
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.XxxxViewPermissionError}</label>
+                                <label >${uiLabelMap.XxxxViewPermissionError}</label>
                             </fail-widgets>
                             -->
                         </section>
@@ -74,7 +74,7 @@ under the License.
                             </widgets>
                             <!--
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.XxxxViewPermissionError}</label>
+                                <label >${uiLabelMap.XxxxViewPermissionError}</label>
                             </fail-widgets>
                             -->
                         </section>

@@ -108,7 +108,7 @@
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -156,7 +156,7 @@
                                         <if-compare field="showScreen" operator="equals" value="message"/>
                                     </condition>
                                     <widgets>
-                                        <label style="h3">${uiLabelMap.SetupPageError}</label>
+                                        <label >${uiLabelMap.SetupPageError}</label>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -207,7 +207,7 @@
                                         <if-compare field="showScreen" operator="equals" value="message"/>
                                     </condition>
                                     <widgets>
-                                        <label style="h3">${uiLabelMap.SetupPageError}</label>
+                                        <label >${uiLabelMap.SetupPageError}</label>
                                     </widgets>
                                 </section>
                             </fail-widgets>

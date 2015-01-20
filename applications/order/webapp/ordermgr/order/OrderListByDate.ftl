@@ -68,6 +68,6 @@ under the License.
         </#list>
       </table>
     <#else>        
-      <h3>${uiLabelMap.OrderNoOrderFound}</h3>
+      ${uiLabelMap.OrderNoOrderFound}
     </#if>
   </@section>

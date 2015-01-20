@@ -131,7 +131,7 @@ under the License.
                             <widgets>
                                 <container style="screenlet">
                                     <container style="screenlet-title-bar">
-                                        <container style="h3">
+                                        <container >
                                             <label text="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigSagePay}"/>
                                         </container>
                                     </container>

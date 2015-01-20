@@ -117,7 +117,7 @@ under the License.
                                     </platform-specific>
                                 </widgets>
                                 <fail-widgets>
-                                    <label text="${uiLabelMap.SfaCanNotMergeSameContact}" style="h3"></label>
+                                    <label text="${uiLabelMap.SfaCanNotMergeSameContact}" ></label>
                                 </fail-widgets>
                             </section>
                         </screenlet>
@@ -137,7 +137,7 @@ under the License.
                 <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleCreateContactFromVCard}">
-                            <container><label style="h3" text="${uiLabelMap.SfaAutoCreateContactByImportingVCard}"/></container>
+                            <container><label  text="${uiLabelMap.SfaAutoCreateContactByImportingVCard}"/></container>
                             <include-form  name="NewContactFromVCard" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                         </screenlet>
                     </decorator-section>

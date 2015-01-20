@@ -72,7 +72,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentUpdatePermissionError}</label>
+                                <label >${uiLabelMap.ContentUpdatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -123,7 +123,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentUpdatePermissionError}</label>
+                                <label >${uiLabelMap.ContentUpdatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -160,7 +160,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentUpdatePermissionError}</label>
+                                <label >${uiLabelMap.ContentUpdatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -208,7 +208,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentUpdatePermissionError}</label>
+                                <label >${uiLabelMap.ContentUpdatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -262,7 +262,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentUpdatePermissionError}</label>
+                                <label >${uiLabelMap.ContentUpdatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -297,7 +297,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentUpdatePermissionError}</label>
+                                <label >${uiLabelMap.ContentUpdatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -342,7 +342,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -377,7 +377,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentUpdatePermissionError}</label>
+                                <label >${uiLabelMap.ContentUpdatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -484,7 +484,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

@@ -55,7 +55,7 @@ under the License.
                                 <not><if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/></not>
                             </condition>
                             <widgets>
-                                <label style="h3" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                                <label  text="${uiLabelMap.AccountingViewPermissionError}"/>
                             </widgets>
                         </section>
                         <decorator-section-include name="body"/>

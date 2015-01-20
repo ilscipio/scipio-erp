@@ -52,7 +52,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                                <label  text="${uiLabelMap.AccountingViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -226,7 +226,7 @@ under the License.
                             <widgets>
                                 <container><label style="h1" text="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingApplications}"/></container>
                                 <container><label style="h1" text="${uiLabelMap.CommonAmount} ${uiLabelMap.CommonTotal} ${payment.amount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingAmountNotApplied} ${notAppliedAmount?currency(${payment.currencyUomId})}"/></container>
-                                <container><label style="h3" text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
+                                <container><label  text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
                             </widgets>
                             <fail-widgets>
                                  <section>

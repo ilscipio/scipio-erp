@@ -35,7 +35,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ManufacturingViewPermissionError}</label>
+                                <label >${uiLabelMap.ManufacturingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

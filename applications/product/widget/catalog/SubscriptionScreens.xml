@@ -106,7 +106,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ProductSubscriptionViewPermissionError}</label>
+                                <label >${uiLabelMap.ProductSubscriptionViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -238,7 +238,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ProductSubscriptionResourceViewPermissionError}</label>
+                                <label >${uiLabelMap.ProductSubscriptionResourceViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

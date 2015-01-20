@@ -96,7 +96,7 @@ under the License.
                 </platform-specific>
             </widgets>
             <fail-widgets>
-                <label style="h3" text="${uiLabelMap.AccountingPrintChecksPermissionError}"/>
+                <label  text="${uiLabelMap.AccountingPrintChecksPermissionError}"/>
             </fail-widgets>
         </section>
     </screen>

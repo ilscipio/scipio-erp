@@ -118,7 +118,7 @@ under the License.
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="h3">${uiLabelMap.CommonView}</label>
+                            <label >${uiLabelMap.CommonView}</label>
                             <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="button tiny">
                                 <parameter param-name="productStoreId"/>
                             </link>
@@ -132,7 +132,7 @@ under the License.
                                     </link>
                         </container>
                         <container>
-                            <label style="h3">${uiLabelMap.CommonView} ${uiLabelMap.CommonActiveInactive}</label>
+                            <label >${uiLabelMap.CommonView} ${uiLabelMap.CommonActiveInactive}</label>
                             <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="button tiny">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="activeOnly" value="N"/>
@@ -591,7 +591,7 @@ under the License.
                 <include-form name="EditProductStoreFacility" location="component://product/widget/catalog/StoreForms.xml"/>
             </widgets>
             <fail-widgets>
-                <label style="h3">${uiLabelMap.ProductCatalogUpdatePermissionError}</label>
+                <label >${uiLabelMap.ProductCatalogUpdatePermissionError}</label>
            </fail-widgets>
         </section>
     </screen>

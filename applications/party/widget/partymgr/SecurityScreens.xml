@@ -166,7 +166,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartySecurityViewPermissionError}</label>
+                                <label >${uiLabelMap.PartySecurityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -198,7 +198,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartySecurityViewPermissionError}</label>
+                                <label >${uiLabelMap.PartySecurityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

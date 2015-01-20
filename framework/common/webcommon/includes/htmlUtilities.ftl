@@ -405,6 +405,118 @@ under the License.
     </#if>
     <@renderNextPrev ajaxEnabled=false javaScriptEnabled=true paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=0 listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying="" paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel=""/>
 </#macro>
+
+
+<#-- 
+*************
+* pricing table
+************
+Since this is very foundation specific, this function may be dropped in future installations
+
+    Usage example:  
+    <@pul >
+        <#pli>Text or <a href="">Anchor</a></#pli>
+    </@pul>            
+                    
+   * General Attributes *
+    title           = fieldset-title
+    
+-->
+
+<#macro pul title="">
+          <ul class="pricing-table">
+              <@pli type="title">${title!}</@pli>
+              <#nested>
+          </ul>
+</#macro>
+
+<#macro pli type>
+    <#switch type>
+          <#case "price">
+              <li class="price"><#nested></li>
+          <#break>
+          <#case "description">
+              <li class="description"><#nested></li>
+          <#break>
+          <#case "title">
+              <li class="title"><#nested></li>
+          <#break>
+          <#case "button">
+              <li class="cta-button"><#nested></li>
+          <#break>        
+          <#default>
+              <li class="bullet-item"><#nested></li>
+          <#break>
+    </#switch>
+</#macro>
+
+<#-- 
+*************
+* Grid list
+************
+Since this is very foundation specific, this function may be dropped in future installations
+
+    Usage example:  
+    <@grid>
+        <li>Text or <a href="">Anchor</a></li>
+    </@grid>            
+                    
+   * General Attributes *
+    class           = Adds classes - please use "(small|medium|large)-block-grid-#"
+    
+-->
+<#macro grid class="small-block-grid-2 medium-block-grid-4 large-block-grid-5">
+          <ul class="${class}">
+              <#nested>
+          </ul>
+</#macro>
+
+
+<#-- 
+*************
+* Nav list
+************
+Since this is very foundation specific, this function may be dropped in future installations
+
+    Usage example:  
+    <@nav type="">
+        <li>Text or <a href="">Anchor</a></li>
+    </@nav>
+    
+    <@nav type="magellan">
+        <@mli>Text or <a href="">Anchor</a></@mli>
+    </@nav>           
+                    
+   * General Attributes *
+    type            = (inline|magellan) (default:inline)
+    class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
+-->
+<#macro nav type="inline">
+    <#switch type>
+        <#case "magellan">
+            <div data-magellan-expedition="fixed">
+              <dl class="sub-nav">
+                <#nested>
+              </dl>
+            </div>
+        <#break>
+        <#default>
+            <ul class="inline-list sub-nav">
+              <#nested>
+            </ul>
+        <#break>
+    </#switch>
+</#macro>
+
+<#macro mli arrival="">
+    <dd data-magellan-arrival="${arrival!}"><#nested></dd>
+</#macro>
+
+<#function mtarget id>
+  <#assign returnValue="data-magellan-destination=\"${id}\""/>
+  <#return returnValue>
+</#function>
+
 <#-- UTLITY MACROS END -->
 
 

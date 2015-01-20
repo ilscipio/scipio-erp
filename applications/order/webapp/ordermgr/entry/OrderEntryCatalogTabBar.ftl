@@ -29,6 +29,8 @@ under the License.
         </#if>
     </#assign>
     <@section title=title!>
-        <a href="<@ofbizUrl>orderentry</@ofbizUrl>">${uiLabelMap.OrderOrderItems}</a>
+        <ul class="button-group">
+            <li><a href="<@ofbizUrl>orderentry</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderOrderItems}</a></li>
+        </ul>
     </@section>
 </#if>

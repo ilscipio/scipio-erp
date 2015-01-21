@@ -29,7 +29,7 @@ under the License.
                 <td colspan="2">&nbsp;</td>
             </tr>
             <tr>
-                <td class="label">${uiLabelMap.WebtoolsLabelManagerKey}</td>
+                <td class=>${uiLabelMap.WebtoolsLabelManagerKey}</td>
                 <td>
                     <#if parameters.sourceKey??>
                         ${parameters.sourceKey}
@@ -42,13 +42,13 @@ under the License.
                 </td>
             </tr>
             <tr>
-                <td class="label">${uiLabelMap.WebtoolsLabelManagerKeyComment}</td>
+                <td class=>${uiLabelMap.WebtoolsLabelManagerKeyComment}</td>
                 <td>
                     <input type="text" name="keyComment" size="70" value="${parameters.sourceKeyComment!}" />
                 </td>
             </tr>
             <tr>
-                <td class="label">${uiLabelMap.WebtoolsLabelManagerFileName}</td>
+                <td class=>${uiLabelMap.WebtoolsLabelManagerFileName}</td>
                 <td>
                     <#if parameters.sourceFileName??>
                         ${parameters.sourceFileName}
@@ -98,11 +98,11 @@ under the License.
                             <#if "ar.iw"?contains(langAttr?substring(0, 2))>
                                 <#assign langDir = "rtl">
                             </#if>
-                            <td lang="${langAttr}" dir="${langDir}" class="label">
+                            <td lang="${langAttr}" dir="${langDir}" class=>
                                 ${locale.getDisplayName(locale)}
                             </td>
                         <#else>
-                            <td class="label">${localeFound}</td>
+                            <td class=>${localeFound}</td>
                         </#if>
                         <td>
                             <input type="hidden" name="localeNames" value="${localeFound}" />

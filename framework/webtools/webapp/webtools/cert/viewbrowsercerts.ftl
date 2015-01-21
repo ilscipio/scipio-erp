@@ -34,11 +34,11 @@ under the License.
           <#assign certString = Static["org.ofbiz.base.util.KeyStoreUtil"].certToString(cert)!>
           <#if (certString?has_content)>
             <tr>
-              <td class="label">${uiLabelMap.WebtoolsCertsCert}</td>
+              <td class=>${uiLabelMap.WebtoolsCertsCert}</td>
               <td>${cert.getType()} ${cert.getSubjectX500Principal()}</td>
             </tr>
             <tr>
-              <td class="label">${uiLabelMap.WebtoolsCertsSerialNum}:</td>
+              <td class=>${uiLabelMap.WebtoolsCertsSerialNum}:</td>
               <td>${cert.getSerialNumber().toString(16)}</td>
             </tr>
             <tr>

@@ -20,7 +20,7 @@ under the License.
         <table class="basic-table" cellspacing="0">
         <thead>
             <tr>
-                <th class="label">${uiLabelMap.WebtoolsLabelManagerKey}</th>
+                <th class=>${uiLabelMap.WebtoolsLabelManagerKey}</th>
                 <th colspan="2">${parameters.sourceKey!}</th>
             </tr>
             <tr class="header-row">

@@ -22,12 +22,12 @@ under the License.
       <form method="post" action="<@ofbizUrl>viewdatafile</@ofbizUrl>">
         <table class="basic-table" cellspacing="0">
           <tr>
-            <td class="label">${uiLabelMap.WebtoolsDataDefinitionFileName}</td>
+            <td class=>${uiLabelMap.WebtoolsDataDefinitionFileName}</td>
             <td><input name="DEFINITION_LOCATION" type="text" size="60" value="${parameters.DEFINITION_LOCATION!}" /></td>
-            <td><span class="label">${uiLabelMap.WebtoolsDataIsUrl}</span><input type="checkbox" name="DEFINITION_IS_URL"<#if parameters.DEFINITION_IS_URL?has_content> checked="checked"</#if> /></td>
+            <td><span class=>${uiLabelMap.WebtoolsDataIsUrl}</span><input type="checkbox" name="DEFINITION_IS_URL"<#if parameters.DEFINITION_IS_URL?has_content> checked="checked"</#if> /></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.WebtoolsDataDefinitionName}</td>
+            <td class=>${uiLabelMap.WebtoolsDataDefinitionName}</td>
             <td>
               <#if definitionNames?has_content>
                 <select name="DEFINITION_NAME">
@@ -44,17 +44,17 @@ under the License.
             <td>&nbsp;</td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.WebtoolsDataFileName}</td>
+            <td class=>${uiLabelMap.WebtoolsDataFileName}</td>
             <td><input name="DATAFILE_LOCATION" type="text" size="60" value="${parameters.DATAFILE_LOCATION!}" /></td>
-            <td><span class="label">${uiLabelMap.WebtoolsDataIsUrl}</span><input type="checkbox" name="DATAFILE_IS_URL"<#if parameters.DATAFILE_IS_URL?has_content> checked="checked"</#if> /></td>
+            <td><span class=>${uiLabelMap.WebtoolsDataIsUrl}</span><input type="checkbox" name="DATAFILE_IS_URL"<#if parameters.DATAFILE_IS_URL?has_content> checked="checked"</#if> /></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.WebtoolsDataSaveToFile}</td>
+            <td class=>${uiLabelMap.WebtoolsDataSaveToFile}</td>
             <td><input name="DATAFILE_SAVE" type="text" size="60" value="${parameters.DATAFILE_SAVE!}"/></td>
             <td>&nbsp;</td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.WebtoolsDataSaveToXml}</td>
+            <td class=>${uiLabelMap.WebtoolsDataSaveToXml}</td>
             <td><input name="ENTITYXML_FILE_SAVE" type="text" size="60" value="${parameters.ENTITYXML_FILE_SAVE!}" /></td>
             <td>&nbsp;</td>
           </tr>
@@ -142,7 +142,7 @@ under the License.
             <td>${modelDataFile.separatorStyle}</td>
           </tr>
           <tr>
-            <td class="label">Description</td>
+            <td class=>Description</td>
             <td colspan="">${modelDataFile.description}</td>
           </tr>
         </table>

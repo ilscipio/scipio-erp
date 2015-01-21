@@ -19,7 +19,7 @@ under the License.
     <form method="post" action="EntitySQLProcessor" name="EntitySQLCommand">
       <table class="basic-table" cellspacing="0">
         <tr>
-            <td class="label">
+            <td class=>
                 ${uiLabelMap.CommonGroup}
             </td>
             <td>
@@ -31,7 +31,7 @@ under the License.
             </td>
         </tr>
         <tr>
-            <td class="label">
+            <td class=>
                 ${uiLabelMap.WebtoolsSqlCommand}
             </td>
             <td>
@@ -39,7 +39,7 @@ under the License.
             </td>
         </tr>
         <tr>
-            <td class="label">
+            <td class=>
                 ${uiLabelMap.WebtoolsLimitRowsTo}
             </td>
             <td>

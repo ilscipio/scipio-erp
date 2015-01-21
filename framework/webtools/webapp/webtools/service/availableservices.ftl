@@ -49,43 +49,43 @@ under the License.
       <div class="screenlet-body">
         <table class="basic-table" cellspacing='0'>
           <tr>
-            <td class="label">${uiLabelMap.WebtoolsServiceName}</td>
+            <td class=>${uiLabelMap.WebtoolsServiceName}</td>
             <td>${selectedServiceMap.serviceName}</td>
-            <td class="label">${uiLabelMap.WebtoolsEngineName}</td>
+            <td class=>${uiLabelMap.WebtoolsEngineName}</td>
             <td><a href='<@ofbizUrl>${url}?constraint=engine_name@${selectedServiceMap.engineName}</@ofbizUrl>'>${selectedServiceMap.engineName}</a></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonDescription}</td>
+            <td class=>${uiLabelMap.CommonDescription}</td>
             <td>${selectedServiceMap.description}</td>
-            <td class="label">${uiLabelMap.WebtoolsInvoke}</td>
+            <td class=>${uiLabelMap.WebtoolsInvoke}</td>
             <td>${selectedServiceMap.invoke}</td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.WebtoolsExportable}</td>
+            <td class=>${uiLabelMap.WebtoolsExportable}</td>
             <td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool = "true">&nbsp;(<a href='<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>'>${uiLabelMap.WebtoolsShowShowWSDL}</a>)</#if></td>
-            <td class="label">${uiLabelMap.WebtoolsLocation}</td>
+            <td class=>${uiLabelMap.WebtoolsLocation}</td>
             <td><a href='<@ofbizUrl>${url}?constraint=location@${selectedServiceMap.location}</@ofbizUrl>'>${selectedServiceMap.location}</a></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.WebtoolsDefinitionLocation}</td>
+            <td class=>${uiLabelMap.WebtoolsDefinitionLocation}</td>
             <td><a href='<@ofbizUrl>${url}?constraint=definitionLocation@${selectedServiceMap.definitionLocation}</@ofbizUrl>'>${selectedServiceMap.definitionLocation}</a></td>
-            <td class="label">${uiLabelMap.WebtoolsDefaultEntityName}</td>
+            <td class=>${uiLabelMap.WebtoolsDefaultEntityName}</td>
             <td><a href='<@ofbizUrl>${url}?constraint=default_entity_name@${selectedServiceMap.defaultEntityName}</@ofbizUrl>'>${selectedServiceMap.defaultEntityName}</a></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.WebtoolsArtifactInfo}</td>
+            <td class=>${uiLabelMap.WebtoolsArtifactInfo}</td>
             <td><a href='<@ofbizUrl>ArtifactInfo?name=${selectedServiceMap.serviceName}&amp;type=service</@ofbizUrl>'>${uiLabelMap.WebtoolsArtifactInfo}</a></td>
-            <td class="label">${uiLabelMap.WebtoolsRequireNewTransaction}</td>
+            <td class=>${uiLabelMap.WebtoolsRequireNewTransaction}</td>
             <td>${selectedServiceMap.requireNewTransaction}</td>
           </tr>
           <tr>
             <td colspan="2">&nbsp;</td>
-            <td class="label">${uiLabelMap.WebtoolsUseTransaction}</td>
+            <td class=>${uiLabelMap.WebtoolsUseTransaction}</td>
             <td>${selectedServiceMap.useTrans}</td>
           </tr>
           <tr>
             <td colspan="2">&nbsp;</td>
-            <td class="label">${uiLabelMap.WebtoolsMaxRetries}</td>
+            <td class=>${uiLabelMap.WebtoolsMaxRetries}</td>
             <td>${selectedServiceMap.maxRetry}</td>
           </tr>
         </table>

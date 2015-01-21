@@ -19,11 +19,11 @@ under the License.
 <div class="screenlet-body">
     <table class="basic-table" cellspacing="3">
         <tr>
-            <td class="label">${uiLabelMap.WebtoolsLabelManagerKey}</td>
+            <td class=>${uiLabelMap.WebtoolsLabelManagerKey}</td>
             <td>${parameters.sourceKey!}</td>
         </tr>
         <tr>
-            <td class="label">${uiLabelMap.WebtoolsLabelManagerFileName}</td>
+            <td class=>${uiLabelMap.WebtoolsLabelManagerFileName}</td>
             <td>${parameters.fileName!}</td>
         </tr>
         <tr>

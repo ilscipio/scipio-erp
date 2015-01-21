@@ -479,7 +479,7 @@ Since this is very foundation specific, this function may be dropped in future i
           </ul>
 </#macro>
 
-<#macro pli type>
+<#macro pli type="">
     <#switch type>
           <#case "price">
               <li class="price"><#nested></li>

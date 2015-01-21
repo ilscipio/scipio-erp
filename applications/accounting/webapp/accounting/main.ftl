@@ -16,108 +16,63 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div>
-<table>
-  <tr>
-     <td colspan="3"><h1>${uiLabelMap.AccountingAgreements}</h1></td>
-  </tr>
 
-  <tr>
-     <td colspan="3">
-<ul>
-<li><a href="<@ofbizUrl>FindAgreement</@ofbizUrl>">${uiLabelMap.AccountingAgreementAvailable}</a></li>
-</ul>
-<br />
-     </td>
-  </tr>
-  <tr>
-     <td colspan="3"><h1 class="h1">${uiLabelMap.AccountingBillingMenu}</h1></td>
-  </tr>
-
-  <tr>
-     <td colspan="3">
-<ul>
-<li><a href="<@ofbizUrl>FindBillingAccount</@ofbizUrl>">${uiLabelMap.CommonShow} ${uiLabelMap.AccountingCustomer} ${uiLabelMap.AccountingBillingAccount}</a></li>
-</ul>
-<br />
-     </td>
-  </tr>
-
-  <tr>
-     <td colspan="3"><h1 class="h1">${uiLabelMap.AccountingFixedAssets}</h1></td>
-  </tr>
-
-  <tr>
-     <td colspan="3">
-<ul>
-<li><a href="<@ofbizUrl>ListFixedAssets</@ofbizUrl>">${uiLabelMap.AccountingShowAllFixedAssets}</a></li>
-</ul>
-<br />
-     </td>
-  </tr>
-
-  <tr>
-     <td colspan="3"><h1 class="h1">${uiLabelMap.AccountingInvoicesMenu}</h1></td>
-  </tr>
-
-  <tr valign="top">
-<td>
-<ul>
-<li><a href="<@ofbizUrl>findInvoices?noConditionFind=Y&amp;lookupFlag=Y</@ofbizUrl>">${uiLabelMap.AccountingShowAllInvoices}</a></li>
-</ul>
-</td>
-
-<td>
-<ul>
-<#list invoiceTypes as invoiceType>
-<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&amp;invoiceTypeId=${invoiceType.invoiceTypeId}</@ofbizUrl>">${uiLabelMap.AccountingShowInvoices} ${invoiceType.get("description",locale)!invoiceType.invoiceTypeId}</a></li>
-</#list>
-</ul>
-</td>
-<td>
-<ul>
-<#list invoiceStatus as status>
-<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&amp;statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.AccountingShowInvoices} ${status.get("description",locale)!status.statusId}</a></li>
-</#list>
-</ul>
-</td>
-</tr>
-
-  <tr>
-     <td colspan="3"><h1 class="h1">${uiLabelMap.AccountingPaymentsMenu}</h1></td>
-  </tr>
-
-<tr valign="top">
-<td>
-<ul>
-<li><a href="<@ofbizUrl>findPayments?noConditionFind=Y&amp;lookupFlag=Y</@ofbizUrl>">${uiLabelMap.AccountingShowAllPayments}</a></li>
-</ul>
-</td>
-<td>
-
-<ul>
-<#list paymentTypes as paymentType>
-<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&amp;paymentTypeId=${paymentType.paymentTypeId}</@ofbizUrl>">${uiLabelMap.AccountingShowPayments} ${paymentType.get("description",locale)!paymentType.paymentTypeId}</a></li>
-</#list>
-</ul>
-</td>
-
-
-<td>
-<ul>
-<#list paymentMethodTypes as paymentMethodType>
-<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&amp;paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">${uiLabelMap.AccountingShowPayments} ${paymentMethodType.get("description",locale)!paymentMethodType.paymentMethodTypeId}</a></li>
-</#list>
-</ul>
-</td>
-
-<td>
-<ul>
-<#list paymentStatus as status>
-<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&amp;statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.AccountingShowPayments} ${status.get("description",locale)!status.statusId}</a></li>
-</#list>
-</ul>
-</td>
-</tr>
-</table>
-</div>
+<@section>
+    <@grid>
+        <li>
+            <@pul title="${uiLabelMap.AccountingInvoicesMenu}">
+                <@pli><a href="<@ofbizUrl>findInvoices?noConditionFind=Y&amp;lookupFlag=Y</@ofbizUrl>">${uiLabelMap.AccountingShowAllInvoices}</a></@pli>
+                <#list invoiceTypes as invoiceType>
+                    <@pli><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&amp;invoiceTypeId=${invoiceType.invoiceTypeId}</@ofbizUrl>">${uiLabelMap.AccountingShowInvoices} ${invoiceType.get("description",locale)!invoiceType.invoiceTypeId}</a></@pli>
+                </#list>
+            </@pul>
+        </li>
+        <li>
+            <@pul title="${uiLabelMap.AccountingInvoicesMenu}: ${uiLabelMap.CommonStatus}">
+                <#list invoiceStatus as status>
+                    <@pli><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&amp;statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.AccountingShowInvoices} ${status.get("description",locale)!status.statusId}</a></@pli>
+                </#list>        
+            </@pul>
+        </li>
+         <li>
+            <@pul title="${uiLabelMap.AccountingPaymentsMenu}">  
+                <@pli><a href="<@ofbizUrl>findPayments?noConditionFind=Y&amp;lookupFlag=Y</@ofbizUrl>">${uiLabelMap.AccountingShowAllPayments}</a></@pli>
+                <#list paymentTypes as paymentType>
+                    <@pli><a href="<@ofbizUrl>findPayments?lookupFlag=Y&amp;paymentTypeId=${paymentType.paymentTypeId}</@ofbizUrl>">${uiLabelMap.AccountingShowPayments} ${paymentType.get("description",locale)!paymentType.paymentTypeId}</a></@pli>
+                </#list>
+            </@pul>
+        </li>
+        <li>
+            <@pul title="${uiLabelMap.AccountingPaymentsMenu}: ${uiLabelMap.CommonPaymentMethodType}">  
+                <#list paymentMethodTypes as paymentMethodType>
+                    <@pli><a href="<@ofbizUrl>findPayments?lookupFlag=Y&amp;paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">${uiLabelMap.AccountingShowPayments} ${paymentMethodType.get("description",locale)!paymentMethodType.paymentMethodTypeId}</a></@pli>
+                </#list>
+            </@pul>
+        </li>
+        <li>
+            <@pul title="${uiLabelMap.AccountingPaymentsMenu}: ${uiLabelMap.CommonStatus}">  
+                <#list paymentStatus as status>
+                    <@pli><a href="<@ofbizUrl>findPayments?lookupFlag=Y&amp;statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.AccountingShowPayments} ${status.get("description",locale)!status.statusId}</a></@pli>
+                </#list>
+            </@pul>
+        </li>
+        <li>
+            <@pul title="${uiLabelMap.AccountingAgreements}">
+            
+                        <@pli><a href="<@ofbizUrl>FindAgreement</@ofbizUrl>">${uiLabelMap.AccountingAgreementAvailable}</a></@pli>
+            
+              
+             </@pul> 
+        </li>
+         <li>
+            <@pul title="${uiLabelMap.AccountingBillingMenu}">
+                <@pli><a href="<@ofbizUrl>FindBillingAccount</@ofbizUrl>">${uiLabelMap.CommonShow} ${uiLabelMap.AccountingCustomer} ${uiLabelMap.AccountingBillingAccount}</a></@pli>
+            </@pul>
+        </li>
+        <li>     
+            <@pul title="${uiLabelMap.AccountingFixedAssets}">
+                <@pli><a href="<@ofbizUrl>ListFixedAssets</@ofbizUrl>">${uiLabelMap.AccountingShowAllFixedAssets}</a></@pli>
+            </@pul>
+        </li>
+    </@grid>
+</@section>

@@ -28,41 +28,42 @@ under the License.
 </#if>
 
 
-
-
+<div id="login" class="reveal-modal remove-whitespace" data-options="close_on_background_click: false;" data-reveal>
+<#assign logo><img src="<@ofbizContentUrl>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
+<@section title="${uiLabelMap.CommonLogin}">
   <@row>
-      <h1>${uiLabelMap.CommonRegistered}</h1>
-    <div class="panel">
+    <div class="large-12 columns auth-plain">
+     <div class="signup-panel right-solid">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
-       <div class="row">
-        <div class="large-6 columns">
-          <div class="row collapse prefix-radius">
+       <@row>
+        <div class="large-12 columns">
+          <div class="row collapse">
             <div class="small-3 columns">
-              <span class="prefix">${uiLabelMap.CommonUsername}</span>
+              <span class="prefix"><i class="fi-torso-female"></i></span>
             </div>
             <div class="small-9 columns">
-              <input type="text" name="USERNAME" value="${username}" size="20" placeholder="admin"/>
+              <input type="text" name="USERNAME" value="${username}" size="20" placeholder="admin" title="${uiLabelMap.CommonUsername}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
             </div>
           </div>
         </div>
-       </div>
-      <div class="row">
-        <div class="large-6 columns">
-          <div class="row collapse prefix-radius">
+       </@row>
+      <@row>
+        <div class="large-12 columns">
+          <div class="row collapse">
             <div class="small-3 columns">
-              <span class="prefix">${uiLabelMap.CommonPassword}</span>
+              <span class="prefix"><i class="fi-lock"></i></span>
             </div>
             <div class="small-9 columns">
-              <input type="password" name="PASSWORD" value="" size="20" placeholder="ofbiz"/>
+              <input type="password" name="PASSWORD" value="" size="20" placeholder="ofbiz" title="${uiLabelMap.CommonPassword}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
             </div>
           </div>
         </div>
-       </div>
+       </@row>
           <#if ("Y" == useMultitenant) >
               <#if !requestAttributes.tenantId??>
               <div class="row">
-                <div class="large-6 columns">
-                  <div class="row collapse prefix-radius">
+                <div class="large-12 columns">
+                  <div class="row collapse">
                     <div class="small-3 columns">
                       <span class="prefix">${uiLabelMap.CommonTenantId}</span>
                     </div>
@@ -76,19 +77,29 @@ under the License.
                   <input type="hidden" name="tenantId" value="${requestAttributes.tenantId!}"/>
               </#if>
           </#if>
-          <tr>
-            <td colspan="2" align="center">
-              <input type="submit" value="${uiLabelMap.CommonLogin}" class="button"/>
-            </td>
-          </tr>
-        </table>
-        <input type="hidden" name="JavaScriptEnabled" value="N"/>
-        <br />
-        <a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a>
+   
+         
+         <@row>
+             <@cell class="large-9 columns text-left">
+                <small><a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a></small>
+                
+             </@cell>
+            <@cell class="large-3 columns text-right">
+                <input type="hidden" name="JavaScriptEnabled" value="N"/>
+                <input type="submit" value="${uiLabelMap.CommonLogin}" class="button"/>
+            </@cell>
+        </@row>
       </form>
+      </div>
     </div>
   </@row>
+</@section>
+</div>
 <script language="JavaScript" type="text/javascript">
+  $(function(){
+     $(document).foundation();
+     $('#login').foundation('reveal', 'open');
+    });
   document.loginform.JavaScriptEnabled.value = "Y";
   <#if focusName>
     document.loginform.USERNAME.focus();

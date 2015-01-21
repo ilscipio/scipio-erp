@@ -18,7 +18,7 @@ under the License.
 -->
 <@section title="${uiLabelMap.CommonLanguageTitle}">
 
-  <table cellspacing="0" class="basic-table">
+  <ul class="no-bullet">
     <#assign altRow = true>
     <#assign availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocales()/>
     <#list availableLocales as availableLocale>
@@ -28,11 +28,9 @@ under the License.
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>
             <#assign langDir = "rtl">
         </#if>
-        <tr <#if altRow>class="alternate-row"</#if>>
-            <td lang="${langAttr}" dir="${langDir}">
+            <li lang="${langAttr}" dir="${langDir}">
                 <a href="<@ofbizUrl>setSessionLocale</@ofbizUrl>?newLocale=${availableLocale.toString()}">${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</a>
-            </td>
-        </tr>
+            </li>
     </#list>
-  </table>
+  </ul>
 </@section>

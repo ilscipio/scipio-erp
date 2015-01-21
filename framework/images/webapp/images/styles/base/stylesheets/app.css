@@ -7606,7 +7606,7 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
 
 /* line 269, ../bower_components/foundation/scss/foundation/components/_type.scss */
 h1 {
-  font-size: 1.6875rem;
+  font-size: 1.375rem;
 }
 
 /* line 270, ../bower_components/foundation/scss/foundation/components/_type.scss */
@@ -7856,7 +7856,7 @@ blockquote p {
 
   /* line 456, ../bower_components/foundation/scss/foundation/components/_type.scss */
   h1 {
-    font-size: 2.3125rem;
+    font-size: 2rem;
   }
 
   /* line 457, ../bower_components/foundation/scss/foundation/components/_type.scss */
@@ -9290,12 +9290,17 @@ table.basic-table tr.odd {
   background: #fafafa;
 }
 
-/* line 113, ../scss/_base.scss */
+/* line 111, ../scss/_base.scss */
+#login {
+  width: 500px;
+}
+
+/* line 114, ../scss/_base.scss */
 td {
   word-break: break-all;
 }
 
-/* line 117, ../scss/_base.scss */
+/* line 118, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -9303,44 +9308,44 @@ td {
   padding: 8px 0px;
 }
 
-/* line 123, ../scss/_base.scss */
+/* line 124, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
 }
 
-/* line 128, ../scss/_base.scss */
+/* line 129, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 132, ../scss/_base.scss */
+/* line 133, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
 /*Highlight code*/
 /*  FOOTER */
-/* line 142, ../scss/_base.scss */
+/* line 143, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 147, ../scss/_base.scss */
+/* line 148, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 152, ../scss/_base.scss */
+/* line 153, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 156, ../scss/_base.scss */
+/* line 157, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;

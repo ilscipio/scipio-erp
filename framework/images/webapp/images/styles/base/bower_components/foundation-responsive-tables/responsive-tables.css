@@ -22,13 +22,13 @@ table.responsive { margin-bottom: 0; }
 
 
 /* customization */
-.pinned { position: absolute; left: 0; top: 0; background: #fff;  overflow: hidden; overflow-x: scroll; border-right: 1px solid #ccc; border-left: 1px solid #ccc;}
+.pinned { position: absolute; left: 0; top: 0; width:150px;background: #fff;  overflow: hidden; overflow-x: scroll; border-right: 1px solid #ccc; border-left: 1px solid #ccc;}
 .pinned table { border-right: none; border-left: none; width: 100%; }
 .pinned table th, .pinned table td { white-space: nowrap; }
 .pinned td:last-child { border-bottom: 0; }
 
 div.table-wrapper { position: relative; margin-bottom: 20px; overflow: hidden; border-right: 1px solid #ccc; }
-div.table-wrapper div.scrollable {  }
+div.table-wrapper div.scrollable {  margin-left:150px;}
 div.table-wrapper div.scrollable { overflow: scroll; overflow-y: hidden; }  
 
 table.responsive td, table.responsive th { position: relative; white-space: nowrap; overflow: hidden; }
@@ -37,6 +37,6 @@ table.responsive th:first-child, table.responsive td:first-child, table.responsi
 
 /* Mobile */
 @media only screen and (max-width: 767px) {
-	
+
 	
 }

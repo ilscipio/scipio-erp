@@ -182,10 +182,14 @@ under the License.
 </#macro>
 
 <#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true>
+<div <#if collapsed>class="toggleField"</#if>>
+<#if collapsed><p class="alert legend">[ <i class="fa fa-arrow-right"></i> ] ${title!}</p></#if>
 <div class="row"<#if id?has_content> id="${id}"</#if>><#rt/>
 <div class="<#if classes?has_content>${classes}<#else>large-12</#if> columns">
+
 <#if showMore>
-    <#if title?has_content><h2>${title}</h2></#if>
+<#if title?has_content><h2> ${title}</h2></#if>    
+    
     <#--
         <#if collapsible>
         <li class="<#rt/>
@@ -199,12 +203,12 @@ under the License.
     -->
     ${menuString}
     </#if>
-    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"<#if collapsed> style="display: none;"</#if></#if><#if padded> class="offset-by-one"<#else></#if>>
+    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if>>
 </#macro>
 
 <#macro renderScreenletSubWidget></#macro>
 
-<#macro renderScreenletEnd></div></div></div></#macro>
+<#macro renderScreenletEnd></div></div></div></div></#macro>
 
 <#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl>
     <li class="${paginateLastStyle}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${lastLinkUrl}">${paginateLastLabel}</a><#else>${paginateLastLabel}</#if></li>

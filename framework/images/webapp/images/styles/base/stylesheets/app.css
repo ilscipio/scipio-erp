@@ -9283,24 +9283,29 @@ table.basic-table tr {
 }
 /* line 101, ../scss/_base.scss */
 table.basic-table tr td {
+  height: auto;
   vertical-align: top;
 }
-/* line 106, ../scss/_base.scss */
+/* line 107, ../scss/_base.scss */
 table.basic-table tr.odd {
   background: #fafafa;
 }
+/* line 109, ../scss/_base.scss */
+table.basic-table input {
+  margin: 0px;
+}
 
-/* line 111, ../scss/_base.scss */
+/* line 113, ../scss/_base.scss */
 #login {
   width: 500px;
 }
 
-/* line 114, ../scss/_base.scss */
+/* line 116, ../scss/_base.scss */
 td {
   word-break: break-all;
 }
 
-/* line 118, ../scss/_base.scss */
+/* line 120, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -9308,44 +9313,44 @@ td {
   padding: 8px 0px;
 }
 
-/* line 124, ../scss/_base.scss */
+/* line 126, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
 }
 
-/* line 129, ../scss/_base.scss */
+/* line 131, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 133, ../scss/_base.scss */
+/* line 135, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
 /*Highlight code*/
 /*  FOOTER */
-/* line 143, ../scss/_base.scss */
+/* line 145, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 148, ../scss/_base.scss */
+/* line 150, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 153, ../scss/_base.scss */
+/* line 155, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 157, ../scss/_base.scss */
+/* line 159, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;

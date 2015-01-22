@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<@section>
         <form method="post" action="<@ofbizUrl>FindGeneric?entityName=${entityName}</@ofbizUrl>">
           <input type="hidden" name="find" value="true"/>
           <input type="hidden" name="searchOptions_collapsed" value="true"/>
@@ -37,8 +38,9 @@ under the License.
                 </tr>
             </#list>
                 <tr>
-                    <td colspan="3"><h3>${uiLabelMap.WebtoolsToFindAll} ${entityName}, ${uiLabelMap.WebtoolsLeaveAllEntriesBlank}</h3></td>
+                    <td colspan="3">${uiLabelMap.WebtoolsToFindAll} ${entityName}, ${uiLabelMap.WebtoolsLeaveAllEntriesBlank}</td>
                     <td><input type="submit" value="${uiLabelMap.CommonFind}"/></td>
                 </tr>
             </table>
         </form>
+</@section>

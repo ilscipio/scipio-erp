@@ -3,7 +3,7 @@
 
 function collapseFieldset(){
 	$( ".toggleField .row" ).wrapAll( "<div class='collapsehide' style='display:none'/>");
-	$(".toggleField legend").click(function(){
+	$(".toggleField legend, .toggleField .legend").click(function(){
         $(this).children("i").toggleClass(" fa-arrow-right").toggleClass(" fa-arrow-down");
         $(this).nextAll("div.collapsehide").slideToggle(500);
 	});

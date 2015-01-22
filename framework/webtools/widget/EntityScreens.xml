@@ -193,16 +193,18 @@ under the License.
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <container style="button-bar button-style-1">
-                                    <link target="entitymaint" text="${uiLabelMap.WebtoolsBackToEntityList}"/>
-                                    <link target="ViewRelations" text="${uiLabelMap.WebtoolsViewRelations}">
+                                <container style="row">
+                                <container style="large-12 columns">
+                                    <link target="entitymaint" text="${uiLabelMap.WebtoolsBackToEntityList}" style="button tiny"/>
+                                    <link target="ViewRelations" text="${uiLabelMap.WebtoolsViewRelations}" style="button tiny">
                                         <parameter param-name="entityName" from-field="entityName"/>
                                     </link>
-                                    <link target="ViewGeneric" text="${uiLabelMap.CommonCreateNew}" style="create">
+                                    <link target="ViewGeneric" text="${uiLabelMap.CommonCreateNew}" style="button tiny success">
                                         <parameter param-name="entityName" from-field="entityName"/>
                                         <parameter param-name="enableEdit" value="true"/>
                                     </link>
                                 </container>
+                            </container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <platform-specific>

@@ -20,7 +20,8 @@ under the License.
             <#assign commonUrl="FindGeneric?${curFindString}&amp;searchOptions_collapsed=${(parameters.searchOptions_collapsed)?default(\"false\")}&amp;"/>
             <@htmlTemplate.nextPrev commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex highIndex=highIndex commonDisplaying=commonDisplaying/>
         </#if>
-          <table class="basic-table hover-bar" cellspacing="0">
+        <#if resultPartialList?has_content>
+          <table class="responsive" cellspacing="0">
            <thead>
                 <tr class="header-row-2">
                     <th>&nbsp;</th>
@@ -33,11 +34,13 @@ under the License.
                 <#assign alt_row = false>
                 <#list records as record>
                     <tr<#if alt_row> class="alternate-row"</#if>>
-                        <td class="button-col">
-                            <a href='<@ofbizUrl>ViewGeneric?${record.findString}</@ofbizUrl>'>${uiLabelMap.CommonView}</a>
+                        <td>
+                            <ul class="button-group">
+                            <li><a href="<@ofbizUrl>ViewGeneric?${record.findString}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonView}</a></li>
                         <#if hasDeletePermission == 'Y'>
-                            <a href='<@ofbizUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@ofbizUrl>'>${uiLabelMap.CommonDelete}</a>
+                            <li><a href="<@ofbizUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@ofbizUrl>" class="button tiny alert">${uiLabelMap.CommonDelete}</a></li>
                         </#if>
+                            </ul>
                         </td>
                         <#list fieldList as field>
                             <td>${record.fields.get(field.name)!?string}</td>
@@ -45,14 +48,11 @@ under the License.
                     </tr>
                     <#assign alt_row = !alt_row>
                 </#list>
-            <#else>
-                <tr>
-                    <td colspan="${columnCount}">
-                        <h2>${uiLabelMap.WebtoolsNoEntityRecordsFound} ${entityName}.</h2>
-                    </td>
-                </tr>
             </#if>
         </table>
+        <#else>
+         <@panel>${uiLabelMap.WebtoolsNoEntityRecordsFound} ${entityName}.</@panel>
+        </#if>
         <#if (arraySize > 0)>
             <@htmlTemplate.nextPrev commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex  highIndex=highIndex />
         </#if>

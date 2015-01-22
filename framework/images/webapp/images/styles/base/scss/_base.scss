@@ -99,12 +99,14 @@ table.basic-table {
         background: none;
         
         td {
+            height:auto;
             vertical-align: top;
         }
     }
     tr.even {}
-    tr.odd {background: $ghost;
-            }
+    tr.odd {background: $ghost;}
+    
+    input {margin:0px;}
             
 }
 

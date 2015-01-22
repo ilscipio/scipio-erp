@@ -35,12 +35,10 @@ under the License.
                 <#list records as record>
                     <tr<#if alt_row> class="alternate-row"</#if>>
                         <td>
-                            <ul class="button-group">
-                            <li><a href="<@ofbizUrl>ViewGeneric?${record.findString}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonView}</a></li>
+                            <a href="<@ofbizUrl>ViewGeneric?${record.findString}</@ofbizUrl>">${uiLabelMap.CommonView}</a>
                         <#if hasDeletePermission == 'Y'>
-                            <li><a href="<@ofbizUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@ofbizUrl>" class="button tiny alert">${uiLabelMap.CommonDelete}</a></li>
+                           <a href="<@ofbizUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@ofbizUrl>" class="alert">${uiLabelMap.CommonDelete}</a>
                         </#if>
-                            </ul>
                         </td>
                         <#list fieldList as field>
                             <td>${record.fields.get(field.name)!?string}</td>

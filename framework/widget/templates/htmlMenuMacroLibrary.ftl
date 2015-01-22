@@ -23,7 +23,6 @@ under the License.
       <#if boundaryComment?has_content>
       <!-- ${boundaryComment} -->
       </#if>
-      
       <#if isSubMenu>
       <div class="large-12 columns">
           <nav class="sub-top-bar hide-for-small" data-topbar role="navigation">          
@@ -84,7 +83,7 @@ under the License.
 </form><#rt/>
   </#if>
 <#if (linkType?has_content && "hidden-form" == linkType) || linkUrl?has_content>
-<a<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if name?has_content> name="${name}"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if> href="<#if "hidden-form"==linkType>javascript:document.${uniqueItemName}.submit()<#else>${linkUrl}</#if>"><#rt/>
+<a<#if id?has_content> id="${id}"</#if> class="<#if style?has_content>${style}</#if>"<#if name?has_content> name="${name}"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if> href="<#if "hidden-form"==linkType>javascript:document.${uniqueItemName}.submit()<#else>${linkUrl}</#if>"><#rt/>
 </#if>
 <#if imgStr?has_content>${imgStr}</#if><#if text?has_content>${text}</#if><#rt/>
 <#if (linkType?has_content && "hidden-form" == linkType) || linkUrl?has_content></a><#rt/></#if>

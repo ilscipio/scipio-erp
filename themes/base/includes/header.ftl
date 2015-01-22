@@ -254,7 +254,8 @@ under the License.
             </ul>
           </li>
           <li class="divider"></li>
-          <li class="has-form"><a class="small button" href="javascript:lookup_popup1('showHelp?helpTopic=${helpTopic}&amp;portalPageId=${parameters.portalPageId!}','help' ,500,500);">${uiLabelMap.CommonHelp}</a></li>       
+          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
+          <li class="has-form"><@modal label="${uiLabelMap.CommonHelp}" id="help" href="${helpLink}"></@modal></li>       
         </ul>
         
         <#if userLogin?has_content>

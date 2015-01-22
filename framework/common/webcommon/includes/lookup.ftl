@@ -17,8 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")> 
-
 <@renderScreenBegin />
     <title>${title!}</title>
     <#-- the trick "<scr" + "ipt below is because browsers should not parse the contents of CDATA elements, but apparently they do. -->
@@ -97,8 +95,7 @@ under the License.
                     eval(evalString);
                 }
             }
-            window.close();
          }
     </script>
 </head>
-<body style="background-color: WHITE;">
+<body>

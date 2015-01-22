@@ -340,8 +340,8 @@ under the License.
     id              = set id
     title           = 
 -->
-<#macro modal id label>
-    <a href="#" data-reveal-id="${id}_modal">${label}</a>
+<#macro modal id label href="">
+    <a href="#" data-reveal-id="${id}_modal" <#if href?has_content>data-reveal-ajax="${href!}"</#if>>${label}</a>
     <div id="${id}_modal" class="reveal-modal" data-reveal>
         <#nested>
         <a class="close-reveal-modal">&#215;</a>

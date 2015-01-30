@@ -912,7 +912,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </div>
     <div id="${collapsibleAreaId}" class="fieldgroup-body" <#if collapsed && collapsible> style="display: none;"</#if>>
     -->
-    <#if title?has_content><legend>[ <i class="fa fa-arrow-right"></i> ] ${title}</legend></#if>
+    <#if title?has_content>[ <legend><i class="fa fa-arrow-right"></i> ] ${title}</legend></#if>
   </#if>
 </#macro>
 

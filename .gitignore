@@ -40,3 +40,4 @@ themes/flatgrey/webapp/flatgrey/mainrtl-min.css
 .*.swp
 .*.swo
 framework/entity/lib/jdbc
+.svn/

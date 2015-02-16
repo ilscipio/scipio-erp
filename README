@@ -14,7 +14,7 @@ System Requirements
 
 Software Requirements
 * Java 1.6 (or greater) SDK
-* Maven 3
+* Apache ANT
 
 
 Recommended Development Tools

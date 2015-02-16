@@ -102,8 +102,9 @@ under the License.
                               my guess is that the base/config/debug.properties file is not found in the classpath -->
                  <property-to-field resource="debug" property="log4j.appender.css.File" field="logFileName" default="runtime/logs/ofbiz.log" no-locale="true"/>
                  <script location="component://webtools/webapp/webtools/WEB-INF/actions/log/LogView.groovy"/>
-                 <!--<set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/vendor/rainbow-custom.min.js" global="true" />-->
-                 
+                 <!-- Uncomment this to prettify the code component
+                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
+                 <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/rainbow/rainbow.css" global="true" />-->
              </actions>
              <widgets>
                  <decorator-screen name="log-decorator">
@@ -112,9 +113,9 @@ under the License.
                              <container style="button-bar">
                                  <link target="LogView" text="${uiLabelMap.CommonRefresh}" style="button tiny refresh"/>
                              </container>
-                             <container style="button-group">
-                                 <label style="tiny button">${uiLabelMap.WebtoolsLogFileName}:</label>
-                                 <label style="tiny button">${logFileName}</label>
+                             <container style="">
+                                 <label style="">${uiLabelMap.WebtoolsLogFileName}:</label>
+                                 <label style="">${logFileName}</label>
                              </container>
                              <platform-specific>
                                  <html><html-template location="component://webtools/webapp/webtools/log/logContent.ftl"/></html>

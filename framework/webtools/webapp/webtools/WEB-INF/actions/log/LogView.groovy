@@ -22,18 +22,24 @@ import org.ofbiz.base.util.FileUtil;
 List logLines = [];
 try {
     File logFile = FileUtil.getFile(logFileName);
+    type = '';
     logFile.eachLine { line ->
-        type = '';
-        if (line.contains(":INFO ] ")) {
+        if (line.startsWith("[INFO]")) {
             type = 'INFO';
-        } else if (line.contains(":WARN ] ")) {
+        } else if (line.startsWith("[WARN]")) {
             type = 'WARN';
-        } else if (line.contains(":ERROR] ")) {
+        } else if (line.startsWith("[ERROR]")) {
             type = 'ERROR';
-        } else if (line.contains(":DEBUG] ")) {
+        } else if (line.startsWith("[DEBUG]")) {
             type = 'DEBUG';
+        } else if (line.startsWith("[TRACE]")) {
+            type = 'TRACE';
+        }else if (line.startsWith("[FATAL]")) {
+            type = 'TRACE';
+        }else if (line.startsWith("[ALL]")) {
+            type = '';
         }
-        logLines.add([type: type, line:line]);
+        logLines.add([type: type, line:line.trim()]);
     }
 } catch (Exception exc) {}
 

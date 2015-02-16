@@ -66,11 +66,7 @@ under the License.
     <@field type="input" label="${uiLabelMap.WebtoolsSingleFilename}" size="60" name="filename" value="${parameters.filename!}"/></td>
     <@field type="datetime" dateType="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedSince}" name="entityFrom"  value="" size="25" maxlength="30" id="entityFrom1" dateType="date" />
     <@field type="datetime" dateType="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedBefore}" name="entityThru" value="" size="25" maxlength="30" id="entityThru1" dateType="date" />
-    <@row>
-        <@cell class="large-12">
-            <@renderCheckBox name="tobrowser" checked=tobrowser?default("N")/> ${StringUtil.wrapString(uiLabelMap.WebtoolsOutToBrowser)}
-        </@cell>
-    </@row>
+    <@field type="checkbox" name="tobrowser" value="N" label="${StringUtil.wrapString(uiLabelMap.WebtoolsOutToBrowser)}"/>
      </@cell>
     </@row>
     <hr>

@@ -114,7 +114,7 @@ under the License.
         <#if type!="radio">
         <@cell class=subclasses>
                 <#if type=="checkbox" || collapse==false>
-                    <label class="">${label}</label>
+                    <label class="" for="${id}">${label}</label>
                 <#else>
                     <span class="prefix">${label}</span>
                 </#if>           
@@ -220,7 +220,7 @@ under the License.
             <@renderLookupField name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
           <#break>
           <#case "checkbox">
-                <@renderCheckBox id=id checked="checked" currentValue=value name=name action=action />
+                <@renderCheckBox id=id currentValue=value name=name action=action />
             <#break>
           <#case "radio">
             <#assign items=[{"description",label!""}]/>

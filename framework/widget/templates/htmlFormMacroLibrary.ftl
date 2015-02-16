@@ -293,25 +293,26 @@ under the License.
 </#macro>
 
 <#macro renderCheckBox id="" checked=false currentValue="N" name="" action="" tooltip="">
-    <div class="switch">
-    <input type="checkbox"<#if id??> id="${id}"</#if><#rt/>
+    <div class="switch small">
+    <input type="checkbox" id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
       <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-      <#if checked?has_content && checked> checked="checked"
+      <#if checked> checked="checked"
       <#elseif currentValue?has_content && currentValue=="Y"> checked="checked"</#if> 
       name="${name?default("")?html}" value="${currentValue!}"<#if action?has_content> onClick="${action}"</#if>/><#rt/>
+      <label for="<#if id?has_content>${id}<#else>${name!}</#if>"></label>
     </div>
 </#macro>
 
 <#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="">
   <#list items as item>
-    <div class="switch">
+    <div class="switch small">
     <span <@renderClass className alert />><#rt/>
       <input type="checkbox"<#if (item_index == 0)> id="${id}"</#if><#rt/>
         <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
         <#if allChecked?has_content && allChecked> checked="checked" <#elseif allChecked?has_content && !allChecked>
           <#elseif currentValue?has_content && currentValue==item.value> checked="checked"</#if> 
           name="${name?default("")?html}" value="${item.value?default("")?html}"<#if event?has_content> ${event}="${action}"</#if>/><#rt/>
-        ${item.description?default("")}
+          <label for="${id!}"></label>
     </span>
     </div>
   </#list>

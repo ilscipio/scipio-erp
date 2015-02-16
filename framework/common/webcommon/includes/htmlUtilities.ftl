@@ -58,6 +58,7 @@ under the License.
     size            = size attribute (default: 20)
     collapse        = should the field be collapsing? (default: false)
     norows          = render without the rows-container
+    norows          = render without the cells-container
         
     * input *
     autoCompleteUrl = if autocomplete function exists, specification of url will make it available
@@ -86,7 +87,7 @@ under the License.
 -->
 <#macro field type="" label="" name="" value="" class="large-12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
-        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false
+        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
         fieldFormName="" formName="">
 
 <#-- fieldIdNum will always increment throughout the page -->
@@ -112,7 +113,7 @@ under the License.
         </#if>
         
         <#if type!="radio">
-        <@cell class=subclasses>
+        <@cell class=subclasses nocells=nocells>
                 <#if type=="checkbox" || collapse==false>
                     <label class="" for="${id}">${label}</label>
                 <#else>
@@ -121,7 +122,7 @@ under the License.
         </@cell>
         </#if>
     </#if>
-    <@cell class="${classes!}">
+    <@cell class="${classes!}" nocells=nocells>
         <#switch type>
           <#case "input">
                 <@renderTextField name=name 
@@ -220,7 +221,7 @@ under the License.
             <@renderLookupField name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
           <#break>
           <#case "checkbox">
-                <@renderCheckBox id=id currentValue=value name=name action=action />
+                <@renderCheckBox id=id currentValue=value checked=checked name=name action=action />
             <#break>
           <#case "radio">
             <#assign items=[{"description",label!""}]/>
@@ -299,10 +300,10 @@ under the License.
     columns         = expected number of columns to be rendered (default 12)
     offset          = offset in number of columns
 -->
-<#macro cell columns=12 offset=0 class="" id="" collapse=false>
-    <div class="<#if class?has_content>${class!}<#else>large-${columns!12}</#if> columns" <#if id?has_content> id="${id}"</#if>><#rt/>
+<#macro cell columns=12 offset=0 class="" id="" collapse=false nocells=false>
+    <#if !nocells><div class="<#if class?has_content>${class!}<#else>large-${columns!12}</#if> columns" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
         <#nested />
-    </div>    
+    <#if !nocells></div></#if>
 </#macro>
 
 

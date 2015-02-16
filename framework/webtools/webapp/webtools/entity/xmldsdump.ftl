@@ -71,39 +71,35 @@ under the License.
     </@row>
     <hr>
     <h3>${uiLabelMap.WebtoolsEntityNames}:</h3>
-    <@displayButtonBar/>
-      <div>${uiLabelMap.WebtoolsEntitySyncDump}:
-        <input name="entitySyncId" size="30" value="${entitySyncId!}"/>
-      </div>
-      ${uiLabelMap.WebtoolsPreConfiguredSet}:
-      <select name="preConfiguredSetName">
-        <option value="">${uiLabelMap.CommonNone}</option>
-        <option value="CatalogExport">${uiLabelMap.WebtoolsPreConfiguredSet1}</option>
-        <option value="Product1">${uiLabelMap.WebtoolsPreConfiguredSet2}</option>
-        <option value="Product2">${uiLabelMap.WebtoolsPreConfiguredSet3}</option>
-        <option value="Product3">${uiLabelMap.WebtoolsPreConfiguredSet4}</option>
-        <option value="Product4">${uiLabelMap.WebtoolsPreConfiguredSet5}</option>
-      </select>
-      <br />
+     <@row>
+        <@cell class="large-6 columns">
+        <@displayButtonBar/>
+          <@field type="input" name="entitySyncId" size="30" value="${entitySyncId!}" label="${uiLabelMap.WebtoolsEntitySyncDump}"/>
+          <@field type="select" label="${uiLabelMap.WebtoolsPreConfiguredSet}" name="preConfiguredSetName">
+           <option value="">${uiLabelMap.CommonNone}</option>
+            <option value="CatalogExport">${uiLabelMap.WebtoolsPreConfiguredSet1}</option>
+            <option value="Product1">${uiLabelMap.WebtoolsPreConfiguredSet2}</option>
+            <option value="Product2">${uiLabelMap.WebtoolsPreConfiguredSet3}</option>
+            <option value="Product3">${uiLabelMap.WebtoolsPreConfiguredSet4}</option>
+            <option value="Product4">${uiLabelMap.WebtoolsPreConfiguredSet5}</option>
+          </@field>
+        </@cell>
+    </@row>
 
-      <table>
-        <tr>
+
+    <@grid>
           <#assign entCount = 0>
           <#assign checkAll = parameters.checkAll?default("false")>
           <#list modelEntities as modelEntity>
-            <#if entCount % 3 == 0 && entCount != 0>
-              </tr><tr>
-            </#if>
             <#assign entCount = entCount + 1>
             <#assign check = checkAll/>
             <#if checkAll == "true" && modelEntity.getClass().getName() == "org.ofbiz.entity.model.ModelViewEntity">
                 <#assign check = "false"/>
             </#if>
             <#assign curEntityName = modelEntity.getEntityName()/>
-            <td><input type="checkbox" name="entityName" value="${curEntityName}"<#if check="true"> checked="checked"</#if>/>${curEntityName}</td>
+            <li><@field type="checkbox" name="entityName" checked="${check}" id="${curEntityName}" label="${curEntityName}" norows=true nocells=true/></li>
           </#list>
-        </tr>
-      </table>
+    </@grid>
 
       <@displayButtonBar/>
     </form>

@@ -137,7 +137,6 @@ fieldset legend:hover{
 }
 
 
-/*Highlight code*/
 pre {
     /* original is white background with no border */
     background-color: #fff;
@@ -173,7 +172,17 @@ code {
     .TRACE {color:$aluminum;}
 }
 
-
+.postfix input[type="submit"], .postfix button {
+        background: $input-prefix-bg;
+        border-color: $input-prefix-border-color;
+        border-size: $input-prefix-border-size;
+        border-type: $input-prefix-border-type;
+        color: $input-prefix-font-color;
+        padding-left:0px;
+        padding-right:0px;
+        font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size:1rem;
+}
 
 /*  FOOTER */
 #body-content {

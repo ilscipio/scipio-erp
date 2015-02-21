@@ -62,7 +62,7 @@ under the License.
         
     * input *
     autoCompleteUrl = if autocomplete function exists, specification of url will make it available
-
+    postfix          = if set to true, attach submit button (default:false)
     
     * textArea *
     readonly        = readonly
@@ -88,7 +88,7 @@ under the License.
 <#macro field type="" label="" name="" value="" class="large-12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="">
+        fieldFormName="" formName="" postfix=false>
 
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum="${fieldIdNum!0+1}" />
@@ -96,20 +96,23 @@ under the License.
 <#if !id?has_content>
     <#assign id="field_id_${fieldIdNum!0}">
 </#if>
-    
-<#-- ToDo Remove    
-<#if label?has_content>
-    <#assign collapse=true/>
-</#if>-->
+<#assign classes = class/>
+<#assign columnspostfix=0/>
+<#if postfix>
+    <#assign columnspostfix=1/>
+    <#local collapse=true/>
+    <#assign classes="small-${12-columnspostfix}"/>
+</#if>
+
+
 <@row collapse=collapse!false norows=norows>
-    <#assign classes = class/>
     <#if label?has_content>
         <#assign subclasses="small-3 large-2"/>
-        <#assign classes="small-9 large-10"/>
+        <#assign classes="small-${9-columnspostfix} large-${10-columnspostfix}"/>
         
         <#if columns?has_content>
             <#assign subclasses="small-${12-columns+1} large-${12-columns}"/>
-            <#assign classes="small-${columns-1} large-${columns}"/>
+            <#assign classes="small-${columns-columnspostfix-1} large-${columns-columnspostfix}"/>
         </#if>
         
         <#if type!="radio">
@@ -236,6 +239,11 @@ under the License.
             </#if>
         </#switch>
      </@cell>
+     <#if postfix && !nocells>
+         <@cell class="small-1">
+                <span class="postfix"><input type="submit" class="fa fa-button" value="&#xf085;"/</span>
+         </@cell>
+     </#if>
 </@row>
 </#macro>
 
@@ -513,9 +521,17 @@ Since this is very foundation specific, this function may be dropped in future i
                     
    * General Attributes *
     class           = Adds classes - please use "(small|medium|large)-block-grid-#"
+    columns         = Number of columns (default 5)
     
 -->
-<#macro grid class="small-block-grid-2 medium-block-grid-4 large-block-grid-5">
+<#macro grid class="small-block-grid-2 medium-block-grid-4 large-block-grid-5" columns=5>
+    <#if columns!=5>
+        <#if columns-2 &gt; 0>
+            <#local class="small-block-grid-${columns-2} medium-block-grid-${columns-1} large-block-grid-${columns}"/>
+        <#else>
+            <#local class="large-block-grid-${columns}"/>
+        </#if>
+    </#if>
           <ul class="${class}">
               <#nested>
           </ul>

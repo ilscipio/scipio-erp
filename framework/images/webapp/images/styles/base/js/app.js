@@ -13,6 +13,7 @@ function collapseFieldset(){
 $(function(){
 	$(document).foundation();
 	collapseFieldset();
+	$('.ui-autocomplete').addClass('f-dropdown');
 });
 
 

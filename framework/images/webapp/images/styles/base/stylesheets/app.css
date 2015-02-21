@@ -9331,8 +9331,7 @@ fieldset legend:hover {
   display: inline-block;
 }
 
-/*Highlight code*/
-/* line 141, ../scss/_base.scss */
+/* line 140, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -9356,56 +9355,74 @@ pre {
   border-width: 1px;
 }
 
-/* line 163, ../scss/_base.scss */
+/* line 162, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 168, ../scss/_base.scss */
+/* line 167, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 170, ../scss/_base.scss */
+/* line 169, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 171, ../scss/_base.scss */
+/* line 170, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 172, ../scss/_base.scss */
+/* line 171, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 173, ../scss/_base.scss */
+/* line 172, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
+/* line 175, ../scss/_base.scss */
+.postfix input[type="submit"], .postfix button {
+  background: #f2f2f2;
+  border-color: #cccccc;
+  border-size: 1px;
+  border-type: solid;
+  color: #333333;
+  padding-left: 0px;
+  padding-right: 0px;
+  font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+}
+
 /*  FOOTER */
-/* line 179, ../scss/_base.scss */
+/* line 188, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 184, ../scss/_base.scss */
+/* line 193, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 189, ../scss/_base.scss */
+/* line 198, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 193, ../scss/_base.scss */
+/* line 202, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
   width: 100%;
+}
+
+/* line 1, ../scss/_ui_autocomplete.scss */
+.ui-helper-hidden-accessible {
+  display: none;
 }

@@ -18,49 +18,36 @@ under the License.
 -->
 <#include StringUtil.wrapString("component://widget/templates/htmlFormMacroLibrary.ftl")> 
 
+<@row>
+<@cell columns=6>
+       <h3>${uiLabelMap.CommonGroup}</h3>
        <form action="<@ofbizUrl>/entitymaint</@ofbizUrl>">
-          <@renderFormatFieldRowOpen collapse=true/>
-            <@renderFormatFieldRowTitleCellOpen collapse=true />${uiLabelMap.CommonGroup}
-            <@renderFormatFieldRowTitleCellClose collapse=true />
-            <@renderFormatFieldRowWidgetCellOpen/>
-                  <select name="filterByGroupName">
+        <@field type="select" name="filterByGroupName" label="${uiLabelMap.WebtoolsGroupName}">
                      <option value="">${uiLabelMap.CommonAll}</option>
                      <#list entityGroups as group>
                         <option value="${group}" <#if filterByGroupName??><#if group = filterByGroupName>selected="selected"</#if></#if>>${group}</option>
                      </#list>
-                  </select>
-                  <@renderFormatFieldRowWidgetCellClose />
-            <@renderFormatFieldRowClose />
-            <@renderFormatFieldRowOpen collapse=true/>
-              <@renderFormatFieldRowTitleCellOpen collapse=true />${uiLabelMap.WebtoolsEntityName}
-                <@renderFormatFieldRowTitleCellClose collapse=true />
-                <@renderFormatFieldRowWidgetCellOpen/>
-                    <input type= "text" name= "filterByEntityName" value="${parameters.filterByEntityName!}"/>
-                <@renderFormatFieldRowWidgetCellClose /> 
+        </@field>
+        <@field type="input" name= "filterByEntityName" value="${parameters.filterByEntityName!}" label="${uiLabelMap.WebtoolsEntityName}"/>
               <input type="submit" value="${uiLabelMap.CommonApply}"/>
-              <@renderFormatFieldRowWidgetCellClose />
-            <@renderFormatFieldRowClose />
        </form>
-    <#assign firstChar = "x">
-    <#assign anchor="">
-    <#assign alt_row = false>
-    <#assign right_col = false>
-    <div class="button-bar">
-      <#list entitiesList as entity>
-        <#if entity.entityName?substring(0, 1) != firstChar>
-          <#assign firstChar = entity.entityName?substring(0, 1)>
-          <a href="#Entity_${firstChar}">${firstChar}</a>&nbsp;
-        </#if>
-      </#list>
-    </div>
-    <div class="screenlet">
-      <div class="screenlet-title-bar">
-        <ul>
-          <li class="h3">${uiLabelMap.WebtoolsEntitiesAlpha}</li>
-        </ul>
-        <br class="clear"/>
-      </div>
-      <div class="screenlet-body">
+</@cell>
+</@row> 
+<@row>
+   <@cell>
+        <h3>${uiLabelMap.WebtoolsEntitiesAlpha}</h3>
+        <#assign firstChar = "x">
+        <#assign anchor="">
+        <#assign alt_row = false>
+        <#assign right_col = false>
+        <@nav type="magellan">
+          <#list entitiesList as entity>
+            <#if entity.entityName?substring(0, 1) != firstChar>
+              <#assign firstChar = entity.entityName?substring(0, 1)>
+              <@mli arrival="Entity_${firstChar}"><a href="#Entity_${firstChar}">${firstChar}</a></@mli>
+            </#if>
+          </#list>
+         </@nav>
         <#assign firstChar = "*">
         <table class="basic-table hover-bar" cellspacing='0'>
           <thead>
@@ -83,7 +70,7 @@ under the License.
                 <#assign alt_row = !alt_row>
               </#if>
               <#assign firstChar = entity.entityName?substring(0, 1)>
-              <#assign anchor="id=\"Entity_${firstChar}\"">
+              <#assign anchor="id=\"Entity_${firstChar}\" data-magellan-destination=\"Entity_${firstChar}\"">
             </#if>
             <#if !right_col>
               <tr<#if alt_row> class="alternate-row"</#if>>
@@ -119,5 +106,5 @@ under the License.
             <td>&nbsp;</td><td>&nbsp;</td></tr>
           </#if>
         </table>
-      </div>
-    </div>
+    </@cell>
+</@row>

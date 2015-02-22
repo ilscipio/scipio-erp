@@ -346,8 +346,8 @@ under the License.
     modal Content 
     </@modal>                
    * General Attributes *
-    id              = set id
-    title           = 
+    id              = set id (required)
+    label           = set anchor text (required)
 -->
 <#macro modal id label href="">
     <a href="#" data-reveal-id="${id}_modal" <#if href?has_content>data-reveal-ajax="${href!}"</#if>>${label}</a>
@@ -549,9 +549,12 @@ Since this is very foundation specific, this function may be dropped in future i
         <li>Text or <a href="">Anchor</a></li>
     </@nav>
     
+    Or:
     <@nav type="magellan">
-        <@mli>Text or <a href="">Anchor</a></@mli>
-    </@nav>           
+        <@mli arrival="MyTargetAnchor">Text or <a href="">Anchor</a></@mli>
+    </@nav>
+    
+    <h3 ${mtarget("id")}>Jump Destination</h3>           
                     
    * General Attributes *
     type            = (inline|magellan) (default:inline)

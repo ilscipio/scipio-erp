@@ -102,9 +102,7 @@ under the License.
                               my guess is that the base/config/debug.properties file is not found in the classpath -->
                  <property-to-field resource="debug" property="log4j.appender.css.File" field="logFileName" default="runtime/logs/ofbiz.log" no-locale="true"/>
                  <script location="component://webtools/webapp/webtools/WEB-INF/actions/log/LogView.groovy"/>
-                 <!-- Uncomment this to prettify the code component
-                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                 <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/rainbow/rainbow.css" global="true" />-->
+
              </actions>
              <widgets>
                  <decorator-screen name="log-decorator">

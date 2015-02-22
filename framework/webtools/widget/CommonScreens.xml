@@ -37,6 +37,8 @@ under the License.
                 <set field="applicationMenuLocation" value="component://webtools/widget/Menus.xml" global="true"/>
                 <set field="applicationMenuName" value="WebtoolsAppBar" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.FrameworkWebTools}" global="true"/>
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
+                <!-- Disable for now<set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/rainbow/rainbow.css" global="true" />-->
             </actions>
             <widgets>
                 <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>

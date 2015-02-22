@@ -25,7 +25,7 @@ under the License.
       <br />
       <div><a href="<@ofbizUrl>checkLogin</@ofbizUrl>" class="button">${uiLabelMap.CommonLogin}</a></div>
     </#if>
-    <ul class="small-block-grid-2 medium-block-grid-4 large-block-grid-5">
+    <@grid>
     <#if userLogin?has_content>
       <li><ul class="pricing-table">
         <li class="title">${uiLabelMap.WebtoolsCacheDebugTools}</li>
@@ -144,6 +144,6 @@ under the License.
         </ul></li>
       </ul></li>
     </#if>
-    </ul>
+    </@grid>
   </div>
 </div>

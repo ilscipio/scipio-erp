@@ -16,39 +16,39 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.PageTitleScheduleJob}</h3>
-  </div>
-  <div class="screenlet-body" align="center">
-    <form method="post" action="<@ofbizUrl>saveServiceResultsToSession</@ofbizUrl>">
-        <table class="basic-table" cellspacing="0">
-          <thead>
-          <tr class="header-row">
-            <th>${uiLabelMap.WebtoolsParameterName}</th>
-            <th>${uiLabelMap.WebtoolsParameterValue}</th>
-            <th>${uiLabelMap.WebtoolsServiceSaveValue} ?</th>
-          </tr>
-          </thead>
-            <#if serviceResultList?has_content>
-              <#list serviceResultList as srl>
-                <tr>
-                  <#if srl.hasChild=="Y">
-                    <td><a href="<@ofbizUrl>/serviceResult?servicePath=</@ofbizUrl><#if parameters.servicePath??>${parameters.servicePath}||</#if>${srl.key!}">${srl.key!}</a></td>
-                  <#else>
-                    <td>${srl.key!}</td>
-                  </#if>
-                    <td>${srl.value!}</td>
-                    <td><input type="checkbox" name="<#if parameters.servicePath??>${parameters.servicePath}||</#if>${srl.key!}" /></td>
-                  </tr>
-               </#list>
-            </#if>
-          <tr>
-            <td>&nbsp;</td>
-            <td class=>${uiLabelMap.WebtoolsServiceClearPreviousParams} ? <input type="checkbox" name="_CLEAR_PREVIOUS_PARAMS_" /></td>
-            <td><input type="submit" value="${uiLabelMap.CommonSubmit}"/></td>
-          </tr>
-        </table>
-      </form>
-  </div>
-</div>
+<@section>${uiLabelMap.PageTitleScheduleJob}</h3>
+
+    <@row>
+        <@cell>
+        <form method="post" action="<@ofbizUrl>saveServiceResultsToSession</@ofbizUrl>">
+            <table class="basic-table" cellspacing="0">
+              <thead>
+              <tr class="header-row">
+                <th>${uiLabelMap.WebtoolsParameterName}</th>
+                <th>${uiLabelMap.WebtoolsParameterValue}</th>
+                <th>${uiLabelMap.WebtoolsServiceSaveValue} ?</th>
+              </tr>
+              </thead>
+                <#if serviceResultList?has_content>
+                  <#list serviceResultList as srl>
+                    <tr>
+                      <#if srl.hasChild=="Y">
+                        <td><a href="<@ofbizUrl>/serviceResult?servicePath=</@ofbizUrl><#if parameters.servicePath??>${parameters.servicePath}||</#if>${srl.key!}">${srl.key!}</a></td>
+                      <#else>
+                        <td>${srl.key!}</td>
+                      </#if>
+                        <td>${srl.value!}</td>
+                        <td><input type="checkbox" name="<#if parameters.servicePath??>${parameters.servicePath}||</#if>${srl.key!}" /></td>
+                      </tr>
+                   </#list>
+                </#if>
+              <tr>
+                <td>&nbsp;</td>
+                <td class=>${uiLabelMap.WebtoolsServiceClearPreviousParams} ? <input type="checkbox" name="_CLEAR_PREVIOUS_PARAMS_" /></td>
+                <td><input type="submit" value="${uiLabelMap.CommonSubmit}"/></td>
+              </tr>
+            </table>
+          </form>
+        </@cell>
+    </@row>
+</@section>

@@ -25,29 +25,24 @@ under the License.
 <#-- Selected Service is available -->
 <#if selectedServiceMap??>
   <#if showWsdl?? && showWsdl = true>
-    <div class="screenlet">
-      <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.WebtoolsServiceWSDL} - ${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}</h3>
-      </div>
-      <div class="screenlet-body" align="center">
-        <form><textarea rows="20" cols="85" name="wsdloutput">${selectedServiceMap.wsdl}</textarea></form>
+    <@section title="${uiLabelMap.WebtoolsServiceWSDL} - ${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
+        <@code type="html">${selectedServiceMap.wsdl}</@code>
         <br />
-        <a href='<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>' class='smallSubmit'>${uiLabelMap.CommonBack}</a>
-      </div>
-    </div>
+        <a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>" class="tiny button">${uiLabelMap.CommonBack}</a>
+    </@section>
+
   <#else>
-    <div class="screenlet">
-      <div class="screenlet-title-bar">
-        <ul>
-          <li class="h3">${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}</li>
-          <li><a href='<@ofbizUrl>${url}</@ofbizUrl>'>${uiLabelMap.CommonListAll}</a></li>
-          <li><a href='<@ofbizUrl>/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}</@ofbizUrl>'>${uiLabelMap.WebtoolsSchedule}</a></li>
-          <li><a href='<@ofbizUrl>/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y</@ofbizUrl>'>${uiLabelMap.PageTitleRunService}</a></li>
+    <@section title="${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
+        <ul class="button-group">
+          <li><a href="<@ofbizUrl>${url}</@ofbizUrl>" class="tiny button">${uiLabelMap.CommonListAll}</a></li>
+          <li><a href="<@ofbizUrl>/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}</@ofbizUrl>" class="tiny button">${uiLabelMap.WebtoolsSchedule}</a></li>
+          <li><a href="<@ofbizUrl>/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y</@ofbizUrl>" class="tiny button">${uiLabelMap.PageTitleRunService}</a></li>
         </ul>
-        <br class="clear"/>
-      </div>
-      <div class="screenlet-body">
-        <table class="basic-table" cellspacing='0'>
+
+
+    <@row>
+        <@cell>
+        <table class="basic-table" cellspacing="0">
           <tr>
             <td class=>${uiLabelMap.WebtoolsServiceName}</td>
             <td>${selectedServiceMap.serviceName}</td>
@@ -89,13 +84,12 @@ under the License.
             <td>${selectedServiceMap.maxRetry}</td>
           </tr>
         </table>
-      </div>
-    </div>
+    </@cell>
+</@row>
 
-    <div class="screenlet">
-      <div class="screenlet-title-bar">
+<@row>
+        <@cell>
         <h3>${uiLabelMap.SecurityGroups}</h3>
-      </div>
       <#if selectedServiceMap.permissionGroups != 'NA'>
         <table class="basic-table" cellspacing="0">
          <thead>
@@ -114,17 +108,15 @@ under the License.
           </#list>
         </table>
       <#else>
-        <div class="screenlet-body">
           <b>${selectedServiceMap.permissionGroups}</b>
-        </div>
       </#if>
-    </div>
+    </@cell>
+</@row>
 
-    <div class="screenlet">
-      <div class="screenlet-title-bar">
+<@row>
+   <@cell>
         <h3>${uiLabelMap.WebtoolsImplementedServices}</h3>
-      </div>
-      <div class="screenlet-body">
+
         <#if selectedServiceMap.implServices == 'NA'>
           <b>${selectedServiceMap.implServices}</b>
         <#elseif selectedServiceMap.implServices?has_content>
@@ -132,8 +124,8 @@ under the License.
             <a href='<@ofbizUrl>${url}?sel_service_name=${implSrv.getService()}</@ofbizUrl>'>${implSrv.getService()}</a><br />
           </#list>
         </#if>
-      </div>
-    </div>
+    </@cell>
+</@row>
 
     <#-- If service has ECA's -->
     <#if ecaMapList?? && ecaMapList?has_content>
@@ -147,10 +139,9 @@ under the License.
               lookupWin.focus();
           }
       </script>
-      <div class="screenlet">
-        <div class="screenlet-title-bar">
+<@row>
+   <@cell>
           <h3>${uiLabelMap.WebtoolsServiceECA}</h3>
-        </div>
         <table class="basic-table" cellspacing="0">
           <thead>
           <tr class="header-row">
@@ -178,7 +169,7 @@ under the License.
               <#if ecaMap.actions?has_content>
                 <td>
                   <#list ecaMap.actions as action>
-                    <table class="basic-table" cellspacing='0'>
+                    <table class="basic-table" cellspacing="0">
                       <tr>
                         <td colspan="2"><a href='<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>'>${action.serviceName?default(uiLabelMap.CommonNA)}</a></td>
                       </tr>
@@ -205,7 +196,7 @@ under the License.
               <#if ecaMap.conditions?has_content>
                 <td>
                   <#list ecaMap.conditions as condition>
-                    <table class='basic-table' cellspacing='0'>
+                    <table class='basic-table' cellspacing="0">
                       <tr>
                         <td><b>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType?default(uiLabelMap.CommonNA)}</td>
                         <td>
@@ -240,27 +231,27 @@ under the License.
               <#if ecaMap.sets?has_content>
                 <td>
                   <#list ecaMap.sets as set>
-                    <table class='basic-table' cellspacing='0'>
+                    <table class='basic-table' cellspacing="0">
                       <tr>
                         <td><b>${uiLabelMap.WebtoolsFieldName}</b> ${set.fieldName?default(uiLabelMap.CommonNA)}</td>
-                        <td colspan="2">&nbsp;</td>
+                        <td>&nbsp;</td>
                       </tr>
                       <tr>
                         <#if set.envName?has_content>
                           <td><b>${uiLabelMap.WebtoolsEnvName}</b> ${set.envName}</td>
-                          <td colspan="2">&nbsp;</td>
+                          <td >&nbsp;</td>
                         </#if>
                       </tr>
                       <tr>
                         <#if set.value?has_content>
                           <td><b>${uiLabelMap.CommonValue}</b> ${set.value}</td>
-                          <td colspan="2">&nbsp;</td>
+                          <td>&nbsp;</td>
                         </#if>
                       </tr>
                       <tr>
                         <#if set.format?has_content>
                           <td><b>${uiLabelMap.WebtoolsFormat}</b> ${set.format}</td>
-                          <td colspan="2">&nbsp;</td>
+                          <td >&nbsp;</td>
                         </#if>
                       </tr>
                     </table><br />
@@ -271,7 +262,8 @@ under the License.
             <tr><td colspan='5'><hr/></td></tr>
           </#list>
         </table>
-      </div>
+    </@cell>
+</@row>
     </#if>
     <#-- End if service has ECA's -->
 
@@ -282,10 +274,10 @@ under the License.
           vertical-align: top;
         }
       </style>
-      <div class="screenlet">
-        <div class="screenlet-title-bar">
+    <@row>
+       <@cell>
           <h3>${paramList.title}</h3>
-        </div>
+
         <#if paramList.paramList?? && paramList.paramList?has_content>
           <table class="basic-table param-table" cellspacing="0">
             <thead>
@@ -320,44 +312,51 @@ under the License.
               </#list>
           </table>
         <#else>
-          <div class="screenlet-body">
             ${uiLabelMap.WebtoolsNoParametersDefined}
-          </div>
         </#if>
-      </div>
+        </@cell>
+    </@row>
     </#list>
 
     <#-- Show a little form for exportServiceEoModelBundle -->
-    <div class="screenlet-body">
-      <form name="exportServiceEoModelBundle" method="post" action="<@ofbizUrl>exportServiceEoModelBundle</@ofbizUrl>" class="basic-form">
-        <input type="hidden" name="sel_service_name" value="${selectedServiceMap.serviceName}"/>
-        <input type="hidden" name="serviceName" value="${selectedServiceMap.serviceName}"/>
-        Save eomodeld to Local Path: <input type="text" name="eomodeldFullPath" value="${parameters.eomodeldFullPath!}" size="60"/>
-        <input type="submit" name="submitButton" value="Export"/>
-      </form>
-    </div>
+    <@row>
+        <@cell>
+          <form name="exportServiceEoModelBundle" method="post" action="<@ofbizUrl>exportServiceEoModelBundle</@ofbizUrl>" class="basic-form">
+            <input type="hidden" name="sel_service_name" value="${selectedServiceMap.serviceName}"/>
+            <input type="hidden" name="serviceName" value="${selectedServiceMap.serviceName}"/>
+            Save eomodeld to Local Path: <input type="text" name="eomodeldFullPath" value="${parameters.eomodeldFullPath!}" size="60"/>
+            <input type="submit" name="submitButton" value="Export"/>
+          </form>
+        </@cell>
+      </@row>
+    </@section>
   </#if>
+  
 <#-- No Service selected , we list all-->
 <#elseif servicesList?? && servicesList?has_content>
 
   <#-- Show alphabetical index -->
   <#if serviceNamesAlphaList?? && serviceNamesAlphaList?has_content>
-      <div class="button-bar">
+      <@nav type="magellan">
+        <@mli arrival="Service_all"><a href="<@ofbizUrl>${url}</@ofbizUrl>">${uiLabelMap.CommonAll}</a></@mli>
         <#assign isfirst=true>
         <#list serviceNamesAlphaList as alpha>
-          <a href='<@ofbizUrl>${url}?constraint=alpha@${alpha}</@ofbizUrl>'>${alpha}</a>
+          <#-- Use this to jump to location
+          <a href="#Service_${alpha}">${alpha}</a>
+           -->
+          <@mli arrival="Service_${alpha}"><a href="<@ofbizUrl>${url}?constraint=alpha@${alpha}</@ofbizUrl>">${alpha}</a></@mli>
           <#assign isfirst=false>
         </#list>
-      </div>
+      </@nav>
   </#if>
 
-  <div class="screenlet">
-    <div class="screenlet-body">
-      <label>${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})</label>
+<@section>
+      <#--
+      ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
       <table class="basic-table hover-bar" cellspacing="0">
         <thead>
         <tr class="header-row">
-          <th>${uiLabelMap.WebtoolsServiceName}</th>
+          <th id="Service_all">${uiLabelMap.WebtoolsServiceName}</th>
           <th>${uiLabelMap.WebtoolsEngineName}</th>
           <th>${uiLabelMap.WebtoolsDefaultEntityName}</th>
           <th>${uiLabelMap.WebtoolsInvoke}</th>
@@ -367,8 +366,10 @@ under the License.
         </thead>
         <#assign alt_row = false>
         <#list servicesList as service>
+          <#assign firstChar = service.serviceName?substring(0, 1)>
+          <#assign anchor="id=\"Service_${firstChar}\" data-magellan-destination=\"Service_${firstChar}\"">
           <tr<#if alt_row> class="alternate-row"</#if>>
-            <td><a href='<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>'>${service.serviceName}</a></td>
+            <td <#if anchor?has_content> ${anchor}</#if>><a href='<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>'>${service.serviceName}</a></td>
             <td><a href='<@ofbizUrl>${url}?constraint=engine_name@${service.engineName?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.engineName}</a></td>
             <td><a href='<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.defaultEntityName}</a></td>
             <td>${service.invoke}</td>
@@ -378,8 +379,7 @@ under the License.
           <#assign alt_row = !alt_row>
         </#list>
       </table>
-    </div>
-  </div>
+</@section>
 <#else>
   ${uiLabelMap.WebtoolsNoServicesFound}.
   <a href='<@ofbizUrl>${url}</@ofbizUrl>' class="smallSubmit">${uiLabelMap.CommonListAll}</a>

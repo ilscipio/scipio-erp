@@ -37,8 +37,14 @@ under the License.
                 <set field="applicationMenuLocation" value="component://webtools/widget/Menus.xml" global="true"/>
                 <set field="applicationMenuName" value="WebtoolsAppBar" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.FrameworkWebTools}" global="true"/>
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
+
                 <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/rainbow/rainbow.css" global="true" />
+                
+                <!-- Use this to prettify code elements
+                <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/rainbow/rainbow.css" global="true" />
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
+                 -->
+
             </actions>
             <widgets>
                 <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
@@ -95,6 +101,8 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="entity"/>
+                
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -131,6 +139,8 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="service"/>
+                
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -167,6 +177,8 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="importExport"/>
+                
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -203,6 +215,8 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="artifact"/>
+                
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -239,6 +253,8 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="configuration"/>
+                
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -275,6 +291,8 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="geoManagement"/>
+                
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

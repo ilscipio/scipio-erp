@@ -18,5 +18,5 @@ under the License.
 -->
 
 
-<pre><code class="language-log"><#list logLines as logLine><div class="${logLine.type!}">${logLine.line}</div><#t></#list><#t>
-</code></pre>
+<@code type="log"><#list logLines as logLine><div class="${logLine.type!}">${logLine.line}</div></#list><#t>
+</@code>

@@ -55,26 +55,25 @@ function ShowTab(lname) {
     </ul>
     <br/>
     <@nav type="magellan">
-        <@mli arrival="xml-view"><a href="#xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</a></@mli>
+        <#if value?has_content><@mli arrival="xml-view"><a href="#xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</a></@mli></#if>
         <#--<@mli arrival="common-view"><a href="#common-view">${uiLabelMap.CommonView}</a></@mli>-->
         <@mli arrival="current-view"><a href="#current-view">${uiLabelMap.WebtoolsEntityCurrentValue}</a></@mli>
         <@mli arrival="related-view"><a href="#related-view">${uiLabelMap.WebtoolsRelatedEntity}</a></@mli>
     </@nav>
     <br/>
     
-    
+<#if value?has_content>    
     <@row>
         <@cell>
           <h3 data-magellan-destination="xml-view" id="xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</h3>
         
-          <pre><code data-language="html"><#compress>
-              <#if value?has_content><#assign valueXmlDoc = Static["org.ofbiz.entity.GenericValue"].makeXmlDocument([value]) />${Static["org.ofbiz.base.util.UtilXml"].writeXmlDocument(valueXmlDoc)}</#if>
-          </#compress>
-          </code></pre>
+          <@code type="html">
+              <#assign valueXmlDoc = Static["org.ofbiz.entity.GenericValue"].makeXmlDocument([value]) />${Static["org.ofbiz.base.util.UtilXml"].writeXmlDocument(valueXmlDoc)}
+          </@code>
         
         </@cell>
     </@row>
-    
+</#if>    
     
     <#--
     <#if value?has_content>

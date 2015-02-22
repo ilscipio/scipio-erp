@@ -586,6 +586,28 @@ Since this is very foundation specific, this function may be dropped in future i
   <#return returnValue>
 </#function>
 
+
+<#-- 
+*************
+* Code Block
+************
+Creates a very basic wrapper for code blocks
+    Usage example:  
+    <@code type="java">
+       //Some java content
+    </@code>
+                    
+   * General Attributes *
+    type            = (html|java|css|javascript|log) (default:html) 
+-->
+<#macro code type="html">
+    <pre><code data-language="${type!}"><#compress>
+    <#nested>
+    </#compress>
+    </code></pre>
+</#macro>
+
+
 <#-- UTLITY MACROS END -->
 
 

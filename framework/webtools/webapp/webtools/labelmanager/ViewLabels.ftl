@@ -16,11 +16,31 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet-body">
-  <table class="basic-table hover-bar">
+<@section>
+    <#if parameters.searchLabels??>
+      <#assign rowNum = "2">
+      <#assign rowNumber = 1>
+      <#assign totalLabels = 0>
+      <#assign missingLabels = 0>
+      <#assign existingLabels = 0>
+      <#assign previousKey = "">
+      <#if localesFound??>
+        <#assign totalLabels = localesFound?size>
+      <#else>
+        <#assign totalLabels = 0>
+      </#if>
+    <@row>
+        <@cell>
+        ${uiLabelMap.WebtoolsLabelStatsMissing}: ${existingLabels!}<br/>
+        ${uiLabelMap.WebtoolsLabelStatsExist}: ${missingLabels!}<br/>
+        ${uiLabelMap.WebtoolsLabelStatsTotal}: ${totalLabels}
+        </@cell>
+    </@row>
+    </#if>
+  <table class="responsive large-12">
    <thead>
     <tr class="header-row">
-      <th>${uiLabelMap.WebtoolsLabelManagerRow}</th>
+      <#--<th>${uiLabelMap.WebtoolsLabelManagerRow}</th>-->
       <th>${uiLabelMap.WebtoolsLabelManagerKey}</th>
       <th>${uiLabelMap.WebtoolsLabelManagerFileName}</th>
       <th>${uiLabelMap.WebtoolsLabelManagerReferences}</th>
@@ -45,15 +65,19 @@ under the License.
           </#if>
         </#if>
       </#list>
-    </tr>
+      </tr>
     </thead>
-    <#if parameters.searchLabels??>
-      <#assign rowNum = "2">
-      <#assign rowNumber = 1>
-      <#assign totalLabels = 0>
-      <#assign missingLabels = 0>
-      <#assign existingLabels = 0>
-      <#assign previousKey = "">
+    <#--
+    <tfoot>
+          <tr class="header-row">
+            <th></th>
+            <th colspan="${localesFound?length+2}">
+              ${uiLabelMap.WebtoolsLabelStatsMissing}: ${existingLabels!}<br/>
+              ${uiLabelMap.WebtoolsLabelStatsExist}: ${missingLabels!}<br/>
+              ${uiLabelMap.WebtoolsLabelStatsTotal}: ${totalLabels}
+            </th>
+          </tr>
+      </tfoot>-->
       <#list labelsList as labelList>
         <#assign label = labels.get(labelList)>
         <#assign labelKey = label.labelKey>
@@ -85,9 +109,8 @@ under the License.
         <#if showLabel && parameters.labelFileName?? && parameters.labelFileName != "" && parameters.labelFileName != label.fileName>
           <#assign showLabel = false>
         </#if>
-        <#if showLabel == true>
           <tr <#if rowNum == "1">class="alternate-row"</#if>>
-            <td>${rowNumber}</td>
+            <#--<td>${rowNumber}</td>-->
             <td><a href="<@ofbizUrl>UpdateLabel?sourceKey=${labelKey}&amp;sourceFileName=${label.fileName}&amp;sourceKeyComment=${label.labelKeyComment!}</@ofbizUrl>" <#if previousKey == labelKey>class="submenutext"</#if>>${label.labelKey}</a></td>
             <td>${label.fileName}</td>
             <td><a href="<@ofbizUrl>ViewReferences?sourceKey=${labelKey}&amp;labelFileName=${label.fileName}</@ofbizUrl>">${uiLabelMap.WebtoolsLabelManagerReferences}</a></td>
@@ -115,22 +138,6 @@ under the License.
           </#if>
           <#assign previousKey = labelKey>
           <#assign rowNumber = rowNumber + 1>
-        </#if>
       </#list>
-      </tfoot>
-          <tr class="header-row">
-            <td/>
-            <td>${uiLabelMap.WebtoolsLabelStatsTotal}: ${totalLabels}</td>
-            <td colspan="2">
-              ${uiLabelMap.WebtoolsLabelStatsExist}:<br />
-              ${uiLabelMap.WebtoolsLabelStatsMissing}:
-            </td>
-            <td>
-              ${existingLabels}<br />
-              ${missingLabels}
-            </td>
-          </tr>
-      </tfoot>
-    </#if>
   </table>
-</div>
+</@section>  

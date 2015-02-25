@@ -35,8 +35,8 @@ table.responsive td, table.responsive th { position: relative; white-space: nowr
 table.responsive th:first-child, table.responsive td:first-child, table.responsive td:first-child, table.responsive.pinned td { display: none; }
 
 
-/* Mobile */
+/* Mobile 
 @media only screen and (max-width: 767px) {
 
 	
-}
+}*/

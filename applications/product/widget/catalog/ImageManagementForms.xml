@@ -451,7 +451,7 @@ under the License.
         <field name="imageName"><hidden value="${contentDataResource.drDataResourceName}"/></field>
         <field name="imageWatermark" use-when="imageURL != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src"><image value="${imageURL}"/></field>
         <field name="imageWatermark" use-when="imageURL == null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de"><image value="/images/defaultImage.jpg"/></field>
-        <field name="" widget-><display description="${uiLabelMap.ImageManagementWatermarkingLocation}"/></field>
+        <field name=""><display description="${uiLabelMap.ImageManagementWatermarkingLocation}"/></field>
         <field name="imageOpacity" title="${uiLabelMap.ImageManagementOpacity}" widget-area-style="opacity">
             <drop-down no-current-selected-key="0.5">
                 <option key="0.1" description="10%"/>

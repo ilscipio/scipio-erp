@@ -15,7 +15,8 @@ label {color: #fff;}
 a {color:#fff;}
 a:hover {color: #333;}
 
-ul li a, td a, th a {color:#008cba;}
+.pricing-table a, td a, th a {color:#008cba;}
+.pricing-table a:hover, td a:hover, th a:hover {color:#333;}
 
 .top-bar{
 	background: rgba(255,255,255,.15);

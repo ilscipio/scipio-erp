@@ -284,7 +284,7 @@ under the License.
                                 <if-empty-section section-name="left-column" />
                             </condition>
                             <widgets>
-                                <container>
+                                <container id="content-main-body">
                                     <decorator-section-include name="body" />
                                 </container>
                             </widgets>
@@ -377,7 +377,9 @@ under the License.
                                     <not><if-empty-section section-name="body"/></not>
                                 </condition>
                                 <widgets>
-                                    <decorator-section-include name="body"/>
+                                    <container id="content-main-body">
+                                        <decorator-section-include name="body"/>
+                                    </container>
                                 </widgets>
                                 <fail-widgets>
                                     <screenlet title="${title}" id="findScreenlet" collapsible="true" padded="false">

@@ -12,8 +12,10 @@ body {
 h1,h2,h3,h4,h5{color:#fff;font-family: 'Open Sans', sans-serif;}
 label {color: #fff;}
 
-a {color:#777;}
+a {color:#fff;}
 a:hover {color: #333;}
+
+ul li a, td a, th a {color:#008cba;}
 
 .top-bar{
 	background: rgba(255,255,255,.15);

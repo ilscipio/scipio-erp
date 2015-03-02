@@ -18,23 +18,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - Base Theme" default="build" basedir=".">
+<project name="OFBiz - Metro Theme" default="build" basedir=".">
     <import file="../../macros.xml"/>
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <property name="desc" value="Base Theme"/>
-    <property name="name" value="base-theme"/>
+    <property name="desc" value="Metro Theme"/>
+    <property name="name" value="metro-theme"/>
     <property name="ofbiz.home.dir" value="../.."/>
 
     <target name="clean">
     </target>
 
     <target name="build" depends="">
-        <!-- echo message="[build] ========== Building Base Theme ==========" />
-        <echo message="[build] ========== Done Building Base Theme ==========" /-->
+        <!-- echo message="[build] ========== Building Metro Theme ==========" />
+        <echo message="[build] ========== Done Building Metro Theme ==========" /-->
     </target>
 
 </project>

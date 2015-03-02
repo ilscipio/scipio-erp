@@ -127,6 +127,7 @@ fieldset legend{
     padding:0px;
     margin:0px;
     text-align:right;
+    background:none;
 }
 fieldset legend:hover{
     color: scale-color($primary-color, $lightness: -14%);

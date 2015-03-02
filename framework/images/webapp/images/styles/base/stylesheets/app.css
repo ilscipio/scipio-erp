@@ -9318,20 +9318,21 @@ fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
+  background: none;
 }
 
-/* line 131, ../scss/_base.scss */
+/* line 132, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 135, ../scss/_base.scss */
+/* line 136, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 140, ../scss/_base.scss */
+/* line 141, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -9355,36 +9356,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 162, ../scss/_base.scss */
+/* line 163, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 167, ../scss/_base.scss */
+/* line 168, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 169, ../scss/_base.scss */
+/* line 170, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 170, ../scss/_base.scss */
+/* line 171, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 171, ../scss/_base.scss */
+/* line 172, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 172, ../scss/_base.scss */
+/* line 173, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 175, ../scss/_base.scss */
+/* line 176, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -9398,24 +9399,24 @@ code .TRACE {
 }
 
 /*  FOOTER */
-/* line 188, ../scss/_base.scss */
+/* line 189, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 193, ../scss/_base.scss */
+/* line 194, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 198, ../scss/_base.scss */
+/* line 199, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 202, ../scss/_base.scss */
+/* line 203, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;

@@ -136,7 +136,6 @@ under the License.
                         <screenlet title="${uiLabelMap.PageTitleEditProduct}">
                             <include-form name="EditProduct" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
-
                         <section>
                             <condition>
                                 <not><if-empty field="product"/></not>

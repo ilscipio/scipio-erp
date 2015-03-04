@@ -18,11 +18,8 @@ under the License.
 -->
 
 <#if productCategoryId?? && productCategory??>
-  <div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3>${uiLabelMap.PageTitleEditCategoryProductCatalogs}</h3>
-    </div>
-        <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleEditCategoryProductCatalogs}">
+
             <table cellspacing="0" class="basic-table">
             <thead>
             <tr class="header-row">
@@ -92,13 +89,11 @@ under the License.
             </#list>
             </table>
             <br />
-        </div>
-    </div>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
+
+<@row>
+    <@cell>
             <h3>${uiLabelMap.ProductAddCatalogProductCategory}</h3>
-        </div>
-        <div class="screenlet-body">
+
             <table cellspacing="0" class="basic-table">
                 <tr><td>
                     <form method="post" action="<@ofbizUrl>category_addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
@@ -118,6 +113,7 @@ under the License.
                     </form>
                 </td></tr>
             </table>
-        </div>
-    </div>
+    </@cell>
+</@row>
+</@section>
 </#if>

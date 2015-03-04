@@ -26,15 +26,17 @@ under the License.
   <#if type?has_content && type=="image">
     <img src="${imageLocation}" alt=""><#lt/>
   <#else>
+    <#--
     <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>
       <span <#if idName?has_content>id="cc_${idName}"</#if> <#if title?has_content>title="${title}"</#if> <@renderClass class alert />><#t/>
     </#if>
-
+    -->
     <#if description?has_content>
       ${description?replace("\n", "<br />")}<#t/>
     <#else>
       &nbsp;<#t/>
     </#if>
+    <#--
     <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true">
       </span><#lt/>
     </#if>
@@ -42,7 +44,7 @@ under the License.
       <script language="JavaScript" type="text/javascript"><#lt/>
         ajaxInPlaceEditDisplayField('cc_${idName}', '${inPlaceEditorUrl}', ${inPlaceEditorParams});<#lt/>
       </script><#lt/>
-    </#if>
+    </#if>-->
   </#if>
 </#macro>
 <#macro renderHyperlinkField></#macro>
@@ -250,7 +252,6 @@ under the License.
 
 
 <#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="">
-  <span class="ui-widget">
     <select name="${name?default("")}<#rt/>" <@renderClass className alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
       <#if firstInList?has_content && currentValue?has_content && !multiple?has_content>
@@ -269,7 +270,6 @@ under the License.
       </#list>
       <#nested>
     </select>
-  </span>
   <#if otherFieldName?has_content>
     <noscript><input type='text' name='${otherFieldName}' /></noscript>
     <script type='text/javascript' language='JavaScript'><!--
@@ -464,13 +464,11 @@ under the License.
 </#macro>
 
 <#macro renderFormatFieldRowOpen collapse=false style="">
-  <#--<tr>-->
    <div class="row">
     <div class="<#if style?has_content>${style}<#else>large-6</#if> columns">
       <div class="row <#if collapse>collapse</#if>">
 </#macro>
 <#macro renderFormatFieldRowClose>
-  <#--</tr>-->
         </div>
     </div>
   </div>
@@ -480,35 +478,16 @@ under the License.
       <#if collapse><span class="prefix"><#else><label></#if>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false>
-  <#--</td>-->
       <#if collapse></span><#else></label></#if>
     </div>
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="">
   <div class="<#if style?has_content>${style}<#else>small-9 large-10</#if> columns">
-    <span>
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>
-  <#--</td>-->
-    </span>
   </div>
 </#macro>
-
-<#--
-    Initial work to convert table based layout for "single" form to divs.
-<#macro renderFormatSingleWrapperOpen style> <div <#if style?has_content>class="${style}"</#if> ></#macro>
-<#macro renderFormatSingleWrapperClose> </div></#macro>
-
-<#macro renderFormatFieldRowOpen>  <div></#macro>
-<#macro renderFormatFieldRowClose>  </div></#macro>
-<#macro renderFormatFieldRowTitleCellOpen style>   <div class="<#if style?has_content>${style}<#else>label</#if>"></#macro>
-<#macro renderFormatFieldRowTitleCellClose></div></#macro>
-<#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan style>   <div<#if positionSpan?has_content && positionSpan gt 0> colspan="${1+positionSpan*3}"</#if><#if style?has_content> class="${style}"</#if>></#macro>
-<#macro renderFormatFieldRowWidgetCellClose></div></#macro>
-
--->
 
 
 <#macro renderFormatEmptySpace>&nbsp;</#macro>
@@ -894,9 +873,10 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#macro renderContainerField id className><div id="${id}" class="${className}"/></#macro>
 
-<#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId collapsible expandToolTip collapseToolTip>
-  <#if style?has_content || id?has_content || title?has_content><div class="fieldgroup<#if style?has_content> ${style}</#if><#if collapsed> toggleField</#if>"<#if id?has_content> id="${id}"</#if>>
-    <fieldset <#if style?has_content || collapsed>class="<#if style?has_content>${style!} </#if>"</#if>>
+<#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible>
+<div class="row">
+  <div class="fieldgroup large-12 columns <#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> collapsed</#if></#if>"<#if id?has_content> id="${id}"</#if>>
+    <fieldset<#if style?has_content || collapsed> class="${style!}"</#if>>
       <#--<#if collapsible>
         <ul>
           <li class="<#if collapsed>collapsed">
@@ -913,13 +893,13 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </div>
     <div id="${collapsibleAreaId}" class="fieldgroup-body" <#if collapsed && collapsible> style="display: none;"</#if>>
     -->
-    <#if title?has_content><legend>[ <i class="fa fa-arrow-right"></i> ] ${title}</legend></#if>
-  </#if>
+    <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="fa fa-arrow-right"></i> ] </#if>${title}</legend></#if>
 </#macro>
 
 <#macro renderFieldGroupClose style id title>
-    <#--<#if style?has_content || id?has_content || title?has_content></div></div></#if>-->
     </fieldset>
+    </div>
+</div>
 </#macro>
 
 <#macro renderHyperlinkTitle name title showSelectAll="N">

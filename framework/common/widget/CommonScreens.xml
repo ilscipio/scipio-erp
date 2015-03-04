@@ -92,16 +92,18 @@ under the License.
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.offcanvas.js" global="true" />
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation-datepicker/js/foundation-datepicker.js" global="true" />
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation-responsive-tables/responsive-tables.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/js/app.js" global="true" />
+
+                
                 
                 <!-- Legacy JS TODO: Remove once possible -->
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/jquery/ui/js/jquery-ui-1.10.3.min.js" global="true" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/selectall.js" global="true" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/fieldlookup.js" global="true" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/miscAjaxFunctions.js" global="true" />               
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/selectMultipleRelatedValues.js" global="true" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/util.js" global="true" />
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/jquery/jquery-migrate-1.2.1.js" global="true"/>
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
                 
                 <!-- Load available JS Language Files -->
@@ -112,9 +114,9 @@ under the License.
                     <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true" />
                     <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.dateTime.getFilePath(initialLocaleComplete)}" global="true" />
                     <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
-                    <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon.min-1.4.3.js" global="true" />
+                    <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" /> // replaced by foundation datepicker
                     <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jquery.maskedinput-1.3.1.min.js" global="true" />
-                    <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/ui/js/jquery-ui-1.10.3.min.js" global="true" />
+                    <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
                     <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jeditable/jquery.jeditable.js" global="true" />
                     <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
                     <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
@@ -449,12 +451,12 @@ under the License.
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true"/>
 
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon.min-1.4.3.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/ui/js/jquery-ui-1.10.3.min.js" global="true"/>
+                <!-- Replaced by foundation datepicker <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" />-->
+                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jeditable/jquery.jeditable.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-migrate-1.2.1.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>                
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>
                     <!-- jQuery CSSs -->
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.css" global="true"/>

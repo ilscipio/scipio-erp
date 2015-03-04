@@ -9300,12 +9300,17 @@ table.basic-table input {
   width: 500px;
 }
 
-/* line 116, ../scss/_base.scss */
+/* line 117, ../scss/_base.scss */
+.inline-list li {
+  margin-bottom: 10px;
+}
+
+/* line 121, ../scss/_base.scss */
 td {
   word-break: break-all;
 }
 
-/* line 120, ../scss/_base.scss */
+/* line 125, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -9313,7 +9318,7 @@ td {
   padding: 8px 0px;
 }
 
-/* line 126, ../scss/_base.scss */
+/* line 131, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
@@ -9321,18 +9326,18 @@ fieldset legend {
   background: none;
 }
 
-/* line 132, ../scss/_base.scss */
+/* line 137, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 136, ../scss/_base.scss */
+/* line 141, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 141, ../scss/_base.scss */
+/* line 146, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -9356,36 +9361,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 163, ../scss/_base.scss */
+/* line 168, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 168, ../scss/_base.scss */
+/* line 173, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 170, ../scss/_base.scss */
+/* line 175, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 171, ../scss/_base.scss */
+/* line 176, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 172, ../scss/_base.scss */
+/* line 177, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 173, ../scss/_base.scss */
+/* line 178, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 176, ../scss/_base.scss */
+/* line 181, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -9399,24 +9404,24 @@ code .TRACE {
 }
 
 /*  FOOTER */
-/* line 189, ../scss/_base.scss */
+/* line 194, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 194, ../scss/_base.scss */
+/* line 199, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 199, ../scss/_base.scss */
+/* line 204, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 203, ../scss/_base.scss */
+/* line 208, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;

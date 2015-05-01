@@ -59,7 +59,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
@@ -75,9 +75,6 @@ under the License.
                                     <widgets>
                                         <include-menu name="FacilityTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
                                     </widgets>
-                                    <fail-widgets>
-                                        <label >${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
-                                    </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
@@ -119,7 +116,7 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <if-has-permission permission="FACILITY" action="_VIEW"/>
@@ -154,6 +151,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="InventoryItemLabelsTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -165,8 +165,6 @@ under the License.
                                         <not><if-empty field="inventoryItemLabel"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="InventoryItemLabelsTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
-                                        <include-menu name="InventoryItemLabelTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
                                         <label style="h1">${uiLabelMap.ProductInventoryItemLabel} [${inventoryItemLabelId}]</label>
                                         <decorator-section-include name="body"/>
                                     </widgets>

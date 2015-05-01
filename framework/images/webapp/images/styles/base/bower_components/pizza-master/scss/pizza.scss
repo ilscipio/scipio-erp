@@ -1,0 +1,53 @@
+// Pie Chart Variables
+$pie-color: #f45c5c !default;
+
+@mixin darkened-children($num-children, $color) {
+  @for $i from 1 through $num-children {
+    $color: scale-color($color, $lightness: -10%);
+    & > *:nth-child(#{$num-children}n+#{$i}) { // This causes looping to occur after there are $num-children child elements.
+      color: $color;
+    }
+  }
+}
+
+@mixin lightened-children($num-children, $color) {
+  @for $i from 1 through $num-children {
+    $color: scale-color($color, $lightness: 10%);
+    & > *:nth-child(#{$num-children}n+#{$i}) { // This causes looping to occur after there are $num-children child elements.
+      color: $color;
+    }
+  }
+}
+
+[data-pie-id], [data-bar-id], [data-line-id] {
+  @include darkened-children(7, $pie-color);
+}
+
+// Set the SVG to 100% width to smooth responsive resizing (optional)
+#pie, #donut, #bar {
+  max-height: 450px;
+}
+
+#bar {
+  // height: 300px;
+}
+
+svg {
+  width: 100%;
+  height: auto;
+}
+
+.tooltip {
+  margin-left: -5px;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+// svg text {
+//  fill: $label-color;
+// }
+
+ul[data-pie-id] {
+  list-style: none;
+  padding: 10px;
+}

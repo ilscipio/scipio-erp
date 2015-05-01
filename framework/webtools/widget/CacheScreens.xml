@@ -29,16 +29,16 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+                     <decorator-section name="left-column">
+                        <include-menu name="FindCache" location="component://webtools/widget/Menus.xml"/>
+                     </decorator-section>
+                     <decorator-section name="body">
                         <section>
                             <!-- do check for UTIL_CACHE, _VIEW permission -->
                             <condition>
                                 <if-has-permission permission="UTIL_CACHE" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <screenlet>
-                                <include-menu name="FindCache" location="component://webtools/widget/Menus.xml"/>
-                                </screenlet>
                                 <screenlet title="${uiLabelMap.WebtoolsMemory}">
                                     <include-form name="MemoryInfo" location="component://webtools/widget/CacheForms.xml"/>
                                 </screenlet>

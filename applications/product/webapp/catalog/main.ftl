@@ -22,7 +22,7 @@ under the License.
     </#if>
 
     <#if security.hasEntityPermission("CATALOG", "_VIEW", session)>
-    <@grid columns=3>
+    <@grid columns=2>
         <li>
            <form method="post" action="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" style="margin: 0;" name="EditProdCatalogForm">
                 <@pul title="${uiLabelMap.ProductEditCatalogWithCatalogId}"> 

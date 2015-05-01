@@ -608,6 +608,38 @@ Creates a very basic wrapper for code blocks
 </#macro>
 
 
+
+<#-- 
+*************
+* Chart Macro
+************
+! The implementation is still experimental and requires the proper includes to actually work.
+
+http://zurb.com/playground/pizza-amore-charts-and-graphs
+
+    Usage example:  
+    <@chart type="bar" >
+        <@chartdata value="36" title="Peperoni"/> 
+    </@chart>              
+                    
+   * General Attributes *
+    type           = (pie|bar|line) (default:pie)
+-->
+
+<#macro chart type="pie">
+    <#global fieldIdNum="${fieldIdNum!0+1}" />    
+    <ul data-${type!}-id="chart_${fieldIdNum!}">
+        <#nested/>
+    </ul>
+    <div id="chart_${fieldIdNum!}"></div>
+</#macro>
+
+<#macro chartdata title value value2="">
+    <li <#if value2?has_content>data-x="${value!}" data-y="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
+</#macro>
+
+
+
 <#-- UTLITY MACROS END -->
 
 

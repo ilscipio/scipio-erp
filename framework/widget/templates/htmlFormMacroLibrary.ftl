@@ -56,7 +56,7 @@ under the License.
     </script>
   </#if>
   <input type="text" name="${name?default("")?html}"<#t/>
-    <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+    <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
     <@renderClass className alert />
     <#if value?has_content> value="${value}"</#if><#rt/>
     <#if textSize?has_content> size="${textSize}"</#if><#rt/>

@@ -6,7 +6,6 @@ body {
     -o-background-size: cover;
     background-size: cover;
     color: #fff;
-    
 }
 
 h1,h2,h3,h4,h5{color:#fff;font-family: 'Open Sans', sans-serif;}
@@ -20,7 +19,6 @@ a:hover {color: #333;}
 
 .top-bar{
 	background: rgba(255,255,255,.15);
-	
 }
 .pagination-centered {}
 ul.pagination li{color:#fff; line-height:24px; }
@@ -28,9 +26,11 @@ ul.pagination li a, ul.pagination li button {color:#fff; background:rgba(255,255
 ul.pagination li a:hover, ul.pagination li button:hover {color:#333;}
 
 
-.sidebar {margin-top:45px;background: rgba(255,255,255,0.9);}
+.sidebar {background: rgba(255,255,255,0.9);color:#333;}
 
+.sidebar h1, .sidebar h2, .sidebar h3, .sidebar h4, .sidebar h5, .sidebar h6,.sidebar label,li.ui-menu-item  {color:#333;}
 
+fieldset {border:none;}
 
 fieldset legend {
 	color:#fff;

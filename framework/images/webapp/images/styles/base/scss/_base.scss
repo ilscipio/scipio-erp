@@ -1,11 +1,10 @@
 /* GRID */
 .fullWidth {
-   width: 100%;
-   margin-left: auto;
-   margin-right: auto;
-   max-width: initial;
+    width: 100%;
+    max-width: 85em;
+    margin-left: auto;
+    margin-right: auto;
 }
-
 
 .v-center {
     position: absolute;
@@ -19,60 +18,18 @@
 
 
 /* NAVIGATION */
+  
+
 .sidebar {
-  background: #FAFAFA;
-  padding: 32px 20px; }
+    margin-top:0px;
+    background: #FAFAFA;
+    padding: 10px; 
 
-.sidebar.fixed, [data-magellan-expedition] {
-  left: auto !important; }
+    form {padding:0px;}
 
-.side-nav .heading {
-  text-transform: uppercase; }
-
-.side-nav li {
-  margin: 0;
-  padding: 0; }
-
-.side-nav li a {
-  padding: 0.33333rem 0; }
-  .side-nav li a:not(.button) {
-    padding: 0.33333rem 0; }
-  .side-nav li a:hover {
-    color: #004054; }
-    .side-nav li a:hover span {
-      background: #dadada;
-      color: #000; }
-
-.side-nav .heading, .sidebar form {
-  padding: 2px 0px; }
-
-.side-nav li.divider {
-  margin: 16px 0px; }
-
-.sidebar h1, .sidebar h2, .sidebar h3, .sidebar h4, .sidebar h5, .sidebar h6 {
-  padding: 4px 0px;
-  font-size: 0.77778rem;
-  font-weight: bold; }
-
-.sidebar .download.button {
-  margin: 10px 0px;
-  font-size: 1rem; }
-
-.sidebar .label {
-  background: #ddd;
-  border-radius: 3px;
-  color: #777;
-  margin-left: 5px; }
-
-.sidebar form {
-  margin-bottom: 0; }
-
-.sidebar .button {
-  font-size: 0.66667rem; }
-
-.sidebar input[type="search"]:focus {
-  box-shadow: 0 0 0 !important; }
-
+    input[type="search"]:focus {
+        box-shadow: 0 0 0 !important; }
+}
 
 
 .sub-top-bar {@include sub-nav(); 
@@ -88,6 +45,7 @@
 /* CONTENT */
 #content-main-section{
     padding-top:32px;
+    padding-bottom:32px;
 }
 // Using the default styles
 input[type="button"], input[type="submit"],.buttontext  { @include button; @include button-size($padding:$button-tny); }
@@ -110,7 +68,7 @@ table.basic-table {
             
 }
 
-#login {width:500px;}
+#login {max-width:500px;}
 
 
 .inline-list {
@@ -128,16 +86,23 @@ td {word-break:break-all;}
     margin:10px 0px;
     padding:8px 0px;
 }
-fieldset legend{
-    padding:0px;
-    margin:0px;
-    text-align:right;
-    background:none;
+fieldset {
+    border:none;
+    
+    legend{
+        padding:0px;
+        margin:0px;
+        text-align:right;
+        background:none;
+    }
+    
+    legend:hover{
+        color: scale-color($primary-color, $lightness: -14%);
+        cursor: pointer;
+    }
 }
-fieldset legend:hover{
-    color: scale-color($primary-color, $lightness: -14%);
-    cursor: pointer;
-}
+
+
 .collapsed{
     display:inline-block;
 }

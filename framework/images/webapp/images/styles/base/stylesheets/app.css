@@ -9058,12 +9058,12 @@ th.hide-for-touch {
 /* line 2, ../scss/_base.scss */
 .fullWidth {
   width: 100%;
+  max-width: 85em;
   margin-left: auto;
   margin-right: auto;
-  max-width: initial;
 }
 
-/* line 10, ../scss/_base.scss */
+/* line 9, ../scss/_base.scss */
 .v-center {
   position: absolute;
   left: 50%;
@@ -9075,96 +9075,22 @@ th.hide-for-touch {
 }
 
 /* NAVIGATION */
-/* line 22, ../scss/_base.scss */
+/* line 23, ../scss/_base.scss */
 .sidebar {
+  margin-top: 0px;
   background: #FAFAFA;
-  padding: 32px 20px;
+  padding: 10px;
 }
-
-/* line 26, ../scss/_base.scss */
-.sidebar.fixed, [data-magellan-expedition] {
-  left: auto !important;
-}
-
-/* line 29, ../scss/_base.scss */
-.side-nav .heading {
-  text-transform: uppercase;
-}
-
-/* line 32, ../scss/_base.scss */
-.side-nav li {
-  margin: 0;
-  padding: 0;
-}
-
-/* line 36, ../scss/_base.scss */
-.side-nav li a {
-  padding: 0.33333rem 0;
-}
-
-/* line 38, ../scss/_base.scss */
-.side-nav li a:not(.button) {
-  padding: 0.33333rem 0;
-}
-
-/* line 40, ../scss/_base.scss */
-.side-nav li a:hover {
-  color: #004054;
-}
-
-/* line 42, ../scss/_base.scss */
-.side-nav li a:hover span {
-  background: #dadada;
-  color: #000;
-}
-
-/* line 46, ../scss/_base.scss */
-.side-nav .heading, .sidebar form {
-  padding: 2px 0px;
-}
-
-/* line 49, ../scss/_base.scss */
-.side-nav li.divider {
-  margin: 16px 0px;
-}
-
-/* line 52, ../scss/_base.scss */
-.sidebar h1, .sidebar h2, .sidebar h3, .sidebar h4, .sidebar h5, .sidebar h6 {
-  padding: 4px 0px;
-  font-size: 0.77778rem;
-  font-weight: bold;
-}
-
-/* line 57, ../scss/_base.scss */
-.sidebar .download.button {
-  margin: 10px 0px;
-  font-size: 1rem;
-}
-
-/* line 61, ../scss/_base.scss */
-.sidebar .label {
-  background: #ddd;
-  border-radius: 3px;
-  color: #777;
-  margin-left: 5px;
-}
-
-/* line 67, ../scss/_base.scss */
+/* line 28, ../scss/_base.scss */
 .sidebar form {
-  margin-bottom: 0;
+  padding: 0px;
 }
-
-/* line 70, ../scss/_base.scss */
-.sidebar .button {
-  font-size: 0.66667rem;
-}
-
-/* line 73, ../scss/_base.scss */
+/* line 30, ../scss/_base.scss */
 .sidebar input[type="search"]:focus {
   box-shadow: 0 0 0 !important;
 }
 
-/* line 78, ../scss/_base.scss */
+/* line 35, ../scss/_base.scss */
 .sub-top-bar {
   display: block;
   width: auto;
@@ -9221,7 +9147,7 @@ th.hide-for-touch {
 .sub-top-bar li.active a:hover {
   background: #0078a0;
 }
-/* line 81, ../scss/_base.scss */
+/* line 38, ../scss/_base.scss */
 .sub-top-bar dt a, .sub-top-bar dd a, .sub-top-bar li a {
   background-color: #fafafa;
   color: #008cba;
@@ -9229,12 +9155,13 @@ th.hide-for-touch {
 }
 
 /* CONTENT */
-/* line 89, ../scss/_base.scss */
+/* line 46, ../scss/_base.scss */
 #content-main-section {
   padding-top: 32px;
+  padding-bottom: 32px;
 }
 
-/* line 93, ../scss/_base.scss */
+/* line 51, ../scss/_base.scss */
 input[type="button"], input[type="submit"], .buttontext {
   border-style: solid;
   border-width: 0;
@@ -9273,44 +9200,44 @@ input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hov
   color: white;
 }
 
-/* line 96, ../scss/_base.scss */
+/* line 54, ../scss/_base.scss */
 table.basic-table {
   width: 100%;
 }
-/* line 98, ../scss/_base.scss */
+/* line 56, ../scss/_base.scss */
 table.basic-table tr {
   background: none;
 }
-/* line 101, ../scss/_base.scss */
+/* line 59, ../scss/_base.scss */
 table.basic-table tr td {
   height: auto;
   vertical-align: top;
 }
-/* line 107, ../scss/_base.scss */
+/* line 65, ../scss/_base.scss */
 table.basic-table tr.odd {
   background: #fafafa;
 }
-/* line 109, ../scss/_base.scss */
+/* line 67, ../scss/_base.scss */
 table.basic-table input {
   margin: 0px;
 }
 
-/* line 113, ../scss/_base.scss */
+/* line 71, ../scss/_base.scss */
 #login {
-  width: 500px;
+  max-width: 500px;
 }
 
-/* line 117, ../scss/_base.scss */
+/* line 75, ../scss/_base.scss */
 .inline-list li {
   margin-bottom: 10px;
 }
 
-/* line 121, ../scss/_base.scss */
+/* line 79, ../scss/_base.scss */
 td {
   word-break: break-all;
 }
 
-/* line 125, ../scss/_base.scss */
+/* line 83, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -9318,26 +9245,29 @@ td {
   padding: 8px 0px;
 }
 
-/* line 131, ../scss/_base.scss */
+/* line 89, ../scss/_base.scss */
+fieldset {
+  border: none;
+}
+/* line 92, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-
-/* line 137, ../scss/_base.scss */
+/* line 99, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 141, ../scss/_base.scss */
+/* line 106, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 146, ../scss/_base.scss */
+/* line 111, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -9361,36 +9291,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 168, ../scss/_base.scss */
+/* line 133, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 173, ../scss/_base.scss */
+/* line 138, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 175, ../scss/_base.scss */
+/* line 140, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 176, ../scss/_base.scss */
+/* line 141, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 177, ../scss/_base.scss */
+/* line 142, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 178, ../scss/_base.scss */
+/* line 143, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 181, ../scss/_base.scss */
+/* line 146, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -9404,24 +9334,24 @@ code .TRACE {
 }
 
 /*  FOOTER */
-/* line 194, ../scss/_base.scss */
+/* line 159, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 199, ../scss/_base.scss */
+/* line 164, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 204, ../scss/_base.scss */
+/* line 169, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 208, ../scss/_base.scss */
+/* line 173, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;

@@ -71,8 +71,8 @@ under the License.
 <#macro primaryAppsMenu>
   <#assign appCount = 0>
   <#assign firstApp = true>
+    <li><label>${uiLabelMap["CommonPrimaryApps"]}</label></li>
   <#list displayApps as display>
-    <li>
         <#assign thisApp = display.getContextRoot()>
         <#assign selected = false>
         <#if thisApp == contextPath || contextPath + "/" == thisApp>
@@ -86,16 +86,17 @@ under the License.
         <#if layoutSettings.suppressTab?? && display.name == layoutSettings.suppressTab>
           <#-- do not display this component-->
         <#else>
-          <a href="${thisURL}${StringUtil.wrapString(externalKeyParam)}"<#if selected> class="active"</#if><#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
-          <#assign appCount = appCount + 1>
+            <li <#if selected> class="active"</#if>>
+                <a href="${thisURL}${StringUtil.wrapString(externalKeyParam)}"<#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
+            </li>
+            <#assign appCount = appCount + 1>
         </#if>
-    </li>
   </#list>
 </#macro>
 
 <#macro secondaryAppsMenu>
-  <#list displaySecondaryApps as display>
-    <li>
+    <li><label>${uiLabelMap["CommonSecondaryApps"]}</label></li>
+    <#list displaySecondaryApps as display>
         <#assign thisApp = display.getContextRoot()>
         <#assign selected = false>
         <#if thisApp == contextPath || contextPath + "/" == thisApp>
@@ -106,13 +107,24 @@ under the License.
           <#if thisApp != "/">
             <#assign thisURL = thisURL + "main">
           </#if>
-        
+          <li <#if selected> class="active"</#if>>      
             <a href="${thisURL}${StringUtil.wrapString(externalKeyParam)}"<#if selected> class="active"</#if><#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
-
-        <#assign appCount = appCount + 1>
-    </li>
-  </#list>
+            <#assign appCount = appCount + 1>
+          </li>
+    </#list>
 </#macro>
+
+<#-- in theory there is a transform that converts the selected menu to a proper list on these screens. It is never used by any of the other ofbiz screens, however and poorly documented
+so for now we have to split the screens in half and rely on the menu widget renderer to get the same effect
+<#macro currentAppMenu>
+    <#if appModelMenu?has_content>
+        <li class="has-dropdown not-click active"><a href="#">${title!"TEST"}</a>
+            <ul class="dropdown">
+                
+            </ul>
+        </li>
+    </#if>
+</#macro>-->
 
 <#macro logoMenu hasLink=true isSmall=false>
     <#if layoutSettings.headerImageUrl??>
@@ -216,23 +228,27 @@ under the License.
         <!-- whatever you want goes here -->
         <ul class="off-canvas-list">
           <@generalMenu />
-          <li><label>${uiLabelMap["CommonPrimaryApps"]}</label></li>
-          <@primaryAppsMenu/>
-          <li><label>${uiLabelMap["CommonSecondaryApps"]}</label></li>
-          <@secondaryAppsMenu/>
-          <li><a <#if pageAvail?has_content>class="alert"</#if> href="javascript:lookup_popup1('showHelp?helpTopic=${helpTopic}&amp;portalPageId=${parameters.portalPageId!}','help' ,500,500);">${uiLabelMap.CommonHelp}</a></li>       
-          
+          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
+          <li class="has-form"><@modal label="${uiLabelMap.CommonHelp}" id="help" href="${helpLink}"></@modal></li>   
         </ul>
+    </aside>
+    
+    <aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+          <@primaryAppsMenu/>
+          <@secondaryAppsMenu/>
+       </ul>
     </aside>
 
     <nav class="tab-bar show-for-small">
+        <section class="left-small">
+            <a class="left-off-canvas-toggle menu-icon"><span></span></a>
+        </section>
         <section class="middle tab-bar-section">
             <h1><@logoMenu isSmall=true/></h1>
         </section>
         <section class="right-small">
-            <a class="right-off-canvas-toggle menu-icon">
-        <span></span>
-        </a>
+            <a class="right-off-canvas-toggle menu-icon"><span></span></a>
         </section>
     </nav>
     
@@ -260,88 +276,19 @@ under the License.
         
         <#if userLogin?has_content>
             <ul class="left">
-                <li class="has-dropdown not-click"><a href="#">${uiLabelMap["CommonPrimaryApps"]}</a>
+                <li class="has-dropdown not-click"><a href="#">${uiLabelMap["CommonApplications"]}</a>
                 <ul class="dropdown">
-                  <@primaryAppsMenu/>
+                  <li class="has-dropdown not-click"><a href="#">${uiLabelMap["CommonPrimaryApps"]}</a>
+                    <ul class="dropdown">
+                        <@primaryAppsMenu/>
+                    </ul>
+                  </li>
+                  <li class="has-dropdown not-click"><a href="#">${uiLabelMap["CommonSecondaryApps"]}</a>
+                    <ul class="dropdown">
+                      <@secondaryAppsMenu/>
+                    </ul>
+                  </li>                  
                 </ul>
               </li>
-              <li class="divider"></li>
-              <li class="has-dropdown not-click"><a href="#">${uiLabelMap["CommonSecondaryApps"]}</a>
-                <ul class="dropdown">
-                  <@secondaryAppsMenu/>
-                </ul>
-              </li>
-            </ul>
         </#if>
-      </section>
-    </nav>
-<section role="main" class="scroll-container">
-
-
-<#--
-  <div id="wait-spinner" style="display:none">
-    <div id="wait-spinner-image"></div>
-  </div>
-  <div class="page-container">
-  <div class="hidden">
-    <a href="#column-container" title="${uiLabelMap.CommonSkipNavigation}" accesskey="2">
-      ${uiLabelMap.CommonSkipNavigation}
-    </a>
-  </div>
-  <div id="masthead">
-    <ul>
-      <#if layoutSettings.headerImageUrl??>
-        <#assign headerImageUrl = layoutSettings.headerImageUrl>
-      <#elseif layoutSettings.commonHeaderImageUrl??>
-        <#assign headerImageUrl = layoutSettings.commonHeaderImageUrl>
-      <#elseif layoutSettings.VT_HDR_IMAGE_URL??>
-        <#assign headerImageUrl = layoutSettings.VT_HDR_IMAGE_URL.get(0)>
-      </#if>
-      <#if headerImageUrl??>
-        <#if organizationLogoLinkURL?has_content>
-            <li class="org-logo-area"><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${StringUtil.wrapString(organizationLogoLinkURL)}</@ofbizContentUrl>"></a></li>
-            <#else>
-            <li class="logo-area"><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${StringUtil.wrapString(headerImageUrl)}</@ofbizContentUrl>"/></a></li>
-        </#if>
-      </#if>
-      
-      <#if layoutSettings.middleTopMessage1?has_content && layoutSettings.middleTopMessage1 != " ">
-        <li>
-        <div class="last-system-msg">
-        <center>${layoutSettings.middleTopHeader!}</center>
-        <a href="${layoutSettings.middleTopLink1!}">${layoutSettings.middleTopMessage1!}</a><br/>
-        <a href="${layoutSettings.middleTopLink2!}">${layoutSettings.middleTopMessage2!}</a><br/>
-        <a href="${layoutSettings.middleTopLink3!}">${layoutSettings.middleTopMessage3!}</a>
-        </div>
-        </li>
-      </#if>
-      <li class="preference-area">
-          <ul>
-          <#if userLogin??>
-            <#if layoutSettings.topLines?has_content>
-              <#list layoutSettings.topLines as topLine>
-                <#if topLine.text??>
-                  <li>${topLine.text}<a href="${StringUtil.wrapString(topLine.url!)}${StringUtil.wrapString(externalKeyParam)}">${topLine.urlText!}</a></li>
-                <#elseif topLine.dropDownList??>
-                  <li><#include "component://common/webcommon/includes/insertDropDown.ftl"/></li>
-                <#else>
-                  <li>${topLine!}</li>
-                </#if>
-              </#list>
-            <#else>
-              <li>${userLogin.userLoginId}</li>
-            </#if>
-            <li><a href="<@ofbizUrl>logout</@ofbizUrl>">${uiLabelMap.CommonLogout}</a></li>
-          <#else/>
-            <li>${uiLabelMap.CommonWelcome}! <a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></li>
-          </#if>
-          <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
-            <#include "component://common/webcommon/includes/helplink.ftl" />
-            <li><a <#if pageAvail?has_content>class="alert"</#if> href="javascript:lookup_popup1('showHelp?helpTopic=${helpTopic}&amp;portalPageId=${parameters.portalPageId!}','help' ,500,500);">${uiLabelMap.CommonHelp}</a></li>
-          </#if>
-          </ul>
-      </li>
-    </ul>
-  </div>
- -->
 </#compress>

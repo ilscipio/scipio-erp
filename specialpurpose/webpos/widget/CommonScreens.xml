@@ -117,7 +117,7 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <widgets>
                                 <include-menu name="ManagerTabBar" location="component://webpos/widget/WebPosMenus.xml"/>

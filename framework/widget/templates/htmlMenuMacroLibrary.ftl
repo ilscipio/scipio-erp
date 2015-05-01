@@ -16,54 +16,39 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#global isSubMenu=false/>
-
+<#global isSubMenu=isSubMenu!false/>
+<#global isLeftBar=isLeftBar!true/>
 <#macro renderMenuBegin boundaryComment="" id="" style="" title="">
-      <#if style?has_content><#global isSubMenu=true/><#else><#global isSubMenu=false/></#if>
       <#if boundaryComment?has_content>
       <!-- ${boundaryComment} -->
       </#if>
       <#if isSubMenu>
-      <div class="large-12 columns">
-          <nav class="sub-top-bar hide-for-small" data-topbar role="navigation">          
-              <section>
-                <ul class="inline-list sub-nav" role="menu" title="${title!"App Navigation"}">
-                        <#--
-                        <li class="has-dropdown not-click"><a href="#"><#if title?has_content>${title!}<#else>Menu</#if></a>
-                        <ul class="dropdown">-->
-      
-      <#else>
-          <#-- Render main navigation-->
-          <div class="row fullWidth">
-          <#-- FIXME: A menu could have an ID and a style, but some visual themes break if both are used. -->
-          <div<#if id?has_content> id="${id}"</#if> class="large-2 columns <#if style?has_content>${style}</#if> hide-for-small">
-              <div class="section-container vertical-nav sidebar" data-section="vertical-nav" data-options="one_up: false;">
-              <section>
+      <#--
+          <nav>
+              <h2>${navigation!}</h2>
               <ul class="side-nav">
-                 <#if title?has_content>
-                  <li class="heading">${title}</li>
-                </#if>
-                <li>
+                  <li>
+      -->
+      
+      <ul class="button-group force-button">
+                       
+      <#else>
+        <li class="has-dropdown not-click active"><a href="#">${title!}</a>
+            <ul class="dropdown">
        </#if>
 </#macro>
 
 <#macro renderMenuEnd boundaryComment="" style="">
     <#if isSubMenu>
-                    <#--</ul></li>-->
-             </ul>
-          </section>
-    </nav>
-      </div>
-      </div>
-      <div class="row">
-      <div class="large-12 columns">    
+            <#--</li>
+            </ul>
+            </nav>
+            -->    
+            </ul>
     <#else>
-            </li>
-          </ul>
-          </section>
-          </div>
-        </div>
-      <div class="large-10 columns" id="main-content">
+        </ul>
+        </li>
+        <#global isSubMenu=true/>
     </#if>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->

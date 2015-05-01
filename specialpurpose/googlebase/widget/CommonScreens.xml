@@ -78,6 +78,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="ProductTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for GOOGLEBASE, _VIEW permission -->
@@ -88,7 +91,6 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="product"/></not></condition>
                                     <widgets>
-                                        <include-menu name="ProductTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                         <container>
                                             <label style="h1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
                                             <image src="${product.smallImageUrl}" url-mode="content" style="cssImgSmall"/>

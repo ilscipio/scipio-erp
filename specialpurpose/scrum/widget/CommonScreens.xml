@@ -104,6 +104,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="TaskTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -115,7 +118,6 @@ under the License.
                                         <not><if-empty field="task"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="TaskTabBar" location="component://scrum/widget/scrumMenus.xml"/>
                                         <section>
                                             <condition>
                                                 <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="TASK"/>
@@ -172,13 +174,15 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="ProductTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <if-service-permission service-name="scrumPermissionCheck" main-action="VIEW" resource-description="SCRUM"/>
                             </condition>
                             <widgets>
-                                <include-menu name="ProductTabBar" location="component://scrum/widget/scrumMenus.xml"/>
                                 <section>
                                     <condition>
                                         <and>
@@ -216,6 +220,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="ProductBackLogItemTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -225,7 +232,6 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <include-menu name="ProductBackLogItemTabBar" location="component://scrum/widget/scrumMenus.xml"/>
                                 <include-menu name="ProductBackLogItemStatusTabBar" location="component://scrum/widget/scrumMenus.xml"/>
                                 <section>
                                     <condition>
@@ -284,6 +290,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="ProductBackLogItemTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -293,7 +302,6 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <include-menu name="ProductBackLogItemTabBar" location="component://scrum/widget/scrumMenus.xml"/>
                                 <include-menu name="ProductBacklogEmailTabBar" location="component://scrum/widget/scrumMenus.xml"/>
                                 <section>
                                     <condition>
@@ -369,6 +377,9 @@ under the License.
                     <widgets/>
                 </section>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu location="component://scrum/widget/scrumMenus.xml" name="ResourceTabBar"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PROJECTMGR, _VIEW permission -->
@@ -382,7 +393,6 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="partyId"/></not></condition>
                                     <widgets>
-                                        <include-menu location="component://scrum/widget/scrumMenus.xml" name="ResourceTabBar"/>
                                         <container>
                                             <section>
                                                 <widgets>
@@ -417,6 +427,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="ProjectMenu" location="component://scrum/widget/scrumMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -428,7 +441,6 @@ under the License.
                                         <not><if-empty field="workEffort"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="ProjectMenu" location="component://scrum/widget/scrumMenus.xml"/>
                                         <section>
                                             <widgets>
                                                  <include-menu name="ProjectSubTabBar" location="component://scrum/widget/scrumMenus.xml"/>
@@ -524,8 +536,10 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+                    <decorator-section name="left-column">
                         <include-menu name="SprintMenu" location="component://scrum/widget/scrumMenus.xml"/>
+                    </decorator-section>
+                    <decorator-section name="body">
                         <include-menu name="SprintSubMenu" location="component://scrum/widget/scrumMenus.xml"/>
                         <label text="Current Sprint: ${sprint.workEffortName} [${sprint.workEffortId}]" style="h1"/>
                         <decorator-section-include name="body"/>
@@ -541,14 +555,14 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="ScrumAdminSubMenu" location="component://scrum/widget/scrumMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <if-service-permission service-name="scrumPermissionCheck" main-action="CREATE" resource-description="MEMBER"/>
                             </condition>
-                            <widgets>
-                                <include-menu name="ScrumAdminSubMenu" location="component://scrum/widget/scrumMenus.xml"/>
-                            </widgets>
                             <fail-widgets>
                                 <label style="h3">${uiLabelMap.ScrumViewPermissionError}</label>
                             </fail-widgets>

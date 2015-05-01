@@ -55,7 +55,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <include-menu name="FacilityTabBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -98,7 +98,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <not><if-empty field="fixedAssetId"/></not>

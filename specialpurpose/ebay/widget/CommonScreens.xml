@@ -53,6 +53,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="left-column">
+                    <include-menu name="ProductTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for EBAY, _VIEW permission -->
@@ -62,8 +65,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <condition><not><if-empty field="product"/></not></condition>
-                                    <widgets>
-                                        <include-menu name="ProductTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                    <widgets>                                        
                                         <container>
                                             <label style="h1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
                                             <image src="${product.smallImageUrl}" url-mode="content" style="cssImgSmall"/>
@@ -126,6 +128,9 @@ under the License.
                 <set field="headerItem" value="eBayConfigurations"/>
             </actions>
             <widgets>
+                <decorator-screen name="left-column">
+                    <include-menu name="EbayConfigTabBar"  location="component://ebay/widget/EbayMenus.xml"/>
+                </decorator-screen>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
@@ -134,7 +139,6 @@ under the License.
                                 <if-has-permission permission="EBAY" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="EbayConfigTabBar"  location="component://ebay/widget/EbayMenus.xml"/>
                                 <section>
                                     <condition><not><if-empty field="ebayConfig"/></not>
                                     </condition>

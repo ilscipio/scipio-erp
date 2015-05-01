@@ -30,18 +30,8 @@ under the License.
     </div>
     </div>
 -->
-
-    <!-- close the off-canvas menu -->
-    <a class="exit-off-canvas"></a>
-  </div>
-</div> 
-</div>
-</div>
-</div>
-</div>
-
 </section>
-
+</div></div>
 <!-- FOOTER SECTION -->
 <footer id="footer">
     <#--
@@ -59,6 +49,7 @@ under the License.
         </div>
     </div>
 </footer> <!-- END FOOTER -->
+
 
     <#if layoutSettings.VT_FTR_JAVASCRIPT?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->

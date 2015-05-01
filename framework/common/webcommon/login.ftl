@@ -28,7 +28,7 @@ under the License.
 </#if>
 
 
-<div id="login" class="reveal-modal remove-whitespace" data-options="close_on_background_click: false;" data-reveal>
+<div id="login" class="reveal-modal remove-whitespace small" data-options="close_on_background_click: false;" data-reveal>
 <#assign logo><img src="<@ofbizContentUrl>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
 <@section title="${uiLabelMap.CommonLogin}">
   <@row>

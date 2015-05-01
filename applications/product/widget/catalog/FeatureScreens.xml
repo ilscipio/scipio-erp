@@ -25,6 +25,7 @@
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
+                        <include-menu name="FeaturesTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                         <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>                    
                     <decorator-section name="body">
@@ -38,7 +39,6 @@
                                 </or>
                             </condition>
                             <widgets>
-                                <include-menu name="FeaturesTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

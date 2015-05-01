@@ -26,4 +26,6 @@ under the License.
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://common/webcommon/includes/messages.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://base-theme/includes/footer.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://base-theme/includes/appbar.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://base-theme/includes/appbarOpen.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://base-theme/includes/appbarClose.ftl" sequenceId="01"/>
 </entity-engine-xml>

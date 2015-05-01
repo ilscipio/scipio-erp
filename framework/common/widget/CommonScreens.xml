@@ -71,7 +71,7 @@ under the License.
                 <set field="layoutSettings.styleSheets[]" value="/images/styles/base/stylesheets/foundation-icons/foundation-icons.css" global="true"/>
                 <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/foundation-responsive-tables/responsive-tables.css" global="true"/>
                 
-                <set field="layoutSettings.styleSheets[]" value="https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" global="true"/>
                           
                 <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />
                 <service service-name="getVisualThemeResources">
@@ -180,7 +180,7 @@ under the License.
                                     <if-empty field="appbarOpenTemplateLocation" />
                                 </not>
                             </condition>
-                            <widgets>
+                            <widgets>                            
                                 <platform-specific>
                                     <html>
                                         <html-template location="${appbarOpenTemplateLocation}" />
@@ -203,13 +203,13 @@ under the License.
                     </condition>
                     <widgets>
                         <!-- render appheader: both menu widget style and ftl template style menus are supported-->
-                        <section name="Render-App-Nav">
+                        <section name="Render-App-Nav">                   
                             <condition>
                                 <not>
                                     <if-empty field="userLogin" />
                                 </not>
                             </condition>
-                            <widgets>
+                            <widgets>      
                                 <section>
                                     <condition>
                                         <not>
@@ -278,31 +278,33 @@ under the License.
                     </html>
                 </platform-specific>
                 <!-- render content area -->
-                <container style="row" id="content-main-section">
+                <container style="row fullWidth" id="content-main-section">
                     <decorator-section-include name="pre-body" />
-                    <container style="large-12 columns">
                         <section>
                             <condition>
-                                <if-empty-section section-name="left-column" />
+                                <and>
+                                    <if-empty-section section-name="left-column" />
+                                </and>
                             </condition>
                             <widgets>
                                 <container id="content-main-body">
-                                    <decorator-section-include name="body" />
-                                </container>
-                            </widgets>
-                            <fail-widgets>
-                                <container style="left">
-                                    <decorator-section-include name="left-column" />
-                                </container>
-                                <container style="leftonly">
-                                    <container style="no-clear" id="centerdiv">
+                                    <container style="large-12 columns" id="main-content">
                                         <decorator-section-include name="body" />
                                     </container>
                                 </container>
+                            </widgets>
+                            <fail-widgets>
+                                <container style="large-2 columns" id="sidebar">
+                                    <container style="sidebar">
+                                        <decorator-section-include name="left-column" />
+                                        <decorator-section-include name="menu-bar" />
+                                    </container>
+                                </container>
+                                <container style="large-10 columns" id="main-content">
+                                        <decorator-section-include name="body" />
+                                </container>
                             </fail-widgets>
                         </section>
-                        <container style="clear"></container>
-                    </container>
                 </container>
                 <section>
                     <condition>

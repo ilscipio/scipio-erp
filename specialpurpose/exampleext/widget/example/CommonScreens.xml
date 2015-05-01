@@ -41,7 +41,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <and>

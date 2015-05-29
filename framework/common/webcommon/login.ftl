@@ -19,7 +19,7 @@ under the License.
 
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign useMultitenant = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "multitenant")>
-
+<#assign logo><img src="<@ofbizContentUrl>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
 <#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
 <#if username != "">
   <#assign focusName = false>
@@ -27,10 +27,18 @@ under the License.
   <#assign focusName = true>
 </#if>
 
+<div class="large-3 large-centered columns login-box" id="login">
+<div id="login-box-title">
+    <h1>${logo} ${uiLabelMap.CommonLogin!}</h1>
+</div>
 
-<div id="login" class="reveal-modal remove-whitespace small" data-options="close_on_background_click: false;" data-reveal>
-<#assign logo><img src="<@ofbizContentUrl>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
-<@section title="${uiLabelMap.CommonLogin}">
+<@section id="login-box-content">
+  <#if uiLabelMap.WebtoolsForSomethingInteresting?has_content 
+       && uiLabelMap.WebtoolsForSomethingInteresting != "WebtoolsForSomethingInteresting">
+  <@alert type="secondary">
+      ${uiLabelMap.WebtoolsForSomethingInteresting}
+  </@alert>
+  </#if>
   <@row>
     <div class="large-12 columns auth-plain">
      <div class="signup-panel right-solid">
@@ -42,7 +50,7 @@ under the License.
               <span class="prefix"><i class="fi-torso-female"></i></span>
             </div>
             <div class="small-9 columns">
-              <input type="text" name="USERNAME" value="${username}" size="20" placeholder="admin" title="${uiLabelMap.CommonUsername}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
+              <input type="text" name="USERNAME" value="${username}" size="20" placeholder="${uiLabelMap.CommonUsername}" title="${uiLabelMap.CommonUsername}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
             </div>
           </div>
         </div>
@@ -54,7 +62,7 @@ under the License.
               <span class="prefix"><i class="fi-lock"></i></span>
             </div>
             <div class="small-9 columns">
-              <input type="password" name="PASSWORD" value="" size="20" placeholder="ofbiz" title="${uiLabelMap.CommonPassword}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
+              <input type="password" name="PASSWORD" value="" size="20" placeholder="${uiLabelMap.CommonPassword}" title="${uiLabelMap.CommonPassword}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
             </div>
           </div>
         </div>
@@ -77,14 +85,13 @@ under the License.
                   <input type="hidden" name="tenantId" value="${requestAttributes.tenantId!}"/>
               </#if>
           </#if>
-   
          
          <@row>
              <@cell class="large-9 columns text-left">
                 <small><a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a></small>
                 
              </@cell>
-            <@cell class="large-3 columns text-right">
+            <@cell class="large-12 large-centered columns text-right">
                 <input type="hidden" name="JavaScriptEnabled" value="N"/>
                 <input type="submit" value="${uiLabelMap.CommonLogin}" class="button"/>
             </@cell>
@@ -96,10 +103,6 @@ under the License.
 </@section>
 </div>
 <script language="JavaScript" type="text/javascript">
-  $(function(){
-     $(document).foundation();
-     $('#login').foundation('reveal', 'open');
-    });
   document.loginform.JavaScriptEnabled.value = "Y";
   <#if focusName>
     document.loginform.USERNAME.focus();

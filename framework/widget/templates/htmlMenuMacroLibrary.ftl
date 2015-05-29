@@ -18,11 +18,19 @@ under the License.
 -->
 <#global isSubMenu=isSubMenu!false/>
 <#global isLeftBar=isLeftBar!true/>
+
+<#-- 
+Menu styles can be set via menu-container-style attribute. The rendering will differ if one of the following classes is set
+    * menu-main
+    * menu-sidebar
+    * menu-button
+    * menu-tab
+
+-->
 <#macro renderMenuBegin boundaryComment="" id="" style="" title="">
       <#if boundaryComment?has_content>
       <!-- ${boundaryComment} -->
       </#if>
-      <#if isSubMenu>
       <#--
           <nav>
               <h2>${navigation!}</h2>
@@ -30,26 +38,54 @@ under the License.
                   <li>
       -->
       
-      <ul class="button-group force-button">
+      <#if style?contains("menu-main")>
+        <li class="has-dropdown not-click active"><a href="#">${title!}</a>
+            <ul class="dropdown">
+      </#if>
+      
+      <#if style?contains("menu-sidebar")>
+        <nav>
+              <h2>${navigation!}</h2>
+              <ul class="side-nav">
+                  <li>
+      </#if>
+      
+      <#--
+      <#if isSubMenu>
+          <ul class="button-group force-button">
                        
       <#else>
         <li class="has-dropdown not-click active"><a href="#">${title!}</a>
             <ul class="dropdown">
-       </#if>
+       </#if>-->
+       
 </#macro>
 
 <#macro renderMenuEnd boundaryComment="" style="">
-    <#if isSubMenu>
             <#--</li>
             </ul>
             </nav>
             -->    
+    <#--        
+    <#if isSubMenu>
+
             </ul>
     <#else>
         </ul>
         </li>
         <#global isSubMenu=true/>
     </#if>
+    -->
+    <#if style?contains("menu-main")>
+            </ul>
+        </li>
+    </#if>
+    <#if style?contains("menu-sidebar")>
+        </li>
+    </ul>
+    </nav>
+    </#if>
+    
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>

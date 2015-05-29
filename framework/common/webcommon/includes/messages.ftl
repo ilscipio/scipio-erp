@@ -39,30 +39,38 @@ under the License.
   
   <#-- display the error messages -->
   <#if (errorMessage?has_content || errorMessageList?has_content)>
-        <@alert type="alert">
-                  <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
-                  <#if errorMessage?has_content>
-                    <p>${StringUtil.wrapString(errorMessage)}</p>
-                  </#if>
-                  <#if errorMessageList?has_content>
-                    <#list errorMessageList as errorMsg>
-                      <p>${StringUtil.wrapString(errorMsg)}</p>
-                    </#list>
-                   </#if>
-        </@alert>
+        <div id="main-alert-box">
+            <@alert type="alert">
+                      <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
+                      <#if errorMessage?has_content>
+                        <p>${StringUtil.wrapString(errorMessage)}</p>
+                      </#if>
+                      <#if errorMessageList?has_content>
+                        <ul>
+                        <#list errorMessageList as errorMsg>
+                          <li>${StringUtil.wrapString(errorMsg)}</li>
+                        </#list>
+                        </ul>
+                       </#if>
+            </@alert>
+        </div>
   </#if>
   <#-- display the event messages -->
   <#if (eventMessage?has_content || eventMessageList?has_content)>
-    <@alert type="info">
-                  <#noescape><p>${uiLabelMap.CommonFollowingOccurred}:</p></#noescape>
-                  <#if eventMessage?has_content>
-                    <p>${StringUtil.wrapString(eventMessage)}</p>
-                  </#if>
-                  <#if eventMessageList?has_content>
-                    <#list eventMessageList as eventMsg>
-                      <p>${StringUtil.wrapString(eventMsg)}</p>
-                    </#list>
-                  </#if>
-    </@alert>
+    <div id="main-info-box">
+        <@alert type="info">
+                      <#noescape><p>${uiLabelMap.CommonFollowingOccurred}:</p></#noescape>
+                      <#if eventMessage?has_content>
+                        <p>${StringUtil.wrapString(eventMessage)}</p>
+                      </#if>
+                      <#if eventMessageList?has_content>
+                        <ul>
+                        <#list eventMessageList as eventMsg>
+                          <li>${StringUtil.wrapString(eventMsg)}</li>
+                        </#list>
+                        </ul>
+                      </#if>
+        </@alert>
+    </div>
   </#if>
 </#escape>

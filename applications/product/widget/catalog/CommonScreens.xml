@@ -400,7 +400,8 @@ under the License.
                         <include-screen name="leftbar"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductCatalogAdministrationMainPage}">
+                        <label style="h1">${uiLabelMap.ProductCatalogAdministrationMainPage}</label>
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/main.ftl"/></html>
                             </platform-specific>

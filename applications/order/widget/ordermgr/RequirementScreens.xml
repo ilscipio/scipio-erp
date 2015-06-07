@@ -20,13 +20,13 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <!-- Apparently this Decorator was declared twice - removing here
     <screen name="CommonRequirementDecorator">
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for ORDERMGR, _VIEW permission -->
                             <condition>
                                 <if-has-permission permission="ORDERMGR" action="_VIEW"/>
                             </condition>
@@ -40,9 +40,16 @@ under the License.
                                 <container>
                                     <label style="h1">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
                                 </container>
-
-                                <decorator-section-include name="body"/>
-
+                                    <decorator-section name="left-column">
+                                        <section>
+                                            <widgets>
+                                                <include-menu name="MainTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                            </widgets>
+                                        </section>
+                                    </decorator-section>
+                                    <decorator-section name="body">
+                                        <decorator-section-include name="body"/>
+                                    </decorator-section>
                             </widgets>
                             <fail-widgets>
                                 <label >${uiLabelMap.OrderViewPermissionError}</label>
@@ -52,11 +59,18 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen>-->
     <screen name="CommonRequirementsDecorator">
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <section>
+                            <widgets>
+                                <include-menu name="MainTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ORDERMGR, _VIEW permission -->

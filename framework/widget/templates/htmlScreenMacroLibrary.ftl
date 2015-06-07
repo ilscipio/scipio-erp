@@ -100,10 +100,9 @@ under the License.
       <#elseif style=="h6">
         <h6${idText}>${text}</h6>
         <#elseif style=="message">
-        <div class="panel callout">
-          <p>${text}</p>
-        </div>
-        
+        <@alert type="info">
+          ${text}
+        </@alert>
       <#else>
         <span${idText} class="${style}">${text}</span>
       </#if>

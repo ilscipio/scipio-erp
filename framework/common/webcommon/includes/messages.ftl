@@ -43,7 +43,7 @@ under the License.
             <@alert type="alert">
                       <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
                       <#if errorMessage?has_content>
-                        <p>${StringUtil.wrapString(errorMessage)}</p>
+                        ${StringUtil.wrapString(errorMessage)}
                       </#if>
                       <#if errorMessageList?has_content>
                         <ul>
@@ -61,7 +61,7 @@ under the License.
         <@alert type="info">
                       <#noescape><p>${uiLabelMap.CommonFollowingOccurred}:</p></#noescape>
                       <#if eventMessage?has_content>
-                        <p>${StringUtil.wrapString(eventMessage)}</p>
+                        ${StringUtil.wrapString(eventMessage)}
                       </#if>
                       <#if eventMessageList?has_content>
                         <ul>

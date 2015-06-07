@@ -21,7 +21,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     * menu-main
     * menu-sidebar
     * menu-button
-    * menu-tab
+    * menu-tab // ToDo
 
 -->
 <#macro renderMenuBegin boundaryComment="" id="" style="" title="">

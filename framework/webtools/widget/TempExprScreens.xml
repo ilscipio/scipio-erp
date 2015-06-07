@@ -56,20 +56,20 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="TemporalExpressionDecorator" location="${parameters.tempExprDecoratorLocation}">
+                   <decorator-section name="left-column">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="tempExprPermissionCheck" main-action="CREATE"/>
+                            </condition>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link target="editTemporalExpression" text="${uiLabelMap.CommonCreate}" style="button tiny create"/>
+                                </container>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                            <decorator-section name="menu-bar">
-                                <section>
-                                    <condition>
-                                        <if-service-permission service-name="tempExprPermissionCheck" main-action="CREATE"/>
-                                    </condition>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link target="editTemporalExpression" text="${uiLabelMap.CommonCreate}" style="button tiny create"/>
-                                        </container>
-                                    </widgets>
-                                </section>
-                            </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindTemporalExpression" location="component://webtools/widget/tempExprForms.xml"/>
                             </decorator-section>

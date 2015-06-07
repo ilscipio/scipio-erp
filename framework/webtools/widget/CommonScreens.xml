@@ -60,6 +60,13 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <section>
+                            <widgets>
+                                <include-menu name="MainTabBar" location="component://webtools/widget/Menus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://webtools/webapp/webtools/main.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -88,7 +95,14 @@ under the License.
                 <set field="titleProperty" value="WebtoolsCertsX509"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonConfigurationDecorator" location="component://webtools/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <section>
+                            <widgets>
+                                <include-menu name="configurationTabBar" location="component://webtools/widget/Menus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://webtools/webapp/webtools/cert/viewbrowsercerts.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -106,9 +120,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
-                    
-                    </decorator-section>
                     <decorator-section name="left-column">
                         <section>
                             <condition>
@@ -261,7 +272,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <if-has-permission permission="ENTITY_MAINT"/>

@@ -19,7 +19,6 @@ under the License.
 -->
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
-
     <menu name="WebtoolsAppBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="logging" title="${uiLabelMap.WebtoolsLogging}">
             <link target="LogView"/>
@@ -45,7 +44,54 @@ under the License.
         <menu-item name="stats" title="${uiLabelMap.WebtoolsStatistics}">
             <link target="StatsSinceStart"/>
         </menu-item>
-        <menu-item name="configuration" title="${uiLabelMap.WebtoolsConfiguration}">
+        <menu-item name="configuration" title="${uiLabelMap.WebtoolsCertsX509}">
+            <link target="myCertificates"/>
+        </menu-item>
+        <menu-item name="geoManagement" title="${uiLabelMap.WebtoolsGeoManagement}">
+            <link target="FindGeo"/>
+        </menu-item>        
+        <menu-item name="portalAdmin" title="${uiLabelMap.WebtoolsAdminPortalPage}">
+            <condition><if-has-permission permission="PORTALPAGE_ADMIN"/></condition>
+            <link target="FindPortalPage"/>
+        </menu-item>
+        <menu-item name="security" title="${uiLabelMap.CommonSecurity}">
+            <condition>
+                <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
+            </condition>
+            <link target="security"/>
+        </menu-item>
+        <menu-item name="LayoutDemo" title="${uiLabelMap.WebtoolsLayoutDemo}">
+            <link target="WebtoolsLayoutDemo" />
+        </menu-item>
+    </menu>
+    
+    <menu name="MainTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <menu-item name="logging" title="${uiLabelMap.WebtoolsLogging}">
+            <link target="LogView"/>
+        </menu-item>
+        <menu-item name="cache" title="${uiLabelMap.WebtoolsCacheMaintenance}">
+            <link target="FindUtilCache"/>
+        </menu-item>
+        <menu-item name="artifact" title="${uiLabelMap.WebtoolsArtifactInfo}">
+            <link target="ViewComponents"/>
+        </menu-item>
+        <menu-item name="entity" title="${uiLabelMap.WebtoolsEntityEngine}">
+            <link target="entitymaint"/>
+        </menu-item>
+        <menu-item name="service" title="${uiLabelMap.WebtoolsServiceEngineTools}">
+            <link target="ServiceList"/>
+        </menu-item>
+        <menu-item name="labels" title="${uiLabelMap.WebtoolsLabelManager}">
+            <link target="SearchLabels"/>
+        </menu-item>
+        <menu-item name="importExport" title="${uiLabelMap.WebtoolsImportExport}">
+            <link target="xmldsdump"/>
+        </menu-item>
+        <menu-item name="stats" title="${uiLabelMap.WebtoolsStatistics}">
+            <link target="StatsSinceStart"/>
+        </menu-item>
+        <menu-item name="configuration" title="${uiLabelMap.WebtoolsCertsX509}">
             <link target="myCertificates"/>
         </menu-item>
         <menu-item name="geoManagement" title="${uiLabelMap.WebtoolsGeoManagement}">
@@ -160,7 +206,7 @@ under the License.
         </menu-item>-->
     </menu>
     
-    <menu name="TempExprTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="TempExprTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabMenuItem">
         <menu-item name="findExpression" title="${uiLabelMap.CommonFind}">
             <link target="findTemporalExpression"/>

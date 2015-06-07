@@ -55,6 +55,7 @@ public class ModelMenu extends ModelWidget {
     protected String defaultEntityName;
     protected String defaultTitleStyle;
     protected String defaultWidgetStyle;
+    protected String defaultLinkStyle;
     protected String defaultTooltipStyle;
     protected String defaultSelectedStyle;
     protected String defaultMenuItemName;
@@ -142,6 +143,7 @@ public class ModelMenu extends ModelWidget {
                 this.defaultTitleStyle = parent.defaultTitleStyle;
                 this.defaultSelectedStyle = parent.defaultSelectedStyle;
                 this.defaultWidgetStyle = parent.defaultWidgetStyle;
+                this.defaultLinkStyle = parent.defaultLinkStyle;
                 this.defaultTooltipStyle = parent.defaultTooltipStyle;
                 this.defaultMenuItemName = parent.defaultMenuItemName;
                 this.menuItemList.addAll(parent.menuItemList);
@@ -187,6 +189,8 @@ public class ModelMenu extends ModelWidget {
             this.defaultSelectedStyle = menuElement.getAttribute("default-selected-style");
         if (this.defaultWidgetStyle == null || menuElement.hasAttribute("default-widget-style"))
             this.defaultWidgetStyle = menuElement.getAttribute("default-widget-style");
+        if (this.defaultLinkStyle == null || menuElement.hasAttribute("default-link-style"))
+            this.defaultLinkStyle = menuElement.getAttribute("default-link-style");
         if (this.defaultTooltipStyle == null || menuElement.hasAttribute("default-tooltip-style"))
             this.defaultTooltipStyle = menuElement.getAttribute("default-tooltip-style");
         if (this.defaultMenuItemName == null || menuElement.hasAttribute("default-menu-item-name"))
@@ -404,6 +408,10 @@ public class ModelMenu extends ModelWidget {
     public String getDefaultWidgetStyle() {
         return this.defaultWidgetStyle;
     }
+    
+    public String getDefaultLinkStyle() {
+        return this.defaultLinkStyle;
+    }
 
     public String getDefaultTooltipStyle() {
         return this.defaultTooltipStyle;
@@ -486,6 +494,13 @@ public class ModelMenu extends ModelWidget {
      */
     public void setDefaultWidgetStyle(String string) {
         this.defaultWidgetStyle = string;
+    }
+    
+    /**
+     * @param string
+     */
+    public void setDefaultLinkStyle(String string) {
+        this.defaultLinkStyle = string;
     }
 
     /**

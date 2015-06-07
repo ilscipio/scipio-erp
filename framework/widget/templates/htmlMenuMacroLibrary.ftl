@@ -16,9 +16,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#global isSubMenu=isSubMenu!false/>
-<#global isLeftBar=isLeftBar!true/>
-
 <#-- 
 Menu styles can be set via menu-container-style attribute. The rendering will differ if one of the following classes is set
     * menu-main
@@ -50,14 +47,12 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
                   <li>
       </#if>
       
-      <#--
-      <#if isSubMenu>
-          <ul class="button-group force-button">
-                       
-      <#else>
-        <li class="has-dropdown not-click active"><a href="#">${title!}</a>
-            <ul class="dropdown">
-       </#if>-->
+      <#if style?contains("menu-button")>
+        <ul class="button-group force-button">
+      </#if>
+      
+      
+      <#if style?contains("menu-tab")></#if>     
        
 </#macro>
 
@@ -80,11 +75,18 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
             </ul>
         </li>
     </#if>
+    
     <#if style?contains("menu-sidebar")>
         </li>
     </ul>
     </nav>
     </#if>
+    
+    <#if style?contains("menu-button")>
+            </ul>
+    </#if>
+    
+    <#if style?contains("menu-tab")></#if>
     
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->

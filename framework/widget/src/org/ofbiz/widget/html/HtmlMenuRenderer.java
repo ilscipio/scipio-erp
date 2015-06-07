@@ -181,8 +181,13 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
 
         Link link = menuItem.getLink();
         //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, link(0):" + link,"");
+        
+        Map<String, Object> linkContext = context;
+        String linkStyle = menuItem.getLinkStyle();
+        linkContext.put("style", linkStyle);
+        
         if (link != null) {
-            renderLink(writer, context, link);
+            renderLink(writer, linkContext, link);
         } else {
             String txt = menuItem.getTitle(context);
             StringUtil.SimpleEncoder simpleEncoder = (StringUtil.SimpleEncoder) context.get("simpleEncoder");
@@ -190,7 +195,6 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
                 txt = simpleEncoder.encode(txt);
             }
             writer.append(txt);
-
         }
         if (!menuItem.getMenuItemList().isEmpty()) {
             appendWhitespace(writer);

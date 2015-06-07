@@ -63,6 +63,7 @@ public class ModelMenuItem {
     protected String titleStyle;
     protected String disabledTitleStyle;
     protected String widgetStyle;
+    protected String linkStyle;
     protected String tooltipStyle;
     protected String selectedStyle;
     protected Integer position = null;
@@ -116,6 +117,7 @@ public class ModelMenuItem {
         this.titleStyle = fieldElement.getAttribute("title-style");
         this.disabledTitleStyle = fieldElement.getAttribute("disabled-title-style");
         this.widgetStyle = fieldElement.getAttribute("widget-style");
+        this.linkStyle = fieldElement.getAttribute("link-style");
         this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
         this.selectedStyle = fieldElement.getAttribute("selected-style");
         this.setHideIfSelected(fieldElement.getAttribute("hide-if-selected"));
@@ -250,6 +252,8 @@ public class ModelMenuItem {
             this.selectedStyle = overrideMenuItem.selectedStyle;
         if (UtilValidate.isNotEmpty(overrideMenuItem.widgetStyle))
             this.widgetStyle = overrideMenuItem.widgetStyle;
+        if (UtilValidate.isNotEmpty(overrideMenuItem.linkStyle))
+            this.linkStyle = overrideMenuItem.linkStyle;
         if (overrideMenuItem.position != null)
             this.position = overrideMenuItem.position;
 
@@ -412,6 +416,16 @@ public class ModelMenuItem {
             return this.modelMenu.getDefaultWidgetStyle();
         }
     }
+    
+    public String getLinkStyle() {
+        if (UtilValidate.isNotEmpty(this.linkStyle)) {
+            return this.linkStyle;
+        } else if (parentMenuItem != null) {
+            return parentMenuItem.getLinkStyle();
+        } else {
+            return this.modelMenu.getDefaultLinkStyle();
+        }
+    }
 
     public String getAlignStyle() {
         if (UtilValidate.isNotEmpty(this.alignStyle)) {
@@ -483,6 +497,13 @@ public class ModelMenuItem {
         this.widgetStyle = string;
     }
 
+    /**
+     * @param string
+     */
+    public void setLinkStyle(String string) {
+        this.linkStyle = string;
+    }
+    
     /**
      * @param string
      */
@@ -660,7 +681,7 @@ public class ModelMenuItem {
         public String getStyle(Map<String, Object> context) {
             String style = this.styleExdr.expandString(context);
             if (UtilValidate.isEmpty(style)) {
-                style = this.linkMenuItem.getWidgetStyle();
+                style = this.linkMenuItem.getLinkStyle();
             }
             return style;
         }

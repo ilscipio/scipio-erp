@@ -275,11 +275,9 @@ under the License.
                 <container style="row fullWidth" id="content-main-section">
                     <decorator-section-include name="pre-body" />
                         <section>
+                            <!-- Not Authenticated Screens -->
                             <condition>
-                                <and>
-                                    <if-empty-section section-name="left-column" />
-                                    <if-empty-section section-name="right-column" />
-                                </and>
+                                <if-empty field="userLogin" />
                             </condition>
                             <widgets>
                                 <container id="content-main-body">
@@ -294,76 +292,100 @@ under the License.
                                     </container>
                                 </container>
                             </widgets>
-                        </section>
-                        <section>
-                            <condition>
-                                <and>
-                                    <not>
-                                        <if-empty-section section-name="left-column" />
-                                    </not>
-                                    <if-empty-section section-name="right-column" />
-                                </and>
-                            </condition>
-                                <widgets>
-                                <container style="large-2 medium-3 columns" id="sidebar">
-                                    <container style="sidebar">
-                                        <decorator-section-include name="menu-bar" />
-                                        <decorator-section-include name="left-column" />
-                                    </container>
-                                </container>
-                                <container style="large-10 medium-9 columns" id="main-content">
-                                        <decorator-section-include name="body" />
-                                </container>
-                            </widgets>                            
-                        </section>
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-empty-section section-name="left-column" />
-                                    <not>
-                                        <if-empty-section section-name="right-column" />
-                                    </not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <container style="large-10 medium-9 columns" id="main-content">
-                                        <decorator-section-include name="body" />
-                                </container>
-                                <container style="large-2 medium-3 columns" id="right-sidebar">
-                                    <container style="sidebar">
-                                        <decorator-section-include name="right-column" />
-                                    </container>
-                                </container>
-                            </widgets>                            
-                        </section>
-                        <section>
-                            <condition>
-                                <and>
-                                    <not>
-                                        <if-empty-section section-name="left-column" />
-                                    </not>
-                                    <not>
-                                        <if-empty-section section-name="right-column" />
-                                    </not>
-                                </and>
-                            </condition>
-                                <widgets>
-                                <container style="large-2 medium-3 columns" id="sidebar">
-                                    <container style="sidebar">
-                                        <decorator-section-include name="menu-bar" />
-                                        <decorator-section-include name="left-column" />
-                                    </container>
-                                </container>
-                                <container style="large-8 medium-6 columns" id="main-content">
-                                        <decorator-section-include name="body" />
-                                </container>
-                                <container style="large-2 medium-3 columns" id="right-sidebar">
-                                    <container style="sidebar">
-                                        <decorator-section-include name="right-column" />
-                                    </container>
-                                </container>
-                            </widgets>                            
-                        </section>
+                            <!-- Authenticated Screens -->
+                            <fail-widgets>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <if-empty-section section-name="left-column" />
+                                            <if-empty-section section-name="right-column" />
+                                        </and>
+                                    </condition>
+                                    <widgets>
+                                        <container id="content-main-body">
+                                            <!-- render messages -->
+                                            <container style="large-12 columns" id="main-content">
+                                                <platform-specific>
+                                                    <html>
+                                                        <html-template location="${messagesTemplateLocation}" />
+                                                    </html>
+                                                </platform-specific>
+                                                <decorator-section-include name="body" />
+                                            </container>
+                                        </container>
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <not>
+                                                <if-empty-section section-name="left-column" />
+                                            </not>
+                                            <if-empty-section section-name="right-column" />
+                                        </and>
+                                    </condition>
+                                        <widgets>
+                                        <container style="large-2 medium-3 columns" id="sidebar">
+                                            <container style="sidebar">
+                                                <decorator-section-include name="menu-bar" />
+                                                <decorator-section-include name="left-column" />
+                                            </container>
+                                        </container>
+                                        <container style="large-10 medium-9 columns" id="main-content">
+                                                <decorator-section-include name="body" />
+                                        </container>
+                                    </widgets>                            
+                                </section>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <if-empty-section section-name="left-column" />
+                                            <not>
+                                                <if-empty-section section-name="right-column" />
+                                            </not>
+                                        </and>
+                                    </condition>
+                                    <widgets>
+                                        <container style="large-10 medium-9 columns" id="main-content">
+                                                <decorator-section-include name="body" />
+                                        </container>
+                                        <container style="large-2 medium-3 columns" id="right-sidebar">
+                                            <container style="sidebar">
+                                                <decorator-section-include name="right-column" />
+                                            </container>
+                                        </container>
+                                    </widgets>                            
+                                </section>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <not>
+                                                <if-empty-section section-name="left-column" />
+                                            </not>
+                                            <not>
+                                                <if-empty-section section-name="right-column" />
+                                            </not>
+                                        </and>
+                                    </condition>
+                                        <widgets>
+                                        <container style="large-2 medium-3 columns" id="sidebar">
+                                            <container style="sidebar">
+                                                <decorator-section-include name="menu-bar" />
+                                                <decorator-section-include name="left-column" />
+                                            </container>
+                                        </container>
+                                        <container style="large-8 medium-6 columns" id="main-content">
+                                                <decorator-section-include name="body" />
+                                        </container>
+                                        <container style="large-2 medium-3 columns" id="right-sidebar">
+                                            <container style="sidebar">
+                                                <decorator-section-include name="right-column" />
+                                            </container>
+                                        </container>
+                                    </widgets>                            
+                                </section>
+                            </fail-widgets>
+                        </section>                       
                 </container>
                 <section>
                     <condition>

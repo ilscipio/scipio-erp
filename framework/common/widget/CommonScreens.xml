@@ -275,7 +275,27 @@ under the License.
                 <container style="row fullWidth" id="content-main-section">
                     <decorator-section-include name="pre-body" />
                         <section>
+                            <!-- Not Authenticated Screens -->
                             <condition>
+                                <if-empty field="userLogin" />
+                            </condition>
+                            <widgets>
+                                <container id="content-main-body">
+                                    <!-- render messages -->
+                                    <container style="large-12 columns" id="main-content">
+                                        <platform-specific>
+                                            <html>
+                                                <html-template location="${messagesTemplateLocation}" />
+                                            </html>
+                                        </platform-specific>
+                                        <decorator-section-include name="body" />
+                                    </container>
+                                </container>
+                            </widgets>
+                            <!-- Authenticated Screens -->
+                            <fail-widgets>
+                                <section>
+                                    <condition>
                                 <and>
                                     <if-empty-section section-name="left-column" />
                                     <if-empty-section section-name="right-column" />
@@ -364,6 +384,8 @@ under the License.
                                 </container>
                             </widgets>                            
                         </section>
+                            </fail-widgets>
+                        </section>                       
                     </container>
                 <section>
                     <condition>

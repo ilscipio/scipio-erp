@@ -110,6 +110,7 @@ under the License.
 </#macro>
 
 <#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip="">
+  <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <div class="row collapse date" data-date="" data-date-format="<#if shortDateInput?? && shortDateInput>yyyy-MM-dd<#else>yyyy-MM-dd HH:mm:ss</#if>">
         <div class="small-11 columns">
             <input type="text" name="${name}_i18n" <@renderClass className alert /><#rt/>
@@ -125,7 +126,7 @@ under the License.
         </div>
         <script type="text/javascript">
             $(function() {
-                <#if name??>$("input[name='${name?html}_i18n']").fdatepicker();<#else>$("input").last().fdatepicker();</#if>
+                <#if name??>$("input[name='${name?html}_i18n']").fdatepicker(${fdatepickerOptions});<#else>$("input").last().fdatepicker(${fdatepickerOptions});</#if>
             });
         </script>
   </div>
@@ -538,6 +539,7 @@ under the License.
 </#macro>
 
 <#macro renderDateFindField className alert name localizedInputTitle value value2 size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty>
+  <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <div class="row collapse date" data-date="" 
     data-date-format="<#if dateType == "date">dd-mm-yyyy<#else>HH:mm:ss</#if>">
         <div class="small-5 columns">
@@ -556,7 +558,7 @@ under the License.
         </div>
         <script type="text/javascript">
             $(function() {
-                <#if name??>$('#${name?html}_fld0_value').fdatepicker();<#else>$('input').last().fdatepicker();</#if>
+                <#if name??>$('#${name?html}_fld0_value').fdatepicker(${fdatepickerOptions});<#else>$('input').last().fdatepicker(${fdatepickerOptions});</#if>
             });
         </script>
   </div>

@@ -227,8 +227,8 @@ under the License.
                 <@renderCheckBox id=id currentValue=value checked=checked name=name action=action />
             <#break>
           <#case "radio">
-            <#assign items=[{"description",label!""}]/>
-                <@renderRadioField items=items className=class alert=alert currentValue=value noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+            <#assign items=[{"key":value, "description":label!""}]/>
+                <@renderRadioField items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
             
             <#break>
           <#default>

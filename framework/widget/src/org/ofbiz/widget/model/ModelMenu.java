@@ -213,7 +213,7 @@ public class ModelMenu extends ModelWidget {
             defaultSelectedStyle = menuElement.getAttribute("default-selected-style");
         if (!menuElement.getAttribute("default-widget-style").isEmpty())
             defaultWidgetStyle = menuElement.getAttribute("default-widget-style");
-        if (!menuElement.hasAttribute("default-link-style").isEmpty())
+        if (!menuElement.getAttribute("default-link-style").isEmpty())
             defaultLinkStyle = menuElement.getAttribute("default-link-style");
         if (!menuElement.getAttribute("default-tooltip-style").isEmpty())
             defaultTooltipStyle = menuElement.getAttribute("default-tooltip-style");

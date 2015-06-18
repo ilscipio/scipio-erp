@@ -47,7 +47,9 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.service.GenericServiceException;
@@ -69,7 +71,7 @@ public class EbayHelper {
         if (UtilValidate.isNotEmpty(productStoreId)) {
             GenericValue eBayConfig = null;
             try {
-                eBayConfig = delegator.findOne("EbayConfig", false, UtilMisc.toMap("productStoreId", productStoreId));
+                eBayConfig = EntityQuery.use(delegator).from("EbayConfig").where(UtilMisc.toMap("productStoreId", productStoreId)).queryOne();
             } catch (GenericEntityException e) {
                 String errMsg = UtilProperties.getMessage(resource, "buildEbayConfig.unableToFindEbayConfig" + e.getMessage(), locale);
                 return ServiceUtil.returnError(errMsg);
@@ -85,14 +87,14 @@ public class EbayHelper {
                 buildEbayConfigContext.put("apiServerUrl", eBayConfig.getString("apiServerUrl"));
             }
         } else {
-            buildEbayConfigContext.put("devID", UtilProperties.getPropertyValue(configFileName, "eBayExport.devID"));
-            buildEbayConfigContext.put("appID", UtilProperties.getPropertyValue(configFileName, "eBayExport.appID"));
-            buildEbayConfigContext.put("certID", UtilProperties.getPropertyValue(configFileName, "eBayExport.certID"));
-            buildEbayConfigContext.put("token", UtilProperties.getPropertyValue(configFileName, "eBayExport.token"));
-            buildEbayConfigContext.put("compatibilityLevel", UtilProperties.getPropertyValue(configFileName, "eBayExport.compatibilityLevel"));
-            buildEbayConfigContext.put("siteID", UtilProperties.getPropertyValue(configFileName, "eBayExport.siteID"));
-            buildEbayConfigContext.put("xmlGatewayUri", UtilProperties.getPropertyValue(configFileName, "eBayExport.xmlGatewayUri"));
-            buildEbayConfigContext.put("apiServerUrl", UtilProperties.getPropertyValue(configFileName, "eBayExport.xmlGatewayUri"));
+            buildEbayConfigContext.put("devID", EntityUtilProperties.getPropertyValue(configFileName, "eBayExport.devID", delegator));
+            buildEbayConfigContext.put("appID", EntityUtilProperties.getPropertyValue(configFileName, "eBayExport.appID", delegator));
+            buildEbayConfigContext.put("certID", EntityUtilProperties.getPropertyValue(configFileName, "eBayExport.certID", delegator));
+            buildEbayConfigContext.put("token", EntityUtilProperties.getPropertyValue(configFileName, "eBayExport.token", delegator));
+            buildEbayConfigContext.put("compatibilityLevel", EntityUtilProperties.getPropertyValue(configFileName, "eBayExport.compatibilityLevel", delegator));
+            buildEbayConfigContext.put("siteID", EntityUtilProperties.getPropertyValue(configFileName, "eBayExport.siteID", delegator));
+            buildEbayConfigContext.put("xmlGatewayUri", EntityUtilProperties.getPropertyValue(configFileName, "eBayExport.xmlGatewayUri", delegator));
+            buildEbayConfigContext.put("apiServerUrl", EntityUtilProperties.getPropertyValue(configFileName, "eBayExport.xmlGatewayUri", delegator));
         }
         return buildEbayConfigContext;
     }
@@ -171,14 +173,13 @@ public class EbayHelper {
         String partyId = "_NA_";
         String shipmentMethodTypeId = "NO_SHIPPING";
         try {
-            GenericValue ebayShippingMethod = delegator.findOne("EbayShippingMethod", UtilMisc.toMap("shipmentMethodName", shippingService, "productStoreId", productStoreId), false);
+            GenericValue ebayShippingMethod = EntityQuery.use(delegator).from("EbayShippingMethod").where("shipmentMethodName", shippingService, "productStoreId", productStoreId).queryOne();
             if (UtilValidate.isNotEmpty(ebayShippingMethod)) {
                 partyId = ebayShippingMethod.getString("carrierPartyId");
                 shipmentMethodTypeId = ebayShippingMethod.getString("shipmentMethodTypeId");
             } else {
                 //Find ebay shipping method on the basis of shipmentMethodName so that we can create new record with productStorId, EbayShippingMethod data is required for atleast one productStore
-                List<GenericValue> ebayShippingMethods = delegator.findByAnd("EbayShippingMethod", UtilMisc.toMap("shipmentMethodName", shippingService), null, false);
-                ebayShippingMethod = EntityUtil.getFirst(ebayShippingMethods);
+                ebayShippingMethod = EntityQuery.use(delegator).from("EbayShippingMethod").where("shipmentMethodName", shippingService).queryFirst();
                 ebayShippingMethod.put("productStoreId", productStoreId);
                 delegator.create(ebayShippingMethod);
                 partyId = ebayShippingMethod.getString("carrierPartyId");
@@ -195,9 +196,7 @@ public class EbayHelper {
         String orderId, String externalId, Timestamp orderDate, BigDecimal amount, String partyIdFrom) {
         List<GenericValue> paymentPreferences = null;
         try {
-            Map<String, String> paymentFields = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_RECEIVED",
-                    "paymentMethodTypeId", "EXT_EBAY");
-            paymentPreferences = delegator.findByAnd("OrderPaymentPreference", paymentFields, null, false);
+            paymentPreferences = EntityQuery.use(delegator).from("OrderPaymentPreference").where("orderId", orderId, "statusId", "PAYMENT_RECEIVED", "paymentMethodTypeId", "EXT_EBAY").queryList();
 
             if (UtilValidate.isNotEmpty(paymentPreferences)) {
                 Iterator<GenericValue> i = paymentPreferences.iterator();
@@ -208,9 +207,7 @@ public class EbayHelper {
                         return false;
                 }
             } else {
-                paymentFields = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_NOT_RECEIVED",
-                    "paymentMethodTypeId", "EXT_EBAY");
-                paymentPreferences = delegator.findByAnd("OrderPaymentPreference", paymentFields, null, false);
+                paymentPreferences = EntityQuery.use(delegator).from("OrderPaymentPreference").where("orderId", orderId, "statusId", "PAYMENT_NOT_RECEIVED", "paymentMethodTypeId", "EXT_EBAY").queryList();
                 if (UtilValidate.isNotEmpty(paymentPreferences)) {
                     Iterator<GenericValue> i = paymentPreferences.iterator();
                     while (i.hasNext()) {
@@ -475,8 +472,7 @@ public class EbayHelper {
         try {
             Debug.logInfo("geocode: " + geoCode, module);
 
-            geo = EntityUtil.getFirst(delegator.findByAnd("Geo", UtilMisc.toMap("geoCode", geoCode.toUpperCase(),
-                    "geoTypeId", "COUNTRY"), null, false));
+            geo = EntityQuery.use(delegator).from("Geo").where("geoCode", geoCode.toUpperCase(), "geoTypeId", "COUNTRY").queryFirst();
             Debug.logInfo("Found a geo entity " + geo, module);
             if (UtilValidate.isEmpty(geo)) {
                 geo = delegator.makeValue("Geo");
@@ -516,7 +512,7 @@ public class EbayHelper {
             GenericValue postalAddress;
             try {
                 // get the postal address for this contact mech
-                postalAddress = delegator.findOne("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId), false);
+                postalAddress = EntityQuery.use(delegator).from("PostalAddress").where("contactMechId", contactMechId).queryOne();
 
                 // match values to compare by modifying them the same way they
                 // were when they were created
@@ -588,8 +584,7 @@ public class EbayHelper {
             GenericValue phoneNumber;
             try {
                 // get the phone number for this contact mech
-                phoneNumber = delegator.findOne("TelecomNumber", UtilMisc
-                        .toMap("contactMechId", contactMechId), false);
+                phoneNumber = EntityQuery.use(delegator).from("TelecomNumber").where("contactMechId", contactMechId).queryOne();
 
                 // now compare values. If one matches, that's our phone number.
                 // Return the related contact mech id.
@@ -611,7 +606,7 @@ public class EbayHelper {
         String productId = "";
         try {
             // First try to get an exact match: title == internalName
-            List<GenericValue> products = delegator.findByAnd("Product", UtilMisc.toMap("internalName", title), null, false);
+            List<GenericValue> products = EntityQuery.use(delegator).from("Product").where("internalName", title).queryList();
             if (UtilValidate.isNotEmpty(products) && products.size() == 1) {
                 productId = (String) (products.get(0)).get("productId");
             }
@@ -622,7 +617,7 @@ public class EbayHelper {
                     titleFirstWord = title.substring(0, title.indexOf(' '));
                 }
                 if (UtilValidate.isNotEmpty(titleFirstWord)) {
-                    GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", titleFirstWord), false);
+                    GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", titleFirstWord).queryOne();
                     if (UtilValidate.isNotEmpty(product)) {
                         productId = product.getString("productId");
                     }

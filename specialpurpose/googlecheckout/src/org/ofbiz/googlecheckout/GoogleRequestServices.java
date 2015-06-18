@@ -29,14 +29,15 @@ import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.service.DispatchContext;
@@ -114,8 +115,8 @@ public class GoogleRequestServices {
         }
 
         // flow support URLs
-        String contShoppingUrl = UtilProperties.getPropertyValue("googleCheckout.properties", "continueShoppingUrl");
-        String editCartUrl = UtilProperties.getPropertyValue("googleCheckout.properties", "editCartUrl");
+        String contShoppingUrl = EntityUtilProperties.getPropertyValue("googleCheckout.properties", "continueShoppingUrl", delegator);
+        String editCartUrl = EntityUtilProperties.getPropertyValue("googleCheckout.properties", "editCartUrl", delegator);
         req.setContinueShoppingUrl(contShoppingUrl);
         req.setEditCartUrl(editCartUrl);
 
@@ -130,7 +131,7 @@ public class GoogleRequestServices {
         // setup shipping options support
         List<GenericValue> shippingOptions = null;
         try {
-            shippingOptions = delegator.findByAnd("GoogleCoShippingMethod", UtilMisc.toMap("productStoreId", productStoreId), null, false);
+            shippingOptions = EntityQuery.use(delegator).from("GoogleCoShippingMethod").where("productStoreId", productStoreId).queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -302,7 +303,7 @@ public class GoogleRequestServices {
 
         List<GenericValue> returnItems = null;
         try {
-            returnItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("returnId", returnId), null, false);
+            returnItems = EntityQuery.use(delegator).from("ReturnItem").where("returnId", returnId).queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -434,7 +435,7 @@ public class GoogleRequestServices {
         if (order != null) {
             GenericValue orderItem = null;
             try {
-                orderItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId), false);
+                orderItem = EntityQuery.use(delegator).from("OrderItem").where("orderId", orderId, "orderItemSeqId", orderItemSeqId).queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
             }
@@ -511,7 +512,7 @@ public class GoogleRequestServices {
     }
 
     private static void sendItemsShipped(Delegator delegator, String shipmentId) throws GeneralException {
-        List<GenericValue> issued = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("shipmentId", shipmentId), null, false);
+        List<GenericValue> issued = EntityQuery.use(delegator).from("ItemIssuance").where("shipmentId", shipmentId).queryList();
         if (UtilValidate.isNotEmpty(issued)) {
             try {
                 GenericValue googleOrder = null;
@@ -533,9 +534,7 @@ public class GoogleRequestServices {
                             isr = new ShipItemsRequest(mInfo, externalId);
                         }
                         // locate the shipment package content record
-                        Map<String, ? extends Object> spcLup = UtilMisc.toMap("shipmentId", shipmentId, "shipmentItemSeqId", shipmentItemSeqId);
-                        List<GenericValue> spc = delegator.findByAnd("ShipmentPackageContent", spcLup, null, false);
-                        GenericValue packageContent = EntityUtil.getFirst(spc);
+                        GenericValue packageContent = EntityQuery.use(delegator).from("ShipmentPackageContent").where("shipmentId", shipmentId, "shipmentItemSeqId", shipmentItemSeqId).queryFirst();
                         String carrier = null;
                         if (UtilValidate.isNotEmpty(packageContent)) {
                             GenericValue shipPackage = packageContent.getRelatedOne("ShipmentPackage", false);
@@ -576,7 +575,7 @@ public class GoogleRequestServices {
     public static GenericValue findGoogleOrder(Delegator delegator, String orderId) {
         GenericValue order = null;
         try {
-            order = delegator.findOne("OrderHeader", false, "orderId", orderId);
+            order = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -594,7 +593,7 @@ public class GoogleRequestServices {
     public static String getProductStoreFromShipment(Delegator delegator, String shipmentId) {
         GenericValue shipment = null;
         try {
-            shipment = delegator.findOne("Shipment", false, "shipmentId", shipmentId);
+            shipment = EntityQuery.use(delegator).from("Shipment").where("shipmentId", shipmentId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -616,7 +615,7 @@ public class GoogleRequestServices {
         if (productStoreId == null) return null;
         GenericValue config = null;
         try {
-            config = delegator.findOne("GoogleCoConfiguration", true, "productStoreId", productStoreId);
+            config = EntityQuery.use(delegator).from("GoogleCoConfiguration").where("productStoreId", productStoreId).cache().queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -642,13 +641,13 @@ public class GoogleRequestServices {
         }
 
         // base URLs
-        String productionRoot = UtilProperties.getPropertyValue("google-checkout.properties", "production.root.url");
-        String sandboxRoot = UtilProperties.getPropertyValue("google-checkout.properties", "sandbox.root.url");
+        String productionRoot = EntityUtilProperties.getPropertyValue("google-checkout.properties", "production.root.url", delegator);
+        String sandboxRoot = EntityUtilProperties.getPropertyValue("google-checkout.properties", "sandbox.root.url", delegator);
 
         // command strings
-        String merchantCheckoutCommand = UtilProperties.getPropertyValue("google-checkout.properties", "merchant.checkout.command", "merchantCheckout");
-        String checkoutCommand = UtilProperties.getPropertyValue("google-checkout.properties", "checkout.command", "checkout");
-        String requestCommand = UtilProperties.getPropertyValue("google-checkout.properties", "request.command", "request");
+        String merchantCheckoutCommand = EntityUtilProperties.getPropertyValue("google-checkout.properties", "merchant.checkout.command", "merchantCheckout", delegator);
+        String checkoutCommand = EntityUtilProperties.getPropertyValue("google-checkout.properties", "checkout.command", "checkout", delegator);
+        String requestCommand = EntityUtilProperties.getPropertyValue("google-checkout.properties", "request.command", "request", delegator);
 
         String environment = null;
         String checkoutUrl = "";

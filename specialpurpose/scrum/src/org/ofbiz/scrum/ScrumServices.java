@@ -21,12 +21,7 @@ package org.ofbiz.scrum;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Timestamp;
-import com.ibm.icu.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,15 +31,13 @@ import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityConditionList;
-import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -65,7 +58,7 @@ public class ScrumServices {
 
         if (UtilValidate.isNotEmpty(communicationEventId)) {
             try {
-                GenericValue communicationEvent = delegator.findOne("CommunicationEvent", UtilMisc.toMap("communicationEventId", communicationEventId), false);
+                GenericValue communicationEvent = EntityQuery.use(delegator).from("CommunicationEvent").where("communicationEventId", communicationEventId).queryOne();
                 if (UtilValidate.isNotEmpty(communicationEvent)) {
                     String subject = communicationEvent.getString("subject");
                     if (UtilValidate.isNotEmpty(subject)) {
@@ -78,16 +71,15 @@ public class ScrumServices {
                             }
                             String productId = subject.substring(pdLocation + 3, nonDigitLocation);
                             // Debug.logInfo("=======================Product id found in subject: >>" + custRequestId + "<<", module);
-                            GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+                            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                             if (UtilValidate.isNotEmpty(product)) {
-                                GenericValue communicationEventProductMap = delegator.findOne("CommunicationEventProduct", UtilMisc.toMap("productId", productId, "communicationEventId", communicationEventId), false);
+                                GenericValue communicationEventProductMap = EntityQuery.use(delegator).from("CommunicationEventProduct").where("productId", productId, "communicationEventId", communicationEventId).queryOne();
                                 if (UtilValidate.isEmpty(communicationEventProductMap)) {
                                     GenericValue communicationEventProduct = delegator.makeValue("CommunicationEventProduct", UtilMisc.toMap("productId", productId, "communicationEventId", communicationEventId));
                                     communicationEventProduct.create();
                                 }
                                 try {
-                                    List<GenericValue> productRoleList = delegator.findByAnd("ProductRole", UtilMisc.toMap("productId",productId, "partyId", communicationEvent.getString("partyIdFrom"), "roleTypeId","PRODUCT_OWNER"), null, false);
-                                    GenericValue productRoleMap = EntityUtil.getFirst(productRoleList);
+                                    GenericValue productRoleMap = EntityQuery.use(delegator).from("ProductRole").where("productId",productId, "partyId", communicationEvent.getString("partyIdFrom"), "roleTypeId","PRODUCT_OWNER").queryFirst();
                                     GenericValue userLogin = (GenericValue) context.get("userLogin");
                                     // also close the incoming communication event
                                     if (UtilValidate.isNotEmpty(productRoleMap)) {
@@ -213,7 +205,7 @@ public class ScrumServices {
                         Debug.logInfo("Revision Link ============== >>>>>>>>>>> "+ revisionLink, module);
                         if (UtilValidate.isNotEmpty(taskId)) {
                             String version = "R" + i;
-                            List <GenericValue> workeffContentList = delegator.findByAnd("WorkEffortAndContentDataResource", UtilMisc.toMap("contentName",version.trim() ,"drObjectInfo", revisionLink.trim()), null, false);
+                            List <GenericValue> workeffContentList = EntityQuery.use(delegator).from("WorkEffortAndContentDataResource").where("contentName",version.trim() ,"drObjectInfo", revisionLink.trim()).queryList();
                             List<EntityCondition> exprsAnd = FastList.newInstance();
                             exprsAnd.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS, taskId));
 
@@ -224,7 +216,7 @@ public class ScrumServices {
                             exprsOr.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "SCRUM_TASK_INST"));
                             exprsAnd.add(EntityCondition.makeCondition(exprsOr, EntityOperator.OR));
 
-                            List<GenericValue> workEffortList = delegator.findList("WorkEffort", EntityCondition.makeCondition(exprsAnd, EntityOperator.AND), null, null, null, false);
+                            List<GenericValue> workEffortList = EntityQuery.use(delegator).from("WorkEffort").where(exprsAnd).queryList();
                             if (UtilValidate.isEmpty(workeffContentList) && UtilValidate.isNotEmpty(workEffortList)) {
                                 Map<String, Object> inputMap = FastMap.newInstance();
                                 inputMap.put("taskId", taskId);
@@ -274,7 +266,7 @@ public class ScrumServices {
             exprsAnd.add(EntityCondition.makeCondition("workEffortContentTypeId", EntityOperator.EQUALS, "TASK_SUB_INFO"));
             exprsAnd.add(EntityCondition.makeCondition("contentTypeId", EntityOperator.EQUALS, "DOCUMENT"));
             exprsAnd.add(EntityCondition.makeCondition("drObjectInfo", EntityOperator.LIKE, revisionLink + "%"));
-            List<GenericValue> workEffortDataResourceList = delegator.findList("WorkEffortAndContentDataResource", EntityCondition.makeCondition(exprsAnd, EntityOperator.AND), null, null, null, false);
+            List<GenericValue> workEffortDataResourceList = EntityQuery.use(delegator).from("WorkEffortAndContentDataResource").where(exprsAnd).queryList();
             if (UtilValidate.isNotEmpty(workEffortDataResourceList)) {
                 Debug.logInfo("Total Content Size ============== >>>>>>>>>>> "+ workEffortDataResourceList.size(), module);
                 Set<String> keys = FastSet.newInstance();
@@ -292,8 +284,8 @@ public class ScrumServices {
                 if (UtilValidate.isNotEmpty(exclusions)) {
                     for (GenericValue contentResourceMap : exclusions) {
                         Debug.logInfo("Remove contentId ============== >>>>>>>>>>> "+ contentResourceMap.getString("contentId"), module);
-                        GenericValue dataResourceMap = delegator.findOne("DataResource", UtilMisc.toMap("dataResourceId", contentResourceMap.getString("dataResourceId")), false);
-                        GenericValue contentMap = delegator.findOne("Content", UtilMisc.toMap("contentId", contentResourceMap.getString("contentId")), false);
+                        GenericValue dataResourceMap = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", contentResourceMap.getString("dataResourceId")).queryOne();
+                        GenericValue contentMap = EntityQuery.use(delegator).from("Content").where("contentId", contentResourceMap.getString("contentId")).queryOne();
                         contentMap.removeRelated("WorkEffortContent");
                         contentMap.removeRelated("ContentRole");
                         contentMap.remove();

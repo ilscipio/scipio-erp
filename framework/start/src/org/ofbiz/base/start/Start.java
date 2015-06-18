@@ -74,19 +74,20 @@ public final class Start {
     }
 
     private static void help(PrintStream out) {
+        // Currently some commands have no dash, see OFBIZ-5872
         out.println("");
         out.println("Usage: java -jar ofbiz.jar [command] [arguments]");
-        out.println("-both    -----> Run simultaneously the POS (Point of Sales) application and OFBiz standard");
+        out.println("both    -----> Runs simultaneously the POS (Point of Sales) application and OFBiz standard");
         out.println("-help, -? ----> This screen");
-        out.println("-install -----> Run install (create tables/load data)");
-        out.println("-pos     -----> Run the POS (Point of Sales) application");
-        out.println("-setup -------> Run external application server setup");
-        out.println("-start -------> Start the server");
-        out.println("-status ------> Status of the server");
-        out.println("-shutdown ----> Shutdown the server");
-        out.println("-test --------> Run the JUnit test script");
-        out.println("[no config] --> Use default config");
-        out.println("[no command] -> Start the server w/ default config");
+        out.println("load-data -----> Creates tables/load data, eg: load-data -readers=seed,demo,ext -timeout=7200 -delegator=default -group=org.ofbiz. Or: load-data -file=/tmp/dataload.xml");
+        out.println("pos     -----> Runs the POS (Point of Sales) application");
+        //out.println("-setup -------> Run external application server setup");
+        out.println("start -------> Starts the server");
+        out.println("-status ------> Gives the status of the server");
+        out.println("-shutdown ----> Shutdowns the server");
+        out.println("test --------> Runs the JUnit test script");
+        out.println("[no config] --> Uses default config");
+        out.println("[no command] -> Starts the server with default config");
     }
 
     public static void main(String[] args) throws StartupException {
@@ -197,7 +198,7 @@ public final class Start {
             }
         }
         try {
-            this.config = Config.getInstance(args);
+            this.config = new Config(args);
         } catch (IOException e) {
             throw (StartupException) new StartupException("Couldn't not fetch config instance").initCause(e);
         }
@@ -219,8 +220,6 @@ public final class Start {
         if (!fullInit) {
             return;
         }
-        // initialize the classpath
-        initClasspath();
         // create the log directory
         createLogDirectory();
         // create the listener thread
@@ -241,25 +240,16 @@ public final class Start {
         initStartLoaders();
     }
 
-    private void initClasspath() throws StartupException {
-        Classpath classPath = new Classpath(System.getProperty("java.class.path"));
+    private void initStartLoaders() throws StartupException {
+        Classpath classPath = new Classpath();
+        Classpath libraryPath = new Classpath(System.getProperty("java.library.path"));
         try {
-            this.config.initClasspath(classPath);
-        } catch (IOException e) {
+            this.config.initClasspath(classPath, libraryPath);
+        } catch (Exception e) {
             throw (StartupException) new StartupException("Couldn't initialized classpath").initCause(e);
         }
-        // Set the classpath/classloader
-        System.setProperty("java.class.path", classPath.toString());
         ClassLoader classloader = classPath.getClassLoader();
         Thread.currentThread().setContextClassLoader(classloader);
-        if (System.getProperty("DEBUG") != null) {
-            System.out.println("Startup Classloader: " + classloader.toString());
-            System.out.println("Startup Classpath: " + classPath.toString());
-        }
-    }
-
-    private void initStartLoaders() throws StartupException {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         synchronized (this.loaders) {
             // initialize the loaders
             for (Map<String, String> loaderMap : config.loaders) {
@@ -386,6 +376,10 @@ public final class Start {
         if (config.shutdownAfterLoad) {
             stopServer();
         }
+    }
+
+    public Config getConfig() {
+        return this.config;
     }
 
     // ----------------------------------------------- //

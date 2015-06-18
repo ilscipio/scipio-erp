@@ -40,6 +40,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
@@ -790,7 +792,7 @@ public class AIMPaymentServices {
         String returnValue = "";
         if (UtilValidate.isNotEmpty(paymentGatewayConfigId)) {
             try {
-                GenericValue payflowPro = delegator.findOne("PaymentGatewayAuthorizeNet", UtilMisc.toMap("paymentGatewayConfigId", paymentGatewayConfigId), false);
+                GenericValue payflowPro = EntityQuery.use(delegator).from("PaymentGatewayAuthorizeNet").where("paymentGatewayConfigId", paymentGatewayConfigId).queryOne();
                 if (UtilValidate.isNotEmpty(payflowPro)) {
                     Object payflowProField = payflowPro.get(paymentGatewayConfigParameterName);
                     if (payflowProField != null) {
@@ -801,7 +803,7 @@ public class AIMPaymentServices {
                 Debug.logError(e, module);
             }
         } else {
-            String value = UtilProperties.getPropertyValue(resource, parameterName);
+            String value = EntityUtilProperties.getPropertyValue(resource, parameterName, delegator);
             if (value != null) {
                 returnValue = value.trim();
             }
@@ -810,12 +812,12 @@ public class AIMPaymentServices {
     }
     
     private static String getCardType(String cardType) {
-        if ((cardType.equalsIgnoreCase("VISA"))) return "V";
-        if ((cardType.equalsIgnoreCase("MASTERCARD"))) return "M";
-        if (((cardType.equalsIgnoreCase("AMERICANEXPRESS")) || (cardType.equalsIgnoreCase("AMEX")))) return "A";
-        if ((cardType.equalsIgnoreCase("DISCOVER"))) return "D";
-        if ((cardType.equalsIgnoreCase("JCB"))) return "J";
-        if (((cardType.equalsIgnoreCase("DINERSCLUB")))) return "C";        
+        if (("CCT_VISA".equalsIgnoreCase(cardType))) return "V";
+        if (("CCT_MASTERCARD".equalsIgnoreCase(cardType))) return "M";
+        if ((("CCT_AMERICANEXPRESS".equalsIgnoreCase(cardType)) || ("CCT_AMEX".equalsIgnoreCase(cardType)))) return "A";
+        if (("CCT_DISCOVER".equalsIgnoreCase(cardType))) return "D";
+        if (("CCT_JCB".equalsIgnoreCase(cardType))) return "J";
+        if ((("CCT_DINERSCLUB".equalsIgnoreCase(cardType)))) return "C";        
         return "";
     }
     

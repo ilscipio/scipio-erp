@@ -30,6 +30,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -267,8 +269,9 @@ public class EwayServices {
         String returnValue = "";
         if (UtilValidate.isNotEmpty(cfgId)) {
             try {
-                GenericValue gv = delegator.findOne("PaymentGatewayEway", true, "paymentGatewayConfigId", cfgId);                         
-                if (UtilValidate.isNotEmpty(gv)) {
+                GenericValue gv = EntityQuery.use(delegator).from("PaymentGatewayEway")
+                        .where("paymantGatewayConfigId", cfgId).cache().queryOne();
+                if (gv != null) {
                     Object field = gv.get(cfgParamName);
                     if (field != null) {
                         returnValue = field.toString().trim();
@@ -278,7 +281,7 @@ public class EwayServices {
                 Debug.logError(e, module);
             }
         } else {
-            String value = UtilProperties.getPropertyValue(resource, resParamName);
+            String value = EntityUtilProperties.getPropertyValue(resource, resParamName, delegator);
             if (value != null) {
                 returnValue = value.trim();
             }

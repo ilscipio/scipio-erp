@@ -47,6 +47,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -157,7 +158,7 @@ public class ProductPromoContentWrapper implements ContentWrapper {
         ModelEntity productModel = delegator.getModelEntity("ProductPromo");
         if (productModel.isField(candidateFieldName)) {
             if (UtilValidate.isEmpty(productPromo)) {
-                productPromo = delegator.findOne("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId), true);
+                productPromo = EntityQuery.use(delegator).from("ProductPromo").where("productPromoId", productPromoId).cache().queryOne();
             }
             if (UtilValidate.isNotEmpty(productPromo)) {
                 String candidateValue = productPromo.getString(candidateFieldName);
@@ -171,9 +172,8 @@ public class ProductPromoContentWrapper implements ContentWrapper {
         List<EntityExpr> exprs = new ArrayList<EntityExpr>();
         exprs.add(EntityCondition.makeCondition("productPromoId", EntityOperator.EQUALS, productPromoId));
         exprs.add(EntityCondition.makeCondition("productPromoContentTypeId", EntityOperator.EQUALS, productPromoContentTypeId));
-        List<String> orderBy = UtilMisc.toList("-fromDate");
 
-        List<GenericValue> productPromoContentList = delegator.findList("ProductPromoContent", EntityCondition.makeCondition(exprs, EntityOperator.AND), null, orderBy, null, true);
+        List<GenericValue> productPromoContentList = EntityQuery.use(delegator).from("ProductPromoContent").where(EntityCondition.makeCondition(exprs, EntityOperator.AND)).orderBy("-fromDate").cache(true).queryList();
         GenericValue productPromoContent = null;
         if (UtilValidate.isNotEmpty(productPromoContentList)) {
             productPromoContent = EntityUtil.getFirst(EntityUtil.filterByDate(productPromoContentList));

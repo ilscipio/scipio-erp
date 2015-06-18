@@ -123,13 +123,14 @@ under the License.
       <script type="text/javascript">
         <#-- If language specific lib is found, use date / time converter else just copy the value fields -->
         if (Date.CultureInfo != undefined) {
-          var initDate = <#if value?has_content>jQuery("#${id}_i18n").val()<#else>""</#if>;
+          var initDate = <#if value?has_content>jQuery("#${id}").val()<#else>""</#if>;
           if (initDate != "") {
             var dateFormat = Date.CultureInfo.formatPatterns.shortDate<#if shortDateInput?? && !shortDateInput> + " " + Date.CultureInfo.formatPatterns.longTime</#if>;
-            <#-- bad hack because the JS date parser doesn't understand dots in the date / time string -->
+            <#-- The JS date parser doesn't understand the dot before ms in the date/time string. The ms here should be always 000 -->
             if (initDate.indexOf('.') != -1) {
               initDate = initDate.substring(0, initDate.indexOf('.'));
             }
+            jQuery("#${id}").val(initDate);
             var ofbizTime = "<#if shortDateInput?? && shortDateInput>yyyy-MM-dd<#else>yyyy-MM-dd HH:mm:ss</#if>";
             var dateObj = Date.parseExact(initDate, ofbizTime);
             var formatedObj = dateObj.toString(dateFormat);
@@ -479,7 +480,7 @@ under the License.
   </#if>
 </#macro>
 
-<#macro renderDateFindField className alert name localizedInputTitle value size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty>
+<#macro renderDateFindField className alert name localizedInputTitle value value2 size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty>
   <span class="view-calendar">
     <input id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
     <#if dateType != "time">
@@ -616,7 +617,7 @@ Parameter: initiallyCollapsed, Not used.
 Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true, the contents of lastViewName will be appended to the Ajax URL.
 -->
 <#macro renderLookupField name formName fieldFormName className="" alert="false" value="" size="" maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" lastViewName="main" >
-  <#if Static["org.ofbiz.widget.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
+  <#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
   <!-- @renderLookupField -->
   </#if>
   <#if (!ajaxUrl?has_content) && ajaxEnabled?has_content && ajaxEnabled>

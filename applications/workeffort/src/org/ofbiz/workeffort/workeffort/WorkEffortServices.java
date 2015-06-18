@@ -52,7 +52,8 @@ import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityListIterator;
-import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -91,9 +92,7 @@ public class WorkEffortServices {
                         EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"),
                         EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED")
                );
-                validWorkEfforts = EntityUtil.filterByDate(
-                        delegator.findList("WorkEffortAndPartyAssign", ecl, null, UtilMisc.toList("estimatedStartDate", "priority"), null, false)
-               );
+                validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("estimatedStartDate", "priority").filterByDate().queryList();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -126,9 +125,7 @@ public class WorkEffortServices {
             conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
 
             EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-            validWorkEfforts = EntityUtil.filterByDate(
-                    delegator.findList("WorkEffortAndPartyAssign", ecl, null, UtilMisc.toList("estimatedStartDate", "priority"), null, false)
-           );
+            validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("estimatedStartDate", "priority").filterByDate().queryList();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -161,7 +158,7 @@ public class WorkEffortServices {
                         EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"),
                         EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"),
                         EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
-                validWorkEfforts = EntityUtil.filterByDate(delegator.findList("WorkEffortAndPartyAssign", ecl, null, UtilMisc.toList("priority"), null, false));
+                validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("priority").filterByDate().queryList();
                 ecl = EntityCondition.makeCondition(
                         EntityOperator.AND,
                         EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
@@ -169,7 +166,7 @@ public class WorkEffortServices {
                         EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CANCELLED "),
                         EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_COMPLETED"),
                         EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CLOSED"));
-                validWorkEfforts.addAll(EntityUtil.filterByDate(delegator.findList("WorkEffortAndPartyAssign", ecl, null, UtilMisc.toList("createdDate DESC"), null, false)));
+                validWorkEfforts.addAll(EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("createdDate DESC").filterByDate().queryList());
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -206,8 +203,7 @@ public class WorkEffortServices {
                 constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "WF_TERMINATED"));
                 constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
 
-                EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(constraints, EntityOperator.AND);
-                validWorkEfforts = EntityUtil.filterByDate(delegator.findList("WorkEffortAndPartyAssign", ecl, null, UtilMisc.toList("priority"), null, false));
+                validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(constraints).orderBy("priority").filterByDate().queryList();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -243,10 +239,7 @@ public class WorkEffortServices {
                 constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "WF_TERMINATED"));
                 constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
 
-                EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(constraints);
-                roleWorkEfforts = EntityUtil.filterByDate(
-                        delegator.findList("WorkEffortPartyAssignByRole", ecl, null, UtilMisc.toList("priority"), null, false)
-               );
+                roleWorkEfforts = EntityQuery.use(delegator).from("WorkEffortPartyAssignByRole").where(constraints).orderBy("priority").filterByDate().queryList();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -282,10 +275,7 @@ public class WorkEffortServices {
                 constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "WF_TERMINATED"));
                 constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
 
-                EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(constraints);
-                groupWorkEfforts = EntityUtil.filterByDate(
-                        delegator.findList("WorkEffortPartyAssignByGroup", ecl, null, UtilMisc.toList("priority"), null, false)
-               );
+                groupWorkEfforts = EntityQuery.use(delegator).from("WorkEffortPartyAssignByGroup").where(constraints).orderBy("priority").filterByDate().queryList();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -309,7 +299,7 @@ public class WorkEffortServices {
         GenericValue workEffort = null;
 
         try {
-            workEffort = delegator.findOne("WorkEffort", false, "workEffortId", workEffortId);
+            workEffort = EntityQuery.use(delegator).from("WorkEffort").where("workEffortId", workEffortId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
@@ -327,7 +317,7 @@ public class WorkEffortServices {
 
             if (UtilValidate.isNotEmpty(statusId)) {
                 try {
-                    currentStatus = delegator.findOne("StatusItem", UtilMisc.toMap("statusId", statusId), true);
+                    currentStatus = EntityQuery.use(delegator).from("StatusItem").where("statusId", statusId).cache().queryOne();
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e, module);
                 }
@@ -336,7 +326,7 @@ public class WorkEffortServices {
             // get a list of workEffortPartyAssignments, if empty then this user CANNOT view the event, unless they have permission to view all
             if (userLogin != null && userLogin.get("partyId") != null && workEffortId != null) {
                 try {
-                    workEffortPartyAssignments = delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId")), null, false);
+                    workEffortPartyAssignments = EntityQuery.use(delegator).from("WorkEffortPartyAssignment").where("workEffortId", workEffortId, "partyId", userLogin.get("partyId")).queryList();
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e, module);
                 }
@@ -350,7 +340,7 @@ public class WorkEffortServices {
 
             if (workEffort.get("currentStatusId") != null) {
                 try {
-                    currentStatus = delegator.findOne("StatusItem", UtilMisc.toMap("statusId", workEffort.get("currentStatusId")), true);
+                    currentStatus = EntityQuery.use(delegator).from("StatusItem").where("statusId", workEffort.get("currentStatusId")).cache().queryOne();
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e, module);
                 }
@@ -634,20 +624,17 @@ public class WorkEffortServices {
         }
         */
 
-        EntityCondition eclTotal = EntityCondition.makeCondition(entityExprList, EntityJoinOperator.AND);
-
-        List<String> orderByList = UtilMisc.toList("estimatedStartDate");
         try {
             List<GenericValue> tempWorkEfforts = null;
             if (UtilValidate.isNotEmpty(partyIdsToUse)) {
                 // Debug.logInfo("=====conditions for party: " + eclTotal);
-                tempWorkEfforts = EntityUtil.filterByDate(delegator.findList("WorkEffortAndPartyAssignAndType", eclTotal, null, orderByList, null, false));
+                tempWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssignAndType").where(entityExprList).orderBy("estimatedStartDate").filterByDate().queryList();
             } else {
-                tempWorkEfforts = delegator.findList("WorkEffort", eclTotal, null, orderByList, null, false);
+                tempWorkEfforts = EntityQuery.use(delegator).from("WorkEffort").where(entityExprList).orderBy("estimatedStartDate").queryList();
             }
             if (!"CAL_PERSONAL".equals(calendarType) && UtilValidate.isNotEmpty(fixedAssetId)) {
                 // Get "new style" work efforts
-                tempWorkEfforts.addAll(EntityUtil.filterByDate(delegator.findList("WorkEffortAndFixedAssetAssign", eclTotal, null, orderByList, null, false)));
+                tempWorkEfforts.addAll(EntityQuery.use(delegator).from("WorkEffortAndFixedAssetAssign").where(entityExprList).orderBy("estimatedStartDate").filterByDate().queryList());
             }
             validWorkEfforts = WorkEffortWorker.removeDuplicateWorkEfforts(tempWorkEfforts);
         } catch (GenericEntityException e) {
@@ -789,15 +776,13 @@ public class WorkEffortServices {
             findIncomingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_RUNNING"));
             findIncomingProductionRunsConds.add(EntityCondition.makeCondition(findIncomingProductionRunsStatusConds, EntityOperator.OR));
 
-            EntityConditionList<EntityCondition> findIncomingProductionRunsCondition = EntityCondition.makeCondition(findIncomingProductionRunsConds, EntityOperator.AND);
-
-            List<GenericValue> incomingProductionRuns = delegator.findList("WorkEffortAndGoods", findIncomingProductionRunsCondition, null, UtilMisc.toList("-estimatedCompletionDate"), null, false);
+            List<GenericValue> incomingProductionRuns = EntityQuery.use(delegator).from("WorkEffortAndGoods").where(findIncomingProductionRunsConds).orderBy("-estimatedCompletionDate").queryList();
             for (GenericValue incomingProductionRun: incomingProductionRuns) {
                 double producedQtyTot = 0.0;
                 if (incomingProductionRun.getString("currentStatusId").equals("PRUN_COMPLETED")) {
-                    List<GenericValue> inventoryItems = delegator.findByAnd("WorkEffortAndInventoryProduced", UtilMisc.toMap("productId", productId, "workEffortId", incomingProductionRun.getString("workEffortId")), null, false);
+                    List<GenericValue> inventoryItems = EntityQuery.use(delegator).from("WorkEffortAndInventoryProduced").where("productId", productId, "workEffortId", incomingProductionRun.getString("workEffortId")).queryList();
                     for (GenericValue inventoryItem: inventoryItems) {
-                        GenericValue inventoryItemDetail = EntityUtil.getFirst(delegator.findByAnd("InventoryItemDetail", UtilMisc.toMap("inventoryItemId", inventoryItem.getString("inventoryItemId")), UtilMisc.toList("inventoryItemDetailSeqId"), false));
+                        GenericValue inventoryItemDetail = EntityQuery.use(delegator).from("InventoryItemDetail").where("inventoryItemId", inventoryItem.getString("inventoryItemId")).orderBy("inventoryItemDetailSeqId").queryFirst();
                         if (inventoryItemDetail != null && inventoryItemDetail.get("quantityOnHandDiff") != null) {
                             Double inventoryItemQty = inventoryItemDetail.getDouble("quantityOnHandDiff");
                             producedQtyTot = producedQtyTot + inventoryItemQty.doubleValue();
@@ -856,8 +841,7 @@ public class WorkEffortServices {
             findOutgoingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_RUNNING"));
             findOutgoingProductionRunsConds.add(EntityCondition.makeCondition(findOutgoingProductionRunsStatusConds, EntityOperator.OR));
 
-            EntityConditionList<EntityCondition> findOutgoingProductionRunsCondition = EntityCondition.makeCondition(findOutgoingProductionRunsConds, EntityOperator.AND);
-            List<GenericValue> outgoingProductionRuns = delegator.findList("WorkEffortAndGoods", findOutgoingProductionRunsCondition, null, UtilMisc.toList("-estimatedStartDate"), null, false);
+            List<GenericValue> outgoingProductionRuns = EntityQuery.use(delegator).from("WorkEffortAndGoods").where(findOutgoingProductionRunsConds).orderBy("-estimatedStartDate").queryList();
             for (GenericValue outgoingProductionRun: outgoingProductionRuns) {
                 String weFacilityId = outgoingProductionRun.getString("facilityId");
                 Double neededQuantity = outgoingProductionRun.getDouble("estimatedQuantity");
@@ -908,7 +892,10 @@ public class WorkEffortServices {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         List<GenericValue> eventReminders = null;
         try {
-            eventReminders = delegator.findList("WorkEffortEventReminder", EntityCondition.makeCondition(UtilMisc.<EntityCondition>toList(EntityCondition.makeCondition("reminderDateTime", EntityOperator.EQUALS, null), EntityCondition.makeCondition("reminderDateTime", EntityOperator.LESS_THAN_EQUAL_TO, now)), EntityOperator.OR), null, null, null, false);
+            eventReminders = EntityQuery.use(delegator).from("WorkEffortEventReminder")
+                    .where(EntityCondition.makeCondition(UtilMisc.<EntityCondition>toList(EntityCondition.makeCondition("reminderDateTime", EntityOperator.EQUALS, null), 
+                            EntityCondition.makeCondition("reminderDateTime", EntityOperator.LESS_THAN_EQUAL_TO, now)), EntityOperator.OR))
+                            .queryList();
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "WorkEffortEventRemindersRetrivingError", UtilMisc.toMap("errorString", e), localePar));
@@ -1050,7 +1037,7 @@ public class WorkEffortServices {
 
             GenericValue emailTemplateSetting = null;
             try {
-                emailTemplateSetting = delegator.findOne("EmailTemplateSetting", true, "emailTemplateSettingId", "WEFF_EVENT_REMINDER");
+                emailTemplateSetting = EntityQuery.use(delegator).from("EmailTemplateSetting").where("emailTemplateSettingId", "WEFF_EVENT_REMINDER").cache().queryOne();
             } catch (GenericEntityException e1) {
                 Debug.logError(e1, module);
             }
@@ -1063,8 +1050,8 @@ public class WorkEffortServices {
                 }
             } else {
                 // TODO: Remove this block after the next release 2010-11-29
-                String screenLocation = UtilProperties.getPropertyValue("EventReminders", "eventReminders.emailScreenWidgetLocation");
-                String fromAddress = UtilProperties.getPropertyValue("EventReminders", "eventReminders.emailFromAddress");
+                String screenLocation = EntityUtilProperties.getPropertyValue("EventReminders", "eventReminders.emailScreenWidgetLocation", delegator);
+                String fromAddress = EntityUtilProperties.getPropertyValue("EventReminders", "eventReminders.emailFromAddress", delegator);
                 String subject = UtilProperties.getMessage("WorkEffortUiLabels", "WorkEffortEventReminder", (Locale) parameters.get("locale"));
                 Map<String, Object> emailCtx = UtilMisc.toMap("sendFrom", fromAddress, "sendTo", toAddress, "subject", subject, "bodyParameters", parameters, "bodyScreenUri", screenLocation);
                 try {
@@ -1083,10 +1070,11 @@ public class WorkEffortServices {
     @Deprecated
     protected static void processEventReminder(DispatchContext ctx, GenericValue reminder, Map<String, Object> parameters) throws GenericEntityException {
         LocalDispatcher dispatcher = ctx.getDispatcher();
+        Delegator delegator = ctx.getDelegator();
         GenericValue contactMech = reminder.getRelatedOne("ContactMech", false);
         if (contactMech != null && "EMAIL_ADDRESS".equals(contactMech.get("contactMechTypeId"))) {
-            String screenLocation = UtilProperties.getPropertyValue("EventReminders", "eventReminders.emailScreenWidgetLocation");
-            String fromAddress = UtilProperties.getPropertyValue("EventReminders", "eventReminders.emailFromAddress");
+            String screenLocation = EntityUtilProperties.getPropertyValue("EventReminders", "eventReminders.emailScreenWidgetLocation", delegator);
+            String fromAddress = EntityUtilProperties.getPropertyValue("EventReminders", "eventReminders.emailFromAddress", delegator);
             String toAddress = contactMech.getString("infoString");
             String subject = UtilProperties.getMessage("WorkEffortUiLabels", "WorkEffortEventReminder", (Locale) parameters.get("locale"));
             Map<String, Object> emailCtx = UtilMisc.toMap("sendFrom", fromAddress, "sendTo", toAddress, "subject", subject, "bodyParameters", parameters, "bodyScreenUri", screenLocation);
@@ -1113,7 +1101,7 @@ public class WorkEffortServices {
         if (modelEntity != null && modelEntity.getField("recurrenceOffset") != null) {
             List<GenericValue> eventReminders = null;
             try {
-                eventReminders = delegator.findList("WorkEffortEventReminder", null, null, null, null, false);
+                eventReminders = EntityQuery.use(delegator).from("WorkEffortEventReminder").queryList();
                 for (GenericValue reminder : eventReminders) {
                     if (UtilValidate.isNotEmpty(reminder.get("recurrenceOffset"))) {
                         reminder.set("reminderOffset", reminder.get("recurrenceOffset"));

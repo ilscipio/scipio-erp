@@ -20,8 +20,7 @@ package org.ofbiz.service.group;
 
 import java.util.List;
 import java.util.Map;
-
-import javolution.util.FastMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
@@ -33,8 +32,6 @@ import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.model.ServiceGroups;
 import org.w3c.dom.Element;
 
-import freemarker.template.utility.StringUtil;
-
 /**
  * ServiceGroupReader.java
  */
@@ -43,7 +40,7 @@ public class ServiceGroupReader {
     public static final String module = ServiceGroupReader.class.getName();
 
     // using a cache is dangerous here because if someone clears it the groups won't work at all: public static UtilCache groupsCache = new UtilCache("service.ServiceGroups", 0, 0, false);
-    public static Map<String, GroupModel> groupsCache = FastMap.newInstance();
+    public static Map<String, GroupModel> groupsCache = new ConcurrentHashMap<String, GroupModel>();
 
     public static void readConfig() {
         List<ServiceGroups> serviceGroupsList = null;
@@ -88,7 +85,7 @@ public class ServiceGroupReader {
             } catch (GenericConfigException e) {
                 Debug.logError(e, "Could not get resource URL", module);
             }
-            Debug.logInfo("Loaded [" + StringUtil.leftPad(Integer.toString(numDefs), 3) + "] Group definitions from " + resourceLocation, module);
+            Debug.logInfo("Loaded [" + numDefs + "] Group definitions from " + resourceLocation, module);
         }
     }
 

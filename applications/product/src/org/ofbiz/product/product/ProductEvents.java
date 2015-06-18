@@ -52,7 +52,9 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.GenericServiceException;
@@ -97,10 +99,10 @@ public class ProductEvents {
         if (!"Y".equals(doAll)) {
             List<EntityCondition> condList = FastList.newInstance();
             condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("autoCreateKeywords", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N")));
-            if ("true".equals(UtilProperties.getPropertyValue("prodsearch", "index.ignore.variants"))) {
+            if ("true".equals(EntityUtilProperties.getPropertyValue("prodsearch", "index.ignore.variants", delegator))) {
                 condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isVariant", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("isVariant", EntityOperator.NOT_EQUAL, "Y")));
             }
-            if ("true".equals(UtilProperties.getPropertyValue("prodsearch", "index.ignore.discontinued.sales"))) {
+            if ("true".equals(EntityUtilProperties.getPropertyValue("prodsearch", "index.ignore.discontinued.sales", delegator))) {
                 condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp)));
             }
             condition = EntityCondition.makeCondition(condList, EntityOperator.AND);
@@ -119,10 +121,10 @@ public class ProductEvents {
             beganTx = TransactionUtil.begin(7200);
             try {
                 if (Debug.infoOn()) {
-                    long count = delegator.findCountByCondition("Product", condition, null, null);
+                    long count = EntityQuery.use(delegator).from("Product").where(condition).queryCount();
                     Debug.logInfo("========== Found " + count + " products to index ==========", module);
                 }
-                entityListIterator = delegator.find("Product", condition, null, null, null, null);
+                entityListIterator = EntityQuery.use(delegator).from("Product").where(condition).queryIterator();
             } catch (GenericEntityException gee) {
                 Debug.logWarning(gee, gee.getMessage(), module);
                 Map<String, String> messageMap = UtilMisc.toMap("gee", gee.toString());
@@ -230,11 +232,11 @@ public class ProductEvents {
         Timestamp fromDate = null;
 
         try {
-            if (delegator.findOne("Product", UtilMisc.toMap("productId", productId), false) == null) {
+            if (EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne() == null) {
                 Map<String, String> messageMap = UtilMisc.toMap("productId", productId);
                 errMsgList.add(UtilProperties.getMessage(resource,"productevents.product_with_id_not_found", messageMap, UtilHttp.getLocale(request)));
             }
-            if (delegator.findOne("Product", UtilMisc.toMap("productId", productIdTo), false) == null) {
+            if (EntityQuery.use(delegator).from("Product").where("productId", productIdTo).queryOne() == null) {
                 Map<String, String> messageMap = UtilMisc.toMap("productIdTo", productIdTo);
                 errMsgList.add(UtilProperties.getMessage(resource,"productevents.product_To_with_id_not_found", messageMap, UtilHttp.getLocale(request)));
             }
@@ -280,7 +282,7 @@ public class ProductEvents {
             GenericValue productAssoc = null;
 
             try {
-                productAssoc = delegator.findOne(tempProductAssoc.getEntityName(), tempProductAssoc.getPrimaryKey(), false);
+                productAssoc = EntityQuery.use(delegator).from(tempProductAssoc.getEntityName()).where(tempProductAssoc.getPrimaryKey()).queryOne();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
                 productAssoc = null;
@@ -353,7 +355,7 @@ public class ProductEvents {
             GenericValue productAssoc = null;
 
             try {
-                productAssoc = delegator.findOne(tempProductAssoc.getEntityName(), tempProductAssoc.getPrimaryKey(), false);
+                productAssoc = EntityQuery.use(delegator).from(tempProductAssoc.getEntityName()).where(tempProductAssoc.getPrimaryKey()).queryOne();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
                 productAssoc = null;
@@ -433,7 +435,7 @@ public class ProductEvents {
                 if (variantProductId == null) {
                     // only single product to update
                     String productId = request.getParameter("productId");
-                    GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+                    GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                     product.set("lastModifiedDate", nowTimestamp);
                     product.setString("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
                     try {
@@ -453,7 +455,7 @@ public class ProductEvents {
                         BigDecimal ntwt = parseBigDecimalForEntity(request.getParameter("~ntwt"));
                         BigDecimal grams = parseBigDecimalForEntity(request.getParameter("~grams"));
 
-                        List<GenericValue> currentProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "STANDARD_FEATURE"), null, false), true);
+                        List<GenericValue> currentProductFeatureAndAppls = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", "STANDARD_FEATURE").filterByDate().queryList();
                         setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "VLIQ_ozUS", "AMOUNT", floz);
                         setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "VLIQ_ml", "AMOUNT", ml);
                         setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "WT_g", "AMOUNT", grams);
@@ -472,7 +474,7 @@ public class ProductEvents {
                     int attribIdx = 0;
                     String productId = variantProductId;
                     do {
-                        GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+                        GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                         try {
                             product.set("productHeight", parseBigDecimalForEntity(request.getParameter("productHeight" + attribIdx)));
                             product.set("productWidth", parseBigDecimalForEntity(request.getParameter("productWidth" + attribIdx)));
@@ -483,7 +485,7 @@ public class ProductEvents {
                             BigDecimal ntwt = parseBigDecimalForEntity(request.getParameter("~ntwt" + attribIdx));
                             BigDecimal grams = parseBigDecimalForEntity(request.getParameter("~grams" + attribIdx));
 
-                            List<GenericValue> currentProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "STANDARD_FEATURE"), null, false), true);
+                            List<GenericValue> currentProductFeatureAndAppls = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", "STANDARD_FEATURE").filterByDate().queryList();
                             setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "VLIQ_ozUS", "AMOUNT", floz);
                             setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "VLIQ_ml", "AMOUNT", ml);
                             setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "WT_g", "AMOUNT", grams);
@@ -533,8 +535,8 @@ public class ProductEvents {
     private static void setOrCreateProdFeature(Delegator delegator, String productId, List<GenericValue> currentProductFeatureAndAppls,
                                           String uomId, String productFeatureTypeId, BigDecimal numberSpecified) throws GenericEntityException {
 
-        GenericValue productFeatureType = delegator.findOne("ProductFeatureType", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId), false);
-        GenericValue uom = delegator.findOne("Uom", UtilMisc.toMap("uomId", uomId), false);
+        GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureTypeId).queryOne();
+        GenericValue uom = EntityQuery.use(delegator).from("Uom").where("uomId", uomId).queryOne();
 
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
@@ -556,7 +558,7 @@ public class ProductEvents {
         // NOTE: if numberSpecified is null then foundOneEqual will always be false, so need to check both
         if (numberSpecified != null && !foundOneEqual) {
             String productFeatureId = null;
-            List<GenericValue> existingProductFeatureList = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId, "numberSpecified", numberSpecified, "uomId", uomId), null, false);
+            List<GenericValue> existingProductFeatureList = EntityQuery.use(delegator).from("ProductFeature").where("productFeatureTypeId", productFeatureTypeId, "numberSpecified", numberSpecified, "uomId", uomId).queryList();
             if (existingProductFeatureList.size() > 0) {
                 GenericValue existingProductFeature = existingProductFeatureList.get(0);
                 productFeatureId = existingProductFeature.getString("productFeatureId");
@@ -572,7 +574,7 @@ public class ProductEvents {
 
                 // if there is a productFeatureCategory with the same id as the productFeatureType, use that category.
                 // otherwise, use a default category from the configuration
-                if (delegator.findOne("ProductFeatureCategory", UtilMisc.toMap("productFeatureCategoryId", productFeatureTypeId), false) == null) {
+                if (EntityQuery.use(delegator).from("ProductFeatureCategory").where("productFeatureCategoryId", productFeatureTypeId).queryOne() == null) {
                     GenericValue productFeatureCategory = delegator.makeValue("ProductFeatureCategory");
                     productFeatureCategory.set("productFeatureCategoryId", productFeatureTypeId);
                     productFeatureCategory.set("description", productFeatureType.get("description"));
@@ -605,7 +607,7 @@ public class ProductEvents {
         try {
             boolean beganTransaction = TransactionUtil.begin();
             try {
-                GenericValue productFeatureType = delegator.findOne("ProductFeatureType", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId), false);
+                GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureTypeId).queryOne();
                 if (productFeatureType == null) {
                     String errMsg = "Error: the ProductFeature Type specified was not valid and one is require to add or update variant features.";
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -616,9 +618,9 @@ public class ProductEvents {
                 if (variantProductId != null) {
                     // multiple products, so use a numeric suffix to get them all
                     int attribIdx = 0;
-                    GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+                    GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                     do {
-                        GenericValue variantProduct = delegator.findOne("Product", UtilMisc.toMap("productId", variantProductId), false);
+                        GenericValue variantProduct = EntityQuery.use(delegator).from("Product").where("productId", variantProductId).queryOne();
                         String description = request.getParameter("description" + attribIdx);
                         // blank means null, which means delete the feature application
                         if ((description != null) && (description.trim().length() < 1)) {
@@ -669,8 +671,7 @@ public class ProductEvents {
         GenericValue productFeatureAndAppl = null;
 
         Set<String> descriptionsForThisType = FastSet.newInstance();
-        List<GenericValue> productFeatureAndApplList = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId,
-                "productFeatureApplTypeId", productFeatureApplTypeId, "productFeatureTypeId", productFeatureTypeId), null, false), true);
+        List<GenericValue> productFeatureAndApplList = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", productFeatureApplTypeId, "productFeatureTypeId", productFeatureTypeId).filterByDate().queryList();
         if (productFeatureAndApplList.size() > 0) {
             Iterator<GenericValue> productFeatureAndApplIter = productFeatureAndApplList.iterator();
             while (productFeatureAndApplIter.hasNext()) {
@@ -722,7 +723,7 @@ public class ProductEvents {
 
             // see if a feature exists with the type and description specified (if doesn't exist will create later)
             String productFeatureId = null;
-            List<GenericValue> existingProductFeatureList = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId, "description", description), null, false);
+            List<GenericValue> existingProductFeatureList = EntityQuery.use(delegator).from("ProductFeature").where("productFeatureTypeId", productFeatureTypeId, "description", description).queryList();
             if (existingProductFeatureList.size() > 0) {
                 GenericValue existingProductFeature = existingProductFeatureList.get(0);
                 productFeatureId = existingProductFeature.getString("productFeatureId");
@@ -736,7 +737,7 @@ public class ProductEvents {
 
                 // if there is a productFeatureCategory with the same id as the productFeatureType, use that category.
                 // otherwise, create a category for the feature type
-                if (delegator.findOne("ProductFeatureCategory", UtilMisc.toMap("productFeatureCategoryId", productFeatureTypeId), false) == null) {
+                if (EntityQuery.use(delegator).from("ProductFeatureCategory").where("productFeatureCategoryId", productFeatureTypeId).queryOne() == null) {
                     GenericValue productFeatureCategory = delegator.makeValue("ProductFeatureCategory");
                     productFeatureCategory.set("productFeatureCategoryId", productFeatureTypeId);
                     productFeatureCategory.set("description", productFeatureType.get("description"));
@@ -747,8 +748,7 @@ public class ProductEvents {
             }
 
             // check to see if the productFeatureId is already attached to the virtual or variant, if not attach them...
-            List<GenericValue> specificProductFeatureApplList = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAppl", UtilMisc.toMap("productId", productId,
-                    "productFeatureApplTypeId", productFeatureApplTypeId, "productFeatureId", productFeatureId), null, false), true);
+            List<GenericValue> specificProductFeatureApplList = EntityQuery.use(delegator).from("ProductFeatureAppl").where("productId", productId, "productFeatureApplTypeId", productFeatureApplTypeId, "productFeatureId", productFeatureId).filterByDate().queryList();
 
             if (specificProductFeatureApplList.size() == 0) {
                 delegator.create("ProductFeatureAppl",
@@ -768,7 +768,7 @@ public class ProductEvents {
         String productFeatureTypeId = request.getParameter("productFeatureTypeId");
 
         try {
-            GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
             // get all the variants
             List<GenericValue> variantAssocs = product.getRelated("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), null, false);
             variantAssocs = EntityUtil.filterByDate(variantAssocs);
@@ -830,10 +830,7 @@ public class ProductEvents {
         if (categoryIds != null) {
             for (String categoryId: categoryIds) {
                 try {
-                    List<GenericValue> catMembs = delegator.findByAnd("ProductCategoryMember", UtilMisc.toMap(
-                            "productCategoryId", categoryId,
-                            "productId", productId), null, false);
-                    catMembs = EntityUtil.filterByDate(catMembs);
+                    List<GenericValue> catMembs = EntityQuery.use(delegator).from("ProductCategoryMember").where("productCategoryId", categoryId, "productId", productId).filterByDate().queryList();
                     if (catMembs.size() == 0) {
                         delegator.create("ProductCategoryMember",
                                 UtilMisc.toMap("productCategoryId", categoryId, "productId", productId, "fromDate", fromDate));
@@ -858,9 +855,7 @@ public class ProductEvents {
             thruDate = UtilDateTime.nowTimestamp().toString();
         }
         try {
-            List<GenericValue> prodCatMembs = delegator.findByAnd("ProductCategoryMember",
-                    UtilMisc.toMap("productCategoryId", productCategoryId, "productId", productId), null, false);
-            prodCatMembs = EntityUtil.filterByDate(prodCatMembs);
+            List<GenericValue> prodCatMembs = EntityQuery.use(delegator).from("ProductCategoryMember").where("productCategoryId", productCategoryId, "productId", productId).filterByDate().queryList();
             if (prodCatMembs.size() > 0) {
                 // there is one to modify
                 GenericValue prodCatMemb = prodCatMembs.get(0);
@@ -889,10 +884,7 @@ public class ProductEvents {
             try {
                 for (String productFeatureId: productFeatureIdArray) {
                     if (!productFeatureId.equals("~~any~~")) {
-                        List<GenericValue> featureAppls = delegator.findByAnd("ProductFeatureAppl",
-                                UtilMisc.toMap("productId", productId,
-                                        "productFeatureId", productFeatureId,
-                                        "productFeatureApplTypeId", productFeatureApplTypeId), null, false);
+                        List<GenericValue> featureAppls = EntityQuery.use(delegator).from("ProductFeatureAppl").where("productId", productId, "productFeatureId", productFeatureId, "productFeatureApplTypeId", productFeatureApplTypeId).queryList();
                         if (featureAppls.size() == 0) {
                             // no existing application for this
                             delegator.create("ProductFeatureAppl",
@@ -962,9 +954,7 @@ public class ProductEvents {
             if ("Y".equals(productStore.getString("requireCustomerRole"))) {
                 List<GenericValue> productStoreRoleList = null;
                 try {
-                    productStoreRoleList = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStore.get("productStoreId"),
-                            "partyId", userLogin.get("partyId"), "roleTypeId", "CUSTOMER"), null, false);
-                    productStoreRoleList = EntityUtil.filterByDate(productStoreRoleList, true);
+                    productStoreRoleList = EntityQuery.use(delegator).from("ProductStoreRole").where("productStoreId", productStore.get("productStoreId"), "partyId", userLogin.get("partyId"), "roleTypeId", "CUSTOMER").filterByDate().queryList();
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Database error finding CUSTOMER ProductStoreRole records, required by the ProductStore with ID [" + productStore.getString("productStoreId") + "]", module);
                 }
@@ -999,8 +989,7 @@ public class ProductEvents {
 
         GenericValue productStoreEmail = null;
         try {
-            productStoreEmail = delegator.findOne("ProductStoreEmailSetting",
-                    UtilMisc.toMap("productStoreId", productStoreId, "emailType", emailType), false);
+            productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", productStoreId, "emailType", emailType).queryOne();
         } catch (GenericEntityException e) {
             String errMsg = "Unable to get product store email setting for tell-a-friend: " + e.toString();
             Debug.logError(e, errMsg, module);
@@ -1194,7 +1183,7 @@ public class ProductEvents {
             
             GenericValue userLogin = null;
             try {
-                userLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", "system"), true);
+                userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").cache().queryOne();
             } catch (GenericEntityException e) {
                 request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
                 return "error";

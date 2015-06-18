@@ -21,9 +21,11 @@ package org.ofbiz.webapp.control;
 import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -35,26 +37,26 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.CachedClassLoader;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilObject;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.security.SecurityConfigurationException;
 import org.ofbiz.security.SecurityFactory;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
+import org.ofbiz.webapp.event.RequestBodyMapHandlerFactory;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
@@ -65,7 +67,6 @@ public class ContextFilter implements Filter {
     public static final String module = ContextFilter.class.getName();
     public static final String FORWARDED_FROM_SERVLET = "_FORWARDED_FROM_SERVLET_";
 
-    protected ClassLoader localCachedClassLoader = null;
     protected FilterConfig config = null;
     protected boolean debug = false;
 
@@ -77,10 +78,6 @@ public class ContextFilter implements Filter {
 
         // puts all init-parameters in ServletContext attributes for easier parameterization without code changes
         this.putAllInitParametersInAttributes();
-
-        // initialize the cached class loader for this application
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        localCachedClassLoader = new CachedClassLoader(loader, (String) config.getServletContext().getAttribute("webSiteId"));
 
         // set debug
         this.debug = "true".equalsIgnoreCase(config.getInitParameter("debug"));
@@ -111,11 +108,6 @@ public class ContextFilter implements Filter {
         // Debug.logInfo("Running ContextFilter.doFilter", module);
 
         // ----- Servlet Object Setup -----
-        // set the cached class loader for more speedy running in this thread
-        String disableCachedClassloader = config.getInitParameter("disableCachedClassloader");
-        if (disableCachedClassloader == null || !"Y".equalsIgnoreCase(disableCachedClassloader)) {
-            Thread.currentThread().setContextClassLoader(localCachedClassLoader);
-        }
 
         // set the ServletContext in the request for future use
         httpRequest.setAttribute("servletContext", config.getServletContext());
@@ -181,9 +173,11 @@ public class ContextFilter implements Filter {
             String redirectPath = config.getInitParameter("redirectPath");
             String errorCode = config.getInitParameter("errorCode");
 
-            List<String> allowList = StringUtil.split(allowedPath, ":");
-            allowList.add("/");  // No path is allowed.
-            allowList.add("");   // No path is allowed.
+            List<String> allowList = null;
+            if ((allowList = StringUtil.split(allowedPath, ":")) != null) {
+                allowList.add("/");  // No path is allowed.
+                allowList.add("");   // No path is allowed.
+            }
 
             if (debug) Debug.logInfo("[Domain]: " + httpRequest.getServerName() + " [Request]: " + httpRequest.getRequestURI(), module);
 
@@ -217,8 +211,10 @@ public class ContextFilter implements Filter {
 
             // Verbose Debugging
             if (Debug.verboseOn()) {
-                for (String allow: allowList) {
-                    Debug.logVerbose("[Allow]: " + allow, module);
+                if (allowList != null) {
+                    for (String allow: allowList) {
+                        Debug.logVerbose("[Allow]: " + allow, module);
+                    }
                 }
                 Debug.logVerbose("[Request path]: " + requestPath, module);
                 Debug.logVerbose("[Request info]: " + requestInfo, module);
@@ -226,7 +222,9 @@ public class ContextFilter implements Filter {
             }
 
             // check to make sure the requested url is allowed
-            if (!allowList.contains(requestPath) && !allowList.contains(requestInfo) && !allowList.contains(httpRequest.getServletPath())) {
+            if (allowList != null &&
+                (!allowList.contains(requestPath) && !allowList.contains(requestInfo) && !allowList.contains(httpRequest.getServletPath()))
+                ) {
                 String filterMessage = "[Filtered request]: " + contextUri;
                 
                 if (redirectPath == null) {
@@ -259,15 +257,28 @@ public class ContextFilter implements Filter {
             // get tenant delegator by domain name
             String serverName = httpRequest.getServerName();
             try {
+            	
                 // if tenant was specified, replace delegator with the new per-tenant delegator and set tenantId to session attribute
                 Delegator delegator = getDelegator(config.getServletContext());
-                List<GenericValue> tenants = delegator.findList("Tenant", EntityCondition.makeCondition("domainName", serverName), null, UtilMisc.toList("-createdStamp"), null, false);
-                if (UtilValidate.isNotEmpty(tenants)) {
-                    GenericValue tenant = EntityUtil.getFirst(tenants);
-                    String tenantId = tenant.getString("tenantId");
 
+                //Use base delegator for fetching data from entity of entityGroup org.ofbiz.tenant 
+                Delegator baseDelegator = DelegatorFactory.getDelegator(delegator.getDelegatorBaseName());
+                GenericValue tenantDomainName = EntityQuery.use(baseDelegator).from("TenantDomainName").where("domainName", serverName).queryOne();
+                String tenantId = null;
+                if(UtilValidate.isNotEmpty(tenantDomainName)) {
+                    tenantId = tenantDomainName.getString("tenantId");
+                }
+                
+                if(UtilValidate.isEmpty(tenantId)) {
+                    tenantId = (String) httpRequest.getAttribute("userTenantId");
+                }
+                if(UtilValidate.isEmpty(tenantId)) {
+                    tenantId = (String) httpRequest.getParameter("userTenantId");
+                }
+                if (UtilValidate.isNotEmpty(tenantId)) {
                     // if the request path is a root mount then redirect to the initial path
                     if (UtilValidate.isNotEmpty(requestPath) && requestPath.equals(contextUri)) {
+                        GenericValue tenant = EntityQuery.use(baseDelegator).from("Tenant").where("tenantId", tenantId).queryOne();
                         String initialPath = tenant.getString("initialPath");
                         if (UtilValidate.isNotEmpty(initialPath) && !"/".equals(initialPath)) {
                             ((HttpServletResponse)response).sendRedirect(initialPath);
@@ -296,7 +307,7 @@ public class ContextFilter implements Filter {
                     request.setAttribute("dispatcher", dispatcher);
                     request.setAttribute("security", security);
                     
-                    request.setAttribute("tenantId", tenantId);
+                    request.setAttribute("userTenantId", tenantId);
                 }
 
                 // NOTE DEJ20101130: do NOT always put the delegator name in the user's session because the user may 
@@ -309,8 +320,11 @@ public class ContextFilter implements Filter {
             }
         }
 
+        setCharacterEncoding(request);
+        setAttributesFromRequestBody(request);
+
         // we're done checking; continue on
-        chain.doFilter(httpRequest, httpResponse);
+        chain.doFilter(request, httpResponse);
     }
 
     /**
@@ -329,6 +343,33 @@ public class ContextFilter implements Filter {
             servletContext.setAttribute("dispatcher", dispatcher);
         }
         return dispatcher;
+    }
+
+    public static void setCharacterEncoding(ServletRequest request) throws UnsupportedEncodingException {
+        String charset = request.getServletContext().getInitParameter("charset");
+        if (UtilValidate.isEmpty(charset)) charset = request.getCharacterEncoding();
+        if (UtilValidate.isEmpty(charset)) charset = "UTF-8";
+        if (Debug.verboseOn()) Debug.logVerbose("The character encoding of the request is: [" + request.getCharacterEncoding() + "]. The character encoding we will use for the request is: [" + charset + "]", module);
+
+        if (!"none".equals(charset)) {
+            request.setCharacterEncoding(charset);
+        }
+    }
+
+    public static void setAttributesFromRequestBody(ServletRequest request) {
+        // read the body (for JSON requests) and set the parameters as attributes:
+        Map<String, Object> requestBodyMap = null;
+        try {
+            requestBodyMap = RequestBodyMapHandlerFactory.extractMapFromRequestBody(request);
+        } catch (IOException ioe) {
+            Debug.logWarning(ioe, module);
+        }
+        if (requestBodyMap != null) {
+            Set<String> parameterNames = requestBodyMap.keySet();
+            for (String parameterName: parameterNames) {
+                request.setAttribute(parameterName, requestBodyMap.get(parameterName));
+            }
+        }
     }
 
     /** This method only sets up a dispatcher for the current webapp and passed in delegator, it does not save it to the ServletContext or anywhere else, just returns it */

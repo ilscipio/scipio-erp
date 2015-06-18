@@ -21,15 +21,14 @@ package org.ofbiz.service;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceHandler;
@@ -44,14 +43,13 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.model.ModelFieldType;
+import org.ofbiz.service.ModelParam.ModelParamValidator;
 import org.ofbiz.service.group.GroupModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import freemarker.template.utility.StringUtil;
 
 /**
  * Generic Service - Service Definition Reader
@@ -65,28 +63,28 @@ public class ModelServiceReader implements Serializable {
     protected boolean isFromURL;
     protected URL readerURL = null;
     protected ResourceHandler handler = null;
-    protected DispatchContext dctx = null;
+    protected Delegator delegator = null;
 
-    public static Map<String, ModelService> getModelServiceMap(URL readerURL, DispatchContext dctx) {
+    public static Map<String, ModelService> getModelServiceMap(URL readerURL, Delegator delegator) {
         if (readerURL == null) {
             Debug.logError("Cannot add reader with a null reader URL", module);
             return null;
         }
 
-        ModelServiceReader reader = new ModelServiceReader(true, readerURL, null, dctx);
+        ModelServiceReader reader = new ModelServiceReader(true, readerURL, null, delegator);
         return reader.getModelServices();
     }
 
-    public static Map<String, ModelService> getModelServiceMap(ResourceHandler handler, DispatchContext dctx) {
-        ModelServiceReader reader = new ModelServiceReader(false, null, handler, dctx);
+    public static Map<String, ModelService> getModelServiceMap(ResourceHandler handler, Delegator delegator) {
+        ModelServiceReader reader = new ModelServiceReader(false, null, handler, delegator);
         return reader.getModelServices();
     }
 
-    private ModelServiceReader(boolean isFromURL, URL readerURL, ResourceHandler handler, DispatchContext dctx) {
+    private ModelServiceReader(boolean isFromURL, URL readerURL, ResourceHandler handler, Delegator delegator) {
         this.isFromURL = isFromURL;
         this.readerURL = readerURL;
         this.handler = handler;
-        this.dctx = dctx;
+        this.delegator = delegator;
     }
 
     private Map<String, ModelService> getModelServices() {
@@ -109,7 +107,7 @@ public class ModelServiceReader implements Serializable {
             }
         }
 
-        Map<String, ModelService> modelServices = FastMap.newInstance();
+        Map<String, ModelService> modelServices = new HashMap<String, ModelService>();
         if (this.isFromURL) {// utilTimer.timerString("Before getDocumentElement in file " + readerURL);
         } else {// utilTimer.timerString("Before getDocumentElement in " + handler);
         }
@@ -182,11 +180,11 @@ public class ModelServiceReader implements Serializable {
         }
         if (this.isFromURL) {
             utilTimer.timerString("Finished file " + readerURL + " - Total Services: " + i + " FINISHED");
-            Debug.logInfo("Loaded [" + StringUtil.leftPad(Integer.toString(i), 3) + "] Services from " + readerURL, module);
+            Debug.logInfo("Loaded [" + i + "] Services from " + readerURL, module);
         } else {
             utilTimer.timerString("Finished document in " + handler + " - Total Services: " + i + " FINISHED");
             if (Debug.infoOn()) {
-                Debug.logInfo("Loaded [" + StringUtil.leftPad(Integer.toString(i), 3) + "] Services from " + resourceLocation, module);
+                Debug.logInfo("Loaded [" + i + "] Services from " + resourceLocation, module);
             }
         }
         return modelServices;
@@ -274,8 +272,8 @@ public class ModelServiceReader implements Serializable {
         service.description = getCDATADef(serviceElement, "description");
         service.nameSpace = getCDATADef(serviceElement, "namespace");
 
-        // contruct the context
-        service.contextInfo = FastMap.newInstance();
+        // construct the context
+        service.contextInfo = new HashMap<String, ModelParam>();
         this.createNotification(serviceElement, service);
         this.createPermission(serviceElement, service);
         this.createPermGroups(serviceElement, service);
@@ -437,8 +435,6 @@ public class ModelServiceReader implements Serializable {
         boolean includePk = "pk".equals(includeType) || "all".equals(includeType);
         boolean includeNonPk = "nonpk".equals(includeType) || "all".equals(includeType);
 
-        // need a delegator for this
-        Delegator delegator = dctx.getDelegator();
         if (delegator == null) {
             Debug.logWarning("Cannot use auto-attribute fields with a null delegator", module);
         }
@@ -694,7 +690,7 @@ public class ModelServiceReader implements Serializable {
         List<? extends Element> validateElements = UtilXml.childElementList(attribute, "type-validate");
         if (UtilValidate.isNotEmpty(validateElements)) {
             // always clear out old ones; never append
-            param.validators = FastList.newInstance();
+            param.validators = new LinkedList<ModelParamValidator>();
 
             Element validate = validateElements.get(0);
             String methodName = validate.getAttribute("method").intern();

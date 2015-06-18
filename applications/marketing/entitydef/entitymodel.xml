@@ -276,7 +276,7 @@ under the License.
         <field name="fromDate" type="date-time"></field>
         <field name="statusDate" type="date-time"></field>
         <field name="statusId" type="id"></field>
-        <field name="setByUserLoginId" type="description"></field>
+        <field name="setByUserLoginId" type="id-vlong"></field>
         <field name="optInVerifyCode" type="short-varchar"><!-- if statusId is CLPT_PENDING, set optInVerifyCode; else if statusId is CLPT_ACCEPTED, make sure optInVerifyCode is the same as the last CLPT_PENDING --></field>
         <prim-key field="contactListId"/>
         <prim-key field="partyId"/>
@@ -531,9 +531,6 @@ under the License.
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="TKNG_CODVST_TKCD" rel-entity-name="TrackingCode">
         <key-map field-name="trackingCodeId"/>
-      </relation>
-      <relation type="one" fk-name="TKNG_CODVST_VST" rel-entity-name="Visit">
-        <key-map field-name="visitId"/>
       </relation>
       <relation type="one" fk-name="TKNG_CODVST_SRCEM" rel-entity-name="Enumeration">
         <key-map field-name="sourceEnumId" rel-field-name="enumId"/>

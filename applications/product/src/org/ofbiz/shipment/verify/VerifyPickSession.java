@@ -36,6 +36,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
@@ -393,26 +394,26 @@ public class VerifyPickSession implements Serializable {
         newShipment.put("shipmentTypeId", "OUTGOING_SHIPMENT");
         newShipment.put("statusId", "SHIPMENT_SCHEDULED");
         newShipment.put("userLogin", this.getUserLogin());
-        GenericValue orderRoleShipTo = EntityUtil.getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "SHIP_TO_CUSTOMER"), null, false));
+        GenericValue orderRoleShipTo = EntityQuery.use(delegator).from("OrderRole").where("orderId", orderId, "roleTypeId", "SHIP_TO_CUSTOMER").queryFirst();
         if (UtilValidate.isNotEmpty(orderRoleShipTo)) {
             newShipment.put("partyIdTo", orderRoleShipTo.getString("partyId"));
         }
         String partyIdFrom = null;
-        GenericValue orderItemShipGroup = EntityUtil.getFirst(delegator.findByAnd("OrderItemShipGroup", UtilMisc.toMap("orderId", orderId, "shipGroupSeqId", line.getShipGroupSeqId()), null, false));
+        GenericValue orderItemShipGroup = EntityQuery.use(delegator).from("OrderItemShipGroup").where("orderId", orderId, "shipGroupSeqId", line.getShipGroupSeqId()).queryFirst();
         if (UtilValidate.isNotEmpty(orderItemShipGroup.getString("vendorPartyId"))) {
             partyIdFrom = orderItemShipGroup.getString("vendorPartyId");
         } else if (UtilValidate.isNotEmpty(orderItemShipGroup.getString("facilityId"))) {
-            GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", orderItemShipGroup.getString("facilityId")), false);
+            GenericValue facility = EntityQuery.use(delegator).from("Facility").where("facilityId", orderItemShipGroup.getString("facilityId")).queryOne();
             if (UtilValidate.isNotEmpty(facility.getString("ownerPartyId"))) {
                 partyIdFrom = facility.getString("ownerPartyId");
             }
         }
         if (UtilValidate.isEmpty(partyIdFrom)) {
-            GenericValue orderRoleShipFrom = EntityUtil.getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "SHIP_FROM_VENDOR"), null, false));
+            GenericValue orderRoleShipFrom = EntityQuery.use(delegator).from("OrderRole").where("orderId", orderId, "roleTypeId", "SHIP_FROM_VENDOR").queryFirst();
             if (UtilValidate.isNotEmpty(orderRoleShipFrom)) {
                 partyIdFrom = orderRoleShipFrom.getString("partyId");
             } else {
-                orderRoleShipFrom = EntityUtil.getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_FROM_VENDOR"), null, false));
+                orderRoleShipFrom = EntityQuery.use(delegator).from("OrderRole").where("orderId", orderId, "roleTypeId", "BILL_FROM_VENDOR").queryFirst();
                 partyIdFrom = orderRoleShipFrom.getString("partyId");
             }
         }

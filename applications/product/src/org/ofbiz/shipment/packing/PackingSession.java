@@ -39,6 +39,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.GenericServiceException;
@@ -70,6 +71,7 @@ public class PackingSession implements java.io.Serializable {
     protected List<ItemDisplay> itemInfos = null;
     protected int packageSeq = -1;
     protected int status = 1;
+    protected Map<Integer, String> shipmentBoxTypes = null;
 
     private transient Delegator _delegator = null;
     private transient LocalDispatcher _dispatcher = null;
@@ -91,6 +93,7 @@ public class PackingSession implements java.io.Serializable {
         this.itemInfos = FastList.newInstance();
         this.packageSeq = 1;
         this.packageWeights = FastMap.newInstance();
+        this.shipmentBoxTypes = FastMap.newInstance();
     }
 
     public PackingSession(LocalDispatcher dispatcher, GenericValue userLogin, String facilityId) {
@@ -598,6 +601,7 @@ public class PackingSession implements java.io.Serializable {
     public void clearAllLines() {
         this.packLines.clear();
         this.packageWeights.clear();
+        this.shipmentBoxTypes.clear();
         this.packageSeq = 1;
     }
 
@@ -610,6 +614,7 @@ public class PackingSession implements java.io.Serializable {
         this.primaryShipGrp = null;
         this.additionalShippingCharge = null;
         if (this.packageWeights != null) this.packageWeights.clear();
+        if (this.shipmentBoxTypes != null) this.shipmentBoxTypes.clear();
         this.weightUomId = null;
         this.packageSeq = 1;
         this.status = 1;
@@ -723,32 +728,32 @@ public class PackingSession implements java.io.Serializable {
         newShipment.put("picklistBinId", picklistBinId);
         newShipment.put("additionalShippingCharge", additionalShippingCharge);
         newShipment.put("userLogin", userLogin);
-        GenericValue orderRoleShipTo = EntityUtil.getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", primaryOrderId, "roleTypeId", "SHIP_TO_CUSTOMER"), null, false));
+        GenericValue orderRoleShipTo = EntityQuery.use(delegator).from("OrderRole").where("orderId", primaryOrderId, "roleTypeId", "SHIP_TO_CUSTOMER").queryFirst();
         if (UtilValidate.isNotEmpty(orderRoleShipTo)) {
             newShipment.put("partyIdTo", orderRoleShipTo.getString("partyId"));
         }
         String partyIdFrom = null;
         if (primaryOrderId != null) {
-            GenericValue orderItemShipGroup = EntityUtil.getFirst(delegator.findByAnd("OrderItemShipGroup", UtilMisc.toMap("orderId", primaryOrderId, "shipGroupSeqId", primaryShipGrp), null, false));
+            GenericValue orderItemShipGroup = EntityQuery.use(delegator).from("OrderItemShipGroup").where("orderId", primaryOrderId, "shipGroupSeqId", primaryShipGrp).queryFirst();
             if (UtilValidate.isNotEmpty(orderItemShipGroup.getString("vendorPartyId"))) {
                 partyIdFrom = orderItemShipGroup.getString("vendorPartyId");
             } else if (UtilValidate.isNotEmpty(orderItemShipGroup.getString("facilityId"))) {
-                GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", orderItemShipGroup.getString("facilityId")), false);
+                GenericValue facility = EntityQuery.use(delegator).from("Facility").where("facilityId", orderItemShipGroup.getString("facilityId")).queryOne();
                 if (UtilValidate.isNotEmpty(facility.getString("ownerPartyId"))) {
                     partyIdFrom = facility.getString("ownerPartyId");
                 }
             }
             if (UtilValidate.isEmpty(partyIdFrom)) {
-                GenericValue orderRoleShipFrom = EntityUtil.getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", primaryOrderId, "roleTypeId", "SHIP_FROM_VENDOR"), null, false));
+                GenericValue orderRoleShipFrom = EntityQuery.use(delegator).from("OrderRole").where("orderId", primaryOrderId, "roleTypeId", "SHIP_FROM_VENDOR").queryFirst();
                 if (UtilValidate.isNotEmpty(orderRoleShipFrom)) {
                     partyIdFrom = orderRoleShipFrom.getString("partyId");
                 } else {
-                    orderRoleShipFrom = EntityUtil.getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", primaryOrderId, "roleTypeId", "BILL_FROM_VENDOR"), null, false));
+                    orderRoleShipFrom = EntityQuery.use(delegator).from("OrderRole").where("orderId", primaryOrderId, "roleTypeId", "BILL_FROM_VENDOR").queryFirst();
                     partyIdFrom = orderRoleShipFrom.getString("partyId");
                 }
             }
         } else if (this.facilityId != null) {
-            GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", this.facilityId), false);
+            GenericValue facility = EntityQuery.use(delegator).from("Facility").where("facilityId", this.facilityId).queryOne();
             if (UtilValidate.isNotEmpty(facility.getString("ownerPartyId"))) {
                 partyIdFrom = facility.getString("ownerPartyId");
             }
@@ -795,7 +800,7 @@ public class PackingSession implements java.io.Serializable {
             Map<String, Object> pkgCtx = FastMap.newInstance();
             pkgCtx.put("shipmentId", shipmentId);
             pkgCtx.put("shipmentPackageSeqId", shipmentPackageSeqId);
-            pkgCtx.put("shipmentBoxTypeId", this.shipmentBoxTypeId);
+            pkgCtx.put("shipmentBoxTypeId", getShipmentBoxType(i+1));
             pkgCtx.put("weight", getPackageWeight(i+1));
             pkgCtx.put("weightUomId", getWeightUomId());
             pkgCtx.put("userLogin", userLogin);
@@ -987,6 +992,25 @@ public class PackingSession implements java.io.Serializable {
         BigDecimal packageWeight = getPackageWeight(packageSeqId);
         BigDecimal newPackageWeight = UtilValidate.isEmpty(packageWeight) ? weight : weight.add(packageWeight);
         setPackageWeight(packageSeqId, newPackageWeight);
+    }
+
+    // These methods (setShipmentBoxType and getShipmentBoxType) are added so that each package will have different box type.
+    public void setShipmentBoxType(int packageSeqId, String shipmentBoxType) {
+        if (UtilValidate.isEmpty(shipmentBoxType)) {
+            shipmentBoxTypes.remove(Integer.valueOf(packageSeqId));
+        } else {
+            shipmentBoxTypes.put(Integer.valueOf(packageSeqId), shipmentBoxType);
+        }
+    }
+
+    public String getShipmentBoxType(int packageSeqId) {
+        if (this.shipmentBoxTypes == null) return null;
+        String shipmentBoxType = null;
+        Object p = shipmentBoxTypes.get(packageSeqId);
+        if (p != null) {
+            shipmentBoxType = (String) p;
+        }
+        return shipmentBoxType;
     }
 
     class ItemDisplay extends AbstractMap<Object, Object> {

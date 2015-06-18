@@ -19,22 +19,17 @@
 package org.ofbiz.service.engine;
 
 import static org.ofbiz.base.util.UtilGenerics.cast;
-import groovy.lang.GroovyClassLoader;
 import groovy.lang.Script;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import javax.script.ScriptContext;
 
-import javolution.util.FastMap;
-
-import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.runtime.InvokerHelper;
-import org.ofbiz.base.config.GenericConfigException;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GroovyUtil;
 import org.ofbiz.base.util.ScriptHelper;
@@ -45,7 +40,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.config.ServiceConfigUtil;
 
 /**
  * Groovy Script Service Engine
@@ -55,8 +49,6 @@ public final class GroovyEngine extends GenericAsyncEngine {
     public static final String module = GroovyEngine.class.getName();
     protected static final Object[] EMPTY_ARGS = {};
     private static final Set<String> protectedKeys = createProtectedKeys();
-
-    GroovyClassLoader groovyClassLoader;
 
     private static Set<String> createProtectedKeys() {
         Set<String> newSet = new HashSet<String>();
@@ -71,16 +63,6 @@ public final class GroovyEngine extends GenericAsyncEngine {
 
     public GroovyEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
-        try {
-            String scriptBaseClass = ServiceConfigUtil.getEngineParameter("groovy", "scriptBaseClass");
-            if (scriptBaseClass != null) {
-                CompilerConfiguration conf = new CompilerConfiguration();
-                conf.setScriptBaseClass(scriptBaseClass);
-                groovyClassLoader = new GroovyClassLoader(getClass().getClassLoader(), conf);
-            }
-        } catch (GenericConfigException gce) {
-            Debug.logWarning(gce, "Error retrieving the configuration for the groovy service engine: ", module);
-        }
     }
 
     /**
@@ -103,10 +85,10 @@ public final class GroovyEngine extends GenericAsyncEngine {
         if (UtilValidate.isEmpty(modelService.location)) {
             throw new GenericServiceException("Cannot run Groovy service with empty location");
         }
-        Map<String, Object> params = FastMap.newInstance();
+        Map<String, Object> params = new HashMap<String, Object>();
         params.putAll(context);
 
-        Map<String, Object> gContext = FastMap.newInstance();
+        Map<String, Object> gContext = new HashMap<String, Object>();
         gContext.putAll(context);
         gContext.put(ScriptUtil.PARAMETERS_KEY, params);
 
@@ -120,7 +102,7 @@ public final class GroovyEngine extends GenericAsyncEngine {
             if (scriptHelper != null) {
                 gContext.put(ScriptUtil.SCRIPT_HELPER_KEY, scriptHelper);
             }
-            Script script = InvokerHelper.createScript(GroovyUtil.getScriptClassFromLocation(this.getLocation(modelService), groovyClassLoader), GroovyUtil.getBinding(gContext));
+            Script script = InvokerHelper.createScript(GroovyUtil.getScriptClassFromLocation(this.getLocation(modelService)), GroovyUtil.getBinding(gContext));
             Object resultObj = null;
             if (UtilValidate.isEmpty(modelService.invoke)) {
                 resultObj = script.run();

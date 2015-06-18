@@ -36,13 +36,12 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
@@ -130,13 +129,8 @@ public class ShoppingListServices {
         try {
             beganTransaction = TransactionUtil.begin();
 
-            List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("shoppingListTypeId", EntityOperator.EQUALS, "SLT_AUTO_REODR"),
-                    EntityCondition.makeCondition("isActive", EntityOperator.EQUALS, "Y"));
-            EntityCondition cond = EntityCondition.makeCondition(exprs, EntityOperator.AND);
-            List<String> order = UtilMisc.toList("-lastOrderedDate");
-
             EntityListIterator eli = null;
-            eli = delegator.find("ShoppingList", cond, null, null, order, null);
+            eli = EntityQuery.use(delegator).from("ShoppingList").where("shoppingListTypeId", "SLT_AUTO_REODR", "isActive", "Y").orderBy("-lastOrderedDate").queryIterator();
 
             if (eli != null) {
                 GenericValue shoppingList;
@@ -271,7 +265,7 @@ public class ShoppingListServices {
             beganTransaction = TransactionUtil.begin();
 
             GenericValue orderHeader = null;
-            orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+            orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
 
             if (orderHeader == null) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderUnableToLocateOrder", UtilMisc.toMap("orderId",orderId), locale));
@@ -312,15 +306,18 @@ public class ShoppingListServices {
             }
 
             GenericValue shoppingList = null;
-            shoppingList = delegator.findOne("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId), false);
+            shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("shoppingListId", shoppingListId).queryOne();
 
             if (shoppingList == null) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderNoShoppingListAvailable",locale));
             }
             shoppingListTypeId = shoppingList.getString("shoppingListTypeId");
 
-            OrderReadHelper orh = new OrderReadHelper(orderHeader);
-            if (orh == null) {
+            OrderReadHelper orh;
+            try {
+                orh = new OrderReadHelper(orderHeader);
+            } catch (IllegalArgumentException e) {
+                Debug.logError(e, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderUnableToLoadOrderReadHelper", UtilMisc.toMap("orderId",orderId), locale));
             }
 
@@ -332,7 +329,7 @@ public class ShoppingListServices {
                             orderItem.get("productId"), "quantity", orderItem.get("quantity"));
                     if (EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", ProductWorker.getProductTypeId(delegator, productId), "parentTypeId", "AGGREGATED")) {
                         try {
-                            GenericValue instanceProduct = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+                            GenericValue instanceProduct = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                             String configId = instanceProduct.getString("configId");
                             ctx.put("configId", configId);
                             String aggregatedProductId = ProductWorker.getInstanceAggregatedId(delegator, productId);
@@ -536,7 +533,7 @@ public class ShoppingListServices {
         Delegator delegator = dispatcher.getDelegator();
         GenericValue shoppingList = null;
         try {
-            shoppingList = delegator.findOne("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId), false);
+            shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("shoppingListId", shoppingListId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -558,13 +555,12 @@ public class ShoppingListServices {
         Delegator delegator = ctx.getDelegator();
         String orderId = (String) context.get("orderId");
         try {
-            List<GenericValue> orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId), null, false);
+            List<GenericValue> orderItems = EntityQuery.use(delegator).from("OrderItem").where("orderId", orderId).queryList();
             for (GenericValue orderItem : orderItems) {
                 String shoppingListId = orderItem.getString("shoppingListId");
                 String shoppingListItemSeqId = orderItem.getString("shoppingListItemSeqId");
                 if (UtilValidate.isNotEmpty(shoppingListId)) {
-                    GenericValue shoppingListItem=delegator.findOne("ShoppingListItem", UtilMisc.toMap("shoppingListId",
-                                shoppingListId, "shoppingListItemSeqId", shoppingListItemSeqId), false);
+                    GenericValue shoppingListItem = EntityQuery.use(delegator).from("ShoppingListItem").where("shoppingListId", shoppingListId, "shoppingListItemSeqId", shoppingListItemSeqId).queryOne();
                     if (shoppingListItem != null) {
                         BigDecimal quantityPurchased = shoppingListItem.getBigDecimal("quantityPurchased");
                         BigDecimal orderQuantity = orderItem.getBigDecimal("quantity");
@@ -589,14 +585,11 @@ public class ShoppingListServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         List<GenericValue> shoppingList = null;
         try {
-            EntityCondition cond = EntityCondition.makeCondition(UtilMisc.toList(
-                                        EntityCondition.makeCondition("partyId", null),
-                                        EntityCondition.makeCondition("shoppingListTypeId", "SLT_SPEC_PURP")), EntityOperator.AND);
-            shoppingList = delegator.findList("ShoppingList", cond, null, null, null, false);
+            shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("partyId", null, "shoppingListTypeId", "SLT_SPEC_PURP").queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
         }
-        String maxDaysStr = UtilProperties.getPropertyValue("order.properties", "autosave.max.age", "30");
+        String maxDaysStr = EntityUtilProperties.getPropertyValue("order.properties", "autosave.max.age", "30", delegator);
         int maxDays = 0;
         try {
             maxDays = Integer.parseInt(maxDaysStr);

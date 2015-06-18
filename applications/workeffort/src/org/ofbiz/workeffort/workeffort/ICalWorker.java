@@ -20,7 +20,6 @@
 package org.ofbiz.workeffort.workeffort;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Date;
 import java.util.Enumeration;
@@ -29,7 +28,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -40,13 +38,13 @@ import javolution.util.FastMap;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilJ2eeCompat;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
@@ -133,24 +131,13 @@ public class ICalWorker {
     protected static Date getLastModifiedDate(HttpServletRequest request) throws GenericEntityException {
         String workEffortId = (String) request.getAttribute("workEffortId");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        GenericValue publishProperties = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId), false);
+        GenericValue publishProperties = EntityQuery.use(delegator).from("WorkEffort").where("workEffortId", workEffortId).queryOne();
         GenericValue iCalData = publishProperties.getRelatedOne("WorkEffortIcalData", false);
         if (iCalData != null) {
             return iCalData.getTimestamp("lastUpdatedStamp");
         } else {
             return publishProperties.getTimestamp("lastUpdatedStamp");
         }
-    }
-
-    protected static Writer getWriter(HttpServletResponse response, ServletContext context) throws IOException {
-        Writer writer = null;
-        if (UtilJ2eeCompat.useOutputStreamNotWriter(context)) {
-            ServletOutputStream ros = response.getOutputStream();
-            writer = new OutputStreamWriter(ros, "UTF-8");
-        } else {
-            writer = response.getWriter();
-        }
-        return writer;
     }
 
     public static void handleGetRequest(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws ServletException, IOException {
@@ -221,7 +208,7 @@ public class ICalWorker {
                     Debug.logVerbose("[handlePropFindRequest] PROPFIND response:\r\n" + UtilXml.writeXmlDocument(responseDocument), module);
                 }
                 ResponseHelper.prepareResponse(response, 207, "Multi-Status");
-                Writer writer = getWriter(response, context);
+                Writer writer = response.getWriter();
                 try {
                     helper.writeResponse(response, writer);
                 } finally {
@@ -332,7 +319,7 @@ public class ICalWorker {
         }
         if (responseProps.statusMessage != null) {
             response.setContentLength(responseProps.statusMessage.length());
-            Writer writer = getWriter(response, context);
+            Writer writer = response.getWriter();
             try {
                 writer.write(responseProps.statusMessage);
             } finally {

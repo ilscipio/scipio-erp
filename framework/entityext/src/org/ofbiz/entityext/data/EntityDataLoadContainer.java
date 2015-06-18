@@ -24,11 +24,10 @@ import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-
-import javolution.util.FastList;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.container.Container;
@@ -50,6 +49,7 @@ import org.ofbiz.entity.datasource.GenericHelperInfo;
 import org.ofbiz.entity.jdbc.DatabaseUtil;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityDataLoader;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.ServiceDispatcher;
 
@@ -66,7 +66,7 @@ public class EntityDataLoadContainer implements Container {
     protected String configFile = null;
     protected String readers = null;
     protected String directory = null;
-    protected List<String> files = FastList.newInstance();
+    protected List<String> files = new LinkedList<String>();
     protected String component = null;
     protected boolean useDummyFks = false;
     protected boolean maintainTxs = false;
@@ -95,7 +95,7 @@ public class EntityDataLoadContainer implements Container {
         ServiceDispatcher.enableSvcs(false);
 
         /*
-           install arguments:
+           load-data arguments:
            readers (none, all, seed, demo, ext, etc - configured in entityengine.xml and associated via ofbiz-component.xml)
            timeout (transaction timeout default 7200)
            delegator (overrides the delegator name configured for the container)
@@ -104,8 +104,11 @@ public class EntityDataLoadContainer implements Container {
            file (import a specific XML file)
 
            Example:
-           $ java -jar ofbiz.jar -install -readers=seed,demo,ext -timeout=7200 -delegator=default -group=org.ofbiz
-           $ java -jar ofbiz.jar -install -file=/tmp/dataload.xml
+           $ java -jar ofbiz.jar -load-data -readers=seed,demo,ext -timeout=7200 -delegator=default -group=org.ofbiz
+           $ java -jar ofbiz.jar -load-data -file=/tmp/dataload.xml
+           Currently no dashes before load-data, see OFBIZ-5872
+               $ java -jar ofbiz.jar load-data -readers=seed,demo,ext -timeout=7200 -delegator=default -group=org.ofbiz
+               $ java -jar ofbiz.jar load-data -file=/tmp/dataload.xml
         */
         if (args != null) {
             for (String argument: args) {
@@ -175,8 +178,10 @@ public class EntityDataLoadContainer implements Container {
                         createConstraints = true;
                     }
                 } else if ("help".equalsIgnoreCase(argumentName)) {
+                    //"java -jar ofbiz.jar -load-data [options]\n" +
+                    // Currently no dashes before load-data, see OFBIZ-5872
                     String helpStr = "\n--------------------------------------\n" +
-                    "java -jar ofbiz.jar -install [options]\n" +
+                    "java -jar ofbiz.jar load-data [options]\n" +
                     "-component=[name] .... only load from a specific component\n" +
                     "-delegator=[name] .... use the defined delegator (default-no-eca)\n" +
                     "-group=[name] ........ override the entity group (org.ofbiz)\n" +
@@ -204,6 +209,7 @@ public class EntityDataLoadContainer implements Container {
     /**
      * @see org.ofbiz.base.container.Container#start()
      */
+    @Override
     public boolean start() throws ContainerException {
         if("all-tenants".equals(this.overrideDelegator)) {
             if (!EntityUtil.isMultiTenantEnabled()) {
@@ -222,12 +228,12 @@ public class EntityDataLoadContainer implements Container {
             if (delegator == null) {
                 throw new ContainerException("Invalid delegator name!");
             }
-            List<EntityExpr> expr = FastList.newInstance();
+            List<EntityExpr> expr = new LinkedList<EntityExpr>();
             expr.add(EntityCondition.makeCondition("disabled", EntityOperator.EQUALS, "N"));
             expr.add(EntityCondition.makeCondition("disabled", EntityOperator.EQUALS, null));
             List<GenericValue> tenantList;
             try {
-                tenantList = delegator.findList("Tenant", EntityCondition.makeCondition(expr, EntityOperator.OR), null, null, null, false);
+                tenantList = EntityQuery.use(delegator).from("Tenant").where(expr, EntityOperator.OR).queryList();
             } catch (GenericEntityException e) {
                 throw new ContainerException(e.getMessage());
             }
@@ -264,7 +270,7 @@ public class EntityDataLoadContainer implements Container {
         List<String> readerNames = null;
         if (this.readers != null && !"none".equalsIgnoreCase(this.readers)) {
             if (this.readers.indexOf(",") == -1) {
-                readerNames = FastList.newInstance();
+                readerNames = new LinkedList<String>();
                 readerNames.add(this.readers);
             } else {
                 readerNames = StringUtil.split(this.readers, ",");
@@ -274,13 +280,14 @@ public class EntityDataLoadContainer implements Container {
         String groupNameToUse = overrideGroup != null ? overrideGroup : entityGroupName;
         Delegator delegator = DelegatorFactory.getDelegator(delegatorNameToUse);
         Delegator baseDelegator = null;
+        if (delegator == null) {
+            throw new ContainerException("Invalid delegator name!");
+        }
+
         if (delegator.getDelegatorTenantId() != null) {
             baseDelegator = DelegatorFactory.getDelegator(delegator.getDelegatorBaseName());
         } else {
             baseDelegator = delegator;
-        }
-        if (delegator == null) {
-            throw new ContainerException("Invalid delegator name!");
         }
 
         GenericHelperInfo helperInfo = delegator.getGroupHelperInfo(groupNameToUse);
@@ -305,7 +312,7 @@ public class EntityDataLoadContainer implements Container {
             componentEntry.set("componentName", config.getComponentName());
             componentEntry.set("rootLocation", config.getRootLocation());
             try {
-                GenericValue componentCheck = baseDelegator.findOne("Component", UtilMisc.toMap("componentName", config.getComponentName()), false);
+                GenericValue componentCheck = EntityQuery.use(baseDelegator).from("Component").where("componentName", config.getComponentName()).queryOne();
                 if (UtilValidate.isEmpty(componentCheck)) {
                     componentEntry.create();
                 } else {
@@ -316,43 +323,33 @@ public class EntityDataLoadContainer implements Container {
             }
         }
         // load specify components
-        List<String> loadComponents = FastList.newInstance();
+        List<String> loadComponents = new LinkedList<String>();
         if (UtilValidate.isNotEmpty(delegator.getDelegatorTenantId()) && EntityUtil.isMultiTenantEnabled()) {
             try {
-                List<EntityExpr> exprs = new ArrayList<EntityExpr>();
-                exprs.add(EntityCondition.makeCondition("rootLocation", EntityOperator.NOT_LIKE, "%hot-deploy%"));
-                EntityCondition cond = EntityCondition.makeCondition(exprs);
-                List<GenericValue> components = baseDelegator.findList("Component", cond , null, UtilMisc.toList("lastUpdatedStamp"), null, false);
-                Debug.logInfo("===== Begin load specify components", module);
                 if (UtilValidate.isEmpty(this.component)) {
-                    for (GenericValue component : components) {
-                        loadComponents.add(component.getString("componentName"));
-                        //Debug.logInfo("- loaded default component : " + component.getString("componentName"), module);
+                    for (ComponentConfig config : allComponents) {
+                        loadComponents.add(config.getComponentName());
                     }
-                    Debug.logInfo("- Loaded components by default : " + components.size() + " components", module);
-                    List<GenericValue> tenantComponents = baseDelegator.findByAnd("TenantComponent", UtilMisc.toMap("tenantId", delegator.getDelegatorTenantId()), UtilMisc.toList("sequenceNum"), false);
+                    List<GenericValue> tenantComponents = EntityQuery.use(baseDelegator).from("TenantComponent").where("tenantId", delegator.getDelegatorTenantId()).orderBy("sequenceNum").queryList();
                     for (GenericValue tenantComponent : tenantComponents) {
                         loadComponents.add(tenantComponent.getString("componentName"));
-                        //Debug.logInfo("- loaded component by tenantId : " + tenantComponent.getString("tenantId") +", component : " + tenantComponent.getString("componentName"), module);
                     }
-                    Debug.logInfo("- Loaded components by tenantId : " + delegator.getDelegatorTenantId() + ", " + tenantComponents.size() + " components", module);
+                    Debug.logInfo("Loaded components by tenantId : " + delegator.getDelegatorTenantId() + ", " + tenantComponents.size() + " components", module);
                 } else {
-                    List<GenericValue> tenantComponents = baseDelegator.findByAnd("TenantComponent", UtilMisc.toMap("tenantId", delegator.getDelegatorTenantId(), "componentName", this.component),
-                            UtilMisc.toList("sequenceNum"), false);
+                    List<GenericValue> tenantComponents = EntityQuery.use(baseDelegator).from("TenantComponent").where("tenantId", delegator.getDelegatorTenantId(), "componentName", this.component).orderBy("sequenceNum").queryList();
                     for (GenericValue tenantComponent : tenantComponents) {
                         loadComponents.add(tenantComponent.getString("componentName"));
-                        //Debug.logInfo("- loaded component by tenantId : " + tenantComponent.getString("tenantId") +", component : " + tenantComponent.getString("componentName"), module);
                     }
-                    Debug.logInfo("- Loaded tenantId : " + delegator.getDelegatorTenantId() + " and component : " + this.component, module);
+                    Debug.logInfo("Loaded tenantId : " + delegator.getDelegatorTenantId() + " and component : " + this.component, module);
                 }
-                Debug.logInfo("===== Loaded : " + loadComponents.size() + " components", module);
+                Debug.logInfo("Loaded : " + loadComponents.size() + " components", module);
             } catch (GenericEntityException e) {
                 Debug.logError(e.getMessage(), module);
             }
         }
         // check for drop index/fks
         if (dropConstraints) {
-            List<String> messages = FastList.newInstance();
+            List<String> messages = new LinkedList<String>();
 
             Debug.logImportant("Dropping foreign key indcies...", module);
             for (String entityName : modelEntityNames) {
@@ -389,7 +386,7 @@ public class EntityDataLoadContainer implements Container {
 
         // drop pks
         if (dropPks) {
-            List<String> messages = FastList.newInstance();
+            List<String> messages = new LinkedList<String>();
             Debug.logImportant("Dropping primary keys...", module);
             for (String entityName : modelEntityNames) {
                 ModelEntity modelEntity = modelEntities.get(entityName);
@@ -409,11 +406,11 @@ public class EntityDataLoadContainer implements Container {
 
         // repair columns
         if (repairColumns) {
-            List<String> fieldsToRepair = FastList.newInstance();
-            List<String> messages = FastList.newInstance();
+            List<String> fieldsToRepair = new LinkedList<String>();
+            List<String> messages = new LinkedList<String>();
             dbUtil.checkDb(modelEntities, fieldsToRepair, messages, false, false, false, false);
             if (fieldsToRepair.size() > 0) {
-                messages = FastList.newInstance();
+                messages = new LinkedList<String>();
                 dbUtil.repairColumnSizeChanges(modelEntities, fieldsToRepair, messages);
                 if (messages.size() > 0) {
                     if (Debug.infoOn()) {
@@ -426,7 +423,7 @@ public class EntityDataLoadContainer implements Container {
         }
 
         // get the reader name URLs first
-        List<URL> urlList = FastList.newInstance();
+        List<URL> urlList = null;
         if (UtilValidate.isNotEmpty(loadComponents)) {
             if (UtilValidate.isNotEmpty(readerNames)) {
                 urlList = EntityDataLoader.getUrlByComponentList(helperInfo.getHelperBaseName(), loadComponents, readerNames);
@@ -442,7 +439,7 @@ public class EntityDataLoadContainer implements Container {
         }
         // need a list if it is empty
         if (urlList == null) {
-            urlList = FastList.newInstance();
+            urlList = new LinkedList<URL>();
         }
 
         // add in the defined extra files
@@ -477,8 +474,8 @@ public class EntityDataLoadContainer implements Container {
         changedFormat.setMinimumIntegerDigits(5);
         changedFormat.setGroupingUsed(false);
 
-        List<Object> errorMessages = FastList.newInstance();
-        List<String> infoMessages = FastList.newInstance();
+        List<Object> errorMessages = new LinkedList<Object>();
+        List<String> infoMessages = new LinkedList<String>();
         int totalRowsChanged = 0;
         if (UtilValidate.isNotEmpty(urlList)) {
             Debug.logImportant("=-=-=-=-=-=-= Doing a data load using delegator '" + delegator.getDelegatorName() + "' with the following files:", module);
@@ -519,7 +516,7 @@ public class EntityDataLoadContainer implements Container {
 
         // create primary keys
         if (createPks) {
-            List<String> messages = FastList.newInstance();
+            List<String> messages = new LinkedList<String>();
 
             Debug.logImportant("Creating primary keys...", module);
             for (String entityName : modelEntityNames) {
@@ -539,7 +536,7 @@ public class EntityDataLoadContainer implements Container {
 
         // create constraints
         if (createConstraints) {
-            List<String> messages = FastList.newInstance();
+            List<String> messages = new LinkedList<String>();
 
             Debug.logImportant("Creating foreign keys...", module);
             for (String entityName : modelEntityNames) {
@@ -577,9 +574,11 @@ public class EntityDataLoadContainer implements Container {
     /**
      * @see org.ofbiz.base.container.Container#stop()
      */
+    @Override
     public void stop() throws ContainerException {
     }
 
+    @Override
     public String getName() {
         return name;
     }

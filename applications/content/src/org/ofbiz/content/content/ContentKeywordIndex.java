@@ -36,6 +36,8 @@ import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 
 /**
  *  Does indexing in preparation for a keyword search.
@@ -77,22 +79,22 @@ public class ContentKeywordIndex {
         addWeightedKeywordSourceString(content, "description", strings);
 
         // ContentAttribute
-        List<GenericValue> contentAttributes = delegator.findByAnd("ContentAttribute", UtilMisc.toMap("contentId", contentId), null, false);
+        List<GenericValue> contentAttributes = EntityQuery.use(delegator).from("ContentAttribute").where("contentId", contentId).queryList();
         for (GenericValue contentAttribute: contentAttributes) {
             addWeightedKeywordSourceString(contentAttribute, "attrName", strings);
             addWeightedKeywordSourceString(contentAttribute, "attrValue", strings);
         }
 
         // ContentMetaData
-        List<GenericValue> contentMetaDatas = delegator.findByAnd("ContentMetaData", UtilMisc.toMap("contentId", contentId), null, false);
+        List<GenericValue> contentMetaDatas = EntityQuery.use(delegator).from("ContentMetaData").where("contentId", contentId).queryList();
         for (GenericValue contentMetaData: contentMetaDatas) {
             addWeightedKeywordSourceString(contentMetaData, "metaDataValue", strings);
         }
 
         // ContentRole
-        List<GenericValue> contentRoles = delegator.findByAnd("ContentRole", UtilMisc.toMap("contentId", contentId), null, false);
+        List<GenericValue> contentRoles = EntityQuery.use(delegator).from("ContentRole").where("contentId", contentId).queryList();
         for (GenericValue contentRole: contentRoles) {
-            GenericValue party = delegator.findOne("PartyNameView", UtilMisc.toMap("partyId", contentRole.getString("partyId")), false);
+            GenericValue party = EntityQuery.use(delegator).from("PartyNameView").where("partyId", contentRole.get("partyId")).queryOne();
             if (party != null) {
                 addWeightedKeywordSourceString(party, "description", strings);
                 addWeightedKeywordSourceString(party, "firstName", strings);
@@ -103,9 +105,9 @@ public class ContentKeywordIndex {
         }
 
         // DataResourceRole
-        List<GenericValue> dataResourceRoles = delegator.findByAnd("DataResourceRole", UtilMisc.toMap("dataResourceId", content.getString("dataResourceId")), null, false);
+        List<GenericValue> dataResourceRoles = EntityQuery.use(delegator).from("DataResourceRole").where("dataResourceId", content.get("dataResourceId")).queryList();
         for (GenericValue dataResourceRole: dataResourceRoles) {
-            GenericValue party = delegator.findOne("PartyNameView", UtilMisc.toMap("partyId", dataResourceRole.getString("partyId")), false);
+            GenericValue party = EntityQuery.use(delegator).from("PartyNameView").where("partyId", dataResourceRole.get("partyId")).queryOne();
             if (party != null) {
                 addWeightedKeywordSourceString(party, "description", strings);
                 addWeightedKeywordSourceString(party, "firstName", strings);
@@ -116,9 +118,9 @@ public class ContentKeywordIndex {
         }
 
         // Product
-        List<GenericValue> productContentList = delegator.findByAnd("ProductContent", UtilMisc.toMap("contentId", contentId), null, false);
+        List<GenericValue> productContentList = EntityQuery.use(delegator).from("ProductContent").where("contentId", contentId).queryList();
         for (GenericValue productContent: productContentList) {
-            GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productContent.getString("productId")), false);
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productContent.get("productId")).queryOne();
             if (product != null) {
                 addWeightedKeywordSourceString(product, "productName", strings);
                 addWeightedKeywordSourceString(product, "internalName", strings);
@@ -129,9 +131,9 @@ public class ContentKeywordIndex {
         }
 
         // ProductCategory
-        List<GenericValue> productCategoryContentList = delegator.findByAnd("ProductCategoryContent", UtilMisc.toMap("contentId", contentId), null, false);
+        List<GenericValue> productCategoryContentList = EntityQuery.use(delegator).from("ProductCategoryContent").where("contentId", contentId).queryList();
         for (GenericValue productCategoryContent: productCategoryContentList) {
-            GenericValue productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryContent.getString("productCategoryId")), false);
+            GenericValue productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryContent.getString("productCategoryId")).queryOne();
             if (productCategory != null) {
                 addWeightedKeywordSourceString(productCategory, "categoryName", strings);
                 addWeightedKeywordSourceString(productCategory, "description", strings);
@@ -140,9 +142,9 @@ public class ContentKeywordIndex {
         }
 
         // PartyContent
-        List<GenericValue> partyContents = delegator.findByAnd("PartyContent", UtilMisc.toMap("contentId", contentId), null, false);
+        List<GenericValue> partyContents = EntityQuery.use(delegator).from("PartyContent").where("contentId", contentId).queryList();
         for (GenericValue partyContent: partyContents) {
-            GenericValue party = delegator.findOne("PartyNameView", UtilMisc.toMap("partyId", partyContent.getString("partyId")), false);
+            GenericValue party = EntityQuery.use(delegator).from("PartyNameView").where("partyId", partyContent.get("partyId")).queryOne();
             if (party != null) {
                 addWeightedKeywordSourceString(party, "description", strings);
                 addWeightedKeywordSourceString(party, "firstName", strings);
@@ -153,9 +155,9 @@ public class ContentKeywordIndex {
         }
 
         // WebSiteContent
-        List<GenericValue> webSiteContents = delegator.findByAnd("WebSiteContent", UtilMisc.toMap("contentId", contentId), null, false);
+        List<GenericValue> webSiteContents = EntityQuery.use(delegator).from("WebSiteContent").where("contentId", contentId).queryList();
         for (GenericValue webSiteContent: webSiteContents) {
-            GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteContent.getString("webSiteId")), false);
+            GenericValue webSite = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteContent.get("webSiteId")).queryOne();
             if (webSite != null) {
                 addWeightedKeywordSourceString(webSite, "siteName", strings);
                 addWeightedKeywordSourceString(webSite, "httpHost", strings);
@@ -164,21 +166,21 @@ public class ContentKeywordIndex {
         }
 
         // WorkEffortContent
-        List<GenericValue> workEffortContents = delegator.findByAnd("WorkEffortContent", UtilMisc.toMap("contentId", contentId), null, false);
+        List<GenericValue> workEffortContents = EntityQuery.use(delegator).from("WorkEffortContent").where("contentId", contentId).queryList();
         for (GenericValue workEffortContent: workEffortContents) {
-            GenericValue workEffort = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workEffortContent.getString("workEffortId")), false);
+            GenericValue workEffort = EntityQuery.use(delegator).from("WorkEffort").where("workEffortId", workEffortContent.get("workEffortId")).queryOne();
             if (workEffort != null) {
                 addWeightedKeywordSourceString(workEffort, "workEffortName", strings);
             }
         }
 
         // DataResource
-        GenericValue dataResource = delegator.findOne("DataResource", UtilMisc.toMap("dataResourceId", content.getString("dataResourceId")), false);
+        GenericValue dataResource = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", content.get("dataResourceId")).queryOne();
         if (dataResource != null) {
             addWeightedKeywordSourceString(dataResource, "dataResourceName", strings);
             addWeightedKeywordSourceString(dataResource, "objectInfo", strings);
         }
-        /*List<GenericValue> contentDataResourceViews = delegator.findByAnd("ContentDataResourceView", UtilMisc.toMap("contentId", contentId), null, false);
+        /*List<GenericValue> contentDataResourceViews = EntityQuery.use(delegator).from("ContentDataResourceView").where("contentId", contentId).queryList();
         for (GenericValue contentDataResourceView: contentDataResourceViews) {
             int weight = 1;
             addWeightedDataResourceString(contentDataResourceView, weight, strings, delegator, content);
@@ -198,7 +200,7 @@ public class ContentKeywordIndex {
         }
 
         List<GenericValue> toBeStored = FastList.newInstance();
-        int keywordMaxLength = Integer.parseInt(UtilProperties.getPropertyValue("contentsearch", "content.keyword.max.length"));
+        int keywordMaxLength = Integer.parseInt(EntityUtilProperties.getPropertyValue("contentsearch", "content.keyword.max.length", delegator));
         for (Map.Entry<String, Long> entry: keywords.entrySet()) {
             if (entry.getKey().length() <= keywordMaxLength) {
                 GenericValue contentKeyword = delegator.makeValue("ContentKeyword", UtilMisc.toMap("contentId", content.getString("contentId"), "keyword", entry.getKey(), "relevancyWeight", entry.getValue()));
@@ -208,7 +210,7 @@ public class ContentKeywordIndex {
         if (toBeStored.size() > 0) {
             if (Debug.verboseOn()) Debug.logVerbose("[ContentKeywordIndex.indexKeywords] Storing " + toBeStored.size() + " keywords for contentId " + content.getString("contentId"), module);
 
-            if ("true".equals(UtilProperties.getPropertyValue("contentsearch", "index.delete.on_index", "false"))) {
+            if ("true".equals(EntityUtilProperties.getPropertyValue("contentsearch", "index.delete.on_index", "false", delegator))) {
                 // delete all keywords if the properties file says to
                 delegator.removeByAnd("ContentKeyword", UtilMisc.toMap("contentId", content.getString("contentId")));
             }

@@ -110,6 +110,8 @@ public class SequenceUtil {
 
         private final String seqName;
         private final long bankSize;
+        private final String updateForLockStatement;
+        private final String selectSequenceStatement;
 
         private long curSeqId;
         private long maxSeqId;
@@ -119,6 +121,8 @@ public class SequenceUtil {
             curSeqId = 0;
             maxSeqId = 0;
             this.bankSize = bankSize;
+            updateForLockStatement = "UPDATE " + SequenceUtil.this.tableName + " SET " + SequenceUtil.this.idColName + "=" + SequenceUtil.this.idColName + " WHERE " + SequenceUtil.this.nameColName + "='" + this.seqName + "'";
+            selectSequenceStatement = "SELECT " + SequenceUtil.this.idColName + " FROM " + SequenceUtil.this.tableName + " WHERE " + SequenceUtil.this.nameColName + "='" + this.seqName + "'";
         }
 
         private Long getNextSeqId(long staggerMax) {
@@ -151,9 +155,19 @@ public class SequenceUtil {
             this.fillBank(staggerMax);
         }
 
+        /*
+           The algorithm to get the new sequence id in a thread safe way is the following:
+           1 - run an update with no changes to get a lock on the record
+               1bis - if no record is found, try to create and update it to get the lock
+           2 - select the record (now locked) to get the curSeqId
+           3 - increment the sequence
+           The three steps are executed in one dedicated database transaction.
+         */
         private void fillBank(long stagger) {
             // no need to get a new bank, SeqIds available
-            if ((curSeqId + stagger) <= maxSeqId) return;
+            if ((curSeqId + stagger) <= maxSeqId) {
+                return;
+            }
 
             long bankSize = this.bankSize;
             if (stagger > 1) {
@@ -161,7 +175,9 @@ public class SequenceUtil {
                 bankSize = stagger * defaultBankSize;
             }
 
-            if (bankSize > maxBankSize) bankSize = maxBankSize;
+            if (bankSize > maxBankSize) {
+                bankSize = maxBankSize;
+            }
 
             Transaction suspendedTransaction = null;
             try {
@@ -188,37 +204,35 @@ public class SequenceUtil {
                         throw new GenericEntityException("Unable to esablish a connection with the database, connection was null...");
                     }
 
-                    String sql = null;
                     try {
                         stmt = connection.createStatement();
-
-                        // run an update with no changes to get a lock on the record
-                        sql = "UPDATE " + SequenceUtil.this.tableName + " SET " + SequenceUtil.this.idColName + "=" + SequenceUtil.this.idColName + " WHERE " + SequenceUtil.this.nameColName + "='" + this.seqName + "'";
-                        if (stmt.executeUpdate(sql) <= 0) {
-                            Debug.logWarning("First select failed: will try to add new row, result set was empty for sequence [" + seqName + "] \nUsed SQL: " + sql + " \n ", module);
+                        String sql = null;
+                        // 1 - run an update with no changes to get a lock on the record
+                        if (stmt.executeUpdate(updateForLockStatement) <= 0) {
+                            Debug.logWarning("Lock failed; no sequence row was found, will try to add a new one for sequence: " + seqName, module);
                             sql = "INSERT INTO " + SequenceUtil.this.tableName + " (" + SequenceUtil.this.nameColName + ", " + SequenceUtil.this.idColName + ") VALUES ('" + this.seqName + "', " + startSeqId + ")";
-                            if (stmt.executeUpdate(sql) <= 0) {
+                            try {
+                                stmt.executeUpdate(sql);
+                            } catch (SQLException sqle) {
                                 // insert failed: this means that another thread inserted the record; then retry to run an update with no changes to get a lock on the record
-                                sql = "UPDATE " + SequenceUtil.this.tableName + " SET " + SequenceUtil.this.idColName + "=" + SequenceUtil.this.idColName + " WHERE " + SequenceUtil.this.nameColName + "='" + this.seqName + "'";
-                                if (stmt.executeUpdate(sql) <= 0) {
+                                if (stmt.executeUpdate(updateForLockStatement) <= 0) {
                                     // This should never happen
-                                    throw new GenericEntityException("No rows changed when trying insert new sequence row with this SQL: " + sql);
+                                    throw new GenericEntityException("No rows changed when trying insert new sequence: " + seqName);
                                 }
+
                             }
                         }
-                        // select the record (now locked) to get the curSeqId
-                        sql = "SELECT " + SequenceUtil.this.idColName + " FROM " + SequenceUtil.this.tableName + " WHERE " + SequenceUtil.this.nameColName + "='" + this.seqName + "'";
-                        rs = stmt.executeQuery(sql);
-                        boolean gotVal = false;
-                        if (rs.next()) {
+                        // 2 - select the record (now locked) to get the curSeqId
+                        rs = stmt.executeQuery(selectSequenceStatement);
+                        boolean sequenceFound = rs.next();
+                        if (sequenceFound) {
                             curSeqId = rs.getLong(SequenceUtil.this.idColName);
-                            gotVal = true;
                         }
                         rs.close();
-                        if (!gotVal) {
-                            throw new GenericEntityException("Failed to find the sequence record: " + sql);
+                        if (!sequenceFound) {
+                            throw new GenericEntityException("Failed to find the sequence record for sequence: " + seqName);
                         }
-                        // increment the sequence
+                        // 3 - increment the sequence
                         sql = "UPDATE " + SequenceUtil.this.tableName + " SET " + SequenceUtil.this.idColName + "=" + SequenceUtil.this.idColName + "+" + bankSize + " WHERE " + SequenceUtil.this.nameColName + "='" + this.seqName + "'";
                         if (stmt.executeUpdate(sql) <= 0) {
                             throw new GenericEntityException("Update failed, no rows changes for seqName: " + seqName);
@@ -227,7 +241,7 @@ public class SequenceUtil {
                         TransactionUtil.commit(beganTransaction);
 
                     } catch (SQLException sqle) {
-                        Debug.logWarning(sqle, "SQL Exception while executing the following:\n" + sql + "\nError was:" + sqle.getMessage(), module);
+                        Debug.logWarning(sqle, "SQL Exception:" + sqle.getMessage(), module);
                         throw sqle;
                     } finally {
                         try {

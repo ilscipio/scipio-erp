@@ -43,6 +43,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
@@ -89,7 +90,7 @@ public class CategoryWorker {
         Collection<GenericValue> results = FastList.newInstance();
 
         try {
-            Collection<GenericValue> allCategories = delegator.findList("ProductCategory", null, null, null, null, false);
+            Collection<GenericValue> allCategories = EntityQuery.use(delegator).from("ProductCategory").queryList();
 
             for (GenericValue curCat: allCategories) {
                 Collection<GenericValue> parentCats = curCat.getRelated("CurrentProductCategoryRollup", null, null, true);
@@ -136,7 +137,7 @@ public class CategoryWorker {
     public static List<GenericValue> getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView, boolean excludeEmpty, boolean recursive) {
       Delegator delegator = (Delegator) request.getAttribute("delegator");
 
-      return getRelatedCategoriesRet(delegator, attributeName, parentId, limitView, excludeEmpty, false);
+      return getRelatedCategoriesRet(delegator, attributeName, parentId, limitView, excludeEmpty, recursive);
     }
 
     public static List<GenericValue> getRelatedCategoriesRet(Delegator delegator, String attributeName, String parentId, boolean limitView, boolean excludeEmpty, boolean recursive) {
@@ -147,9 +148,7 @@ public class CategoryWorker {
         List<GenericValue> rollups = null;
 
         try {
-            rollups = delegator.findByAnd("ProductCategoryRollup",
-                        UtilMisc.toMap("parentProductCategoryId", parentId),
-                        UtilMisc.toList("sequenceNum"), true);
+            rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", parentId).orderBy("sequenceNum").cache(true).queryList();
             if (limitView) {
                 rollups = EntityUtil.filterByDate(rollups, true);
             }
@@ -212,7 +211,7 @@ public class CategoryWorker {
         Delegator delegator = category.getDelegator();
         long count = 0;
         try {
-            count = delegator.findCountByCondition("ProductCategoryMember", buildCountCondition("productCategoryId", category.getString("productCategoryId")), null, null);
+            count = EntityQuery.use(delegator).from("ProductCategoryMember").where("productCategoryId", category.getString("productCategoryId")).queryCount();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -224,7 +223,7 @@ public class CategoryWorker {
         Delegator delegator = category.getDelegator();
         long count = 0;
         try {
-            count = delegator.findCountByCondition("ProductCategoryRollup", buildCountCondition("parentProductCategoryId", category.getString("productCategoryId")), null, null);
+            count = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", category.getString("productCategoryId")).queryCount();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -362,11 +361,14 @@ public class CategoryWorker {
         if (productCategoryId == null) return false;
         if (UtilValidate.isEmpty(productId)) return false;
 
-        List<GenericValue> productCategoryMembers = EntityUtil.filterByDate(delegator.findByAnd("ProductCategoryMember",
-                UtilMisc.toMap("productCategoryId", productCategoryId, "productId", productId), null, true), true);
+        List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
+                .where("productCategoryId", productCategoryId, "productId", productId)
+                .cache(true)
+                .filterByDate()
+                .queryList();
         if (UtilValidate.isEmpty(productCategoryMembers)) {
             //before giving up see if this is a variant product, and if so look up the virtual product and check it...
-            GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), true);
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
             List<GenericValue> productAssocs = ProductWorker.getVariantVirtualAssocs(product);
             //this does take into account that a product could be a variant of multiple products, but this shouldn't ever really happen...
             if (productAssocs != null) {
@@ -450,8 +452,7 @@ public class CategoryWorker {
                 List<EntityCondition> rolllupConds = FastList.newInstance();
                 rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
                 rolllupConds.add(EntityUtil.getFilterByDateExpr());
-                List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", 
-                        EntityCondition.makeCondition(rolllupConds), null, UtilMisc.toList("sequenceNum"), null, true);
+                List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).orderBy("sequenceNum").cache(true).queryList();
                 if (UtilValidate.isNotEmpty(productCategoryRollups)) {
                     // add only categories that belong to the top category to trail
                     for (GenericValue productCategoryRollup : productCategoryRollups) {

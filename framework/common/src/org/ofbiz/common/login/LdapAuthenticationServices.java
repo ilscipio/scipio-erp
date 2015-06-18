@@ -37,6 +37,8 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 
 /** LDAP Authentication Services.
@@ -61,7 +63,7 @@ public class LdapAuthenticationServices {
         boolean isServiceAuth = context.get("isServiceAuth") != null && ((Boolean) context.get("isServiceAuth")).booleanValue();
         GenericValue userLogin = null;
         try {
-            userLogin = delegator.findOne("UserLogin", isServiceAuth, "userLoginId", username);
+            userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username).cache(isServiceAuth).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "", module);
         }
@@ -93,7 +95,7 @@ public class LdapAuthenticationServices {
         }
         // Synchronize user's OFBiz password with user's LDAP password
         if (userLogin != null) {
-            boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
+            boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security.properties", "password.encrypt", delegator));
             String currentPassword = userLogin.getString("currentPassword");
             boolean samePassword;
             if (useEncryption) {

@@ -21,6 +21,7 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.base.util.*
+import org.ofbiz.entity.util.EntityUtilProperties;
 
 module = "showvisits.groovy";
 
@@ -42,7 +43,7 @@ try {
     beganTransaction = TransactionUtil.begin();
 
     viewIndex = Integer.valueOf(parameters.VIEW_INDEX  ?: 1);
-    viewSize = Integer.valueOf(parameters.VIEW_SIZE ?: UtilProperties.getPropertyValue("widget", "widget.form.defaultViewSize", "20"));
+    viewSize = Integer.valueOf(parameters.VIEW_SIZE ?: EntityUtilProperties.getPropertyValue("widget", "widget.form.defaultViewSize", "20", delegator));
     context.viewIndex = viewIndex;
     context.viewSize = viewSize;
 
@@ -51,12 +52,12 @@ try {
     highIndex = viewIndex * viewSize;
 
     if (partyId) {
-        visitListIt = delegator.find("Visit", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), null, null, sortList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, -1, highIndex, true));
+        visitListIt = from("Visit").where("partyId", partyId).orderBy(sortList).cursorScrollInsensitive().maxRows(highIndex).distinct().queryIterator();
     } else if (showAll.equalsIgnoreCase("true")) {
-        visitListIt = delegator.find("Visit", null, null, null, sortList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, -1, highIndex, true));
+        visitListIt = from("Visit").orderBy(sortList).cursorScrollInsensitive().maxRows(highIndex).distinct().queryIterator();
     } else {
         // show active visits
-        visitListIt = delegator.find("Visit", EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), null, null, sortList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, -1, highIndex, true));
+        visitListIt = from("Visit").where("thruDate", null).orderBy(sortList).cursorScrollInsensitive().maxRows(highIndex).distinct().queryIterator();
     }
 
     // get the partial list for this page

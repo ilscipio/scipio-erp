@@ -32,6 +32,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -298,17 +300,13 @@ public class SecurePayPaymentServices {
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRefund", locale));
         }
 
-        List<GenericValue> paymentGatewayResponse = null;
         String referenceNum = null;
         try {
-            paymentGatewayResponse = delegator.findByAnd("PaymentGatewayResponse", UtilMisc.toMap(
-                    "orderPaymentPreferenceId", authTransaction.getString("orderPaymentPreferenceId"),
-                    "paymentServiceTypeEnumId", "PRDS_PAY_CAPTURE"));
-            if (paymentGatewayResponse.size() > 0) {
-                referenceNum = (String) paymentGatewayResponse.get(0).get("referenceNum");
-            } else {
-                referenceNum = authTransaction.getString("referenceNum");
-            }
+            GenericValue paymentGatewayResponse = EntityQuery.use(delegator).from("PaymentGatewayResponse")
+                    .where("orderPaymentPreferenceId", authTransaction.get("orderPaymentPreferenceId"),
+                            "paymentServiceTypeEnumId", "PRDS_PAY_CAPTURE")
+                    .queryFirst();
+            referenceNum = paymentGatewayResponse != null ? paymentGatewayResponse.get("referenceNum") : authTransaction.getString("referenceNum");
         } catch (GenericEntityException e) {
             e.printStackTrace();
         }
@@ -483,7 +481,7 @@ public class SecurePayPaymentServices {
         String returnValue = "";
         if (UtilValidate.isNotEmpty(paymentGatewayConfigId)) {
             try {
-                GenericValue securePay = delegator.findOne("PaymentGatewaySecurePay", UtilMisc.toMap("paymentGatewayConfigId", paymentGatewayConfigId), false);
+                GenericValue securePay = EntityQuery.use(delegator).from("PaymentGatewaySecurePay").where("paymentGatewayConfigId", paymentGatewayConfigId).queryOne();
                 if (UtilValidate.isNotEmpty(securePay)) {
                     Object securePayField = securePay.get(paymentGatewayConfigParameterName);
                     if (securePayField != null) {
@@ -494,7 +492,7 @@ public class SecurePayPaymentServices {
                 Debug.logError(e, module);
             }
         } else {
-            String value = UtilProperties.getPropertyValue(resource, parameterName);
+            String value = EntityUtilProperties.getPropertyValue(resource, parameterName, delegator);
             if (value != null) {
                 returnValue = value.trim();
             }

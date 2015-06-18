@@ -27,6 +27,7 @@
         <value xml:lang="ru">Ключ дубликат. Ключ уже существует.</value>
         <value xml:lang="vi">Khóa đã tồn tại và bị trùng.</value>
         <value xml:lang="zh">键重复了。该键已存在。</value>
+        <value xml:lang="zh_TW">鍵值重複.該鍵值已存在.</value>
     </property>
     <property key="ImageTransform.error_occurs_during_reading">
         <value xml:lang="da">Der opstår en fejl under læsning</value>
@@ -56,7 +57,7 @@
         <value xml:lang="ru">Предыдущая ошибка документа была полностью проанализированна</value>
         <value xml:lang="vi">Có sự cố xảy ra nên hệ thống không thể phân tích được tài liệu</value>
         <value xml:lang="zh">发生错误阻止了文档完全解析</value>
-        <value xml:lang="zh_TW">發生錯誤阻止了文檔完全解析</value>
+        <value xml:lang="zh_TW">發生錯誤使檔無法被完整解析</value>
     </property>
     <property key="ImageTransform.errors_occurred_during_parsing">
         <value xml:lang="da">Der opstod fejl under oversættelse</value>
@@ -131,7 +132,7 @@
         <value xml:lang="ru">Одно измерение по умолчанию - ноль</value>
         <value xml:lang="vi">Chiều mặc định bị Rỗng</value>
         <value xml:lang="zh">一个缺省的纬度是null</value>
-        <value xml:lang="zh_TW">一個缺省的緯度是null</value>
+        <value xml:lang="zh_TW">一個預設的維度是null</value>
     </property>
     <property key="ImageTransform.root_element_has_not_been_set">
         <value xml:lang="da">Rod element er ikke sat</value>
@@ -145,8 +146,8 @@
         <value xml:lang="pt_BR">Elemento raiz não foi definido</value>
         <value xml:lang="ru">Корневой элемент не имеет значения</value>
         <value xml:lang="vi">Gốc tài liệu chưa được thiết lập</value>
-        <value xml:lang="zh">已经设置了根元素</value>
-        <value xml:lang="zh_TW">已經設置了根元素</value>
+        <value xml:lang="zh">未设置根元素</value>
+        <value xml:lang="zh_TW">未設定根元素</value>
     </property>
     <property key="ImageTransform.unknown_buffered_image_type">
         <value xml:lang="da">Ukendt buffered billedtype</value>

@@ -39,6 +39,8 @@ import org.ofbiz.common.login.LoginServices;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.ldap.LdapLoginWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -96,14 +98,14 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
         String visitId = VisitHandler.getVisitId(session);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = dispatcher.getDelegator();
-        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
+        boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security.properties", "password.encrypt", delegator));
         GenericValue userLoginToCreate = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username));
         userLoginToCreate.set("passwordHint", "");
         userLoginToCreate.set("enabled", "Y");
         userLoginToCreate.set("partyId", getPartyId(rootElement, result));
         userLoginToCreate.set("currentPassword", useEncryption ? HashCrypt.cryptUTF8(LoginServices.getHashType(), null, password) : password);
 
-        GenericValue userTryToLogin = delegator.findOne("UserLogin", false, "userLoginId", username);
+        GenericValue userTryToLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username).queryOne();
         if (userTryToLogin == null) {
             // create the userLogin
             try {

@@ -94,7 +94,7 @@ under the License.
     </div>
     <div class="screenlet-body">
 <!-- if we're called with loadOrderItems or createReturn, then orderId would exist -->
-<#if !requestParameters.orderId??>
+<#if !requestParameters.orderId?? && returnHeader?has_content>
           <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">
           <input type="hidden" name="_useRowSubmit" value="Y" />
         <table cellspacing="0" class="basic-table">
@@ -151,8 +151,6 @@ under the License.
               <#if (item.get("returnQuantity")?? && item.get("returnPrice")??)>
                  <#assign returnTotal = returnTotal + item.get("returnQuantity") * item.get("returnPrice") >
                  <#assign returnItemSubTotal = item.get("returnQuantity") * item.get("returnPrice") >
-              <#else>
-                 <#assign returnItemSubTotal = null >  <#-- otherwise the last item's might carry over -->
               </#if>
               <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                 <td><a href="<@ofbizUrl>orderview?orderId=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}
@@ -179,7 +177,7 @@ under the License.
                     <#if readOnly>
                         ${item.returnQuantity?string.number}
                     <#else>
-                        <input name="returnQuantity_o_${rowCount}" value="${item.returnQuantity}" type="text" size="8" align="right" />
+                        <input name="returnQuantity_o_${rowCount}" value="${item.returnQuantity?if_exists}" type="text" size="8" align="right" />
                     </#if>
                     <#if item.receivedQuantity??>
                     <br />${uiLabelMap.OrderTotalQuantityReceive}: ${item.receivedQuantity}
@@ -192,7 +190,7 @@ under the License.
                     <#if readOnly>
                         <@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/>
                     <#else>
-                        <input name="returnPrice_o_${rowCount}" value="${item.returnPrice}" type="text" size="8" align="right" />
+                        <input name="returnPrice_o_${rowCount}" value="${item.returnPrice?if_exists}" type="text" size="8" align="right" />
                     </#if>
                     </div></td>
                 <td>
@@ -386,13 +384,15 @@ under the License.
         </form>
         </#if>
 <!-- if no requestParameters.orderId??, then show list of items -->
-<#else>
+<#elseif returnHeader?has_content>
         <#assign selectAllFormName = "returnItems"/>
         <form name="returnItems" method="post" action="<@ofbizUrl>createReturnItems</@ofbizUrl>">
           <input type="hidden" name="returnId" value="${returnId}" />
           <input type="hidden" name="_useRowSubmit" value="Y" />
           <#include "returnItemInc.ftl"/>
         </form>
+<#else>
+  ${uiLabelMap.CommonErrorMessage2} : ${uiLabelMap.CommonPleaseSelect}. ${uiLabelMap.CommonUseBackButton}
 </#if>
     </div>
 </div>

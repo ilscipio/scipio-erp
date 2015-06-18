@@ -38,6 +38,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.service.ServiceUtil;
@@ -352,7 +353,7 @@ public class WeightPackageSession implements Serializable {
     protected BigDecimal upsShipmentConfirm() throws GeneralException {
         Delegator delegator = this.getDelegator();
         BigDecimal actualCost = ZERO;
-        List<GenericValue> shipmentRouteSegments = delegator.findByAnd("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId), null, false);
+        List<GenericValue> shipmentRouteSegments = EntityQuery.use(delegator).from("ShipmentRouteSegment").where("shipmentId", shipmentId).queryList();
         if (UtilValidate.isNotEmpty(shipmentRouteSegments)) {
             for (GenericValue shipmentRouteSegment : shipmentRouteSegments) {
                 Map<String, Object> shipmentRouteSegmentMap = FastMap.newInstance();
@@ -363,7 +364,7 @@ public class WeightPackageSession implements Serializable {
                 if (ServiceUtil.isError(shipmentRouteSegmentResult)) {
                     throw new GeneralException(ServiceUtil.getErrorMessage(shipmentRouteSegmentResult));
                 }
-                GenericValue shipRouteSeg = delegator.findOne("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegment.getString("shipmentRouteSegmentId")), false);
+                GenericValue shipRouteSeg = EntityQuery.use(delegator).from("ShipmentRouteSegment").where("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegment.getString("shipmentRouteSegmentId")).queryOne();
                 actualCost = actualCost.add(shipRouteSeg.getBigDecimal("actualCost"));
             }
         }

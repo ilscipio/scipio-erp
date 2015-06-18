@@ -52,7 +52,9 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppinglist.ShoppingListEvents;
@@ -182,7 +184,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         GenericValue product = null;
 
         try {
-            product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), true);
+            product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.toString(), module);
         }
@@ -190,8 +192,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (product == null) {
             Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productId", productId);
 
-            String excMsg = UtilProperties.getMessage(resource_error, "item.product_not_found",
-                                          messageMap , cart.getLocale());
+            String excMsg = UtilProperties.getMessage(resource_error, "item.product_not_found", messageMap , cart.getLocale());
 
             Debug.logWarning(excMsg, module);
             throw new ItemNotFoundException(excMsg);
@@ -200,11 +201,9 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
-            Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productName", product.getString("productName"),
-                                            "productId", product.getString("productId"));
+            Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productName", product.getString("productName"), "productId", product.getString("productId"));
 
-            String excMsg = UtilProperties.getMessage(resource_error, "item.cannot_add_product_virtual",
-                                          messageMap , cart.getLocale());
+            String excMsg = UtilProperties.getMessage(resource_error, "item.cannot_add_product_virtual", messageMap , cart.getLocale());
 
             Debug.logWarning(excMsg, module);
             throw new CartItemModifyException(excMsg);
@@ -215,11 +214,9 @@ public class ShoppingCartItem implements java.io.Serializable {
         // check to see if the product is fully configured
         if ("AGGREGATED".equals(product.getString("productTypeId")) || "AGGREGATED_SERVICE".equals(product.getString("productTypeId"))) {
             if (configWrapper == null || !configWrapper.isCompleted()) {
-                Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productName", product.getString("productName"),
-                                                "productId", product.getString("productId"));
+                Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productName", product.getString("productName"), "productId", product.getString("productId"));
 
-                String excMsg = UtilProperties.getMessage(resource_error, "item.cannot_add_product_not_configured_correctly",
-                                              messageMap , cart.getLocale());
+                String excMsg = UtilProperties.getMessage(resource_error, "item.cannot_add_product_not_configured_correctly", messageMap , cart.getLocale());
 
                 Debug.logWarning(excMsg, module);
                 throw new CartItemModifyException(excMsg);
@@ -326,7 +323,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         {
             try
             {
-                parentProduct = delegator.findOne("Product", UtilMisc.toMap("productId", parentProductId), true);
+                parentProduct = EntityQuery.use(delegator).from("Product").where("productId", parentProductId).cache().queryOne();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.toString(), module);
             }
@@ -402,11 +399,9 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
-            Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productName", product.getString("productName"),
-                                            "productId", product.getString("productId"));
+            Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productName", product.getString("productName"), "productId", product.getString("productId"));
 
-            String excMsg = UtilProperties.getMessage(resource_error, "item.cannot_add_product_virtual",
-                                          messageMap , cart.getLocale());
+            String excMsg = UtilProperties.getMessage(resource_error, "item.cannot_add_product_virtual", messageMap , cart.getLocale());
 
             Debug.logWarning(excMsg, module);
             throw new CartItemModifyException(excMsg);
@@ -421,21 +416,18 @@ public class ShoppingCartItem implements java.io.Serializable {
         // check to see if the product is a rental item
         if ("ASSET_USAGE".equals(product.getString("productTypeId")) || "ASSET_USAGE_OUT_IN".equals(product.getString("productTypeId"))) {
             if (reservStart == null)    {
-                String excMsg = UtilProperties.getMessage(resource_error, "item.missing_reservation_starting_date",
-                                              cart.getLocale());
+                String excMsg = UtilProperties.getMessage(resource_error, "item.missing_reservation_starting_date", cart.getLocale());
                 throw new CartItemModifyException(excMsg);
             }
 
             if (reservStart.before(UtilDateTime.nowTimestamp()))    {
-                String excMsg = UtilProperties.getMessage(resource_error, "item.reservation_from_tomorrow",
-                                              cart.getLocale());
+                String excMsg = UtilProperties.getMessage(resource_error, "item.reservation_from_tomorrow", cart.getLocale());
                 throw new CartItemModifyException(excMsg);
             }
             newItem.setReservStart(reservStart);
 
             if (reservLength.compareTo(BigDecimal.ONE) < 0)    {
-                String excMsg = UtilProperties.getMessage(resource_error, "item.number_of_days",
-                                              cart.getLocale());
+                String excMsg = UtilProperties.getMessage(resource_error, "item.number_of_days", cart.getLocale());
                 throw new CartItemModifyException(excMsg);
             }
             newItem.setReservLength(reservLength);
@@ -443,10 +435,8 @@ public class ShoppingCartItem implements java.io.Serializable {
             if (product.get("reservMaxPersons") != null) {
                 BigDecimal reservMaxPersons = product.getBigDecimal("reservMaxPersons");
                  if (reservMaxPersons.compareTo(reservPersons) < 0)    {
-                     Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("reservMaxPersons", product.getString("reservMaxPersons"),
-                                                     "reservPersons", reservPersons);
-                     String excMsg = UtilProperties.getMessage(resource_error, "item.maximum_number_of_person_renting",
-                                                   messageMap, cart.getLocale());
+                     Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("reservMaxPersons", product.getString("reservMaxPersons"), "reservPersons", reservPersons);
+                     String excMsg = UtilProperties.getMessage(resource_error, "item.maximum_number_of_person_renting", messageMap, cart.getLocale());
 
                      Debug.logInfo(excMsg,module);
                      throw new CartItemModifyException(excMsg);
@@ -467,10 +457,8 @@ public class ShoppingCartItem implements java.io.Serializable {
             // check to see if the related fixed asset is available for rent
             String isAvailable = checkAvailability(product.getString("productId"), quantity, reservStart, reservLength, cart);
             if (isAvailable.compareTo("OK") != 0) {
-                Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productId", product.getString("productId"),
-                                                "availableMessage", isAvailable);
-                String excMsg = UtilProperties.getMessage(resource_error, "item.product_not_available",
-                                              messageMap, cart.getLocale());
+                Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productId", product.getString("productId"), "availableMessage", isAvailable);
+                String excMsg = UtilProperties.getMessage(resource_error, "item.product_not_available", messageMap, cart.getLocale());
                 Debug.logInfo(excMsg, module);
                 throw new CartItemModifyException(isAvailable);
             }
@@ -515,7 +503,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         GenericValue product;
 
         try {
-            product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), true);
+            product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
 
             // first see if there is a purchase allow category and if this product is in it or not
             String purchaseProductCategoryId = CatalogWorker.getCatalogPurchaseAllowCategoryId(delegator, prodCatalogId);
@@ -900,8 +888,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         List<GenericValue> selFixedAssetProduct = null;
         GenericValue fixedAssetProduct = null;
         try {
-            List<GenericValue> allFixedAssetProduct = delegator.findByAnd("FixedAssetProduct", UtilMisc.toMap("productId", productId, "fixedAssetProductTypeId", "FAPT_USE"), null, false);
-            selFixedAssetProduct = EntityUtil.filterByDate(allFixedAssetProduct, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", true);
+            selFixedAssetProduct = EntityQuery.use(delegator).from("FixedAssetProduct").where("productId", productId, "fixedAssetProductTypeId", "FAPT_USE").filterByDate(UtilDateTime.nowTimestamp(), "fromDate", "thruDate").queryList();
         } catch (GenericEntityException e) {
             Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productId", productId);
             String msg = UtilProperties.getMessage(resource_error, "item.cannot_find_Fixed_Asset", messageMap , cart.getLocale());
@@ -961,8 +948,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             // find an existing Day exception record
             Timestamp exceptionDateStartTime = new Timestamp((reservStart.getTime() + (dayCount++ * 86400000)));
             try {
-                techDataCalendarExcDay = delegator.findOne("TechDataCalendarExcDay",
-                        UtilMisc.toMap("calendarId", fixedAsset.get("calendarId"), "exceptionDateStartTime", exceptionDateStartTime), false);
+                techDataCalendarExcDay = EntityQuery.use(delegator).from("TechDataCalendarExcDay").where("calendarId", fixedAsset.get("calendarId"), "exceptionDateStartTime", exceptionDateStartTime).queryOne();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
             }
@@ -1074,6 +1060,11 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         // set the item ship group
         if (resetShipGroup) {
+            int itemId = cart.getItemIndex(this);
+            int shipGroupIndex = 0;
+            if (itemId != -1) {
+                shipGroupIndex = cart.getItemShipGroupIndex(itemId);
+            }
             cart.clearItemShipInfo(this);
 
             /*
@@ -1133,7 +1124,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             }
             cart.setItemShipGroupQty(this, quantity, shipGroupIndex);
             */
-            cart.setItemShipGroupQty(this, quantity, 0);
+            cart.setItemShipGroupQty(this, quantity, shipGroupIndex);
         }
     }
 
@@ -1198,7 +1189,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                             }
                         }
                     }
-                    if ("true".equals(UtilProperties.getPropertyValue("catalog.properties", "convertProductPriceCurrency"))){
+                    if ("true".equals(EntityUtilProperties.getPropertyValue("catalog.properties", "convertProductPriceCurrency", delegator))){
                         priceContext.put("currencyUomIdTo", cart.getCurrency());
                     } else {
                         priceContext.put("currencyUomId", cart.getCurrency());
@@ -2020,6 +2011,10 @@ public class ShoppingCartItem implements java.io.Serializable {
         return listPrice;
     }
 
+    public void setListPrice(BigDecimal listPrice) {
+        this.listPrice = listPrice;
+    }
+
     /** Returns isModifiedPrice */
     public boolean getIsModifiedPrice() {
         return isModifiedPrice;
@@ -2516,7 +2511,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         return delegator;
     }
 
-    public void explodeItem(ShoppingCart cart, LocalDispatcher dispatcher) throws CartItemModifyException {
+    public List<ShoppingCartItem> explodeItem(ShoppingCart cart, LocalDispatcher dispatcher) throws CartItemModifyException {
         BigDecimal baseQuantity = this.getQuantity();
         int thisIndex = cart.items().indexOf(this);
         List<ShoppingCartItem> newItems = new ArrayList<ShoppingCartItem>();
@@ -2528,7 +2523,6 @@ public class ShoppingCartItem implements java.io.Serializable {
 
                 // set the new item's quantity
                 item.setQuantity(BigDecimal.ONE, dispatcher, cart, false);
-
                 // now copy/calc the adjustments
                 Debug.logInfo("Clone's adj: " + item.getAdjustments(), module);
                 if (UtilValidate.isNotEmpty(item.getAdjustments())) {
@@ -2578,11 +2572,8 @@ public class ShoppingCartItem implements java.io.Serializable {
                 }
             }
 
-            // add the cloned item(s) to the cart
-            for (ShoppingCartItem sci : newItems) {
-                cart.addItem(thisIndex, sci);
-            }
         }
+        return newItems;
     }
 
     public static String getPurchaseOrderItemDescription(GenericValue product, GenericValue supplierProduct, Locale locale) {

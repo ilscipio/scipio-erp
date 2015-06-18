@@ -138,7 +138,6 @@ under the License.
 
     <DataTemplateType dataTemplateTypeId="NONE" description="No Template" extension=""/>
     <DataTemplateType dataTemplateTypeId="FTL" description="FreeMarker" extension="ftl"/>
-    <DataTemplateType dataTemplateTypeId="VTL" description="Velocity" extension="vtl"/>
     <DataTemplateType dataTemplateTypeId="WM" description="WebMacro" extension="wm"/>
     <DataTemplateType dataTemplateTypeId="XSLT" description="XSLT" extension="xsl"/>
     <DataTemplateType dataTemplateTypeId="SCREEN_COMBINED" description="Screen widget" extension="xml"/>
@@ -220,7 +219,7 @@ under the License.
     <SurveyQuestionType surveyQuestionTypeId="TEXTAREA" description="Text (multi-line)"/>
     <SurveyQuestionType surveyQuestionTypeId="URL" description="URL"/>
 
-    <DataResource dataResourceId="STDWRAP001" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="FTL"/>
+    <DataResource dataResourceId="STDWRAP001" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="FTL" dataResourceName="Standard SubContent Wrapper" mimeTypeId="text/html"/>
     <ElectronicText dataResourceId="STDWRAP001">
         <textData><![CDATA[<#assign mapKey=wrapMapKey?if_exists/>
 <#assign subDataResourceId=wrapDataResourceId?if_exists/>
@@ -253,9 +252,7 @@ under the License.
 </div>
 </div>]]></textData>
     </ElectronicText>
-    <Content contentId="STDWRAP001" contentTypeId="DOCUMENT" dataResourceId="STDWRAP001" contentName="Standard SubContent Wrapper" description="Standard SubContent Wrapper"/>
-
-    <Content contentId="TREE_ROOT"/>
+    <Content contentId="STDWRAP001" contentTypeId="DOCUMENT" dataResourceId="STDWRAP001" contentName="Standard SubContent Wrapper" description="Standard SubContent Wrapper" mimeTypeId="text/html"/>
 
     <WebAnalyticsType description="Web Analytics" hasTable="N" parentTypeId="" webAnalyticsTypeId="WEB_ANALYTICS"/>
     <WebAnalyticsType webAnalyticsTypeId="GOOGLE_ANALYTICS" parentTypeId="WEB_ANALYTICS" hasTable="N" description="Google Analytics"/>

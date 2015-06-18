@@ -1150,6 +1150,7 @@ under the License.
                 <set field="groupByShippingMethod" from-field="parameters.groupByShippingMethod"/>
                 <set field="groupByWarehouseArea" from-field="parameters.groupByWarehouseArea"/>
                 <set field="groupByNoOfOrderItems" from-field="parameters.groupByNoOfOrderItems"/>
+                <set field="maxNumberOfOrders" from-field="parameters.maxNumberOfOrders" default-value="50"/>
                 <service service-name="findOrdersToPickMove">
                     <field-map field-name="facilityId"/>
                     <field-map field-name="groupByShippingMethod"/>
@@ -1246,6 +1247,8 @@ under the License.
                 <set field="tabButtonItem" value="PicklistManage"/>
 
                 <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.viewIndex" default-value="0"/>
+                <set field="viewSize" from-field="parameters.viewSize" default-value="10"/>
                 <service service-name="getPicklistDisplayInfo">
                     <field-map field-name="facilityId"/>
                 </service>
@@ -1303,7 +1306,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="PickMoveStockSimple">
+    <screen name="PickMoveStockSimple.fo">
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
@@ -1330,7 +1333,7 @@ under the License.
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://product/webapp/facility/facility/PickMoveStock.ftl"/></html>
+                            <xsl-fo><html-template location="component://product/webapp/facility/facility/PickMoveStockSimple.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

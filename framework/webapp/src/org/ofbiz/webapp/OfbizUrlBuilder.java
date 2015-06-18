@@ -29,6 +29,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
@@ -85,7 +86,7 @@ public final class OfbizUrlBuilder {
             Assert.notNull("delegator", delegator);
             String webSiteId = WebAppUtil.getWebSiteId(webAppInfo);
             if (webSiteId != null) {
-                GenericValue webSiteValue = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), true);
+                GenericValue webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
                 if (webSiteValue != null) {
                     webSiteProps = WebSiteProperties.from(webSiteValue);
                 }
@@ -94,7 +95,7 @@ public final class OfbizUrlBuilder {
             servletPath = WebAppUtil.getControlServletPath(webAppInfo);
         }
         if (webSiteProps == null) {
-            webSiteProps = WebSiteProperties.defaults();
+            webSiteProps = WebSiteProperties.defaults(delegator);
         }
         return new OfbizUrlBuilder(config, webSiteProps, servletPath);
     }
@@ -132,7 +133,7 @@ public final class OfbizUrlBuilder {
      * @param buffer
      * @param url
      * @param useSSL Default value to use - will be replaced by request-map setting
-     * if one is found.
+     * if one is found with security=true set.
      * @return <code>true</code> if the URL uses https
      * @throws WebAppConfigurationException
      * @throws IOException
@@ -149,7 +150,7 @@ public final class OfbizUrlBuilder {
         if (config != null) {
             requestMap = config.getRequestMapMap().get(requestMapUri);
         }
-        if (requestMap != null) {
+        if (!makeSecure && requestMap != null) { // if the request has security="true" then use it
             makeSecure = requestMap.securityHttps;
         }
         makeSecure = webSiteProps.getEnableHttps() & makeSecure;

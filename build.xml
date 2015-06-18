@@ -219,7 +219,10 @@ under the License.
         <xmlproperty file="runtime/svninfo_tmp.xml"/>
         <echo message="Rev:${info.entry.commit(revision)}"/>
         <basename property="releasePath" file="${info.entry.url}"/>
-        <echo message=" - Release-revision : ${releasePath}-r${info.entry.commit(revision)}" file="runtime/svninfo.ftl"/>
+        <tstamp>
+            <format property="dateTime" pattern="yyyy-MM-dd HH:mm:ss"/>
+        </tstamp>
+        <echo message=" - Release-revision : ${releasePath}-r${info.entry.commit(revision)},  ${uiLabelMap.CommonBuiltOn} ${dateTime}" file="runtime/svninfo.ftl"/>
         <delete file="runtime/svninfo_tmp.xml"/>
         <echo message="Done!"/>
     </target>
@@ -242,8 +245,11 @@ under the License.
             <arg value="rev-parse"/>
             <arg value="HEAD"/>
         </exec>
+        <tstamp>
+            <format property="dateTime" pattern="yyyy-MM-dd HH:mm:ss"/>
+        </tstamp>        
         <echo message="Found Branch-revision: ${branch}-${revision}"/>
-        <echo message=" - Branch-revision: ${branch}-${revision}" file="runtime/gitinfo.ftl"/>
+        <echo message=" - Branch-revision: ${branch}-${revision}, ${uiLabelMap.CommonBuiltOn} ${dateTime}" file="runtime/gitinfo.ftl"/>
         <echo message="Done!"/>
     </target>
 
@@ -257,59 +263,151 @@ under the License.
     <!-- Apply patches where needed                                         -->
     <!-- ================================================================== -->
 
-    <target name="build-dev" 
-        description="Patch and build all sources in a dev environment. This includes patching OFBiz using patches in runtime/patches. On Windows you need to have patch.exe in the path and patch files must all be in dos format (CR+LF)">
-        <!-- patch task can't handle a fileset => create a global patch -->
-        <concat destfile="${basedir}/runtime/patches/dev.patch" encoding="UTF-8" outputencoding="UTF-8">            
-            <fileset dir="${basedir}/runtime/patches" casesensitive="no">
-                <exclude name="dev.patch"/> <!-- exclude the patch itself in case it's still there -->
-                <include name="*.patch"/>
-            </fileset>
-        </concat>
-        <if>
-            <resourceexists>
-                <file file="${basedir}/runtime/patches/dev.patch"/>
-            </resourceexists>            
-            <then>                          
-                <patch strip="0" patchfile="${basedir}/runtime/patches/dev.patch" dir="${basedir}"/>
-                <delete>
-                    <fileset dir="${basedir}/runtime/patches" includes="dev.patch"/>
-                </delete>
-            </then>                                  
-        </if>        
+    <target name="build-dev"
+      description="Patch sources in a dev environment if patch files are present in runtime/patches.">
+      <!-- Ant patch task can't handle a fileset => create a global patch -->
+      <concat destfile="${basedir}/runtime/patches/dev.patch" encoding="UTF-8" outputencoding="UTF-8">
+        <fileset dir="${basedir}/runtime/patches" casesensitive="no">
+          <exclude name="dev.patch"/> <!-- exclude the patch itself in case it's still there -->
+          <include name="*.patch"/>
+        </fileset>
+      </concat>
+      <if>
+        <available file="${basedir}/runtime/patches/dev.patch"/>
+        <then>
+            <antcall target="patch">
+                <param name="dir-name" value="${basedir}"/>
+                <param name="diff-file" value="${basedir}/runtime/patches/dev.patch"/>
+            </antcall>
+            <delete file="${basedir}/runtime/patches/dev.patch"/>
+        </then>
+      </if>
     </target>
     
+    <!-- Following allow to use "svn patch" and fallback on "patch" if necessary -->
+    <target name="calculate-svn-patch-available">
+        <mkdir dir="build/svn-check"/>
+        <exec dir="build/svn-check" output="build/svn-check/svn.output" executable="svn" failonerror="true">
+            <arg value="--version" />
+        </exec>
+        <loadfile property="svn-output" srcFile="build/svn-check/svn.output"/>
+        <condition property="svn-version-ok">
+        <!-- On Linux prefer patch because "svn patch" needs "ant exec and you can't check patching errors -->
+          <and>
+            <os family="windows"/>
+            <or>
+                <!-- This might also depend on the format of the working copy -->
+                <contains string="${svn-output}" substring="1.7."/>
+                <contains string="${svn-output}" substring="1.8."/>
+                <contains string="${svn-output}" substring="1.9."/>
+                <contains string="${svn-output}" substring="1.10."/>
+                <contains string="${svn-output}" substring="1.11."/>
+            </or>
+          </and>
+        </condition>
+        <delete dir="build/svn-check"/>
+    </target>
+    
+    <target name="calculate-patch-available" depends="calculate-svn-patch-available" unless="svn-version-ok">
+        <condition property="patch-ok">
+            <os family="unix"/>
+        </condition>
+    </target>
+    
+    <target name="check-svn-patch-available" depends="calculate-svn-patch-available" unless="svn-version-ok">
+        <echo message="You need svn version 1.7 or higher - attempting patch instead."/>
+    </target>
+    
+    <target name="check-patch-available" depends="calculate-patch-available" unless="patch-ok"/>
+    
+    <target name="patch-via-svn" depends="check-svn-patch-available" if="svn-version-ok">
+        <exec dir="${basedir}" executable="svn" failonerror="true">
+            <arg value="patch" />
+            <arg value="${diff-file}" />
+            <arg value="${dir-name}" />
+        </exec>
+    </target>
+    
+    <target name="patch-via-patch" depends="check-patch-available" if="patch-ok">
+        <exec dir="${basedir}" executable="patch" input="${diff-file}" failonerror="true">
+            <arg value="--binary" /><!-- To prevent EOL issues which comes when using mixed development platforms (ie Unix and Win) -->
+            <arg value="-p0" />
+        </exec>
+    </target>
+    
+    <target name="patch" depends="patch-via-svn,patch-via-patch"/>
+
+    <target name="revert-dev"
+      description="Revert patch files present in runtime/patches applied by build-dev.">
+      <!-- Ant patch task can't handle a fileset => create a global patch -->
+      <concat destfile="${basedir}/runtime/patches/dev.patch" encoding="UTF-8" outputencoding="UTF-8">
+        <fileset dir="${basedir}/runtime/patches" casesensitive="no">
+          <exclude name="dev.patch"/> <!-- exclude the patch itself in case it's still there -->
+          <include name="*.patch"/>
+        </fileset>
+      </concat>
+      <if>
+        <available file="${basedir}/runtime/patches/dev.patch"/>
+        <then>
+            <antcall target="revert-patch">
+                <param name="dir-name" value="${basedir}"/>
+                <param name="diff-file" value="${basedir}/runtime/patches/dev.patch"/>
+            </antcall>
+            <delete file="${basedir}/runtime/patches/dev.patch"/>
+        </then>
+      </if>
+    </target>
+
+    <target name="revert-via-svn" depends="check-svn-patch-available" if="svn-version-ok">
+        <exec dir="${basedir}" executable="svn" failonerror="true">
+            <arg value="patch" />
+            <arg value="${diff-file}" />
+            <arg value="${dir-name}" />
+            <arg value="--reverse-diff" />
+        </exec>
+    </target>
+    
+    <target name="revert-via-patch" depends="check-patch-available" if="patch-ok">
+        <exec dir="${basedir}" executable="patch" input="${diff-file}" failonerror="true">
+            <arg value="--binary" /><!-- To prevent EOL issues which comes when using mixed development platforms (ie Unix and Win) -->
+            <arg value="-p0" />
+            <arg value="-R" />
+        </exec>
+    </target>
+    
+    <target name="revert-patch" depends="revert-via-svn,revert-via-patch"/>
+
     <target name="build-test" 
         description="Patch and build all sources for use in a test environment. On Windows you need to have patch.exe in the path and patch files must all be in dos format (CR+LF)">
-        <subant inheritall="false" target="prepare-to-build-test">
+        <subant inheritall="false" target="prepare-to-build-test" failonerror="true">
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
                 <include name="*/build.xml"/>
             </fileset>
         </subant>
-        <antcall target="build"/>
+        <!--antcall target="build"/--><!-- you can chain if you don't use build-dev  see MVP-256-->
     </target>
     
     <target name="build-qa" 
         description="Patch and build all sources for use in a qa environment. On Windows you need to have patch.exe in the path and patch files must all be in dos format (CR+LF)">
-        <subant inheritall="false" target="prepare-to-build-qa">
+        <subant inheritall="false" target="prepare-to-build-qa" failonerror="true">
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
                 <include name="*/build.xml"/>
             </fileset>
         </subant>
-        <antcall target="build"/>
+      <!--antcall target="build"/--><!-- you can chain if you don't use build-dev  see MVP-256-->
     </target>
 
     <target name="build-production" 
         description="Patch and build all sources for use in a live environment. On Windows you need to have patch.exe in the path and patch files must all be in dos format (CR+LF)">
-        <subant inheritall="false" target="prepare-to-build-production">
+        <subant inheritall="false" target="prepare-to-build-production" failonerror="true">
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
                 <include name="*/build.xml"/>
             </fileset>
         </subant>
-        <antcall target="build"/>
+      <!--antcall target="build"/--><!-- you can chain if you don't use build-dev  see MVP-256-->
     </target>    
     
     <!-- ================================================================== -->
@@ -318,6 +416,7 @@ under the License.
     
     <target name="build" depends="ofbiz-init">
         <echo message="[build] ========== Start Building (Compile) =========="/>
+        <antcall target="build-dev"/>
 
         <antcall target="build-framework"/>
         <antcall target="build-applications"/>
@@ -584,7 +683,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
         </java>
     </target>
     <target name="load-demo-multitenant" depends="build"
@@ -593,20 +692,20 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
         </java>
         <java jar="ofbiz.jar" fork="true">
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="delegator=default#DEMO1"/>
         </java>
         <java jar="ofbiz.jar" fork="true">
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="delegator=default#DEMO2"/>
         </java>
     </target>
@@ -616,7 +715,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="readers=seed"/>
         </java>
     </target>
@@ -626,7 +725,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="readers=seed,seed-initial,ext"/>
         </java>
     </target>
@@ -636,7 +735,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="readers=seed,seed-initial,ext,ext-test"/>
         </java>
     </target>
@@ -646,7 +745,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
         </java>
     </target>
@@ -657,7 +756,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="delegator=${delegator}"/>
             <arg value="file=${data-file}"/>
         </java>
@@ -673,7 +772,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="readers=tenant"/>
         </java>
         <condition property="hasTenant">
@@ -714,7 +813,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
         </java>
     </target>
@@ -723,7 +822,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
         </java>
@@ -748,7 +847,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="component=${component}"/>
         </java>
@@ -758,7 +857,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
             <arg value="component=${component}"/>
@@ -776,7 +875,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="readers=tenant"/>
         </java>
         <condition property="hasReader">
@@ -797,7 +896,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="delegator=${delegator}"/>
         </java>
     </target>
@@ -806,7 +905,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=${delegator}"/>
         </java>
@@ -825,6 +924,7 @@ under the License.
     <target name="get-tenant-data">
         <input addproperty="tenantId" message="Enter Id for the tenant: "/>
         <input addproperty="tenantName" message="Enter name for tenant: "/>
+        <input addproperty="domainName" message="Enter domain name for tenant (Optional): "/>
         <input addproperty="data-readers" message="Enter data to install.
         Choices are e.g. seed,seed-initial,ext,demo.
         Multipe datasets must be separated with a comma: "/>
@@ -856,6 +956,7 @@ under the License.
             <filterset>
                 <filter token="tenantId" value="${tenantId}"/>
                 <filter token="tenantName" value="${tenantName}"/>
+                <filter token="domainName" value="${domainName}"/>
             </filterset>
         </copy>
         <antcall target="load-file">
@@ -876,6 +977,7 @@ under the License.
             <filterset>
                 <filter token="tenantId" value="${tenantId}"/>
                 <filter token="tenantName" value="${tenantName}"/>
+                <filter token="domainName" value="${domainName}"/>
                 <filter token="db-IP" value="${db-IP}"/>
                 <filter token="db-User" value="${db-User}"/>
                 <filter token="db-Password" value="${db-Password}"/>
@@ -899,6 +1001,7 @@ under the License.
             <filterset>
                 <filter token="tenantId" value="${tenantId}"/>
                 <filter token="tenantName" value="${tenantName}"/>
+                <filter token="domainName" value="${domainName}"/>
                 <filter token="db-IP" value="${db-IP}"/>
                 <filter token="db-User" value="${db-User}"/>
                 <filter token="db-Password" value="${db-Password}"/>
@@ -922,6 +1025,7 @@ under the License.
             <filterset>
                 <filter token="tenantId" value="${tenantId}"/>
                 <filter token="tenantName" value="${tenantName}"/>
+                <filter token="domainName" value="${domainName}"/>
                 <filter token="db-IP" value="${db-IP}"/>
                 <filter token="db-User" value="${db-User}"/>
                 <filter token="db-Password" value="${db-Password}"/>
@@ -942,6 +1046,7 @@ under the License.
         <echo>------------------------------------</echo>
         <echo message="tenantId = ${tenantId}"/>
         <echo>tenantName = ${tenantName}</echo>
+        <echo>domainName = ${domainName}</echo>
         <echo>db-Platform = ${db-Platform}</echo>
         <echo>db-IP = ${db-IP}</echo>
         <echo>db-User = ${db-User}</echo>
@@ -985,7 +1090,7 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
-            <arg value="install"/>
+            <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=default#${tenantId}"/>
         </java>
@@ -1207,7 +1312,7 @@ under the License.
         <property name="sonar.sources" value="specialpurpose/appserver/src, framework/base/src, framework/bi/src,
             framework/catalina/src, framework/common/src, framework/datafile/src, framework/entity/src, framework/entityext/src,
             framework/example/src, framework/geronimo/src, framework/jetty/src,
-            framework/minilang/src, framework/security/src, framework/service/src, framework/sql/src, framework/start/src,
+            framework/minilang/src, framework/security/src, framework/service/src, framework/start/src,
             framework/testtools/src, framework/webapp/src, framework/webtools/src, framework/widget/src,
             applications/accounting/src, applications/commonext/src, applications/content/src, applications/humanres/src,
             applications/manufacturing/src, applications/marketing/src, applications/order/src, applications/party/src,
@@ -1216,7 +1321,7 @@ under the License.
             specialpurpose/googlecheckout/src, specialpurpose/hhfacility/src, specialpurpose/oagis/src, specialpurpose/pos/src,
             specialpurpose/scrum/src, specialpurpose/birt/src" />
         <property name="sonar.tests" value="framework/base/src/org/ofbiz/base/test, framework/entity/src/org/ofbiz/entity/test,
-            framework/service/src/org/ofbiz/service/test, framework/sql/src/org/ofbiz/sql/test,
+            framework/service/src/org/ofbiz/service/test,
             applications/accounting/src/org/ofbiz/accounting/test, applications/content/src/org/ofbiz/content/test,
             applications/product/src/org/ofbiz/product/test, applications/product/src/org/ofbiz/shipment/test,
             applications/securityext/src/org/ofbiz/securityext/test" />
@@ -1431,7 +1536,7 @@ under the License.
             <arg value="-kek"/>
             <classpath>
                 <path location="framework/base/build/lib/ofbiz-base.jar"/>
-                <path location="framework/base/lib/commons/commons-codec-1.4.jar"/>
+                <path location="framework/base/lib/commons/commons-codec-1.10.jar"/>
             </classpath>
         </java>
     </target>

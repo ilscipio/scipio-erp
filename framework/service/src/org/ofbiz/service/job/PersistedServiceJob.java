@@ -21,11 +21,10 @@ package org.ofbiz.service.job;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
-
-import javolution.util.FastMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.config.GenericConfigException;
@@ -40,6 +39,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.ServiceUtil;
@@ -291,7 +291,7 @@ public class PersistedServiceJob extends GenericServiceJob {
                 }
             }
             if (context == null) {
-                context = FastMap.newInstance();
+                context = new HashMap<String, Object>();
             }
             // check the runAsUser
             if (!UtilValidate.isEmpty(jobValue.getString("runAsUser"))) {
@@ -322,8 +322,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         }
         long count = 0;
         try {
-            EntityFieldMap ecl = EntityCondition.makeConditionMap("parentJobId", pJobId, "statusId", "SERVICE_FAILED");
-            count = delegator.findCountByCondition("JobSandbox", ecl, null, null);
+            count = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", pJobId, "statusId", "SERVICE_FAILED").queryCount();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Exception thrown while counting retries: ", module);
         }

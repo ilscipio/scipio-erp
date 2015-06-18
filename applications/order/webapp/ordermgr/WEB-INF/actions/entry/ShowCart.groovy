@@ -20,6 +20,7 @@
 import org.ofbiz.service.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.order.order.OrderReadHelper; 
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.product.catalog.CatalogWorker;
@@ -52,8 +53,27 @@ context.shoppingCart = shoppingCart;
 context.currencyUomId = shoppingCart.getCurrency();
 context.orderType = shoppingCart.getOrderType();
 
+orderItems = shoppingCart.makeOrderItems();
+orderAdjustments = shoppingCart.makeAllAdjustments();
+orderItemShipGroupInfo = shoppingCart.makeAllShipGroupInfos();
+if (orderItemShipGroupInfo) {
+    orderItemShipGroupInfo.each { osiInfo ->
+        if ("OrderAdjustment".equals(osiInfo.getEntityName())) {
+            // shipping / tax adjustment(s)
+            orderAdjustments.add(osiInfo);
+        }
+    }
+}
+orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments, null);
+orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments);
+shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
+shippingAmount = shippingAmount.add(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true));
+context.orderShippingTotal = shippingAmount;
+taxAmount = OrderReadHelper.getOrderTaxByTaxAuthGeoAndParty(orderAdjustments).taxGrandTotal;
+context.orderTaxTotal = taxAmount;
+
 // get all the possible gift wrap options
-allgiftWraps = delegator.findByAnd("ProductFeature", [productFeatureTypeId : "GIFT_WRAP"], ["defaultSequenceNum"], false);
+allgiftWraps = from("ProductFeature").where("productFeatureTypeId", "GIFT_WRAP").orderBy("defaultSequenceNum").queryList();
 context.allgiftWraps = allgiftWraps;
 
 context.contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
@@ -82,24 +102,24 @@ context.defaultComment = defaultComment;
 
 // get all party shopping lists
 if (partyId) {
-  shoppingLists = delegator.findByAnd("ShoppingList", [partyId : partyId], null, false);
+  shoppingLists = from("ShoppingList").where("partyId", partyId).queryList();
   context.shoppingLists = shoppingLists;
 }
 
 // get product inventory summary for each shopping cart item
-productStore = delegator.findOne("ProductStore", [productStoreId : productStoreId], true);
+productStore = from("ProductStore").where("productStoreId", productStoreId).cache(true).queryOne();
 context.productStore = productStore
 productStoreFacilityId = null;
 if (productStore) {
     productStoreFacilityId = productStore.inventoryFacilityId;
 }
 context.facilityId = productStoreFacilityId;
-inventorySummary = dispatcher.runSync("getProductInventorySummaryForItems", [orderItems : shoppingCart.makeOrderItems(), facilityId : productStoreFacilityId]);
+inventorySummary = runService('getProductInventorySummaryForItems', [orderItems : shoppingCart.makeOrderItems(), facilityId : productStoreFacilityId]);
 context.availableToPromiseMap = inventorySummary.availableToPromiseMap;
 context.quantityOnHandMap = inventorySummary.quantityOnHandMap;
 context.mktgPkgATPMap = inventorySummary.mktgPkgATPMap;
 context.mktgPkgQOHMap = inventorySummary.mktgPkgQOHMap;
 
 // get purchase order item types
-purchaseOrderItemTypeList = delegator.findByAnd("OrderItemType", [parentTypeId : "PURCHASE_SPECIFIC"], null, true);
+purchaseOrderItemTypeList = from("OrderItemType").where("parentTypeId", "PURCHASE_SPECIFIC").cache(true).queryList();
 context.purchaseOrderItemTypeList = purchaseOrderItemTypeList;

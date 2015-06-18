@@ -43,6 +43,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -92,7 +93,7 @@ public class PromoServices {
                 }
                 GenericValue existingPromoCode = null;
                 try {
-                    existingPromoCode = delegator.findOne("ProductPromoCode", UtilMisc.toMap("productPromoCodeId", newPromoCodeId), true);
+                    existingPromoCode = EntityQuery.use(delegator).from("ProductPromoCode").where("productPromoCodeId", newPromoCodeId).cache().queryOne();
                 }
                 catch (GenericEntityException e) {
                     Debug.logWarning("Could not find ProductPromoCode for just generated ID: " + newPromoCodeId, module);
@@ -137,10 +138,9 @@ public class PromoServices {
         condList.add(EntityCondition.makeCondition("userEntered", EntityOperator.EQUALS, "Y"));
         condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.NOT_EQUAL, null));
         condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, nowTimestamp));
-        EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
         try {
-            EntityListIterator eli = delegator.find("ProductStorePromoAndAppl", cond, null, null, null, null);
+            EntityListIterator eli = EntityQuery.use(delegator).from("ProductStorePromoAndAppl").where(condList).queryIterator();
             GenericValue productStorePromoAndAppl = null;
             while ((productStorePromoAndAppl = eli.next()) != null) {
                 GenericValue productStorePromo = delegator.makeValue("ProductStorePromoAppl");

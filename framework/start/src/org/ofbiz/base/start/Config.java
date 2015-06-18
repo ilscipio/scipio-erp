@@ -18,13 +18,25 @@
  *******************************************************************************/
 package org.ofbiz.base.start;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -34,143 +46,188 @@ import java.util.TimeZone;
 
 public class Config {
 
-    private static String getConfigFileName(String command) {
-        // default command is "start"
-        if (command == null || command.trim().length() == 0) {
-            command = "start";
-        }
-        return "org/ofbiz/base/start/" + command + ".properties";
-    }
+    public final InetAddress adminAddress;
+    public final String adminKey;
+    public final int adminPort;
+    public final String awtHeadless;
+    public final String containerConfig;
+    public final String instrumenterClassName;
+    public final String instrumenterFile;
+    public final List<Map<String, String>> loaders;
+    public final String logDir;
+    public final String ofbizHome;
+    public final boolean shutdownAfterLoad;
+    public final String splashLogo;
+    public final boolean useShutdownHook;
+    public final Integer portOffset;
 
-    public static Config getInstance(String[] args) throws IOException {
+    Config(String[] args) throws IOException {
         String firstArg = args.length > 0 ? args[0] : "";
         // Needed when portoffset is used with these commands, start.properties fits for all of them
-        if ("start-batch".equalsIgnoreCase(firstArg) 
-                || "start-debug".equalsIgnoreCase(firstArg) 
-                || "stop".equalsIgnoreCase(firstArg) 
-                || "-shutdown".equalsIgnoreCase(firstArg) // shutdown & status hack (was pre-existing to portoffset introduction, also useful with it) 
+        if ("start-batch".equalsIgnoreCase(firstArg)
+                || "start-debug".equalsIgnoreCase(firstArg)
+                || "stop".equalsIgnoreCase(firstArg)
+                || "-shutdown".equalsIgnoreCase(firstArg) // shutdown & status hack (was pre-existing to portoffset introduction, also useful with it)
                 || "-status".equalsIgnoreCase(firstArg)) {
             firstArg = "start";
         }
-        String configFileName = getConfigFileName(firstArg);
-        Config result = new Config();
-        result.readConfig(configFileName, args);
-        return result;
-    }
-
-    public InetAddress adminAddress;
-    public String adminKey;
-    public int adminPort;
-    public String awtHeadless;
-    public String baseConfig;
-    public String baseDtd;
-    public String baseJar;
-    public String baseLib;
-    public String commJar;
-    public String containerConfig;
-    public String instrumenterClassName;
-    public String instrumenterFile;
-    public List<Map<String, String>> loaders;
-    public String logDir;
-    public String ofbizHome;
-    public boolean requireCommJar = false;
-    public boolean requireToolsJar = false;
-    public boolean shutdownAfterLoad = false;
-    public String splashLogo;
-    public String testConfig;
-    public String toolsJar;
-    public boolean useShutdownHook = true;
-
-    private String findSystemJar(Properties props, String javaVendor, String javaVersion, String jarName, boolean required) {
-        String fileSep = System.getProperty("file.separator");
-        String javaHome = System.getProperty("java.home");
-        String errorMsg = "Unable to locate " + jarName + " - ";
-        // String foundMsg = "Found " + jarName + " - ";
-        String jarLoc = "lib" + fileSep + jarName;
-        File tj = null;
-
-        if ("tools.jar".equals(jarName) && javaVendor.startsWith("Apple")) {
-            // tools.jar is always available in Apple's JDK implementation
-            return null;
+        // default command is "start"
+        if (firstArg == null || firstArg.trim().length() == 0) {
+            firstArg = "start";
         }
+        String config =  "org/ofbiz/base/start/" + firstArg + ".properties";
 
-        // check to see if it is in the OFBIZ_HOME directory
-        tj = new File(ofbizHome + fileSep + jarName);
-        if (tj.exists()) {
-            return null;
+        Properties props = this.getPropertiesFile(config);
+        System.out.println("Start.java using configuration file " + config);
+
+        // set the ofbiz.home
+        String ofbizHomeTmp = props.getProperty("ofbiz.home", ".");
+        // get a full path
+        if (ofbizHomeTmp.equals(".")) {
+            ofbizHomeTmp = System.getProperty("user.dir");
+            ofbizHomeTmp = ofbizHomeTmp.replace('\\', '/');
         }
+        ofbizHome = ofbizHomeTmp;
+        System.setProperty("ofbiz.home", ofbizHome);
+        System.out.println("Set OFBIZ_HOME to - " + ofbizHome);
 
-        // check to see if it is in the base/lib directory
-        tj = new File(baseLib + fileSep + jarName);
-        if (tj.exists()) {
-            return null;
-        }
+        // log directory
+        logDir = getOfbizHomeProp(props, "ofbiz.log.dir", "runtime/logs");
 
-        // try to locate tools.jar from the properties file
-        String jarProps = props.getProperty("java." + jarName, null);
-        if (jarProps != null) {
-            tj = new File(jarProps);
-            if (!tj.exists()) {
-                if (required) {
-                    System.err.println(errorMsg + tj.getAbsolutePath());
+        // container configuration
+        containerConfig = getOfbizHomeProp(props, "ofbiz.container.config", "framework/base/config/ofbiz-containers.xml");
+
+        // get the admin server info
+        String serverHost = getProp(props, "ofbiz.admin.host", "127.0.0.1");
+
+        String adminPortStr = getProp(props, "ofbiz.admin.port", "0");
+        // set the admin key
+        adminKey = getProp(props, "ofbiz.admin.key", "NA");
+
+        // create the host InetAddress
+        adminAddress = InetAddress.getByName(serverHost);
+
+        // parse the port number
+        int adminPortTmp;
+        try {
+            adminPortTmp = Integer.parseInt(adminPortStr);
+            if (args.length > 0) {
+                for (String arg : args) {
+                    if (arg.toLowerCase().contains("portoffset=") && !arg.toLowerCase().contains("${portoffset}")) {
+                        adminPortTmp = adminPortTmp != 0 ? adminPortTmp : 10523; // This is necessary because the ASF machines don't allow ports 1 to 3, see  INFRA-6790
+                        adminPortTmp += Integer.parseInt(arg.split("=")[1]);
+                    }
                 }
-            } else {
-                // System.out.println(foundMsg + tj.getAbsolutePath());
-                return jarProps;
             }
+        } catch (Exception e) {
+            System.out.println("Error while parsing admin port number (so default to 10523) = " + e);
+            adminPortTmp = 10523;
         }
+        adminPort = adminPortTmp;
 
-        // next check the JAVA_HOME lib dir
-        tj = new File(javaHome + fileSep + jarLoc);
-        if (!tj.exists()) {
-            if (required) {
-                System.err.println(errorMsg + tj.getAbsolutePath());
-            }
+        // set the Derby system home
+        String derbyPath = getProp(props, "derby.system.home", "runtime/data/derby");
+        System.setProperty("derby.system.home", derbyPath);
+
+        // check for shutdown hook
+        if (System.getProperty("ofbiz.enable.hook") != null && System.getProperty("ofbiz.enable.hook").length() > 0) {
+            useShutdownHook = "true".equalsIgnoreCase(System.getProperty("ofbiz.enable.hook"));
+        } else if (props.getProperty("ofbiz.enable.hook") != null && props.getProperty("ofbiz.enable.hook").length() > 0) {
+            useShutdownHook = "true".equalsIgnoreCase(props.getProperty("ofbiz.enable.hook"));
         } else {
-            // System.out.println(foundMsg + tj.getAbsolutePath());
-            return tj.getAbsolutePath();
+            useShutdownHook = true;
         }
 
-        // next if we are a JRE dir check the parent dir
-        String jreExt = fileSep + "jre";
-        if (javaHome.toLowerCase().endsWith(jreExt)) {
-            javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSep));
-            tj = new File(javaHome + fileSep + jarLoc);
-            if (!tj.exists()) {
-                if (required) {
-                    System.err.println(errorMsg + tj.getAbsolutePath());
-                }
+        // check for auto-shutdown
+        if (System.getProperty("ofbiz.auto.shutdown") != null && System.getProperty("ofbiz.auto.shutdown").length() > 0) {
+            shutdownAfterLoad = "true".equalsIgnoreCase(System.getProperty("ofbiz.auto.shutdown"));
+        } else if (props.getProperty("ofbiz.auto.shutdown") != null && props.getProperty("ofbiz.auto.shutdown").length() > 0) {
+            shutdownAfterLoad = "true".equalsIgnoreCase(props.getProperty("ofbiz.auto.shutdown"));
+        } else {
+            shutdownAfterLoad = false;
+        }
+
+        // set AWT headless mode
+        awtHeadless = getProp(props, "java.awt.headless", null);
+        if (awtHeadless != null) {
+            System.setProperty("java.awt.headless", awtHeadless);
+        }
+
+        // get the splash logo
+        splashLogo = props.getProperty("ofbiz.start.splash.logo", null);
+
+        // set the default locale
+        String localeString = props.getProperty("ofbiz.locale.default");
+        if (localeString != null && localeString.length() > 0) {
+            String locales[] = localeString.split("_");
+            switch (locales.length) {
+                case 1:
+                    Locale.setDefault(new Locale(locales[0]));
+                    break;
+                case 2:
+                    Locale.setDefault(new Locale(locales[0], locales[1]));
+                    break;
+                case 3:
+                    Locale.setDefault(new Locale(locales[0], locales[1], locales[2]));
+            }
+            System.setProperty("user.language", localeString);
+        }
+
+        // set the default time zone
+        String tzString = props.getProperty("ofbiz.timeZone.default");
+        if (tzString != null && tzString.length() > 0) {
+            TimeZone.setDefault(TimeZone.getTimeZone(tzString));
+        }
+
+        instrumenterClassName = getProp(props, "ofbiz.instrumenterClassName", null);
+        instrumenterFile = getProp(props, "ofbiz.instrumenterFile", null);
+
+        // loader classes
+        List loadersTmp = new ArrayList<Map<String, String>>();
+        int currentPosition = 1;
+        Map<String, String> loader = null;
+        while (true) {
+            loader = new HashMap<String, String>();
+            String loaderClass = props.getProperty("ofbiz.start.loader" + currentPosition);
+            if (loaderClass == null || loaderClass.length() == 0) {
+                break;
             } else {
-                // System.out.println(foundMsg + tj.getAbsolutePath());
-                return tj.getAbsolutePath();
+                loader.put("class", loaderClass);
+                loader.put("profiles", props.getProperty("ofbiz.start.loader" + currentPosition + ".loaders"));
+                loadersTmp.add(Collections.unmodifiableMap(loader));
+                currentPosition++;
             }
         }
+        loaders = Collections.unmodifiableList(loadersTmp);
 
-        // special windows checking
-        if (javaHome.toLowerCase().charAt(1) == ':') {
-            String driveLetter = javaHome.substring(0, 2);
-            String windowsPath = driveLetter + fileSep + "j2sdk" + javaVersion;
-            tj = new File(windowsPath + fileSep + jarLoc);
-            if (!tj.exists()) {
-                if (required) {
-                    System.err.println(errorMsg + tj.getAbsolutePath());
+        // set the port offset
+        Integer portOffset = 0;
+        if (args != null) {
+            for (String argument : args) {
+                // arguments can prefix w/ a '-'. Just strip them off
+                if (argument.startsWith("-")) {
+                    int subIdx = 1;
+                    if (argument.startsWith("--")) {
+                        subIdx = 2;
+                    }
+                    argument = argument.substring(subIdx);
                 }
-            } else {
-                // System.out.println(foundMsg + tj.getAbsolutePath());
-                return tj.getAbsolutePath();
+                // parse the arguments
+                if (argument.indexOf("=") != -1) {
+                    String argumentName = argument.substring(0, argument.indexOf("="));
+                    String argumentVal = argument.substring(argument.indexOf("=") + 1);
+                    if ("portoffset".equalsIgnoreCase(argumentName) && !"${portoffset}".equals(argumentVal)) {
+                        try {
+                            portOffset = Integer.valueOf(argumentVal);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error while parsing portoffset (the default value 0 will be used) = " + e);
+                        }
+                    }
+                }
             }
         }
+        this.portOffset = portOffset;
 
-        if (required) {
-            System.err.println("");
-            System.err.println("Required library " + jarName + " could not be located.");
-            System.err.println("You may need to copy " + jarName + " into a loadable lib directory");
-            System.err.println("(i.e. OFBIZ_HOME or OFBIZ_HOME/base/lib)");
-            System.err.println("");
-            System.exit(-1);
-        }
-
-        return null;
     }
 
     private String getOfbizHomeProp(Properties props, String key, String def) {
@@ -229,207 +286,116 @@ public class Config {
         return props;
     }
 
-    public void initClasspath(Classpath classPath) throws IOException {
-        // load tools.jar
-        if (this.toolsJar != null) {
-            classPath.addComponent(this.toolsJar);
-        }
-        // load comm.jar
-        if (this.commJar != null) {
-            classPath.addComponent(this.commJar);
-        }
-        // add OFBIZ_HOME to class path & load libs
+    void initClasspath(Classpath classPath, Classpath libraryPath) throws Exception {
+        // add OFBIZ_HOME to class path
         classPath.addClasspath(this.ofbizHome);
-        loadLibs(classPath, this.ofbizHome, false);
-        // load the lib directory
-        if (this.baseLib != null) {
-            loadLibs(classPath, this.baseLib, true);
-        }
-        // load the ofbiz-base.jar
-        if (this.baseJar != null) {
-            classPath.addComponent(this.baseJar);
-        }
-        // load the base schema directory
-        if (this.baseDtd != null) {
-            classPath.addComponent(this.baseDtd);
-        }
-        // load the config directory
-        if (this.baseConfig != null) {
-            classPath.addComponent(this.baseConfig);
-        }
+        File home = new File(this.ofbizHome);
+        collectClasspathEntries(new File(home, "framework"), classPath, libraryPath);
+        collectClasspathEntries(new File(home, "applications"), classPath, libraryPath);
+        collectClasspathEntries(new File(home, "specialpurpose"), classPath, libraryPath);
+        collectClasspathEntries(new File(home, "hot-deploy"), classPath, libraryPath);
+        System.setProperty("java.library.path", libraryPath.toString());
         classPath.instrument(this.instrumenterFile, this.instrumenterClassName);
     }
 
-    private void loadLibs(Classpath classPath, String path, boolean recurse) throws IOException {
-        File libDir = new File(path);
-        if (libDir.exists()) {
-            File files[] = libDir.listFiles();
-            for (File file: files) {
-                String fileName = file.getName();
-                if (file.isHidden()) {
+    private void collectClasspathEntries(File folder, Classpath classpath, Classpath libraryPath) throws ParserConfigurationException, IOException, SAXException {
+        if (!folder.exists() && !folder.isDirectory()) {
+            return;
+        }
+        FileFilter componentLoadFilter = new FileFilter() {
+            public boolean accept(File pathname) {
+                return "component-load.xml".equals(pathname.getName());
+            }
+        };
+        FileFilter folderFilter = new FileFilter() {
+            public boolean accept(File pathname) {
+                return pathname.isDirectory();
+            }
+        };
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        File[] componentLoadFiles;
+        List<File> ofbizComponents = new ArrayList<File>();
+        componentLoadFiles = folder.listFiles(componentLoadFilter);
+        if (componentLoadFiles != null && componentLoadFiles.length == 1) {
+            File componentLoadFile = componentLoadFiles[0];
+            // parse and get folder names to be processed
+            Document document = builder.parse(componentLoadFile);
+            Element element = document.getDocumentElement();
+            NodeList loadComponents = element.getElementsByTagName("load-component");
+            for (int i = 0; i < loadComponents.getLength(); i++) {
+                Node loadComponent = loadComponents.item(i);
+                NamedNodeMap attributes = loadComponent.getAttributes();
+                Node componentLocation = attributes.getNamedItem("component-location");
+                if (componentLocation == null) {
                     continue;
                 }
-                // FIXME: filter out other files?
-                if (file.isDirectory() && !"CVS".equals(fileName) && !".svn".equals(fileName) && recurse) {
-                    loadLibs(classPath, file.getCanonicalPath(), recurse);
-                } else if (fileName.endsWith(".jar") || fileName.endsWith(".zip")) {
-                    classPath.addComponent(file);
+                ofbizComponents.add(new File(new File(folder, componentLocation.getNodeValue()), "ofbiz-component.xml"));
+            }
+        } else {
+            File[] componentFolders = folder.listFiles(folderFilter);
+            for (File componentFolder: componentFolders) {
+                File ofbizComponent = new File(componentFolder, "ofbiz-component.xml");
+                if (ofbizComponent.exists()) {
+                    ofbizComponents.add(ofbizComponent);
                 }
             }
         }
-    }
-
-    public void readConfig(String config, String[] args) throws IOException {
-        // check the java_version
-        String javaVersion = System.getProperty("java.version");
-        String javaVendor = System.getProperty("java.vendor");
-
-        Properties props = this.getPropertiesFile(config);
-        System.out.println("Start.java using configuration file " + config);
-
-        // set the ofbiz.home
-        if (ofbizHome == null) {
-            ofbizHome = props.getProperty("ofbiz.home", ".");
-            // get a full path
-            if (ofbizHome.equals(".")) {
-                ofbizHome = System.getProperty("user.dir");
-                ofbizHome = ofbizHome.replace('\\', '/');
-                System.out.println("Set OFBIZ_HOME to - " + ofbizHome);
+        String nativeLibExt = System.mapLibraryName("someLib").replace("someLib", "").toLowerCase();
+        for (File ofbizComponent: ofbizComponents) {
+            Document document = builder.parse(ofbizComponent);
+            Element element = document.getDocumentElement();
+            if (element.hasAttribute("enabled")) {
+                if ("false".equals(element.getAttribute("enabled"))) {
+                    continue;
+                }
             }
-        }
-        System.setProperty("ofbiz.home", ofbizHome);
+            NodeList classpathEntries = element.getElementsByTagName("classpath");
+            for (int i = 0; i < classpathEntries.getLength(); i++) {
+                Node classpathEntry = classpathEntries.item(i);
+                NamedNodeMap attributes = classpathEntry.getAttributes();
+                Node type = attributes.getNamedItem("type");
+                if (type == null || !("jar".equals(type.getNodeValue()) || "dir".equals(type.getNodeValue()))) {
+                    continue;
+                }
+                Node location = attributes.getNamedItem("location");
+                String locationValue = location.getNodeValue();
+                locationValue = locationValue.replace('\\', '/');
+                // set the location to not have a leading slash
+                if (locationValue.startsWith("/")) {
+                    locationValue = locationValue.substring(1);
+                }
+                String dirLoc = locationValue;
+                if (dirLoc.endsWith("/*")) {
+                    // strip off the slash splat
+                    dirLoc = locationValue.substring(0, locationValue.length() - 2);
+                }
 
-        // base config directory
-        baseConfig = getOfbizHomeProp(props, "ofbiz.base.config", "framework/base/config");
-
-        // base schema directory
-        baseDtd = getOfbizHomeProp(props, "ofbiz.base.schema", "framework/base/dtd");
-
-        // base lib directory
-        baseLib = getOfbizHomeProp(props, "ofbiz.base.lib", "framework/base/lib");
-
-        // base jar file
-        baseJar = getOfbizHomeProp(props, "ofbiz.base.jar", "framework/base/build/lib/ofbiz-base.jar");
-
-        // tools jar
-        String reqTJ = getProp(props, "java.tools.jar.required", "false");
-        requireToolsJar = "true".equalsIgnoreCase(reqTJ);
-        toolsJar = this.findSystemJar(props, javaVendor, javaVersion, "tools.jar", requireToolsJar);
-
-        // comm jar
-        String reqCJ = getProp(props, "java.comm.jar.required", "false");
-        requireCommJar = "true".equalsIgnoreCase(reqCJ);
-        commJar = this.findSystemJar(props, javaVendor, javaVersion, "comm.jar", requireCommJar);
-
-        // log directory
-        logDir = getOfbizHomeProp(props, "ofbiz.log.dir", "runtime/logs");
-
-        // container configuration
-        containerConfig = getOfbizHomeProp(props, "ofbiz.container.config", "framework/base/config/ofbiz-containers.xml");
-
-        // get the admin server info
-        String serverHost = getProp(props, "ofbiz.admin.host", "127.0.0.1");
-
-        String adminPortStr = getProp(props, "ofbiz.admin.port", "0");
-        // set the admin key
-        adminKey = getProp(props, "ofbiz.admin.key", "NA");
-
-        // create the host InetAddress
-        adminAddress = InetAddress.getByName(serverHost);
-
-        // parse the port number
-        try {
-            adminPort = Integer.parseInt(adminPortStr);
-            if (args.length > 0) {
-                for (String arg : args) {
-                    if (arg.toLowerCase().contains("portoffset=") && !arg.toLowerCase().contains("${portoffset}")) {
-                        adminPort = adminPort != 0 ? adminPort : 10523; // This is necessary because the ASF machines don't allow ports 1 to 3, see  INFRA-6790
-                        adminPort += Integer.parseInt(arg.split("=")[1]);
+                String fileNameSeparator = ("\\".equals(File.separator) ? "\\" + File.separator : File.separator);
+                dirLoc = dirLoc.replaceAll("/+|\\\\+", fileNameSeparator);
+                File path = new File(ofbizComponent.getParent(), dirLoc);
+                if (path.exists()) {
+                    if (path.isDirectory()) {
+                        if ("dir".equals(type.getNodeValue())) {
+                            classpath.addComponent(path.toString());
+                        }
+                        // load all .jar, .zip files and native libs in this directory
+                        boolean containsNativeLibs = false;
+                        for (File file: path.listFiles()) {
+                            String fileName = file.getName().toLowerCase();
+                            if (fileName.endsWith(".jar") || fileName.endsWith(".zip")) {
+                                classpath.addComponent(file);
+                            } else if (fileName.endsWith(nativeLibExt)) {
+                                containsNativeLibs = true;
+                            }
+                        }
+                        if (containsNativeLibs) {
+                            libraryPath.addComponent(path);
+                        }
+                    } else {
+                        classpath.addComponent(path.toString());
                     }
                 }
-            }
-        } catch (Exception e) {
-            System.out.println("Error while parsing admin port number (so default to 10523) = " + e);
-            adminPort = 10523;
-        }
-
-        // set the Derby system home
-        String derbyPath = getProp(props, "derby.system.home", "runtime/data/derby");
-        System.setProperty("derby.system.home", derbyPath);
-
-        // set the property to tell Log4J to use log4j.xml
-        String log4jConfig = getProp(props, "log4j.configuration", "log4j.xml");
-
-        // set the log4j configuration property so we don't pick up one inside jars by
-        // mistake
-        System.setProperty("log4j.configuration", log4jConfig);
-
-        // check for shutdown hook
-        if (System.getProperty("ofbiz.enable.hook") != null && System.getProperty("ofbiz.enable.hook").length() > 0) {
-            useShutdownHook = "true".equalsIgnoreCase(System.getProperty("ofbiz.enable.hook"));
-        } else if (props.getProperty("ofbiz.enable.hook") != null && props.getProperty("ofbiz.enable.hook").length() > 0) {
-            useShutdownHook = "true".equalsIgnoreCase(props.getProperty("ofbiz.enable.hook"));
-        }
-
-        // check for auto-shutdown
-        if (System.getProperty("ofbiz.auto.shutdown") != null && System.getProperty("ofbiz.auto.shutdown").length() > 0) {
-            shutdownAfterLoad = "true".equalsIgnoreCase(System.getProperty("ofbiz.auto.shutdown"));
-        } else if (props.getProperty("ofbiz.auto.shutdown") != null && props.getProperty("ofbiz.auto.shutdown").length() > 0) {
-            shutdownAfterLoad = "true".equalsIgnoreCase(props.getProperty("ofbiz.auto.shutdown"));
-        }
-
-        // set AWT headless mode
-        awtHeadless = getProp(props, "java.awt.headless", null);
-        if (awtHeadless != null) {
-            System.setProperty("java.awt.headless", awtHeadless);
-        }
-
-        // get the splash logo
-        splashLogo = props.getProperty("ofbiz.start.splash.logo", null);
-
-        // set the property to tell Jetty to use 2.4 SessionListeners
-        System.setProperty("org.mortbay.jetty.servlet.AbstractSessionManager.24SessionDestroyed", "true");
-
-        // set the default locale
-        String localeString = props.getProperty("ofbiz.locale.default");
-        if (localeString != null && localeString.length() > 0) {
-            String locales[] = localeString.split("_");
-            switch (locales.length) {
-                case 1:
-                    Locale.setDefault(new Locale(locales[0]));
-                    break;
-                case 2:
-                    Locale.setDefault(new Locale(locales[0], locales[1]));
-                    break;
-                case 3:
-                    Locale.setDefault(new Locale(locales[0], locales[1], locales[2]));
-            }
-            System.setProperty("user.language", localeString);
-        }
-
-        // set the default time zone
-        String tzString = props.getProperty("ofbiz.timeZone.default");
-        if (tzString != null && tzString.length() > 0) {
-            TimeZone.setDefault(TimeZone.getTimeZone(tzString));
-        }
-
-        instrumenterClassName = getProp(props, "ofbiz.instrumenterClassName", null);
-        instrumenterFile = getProp(props, "ofbiz.instrumenterFile", null);
-
-        // loader classes
-        loaders = new ArrayList<Map<String, String>>();
-        int currentPosition = 1;
-        Map<String, String> loader = null;
-        while (true) {
-            loader = new HashMap<String, String>();
-            String loaderClass = props.getProperty("ofbiz.start.loader" + currentPosition);
-            if (loaderClass == null || loaderClass.length() == 0) {
-                break;
-            } else {
-                loader.put("class", loaderClass);
-                loader.put("profiles", props.getProperty("ofbiz.start.loader" + currentPosition + ".loaders"));
-                loaders.add(loader);
-                currentPosition++;
             }
         }
     }

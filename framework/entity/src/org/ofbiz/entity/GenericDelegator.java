@@ -77,6 +77,7 @@ import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityCrypto;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.SequenceUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -196,13 +197,13 @@ public class GenericDelegator implements Delegator {
         // before continuing, if there is a tenantId use the base delegator to see if it is valid
         if (UtilValidate.isNotEmpty(this.delegatorTenantId)) {
             Delegator baseDelegator = DelegatorFactory.getDelegator(this.delegatorBaseName);
-            GenericValue tenant = baseDelegator.findOne("Tenant", true, "tenantId", this.delegatorTenantId);
+            GenericValue tenant = EntityQuery.use(baseDelegator).from("Tenant").where("tenantId", this.delegatorTenantId).cache(true).queryOne();
             if (tenant == null) {
                 throw new GenericEntityException("No Tenant record found for delegator [" + this.delegatorFullName + "] with tenantId [" + this.delegatorTenantId + "]");
             } else if ("Y".equals(tenant.getString("disabled"))) {
                 throw new GenericEntityException("No Tenant record found for delegator [" + this.delegatorFullName + "] with tenantId [" + this.delegatorTenantId + "]");
             }
-            GenericValue kekValue = baseDelegator.findOne("TenantKeyEncryptingKey", true, "tenantId", getDelegatorTenantId());
+            GenericValue kekValue = EntityQuery.use(baseDelegator).from("TenantKeyEncryptingKey").where("tenantId", getDelegatorTenantId()).cache(true).queryOne();
             if (kekValue != null) {
                 kekText = kekValue.getString("kekText");
             } else {
@@ -478,16 +479,19 @@ public class GenericDelegator implements Delegator {
         if (helperBaseName == null) {
             return null;
         }
-        GenericHelperInfo helperInfo = new GenericHelperInfo(entityGroupName, helperBaseName);
+        if (UtilValidate.isNotEmpty(this.delegatorTenantId) && "org.ofbiz.tenant".equals(entityGroupName)) {
+            Debug.logInfo("Can't access entity of entityGroup = " + entityGroupName + " using tenant delegator "+ this.getDelegatorName()+", use base delegator instead", module);
+            return null;
+        }
 
-        // to avoid infinite recursion, and to behave right for shared org.ofbiz.tenant entities, do nothing with the tenantId if the entityGroupName=org.ofbiz.tenant
+        GenericHelperInfo helperInfo = new GenericHelperInfo(entityGroupName, helperBaseName);
         if (UtilValidate.isNotEmpty(this.delegatorTenantId)) {
             // get the JDBC parameters from the DB for the entityGroupName and tenantId
             try {
                 // NOTE: instead of caching the GenericHelpInfo object do a cached query here and create a new object each time, will avoid issues when the database data changes during run time
                 // NOTE: always use the base delegator for this to avoid problems when this is being initialized
                 Delegator baseDelegator = DelegatorFactory.getDelegator(this.delegatorBaseName);
-                GenericValue tenantDataSource = baseDelegator.findOne("TenantDataSource", true, "tenantId", this.delegatorTenantId, "entityGroupName", entityGroupName);
+                GenericValue tenantDataSource = EntityQuery.use(baseDelegator).from("TenantDataSource").where("tenantId", this.delegatorTenantId, "entityGroupName", entityGroupName).cache(true).queryOne();
                 if (tenantDataSource != null) {
                     helperInfo.setTenantId(this.delegatorTenantId);
                     helperInfo.setOverrideJdbcUri(tenantDataSource.getString("jdbcUri"));
@@ -500,7 +504,6 @@ public class GenericDelegator implements Delegator {
                 // don't complain about this too much, just log the error if there is one
                 Debug.logInfo(e, "Error getting TenantDataSource info for tenantId=" + this.delegatorTenantId + ", entityGroupName=" + entityGroupName, module);
             }
-
         }
         return helperInfo;
     }
@@ -1802,10 +1805,18 @@ public class GenericDelegator implements Delegator {
                 beganTransaction = TransactionUtil.begin();
             }
 
-            EntityListIterator eli = this.find(entityName, entityCondition, null, fieldsToSelect, orderBy, findOptions);
-            eli.setDelegator(this);
-            List<GenericValue> list = eli.getCompleteList();
-            eli.close();
+            EntityListIterator eli = null;
+            List<GenericValue> list = null;
+            try {
+                eli = this.find(entityName, entityCondition, null, fieldsToSelect, orderBy, findOptions);
+                list = eli.getCompleteList();
+            } finally {
+                if (eli != null) {
+                    try {
+                        eli.close();
+                    } catch (Exception exc) {}
+                }
+            }
 
             if (useCache) {
                 ecaRunner.evalRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, dummyValue, false);
@@ -2532,10 +2543,12 @@ public class GenericDelegator implements Delegator {
                     sequencer = this.AtomicRefSequencer.get();
                 }
             }
-
-            // might be null, but will usually match the entity name
-            ModelEntity seqModelEntity = this.getModelEntity(seqName);
-
+            ModelEntity seqModelEntity = null;
+            try {
+                seqModelEntity = getModelReader().getModelEntity(seqName);
+            } catch (GenericEntityException e) {
+                Debug.logInfo("Entity definition not found for sequence name " + seqName, module);
+            }
             Long newSeqId = sequencer == null ? null : sequencer.getNextSeqId(seqName, staggerMax, seqModelEntity);
             return newSeqId;
         } catch (Exception e) {

@@ -39,6 +39,7 @@ import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
@@ -61,7 +62,7 @@ public class ProductStoreWorker {
         }
         GenericValue productStore = null;
         try {
-            productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), true);
+            productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).cache().queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problem getting ProductStore entity", module);
         }
@@ -115,7 +116,7 @@ public class ProductStoreWorker {
     public static String determineSingleFacilityForStore(Delegator delegator, String productStoreId) {
         GenericValue productStore = null;
         try {
-            productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), false);
+            productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -166,7 +167,7 @@ public class ProductStoreWorker {
     public static GenericValue getProductStorePaymentSetting(Delegator delegator, String productStoreId, String paymentMethodTypeId, String paymentServiceTypeEnumId, boolean anyServiceType) {
         GenericValue storePayment = null;
         try {
-            storePayment = delegator.findOne("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId, "paymentServiceTypeEnumId", paymentServiceTypeEnumId), true);
+            storePayment = EntityQuery.use(delegator).from("ProductStorePaymentSetting").where("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId, "paymentServiceTypeEnumId", paymentServiceTypeEnumId).cache().queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up store payment settings", module);
         }
@@ -174,8 +175,7 @@ public class ProductStoreWorker {
         if (anyServiceType) {
             if (storePayment == null) {
                 try {
-                    List<GenericValue> storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId), null, false);
-                    storePayment = EntityUtil.getFirst(storePayments);
+                    storePayment = EntityQuery.use(delegator).from("ProductStorePaymentSetting").where("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId).queryFirst();
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problems looking up store payment settings", module);
                 }
@@ -183,8 +183,7 @@ public class ProductStoreWorker {
 
             if (storePayment == null) {
                 try {
-                    List<GenericValue> storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId), null, false);
-                    storePayment = EntityUtil.getFirst(storePayments);
+                    storePayment = EntityQuery.use(delegator).from("ProductStorePaymentSetting").where("productStoreId", productStoreId).queryFirst();
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problems looking up store payment settings", module);
                 }
@@ -197,12 +196,14 @@ public class ProductStoreWorker {
     public static List<GenericValue> getProductStoreShipmentMethods(Delegator delegator, String productStoreId,
                                                              String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId) {
         // check for an external service call
-        Map<String, String> storeFields = UtilMisc.toMap("productStoreId", productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId,
-                "partyId", carrierPartyId, "roleTypeId", carrierRoleTypeId);
 
         List<GenericValue> storeShipMethods = null;
         try {
-            storeShipMethods = delegator.findByAnd("ProductStoreShipmentMeth", storeFields, null, true);
+            storeShipMethods = EntityQuery.use(delegator).from("ProductStoreShipmentMeth")
+                                   .where("productStoreId", productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId,
+                                           "partyId", carrierPartyId, "roleTypeId", carrierRoleTypeId)
+                                   .cache(true)
+                                   .queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -223,7 +224,7 @@ public class ProductStoreWorker {
         }
         List<GenericValue> shippingMethods = null;
         try {
-            shippingMethods = delegator.findByAnd("ProductStoreShipmentMethView", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNumber"), true);
+            shippingMethods = EntityQuery.use(delegator).from("ProductStoreShipmentMethView").where("productStoreId", productStoreId).orderBy("sequenceNumber").cache(true).queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get ProductStore shipping methods", module);
             return null;
@@ -379,7 +380,7 @@ public class ProductStoreWorker {
                 if (UtilValidate.isNotEmpty(includeFeatures)) {
                     List<GenericValue> includedFeatures = null;
                     try {
-                        includedFeatures = delegator.findByAnd("ProductFeatureGroupAppl", UtilMisc.toMap("productFeatureGroupId", includeFeatures), null, true);
+                        includedFeatures = EntityQuery.use(delegator).from("ProductFeatureGroupAppl").where("productFeatureGroupId", includeFeatures).cache(true).queryList();
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Unable to lookup ProductFeatureGroupAppl records for group : " + includeFeatures, module);
                     }
@@ -401,7 +402,7 @@ public class ProductStoreWorker {
                 if (UtilValidate.isNotEmpty(excludeFeatures)) {
                     List<GenericValue> excludedFeatures = null;
                     try {
-                        excludedFeatures = delegator.findByAnd("ProductFeatureGroupAppl", UtilMisc.toMap("productFeatureGroupId", excludeFeatures), null, true);
+                        excludedFeatures = EntityQuery.use(delegator).from("ProductFeatureGroupAppl").where("productFeatureGroupId", excludeFeatures).cache(true).queryList();
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Unable to lookup ProductFeatureGroupAppl records for group : " + excludeFeatures, module);
                     }
@@ -464,7 +465,7 @@ public class ProductStoreWorker {
         List<GenericValue> surveys = FastList.newInstance();
         List<GenericValue> storeSurveys = null;
         try {
-            storeSurveys = delegator.findByAnd("ProductStoreSurveyAppl", UtilMisc.toMap("productStoreId", productStoreId, "surveyApplTypeId", surveyApplTypeId), UtilMisc.toList("sequenceNum"), true);
+            storeSurveys = EntityQuery.use(delegator).from("ProductStoreSurveyAppl").where("productStoreId", productStoreId, "surveyApplTypeId", surveyApplTypeId).orderBy("sequenceNum").cache(true).queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get ProductStoreSurveyAppl for store : " + productStoreId, module);
             return surveys;
@@ -487,7 +488,7 @@ public class ProductStoreWorker {
 
                 // if the item is a variant, get its virtual productId
                 try {
-                    product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), true);
+                    product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
                     if ((product != null) && ("Y".equals(product.get("isVariant")))) {
                         if (parentProductId != null) {
                             virtualProductId = parentProductId;
@@ -511,7 +512,7 @@ public class ProductStoreWorker {
                 } else if (surveyAppl.get("productCategoryId") != null) {
                     List<GenericValue> categoryMembers = null;
                     try {
-                        categoryMembers = delegator.findByAnd("ProductCategoryMember", UtilMisc.toMap("productCategoryId", surveyAppl.get("productCategoryId")), null, true);
+                        categoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember").where("productCategoryId", surveyAppl.get("productCategoryId")).cache(true).queryList();
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Unable to get ProductCategoryMember records for survey application : " + surveyAppl, module);
                     }
@@ -555,7 +556,7 @@ public class ProductStoreWorker {
 
         List<GenericValue> surveyResponse = null;
         try {
-            surveyResponse = delegator.findByAnd("SurveyResponse", UtilMisc.toMap("surveyId", surveyId, "partyId", partyId), null, false);
+            surveyResponse = EntityQuery.use(delegator).from("SurveyResponse").where("surveyId", surveyId, "partyId", partyId).queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return -1;

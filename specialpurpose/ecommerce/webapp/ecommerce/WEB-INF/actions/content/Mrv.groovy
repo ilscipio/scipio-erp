@@ -32,8 +32,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
-import org.ofbiz.widget.html.*;
-import org.ofbiz.widget.form.*;
+import org.ofbiz.widget.renderer.html.HtmlFormWrapper;
 import org.ofbiz.base.util.collections.LifoSet;
 
 import javax.servlet.*;
@@ -59,7 +58,7 @@ mrvList = [];
 
 lifoSet.each { pk0 ->
     pk = pk0.getPrimaryKey();
-    gv = delegator.findOne(pk.getEntityName(), pk, true);
+    gv = from(pk.getEntityName()).where(pk).cache(true).queryOne();
     if (gv) {
         arr = [gv.contentId, gv.contentName] as String[];
         mrvList.add(arr);

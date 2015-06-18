@@ -193,7 +193,7 @@ under the License.
                               </#list>
                             </select>
                             <span class="label">${uiLabelMap.CommonComments}</span>
-                            <input type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60"/>
+                            <input type="text" name="icm_${orderItem.orderItemSeqId}" value="${orderItem.comments!}" size="30" maxlength="60"/>
                             <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER')>
                               <span class="label">${uiLabelMap.OrderEstimatedShipDate}</span>
                               <@htmlTemplate.renderDateTimeField name="isdm_${orderItem.orderItemSeqId}" value="${orderItem.estimatedShipDate!}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="isdm_${orderItem.orderItemSeqId}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
@@ -245,27 +245,40 @@ under the License.
                                 <#assign shipGroupQty = shipGroupAssoc.quantity - shipGroupAssoc.cancelQuantity?default(0)>
                               <#assign shipGroup = shipGroupAssoc.getRelatedOne("OrderItemShipGroup", false)>
                               <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
-                              <#assign itemStatusOkay = (orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && (shipGroupAssoc.cancelQuantity?default(0) < shipGroupAssoc.quantity?default(0)) && ("Y" != orderItem.isPromo!))>
-                              <#assign itemSelectable = (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
-                              <tr>
-                                  <td class="align-text" colspan="2">
-                                      <span class="label">${uiLabelMap.OrderShipGroup}</span>&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
-                                  </td>
-                                  <td align="center">
-                                      <input type="text" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shipGroupQty?string.number}"/>
-                                      <#if itemSelectable>
-                                          <input type="checkbox" name="selectedItem" value="${orderItem.orderItemSeqId}" />
-                                      </#if>
-                                  </td>
-                                  <td colspan="4">&nbsp;</td>
-                                  <td>
-                                      <#if itemSelectable>
-                                          <a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" class="buttontext">${uiLabelMap.CommonCancel}</a>
-                                      <#else>
-                                          &nbsp;
-                                      </#if>
-                                  </td>
-                              </tr>
+                              <#assign shippedQuantity = orderReadHelper.getItemShipGroupAssocShippedQuantity(orderItem, shipGroup.shipGroupSeqId)>
+                              <#if shipGroupAssoc.quantity != shippedQuantity>
+                                <#assign itemStatusOkay = (orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && (shipGroupAssoc.cancelQuantity?default(0) < shipGroupAssoc.quantity?default(0)) && ("Y" != orderItem.isPromo!))>
+                                <#assign itemSelectable = (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
+                                <tr>
+                                    <td class="align-text" colspan="2">
+                                        <span class="label">${uiLabelMap.OrderShipGroup}</span>&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
+                                    </td>
+                                    <td align="center">
+                                        <input type="text" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shipGroupQty?string.number}"/>
+                                        <#if itemSelectable>
+                                            <input type="checkbox" name="selectedItem" value="${orderItem.orderItemSeqId}" />
+                                        </#if>
+                                    </td>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td>
+                                        <#if itemSelectable>
+                                            <a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" class="buttontext">${uiLabelMap.CommonCancel}</a>
+                                        <#else>
+                                            &nbsp;
+                                        </#if>
+                                    </td>
+                                </tr>
+                              <#else>
+                                <tr>
+                                    <td class="align-text" colspan="2">
+                                        <span class="label">${uiLabelMap.OrderQtyShipped}</span>&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
+                                    </td>
+                                    <td align="center">
+                                        ${shippedQuantity?default(0)}<input type="hidden" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shippedQuantity?string.number}"/>
+                                    </td>
+                                    <td colspan="5">&nbsp;</td>
+                                </tr>
+                              </#if>
                           </#list>
                       </#if>
                     </#if>

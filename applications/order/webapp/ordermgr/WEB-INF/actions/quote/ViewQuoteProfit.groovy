@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.base.util.Debug;
 
 costMult = 0.0;
 quoteCoefficients.each { quoteCoefficient ->
@@ -53,11 +54,10 @@ quoteItems.each { quoteItem ->
 
     try {
         if (currency && quoteItem.productId) {
-            productPrices = delegator.findByAnd("ProductPrice", [productId : quoteItem.productId,
-                                                                 currencyUomId : currency,
-                                                                 productPriceTypeId : "AVERAGE_COST"], null, false);
-            productPrices = EntityUtil.filterByDate(productPrices, issueDate);
-            productPrice = EntityUtil.getFirst(productPrices);
+            productPrice = from("ProductPrice")
+                              .where(productId : quoteItem.productId, currencyUomId : currency, productPriceTypeId : "AVERAGE_COST")
+                              .filterByDate(issueDate)
+                              .queryFirst();
             if (productPrice?.price != null) {
                 averageCost = productPrice.price * selectedAmount;
             }
@@ -69,7 +69,7 @@ quoteItems.each { quoteItem ->
         Debug.logError("Problems getting the averageCost for quoteItem: " + quoteItem);
     }
     profit = unitPrice - averageCost;
-    percProfit = averageCost != 0 ? (unitPrice / averageCost) * 100.00 : 0.00;
+    percProfit = averageCost != 0 ? (profit / unitPrice) * 100.00 : 0.00;
     quoteItemAndCostInfo = new java.util.HashMap(quoteItem);
     quoteItemAndCostInfo.averageCost = averageCost;
     quoteItemAndCostInfo.profit = profit;
@@ -85,4 +85,4 @@ context.quoteItemAndCostInfos = quoteItemAndCostInfos;
 context.totalCost = totalCost;
 context.totalPrice = totalPrice;
 context.totalProfit = totalProfit;
-context.totalPercProfit = totalCost != 0 ? (totalPrice / totalCost) * 100.00: 0.00;
+context.totalPercProfit = totalCost != 0 ? (totalProfit / totalPrice) * 100.00: 0.00;

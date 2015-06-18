@@ -43,6 +43,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityComparisonOperator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
@@ -992,7 +993,7 @@ public class EbayOrderServices {
             if (productStoreId == null) {
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
             } else {
-                GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), false);
+                GenericValue productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).queryOne();
                 if (productStore != null) {
                     defaultCurrencyUomId = productStore.getString("defaultCurrencyUomId");
                     payToPartyId = productStore.getString("payToPartyId");
@@ -1141,7 +1142,7 @@ public class EbayOrderServices {
                 // If matching party not found then try to find partyId from PartyAttribute entity.
                 GenericValue partyAttribute = null;
                 if (UtilValidate.isNotEmpty(context.get("eiasTokenBuyer"))) {
-                    partyAttribute = EntityUtil.getFirst(delegator.findByAnd("PartyAttribute", UtilMisc.toMap("attrValue", (String) context.get("eiasTokenBuyer")), null, false));
+                    partyAttribute = EntityQuery.use(delegator).from("PartyAttribute").where("attrValue", (String) context.get("eiasTokenBuyer")).queryFirst();
                     if (UtilValidate.isNotEmpty(partyAttribute)) {
                         partyId = (String) partyAttribute.get("partyId");
                     }
@@ -1150,7 +1151,7 @@ public class EbayOrderServices {
                 // if we get a party, check its contact information.
                 if (UtilValidate.isNotEmpty(partyId)) {
                     Debug.logInfo("Found existing party associated to the eBay buyer: " + partyId, module);
-                    GenericValue party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+                    GenericValue party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
 
                     contactMechId = EbayHelper.setShippingAddressContactMech(dispatcher, delegator, party, userLogin, shippingAddressCtx);
                     String emailBuyer = (String) context.get("emailBuyer");
@@ -1250,18 +1251,16 @@ public class EbayOrderServices {
     // Made some changes transactionId removed.
     private static GenericValue externalOrderExists(Delegator delegator, String externalId) throws GenericEntityException {
         Debug.logInfo("Checking for existing externalId: " + externalId, module);
-        GenericValue orderHeader = null;
         EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("externalId", EntityComparisonOperator.EQUALS, externalId), EntityCondition.makeCondition("statusId", EntityComparisonOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityComparisonOperator.AND);
-        List<GenericValue> orderHeaderList = delegator.findList("OrderHeader", condition, null, null, null, true);
-        if (UtilValidate.isNotEmpty(orderHeaderList)) {
-            orderHeader = EntityUtil.getFirst(orderHeaderList);
-        }
+        GenericValue orderHeader = EntityQuery.use(delegator).from("OrderHeader")
+                .where(condition)
+                .cache(true).queryFirst();
         return orderHeader;
     }
 
     private static void addItem(ShoppingCart cart, Map<String, Object> orderItem, LocalDispatcher dispatcher, Delegator delegator, int groupIdx) throws GeneralException {
         String productId = (String) orderItem.get("productId");
-        GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+        GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
         if (UtilValidate.isEmpty(product)) {
             String productMissingMsg = "The product having ID (" + productId + ") is misssing in the system.";
             orderImportFailureMessageList.add(productMissingMsg);

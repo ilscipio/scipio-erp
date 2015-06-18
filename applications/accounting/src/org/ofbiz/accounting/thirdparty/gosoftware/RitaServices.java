@@ -30,7 +30,6 @@ import org.ofbiz.accounting.payment.PaymentGatewayServices;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
@@ -38,7 +37,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -55,7 +55,8 @@ public class RitaServices {
 
     public static Map<String, Object> ccAuth(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Properties props = buildPccProperties(context);
+        Delegator delegator = dctx.getDelegator();
+        Properties props = buildPccProperties(context, delegator);
         RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
@@ -143,7 +144,8 @@ public class RitaServices {
     public static Map<String, Object> ccCapture(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         Locale locale = (Locale) context.get("locale");
-
+        Delegator delegator = dctx.getDelegator();
+        
         //lets see if there is a auth transaction already in context
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
 
@@ -157,7 +159,7 @@ public class RitaServices {
         }
 
         // setup the RiTA Interface
-        Properties props = buildPccProperties(context);
+        Properties props = buildPccProperties(context, delegator);
         RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
@@ -211,7 +213,8 @@ public class RitaServices {
     private static Map<String, Object> ccVoid(DispatchContext dctx, Map<String, ? extends Object> context, boolean isRefund) {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         Locale locale = (Locale) context.get("locale");
-
+        Delegator delegator = dctx.getDelegator();
+        
         //lets see if there is a auth transaction already in context
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
 
@@ -225,7 +228,7 @@ public class RitaServices {
         }
 
         // setup the RiTA Interface
-        Properties props = buildPccProperties(context);
+        Properties props = buildPccProperties(context, delegator);
         RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
@@ -278,7 +281,8 @@ public class RitaServices {
     public static Map<String, Object> ccCreditRefund(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         Locale locale = (Locale) context.get("locale");
-
+        Delegator delegator = dctx.getDelegator();
+        
         //lets see if there is a auth transaction already in context
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
 
@@ -292,7 +296,7 @@ public class RitaServices {
         }
 
         // setup the RiTA Interface
-        Properties props = buildPccProperties(context);
+        Properties props = buildPccProperties(context, delegator);
         RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
@@ -364,9 +368,8 @@ public class RitaServices {
                 Timestamp orderDate = orderHeader.getTimestamp("orderDate");
                 GenericValue terminalState = null;
                 try {
-                    List<GenericValue> states = delegator.findByAnd("PosTerminalState", UtilMisc.toMap("posTerminalId", terminalId), null, false);
-                    states = EntityUtil.filterByDate(states, UtilDateTime.nowTimestamp(), "openedDate", "closedDate", true);
-                    terminalState = EntityUtil.getFirst(states);
+                    terminalState = EntityQuery.use(delegator).from("PosTerminalState")
+                            .where("posTerminalId", terminalId).filterByDate("openedDate", "closedDate").queryFirst();
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                 }
@@ -405,7 +408,7 @@ public class RitaServices {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         GenericValue creditCard = (GenericValue) context.get("creditCard");
         if (creditCard == null) {
-            creditCard = delegator.findOne("CreditCard", UtilMisc.toMap("paymentMethodId", orderPaymentPreference.getString("paymentMethodId")), false);
+            creditCard = EntityQuery.use(delegator).from("CreditCard").where("paymentMethodId", orderPaymentPreference.getString("paymentMethodId")).queryOne();
         }
         if (creditCard != null) {
             List<String> expDateList = StringUtil.split(creditCard.getString("expireDate"), "/");
@@ -505,20 +508,20 @@ public class RitaServices {
         return api;
     }
 
-    private static Properties buildPccProperties(Map<String, ? extends Object> context) {
+    private static Properties buildPccProperties(Map<String, ? extends Object> context, Delegator delegator) {
         String configString = (String) context.get("paymentConfig");
         if (configString == null) {
             configString = "payment.properties";
         }
 
-        String clientId = UtilProperties.getPropertyValue(configString, "payment.rita.clientID");
-        String userId = UtilProperties.getPropertyValue(configString, "payment.rita.userID");
-        String userPw = UtilProperties.getPropertyValue(configString, "payment.rita.userPW");
-        String host = UtilProperties.getPropertyValue(configString, "payment.rita.host");
-        String port = UtilProperties.getPropertyValue(configString, "payment.rita.port");
-        String ssl = UtilProperties.getPropertyValue(configString, "payment.rita.ssl", "N");
-        String autoBill = UtilProperties.getPropertyValue(configString, "payment.rita.autoBill", "0");
-        String forceTx = UtilProperties.getPropertyValue(configString, "payment.rita.forceTx", "0");
+        String clientId = EntityUtilProperties.getPropertyValue(configString, "payment.rita.clientID", delegator);
+        String userId = EntityUtilProperties.getPropertyValue(configString, "payment.rita.userID", delegator);
+        String userPw = EntityUtilProperties.getPropertyValue(configString, "payment.rita.userPW", delegator);
+        String host = EntityUtilProperties.getPropertyValue(configString, "payment.rita.host", delegator);
+        String port = EntityUtilProperties.getPropertyValue(configString, "payment.rita.port", delegator);
+        String ssl = EntityUtilProperties.getPropertyValue(configString, "payment.rita.ssl", "N", delegator);
+        String autoBill = EntityUtilProperties.getPropertyValue(configString, "payment.rita.autoBill", "0", delegator);
+        String forceTx = EntityUtilProperties.getPropertyValue(configString, "payment.rita.forceTx", "0", delegator);
 
         // some property checking
         if (UtilValidate.isEmpty(clientId)) {

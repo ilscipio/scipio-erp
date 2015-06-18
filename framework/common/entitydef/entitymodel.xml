@@ -311,12 +311,6 @@ under the License.
     <extend-entity entity-name="Visit">
         <field name="clientIpStateProvGeoId" type="id"></field>
         <field name="clientIpCountryGeoId" type="id"></field>
-        <relation type="one" fk-name="VISIT_CIP_STPRV" title="ClientIpStateProv" rel-entity-name="Geo">
-            <key-map field-name="clientIpStateProvGeoId" rel-field-name="geoId"/>
-        </relation>
-        <relation type="one" fk-name="VISIT_CIP_CNTRY" title="ClientIpCountry" rel-entity-name="Geo">
-            <key-map field-name="clientIpCountryGeoId" rel-field-name="geoId"/>
-        </relation>
     </extend-entity>
  
   <!-- ========================================================= -->
@@ -741,7 +735,7 @@ under the License.
         <!-- defined in an extend in content component to avoid dependencies between common and content
         <field name="helpContentId" type="id"><description>Used to give contentId which will be shown when help on this page will be called</description></field>
          -->
-        <field name="ownerUserLoginId" type="id"></field>
+        <field name="ownerUserLoginId" type="id-vlong-ne"></field>
         <field name="originalPortalPageId" type="id"><description>The system portal page this page is derived from</description></field>
         <field name="parentPortalPageId" type="id"><description>the parent this page is belonging to, normally the startpage of the portal page group</description></field>
         <field name="sequenceNum" type="numeric"></field>

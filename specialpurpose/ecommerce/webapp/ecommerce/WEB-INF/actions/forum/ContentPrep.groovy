@@ -23,8 +23,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
-import org.ofbiz.widget.html.*;
-import org.ofbiz.widget.form.*;
+import org.ofbiz.widget.renderer.html.HtmlFormWrapper;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.webapp.ftl.FreeMarkerViewHandler;
 import org.ofbiz.content.content.ContentWorker;
@@ -61,7 +60,7 @@ if (!contentId && currentValue) {
     contentId = currentValue.contentId;
 }
 if (contentId && !currentValue) {
-    currentValue = delegator.findOne("Content", [contentId : contentId], true);
+    currentValue = from("Content").where("contentId", contentId).cache(true).queryOne();
 }
 //Debug.logInfo("in contentprep, currentValue(1):" + currentValue, "");
 //Debug.logInfo("in contentprep, contentId(4):" + contentId, "");

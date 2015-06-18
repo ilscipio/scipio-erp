@@ -36,6 +36,8 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 
 import com.ibm.icu.util.Calendar;
 
@@ -212,7 +214,7 @@ public class ServerHitBin {
             // put the copy at the first of the list, then put this object back on
             if (bin.getNumberHits() > 0) {
                 // persist each bin when time ends if option turned on
-                if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".bin", "true")) {
+                if (EntityUtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".bin", "true", delegator)) {
                     GenericValue serverHitBin = delegator.makeValue("ServerHitBin");
                     serverHitBin.set("contentId", bin.id);
                     serverHitBin.set("hitTypeId", ServerHitBin.typeIds[bin.type]);
@@ -464,7 +466,8 @@ public class ServerHitBin {
 
     private void saveHit(HttpServletRequest request, long startTime, long runningTime, GenericValue userLogin) throws GenericEntityException {
         // persist record of hit in ServerHit entity if option turned on
-        if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".hit", "true")) {
+    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+        if (EntityUtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".hit", "true", delegator)) {
             // if the hit type is ENTITY and the name contains "ServerHit" don't
             // persist; avoids the infinite loop and a bunch of annoying data
             if (this.type == ENTITY && this.id.indexOf("ServerHit") > 0) {
@@ -474,7 +477,7 @@ public class ServerHitBin {
             // check for type data before running.
             GenericValue serverHitType = null;
 
-            serverHitType = delegator.findOne("ServerHitType", UtilMisc.toMap("hitTypeId", ServerHitBin.typeIds[this.type]), true);
+            serverHitType = EntityQuery.use(delegator).from("ServerHitType").where("hitTypeId", ServerHitBin.typeIds[this.type]).cache().queryOne();
             if (serverHitType == null) {
                 // datamodel data not loaded; not storing hit.
                 Debug.logWarning("The datamodel data has not been loaded; cannot find hitTypeId '" + ServerHitBin.typeIds[this.type] + " not storing ServerHit.", module);
@@ -488,7 +491,7 @@ public class ServerHitBin {
                 return;
             }
             String visitId = visit.getString("visitId");
-            visit = delegator.findOne("Visit", UtilMisc.toMap("visitId", visitId), false);
+            visit = EntityQuery.use(delegator).from("Visit").where("visitId", visitId).queryOne();
             if (visit == null) {
                 // GenericValue stored in client session does not exist in database.
                 Debug.logInfo("The Visit GenericValue stored in the client session does not exist in the database, not storing server hit.", module);

@@ -56,6 +56,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.product.category.CategoryContentWrapper;
@@ -121,7 +122,7 @@ public class ProductSearch {
 
         // now find all sub-categories, filtered by effective dates, and call this routine for them
         try {
-            List<GenericValue> productCategoryRollupList = delegator.findByAnd("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryId), null, true);
+            List<GenericValue> productCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", productCategoryId).cache(true).queryList();
             for (GenericValue productCategoryRollup: productCategoryRollupList) {
                 String subProductCategoryId = productCategoryRollup.getString("productCategoryId");
                 if (productCategoryIdSet.contains(subProductCategoryId)) {
@@ -661,21 +662,23 @@ public class ProductSearch {
             }
 
             dynamicViewEntity.addAlias("PROD", "mainProductId", "productId", null, null, Boolean.valueOf(productIdGroupBy), null);
-            EntityCondition whereCondition = EntityCondition.makeCondition(entityConditionList, EntityOperator.AND);
-            EntityFindOptions efo = new EntityFindOptions();
-            efo.setDistinct(true);
-            efo.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
-            if (maxResults != null) {
-                int queryMaxResults = maxResults;
-                if (resultOffset != null) {
-                    queryMaxResults += resultOffset - 1;
-                }
-                efo.setMaxRows(queryMaxResults);
-            }
 
             EntityListIterator eli = null;
             try {
-                eli = delegator.findListIteratorByCondition(dynamicViewEntity, whereCondition, null, fieldsToSelect, orderByList, efo);
+                int queryMaxResults = 0;
+                if (maxResults != null) {
+                    queryMaxResults = maxResults;
+                    if (resultOffset != null) {
+                        queryMaxResults += resultOffset - 1;
+                    }
+                }
+                eli = EntityQuery.use(delegator).select(UtilMisc.toSet(fieldsToSelect))
+                        .from(dynamicViewEntity).where(entityConditionList)
+                        .orderBy(orderByList)
+                        .distinct(true)
+                        .maxRows(queryMaxResults)
+                        .cursorScrollInsensitive()
+                        .queryIterator();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error in product search", module);
                 return null;
@@ -888,7 +891,7 @@ public class ProductSearch {
         public String prettyPrintConstraint(Delegator delegator, boolean detailed, Locale locale) {
             GenericValue prodCatalog = null;
             try {
-                prodCatalog = delegator.findOne("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId), true);
+                prodCatalog = EntityQuery.use(delegator).from("ProdCatalog").where("prodCatalogId", prodCatalogId).cache().queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error finding ProdCatalog information for constraint pretty print", module);
             }
@@ -969,7 +972,7 @@ public class ProductSearch {
         public String prettyPrintConstraint(Delegator delegator, boolean detailed, Locale locale) {
             GenericValue productCategory = null;
             try {
-                productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
+                productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache().queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error finding ProductCategory information for constraint pretty print", module);
             }
@@ -1054,7 +1057,7 @@ public class ProductSearch {
             GenericValue productFeature = null;
             GenericValue productFeatureType = null;
             try {
-                productFeature = delegator.findOne("ProductFeature", UtilMisc.toMap("productFeatureId", productFeatureId), true);
+                productFeature = EntityQuery.use(delegator).from("ProductFeature").where("productFeatureId", productFeatureId).cache().queryOne();
                 productFeatureType = productFeature == null ? null : productFeature.getRelatedOne("ProductFeatureType", false);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error finding ProductFeature and Type information for constraint pretty print", module);
@@ -1136,7 +1139,7 @@ public class ProductSearch {
         public String prettyPrintConstraint(Delegator delegator, boolean detailed, Locale locale) {
             GenericValue productFeatureCategory = null;
             try {
-                productFeatureCategory = delegator.findOne("ProductFeatureCategory", UtilMisc.toMap("productFeatureCategoryId", productFeatureCategoryId), true);
+                productFeatureCategory = EntityQuery.use(delegator).from("ProductFeatureCategory").where("productFeatureCategoryId", productFeatureCategoryId).cache().queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error finding ProductFeatureCategory and Type information for constraint pretty print", module);
             }
@@ -1217,7 +1220,7 @@ public class ProductSearch {
         public String prettyPrintConstraint(Delegator delegator, boolean detailed, Locale locale) {
             GenericValue productFeatureGroup = null;
             try {
-                productFeatureGroup = delegator.findOne("ProductFeatureGroup", UtilMisc.toMap("productFeatureGroupId", productFeatureGroupId), true);
+                productFeatureGroup = EntityQuery.use(delegator).from("ProductFeatureGroup").where("productFeatureGroupId", productFeatureGroupId).cache().queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error finding ProductFeatureGroup and Type information for constraint pretty print", module);
             }
@@ -1311,7 +1314,7 @@ public class ProductSearch {
                     if (infoOut.length() > 0) {
                         infoOut.append(", ");
                     }
-                    GenericValue productFeature = delegator.findOne("ProductFeature", UtilMisc.toMap("productFeatureId", featureId), true);
+                    GenericValue productFeature = EntityQuery.use(delegator).from("ProductFeature").where("productFeatureId", featureId).cache().queryOne();
                     GenericValue productFeatureType = productFeature == null ? null : productFeature.getRelatedOne("ProductFeatureType", true);
                     if (productFeatureType == null) {
                         infoOut.append(UtilProperties.getMessage(resource, "ProductFeature", locale)).append(": ");

@@ -40,6 +40,7 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
@@ -921,7 +922,7 @@ public class PayflowPro {
         String returnValue = "";
         if (UtilValidate.isNotEmpty(paymentGatewayConfigId)) {
             try {
-                GenericValue payflowPro = delegator.findOne("PaymentGatewayPayflowPro", UtilMisc.toMap("paymentGatewayConfigId", paymentGatewayConfigId), false);
+                GenericValue payflowPro = EntityQuery.use(delegator).from("PaymentGatewayPayflowPro").where("paymentGatewayConfigId", paymentGatewayConfigId).queryOne();
                 if (UtilValidate.isNotEmpty(payflowPro)) {
                     Object payflowProField = payflowPro.get(paymentGatewayConfigParameterName);
                     if (payflowProField != null) {
@@ -932,7 +933,7 @@ public class PayflowPro {
                 Debug.logError(e, module);
             }
         } else {
-            String value = UtilProperties.getPropertyValue(resource, parameterName);
+            String value = EntityUtilProperties.getPropertyValue(resource, parameterName, delegator);
             if (value != null) {
                 returnValue = value.trim();
             }

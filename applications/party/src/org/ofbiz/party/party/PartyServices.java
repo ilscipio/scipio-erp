@@ -53,8 +53,10 @@ import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -137,7 +139,7 @@ public class PartyServices {
         GenericValue party = null;
 
         try {
-            party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+            party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
         }
@@ -178,7 +180,7 @@ public class PartyServices {
         GenericValue person = null;
 
         try {
-            person = delegator.findOne("Person", UtilMisc.toMap("partyId", partyId), false);
+            person = EntityQuery.use(delegator).from("Person").where("partyId", partyId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
         }
@@ -221,17 +223,18 @@ public class PartyServices {
         }
 
         try {
-            GenericValue party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
-
-            if (party.get("statusId") == null) { // old records
-                party.set("statusId", "PARTY_ENABLED");
-            }
+            GenericValue party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
 
             String oldStatusId = party.getString("statusId");
-            if (!party.getString("statusId").equals(statusId)) {
+            if (!statusId.equals(oldStatusId)) {
+
+                if (oldStatusId == null) { // old records
+                    party.set("statusId", "PARTY_ENABLED");
+                    oldStatusId = party.getString("statusId");
+                } else {
 
                 // check that status is defined as a valid change
-                GenericValue statusValidChange = delegator.findOne("StatusValidChange", UtilMisc.toMap("statusId", party.getString("statusId"), "statusIdTo", statusId), false);
+                GenericValue statusValidChange = EntityQuery.use(delegator).from("StatusValidChange").where("statusId", party.getString("statusId"), "statusIdTo", statusId).queryOne();
                 if (statusValidChange == null) {
                     String errorMsg = "Cannot change party status from " + party.getString("statusId") + " to " + statusId;
                     Debug.logWarning(errorMsg, module);
@@ -242,6 +245,7 @@ public class PartyServices {
                 }
 
                 party.set("statusId", statusId);
+                }
                 party.store();
 
                 // record this status change in PartyStatus table
@@ -250,7 +254,7 @@ public class PartyServices {
 
                 // disable all userlogins for this user when the new status is disabled
                 if (("PARTY_DISABLED").equals(statusId)) {
-                    List <GenericValue> userLogins = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", partyId), null, false);
+                    List <GenericValue> userLogins = EntityQuery.use(delegator).from("UserLogin").where("partyId", partyId).queryList();
                     for (GenericValue userLogin : userLogins) {
                         if (!"N".equals(userLogin.getString("enabled"))) {
                             userLogin.set("enabled", "N");
@@ -292,8 +296,8 @@ public class PartyServices {
         GenericValue party = null;
 
         try {
-            person = delegator.findOne("Person", UtilMisc.toMap("partyId", partyId), false);
-            party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+            person = EntityQuery.use(delegator).from("Person").where("partyId", partyId).queryOne();
+            party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -375,8 +379,8 @@ public class PartyServices {
 
         try {
             // check to see if party object exists, if so make sure it is PARTY_GROUP type party
-            GenericValue party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
-            GenericValue partyGroupPartyType = delegator.findOne("PartyType", UtilMisc.toMap("partyTypeId", "PARTY_GROUP"), true);
+            GenericValue party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
+            GenericValue partyGroupPartyType = EntityQuery.use(delegator).from("PartyType").where("partyTypeId", "PARTY_GROUP").cache().queryOne();
 
             if (partyGroupPartyType == null) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -395,7 +399,7 @@ public class PartyServices {
                 String partyTypeId = "PARTY_GROUP";
 
                 if (UtilValidate.isNotEmpty(context.get("partyTypeId"))) {
-                    GenericValue desiredPartyType = delegator.findOne("PartyType", UtilMisc.toMap("partyTypeId", context.get("partyTypeId")), true);
+                    GenericValue desiredPartyType = EntityQuery.use(delegator).from("PartyType").where("partyTypeId", context.get("partyTypeId")).cache().queryOne();
                     if (desiredPartyType != null && EntityTypeUtil.isType(desiredPartyType, partyGroupPartyType)) {
                         partyTypeId = desiredPartyType.getString("partyTypeId");
                     } else {
@@ -426,7 +430,7 @@ public class PartyServices {
                 partyStat.create();
             }
 
-            GenericValue partyGroup = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
+            GenericValue partyGroup = EntityQuery.use(delegator).from("PartyGroup").where("partyId", partyId).queryOne();
             if (partyGroup != null) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                         "partyservices.cannot_create_party_group_already_exists", locale));
@@ -470,8 +474,8 @@ public class PartyServices {
         GenericValue party = null;
 
         try {
-            partyGroup = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
-            party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+            partyGroup = EntityQuery.use(delegator).from("PartyGroup").where("partyId", partyId).queryOne();
+            party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -549,7 +553,7 @@ public class PartyServices {
         GenericValue party = null;
 
         try {
-            party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+            party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
         }
@@ -562,7 +566,7 @@ public class PartyServices {
         GenericValue affiliate = null;
 
         try {
-            affiliate = delegator.findOne("Affiliate", UtilMisc.toMap("partyId", partyId), false);
+            affiliate = EntityQuery.use(delegator).from("Affiliate").where("partyId", partyId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
         }
@@ -609,7 +613,7 @@ public class PartyServices {
         GenericValue affiliate = null;
 
         try {
-            affiliate = delegator.findOne("Affiliate", UtilMisc.toMap("partyId", partyId), false);
+            affiliate = EntityQuery.use(delegator).from("Affiliate").where("partyId", partyId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -655,7 +659,7 @@ public class PartyServices {
         //Make sure the note Id actually exists if one is passed to avoid a foreign key error below
         if (noteId != null) {
             try {
-                GenericValue value = delegator.findOne("NoteData", UtilMisc.toMap("noteId", noteId), false);
+                GenericValue value = EntityQuery.use(delegator).from("NoteData").where("noteId", noteId).queryOne();
                 if (value == null) {
                     Debug.logError("ERROR: Note id does not exist for : " + noteId + ", autogenerating." , module);
                     noteId = null;
@@ -725,8 +729,11 @@ public class PartyServices {
         }
 
         try {
-            EntityExpr ee = EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("infoString"), EntityOperator.EQUALS, EntityFunction.UPPER(email.toUpperCase()));
-            List<GenericValue> c = EntityUtil.filterByDate(delegator.findList("PartyAndContactMech", ee, null, UtilMisc.toList("infoString"), null, false), true);
+            List<GenericValue> c = EntityQuery.use(delegator).from("PartyAndContactMech")
+                    .where(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("infoString"), EntityOperator.EQUALS, EntityFunction.UPPER(email.toUpperCase())))
+                    .orderBy("infoString")
+                    .filterByDate()
+                    .queryList();
 
             if (Debug.verboseOn()) Debug.logVerbose("List: " + c, module);
             if (Debug.infoOn()) Debug.logInfo("PartyFromEmail number found: " + c.size(), module);
@@ -760,8 +767,11 @@ public class PartyServices {
         }
 
         try {
-            EntityExpr ee = EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("infoString"), EntityOperator.LIKE, EntityFunction.UPPER(("%" + email.toUpperCase()) + "%"));
-            List<GenericValue> c = EntityUtil.filterByDate(delegator.findList("PartyAndContactMech", ee, null, UtilMisc.toList("infoString"), null, false), true);
+            List<GenericValue> c = EntityQuery.use(delegator).from("PartyAndContactMech")
+                    .where(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("infoString"), EntityOperator.LIKE, EntityFunction.UPPER(("%" + email.toUpperCase()) + "%")))
+                    .orderBy("infoString")
+                    .filterByDate()
+                    .queryList();
 
             if (Debug.verboseOn()) Debug.logVerbose("List: " + c, module);
             if (Debug.infoOn()) Debug.logInfo("PartyFromEmail number found: " + c.size(), module);
@@ -801,8 +811,10 @@ public class PartyServices {
                     "PartyCannotGetUserLoginFromParty", locale));
 
         try {
-            EntityExpr ee = EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("userLoginId"), EntityOperator.LIKE, EntityFunction.UPPER("%" + userLoginId.toUpperCase() + "%"));
-            Collection<GenericValue> ulc = delegator.findList("PartyAndUserLogin", ee, null, UtilMisc.toList("userLoginId"), null, false);
+            Collection<GenericValue> ulc = EntityQuery.use(delegator).from("PartyAndUserLogin")
+                    .where(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("userLoginId"), EntityOperator.LIKE, EntityFunction.UPPER("%" + userLoginId.toUpperCase() + "%")))
+                    .orderBy("userLoginId")
+                    .queryList();
 
             if (Debug.verboseOn()) Debug.logVerbose("Collection: " + ulc, module);
             if (Debug.infoOn()) Debug.logInfo("PartyFromUserLogin number found: " + ulc.size(), module);
@@ -853,7 +865,7 @@ public class PartyServices {
             EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(EntityOperator.AND,
                     EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("firstName"), EntityOperator.LIKE, EntityFunction.UPPER("%" + firstName.toUpperCase() + "%")),
                     EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("lastName"), EntityOperator.LIKE, EntityFunction.UPPER("%" + lastName.toUpperCase() + "%")));
-            Collection<GenericValue> pc = delegator.findList("Person", ecl, null, UtilMisc.toList("lastName", "firstName", "partyId"), null, false);
+            Collection<GenericValue> pc = EntityQuery.use(delegator).from("Person").where(ecl).orderBy("lastName", "firstName", "partyId").queryList();
 
             if (Debug.infoOn()) Debug.logInfo("PartyFromPerson number found: " + pc.size(), module);
             if (pc != null) {
@@ -893,8 +905,10 @@ public class PartyServices {
         }
 
         try {
-            EntityExpr ee = EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("groupName"), EntityOperator.LIKE, EntityFunction.UPPER("%" + groupName.toUpperCase() + "%"));
-            Collection<GenericValue> pc = delegator.findList("PartyGroup", ee, null, UtilMisc.toList("groupName", "partyId"), null, false);
+            Collection<GenericValue> pc = EntityQuery.use(delegator).from("PartyGroup")
+                    .where(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("groupName"), EntityOperator.LIKE, EntityFunction.UPPER("%" + groupName.toUpperCase() + "%")))
+                    .orderBy("groupName", "partyId")
+                    .queryList();
 
             if (Debug.infoOn()) Debug.logInfo("PartyFromGroup number found: " + pc.size(), module);
             if (pc != null) {
@@ -923,7 +937,7 @@ public class PartyServices {
         GenericValue person = null;
 
         try {
-            person = delegator.findOne("Person", UtilMisc.toMap("partyId", partyId), true);
+            person = EntityQuery.use(delegator).from("Person").where("partyId", partyId).cache().queryOne();
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "partyservices.cannot_get_party_entities_read",
@@ -970,8 +984,8 @@ public class PartyServices {
 
         try {
             // validate the existance of party and dataSource
-            GenericValue party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
-            GenericValue dataSource = delegator.findOne("DataSource", UtilMisc.toMap("dataSourceId", dataSourceId), false);
+            GenericValue party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
+            GenericValue dataSource = EntityQuery.use(delegator).from("DataSource").where("dataSourceId", dataSourceId).queryOne();
             if (party == null || dataSource == null) {
                 List<String> errorList = UtilMisc.toList(UtilProperties.getMessage(resource, 
                         "PartyCannotCreatePartyDataSource", locale));
@@ -1008,7 +1022,7 @@ public class PartyServices {
 
         // get the role types
         try {
-            List<GenericValue> roleTypes = delegator.findList("RoleType", null, null, UtilMisc.toList("description"), null, false);
+            List<GenericValue> roleTypes = EntityQuery.use(delegator).from("RoleType").orderBy("description").queryList();
             result.put("roleTypes", roleTypes);
         } catch (GenericEntityException e) {
             String errMsg = "Error looking up RoleTypes: " + e.toString();
@@ -1023,7 +1037,7 @@ public class PartyServices {
         try {
             roleTypeId = (String) context.get("roleTypeId");
             if (UtilValidate.isNotEmpty(roleTypeId)) {
-                GenericValue currentRole = delegator.findOne("RoleType", UtilMisc.toMap("roleTypeId", roleTypeId), true);
+                GenericValue currentRole = EntityQuery.use(delegator).from("RoleType").where("roleTypeId", roleTypeId).cache().queryOne();
                 result.put("currentRole", currentRole);
             }
         } catch (GenericEntityException e) {
@@ -1036,7 +1050,7 @@ public class PartyServices {
 
         //get party types
         try {
-            List<GenericValue> partyTypes = delegator.findList("PartyType", null, null, UtilMisc.toList("description"), null, false);
+            List<GenericValue> partyTypes = EntityQuery.use(delegator).from("PartyType").orderBy("description").queryList();
             result.put("partyTypes", partyTypes);
         } catch (GenericEntityException e) {
             String errMsg = "Error looking up PartyTypes: " + e.toString();
@@ -1051,7 +1065,7 @@ public class PartyServices {
         try {
             partyTypeId = (String) context.get("partyTypeId");
             if (UtilValidate.isNotEmpty(partyTypeId)) {
-                GenericValue currentPartyType = delegator.findOne("PartyType", UtilMisc.toMap("partyTypeId", partyTypeId), true);
+                GenericValue currentPartyType = EntityQuery.use(delegator).from("PartyType").where("partyTypeId", partyTypeId).cache().queryOne();
                 result.put("currentPartyType", currentPartyType);
             }
         } catch (GenericEntityException e) {
@@ -1067,7 +1081,7 @@ public class PartyServices {
         try {
             stateProvinceGeoId = (String) context.get("stateProvinceGeoId");
             if (UtilValidate.isNotEmpty(stateProvinceGeoId)) {
-                GenericValue currentStateGeo = delegator.findOne("Geo", UtilMisc.toMap("geoId", stateProvinceGeoId), true);
+                GenericValue currentStateGeo = EntityQuery.use(delegator).from("Geo").where("geoId", stateProvinceGeoId).cache().queryOne();
                 result.put("currentStateGeo", currentStateGeo);
             }
         } catch (GenericEntityException e) {
@@ -1455,9 +1469,15 @@ public class PartyServices {
                     highIndex = (viewIndex + 1) * viewSize;
 
                     // set distinct on so we only get one row per order
-                    EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, -1, highIndex, true);
                     // using list iterator
-                    EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, fieldsToSelect, orderBy, findOpts);
+                    EntityListIterator pli = EntityQuery.use(delegator).select(UtilMisc.toSet(fieldsToSelect))
+                            .from(dynamicView)
+                            .where(mainCond)
+                            .orderBy(orderBy)
+                            .cursorScrollInsensitive()
+                            .fetchSize(highIndex)
+                            .distinct()
+                            .queryIterator();
 
                     // get the partial list for this page
                     partyList = pli.getPartialList(lowIndex, viewSize);
@@ -1519,7 +1539,7 @@ public class PartyServices {
         // get the from/to party records
         GenericValue partyTo;
         try {
-            partyTo = delegator.findOne("Party", UtilMisc.toMap("partyId", partyIdTo), false);
+            partyTo = EntityQuery.use(delegator).from("Party").where("partyId", partyIdTo).queryOne();
         } catch (GenericEntityException e) {
             Debug.logInfo(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -1535,7 +1555,7 @@ public class PartyServices {
 
         GenericValue party;
         try {
-            party = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+            party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logInfo(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -1602,7 +1622,7 @@ public class PartyServices {
         // update the non-existing party roles
         List<GenericValue> rolesToMove;
         try {
-            rolesToMove = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", partyId), null, false);
+            rolesToMove = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyId).queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -1611,7 +1631,7 @@ public class PartyServices {
         for (GenericValue attr: rolesToMove) {
             attr.set("partyId", partyIdTo);
             try {
-                if (delegator.findOne("PartyRole", attr.getPrimaryKey(), false) == null) {
+                if (EntityQuery.use(delegator).from("PartyRole").where(attr.getPrimaryKey()).queryOne() == null) {
                     attr.create();
                 }
             } catch (GenericEntityException e) {
@@ -1694,7 +1714,7 @@ public class PartyServices {
         // update the non-existing attributes
         List<GenericValue> attrsToMove;
         try {
-            attrsToMove = delegator.findByAnd("PartyAttribute", UtilMisc.toMap("partyId", partyId), null, false);
+            attrsToMove = EntityQuery.use(delegator).from("PartyAttribute").where("partyId", partyId).queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -1703,7 +1723,7 @@ public class PartyServices {
         for (GenericValue attr: attrsToMove) {
             attr.set("partyId", partyIdTo);
             try {
-                if (delegator.findOne("PartyAttribute", attr.getPrimaryKey(), false) == null) {
+                if (EntityQuery.use(delegator).from("PartyAttribute").where(attr.getPrimaryKey()).queryOne() == null) {
                     attr.create();
                 }
             } catch (GenericEntityException e) {
@@ -1915,24 +1935,26 @@ public class PartyServices {
                     lastContactNumber = null;
                     
                     // party validation
-                    List <GenericValue> currencyCheck = delegator.findByAnd("Uom", UtilMisc.toMap("abbreviation", rec.get("preferredCurrencyUomId"), "uomTypeId", "CURRENCY_MEASURE"), null, false);
+                    List <GenericValue> currencyCheck = EntityQuery.use(delegator).from("Uom")
+                            .where("abbreviation", rec.get("preferredCurrencyUomId"), "uomTypeId", "CURRENCY_MEASURE")
+                            .queryList();
                     if (UtilValidate.isNotEmpty(rec.get("preferredCurrencyUomId")) && currencyCheck.size() == 0) {
                         newErrMsgs.add("Line number " + rec.getRecordNumber() + ": partyId: " + currentPartyId + "Currency code not found for: " + rec.get("preferredCurrencyUomId"));
                     }
 
                     if (UtilValidate.isEmpty(rec.get("roleTypeId"))) {
                         newErrMsgs.add("Line number " + rec.getRecordNumber() + ": Mandatory roletype is missing, possible values: CUSTOMER, SUPPLIER, EMPLOYEE and more....");
-                    } else if (delegator.findOne("RoleType", UtilMisc.<String, Object>toMap("roleTypeId", rec.get("roleTypeId")), true) == null) {
+                    } else if (EntityQuery.use(delegator).from("RoleType").where("roleTypeId", rec.get("roleTypeId")).queryOne() == null) {
                         newErrMsgs.add("Line number " + rec.getRecordNumber() + ": RoletypeId is not valid: " + rec.get("roleTypeId") );
                     }
 
                     if (UtilValidate.isNotEmpty(rec.get("contactMechTypeId")) &&
-                            delegator.findOne("ContactMechType", true, UtilMisc.toMap("contactMechTypeId", rec.get("contactMechTypeId"))) == null) {
+                            EntityQuery.use(delegator).from("ContactMechType").where("contactMechTypeId", rec.get("contactMechTypeId")).cache().queryOne() == null) {
                         newErrMsgs.add("Line number " + rec.getRecordNumber() + ": partyId: " + currentPartyId + " contactMechTypeId code not found for: " + rec.get("contactMechTypeId"));
                     }
                     
                     if (UtilValidate.isNotEmpty(rec.get("contactMechPurposeTypeId")) &&
-                            delegator.findOne("ContactMechPurposeType", true, UtilMisc.toMap("contactMechPurposeTypeId", rec.get("contactMechPurposeTypeId"))) == null) {
+                            EntityQuery.use(delegator).from("ContactMechPurposeType").where("contactMechPurposeTypeId", rec.get("contactMechPurposeTypeId")).cache().queryOne() == null) {
                         newErrMsgs.add("Line number " + rec.getRecordNumber() + ": partyId: " + currentPartyId + "contactMechPurposeTypeId code not found for: " + rec.get("contactMechPurposeTypeId"));
                     }
                     
@@ -1940,7 +1962,9 @@ public class PartyServices {
                         if (UtilValidate.isEmpty(rec.get("countryGeoId"))) {
                             newErrMsgs.add("Line number " + rec.getRecordNumber() + ": partyId: " + currentPartyId + "Country code missing");
                         } else {
-                            List <GenericValue> countryCheck = delegator.findByAnd("Geo", UtilMisc.toMap("geoTypeId", "COUNTRY", "abbreviation", rec.get("countryGeoId")), null, false);
+                            List <GenericValue> countryCheck = EntityQuery.use(delegator).from("Geo")
+                                    .where("geoTypeId", "COUNTRY", "abbreviation", rec.get("countryGeoId"))
+                                    .queryList();
                             if (countryCheck.size() == 0) {
                                 newErrMsgs.add("Line number " + rec.getRecordNumber() + " partyId: " + currentPartyId + " Invalid Country code: " + rec.get("countryGeoId"));
                             }
@@ -1951,7 +1975,9 @@ public class PartyServices {
                         } 
 
                         if (UtilValidate.isNotEmpty(rec.get("stateProvinceGeoId"))) {
-                            List <GenericValue> stateCheck = delegator.findByAnd("Geo", UtilMisc.toMap("geoTypeId", "STATE", "abbreviation", rec.get("stateProvinceGeoId")), null, false);
+                            List <GenericValue> stateCheck = EntityQuery.use(delegator).from("Geo")
+                                    .where("geoTypeId", "STATE", "abbreviation", rec.get("stateProvinceGeoId"))
+                                    .queryList();
                             if (stateCheck.size() == 0) {
                                 newErrMsgs.add("Line number " + rec.getRecordNumber() + " partyId: " + currentPartyId + " Invalid stateProvinceGeoId code: " + rec.get("countryGeoId"));
                             }
@@ -1971,7 +1997,9 @@ public class PartyServices {
                     }
           
                     if (errMsgs.size() == 0) {
-                        List <GenericValue> partyCheck = delegator.findByAnd("PartyIdentification", UtilMisc.toMap("partyIdentificationTypeId", "PARTY_IMPORT", "idValue", rec.get("partyId")), null, false);
+                        List <GenericValue> partyCheck = EntityQuery.use(delegator).from("PartyIdentification")
+                                .where("partyIdentificationTypeId", "PARTY_IMPORT", "idValue", rec.get("partyId"))
+                                .queryList();
                         addParty = partyCheck.size() == 0;
                         if (!addParty) { // update party
                             newPartyId = EntityUtil.getFirst(partyCheck).getString("partyId");
@@ -2035,7 +2063,9 @@ public class PartyServices {
                             dispatcher.runSync("createPartyRole", partyRole);
 
                             if (UtilValidate.isNotEmpty(rec.get("companyPartyId"))) {
-                                List <GenericValue> companyCheck = delegator.findByAnd("PartyIdentification", UtilMisc.toMap("partyIdentificationTypeId", "PARTY_IMPORT", "idValue", rec.get("partyId")), null, false);
+                                List <GenericValue> companyCheck = EntityQuery.use(delegator).from("PartyIdentification")
+                                        .where("partyIdentificationTypeId", "PARTY_IMPORT", "idValue", rec.get("partyId"))
+                                        .queryList();
                                 if (companyCheck.size() == 0) { // update party group
                                     // company does not exist so create
                                     Map<String, Object> companyPartyGroup = UtilMisc.toMap(

@@ -57,13 +57,15 @@ import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.widget.fo.FoFormRenderer;
-import org.ofbiz.widget.html.HtmlScreenRenderer;
-import org.ofbiz.widget.screen.ScreenRenderer;
+import org.ofbiz.widget.renderer.ScreenRenderer;
+import org.ofbiz.widget.renderer.fo.FoFormRenderer;
+import org.ofbiz.widget.renderer.html.HtmlScreenRenderer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -79,10 +81,6 @@ public class OagisServices {
     public static final SimpleDateFormat isoDateFormatNoTzValue = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSS'Z'");
 
     public static final String resource = "OagisUiLabels";
-
-    public static final String certAlias = UtilProperties.getPropertyValue("oagis.properties", "auth.client.certificate.alias");
-    public static final String basicAuthUsername = UtilProperties.getPropertyValue("oagis.properties", "auth.basic.username");
-    public static final String basicAuthPassword = UtilProperties.getPropertyValue("oagis.properties", "auth.basic.password");
 
     public static final boolean debugSaveXmlOut = "true".equals(UtilProperties.getPropertyValue("oagis.properties", "Oagis.Debug.Save.Xml.Out"));
     public static final boolean debugSaveXmlIn = "true".equals(UtilProperties.getPropertyValue("oagis.properties", "Oagis.Debug.Save.Xml.In"));
@@ -106,35 +104,35 @@ public class OagisServices {
         Locale locale = (Locale) context.get("locale");
         String errorReferenceId = (String) context.get("referenceId");
         List<Map<String, String>> errorMapList = UtilGenerics.checkList(context.get("errorMapList"));
-
+        
         String sendToUrl = (String) context.get("sendToUrl");
         if (UtilValidate.isEmpty(sendToUrl)) {
-            sendToUrl = UtilProperties.getPropertyValue("oagis.properties", "url.send.confirmBod");
+            sendToUrl = EntityUtilProperties.getPropertyValue("oagis.properties", "url.send.confirmBod", delegator);
         }
 
         String saveToFilename = (String) context.get("saveToFilename");
         if (UtilValidate.isEmpty(saveToFilename)) {
-            String saveToFilenameBase = UtilProperties.getPropertyValue("oagis.properties", "test.save.outgoing.filename.base", "");
+            String saveToFilenameBase = EntityUtilProperties.getPropertyValue("oagis.properties", "test.save.outgoing.filename.base", "", delegator);
             if (UtilValidate.isNotEmpty(saveToFilenameBase)) {
                 saveToFilename = saveToFilenameBase + "ConfirmBod" + errorReferenceId + ".xml";
             }
         }
         String saveToDirectory = (String) context.get("saveToDirectory");
         if (UtilValidate.isEmpty(saveToDirectory)) {
-            saveToDirectory = UtilProperties.getPropertyValue("oagis.properties", "test.save.outgoing.directory");
+            saveToDirectory = EntityUtilProperties.getPropertyValue("oagis.properties", "test.save.outgoing.directory", delegator);
         }
 
         OutputStream out = (OutputStream) context.get("outputStream");
 
         GenericValue userLogin = null;
         try {
-            userLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", "system"), false);
+            userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error getting userLogin", module);
         }
 
-        String logicalId = UtilProperties.getPropertyValue("oagis.properties", "CNTROLAREA.SENDER.LOGICALID");
-        String authId = UtilProperties.getPropertyValue("oagis.properties", "CNTROLAREA.SENDER.AUTHID");
+        String logicalId = EntityUtilProperties.getPropertyValue("oagis.properties", "CNTROLAREA.SENDER.LOGICALID", delegator);
+        String authId = EntityUtilProperties.getPropertyValue("oagis.properties", "CNTROLAREA.SENDER.AUTHID", delegator);
 
         MapStack<String> bodyParameters =  MapStack.create();
         bodyParameters.put("logicalId", logicalId);
@@ -188,7 +186,7 @@ public class OagisServices {
         bodyParameters.put("errorReferenceId", errorReferenceId);
         bodyParameters.put("errorMapList", errorMapList);
         bodyParameters.put("origRef", context.get("origRefId"));
-        String bodyScreenUri = UtilProperties.getPropertyValue("oagis.properties", "Oagis.Template.ConfirmBod");
+        String bodyScreenUri = EntityUtilProperties.getPropertyValue("oagis.properties", "Oagis.Template.ConfirmBod", delegator);
 
         String outText = null;
         try {
@@ -217,7 +215,7 @@ public class OagisServices {
             Debug.logError(e, errMsg, module);
         }
 
-        Map<String, Object> sendMessageReturn = OagisServices.sendMessageText(outText, out, sendToUrl, saveToDirectory, saveToFilename, locale);
+        Map<String, Object> sendMessageReturn = OagisServices.sendMessageText(outText, out, sendToUrl, saveToDirectory, saveToFilename, locale, delegator);
         if (sendMessageReturn != null) {
             return sendMessageReturn;
         }
@@ -241,7 +239,7 @@ public class OagisServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = null;
         try {
-            userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId", "system"), false);
+            userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
         } catch (GenericEntityException e) {
             String errMsg = "Error Getting UserLogin with userLoginId 'system':" + e.toString();
             Debug.logError(e, errMsg, module);
@@ -324,7 +322,7 @@ public class OagisServices {
             } else {
                 Map<String, Object> originalOmiPkMap = UtilMisc.toMap("logicalId", (Object) dataAreaLogicalId, "component", dataAreaComponent,
                         "task", dataAreaTask, "referenceId", dataAreaReferenceId);
-                GenericValue originalOagisMsgInfo = delegator.findOne("OagisMessageInfo", originalOmiPkMap, false);
+                GenericValue originalOagisMsgInfo = EntityQuery.use(delegator).from("OagisMessageInfo").where(originalOmiPkMap).queryOne();
                 if (originalOagisMsgInfo != null) {
                     for (Element dataAreaConfirmMsgElement : dataAreaConfirmMsgList) {
                         String description = UtilXml.childElementValue(dataAreaConfirmMsgElement, "of:DESCRIPTN");
@@ -444,7 +442,7 @@ public class OagisServices {
 
             if (UtilValidate.isNotEmpty(referenceId) && (UtilValidate.isEmpty(component) || UtilValidate.isEmpty(task) || UtilValidate.isEmpty(referenceId))) {
                 // try looking up by just the referenceId, those alone are often unique, return error if there is more than one result
-                List<GenericValue> oagisMessageInfoList = delegator.findByAnd("OagisMessageInfo", UtilMisc.toMap("referenceId", referenceId), null, false);
+                List<GenericValue> oagisMessageInfoList = EntityQuery.use(delegator).from("OagisMessageInfo").where("referenceId", referenceId).queryList();
                 if (oagisMessageInfoList.size() == 1) {
                     oagisMessageInfo = oagisMessageInfoList.get(0);
                 } else if (oagisMessageInfoList.size() > 1) {
@@ -452,7 +450,7 @@ public class OagisServices {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "OagisErrorLookupByReferenceError", UtilMisc.toMap("messageSize", messageSize.toString(), "referenceId", referenceId), locale));
                 }
             } else {
-                oagisMessageInfo = delegator.findOne("OagisMessageInfo", oagisMessageInfoKey, false);
+                oagisMessageInfo = EntityQuery.use(delegator).from("OagisMessageInfo").where(oagisMessageInfoKey).queryOne();
             }
 
             if (oagisMessageInfo == null) {
@@ -486,7 +484,7 @@ public class OagisServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = null;
         try {
-            userLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", "system"), false);
+            userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
         } catch (GenericEntityException e) {
             String errMsg = "Error Getting UserLogin with userLoginId system: "+e.toString();
             Debug.logError(e, errMsg, module);
@@ -547,7 +545,7 @@ public class OagisServices {
         GenericValue oagisMessageInfo = null;
         Map<String, Object> oagisMessageInfoKey = UtilMisc.toMap("logicalId", (Object) logicalId, "component", component, "task", task, "referenceId", referenceId);
         try {
-            oagisMessageInfo = delegator.findOne("OagisMessageInfo", oagisMessageInfoKey, false);
+            oagisMessageInfo = EntityQuery.use(delegator).from("OagisMessageInfo").where(oagisMessageInfoKey).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error Getting Entity OagisMessageInfo: " + e.toString(), module);
         }
@@ -677,8 +675,11 @@ public class OagisServices {
         return result;
     }
 
-    public static Map<String, Object> sendMessageText(String outText, OutputStream out, String sendToUrl, String saveToDirectory, String saveToFilename, Locale locale) {
-        if (out != null) {
+    public static Map<String, Object> sendMessageText(String outText, OutputStream out, String sendToUrl, String saveToDirectory, String saveToFilename, Locale locale, Delegator delegator) {
+        final String certAlias = EntityUtilProperties.getPropertyValue("oagis.properties", "auth.client.certificate.alias", delegator);
+        final String basicAuthUsername = EntityUtilProperties.getPropertyValue("oagis.properties", "auth.basic.username", delegator);
+        final String basicAuthPassword = EntityUtilProperties.getPropertyValue("oagis.properties", "auth.basic.password", delegator);
+    	if (out != null) {
             Writer outWriter = new OutputStreamWriter(out);
             try {
                 outWriter.write(outText);

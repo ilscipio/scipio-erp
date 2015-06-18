@@ -27,7 +27,7 @@ import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilHttp
 import org.ofbiz.content.search.SearchWorker
 import org.ofbiz.product.feature.ParametricSearch
-import org.ofbiz.widget.html.HtmlFormWrapper
+import org.ofbiz.widget.renderer.html.HtmlFormWrapper
 import org.apache.lucene.search.*
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.store.Directory
@@ -105,7 +105,7 @@ if (searcher) {
     for (int start = 0; start < collector.getTotalHits(); start++) {
         Document doc = searcher.doc(hits[start].doc)
         contentId = doc.get("contentId");
-        content = delegator.findOne("Content", [contentId : contentId], true);
+        content = from("Content").where("contentId", contentId).cache(true).queryOne();
         if (!hitSet.contains(contentId)) {
             contentList.add(content);
             hitSet.add(contentId);

@@ -38,6 +38,7 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.website.WebSiteWorker;
@@ -56,15 +57,17 @@ public class UrlServletHelper extends ContextFilter {
             try {
                 // if tenant was specified, replace delegator with the new per-tenant delegator and set tenantId to session attribute
                 delegator = getDelegator(servletContext);
-                List<GenericValue> tenants = delegator.findList("Tenant", EntityCondition.makeCondition("domainName", serverName), null, UtilMisc.toList("-createdStamp"), null, false);
-                if (UtilValidate.isNotEmpty(tenants)) {
-                    GenericValue tenant = EntityUtil.getFirst(tenants);
-                    String tenantId = tenant.getString("tenantId");
-                    
+
+                //Use base delegator for fetching data from entity of entityGroup org.ofbiz.tenant 
+                Delegator baseDelegator = DelegatorFactory.getDelegator(delegator.getDelegatorBaseName());
+                GenericValue tenantDomainName = EntityQuery.use(baseDelegator).from("TenantDomainName").where("domainName", serverName).queryOne();
+
+                if (UtilValidate.isNotEmpty(tenantDomainName)) {
+                    String tenantId = tenantDomainName.getString("tenantId");
                     // make that tenant active, setup a new delegator and a new dispatcher
                     String tenantDelegatorName = delegator.getDelegatorBaseName() + "#" + tenantId;
                     httpRequest.getSession().setAttribute("delegatorName", tenantDelegatorName);
-                
+
                     // after this line the delegator is replaced with the new per-tenant delegator
                     delegator = DelegatorFactory.getDelegator(tenantDelegatorName);
                     servletContext.setAttribute("delegator", delegator);
@@ -154,7 +157,11 @@ public class UrlServletHelper extends ContextFilter {
         // check path alias
         GenericValue pathAlias = null;
         try {
-            pathAlias = delegator.findOne("WebSitePathAlias", UtilMisc.toMap("webSiteId", webSiteId, "pathAlias", pathInfo), true);
+            pathAlias = EntityQuery.use(delegator)
+                                   .from("WebSitePathAlias")
+                                   .where("webSiteId", webSiteId, "pathAlias", pathInfo)
+                                   .cache()
+                                   .queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -179,7 +186,10 @@ public class UrlServletHelper extends ContextFilter {
         } else {
             // send 404 error if a URI is alias TO
             try {
-                List<GenericValue> aliasTos = delegator.findByAnd("WebSitePathAlias", UtilMisc.toMap("webSiteId", webSiteId, "aliasTo", httpRequest.getRequestURI()), null, false);
+                List<GenericValue> aliasTos = EntityQuery.use(delegator)
+                                                         .from("WebSitePathAlias")
+                                                         .where("webSiteId", webSiteId, "aliasTo", httpRequest.getRequestURI())
+                                                         .queryList();
                 if (UtilValidate.isNotEmpty(aliasTos)) {
                     httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND, "Not Found");
                     return;

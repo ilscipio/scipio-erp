@@ -27,24 +27,25 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.string.*;
 import org.ofbiz.content.content.*;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.ofbiz.entity.util.EntityUtilProperties;
 
-int minFontSize = Integer.parseInt(UtilProperties.getPropertyValue("ecommerce.properties", "tagcloud.min.fontsize"));
-int maxFontSize = Integer.parseInt(UtilProperties.getPropertyValue("ecommerce.properties", "tagcloud.max.fontsize"));
-int limitTagCloud = Integer.parseInt(UtilProperties.getPropertyValue("ecommerce.properties", "tagcloud.limit"));
+int minFontSize = Integer.parseInt(EntityUtilProperties.getPropertyValue("ecommerce.properties", "tagcloud.min.fontsize", delegator));
+int maxFontSize = Integer.parseInt(EntityUtilProperties.getPropertyValue("ecommerce.properties", "tagcloud.max.fontsize", delegator));
+int limitTagCloud = Integer.parseInt(EntityUtilProperties.getPropertyValue("ecommerce.properties", "tagcloud.limit", delegator));
 
 tagCloudList = [] as LinkedList;
 tagList = [] as LinkedList;
 
-keywordConditions = EntityCondition.makeCondition([keywordTypeId : "KWT_TAG", statusId : "KW_APPROVED"], EntityOperator.AND);
-keywordOrder = ["keyword"];
-keywordFields = ["keyword", "keywordTypeId", "statusId"] as Set;
-keywordFindOptions = new EntityFindOptions();
-keywordFindOptions.setDistinct(true);
-productKeywords = delegator.findList("ProductKeyword", keywordConditions, keywordFields, keywordOrder, keywordFindOptions, false);
+productKeywords = select("keyword", "keywordTypeId", "statusId")
+                    .from("ProductKeyword")
+                    .where(keywordTypeId : "KWT_TAG", statusId : "KW_APPROVED")
+                    .orderBy("keyword")
+                    .distinct(true)
+                    .queryList();
 
 if (UtilValidate.isNotEmpty(productKeywords)) {
     productKeywords.each { productKeyword ->
-        productTags = delegator.findByAnd("ProductKeyword", ["keyword": productKeyword.keyword, "keywordTypeId" : "KWT_TAG", "statusId" : "KW_APPROVED"], null, false);
+        productTags = from("ProductKeyword").where("keyword", productKeyword.keyword, "keywordTypeId", "KWT_TAG", "statusId", "KW_APPROVED").queryList();
         searchResult = [:];
         searchResult.tag = productKeyword.keyword;
         searchResult.countTag = productTags.size();

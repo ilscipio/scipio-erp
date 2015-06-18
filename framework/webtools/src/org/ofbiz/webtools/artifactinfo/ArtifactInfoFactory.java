@@ -42,6 +42,8 @@ import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.config.model.DelegatorElement;
 import org.ofbiz.entity.config.model.EntityConfig;
@@ -54,10 +56,10 @@ import org.ofbiz.service.eca.ServiceEcaRule;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
-import org.ofbiz.widget.form.FormFactory;
-import org.ofbiz.widget.form.ModelForm;
-import org.ofbiz.widget.screen.ModelScreen;
-import org.ofbiz.widget.screen.ScreenFactory;
+import org.ofbiz.widget.model.FormFactory;
+import org.ofbiz.widget.model.ModelForm;
+import org.ofbiz.widget.model.ModelScreen;
+import org.ofbiz.widget.model.ScreenFactory;
 import org.xml.sax.SAXException;
 
 public class ArtifactInfoFactory {

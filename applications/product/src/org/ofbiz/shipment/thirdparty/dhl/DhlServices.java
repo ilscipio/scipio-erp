@@ -45,6 +45,8 @@ import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -169,8 +171,9 @@ public class DhlServices {
         // translate shipmentMethodTypeId to DHL service code
         String dhlShipmentDetailCode = null;
         try {
-            GenericValue carrierShipmentMethod = delegator.findOne("CarrierShipmentMethod", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId,
-                    "partyId", carrierPartyId, "roleTypeId", "CARRIER"), false);
+            GenericValue carrierShipmentMethod = EntityQuery.use(delegator).from("CarrierShipmentMethod")
+                    .where("shipmentMethodTypeId", shipmentMethodTypeId, "partyId", carrierPartyId, "roleTypeId", "CARRIER")
+                    .queryOne();
             if (carrierShipmentMethod == null) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                         "FacilityShipmentDhlNoCarrierShipmentMethod",
@@ -198,7 +201,7 @@ public class DhlServices {
         GenericValue shipToAddress = null;
         if (shippingContactMechId != null) {
             try {
-                shipToAddress = delegator.findOne("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId), false);
+                shipToAddress = EntityQuery.use(delegator).from("PostalAddress").where("contactMechId", shippingContactMechId).queryOne();
                 if (shipToAddress == null) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                             "FacilityShipmentUnableFoundShipToAddresss", locale));
@@ -210,7 +213,7 @@ public class DhlServices {
         }
 
         if ((shippableWeight == null) || (shippableWeight.compareTo(BigDecimal.ZERO) <= 0)) {
-            String tmpValue = UtilProperties.getPropertyValue(shipmentPropertiesFile, "shipment.default.weight.value");
+            String tmpValue = EntityUtilProperties.getPropertyValue(shipmentPropertiesFile, "shipment.default.weight.value", delegator);
             if (tmpValue != null) {
                 try {
                     shippableWeight = new BigDecimal(tmpValue);
@@ -522,12 +525,12 @@ public class DhlServices {
         
         String shipmentConfirmResponseString = null;
         try {
-            GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+            GenericValue shipment = EntityQuery.use(delegator).from("Shipment").where("shipmentId", shipmentId).queryOne();
             if (shipment == null) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                         "ProductShipmentNotFoundId", locale) + shipmentId);
             }
-            GenericValue shipmentRouteSegment = delegator.findOne("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId), false);
+            GenericValue shipmentRouteSegment = EntityQuery.use(delegator).from("ShipmentRouteSegment").where("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId).queryOne();
             if (shipmentRouteSegment == null) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                         "ProductShipmentRouteSegmentNotFound", 
@@ -676,7 +679,7 @@ public class DhlServices {
                 } else {
                     // use default weight if available
                     try {
-                        packageWeight = new BigDecimal(UtilProperties.getPropertyValue(shipmentPropertiesFile, "shipment.default.weight.value"));
+                        packageWeight = new BigDecimal(EntityUtilProperties.getPropertyValue(shipmentPropertiesFile, "shipment.default.weight.value", delegator));
                     } catch (NumberFormatException ne) {
                         Debug.logWarning("Default shippable weight not configured (shipment.default.weight.value)", module);
                         packageWeight = BigDecimal.ONE;
@@ -710,8 +713,9 @@ public class DhlServices {
             // translate shipmentMethodTypeId to DHL service code
             String shipmentMethodTypeId = shipmentRouteSegment.getString("shipmentMethodTypeId");
             String dhlShipmentDetailCode = null;
-            GenericValue carrierShipmentMethod = delegator.findOne("CarrierShipmentMethod", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId,
-                    "partyId", "DHL", "roleTypeId", "CARRIER"), false);
+            GenericValue carrierShipmentMethod = EntityQuery.use(delegator).from("CarrierShipmentMethod")
+                    .where("shipmentMethodTypeId", shipmentMethodTypeId, "partyId", "DHL", "roleTypeId", "CARRIER")
+                    .queryOne();
             if (carrierShipmentMethod == null) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                         "FacilityShipmentDhlNoCarrierShipmentMethod", 
@@ -956,7 +960,7 @@ public class DhlServices {
         String returnValue = "";
         if (UtilValidate.isNotEmpty(shipmentGatewayConfigId)) {
             try {
-                GenericValue dhl = delegator.findOne("ShipmentGatewayDhl", UtilMisc.toMap("shipmentGatewayConfigId", shipmentGatewayConfigId), false);
+                GenericValue dhl = EntityQuery.use(delegator).from("ShipmentGatewayDhl").where("shipmentGatewayConfigId", shipmentGatewayConfigId).queryOne();
                 if (UtilValidate.isNotEmpty(dhl)) {
                     Object dhlField = dhl.get(shipmentGatewayConfigParameterName);
                     if (dhlField != null) {
@@ -967,7 +971,7 @@ public class DhlServices {
                 Debug.logError(e, module);
             }
         } else {
-            String value = UtilProperties.getPropertyValue(resource, parameterName);
+            String value = EntityUtilProperties.getPropertyValue(resource, parameterName, delegator);
             if (value != null) {
                 returnValue = value.trim();
             }

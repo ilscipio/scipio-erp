@@ -35,6 +35,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
@@ -42,6 +43,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -129,7 +131,7 @@ public class CategoryContentWrapper implements ContentWrapper {
         ModelEntity categoryModel = delegator.getModelEntity("ProductCategory");
         if (categoryModel.isField(candidateFieldName)) {
             if (productCategory == null) {
-                productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
+                productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache().queryOne();
             }
             if (productCategory != null) {
                 String candidateValue = productCategory.getString(candidateFieldName);
@@ -140,9 +142,25 @@ public class CategoryContentWrapper implements ContentWrapper {
             }
         }
 
-        List<GenericValue> categoryContentList = delegator.findByAnd("ProductCategoryContent", UtilMisc.toMap("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId), UtilMisc.toList("-fromDate"), true);
+        List<GenericValue> categoryContentList = EntityQuery.use(delegator).from("ProductCategoryContent").where("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId).orderBy("-fromDate").cache(true).queryList();
         categoryContentList = EntityUtil.filterByDate(categoryContentList);
-        GenericValue categoryContent = EntityUtil.getFirst(categoryContentList);
+        
+        GenericValue categoryContent = null;
+        String sessionLocale = locale.toString();
+        String fallbackLocale = UtilProperties.getFallbackLocale().toString();
+        if ( sessionLocale == null ) sessionLocale = fallbackLocale;
+        // look up all content found for locale
+        for( GenericValue currentContent: categoryContentList ) {
+            GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", currentContent.getString("contentId")).cache().queryOne();
+            if ( sessionLocale.equals(content.getString("localeString")) ) {
+              // valid locale found
+              categoryContent = currentContent;
+              break;
+            } else if ( fallbackLocale.equals(content.getString("localeString")) ) {
+              // fall back to default locale
+              categoryContent = currentContent;
+            }
+        }
         if (categoryContent != null) {
             // when rendering the category content, always include the Product Category and ProductCategoryContent records that this comes from
             Map<String, Object> inContext = FastMap.newInstance();

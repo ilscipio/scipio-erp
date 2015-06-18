@@ -33,11 +33,10 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.finaccount.FinAccountHelper;
 import org.ofbiz.order.order.OrderReadHelper;
@@ -85,7 +84,9 @@ public class GiftCertificateServices {
             final String accountName = "Gift Certificate Account";
             final String deposit = "DEPOSIT";
 
-            GenericValue giftCertSettings = delegator.findOne("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), true);
+            GenericValue giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
+                    .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
+                    .cache().queryOne();
             Map<String, Object> acctResult = null;
 
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
@@ -129,7 +130,7 @@ public class GiftCertificateServices {
             // create the initial (deposit) transaction
             // do something tricky here: run as the "system" user
             // that can actually create a financial account transaction
-            GenericValue permUserLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", "system"), true);
+            GenericValue permUserLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").cache().queryOne();
             refNum = createTransaction(delegator, dispatcher, permUserLogin, initialAmount, productStoreId, 
                     partyId, currencyUom, deposit, finAccountId, locale);
 
@@ -182,7 +183,9 @@ public class GiftCertificateServices {
         GenericValue finAccount = null;
          // validate the pin if the store requires it and figure out the finAccountId from card number
         try {
-            GenericValue giftCertSettings = delegator.findOne("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), true);
+            GenericValue giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
+                    .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
+                    .cache().queryOne();
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                 if (!validatePin(delegator, cardNumber, pinNumber)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -209,7 +212,7 @@ public class GiftCertificateServices {
 
         if (finAccount == null) {
             try {
-                finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+                finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", finAccountId).queryOne();
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                         "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", finAccountId), locale));
@@ -274,7 +277,9 @@ public class GiftCertificateServices {
 
         // validate the pin if the store requires it
         try {
-            GenericValue giftCertSettings = delegator.findOne("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), true);
+            GenericValue giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
+                    .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
+                    .cache().queryOne();
             if ("Y".equals(giftCertSettings.getString("requirePinCode")) && !validatePin(delegator, cardNumber, pinNumber)) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                         "AccountingGiftCerticateNumberPinNotValid", locale));
@@ -289,7 +294,7 @@ public class GiftCertificateServices {
 
         GenericValue finAccount = null;
         try {
-            finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", cardNumber), false);
+            finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", cardNumber).queryOne();
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", cardNumber), locale));
@@ -343,7 +348,7 @@ public class GiftCertificateServices {
 
         GenericValue finAccount = null;
         try {
-            finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", cardNumber), false);
+            finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", cardNumber).queryOne();
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", cardNumber), locale));
@@ -387,7 +392,7 @@ public class GiftCertificateServices {
         // get the gift certificate and its authorization from the authorization
         String finAccountAuthId = authTransaction.getString("referenceNum");
         try {
-            GenericValue finAccountAuth = delegator.findOne("FinAccountAuth", UtilMisc.toMap("finAccountAuthId", finAccountAuthId), false);
+            GenericValue finAccountAuth = EntityQuery.use(delegator).from("FinAccountAuth").where("finAccountAuthId", finAccountAuthId).queryOne();
             GenericValue giftCard = finAccountAuth.getRelatedOne("FinAccount", false);
             // make sure authorization has not expired
             Timestamp authExpiration = finAccountAuth.getTimestamp("thruDate");
@@ -478,14 +483,16 @@ public class GiftCertificateServices {
         try {
             // if the store requires pin codes, then validate pin code against card number, and the gift certificate's finAccountId is the gift card's card number
             // otherwise, the gift card's card number is an ecrypted string, which must be decoded to find the FinAccount
-            GenericValue giftCertSettings = delegator.findOne("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), true);
+            GenericValue giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
+                    .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
+                    .cache().queryOne();
             GenericValue finAccount = null;
             String finAccountId = null;
             if (UtilValidate.isNotEmpty(giftCertSettings)) {
                 if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                     if (validatePin(delegator, giftCard.getString("cardNumber"), giftCard.getString("pinNumber"))) {
                         finAccountId = giftCard.getString("cardNumber");
-                        finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+                        finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", finAccountId).queryOne();
                     }
                 } else {
                         finAccount = FinAccountHelper.getFinAccountFromCode(giftCard.getString("cardNumber"), delegator);
@@ -754,7 +761,9 @@ public class GiftCertificateServices {
         // Gift certificate settings are per store in this entity
         GenericValue giftCertSettings = null;
         try {
-            giftCertSettings = delegator.findOne("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), true);
+            giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
+                    .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
+                    .cache().queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get Product Store FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -769,12 +778,10 @@ public class GiftCertificateServices {
         // get the survey response
         GenericValue surveyResponse = null;
         try {
-            Map<String, Object> fields = UtilMisc.<String, Object>toMap("orderId", orderId, 
-                    "orderItemSeqId", orderItem.get("orderItemSeqId"), "surveyId", surveyId);
-            List<String> order = UtilMisc.toList("-responseDate");
-            List<GenericValue> responses = delegator.findByAnd("SurveyResponse", fields, order, false);
             // there should be only one
-            surveyResponse = EntityUtil.getFirst(responses);
+            surveyResponse = EntityQuery.use(delegator).from("SurveyResponse")
+                    .where("orderId", orderId, "orderItemSeqId", orderItem.get("orderItemSeqId"), "surveyId", surveyId)
+                    .orderBy("-responseDate").queryFirst();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -883,8 +890,7 @@ public class GiftCertificateServices {
             GenericValue productStoreEmail = null;
             String emailType = "PRDS_GC_PURCHASE";
             try {
-                productStoreEmail = delegator.findOne("ProductStoreEmailSetting", 
-                        UtilMisc.toMap("productStoreId", productStoreId, "emailType", emailType), false);
+                productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", productStoreId, "emailType", emailType).queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Unable to get product store email setting for gift card purchase", module);
             }
@@ -999,17 +1005,15 @@ public class GiftCertificateServices {
         BigDecimal amount = orderItem.getBigDecimal("unitPrice");
 
         // survey information
-        String surveyId = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.reload.surveyId");
+        String surveyId = EntityUtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.reload.surveyId", delegator);
 
         // get the survey response
         GenericValue surveyResponse = null;
         try {
-            Map<String, Object> fields = UtilMisc.toMap("orderId", orderId, 
-                    "orderItemSeqId", orderItem.get("orderItemSeqId"), "surveyId", surveyId);
-            List<String> order = UtilMisc.toList("-responseDate");
-            List<GenericValue> responses = delegator.findByAnd("SurveyResponse", fields, order, false);
             // there should be only one
-            surveyResponse = EntityUtil.getFirst(responses);
+            surveyResponse = EntityQuery.use(delegator).from("SurveyResponse")
+                    .where("orderId", orderId, "orderItemSeqId", orderItem.get("orderItemSeqId"), "surveyId", surveyId)
+                    .orderBy("-responseDate").queryFirst();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
@@ -1046,8 +1050,8 @@ public class GiftCertificateServices {
             }
         }
 
-        String cardNumberKey = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.reload.survey.cardNumber");
-        String pinNumberKey = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.reload.survey.pinNumber");
+        String cardNumberKey = EntityUtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.reload.survey.cardNumber", delegator);
+        String pinNumberKey = EntityUtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.reload.survey.pinNumber", delegator);
         String cardNumber = (String) answerMap.get(cardNumberKey);
         String pinNumber = (String) answerMap.get(pinNumberKey);
 
@@ -1124,7 +1128,7 @@ public class GiftCertificateServices {
         GenericValue productStoreEmail = null;
         String emailType = "PRDS_GC_RELOAD";
         try {
-            productStoreEmail = delegator.findOne("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", productStoreId, "emailType", emailType), false);
+            productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", productStoreId, "emailType", emailType).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get product store email setting for gift card purchase", module);
         }
@@ -1296,10 +1300,10 @@ public class GiftCertificateServices {
                 Debug.logVerbose("Created return item : " + returnId + " / " + returnItemSeqId, module);
             }
 
-            // need the admin userLogin to "fake" out the update service
+            // need the system userLogin to "fake" out the update service
             GenericValue admin = null;
             try {
-                admin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", "admin"), false);
+                admin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
@@ -1336,7 +1340,7 @@ public class GiftCertificateServices {
     private static boolean validatePin(Delegator delegator, String cardNumber, String pinNumber) {
         GenericValue finAccount = null;
         try {
-            finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", cardNumber), false);
+            finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", cardNumber).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -1466,7 +1470,7 @@ public class GiftCertificateServices {
     }
 
     private static boolean checkNumberInDatabase(Delegator delegator, String number) throws GenericEntityException {
-        GenericValue finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", number), false);
+        GenericValue finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", number).queryOne();
         if (finAccount == null) {
             return true;
         }
@@ -1482,7 +1486,7 @@ public class GiftCertificateServices {
         String payToPartyId = "Company"; // default value
         GenericValue productStore = null;
         try {
-            productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), false);
+            productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to locate ProductStore (" + productStoreId + ")", module);
             return null;

@@ -22,12 +22,13 @@ import org.ofbiz.entity.*
 import org.ofbiz.entity.condition.*
 import org.ofbiz.entity.util.*
 import org.ofbiz.product.product.*
+import org.ofbiz.entity.util.EntityUtilProperties;
 
 context.nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
-context.assocTypes = delegator.findList("ProductAssocType", null, null, null, null, false);
+context.assocTypes = from("ProductAssocType").queryList();
 
-context.featureTypes = delegator.findList("ProductFeatureType", null, null, null, null, false);
+context.featureTypes = from("ProductFeatureType").queryList();
 
 // add/remove feature types
 addedFeatureTypes = (HashMap) session.getAttribute("addedFeatureTypes");
@@ -46,7 +47,7 @@ if (addFeatureTypeId) {
 addFeatureTypeIdIter = addFeatureTypeIdList.iterator();
 while (addFeatureTypeIdIter) {
     String curFeatureTypeId = addFeatureTypeIdIter.next();
-    GenericValue featureType = delegator.findOne("ProductFeatureType", [productFeatureTypeId : curFeatureTypeId], false);
+    GenericValue featureType = from("ProductFeatureType").where("productFeatureTypeId", curFeatureTypeId).queryOne();
     if ((featureType) && !addedFeatureTypes.containsKey(curFeatureTypeId)) {
         addedFeatureTypes.put(curFeatureTypeId, featureType);
     }
@@ -55,7 +56,7 @@ while (addFeatureTypeIdIter) {
 String[] removeFeatureTypeId = request.getParameterValues("removeFeatureTypeId");
 if (removeFeatureTypeId) {
     for (int i = 0; i < removeFeatureTypeId.length; i++) {
-        GenericValue featureType = delegator.findOne("ProductFeatureType", [productFeatureTypeId : addFeatureTypeId[i]], false);
+        GenericValue featureType = from("ProductFeatureType").where("productFeatureTypeId", addFeatureTypeId[i]).queryOne();
         if ((featureType) && addedFeatureTypes.containsKey(removeFeatureTypeId[i])) {
             addedFeatureTypes.remove(removeFeatureTypeId[i]);
             featuresByType.remove(removeFeatureTypeId[i]);
@@ -83,7 +84,7 @@ if (productId) {
     context.productId = productId;
 }
 
-product = delegator.findOne("Product", [productId : productId], false);
+product = from("Product").where("productId", productId).queryOne();
 assocProducts = [];
 featureFloz = [:];
 featureMl = [:];
@@ -107,9 +108,8 @@ if (product) {
     context.product = product;
 
     // get categories
-    allCategories = delegator.findList("ProductCategory",
-            EntityCondition.makeCondition(EntityCondition.makeCondition("showInSelect", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("showInSelect", EntityOperator.NOT_EQUAL, "N")),
-            null, ['description'], null, false);
+    allCategories = from("ProductCategory").where(EntityCondition.makeCondition(EntityCondition.makeCondition("showInSelect", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("showInSelect", EntityOperator.NOT_EQUAL, "N")))
+        .orderBy("description").queryList();
 
     categoryMembers = product.getRelated("ProductCategoryMember", null, null, false);
     categoryMembers = EntityUtil.filterByDate(categoryMembers);
@@ -303,11 +303,11 @@ context.featureThruDate = featureThruDate;
 context.selFeatureDesc = selFeatureDesc;
 
 // get "all" category id
-String allCategoryId = UtilProperties.getPropertyValue("catalog", "all.product.category");
+String allCategoryId = EntityUtilProperties.getPropertyValue("catalog", "all.product.category", delegator);
 context.allCategoryId = allCategoryId;
 
 // show the publish or unpublish section
-prodCatMembs = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition([productCategoryId : allCategoryId, productId : productId]), null, null, null, false);
+prodCatMembs = from("ProductCategoryMember").where("productCategoryId", allCategoryId, "productId", productId).queryList();
 //don't filter by date, show all categories: prodCatMembs = EntityUtil.filterByDate(prodCatMembs);
 
 String showPublish = "false";

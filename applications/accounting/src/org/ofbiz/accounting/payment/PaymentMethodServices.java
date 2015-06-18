@@ -35,6 +35,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
@@ -73,7 +74,7 @@ public class PaymentMethodServices {
         GenericValue paymentMethod = null;
 
         try {
-            paymentMethod = delegator.findOne("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
+            paymentMethod = EntityQuery.use(delegator).from("PaymentMethod").where("paymentMethodId", paymentMethodId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.toString(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -213,10 +214,11 @@ public class PaymentMethodServices {
             GenericValue tempVal = null;
 
             try {
-                List<GenericValue> allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose",
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null, false), true);
-
-                tempVal = EntityUtil.getFirst(allPCMPs);
+                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
+                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
+                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
+                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
+                tempVal = EntityUtil.getFirst(allPCWPs);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
                 tempVal = null;
@@ -274,8 +276,8 @@ public class PaymentMethodServices {
         String paymentMethodId = (String) context.get("paymentMethodId");
 
         try {
-            creditCard = delegator.findOne("CreditCard", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
-            paymentMethod = delegator.findOne("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
+            creditCard = EntityQuery.use(delegator).from("CreditCard").where("paymentMethodId", paymentMethodId).queryOne();
+            paymentMethod = EntityQuery.use(delegator).from("PaymentMethod").where("paymentMethodId", paymentMethodId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
@@ -387,10 +389,12 @@ public class PaymentMethodServices {
             GenericValue tempVal = null;
 
             try {
-                List<GenericValue> allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose",
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null, false), true);
+                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
+                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
+                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
+                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
 
-                tempVal = EntityUtil.getFirst(allPCMPs);
+                tempVal = EntityUtil.getFirst(allPCWPs);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
                 tempVal = null;
@@ -445,7 +449,7 @@ public class PaymentMethodServices {
         Delegator delegator = dctx.getDelegator();
         GenericValue creditCard;
         try {
-            creditCard = delegator.findOne("CreditCard", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
+            creditCard = EntityQuery.use(delegator).from("CreditCard").where("paymentMethodId", paymentMethodId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -560,8 +564,8 @@ public class PaymentMethodServices {
         String paymentMethodId = (String) context.get("paymentMethodId");
 
         try {
-            giftCard = delegator.findOne("GiftCard", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
-            paymentMethod = delegator.findOne("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
+            giftCard = EntityQuery.use(delegator).from("GiftCard").where("paymentMethodId", paymentMethodId).queryOne();
+            paymentMethod = EntityQuery.use(delegator).from("PaymentMethod").where("paymentMethodId", paymentMethodId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -726,11 +730,12 @@ public class PaymentMethodServices {
 
             GenericValue tempVal = null;
             try {
-                List<GenericValue> allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", 
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, 
-                                "contactMechPurposeTypeId", contactMechPurposeTypeId), null, false), true);
+                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
+                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
+                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
+                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
 
-                tempVal = EntityUtil.getFirst(allPCMPs);
+                tempVal = EntityUtil.getFirst(allPCWPs);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
                 tempVal = null;
@@ -791,9 +796,9 @@ public class PaymentMethodServices {
         String paymentMethodId = (String) context.get("paymentMethodId");
 
         try {
-            eftAccount = delegator.findOne("EftAccount", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
+            eftAccount = EntityQuery.use(delegator).from("EftAccount").where("paymentMethodId", paymentMethodId).queryOne();
             paymentMethod =
-                delegator.findOne("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
+                EntityQuery.use(delegator).from("PaymentMethod").where("paymentMethodId", paymentMethodId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -854,10 +859,11 @@ public class PaymentMethodServices {
             GenericValue tempVal = null;
 
             try {
-                List<GenericValue> allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose",
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, 
-                                "contactMechPurposeTypeId",contactMechPurposeTypeId), null, false), true);
-                tempVal = EntityUtil.getFirst(allPCMPs);
+                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
+                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
+                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
+                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
+                tempVal = EntityUtil.getFirst(allPCWPs);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
                 tempVal = null;

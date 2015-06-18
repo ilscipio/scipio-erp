@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.service.engine
 
-import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.Debug
+import org.ofbiz.entity.util.EntityQuery
 import org.ofbiz.service.ServiceUtil
 import org.ofbiz.service.ExecutionServiceException
 
@@ -36,20 +37,24 @@ abstract class GroovyBaseScript extends Script {
         return result;
     }
 
+    Map run(Map args) throws ExecutionServiceException {
+        return runService((String)args.get('service'), (Map)args.get('with', new HashMap()));
+    }
+
     Map makeValue(String entityName) throws ExecutionServiceException {
         return result = binding.getVariable('delegator').makeValue(entityName);
     }
 
-    Map findOne(String entityName, Map inputMap) {
-        Map genericValue = binding.getVariable('delegator').findOne(entityName, inputMap, true);
-        // TODO: get the list of pk fields from the map and use them only
-        return genericValue;
+    EntityQuery from(def entity) {
+        return EntityQuery.use(binding.getVariable('delegator')).from(entity);
     }
 
-    List findList(String entityName, Map inputMap) {
-        List genericValues = binding.getVariable('delegator').findByAnd(entityName, inputMap, null, false);
-        // TODO: get the list of entity fields from the map and use them only
-        return genericValues;
+    EntityQuery select(String... fields) {
+        return EntityQuery.use(binding.getVariable('delegator')).select(fields);
+    }
+
+    EntityQuery select(Set<String> fields) {
+        return EntityQuery.use(binding.getVariable('delegator')).select(fields);
     }
 
     def success(String message) {

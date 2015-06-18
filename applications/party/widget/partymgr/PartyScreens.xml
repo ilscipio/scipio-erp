@@ -63,7 +63,7 @@ under the License.
                 <set field="tabButtonItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
                 <set field="partyId" from-field="parameters.partyId"/>
-                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
             </actions>
             <widgets>
@@ -717,6 +717,7 @@ under the License.
                                 <set field="dependentKeyName" value="geoId"/>
                                 <set field="descName" value="geoName"/>
                                 <set field="selectedDependentOption" value="_none_"/>
+                                <set field="focusFieldName" value="NewUser_USER_PARTY_ID"/>
                             </actions>
                             <widgets>
                                 <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
@@ -1297,9 +1298,9 @@ under the License.
             </actions>
             <widgets>
                 <platform-specific>
-                    <html>
+                    <xsl-fo>
                         <html-template location="component://party/webapp/partymgr/party/contactmechtemplates/${postalAddressTemplate}"/>
-                    </html>
+                    </xsl-fo>
                 </platform-specific>
             </widgets>
         </section>

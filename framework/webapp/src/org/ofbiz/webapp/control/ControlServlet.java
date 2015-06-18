@@ -32,10 +32,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.bsf.BSFManager;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilJ2eeCompat;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -72,7 +71,8 @@ public class ControlServlet extends HttpServlet {
         super.init(config);
         if (Debug.infoOn()) {
             ServletContext servletContext = config.getServletContext();
-            Debug.logInfo("Lading webapp [" + servletContext.getContextPath().substring(1) + "], located at " + servletContext.getRealPath("/"), module);
+            String webappName = servletContext.getContextPath().length() != 0 ? servletContext.getContextPath().substring(1) : "";
+            Debug.logInfo("Loading webapp [" + webappName + "], located at " + servletContext.getRealPath("/"), module);
         }
 
         // configure custom BSF engines
@@ -99,18 +99,11 @@ public class ControlServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         // setup DEFAULT character encoding and content type, this will be overridden in the RequestHandler for view rendering
-        String charset = getServletContext().getInitParameter("charset");
-        if (UtilValidate.isEmpty(charset)) charset = request.getCharacterEncoding();
-        if (UtilValidate.isEmpty(charset)) charset = "UTF-8";
-        if (Debug.verboseOn()) Debug.logVerbose("The character encoding of the request is: [" + request.getCharacterEncoding() + "]. The character encoding we will use for the request and response is: [" + charset + "]", module);
-
-        if (!"none".equals(charset)) {
-            request.setCharacterEncoding(charset);
-        }
+        String charset = request.getCharacterEncoding();
 
         // setup content type
         String contentType = "text/html";
-        if (charset.length() > 0 && !"none".equals(charset)) {
+        if (UtilValidate.isNotEmpty(charset) && !"none".equals(charset)) {
             response.setContentType(contentType + "; charset=" + charset);
             response.setCharacterEncoding(charset);
         } else {
@@ -224,8 +217,7 @@ public class ControlServlet extends HttpServlet {
                 if (Debug.verboseOn()) Debug.logVerbose(throwable, module);
             } else {
                 Debug.logError(throwable, "Error in request handler: ", module);
-                StringUtil.HtmlEncoder encoder = new StringUtil.HtmlEncoder();
-                request.setAttribute("_ERROR_MESSAGE_", encoder.encode(throwable.toString()));
+                request.setAttribute("_ERROR_MESSAGE_", UtilCodec.getEncoder("html").encode(throwable.toString()));
                 errorPage = requestHandler.getDefaultErrorPage(request);
             }
          } catch (RequestHandlerExceptionAllowExternalRequests e) {
@@ -233,8 +225,7 @@ public class ControlServlet extends HttpServlet {
               Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
         } catch (Exception e) {
             Debug.logError(e, "Error in request handler: ", module);
-            StringUtil.HtmlEncoder encoder = new StringUtil.HtmlEncoder();
-            request.setAttribute("_ERROR_MESSAGE_", encoder.encode(e.toString()));
+            request.setAttribute("_ERROR_MESSAGE_", UtilCodec.getEncoder("html").encode(e.toString()));
             errorPage = requestHandler.getDefaultErrorPage(request);
         }
 
@@ -260,11 +251,7 @@ public class ControlServlet extends HttpServlet {
 
                     String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + request.getAttribute("_ERROR_MESSAGE_");
                     try {
-                        if (UtilJ2eeCompat.useOutputStreamNotWriter(getServletContext())) {
-                            response.getOutputStream().print(errorMessage);
-                        } else {
-                            response.getWriter().print(errorMessage);
-                        }
+                        response.getWriter().print(errorMessage);
                     } catch (Throwable t2) {
                         try {
                             int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
@@ -283,11 +270,7 @@ public class ControlServlet extends HttpServlet {
                 }
 
                 String errorMessage = "<html><body>ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + request.getAttribute("_ERROR_MESSAGE_") + "</body></html>";
-                if (UtilJ2eeCompat.useOutputStreamNotWriter(getServletContext())) {
-                    response.getOutputStream().print(errorMessage);
-                } else {
-                    response.getWriter().print(errorMessage);
-                }
+                response.getWriter().print(errorMessage);
             }
         }
 

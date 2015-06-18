@@ -18,11 +18,11 @@
  */
 package org.ofbiz.service.engine;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -69,7 +69,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
         // static java service methods should be: public Map<String, Object> methodName(DispatchContext dctx, Map<String, Object> context)
         DispatchContext dctx = dispatcher.getLocalContext(localName);
         Locale locale = (Locale) parameters.get("locale");
-        Map<String, Object> localContext = FastMap.newInstance();
+        Map<String, Object> localContext = new HashMap<String, Object>();
         localContext.put("parameters", parameters);
         Map<String, Object> result = ServiceUtil.returnSuccess();
 
@@ -89,10 +89,22 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
 
         try {
             boolean allPksInOnly = true;
+            LinkedList<String> pkFieldNameOutOnly = null;
+            /* Check for each pk if it's :
+             * 1. part IN 
+             * 2. or part IN and OUT, but without value but present on parameters map
+             * Help the engine to determinate the operation to realize for a create call or validate that
+             * any pk is present for update/delete call.
+             */
             for (ModelField pkField: modelEntity.getPkFieldsUnmodifiable()) {
                 ModelParam pkParam = modelService.getParam(pkField.getName());
-                if (pkParam.isOut()) {
-                    allPksInOnly = false;
+                boolean pkValueInParameters = pkParam.isIn() && UtilValidate.isNotEmpty(parameters.get(pkParam.getFieldName()));
+                if (pkParam.isOut() && !pkValueInParameters) {
+                    if (pkFieldNameOutOnly == null) {
+                        pkFieldNameOutOnly = new LinkedList();
+                        allPksInOnly = false;
+                    }
+                    pkFieldNameOutOnly.add(pkField.getName());
                 }
             }
 
@@ -129,7 +141,6 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                     }
                 }
 
-
                 if (isSinglePk && isSinglePkOut && !isSinglePkIn) {
                     /*
                      **** primary sequenced primary key ****
@@ -146,7 +157,6 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
 
                     String sequencedId = dctx.getDelegator().getNextSeqId(modelEntity.getEntityName());
                     newEntity.set(singlePkModeField.getName(), sequencedId);
-                    result.put(singlePkModelParam.name, sequencedId);
                 } else if (isSinglePk && isSinglePkOut && isSinglePkIn) {
                     /*
                      **** primary sequenced key with optional override passed in ****
@@ -182,7 +192,6 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                         }
                     }
                     newEntity.set(singlePkModeField.getName(), pkValue);
-                    result.put(singlePkModelParam.name, pkValue);
                 } else if (isDoublePk && doublePkPrimaryInParam != null && doublePkSecondaryOutParam != null) {
                     /*
                      **** secondary sequenced primary key ****
@@ -200,7 +209,6 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
 
                     newEntity.setPKFields(parameters, true);
                     dctx.getDelegator().setNextSubSeqId(newEntity, doublePkSecondaryOutField.getName(), 5, 1);
-                    result.put(doublePkSecondaryOutParam.name, newEntity.get(doublePkSecondaryOutField.getName()));
                 } else if (allPksInOnly) {
                     /*
                      **** plain specified primary key ****
@@ -214,24 +222,46 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                      *
                      */
                     newEntity.setPKFields(parameters, true);
+                    //with all pks present on parameters, check if the entity is not already exists.
+                    GenericValue lookedUpValue = PrimaryKeyFinder.runFind(modelEntity, parameters, dctx.getDelegator(), false, true, null, null);
+                    if (lookedUpValue != null) {
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ServiceValueFound", UtilMisc.toMap("pkFields", newEntity.getPkShortValueString()), locale));
+                    }
                 } else {
-                    throw new GenericServiceException("In Service [" + modelService.name + "] which uses the entity-auto engine with the create invoke option: " +
-                            "could not find a valid combination of primary key settings to do a known create operation; options include: " +
-                            "1. a single OUT pk for primary auto-sequencing, " +
-                            "2. a single INOUT pk for primary auto-sequencing with optional override, " +
-                            "3. a 2-part pk with one part IN (existing primary pk) and one part OUT (the secdonary pk to sub-sequence, " +
-                            "4. all pk fields are IN for a manually specified primary key");
+                    /* We haven't all Pk and their are 3 or more, now check if isn't a associate entity with own sequence
+                    <set-pk-fields map="parameters" value-field="newEntity"/>
+                    <sequenced-id sequence-name="ExempleItemAssoc" field="newEntity.exempleItemAssocId"/>
+                    <create-value value-field="newEntity"/>
+                     */
+                    if (pkFieldNameOutOnly != null && pkFieldNameOutOnly.size() == 1) {
+                        newEntity.setPKFields(parameters, true);
+                        String pkFieldName = pkFieldNameOutOnly.getFirst();
+                        //if it's a fromDate, don't update it now, it's will be done next step
+                        if (! "fromDate".equals(pkFieldName)) { 
+                            String pkValue = dctx.getDelegator().getNextSeqId(modelEntity.getEntityName());
+                            newEntity.set(pkFieldName, pkValue);
+                        }
+                    } else {
+                        throw new GenericServiceException("In Service [" + modelService.name + "] which uses the entity-auto engine with the create invoke option: " +
+                                "could not find a valid combination of primary key settings to do a known create operation; options include: " +
+                                "1. a single OUT pk for primary auto-sequencing, " +
+                                "2. a single INOUT pk for primary auto-sequencing with optional override, " +
+                                "3. a 2-part pk with one part IN (existing primary pk) and one part OUT (the secondary pk to sub-sequence), " +
+                                "4. a N-part pk with N-1 part IN and one party OUT only (missing pk is a sub-sequence mainly for entity assoc), " +
+                                "5. all pk fields are IN for a manually specified primary key");
+                    }
                 }
 
                 // handle the case where there is a fromDate in the pk of the entity, and it is optional or undefined in the service def, populate automatically
                 ModelField fromDateField = modelEntity.getField("fromDate");
                 if (fromDateField != null && fromDateField.getIsPk()) {
                     ModelParam fromDateParam = modelService.getParam("fromDate");
-                    if (fromDateParam == null || (fromDateParam.isOptional() && parameters.get("fromDate") == null)) {
+                    if (fromDateParam == null || parameters.get("fromDate") == null) {
                         newEntity.set("fromDate", UtilDateTime.nowTimestamp());
                     }
                 }
 
+                newEntity.setNonPKFields(parameters, true);
                 if (modelEntity.getField("createdDate") != null) {
                     newEntity.set("createdDate", UtilDateTime.nowTimestamp());
                     if (modelEntity.getField("createdByUserLogin") != null) {
@@ -247,8 +277,8 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                         newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
                     }
                 }
-                newEntity.setNonPKFields(parameters, true);
                 newEntity.create();
+                result.putAll(modelService.makeValid(newEntity, "OUT"));
             } else if ("update".equals(modelService.invoke)) {
                 /*
                 <auto-attributes include="pk" mode="IN" optional="false"/>
@@ -314,9 +344,9 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                         }
                     }
                 }
-
                 // NOTE: nothing here to maintain the status history, that should be done with a custom service called by SECA rule
 
+                lookedUpValue.setNonPKFields(parameters, true);
                 if (modelEntity.getField("lastModifiedDate") != null) {
                     lookedUpValue.set("lastModifiedDate", UtilDateTime.nowTimestamp());
                     if (modelEntity.getField("lastModifiedByUserLogin") != null) {
@@ -326,8 +356,6 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                         }
                     }
                 }
-
-                lookedUpValue.setNonPKFields(parameters, true);
                 lookedUpValue.store();
             } else if ("delete".equals(modelService.invoke)) {
                 /*
@@ -345,6 +373,8 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
                 GenericValue lookedUpValue = PrimaryKeyFinder.runFind(modelEntity, parameters, dctx.getDelegator(), false, true, null, null);
                 if (lookedUpValue != null) {
                     lookedUpValue.remove();
+                } else {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ServiceValueNotFoundForRemove", locale));
                 }
             }
         } catch (GeneralException e) {

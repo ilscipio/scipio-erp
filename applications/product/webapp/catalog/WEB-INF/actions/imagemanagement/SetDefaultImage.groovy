@@ -33,20 +33,23 @@ import org.ofbiz.product.image.ScaleImage;
 
 context.nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
-imageManagementPath = FlexibleStringExpander.expandString(UtilProperties.getPropertyValue("catalog", "image.management.path"), context);
+imageManagementPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
 
 String fileType = "original";
 String productId = request.getParameter("productId");
 
-productContentList = delegator.findByAnd("ProductContentAndInfo", UtilMisc.toMap("productId", productId, "productContentTypeId", "DEFAULT_IMAGE"), null, false);
+productContentList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "DEFAULT_IMAGE").queryList();
 if (productContentList) {
     dataResourceName = productContentList.get(0).drDataResourceName
 }
 
 // make the image file formats
-imageFilenameFormat = UtilProperties.getPropertyValue('catalog', 'image.filename.format');
+context.tenantId = delegator.getDelegatorTenantId();
+imageFilenameFormat = EntityUtilProperties.getPropertyValue('catalog', 'image.filename.format', delegator);
 imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.server.path", delegator), context);
-imageUrlPrefix = EntityUtilProperties.getPropertyValue('catalog', 'image.url.prefix',delegator);
+imageUrlPrefix = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.url.prefix",delegator), context);
+imageServerPath = imageServerPath.endsWith("/") ? imageServerPath.substring(0, imageServerPath.length()-1) : imageServerPath;
+imageUrlPrefix = imageUrlPrefix.endsWith("/") ? imageUrlPrefix.substring(0, imageUrlPrefix.length()-1) : imageUrlPrefix;
 context.imageFilenameFormat = imageFilenameFormat;
 context.imageServerPath = imageServerPath;
 context.imageUrlPrefix = imageUrlPrefix;
@@ -60,7 +63,7 @@ context.imageNameOriginal = imageUrlPrefix + "/" + filenameExpander.expandString
 
 // Start ProductContent stuff
 if (productId) {
-    product = delegator.findOne("Product",["productId" : productId], false);
+    product = from("Product").where("productId", productId).queryOne();
     context.productId = productId;
 }
 

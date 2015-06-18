@@ -23,7 +23,6 @@ import java.io.File;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -37,10 +36,11 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.content.search.SearchWorker;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.testtools.OFBizTestCase;
 
 public class LuceneTests extends OFBizTestCase {
@@ -53,27 +53,28 @@ public class LuceneTests extends OFBizTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        userLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", "system"), false);
+        userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
     }
 
     @Override
     protected void tearDown() throws Exception {
     }
 
-    public void testCreateIndex() throws Exception {
+    public void testSearchTermHand() throws Exception {
         Map<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("contentId", "WebStoreCONTENT");
         ctx.put("userLogin", userLogin);
         Map<String, Object> resp = dispatcher.runSync("indexContentTree", ctx);
-    }
-
-    public void testSearchTermHand() throws Exception {
+        assertTrue("Could not init search index", ServiceUtil.isSuccess(resp));
+        try {
+            Thread.sleep(3000); // sleep 3 seconds to give enough time to the indexer to process the entries
+        } catch(Exception e) {}
         Directory directory = FSDirectory.open(new File(SearchWorker.getIndexPath("content")));
         DirectoryReader r = null;
         try {
             r = DirectoryReader.open(directory);
         } catch (Exception e) {
-            // ignore
+            fail("Could not open search index: " + directory);
         }
 
         BooleanQuery combQuery = new BooleanQuery();

@@ -31,8 +31,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
-import org.ofbiz.widget.html.*;
-import org.ofbiz.widget.form.*;
+import org.ofbiz.widget.renderer.html.HtmlFormWrapper;
 import org.ofbiz.content.ContentManagementWorker;
 
 import javax.servlet.*;
@@ -120,7 +119,7 @@ if (!pksEqual) {
 currentEntityMap[currentEntityName] = currentPK;
 request.setAttribute("currentPK", currentPK);
 context.currentPK = currentPK;
-currentValue = delegator.findOne(currentPK.getPrimaryKey().getEntityName(), currentPK.getPrimaryKey(), false);
+currentValue = from(currentPK.getPrimaryKey().getEntityName()).where(currentPK.getPrimaryKey()).queryOne();
 context.currentValue = currentValue;
 request.setAttribute("currentValue", currentValue);
 

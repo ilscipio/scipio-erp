@@ -56,7 +56,9 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.guiapp.xui.XuiSession;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
@@ -433,7 +435,7 @@ public class PosTransaction implements Serializable {
         try {
             Delegator delegator = cart.getDelegator();
             GenericValue product = null;
-            product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), true);
+            product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
             if (UtilValidate.isNotEmpty(product) && ("AGGREGATED".equals(product.getString("productTypeId")) || "AGGREGATED_SERVICE".equals(product.getString("productTypeId")))) {
                 return true;
             }
@@ -492,7 +494,7 @@ public class PosTransaction implements Serializable {
             Delegator delegator = cart.getDelegator();
             GenericValue product = null;
             ProductConfigWrapper pcw = null;
-            product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), true);
+            product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
             if (UtilValidate.isNotEmpty(product) && ("AGGREGATED".equals(product.getString("productTypeId"))||"AGGREGATED_SERVICE".equals(product.getString("productTypeId")))) {
                 // if it's an aggregated item, load the configwrapper and set to defaults
                 pcw = new ProductConfigWrapper(delegator, session.getDispatcher(), productId, null, null, null, null, null, null);
@@ -966,7 +968,7 @@ public class PosTransaction implements Serializable {
                 if (this.isAggregatedItem(item.getProductId())) {
                     // put alterations here
                     ProductConfigWrapper pcw = null;
-                    // product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), true);
+                    // product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
                     // pcw = new ProductConfigWrapper(delegator, session.getDispatcher(), productId, null, null, null, null, null, null);
                     pcw = item.getConfigWrapper();
                     List<ConfigOption> selected = pcw.getSelectedOptions();
@@ -1166,14 +1168,13 @@ public class PosTransaction implements Serializable {
 
     public GenericValue getTerminalState() {
         Delegator delegator = session.getDelegator();
-        List<GenericValue> states = null;
+        GenericValue state = null;
         try {
-            states = delegator.findByAnd("PosTerminalState", UtilMisc.toMap("posTerminalId", this.getTerminalId()), null, false);
+            state = EntityQuery.use(delegator).from("PosTerminalState").where("posTerminalId", this.getTerminalId()).filterByDate(UtilDateTime.nowTimestamp(), "openedDate", "closedDate").queryFirst();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
-        states = EntityUtil.filterByDate(states, UtilDateTime.nowTimestamp(), "openedDate", "closedDate", true);
-        return EntityUtil.getFirst(states);
+        return state;
     }
 
     public void setPrintWriter(PrintWriter writer) {
@@ -1305,7 +1306,7 @@ public class PosTransaction implements Serializable {
         List<GenericValue> shoppingLists = null;
         Delegator delegator = this.session.getDelegator();
         try {
-            shoppingLists = delegator.findList("ShoppingList", null, null, null, null, false);
+            shoppingLists = EntityQuery.use(delegator).from("ShoppingList").queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return null;
@@ -1655,9 +1656,14 @@ public class PosTransaction implements Serializable {
 
                 try {
                     // set distinct on so we only get one row per person
-                    EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, -1, maxRows, true);
                     // using list iterator
-                    EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, fieldsToSelect, orderBy, findOpts);
+                     EntityListIterator pli = EntityQuery.use(delegator).select(UtilMisc.toSet(fieldsToSelect))
+                            .from(dynamicView).where(mainCond)
+                            .cursorScrollInsensitive()
+                            .fetchSize(-1)
+                            .maxRows(maxRows)
+                            .cache(true)
+                            .queryIterator();
 
                     // get the partial list for this page
                     partyList = pli.getPartialList(1, maxRows);
@@ -1727,6 +1733,7 @@ public class PosTransaction implements Serializable {
         // We suppose only one email address (should be ok anyway because of the contactMechPurposeTypeId == "PRIMARY_EMAIL")
         // we suppose only one phone number (should be ok anyway because of the contactMechPurposeTypeId == "PHONE_HOME")
         LocalDispatcher dispatcher = session.getDispatcher();
+        Delegator delegator = dispatcher.getDelegator();
         GenericValue userLogin = session.getUserLogin();
         GenericValue partyUserLogin = null;
         String result = null;
@@ -1932,7 +1939,8 @@ public class PosTransaction implements Serializable {
                             trace("updatePassword");
                             String passwordAcceptEncryptedAndPlain = null;
                             try {
-                                passwordAcceptEncryptedAndPlain = UtilProperties.getPropertyValue("security.properties", "password.accept.encrypted.and.plain");
+                            	
+                                passwordAcceptEncryptedAndPlain = EntityUtilProperties.getPropertyValue("security.properties", "password.accept.encrypted.and.plain", delegator);
                                 UtilProperties.setPropertyValueInMemory("security.properties", "password.accept.encrypted.and.plain", "true");
                                 svcRes = dispatcher.runSync("updatePassword",
                                         UtilMisc.toMap("userLogin", userLogin,

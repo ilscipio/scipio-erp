@@ -20,12 +20,11 @@ package org.ofbiz.webapp.control;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
@@ -35,6 +34,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 
 /**
  * Common Workers
@@ -43,8 +43,8 @@ public class ProtectViewWorker {
 
     private final static String module = ProtectViewWorker.class.getName();
     private static final String resourceWebapp = "WebappUiLabels";
-    private static final FastMap<String, Long> hitsByViewAccessed = FastMap.newInstance();
-    private static final FastMap<String, Long> durationByViewAccessed = FastMap.newInstance();
+    private static final Map<String, Long> hitsByViewAccessed = new ConcurrentHashMap<String, Long>();
+    private static final Map<String, Long> durationByViewAccessed = new ConcurrentHashMap<String, Long>();
     private static final Long one = new Long(1);
 
     /**
@@ -65,15 +65,21 @@ public class ProtectViewWorker {
         if (userLogin != null) {
             String userLoginId = userLogin.getString("userLoginId");
             try {
-                List<GenericValue> protectedViews = delegator.findByAnd("UserLoginAndProtectedView",
-                        UtilMisc.toMap("userLoginId", userLoginId, "viewNameId", viewNameId), null, true);
+                List<GenericValue> protectedViews = EntityQuery.use(delegator)
+                                                               .from("UserLoginAndProtectedView")
+                                                               .where("userLoginId", userLoginId, "viewNameId", viewNameId)
+                                                               .cache(true)
+                                                               .queryList();
                 // Any views to deal with ?
                 if (UtilValidate.isNotEmpty(protectedViews)) {
                     Long now = System.currentTimeMillis(); // we are not in a margin of some milliseconds
 
                     // Is this login/view couple already tarpitted ? (ie denied access to view for login for a period of time)
-                    List<GenericValue> tarpittedLoginViews = delegator.findByAnd("TarpittedLoginView",
-                            UtilMisc.toMap("userLoginId", userLoginId, "viewNameId", viewNameId), null, true);
+                    List<GenericValue> tarpittedLoginViews = EntityQuery.use(delegator)
+                                                                        .from("TarpittedLoginView")
+                                                                        .where("userLoginId", userLoginId, "viewNameId", viewNameId)
+                                                                        .cache(true)
+                                                                        .queryList();
                     String  viewNameUserLoginId = viewNameId + userLoginId;
                     if (UtilValidate.isNotEmpty(tarpittedLoginViews)) {
                         GenericValue tarpittedLoginView = tarpittedLoginViews.get(0);

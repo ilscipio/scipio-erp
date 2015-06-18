@@ -27,12 +27,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javolution.util.FastMap;
-
 import net.wimpi.pim.Pim;
 import net.wimpi.pim.contact.basicimpl.AddressImpl;
 import net.wimpi.pim.contact.basicimpl.EmailAddressImpl;
@@ -61,7 +59,8 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.service.DispatchContext;
@@ -116,23 +115,19 @@ public class VCard {
                     serviceCtx.put("city", workAddress.getCity());
                     serviceCtx.put("postalCode", workAddress.getPostalCode());
 
-                    List<GenericValue> countryGeoList = null;
-                    List<GenericValue> stateGeoList = null;
-                    EntityCondition cond = EntityCondition.makeCondition(UtilMisc.toList(
-                                                        EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS, "COUNTRY"),
-                                                        EntityCondition.makeCondition("geoName", EntityOperator.LIKE, workAddress.getCountry())), EntityOperator.AND);
-                    countryGeoList = delegator.findList("Geo", cond, null, null, null, true);
-                    if (!countryGeoList.isEmpty()) {
-                        GenericValue countryGeo = EntityUtil.getFirst(countryGeoList);
+                    GenericValue countryGeo = EntityQuery.use(delegator).from("Geo")
+                            .where(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS, "COUNTRY"),
+                                    EntityCondition.makeCondition("geoName", EntityOperator.LIKE, workAddress.getCountry()))
+                            .cache().queryFirst();
+                    if (countryGeo != null) {
                         serviceCtx.put("countryGeoId", countryGeo.get("geoId"));
                     }
 
-                    EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(
-                            EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS, "STATE"),
-                            EntityCondition.makeCondition("geoName", EntityOperator.LIKE, workAddress.getRegion())), EntityOperator.AND);
-                    stateGeoList = delegator.findList("Geo", condition, null, null, null, true);
-                    if (!stateGeoList.isEmpty()) {
-                        GenericValue stateGeo = EntityUtil.getFirst(stateGeoList);
+                    GenericValue stateGeo = EntityQuery.use(delegator).from("Geo")
+                            .where(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS, "STATE"),
+                            EntityCondition.makeCondition("geoName", EntityOperator.LIKE, workAddress.getRegion()))
+                            .cache().queryFirst();
+                    if (stateGeo != null) {
                         serviceCtx.put("stateProvinceGeoId", stateGeo.get("geoId"));
                     }
                 }
@@ -269,7 +264,7 @@ public class VCard {
             }
             ContactIOFactory ciof = Pim.getContactIOFactory();
             ContactMarshaller marshaller = ciof.createContactMarshaller();
-            String saveToDirectory = UtilProperties.getPropertyValue("sfa.properties", "save.outgoing.directory", "");
+            String saveToDirectory = EntityUtilProperties.getPropertyValue("sfa.properties", "save.outgoing.directory", "", delegator);
             if (UtilValidate.isEmpty(saveToDirectory)) {
                 saveToDirectory = System.getProperty("ofbiz.home");
             }

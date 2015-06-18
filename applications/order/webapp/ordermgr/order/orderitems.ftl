@@ -669,11 +669,11 @@ under the License.
                         <#if orderItem.comments?has_content>
                           <tr class="${rowColor!}">
                             <td>&nbsp;</td>
-                            <td>
+                            <td colspan="4">
                               <@section>
-                                  <table>
+                                  <table class="basic-table" cellspacing="0">
                                     <tr>
-                                      <td class="text-right">
+                                      <td class="text-right" nowrap="nowrap">
                                         ${uiLabelMap.CommonComments}
                                       </td>
                                       <td>
@@ -698,9 +698,6 @@ under the License.
                                   </table>
                               </@section>
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
                             <td></td>
                             <td></td>
                           </tr>

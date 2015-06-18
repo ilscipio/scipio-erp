@@ -42,16 +42,10 @@ margin: 1em;
         });
     });
 </script>
+<@panel type="callout">${uiLabelMap.CommonVisualThemeUsage}</@panel>
 
-<div class="screenlet" style="margin: 1em;">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.CommonVisualThemes}</li>
-      <li><a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonDone}</a></li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <li class="h2" style="padding-top:1em">${uiLabelMap.CommonVisualThemeUsage}</li>
+<@section title="${uiLabelMap.CommonVisualThemes}">
+  
   <#if visualThemes?has_content>
     <#assign orderByList = Static["org.ofbiz.base.util.UtilMisc"].toList("visualThemeId")/>
     <table cellspacing="0" class="basic-table">
@@ -84,4 +78,4 @@ margin: 1em;
       </#list>
     </table>
   </#if>
-</div>
+</@section>

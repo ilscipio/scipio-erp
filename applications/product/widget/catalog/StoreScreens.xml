@@ -118,31 +118,31 @@ under the License.
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="h3">${uiLabelMap.CommonView}</label>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="buttontext">
+                            <label >${uiLabelMap.CommonView}</label>
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="button tiny">
                                 <parameter param-name="productStoreId"/>
                             </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="buttontext">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="button tiny">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="userEntered" value="Y"/>
                                     </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="buttontext">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="button tiny">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="userEntered" value="N"/>
                                     </link>
                         </container>
                         <container>
-                            <label style="h3">${uiLabelMap.CommonView} ${uiLabelMap.CommonActiveInactive}</label>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="buttontext">
+                            <label >${uiLabelMap.CommonView} ${uiLabelMap.CommonActiveInactive}</label>
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="button tiny">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="activeOnly" value="N"/>
                                     </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="buttontext">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="button tiny">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="activeOnly" value="N"/>
                                         <parameter param-name="userEntered" value="Y"/>
                                     </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="buttontext">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="button tiny">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="activeOnly" value="N"/>
                                         <parameter param-name="userEntered" value="N"/>
@@ -454,7 +454,7 @@ under the License.
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <link target="/marketing/control/viewSegmentGroup" style="buttontext" url-mode="inter-app" text="${uiLabelMap.ProductNewSegment}">
+                            <link target="/marketing/control/viewSegmentGroup" style="button tiny" url-mode="inter-app" text="${uiLabelMap.ProductNewSegment}">
                                 <parameter param-name="productStoreId" from-field="productStoreId"/>
                             </link>
                         </container>
@@ -591,7 +591,7 @@ under the License.
                 <include-form name="EditProductStoreFacility" location="component://product/widget/catalog/StoreForms.xml"/>
             </widgets>
             <fail-widgets>
-                <label style="h3">${uiLabelMap.ProductCatalogUpdatePermissionError}</label>
+                <label >${uiLabelMap.ProductCatalogUpdatePermissionError}</label>
            </fail-widgets>
         </section>
     </screen>

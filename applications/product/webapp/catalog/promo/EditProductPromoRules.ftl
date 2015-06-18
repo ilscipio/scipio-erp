@@ -24,11 +24,13 @@ under the License.
   <#-- ======================= Rules ======================== -->
   <div class="screenlet-body">
     <table cellspacing="0" class="basic-table">
+     <thead>
       <tr class="header-row">
-        <td width="10%"><b>${uiLabelMap.ProductRuleId}</b></td>
-        <td width="80%"><b>${uiLabelMap.ProductRuleName}</b></td>
-        <td width="10%"><b>&nbsp;</b></td>
+        <th width="10%">${uiLabelMap.ProductRuleId}</th>
+        <th width="80%">${uiLabelMap.ProductRuleName}</th>
+        <th width="10%">&nbsp;</th>
       </tr>
+      </thead>
   <#assign ruleClass = "2">
   <#list productPromoRules as productPromoRule>
     <#assign productPromoConds = productPromoRule.getRelated("ProductPromoCond", null, null, false)>
@@ -37,7 +39,7 @@ under the License.
         <tr><td colspan="3"><hr /></td></tr>
       </#if>
       <tr valign="middle" class="row-level-one<#if ruleClass == "1"> alternate-row</#if>">
-        <td class="label"><b> ${uiLabelMap.ProductRule} ${(productPromoRule.productPromoRuleId)!}</b></td>
+        <td ><b> ${uiLabelMap.ProductRule} ${(productPromoRule.productPromoRuleId)!}</b></td>
         <td>
           <form method="post" action="<@ofbizUrl>updateProductPromoRule</@ofbizUrl>">
             <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
@@ -51,14 +53,14 @@ under the License.
           <form name="deleteProductPromoRule_${productPromoRule_index}" method="post" action="<@ofbizUrl>deleteProductPromoRule</@ofbizUrl>">
             <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
             <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
-            <a href="javascript:document.deleteProductPromoRule_${productPromoRule_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+            <a href="javascript:document.deleteProductPromoRule_${productPromoRule_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
           </form>
     </#if>
         </td>
       </tr>
       <tr><td><hr /></td><td colspan="2"></td></tr>
       <tr valign="top" class="row-level-one<#if ruleClass == "1"> alternate-row</#if>">
-        <td align="right" class="label">${uiLabelMap.ProductConditionsForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
+        <td align="right" >${uiLabelMap.ProductConditionsForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
         <td colspan="2">
           <table cellspacing="0" class="basic-table">
     <#assign maxCondSeqId = 1>
@@ -132,10 +134,10 @@ under the License.
                   <input type="hidden" name="productPromoId" value="${(productPromoCond.productPromoId)!}" />
                   <input type="hidden" name="productPromoRuleId" value="${(productPromoCond.productPromoRuleId)!}" />
                   <input type="hidden" name="productPromoCondSeqId" value="${(productPromoCond.productPromoCondSeqId)!}" />
-                  <a href="javascript:document.deleteProductPromoCondition_${productPromoRule_index}_${productPromoCond_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                  <a href="javascript:document.deleteProductPromoCondition_${productPromoRule_index}_${productPromoCond_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
                 </form>
       <#-- ======================= Categories ======================== -->
-                <div class="label">${uiLabelMap.ProductConditionsCategoriesForCondition} ${(productPromoCond.productPromoCondSeqId)!}:</div>
+                <div >${uiLabelMap.ProductConditionsCategoriesForCondition} ${(productPromoCond.productPromoCondSeqId)!}:</div>
       <#assign condProductPromoCategories = productPromoCond.getRelated("ProductPromoCategory", null, null, false)>
       <#if condProductPromoCategories?has_content>
       <#list condProductPromoCategories as condProductPromoCategory>
@@ -153,7 +155,7 @@ under the License.
                     <input type="hidden" name="productPromoCondSeqId" value="${(condProductPromoCategory.productPromoCondSeqId)!}" />
                     <input type="hidden" name="productCategoryId" value="${(condProductPromoCategory.productCategoryId)!}" />
                     <input type="hidden" name="andGroupId" value="${(condProductPromoCategory.andGroupId)!}" />
-                    <a href="javascript:document.deleteProductPromoCategoryCondition_${productPromoRule_index}_${condProductPromoCategory_index}_${productPromoCond_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteProductPromoCategoryCondition_${productPromoRule_index}_${condProductPromoCategory_index}_${productPromoCond_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </div>
       </#list>
@@ -181,7 +183,7 @@ under the License.
                   </form>
                 </div>
       <#-- ======================= Products ======================== -->
-                <div class="label">${uiLabelMap.ProductConditionsProductsForCondition} ${(productPromoCond.productPromoCondSeqId)!}:</div>
+                <div >${uiLabelMap.ProductConditionsProductsForCondition} ${(productPromoCond.productPromoCondSeqId)!}:</div>
       <#assign condProductPromoProducts = productPromoCond.getRelated("ProductPromoProduct", null, null, false)>
       <#if condProductPromoProducts?has_content>
       <#list condProductPromoProducts as condProductPromoProduct>
@@ -196,7 +198,7 @@ under the License.
                     <input type="hidden" name="productPromoActionSeqId" value="${(condProductPromoProduct.productPromoActionSeqId)!}" />
                     <input type="hidden" name="productPromoCondSeqId" value="${(condProductPromoProduct.productPromoCondSeqId)!}" />
                     <input type="hidden" name="productId" value="${(condProductPromoProduct.productId)!}" />
-                    <a href="javascript:document.deleteProductPromoProductCondition_${productPromoRule_index}_${productPromoCond_index}_${condProductPromoProduct_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteProductPromoProductCondition_${productPromoRule_index}_${productPromoCond_index}_${condProductPromoProduct_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </div>
       </#list>
@@ -233,7 +235,7 @@ under the License.
                 <form method="post" action="<@ofbizUrl>createProductPromoCond</@ofbizUrl>">
                   <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                   <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
-                  <span class="label"><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
+                  <span ><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
                   <select name="inputParamEnumId" size="1">
     <#list inputParamEnums as inputParamEnum>
                     <option value="${(inputParamEnum.enumId)!}">${(inputParamEnum.get("description",locale))!}</option>
@@ -264,7 +266,7 @@ under the License.
       </tr>
       <tr><td><hr /></td><td colspan="2"></td></tr>
       <tr valign="top" class="row-level-one<#if ruleClass == "1"> alternate-row</#if>">
-        <td align="right" class="label">${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
+        <td align="right" >${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
         <td colspan="2">
           <table cellspacing="0" class="basic-table">
     <#assign actionClass = "2">
@@ -314,11 +316,11 @@ under the License.
                     <input type="hidden" name="productPromoId" value="${(productPromoAction.productPromoId)!}" />
                     <input type="hidden" name="productPromoRuleId" value="${(productPromoAction.productPromoRuleId)!}" />
                     <input type="hidden" name="productPromoActionSeqId" value="${(productPromoAction.productPromoActionSeqId)!}" />
-                    <a href="javascript:document.deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </div>
       <#-- ======================= Categories ======================== -->
-                <div class="label">${uiLabelMap.ProductActionsCategoriesForAction} ${(productPromoAction.productPromoActionSeqId)!}:</div>
+                <div >${uiLabelMap.ProductActionsCategoriesForAction} ${(productPromoAction.productPromoActionSeqId)!}:</div>
       <#assign actionProductPromoCategories = productPromoAction.getRelated("ProductPromoCategory", null, null, false)>
       <#if actionProductPromoCategories?has_content>
       <#list actionProductPromoCategories as actionProductPromoCategory>
@@ -336,7 +338,7 @@ under the License.
                     <input type="hidden" name="productPromoActionSeqId" value="${(actionProductPromoCategory.productPromoActionSeqId)!}" />
                     <input type="hidden" name="productCategoryId" value="${(actionProductPromoCategory.productCategoryId)!}" />
                     <input type="hidden" name="andGroupId" value="${(actionProductPromoCategory.andGroupId)!}" />
-                    <a href="javascript:document.deleteProductPromoCategoryAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoCategory_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteProductPromoCategoryAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoCategory_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </div>
       </#list>
@@ -365,7 +367,7 @@ under the License.
                   </form>
                 </div>
       <#-- ======================= Products ======================== -->
-                 <div class="label">${uiLabelMap.ProductActionsProductsForAction} ${(productPromoAction.productPromoActionSeqId)!}:</div>
+                 <div >${uiLabelMap.ProductActionsProductsForAction} ${(productPromoAction.productPromoActionSeqId)!}:</div>
       <#assign actionProductPromoProducts = productPromoAction.getRelated("ProductPromoProduct", null, null, false)>
       <#if actionProductPromoProducts?has_content>
       <#list actionProductPromoProducts as actionProductPromoProduct>
@@ -380,7 +382,7 @@ under the License.
                     <input type="hidden" name="productPromoCondSeqId" value="${(actionProductPromoProduct.productPromoCondSeqId)!}" />
                     <input type="hidden" name="productPromoActionSeqId" value="${(actionProductPromoProduct.productPromoActionSeqId)!}" />
                     <input type="hidden" name="productId" value="${(actionProductPromoProduct.productId)!}" />
-                    <a href="javascript:document.deleteProductPromoProductAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoProduct_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteProductPromoProductAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoProduct_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </div>
       </#list>
@@ -418,7 +420,7 @@ under the License.
                   <form method="post" action="<@ofbizUrl>createProductPromoAction</@ofbizUrl>">
                     <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                     <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
-                    <span class="label"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
+                    <span ><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <select name="productPromoActionEnumId" size="1">
     <#list productPromoActionEnums as productPromoActionEnum>
                       <option value="${(productPromoActionEnum.enumId)!}">${(productPromoActionEnum.get("description",locale))!}</option>
@@ -464,7 +466,7 @@ under the License.
   <div class="screenlet-body">
     <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>">
       <input type="hidden" name="productPromoId" value="${productPromoId!}" />
-      <span class="label">${uiLabelMap.ProductName}</span><input type="text" size="30" name="ruleName" />
+      <span >${uiLabelMap.ProductName}</span><input type="text" size="30" name="ruleName" />
       <input type="submit" value="${uiLabelMap.CommonAdd}" />
     </form>
   </div>
@@ -490,7 +492,7 @@ under the License.
         <input type="hidden" name="productPromoCondSeqId" value="${(promoProductPromoCategory.productPromoCondSeqId)!}" />
         <input type="hidden" name="productCategoryId" value="${(promoProductPromoCategory.productCategoryId)!}" />
         <input type="hidden" name="andGroupId" value="${(promoProductPromoCategory.andGroupId)!}" />
-        <a href="javascript:document.deleteProductPromoCategoryAction_${promoProductPromoCategory_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+        <a href="javascript:document.deleteProductPromoCategoryAction_${promoProductPromoCategory_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
       </form>
     </div>
   </#list>
@@ -534,7 +536,7 @@ under the License.
         <input type="hidden" name="productPromoActionSeqId" value="${(promoProductPromoProduct.productPromoActionSeqId)!}" />
         <input type="hidden" name="productPromoCondSeqId" value="${(promoProductPromoProduct.productPromoCondSeqId)!}" />
         <input type="hidden" name="productId" value="${(promoProductPromoProduct.productId)!}" />
-        <a href="javascript:document.deleteProductPromoProductAction_${promoProductPromoProduct_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+        <a href="javascript:document.deleteProductPromoProductAction_${promoProductPromoProduct_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
       </form>
     </div>
   </#list>
@@ -544,7 +546,7 @@ under the License.
         <input type="hidden" name="productPromoRuleId" value="_NA_" />
         <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
         <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
-        <span class="label">${uiLabelMap.ProductProductId}</span>*<@htmlTemplate.lookupField formName="createpromoproductform" name="productId" id="productId" fieldFormName="LookupProduct"/>
+        <span >${uiLabelMap.ProductProductId}</span>*<@htmlTemplate.lookupField formName="createpromoproductform" name="productId" id="productId" fieldFormName="LookupProduct"/>
         <select name="productPromoApplEnumId">
   <#list productPromoApplEnums as productPromoApplEnum>
           <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>

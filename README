@@ -1,51 +1,90 @@
+   _________  __________ 
+  / ____/   |/_  __/ __ \
+ / /   / /| | / / / / / /
+/ /___/ ___ |/ / / /_/ / 
+\____/_/  |_/_/  \____/  
 
-Welcome to Apache OFBiz!
+***************************
+* I N S T A L L A T I O N *
+***************************
+System Requirements
+* Operating System: Windows, Linux, OS X
+* Core 2 Duo or Athlon X2 at 2.4 GHz or higher
+* 4+GB RAM, 2+GB free hard disk space
 
-All you need to run OFBiz is a 1.7 (version 7) JDK
-(not just the JRE, the full JDK).
-http://java.sun.com/javase/downloads/index.jsp
+Software Requirements
+* Java 1.7 (or greater) SDK
+* Apache ANT
 
-You can load the demo data (strongly advised if you are new to
-OFBiz) with the following command on the command line
-from the OFBiz home folder (in Unix-like operating systems
-type "./ant" rather than "ant" to use the embed ant version
- if you haven't installed it on your system) :
 
-ant load-demo
+Recommended Development Tools
+* GIT Client
+* Eclipse Java IDE
+ * m2eclipse
+ * Groovy-eclipse
+ * Freemarker IDE editor (select from JBools tools plugin)
 
-Then start OFBiz:
 
-ant start
+Prerequisits
+In order to install CATO, the followong prerequisites must be installed properly:
+* Java 1.7 (or greater) SDK
+ * Download and Install
+ * Set JAVA_HOME Path
+ * Validate Settings
 
-(or "java -Xms128M -Xmx512M -XX:MaxPermSize=128m -jar ofbiz.jar")
-(you can also run directly "ant load-demo start")
 
-Once OFBiz starts, you can look at the demo storefront at:
-http://localhost:8080/ecommerce
+Installation
+In order to install, the following steps must be taken:
 
-the back office at:
-https://localhost:8443/ordermgr
+1. Open your command line, go to the extracted folder and run:
+a. Linux ./ant load-demo
+b. OS X: ./ant load-demo
+c. Windows: ant.bat load-demo
 
-and the administration interface at:
-https://localhost:8443/webtools
 
-You can log in with the user "admin" and password "ofbiz".
+2. From the same command line run:
+a. Linux ./tools/startofbiz.sh
+b. OS X: bash /tools/startofbiz.sh
+c. Windows: /tools/startofbiz.bat
 
-To stop OFBiz:
+3. To access the application visit:
+OFBiz Dashboard: http://localhost:8080/webtools
 
-ant stop
 
-To get the list of available commands:
+To access the OFBiz Applications from the dashboard use:
+Username: admin
+Password: ofbiz
 
-ant -p
 
-You will also find several platform dependent scripts in the
-"tools" folder (for example for Windows and Unix-like operating
-systems, the startup scripts are startofbiz.bat and startofbiz.sh).
+                            Congratulations, you have installed CATO!
 
-Note that the default configuration uses an embedded Java database
-(Apache Derby) and embedded application server components such as
-Tomcat, Geronimo (transaction manager), etc.
+
+
+
+Optional Configuration
+* OFBiz-related Configuration
+  https://cwiki.apache.org/confluence/display/OFBTECH/Apache+OFBiz+Technical+Production+Setup+Guide
+* Memory allocation
+  https://cwiki.apache.org/confluence/display/OFBTECH/Apache+OFBiz+Technical+Production+Setup+Guide#ApacheOFBizTechnicalProductionSetupGuide-MemorySettings
+
+
+*****************
+* S U P P O R T *
+*****************
+For detailed changes to the CATO Commerce suite, visit the github wiki at:
+
+https://github.com/catocommerce/cato/wiki
+
+You can get in touch with the community over at:
+
+http://forum.cato-commerce.com/
+
+
+
+*************
+* O F B I Z *
+*************
+Cato is a fork of the Apache OFBiz project. 
 
 For more details about OFBiz please visit the OFBiz Documentation page:
 
@@ -56,16 +95,25 @@ In this page you will find links to useful guides such as:
 * "Basic Production Setup Guide"
 * "A Beginners Development Guide"
 
+
 If you would like to get in touch with the OFBiz community of users and
 developers, the following page will help to get started:
 
 http://ofbiz.apache.org/community.html
 
-Enjoy!
 
-=========================================================================
-==  BIS Crypto TSU exception notice                                    ==
-=========================================================================
+***********************
+* D I S C L A I M E R *
+***********************
+CATO and the CATO logo are trademarks of Ilscipio GmbH. 
+© Copyright CATO components 2014 Ilscipio GmbH.
+Apache OFBiz, Apache, the Apache feather logo are trademarks
+ of The Apache Software Foundation.
+
+
+***********************************
+* BIS Crypto TSU exception notice *
+***********************************
    This distribution includes cryptographic software.  The country in
    which you currently reside may have restrictions on the import,
    possession, use, and/or re-export to another country, of
@@ -93,5 +141,4 @@ Enjoy!
      java.security.* and javax.crypto.* (the JCE, Java Cryptography
      Extensions API)
    * Other classes such as HttpClient and various related ones use
-     the JSSE (Java Secure Sockets Extension) API
-=========================================================================
+  the JSSE (Java Secure Sockets Extension) API

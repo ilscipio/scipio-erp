@@ -40,7 +40,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="buttontext create"/>
+                                            <link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="button tiny create"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -113,7 +113,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                                <label  text="${uiLabelMap.AccountingViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -139,7 +139,7 @@ under the License.
                                 <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
                             </condition>
                             <widgets>
-                                <container style="button-bar"><link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="buttontext create"/></container>
+                                <container style="button-bar"><link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="button tiny create"/></container>
                             </widgets>
                         </section>
                         <include-form name="EditFixedAsset" location="component://accounting/widget/FixedAssetForms.xml"/>
@@ -355,7 +355,7 @@ under the License.
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
-                            <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="buttontext create">
+                            <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="button tiny create">
                                 <parameter param-name="fixedAssetId"/>
                             </link>
                         </container>
@@ -394,7 +394,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="buttontext">
+                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="button tiny">
                                         <parameter param-name="fixedAssetId"/>
                                     </link>
                                 </container>
@@ -529,12 +529,12 @@ under the License.
                         <section>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationHistory}">
-                                    <label style="h3">${uiLabelMap.FormFieldTitle_purchaseCost}: ${fixedAsset.purchaseCost}</label>
-                                    <label style="h3">${uiLabelMap.FormFieldTitle_depreciation}: ${depreciation}</label>
-                                    <label style="h3">${uiLabelMap.FormFieldTitle_salvageValue}: ${fixedAsset.salvageValue}</label>
-                                    <label style="h3">${uiLabelMap.FormFieldTitle_dateAcquired}: ${fixedAsset.dateAcquired}</label>
-                                    <label style="h3">${uiLabelMap.FormFieldTitle_expectedEndOfLife}: ${fixedAsset.expectedEndOfLife}</label>
-                                    <label style="h3">${uiLabelMap.FormFieldTitle_NextDepreciationAmount}: ${assetDepreciationResultMap.nextDepreciationAmount}</label>
+                                    <label >${uiLabelMap.FormFieldTitle_purchaseCost}: ${fixedAsset.purchaseCost}</label>
+                                    <label >${uiLabelMap.FormFieldTitle_depreciation}: ${depreciation}</label>
+                                    <label >${uiLabelMap.FormFieldTitle_salvageValue}: ${fixedAsset.salvageValue}</label>
+                                    <label >${uiLabelMap.FormFieldTitle_dateAcquired}: ${fixedAsset.dateAcquired}</label>
+                                    <label >${uiLabelMap.FormFieldTitle_expectedEndOfLife}: ${fixedAsset.expectedEndOfLife}</label>
+                                    <label >${uiLabelMap.FormFieldTitle_NextDepreciationAmount}: ${assetDepreciationResultMap.nextDepreciationAmount}</label>
                                     <section>
                                         <condition>
                                             <and>
@@ -561,7 +561,7 @@ under the License.
                                         </actions>
                                         <widgets>
                                             <container>
-                                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}: ${assetDepreciationResultMap.plannedPastDepreciationTotal}" style="buttontext" target="CreateAcctgTransAndEntries">
+                                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}: ${assetDepreciationResultMap.plannedPastDepreciationTotal}" style="button tiny" target="CreateAcctgTransAndEntries">
                                                     <parameter param-name="fixedAssetId" from-field="fixedAsset.fixedAssetId"/>
                                                     <parameter param-name="organizationPartyId" from-field="fixedAsset.partyId"/>
                                                     <parameter param-name="acctgTransTypeId" value="DEPRECIATION"/>
@@ -579,9 +579,9 @@ under the License.
                                 </screenlet>
                                 <screenlet title="${uiLabelMap.AccountingGlMappings}">
                                     <include-form name="AddFixedAssetTypeGlAccount" location="component://accounting/widget/FixedAssetForms.xml"/>
-                                    <label style="h3">${uiLabelMap.PageTitleFixedAssetMappings}</label>
+                                    <label >${uiLabelMap.PageTitleFixedAssetMappings}</label>
                                     <include-form name="FixedAssetTypeGlAccounts" location="component://accounting/widget/FixedAssetForms.xml"/>
-                                    <label style="h3">${uiLabelMap.PageTitleFixedAssetGlobalMappings}</label>
+                                    <label >${uiLabelMap.PageTitleFixedAssetGlobalMappings}</label>
                                     <include-form name="GlobalFixedAssetTypeGlAccounts" location="component://accounting/widget/FixedAssetForms.xml"/>
                                 </screenlet>
                                 <section>
@@ -595,7 +595,7 @@ under the License.
                                     </widgets>
                                     <fail-widgets>
                                         <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationReport}">
-                                            <label style="h3">${assetDepreciationResultMessages}</label>
+                                            <label >${assetDepreciationResultMessages}</label>
                                         </screenlet>
                                     </fail-widgets>
                                 </section>

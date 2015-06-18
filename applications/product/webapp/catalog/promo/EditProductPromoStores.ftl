@@ -23,19 +23,21 @@ under the License.
         </div>
         <div class="screenlet-body">
             <table cellspacing="0" class="basic-table">
+             <thead>
                 <tr class="header-row">
-                    <td><b>${uiLabelMap.ProductStoreNameId}</b></td>
-                    <td><b>${uiLabelMap.CommonFromDateTime}</b></td>
-                    <td align="center"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></td>
-                    <td><b>&nbsp;</b></td>
+                    <th>${uiLabelMap.ProductStoreNameId}</th>
+                    <th>${uiLabelMap.CommonFromDateTime}</th>
+                    <th align="center">${uiLabelMap.ProductThruDateTimeSequence}</th>
+                    <th>&nbsp;</th>
                 </tr>
+             </thead>
                 <#assign line = 0>
                 <#assign rowClass = "2">
                 <#list productStorePromoAppls as productStorePromoAppl>
                 <#assign line = line + 1>
                 <#assign productStore = productStorePromoAppl.getRelatedOne("ProductStore", false)>
                 <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                    <td><a href="<@ofbizUrl>EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="buttontext"><#if productStore??>${(productStore.storeName)!}</#if>[${productStorePromoAppl.productStoreId}]</a></td>
+                    <td><a href="<@ofbizUrl>EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="button tiny"><#if productStore??>${(productStore.storeName)!}</#if>[${productStorePromoAppl.productStoreId}]</a></td>
                     <#assign hasntStarted = false>
                     <#if (productStorePromoAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                     <td <#if hasntStarted>style="color: red;"</#if>>${productStorePromoAppl.fromDate!}</td>
@@ -47,7 +49,7 @@ under the License.
                             <input type="hidden" name="productPromoId" value="${productStorePromoAppl.productPromoId}" />
                             <input type="hidden" name="fromDate" value="${productStorePromoAppl.fromDate}" />
                             <#if hasExpired><#assign class="alert"></#if>
-                            <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="${class!''}" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(productStorePromoAppl.thruDate)!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                            <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(productStorePromoAppl.thruDate)!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                             <input type="text" size="5" name="sequenceNum" value="${(productStorePromoAppl.sequenceNum)!}" />
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                         </form>
@@ -84,7 +86,7 @@ under the License.
                     <option value="${(productStore.productStoreId)!}">${(productStore.storeName)!} [${(productStore.productStoreId)!}]</option>
                 </#list>
                 </select>
-                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 <input type="submit" value="${uiLabelMap.CommonAdd}"/>
             </form>
         </div>

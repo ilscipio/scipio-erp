@@ -47,6 +47,7 @@ under the License.
             <xs:attribute type="xs:string" name="default-entity-name" />
             <xs:attribute type="xs:string" name="default-title-style" />
             <xs:attribute type="xs:string" name="default-widget-style" />
+            <xs:attribute type="xs:string" name="default-link-style" />
             <xs:attribute type="xs:string" name="default-tooltip-style" />
             <xs:attribute type="xs:string" name="default-selected-style" />
             <xs:attribute type="xs:string" name="default-align-style" />
@@ -137,6 +138,7 @@ under the License.
             <xs:attribute type="xs:string" name="tooltip" />
             <xs:attribute type="xs:string" name="title-style" />
             <xs:attribute type="xs:string" name="widget-style" />
+            <xs:attribute type="xs:string" name="link-style" />
             <xs:attribute type="xs:string" name="align-style" />
             <xs:attribute type="xs:string" name="tooltip-style" />
             <xs:attribute type="xs:string" name="selected-style" />

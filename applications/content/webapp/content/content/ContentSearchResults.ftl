@@ -22,10 +22,10 @@ under the License.
   </div>
   <div class="screenlet-body">
     <#list searchConstraintStrings as searchConstraintString>
-        <div>&nbsp;<a href="<@ofbizUrl>ContentSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="buttontext">X</a>&nbsp;${searchConstraintString}</div>
+        <div>&nbsp;<a href="<@ofbizUrl>ContentSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="button tiny">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
-    <div><span class="label">${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
-    <div><a href="<@ofbizUrl>ContentSearchOptions</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRefineSearch}</a></div>
+    <div><span >${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
+    <div><a href="<@ofbizUrl>ContentSearchOptions</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !contentIds?has_content>
       <br /><h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>
@@ -34,15 +34,15 @@ under the License.
     <#if contentIds?has_content>
     <table class="basic-table" cellspacing="0">
         <tr>
-          <td align="right" class="label">
+          <td align="right" >
             <#if 0 < viewIndex?int>
-              <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a>
+              <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a>
             </#if>
             <#if 0 < listSize?int>
               ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
             </#if>
             <#if highIndex?int < listSize?int>
-              | <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
+              | <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNext}</a>
             </#if>
           </td>
         </tr>
@@ -58,7 +58,7 @@ under the License.
           <#assign content = delegator.findOne("Content", Static["org.ofbiz.base.util.UtilMisc"].toMap("contentId", contentId), false)>
           <tr>
             <td>
-              <a href="<@ofbizUrl>editContent?contentId=${contentId}</@ofbizUrl>" class="buttontext">${contentId} ${(content.contentName)!}</a>
+              <a href="<@ofbizUrl>editContent?contentId=${contentId}</@ofbizUrl>" class="button tiny">${contentId} ${(content.contentName)!}</a>
             </td>
           </tr>
         </#list>
@@ -69,15 +69,15 @@ under the License.
     <#if contentIds?has_content>
     <table class="basic-table" cellspacing="0">
         <tr>
-          <td align="right" class="label">
+          <td align="right" >
             <#if 0 < viewIndex?int>
-              <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
+              <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a> |
             </#if>
             <#if 0 < listSize?int>
               ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
             </#if>
             <#if highIndex?int < listSize?int>
-              | <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
+              | <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNext}</a>
             </#if>
           </td>
         </tr>

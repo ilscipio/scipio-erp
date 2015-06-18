@@ -117,8 +117,8 @@ under the License.
 </#if>
 <#if invoiceList?has_content && (parameters.noConditionFind)! == 'Y'>
   <div>
-    <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} :</span>
-    <span class="label" id="showInvoiceRunningTotal"></span>
+    <span >${uiLabelMap.AccountingRunningTotalOutstanding} :</span>
+    <span  id="showInvoiceRunningTotal"></span>
   </div>
   <form name="listInvoices" id="listInvoices"  method="post" action="">
     <div align="right">
@@ -165,7 +165,7 @@ under the License.
           <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", Static["org.ofbiz.base.util.UtilMisc"].toMap("invoiceId", invoice.invoiceId, "userLogin", userLogin))/>
           <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a class="buttontext" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></td>
+              <td><a class="button tiny" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></td>
               <td>
                 <#assign invoiceType = delegator.findOne("InvoiceType", {"invoiceTypeId" : invoice.invoiceTypeId}, true) />
                 ${invoiceType.description?default(invoice.invoiceTypeId)}

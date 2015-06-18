@@ -35,7 +35,7 @@ function lookupBom() {
   </div>
   <div class="screenlet-body">
     <#if product?has_content>
-        <a href="<@ofbizUrl>BomSimulation</@ofbizUrl>?productId=${productId}&amp;bomType=${productAssocTypeId}" class="buttontext">${uiLabelMap.ManufacturingBomSimulation}</a>
+        <a href="<@ofbizUrl>BomSimulation</@ofbizUrl>?productId=${productId}&amp;bomType=${productAssocTypeId}" class="button tiny">${uiLabelMap.ManufacturingBomSimulation}</a>
     </#if>
     <br />
     <br />
@@ -64,7 +64,7 @@ function lookupBom() {
             <td>&nbsp;</td>
             <td>
                 <@htmlTemplate.lookupField value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                <span><a href="javascript:document.searchform.submit();" class="buttontext">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
+                <span><a href="javascript:document.searchform.submit();" class="button tiny">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
             </td>
         </tr>
         <tr>
@@ -75,7 +75,7 @@ function lookupBom() {
             <td>&nbsp;</td>
             <td>
                 <@htmlTemplate.lookupField formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
-                <span><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="buttontext">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
+                <span><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="button tiny">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
             </td>
         </tr>
     </table>
@@ -121,7 +121,7 @@ function lookupBom() {
             <td align="right">${uiLabelMap.CommonFromDate}</td>
             <td>&nbsp;</td>
             <td>
-                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="50" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="50" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 <span class="tooltip">(${uiLabelMap.ManufacturingWillBeSetToNow})</span>
             </td>
           </tr>
@@ -163,7 +163,7 @@ function lookupBom() {
             <#else>
               <#assign value= request.getParameter("thruDate")!>
             </#if>
-            <@htmlTemplate.renderDateTimeField value="${value!''}" name="thruDate" className="" event="" action="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="30" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            <@htmlTemplate.renderDateTimeField value="${value!''}" name="thruDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="30" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
         </td>
     </tr>
     <tr>
@@ -244,26 +244,28 @@ function lookupBom() {
   <div class="screenlet-body">
     <a name="components"></a>
     <table class="basic-table" cellspacing="0">
+     <thead>
       <tr class="header-row">
-        <td>${uiLabelMap.ProductProductId}</td>
-        <td>${uiLabelMap.ProductProductName}</td>
-        <td>${uiLabelMap.CommonFromDate}</td>
-        <td>${uiLabelMap.CommonThruDate}</td>
-        <td>${uiLabelMap.CommonSequenceNum}</td>
-        <td>${uiLabelMap.CommonQuantity}</td>
-        <td>${uiLabelMap.ManufacturingScrapFactor}</td>
-        <td>${uiLabelMap.ManufacturingFormula}</td>
-        <td>${uiLabelMap.ManufacturingRoutingTask}</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
+        <th>${uiLabelMap.ProductProductId}</th>
+        <th>${uiLabelMap.ProductProductName}</th>
+        <th>${uiLabelMap.CommonFromDate}</th>
+        <th>${uiLabelMap.CommonThruDate}</th>
+        <th>${uiLabelMap.CommonSequenceNum}</th>
+        <th>${uiLabelMap.CommonQuantity}</th>
+        <th>${uiLabelMap.ManufacturingScrapFactor}</th>
+        <th>${uiLabelMap.ManufacturingFormula}</th>
+        <th>${uiLabelMap.ManufacturingRoutingTask}</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
       </tr>
+    </thead>
     <#assign alt_row = false>
     <#list assocFromProducts! as assocFromProduct>
     <#assign listToProduct = assocFromProduct.getRelatedOne("AssocProduct", true)>
     <#assign curProductAssocType = assocFromProduct.getRelatedOne("ProductAssocType", true)>
       <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-        <td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="buttontext">${(assocFromProduct.productIdTo)!}</a></td>
-        <td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="buttontext">${(listToProduct.internalName)!}</a></#if>&nbsp;</td>
+        <td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="button tiny">${(assocFromProduct.productIdTo)!}</a></td>
+        <td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="button tiny">${(listToProduct.internalName)!}</a></#if>&nbsp;</td>
         <td<#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))> class="alert"</#if>>
         ${(assocFromProduct.fromDate)!}&nbsp;</td>
         <td<#if (assocFromProduct.getTimestamp("thruDate"))?? && nowDate.after(assocFromProduct.getTimestamp("thruDate"))> class="alert"</#if>>
@@ -274,10 +276,10 @@ function lookupBom() {
         <td>&nbsp;${(assocFromProduct.estimateCalcMethod)!}</td>
         <td>&nbsp;${(assocFromProduct.routingWorkEffortId)!}</td>
         <td>
-        <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
+        <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonDelete}</a>
         </td>
         <td>
-        <a href="<@ofbizUrl>EditProductBom?productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a>
+        <a href="<@ofbizUrl>EditProductBom?productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a>
         </td>
       </tr>
       <#-- toggle the row color -->
@@ -295,27 +297,29 @@ function lookupBom() {
   </div>
   <div class="screenlet-body">
       <table class="basic-table" cellspacing="0">
+       <thead>
         <tr class="header-row">
-            <td>${uiLabelMap.ProductProductId}</td>
-            <td>${uiLabelMap.ProductProductName}</td>
-            <td>${uiLabelMap.CommonFromDate}</td>
-            <td>${uiLabelMap.CommonThruDate}</td>
-            <td>${uiLabelMap.CommonQuantity}</td>
-            <td>&nbsp;</td>
+            <th>${uiLabelMap.ProductProductId}</th>
+            <th>${uiLabelMap.ProductProductName}</th>
+            <th>${uiLabelMap.CommonFromDate}</th>
+            <th>${uiLabelMap.CommonThruDate}</th>
+            <th>${uiLabelMap.CommonQuantity}</th>
+            <th>&nbsp;</th>
         </tr>
+        </thead>
         <#assign alt_row = false>
         <#list assocToProducts! as assocToProduct>
         <#assign listToProduct = assocToProduct.getRelatedOne("MainProduct", true)>
         <#assign curProductAssocType = assocToProduct.getRelatedOne("ProductAssocType", true)>
         <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-            <td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="buttontext">${(assocToProduct.productId)!}</a></td>
-<!--                <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="buttontext">${(listToProduct.internalName)!}</a></#if></td> -->
-            <td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="buttontext">${(listToProduct.internalName)!}</a></#if></td>
+            <td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="button tiny">${(assocToProduct.productId)!}</a></td>
+<!--                <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="button tiny">${(listToProduct.internalName)!}</a></#if></td> -->
+            <td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="button tiny">${(listToProduct.internalName)!}</a></#if></td>
             <td>${(assocToProduct.getTimestamp("fromDate"))!}&nbsp;</td>
             <td>${(assocToProduct.getTimestamp("thruDate"))!}&nbsp;</td>
             <td>${(assocToProduct.quantity)!}&nbsp;</td>
             <td>
-                <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@ofbizUrl>" class="button tiny">
                 ${uiLabelMap.CommonDelete}</a>
             </td>
         </tr>

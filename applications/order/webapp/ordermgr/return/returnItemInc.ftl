@@ -18,7 +18,7 @@ under the License.
 -->
 <table cellspacing="0" class="basic-table">
     <tr>
-      <td colspan="7"><h3>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</a></h3></td>
+      <td colspan="7"><h3>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="button tiny">${orderId}</a></h3></td>
       <td colspan="2" align="right">
         <span>${uiLabelMap.CommonSelectAll}</span>&nbsp;
         <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${selectAllFormName}');highlightAllRows(this, 'returnItemId_tableRow_', 'selectAllForm');"/>
@@ -30,15 +30,15 @@ under the License.
     <tr><td colspan="10">
         <table cellspacing="0" class="basic-table">
           <tr>
-            <td class="label" width="25%">${uiLabelMap.OrderOrderTotal}</td>
+            <td  width="25%">${uiLabelMap.OrderOrderTotal}</td>
             <td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></td>
           </tr>
           <tr>
-            <td class="label" width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</td>
+            <td  width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</td>
             <td><@ofbizCurrency amount=orh.getOrderReturnedCreditTotalBd() isoCode=orh.getCurrency()/></td>
           </tr>
           <tr>
-            <td class="label" width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</td>
+            <td  width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</td>
             <td><@ofbizCurrency amount=orh.getOrderReturnedRefundTotalBd() isoCode=orh.getCurrency()/></td>
           </tr>
         </table>
@@ -165,16 +165,18 @@ under the License.
       </#list>
     <tr><td colspan="9"><hr/></td></tr>
     <tr>
-      <td colspan="9"><h3>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</a></h3></td>
+      <td colspan="9"><h3>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="button tiny">${orderId}</a></h3></td>
     </tr>
     <tr><td colspan="9"><br /></td></tr>
     <#if orderHeaderAdjustments?has_content>
+      <thead>
       <tr class="header-row">
-        <td>${uiLabelMap.CommonDescription}</td>
-        <td>${uiLabelMap.CommonAmount}</td>
-        <td>${uiLabelMap.OrderReturnType}</td>
-        <td align="right">${uiLabelMap.OrderOrderInclude}?</td>
+        <th>${uiLabelMap.CommonDescription}</th>
+        <th>${uiLabelMap.CommonAmount}</th>
+        <th>${uiLabelMap.OrderReturnType}</th>
+        <th align="right">${uiLabelMap.OrderOrderInclude}?</th>
       </tr>
+      </thead>
       <#list orderHeaderAdjustments as adj>
         <#assign returnAdjustmentType = returnItemTypeMap.get(adj.get("orderAdjustmentTypeId"))/>
         <#assign adjustmentType = adj.getRelatedOne("OrderAdjustmentType", false)/>
@@ -220,7 +222,7 @@ under the License.
     </tr>
     <tr>
       <td colspan="9">
-        <h3>${uiLabelMap.OrderReturnManualAdjustment} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</a></h3>
+        <h3>${uiLabelMap.OrderReturnManualAdjustment} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="button tiny">${orderId}</a></h3>
       </td>
     </tr>
     <tr>
@@ -247,12 +249,12 @@ under the License.
     <tr>
       <td colspan="9" align="right">
     <input type="hidden" name="_rowCount" value="${rowCount}"/>
-        <a href="javascript:document.${selectAllFormName}.submit()" class="buttontext">${uiLabelMap.OrderReturnSelectedItems}</a>
+        <a href="javascript:document.${selectAllFormName}.submit()" class="button tiny">${uiLabelMap.OrderReturnSelectedItems}</a>
       </td>
     </tr>
     <#else>
     <tr>
-      <td colspan="9" class="label">${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</td>
+      <td colspan="9" >${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</td>
     </tr>
     </#if>
     <tr>

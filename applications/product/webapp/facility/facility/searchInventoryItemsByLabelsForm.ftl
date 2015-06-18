@@ -27,7 +27,7 @@ under the License.
     <tr>
       <td>
           <div>
-          <span class="label">${labelType.description!} [${labelType.inventoryItemLabelTypeId}]</span>
+          <span >${labelType.description!} [${labelType.inventoryItemLabelTypeId}]</span>
           &nbsp;
           <select name="inventoryItemLabelId_${index}">
             <option></option>

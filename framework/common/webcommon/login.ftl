@@ -19,53 +19,89 @@ under the License.
 
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign useMultitenant = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "multitenant")>
-
+<#assign logo><img src="<@ofbizContentUrl>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
 <#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
 <#if username != "">
   <#assign focusName = false>
 <#else>
   <#assign focusName = true>
 </#if>
-<center>
-  <div class="screenlet login-screenlet">
-    <div class="screenlet-title-bar">
-      <h3>${uiLabelMap.CommonRegistered}</h3>
+
+<div class="large-3 large-centered columns login-box" id="login">
+<div id="login-box-title">
+    <h1>${logo} ${uiLabelMap.CommonLogin!}</h1>
     </div>
-    <div class="screenlet-body">
+
+<@section id="login-box-content">
+  <#if uiLabelMap.WebtoolsForSomethingInteresting?has_content 
+       && uiLabelMap.WebtoolsForSomethingInteresting != "WebtoolsForSomethingInteresting">
+  <@alert type="secondary">
+      ${uiLabelMap.WebtoolsForSomethingInteresting}
+  </@alert>
+  </#if>
+  <@row>
+    <div class="large-12 columns auth-plain">
+     <div class="signup-panel right-solid">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
-        <table class="basic-table" cellspacing="0">
-          <tr>
-            <td class="label">${uiLabelMap.CommonUsername}</td>
-            <td><input type="text" name="USERNAME" value="${username}" size="20"/></td>
-          </tr>
-          <tr>
-            <td class="label">${uiLabelMap.CommonPassword}</td>
-            <td><input type="password" name="PASSWORD" value="" size="20"/></td>
-          </tr>
+       <@row>
+        <div class="large-12 columns">
+          <div class="row collapse">
+            <div class="small-3 columns">
+              <span class="prefix"><i class="fi-torso-female"></i></span>
+            </div>
+            <div class="small-9 columns">
+              <input type="text" name="USERNAME" value="${username}" size="20" placeholder="${uiLabelMap.CommonUsername}" title="${uiLabelMap.CommonUsername}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
+            </div>
+          </div>
+        </div>
+       </@row>
+      <@row>
+        <div class="large-12 columns">
+          <div class="row collapse">
+            <div class="small-3 columns">
+              <span class="prefix"><i class="fi-lock"></i></span>
+            </div>
+            <div class="small-9 columns">
+              <input type="password" name="PASSWORD" value="" size="20" placeholder="${uiLabelMap.CommonPassword}" title="${uiLabelMap.CommonPassword}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
+            </div>
+          </div>
+        </div>
+       </@row>
           <#if ("Y" == useMultitenant) >
               <#if !requestAttributes.userTenantId??>
-                  <tr>
-                      <td class="label">${uiLabelMap.CommonTenantId}</td>
-                      <td><input type="text" name="userTenantId" value="${parameters.userTenantId!}" size="20"/></td>
-                  </tr>
+              <div class="row">
+                <div class="large-12 columns">
+                  <div class="row collapse">
+                    <div class="small-3 columns">
+                      <span class="prefix">${uiLabelMap.CommonTenantId}</span>
+                    </div>
+                    <div class="small-9 columns">
+                      <input type="text" name="userTenantId" value="${parameters.userTenantId!}" size="20"/>
+                    </div>
+                  </div>
+                </div>
+               </div>
               <#else>
                   <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
               </#if>
           </#if>
-          <tr>
-            <td colspan="2" align="center">
-              <input type="submit" value="${uiLabelMap.CommonLogin}"/>
-            </td>
-          </tr>
-        </table>
+         
+         <@row>
+             <@cell class="large-9 columns text-left">
+                <small><a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a></small>
+                
+             </@cell>
+            <@cell class="large-12 large-centered columns text-right">
         <input type="hidden" name="JavaScriptEnabled" value="N"/>
-        <br />
-        <a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a>
+                <input type="submit" value="${uiLabelMap.CommonLogin}" class="button"/>
+            </@cell>
+        </@row>
       </form>
     </div>
   </div>
-</center>
-
+  </@row>
+</@section>
+</div>
 <script language="JavaScript" type="text/javascript">
   document.loginform.JavaScriptEnabled.value = "Y";
   <#if focusName>

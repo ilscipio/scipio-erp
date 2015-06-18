@@ -18,7 +18,7 @@ under the License.
 -->
 <#if (requestAttributes.uiLabelMap)??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <br />
-<div class="label">[${product.productId}] ${product.internalName}</div>
+<div >[${product.productId}] ${product.internalName}</div>
 <br />
 <#if searchFeatures?has_content>
   <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
@@ -26,7 +26,7 @@ under the License.
         <input type="hidden" name="productId" value="${product.productId}" />
         <#list searchFeatures as searchFeature>
             <tr>
-                <td class="label"><b>${searchFeature.featureType}</b></td>
+                <td ><b>${searchFeature.featureType}</b></td>
                 <td><select name="${searchFeature.featureType}">
                     <#assign features = searchFeature.features>
                     <option value=""></option>
@@ -50,14 +50,16 @@ under the License.
 <br />
 <#if variantProducts??>
     <table cellspacing="0" class="basic-table">
+       <thead>
         <tr class="header-row">
-            <td><b>${uiLabelMap.ProductProductId}</b></td>
-            <td><b>${uiLabelMap.ProductBrandName}</b></td>
-            <td><b>${uiLabelMap.ProductInternalName}</b></td>
+            <td>${uiLabelMap.ProductProductId}</td>
+            <td>${uiLabelMap.ProductBrandName}</td>
+            <td>${uiLabelMap.ProductInternalName}</td>
         </tr>
+        </thead>
         <#list variantProducts as variant>
             <tr>
-                <td><a class="buttontext" href="javascript:set_value('${variant.productId}')">${variant.productId}</a></td>
+                <td><a class="button tiny" href="javascript:set_value('${variant.productId}')">${variant.productId}</a></td>
                 <td>${variant.brandName!}</td>
                 <td>${variant.internalName!}</td>
             </tr>

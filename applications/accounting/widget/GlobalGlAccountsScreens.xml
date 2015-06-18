@@ -43,7 +43,7 @@ under the License.
                             </widgets>
                             <!--
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.XxxxViewPermissionError}</label>
+                                <label >${uiLabelMap.XxxxViewPermissionError}</label>
                             </fail-widgets>
                             -->
                         </section>
@@ -74,7 +74,7 @@ under the License.
                             </widgets>
                             <!--
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.XxxxViewPermissionError}</label>
+                                <label >${uiLabelMap.XxxxViewPermissionError}</label>
                             </fail-widgets>
                             -->
                         </section>
@@ -233,8 +233,8 @@ under the License.
                         <include-menu name="GlSettingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <screenlet title="${uiLabelMap[labelTitleProperty]}">
                             <container style="button-bar">
-                                <link target="ListGlAccountsReport" text="${uiLabelMap.CommonPrint}" style="buttontext"/>
-                                <link target="ListGlAccountsExport" text="${uiLabelMap.CommonExport}" style="buttontext"/>
+                                <link target="ListGlAccountsReport" text="${uiLabelMap.CommonPrint}" style="button tiny"/>
+                                <link target="ListGlAccountsExport" text="${uiLabelMap.CommonExport}" style="button tiny"/>
                             </container>
                             <include-form name="ListGlAccount" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
                         </screenlet>

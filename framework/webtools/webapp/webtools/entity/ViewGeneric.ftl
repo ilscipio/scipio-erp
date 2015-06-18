@@ -16,8 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
 <#assign enableEdit = parameters.enableEdit?default("false")>
+<#--
 <script language="JavaScript" type="text/javascript">
 var numTabs=${(entity.getRelationsSize()+1)};
 function ShowTab(lname) {
@@ -36,71 +36,71 @@ function ShowTab(lname) {
     }
   }
 }
-</script>
+</script>-->
+<@section title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}">
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.WebtoolsViewValue}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
-    <h2>${uiLabelMap.WebtoolsForEntity}: ${entityName}</h2>
-    <h2>${uiLabelMap.WebtoolsWithPk}: ${findByPk}</h2>
-    <br />
-    <div class="button-bar">
-      <a href='<@ofbizUrl>FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>' class="buttontext">${uiLabelMap.WebtoolsBackToFindScreen}</a>
+    <ul class="button-group">
+      <li><a href='<@ofbizUrl>FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>' class="button tiny">${uiLabelMap.WebtoolsBackToFindScreen}</a></li>
       <#if enableEdit = "false">
         <#if hasCreatePermission>
-          <a href='<@ofbizUrl>ViewGeneric?entityName=${entityName}&amp;enableEdit=true</@ofbizUrl>' class="buttontext create">${uiLabelMap.CommonCreateNew}</a>
-          <a href="<@ofbizUrl>ViewGeneric?${curFindString}&amp;enableEdit=true</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a>
+          <li><a href='<@ofbizUrl>ViewGeneric?entityName=${entityName}&amp;enableEdit=true</@ofbizUrl>' class="button tiny create">${uiLabelMap.CommonCreateNew}</a></li>
+          <li><a href="<@ofbizUrl>ViewGeneric?${curFindString}&amp;enableEdit=true</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a></li>
         </#if>
         <#if value?has_content>
           <#if hasDeletePermission>
-            <a href='<@ofbizUrl>UpdateGeneric?UPDATE_MODE=DELETE&amp;${curFindString}</@ofbizUrl>' class="buttontext delete">${uiLabelMap.WebtoolsDeleteThisValue}</a>
+            <li><a href='<@ofbizUrl>UpdateGeneric?UPDATE_MODE=DELETE&amp;${curFindString}</@ofbizUrl>' class="button tiny delete">${uiLabelMap.WebtoolsDeleteThisValue}</a></li>
           </#if>
         </#if>
       </#if>
-    </div>
+    </ul>
+    <br/>
+    <@nav type="magellan">
+        <#if value?has_content><@mli arrival="xml-view"><a href="#xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</a></@mli></#if>
+        <#--<@mli arrival="common-view"><a href="#common-view">${uiLabelMap.CommonView}</a></@mli>-->
+        <@mli arrival="current-view"><a href="#current-view">${uiLabelMap.WebtoolsEntityCurrentValue}</a></@mli>
+        <@mli arrival="related-view"><a href="#related-view">${uiLabelMap.WebtoolsRelatedEntity}</a></@mli>
+    </@nav>
+    <br/>
+    
     <#if value?has_content>
-      <form name="relationForm">
-        <p><b>${uiLabelMap.CommonView}</b></p>
-        <select name="viewRelated" onchange="javascript:ShowTab(this.options[this.selectedIndex].value)">
+    <@row>
+        <@cell>
+          <h3 data-magellan-destination="xml-view" id="xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</h3>
+        
+          <@code type="html">
+              <#assign valueXmlDoc = Static["org.ofbiz.entity.GenericValue"].makeXmlDocument([value]) />${Static["org.ofbiz.base.util.UtilXml"].writeXmlDocument(valueXmlDoc)}
+          </@code>
+        
+        </@cell>
+    </@row>
+</#if>    
+    
+    <#--
+    <#if value?has_content>
+    <@row>
+            <@cell columns=6>
+      <form name="relationForm" onchange="javascript:ShowTab(this.options[this.selectedIndex].value)">
+         
+        <h3 data-magellan-destination="common-view" id="common-view">${uiLabelMap.CommonView}</h3>
+        <@field type="select" name="viewRelated">
           <option value="tab1">${entityName}</option>
           <#list relationFieldList as relation>
             <option value="tab${(relation_index+2)}">${relation.title}${relation.relEntityName} (${relation.type})</option>
           </#list>
-        </select>
+        </@field>
       </form>
-      <br />
-    </#if>
-    <div id="area1" class="screenlet">
-      <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.WebtoolsEntityCurrentValue}</h3>
-      </div>
-      <#if value?has_content>
+          </@cell>
+    </@row>
+    
+    </#if>-->
+    
+
+   
+    <#if enableEdit = "true" && ( hasUpdatePermission || hasCreatePermission)>
         <#assign alt_row = false>
-        <table class="basic-table" cellspacing="0">
-          <#list fields as field>
-            <tr<#if alt_row> class="alternate-row"</#if>>
-              <td class="label">${field.name}</td>
-              <td>${field.value}</td>
-            </tr>
-            <#assign alt_row = !alt_row>
-          </#list>
-        </table>
-      <#else>
-        ${uiLabelMap.WebtoolsSpecifiedEntity1} ${entityName} ${uiLabelMap.WebtoolsSpecifiedEntity2}.
-      </#if>
-    </div>
-    <#if enableEdit = "true">
-      <#if hasUpdatePermission || hasCreatePermission>
-        <#assign alt_row = false>
-        <div id="area2" class="screenlet">
-          <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.WebtoolsEntityEditValue}</h3>
-          </div>
+           <@row>
+            <@cell>
+            <h3 data-magellan-destination="current-view" id="current-view">${uiLabelMap.WebtoolsEntityEditValue}</h3>
           <#if pkNotFound>
             <p>${uiLabelMap.WebtoolsEntityName} ${entityName} ${uiLabelMap.WebtoolsWithPk} ${findByPk} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</p>
           </#if>
@@ -114,7 +114,7 @@ function ShowTab(lname) {
                     <input type="hidden" name="UPDATE_MODE" value="UPDATE"/>
                     <#list newFieldPkList as field>
                       <tr<#if alt_row> class="alternate-row"</#if>>
-                        <td class="label">${field.name}</td>
+                        <td class=>${field.name}</td>
                         <td>
                           <input type="hidden" name="${field.name}" value="${field.value}"/>
                           ${field.value}
@@ -134,12 +134,12 @@ function ShowTab(lname) {
                     <input type="hidden" name="UPDATE_MODE" value="CREATE"/>
                     <#list newFieldPkList as field>
                       <tr<#if alt_row> class="alternate-row"</#if>>
-                        <td class="label">${field.name}</td>
+                        <td class=>${field.name}</td>
                         <td>
                           <#if field.fieldType == 'DateTime'>
-                            DateTime(YYYY-MM-DD HH:mm:SS.sss):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                            DateTime(YYYY-MM-DD HH:mm:SS.sss):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                           <#elseif field.fieldType == 'Date'>
-                            Date(YYYY-MM-DD):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                            Date(YYYY-MM-DD):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                           <#elseif field.fieldType == 'Time'>
                             Time(HH:mm:SS.sss):<input type="text" size="6" maxlength="10" name="${field.name}" value="${field.value}" />
                           <#elseif field.fieldType == 'Integer'>
@@ -174,12 +174,12 @@ function ShowTab(lname) {
                   <#assign alt_row = false>
                   <#list newFieldNoPkList as field>
                     <tr<#if alt_row> class="alternate-row"</#if>>
-                      <td class="label">${field.name}</td>
+                      <td class=>${field.name}</td>
                       <td>
                         <#if field.fieldType == 'DateTime'>
-                          DateTime(YYYY-MM-DD HH:mm:SS.sss):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                          DateTime(YYYY-MM-DD HH:mm:SS.sss):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         <#elseif field.fieldType == 'Date'>
-                          Date(YYYY-MM-DD):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                          Date(YYYY-MM-DD):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         <#elseif field.fieldType == 'Time'>
                           Time(HH:mm:SS.sss):<input type="text" size="6" maxlength="10" name="${field.name}" value="${field.value}" />
                         <#elseif field.fieldType == 'Integer'>
@@ -219,63 +219,97 @@ function ShowTab(lname) {
               </#if>
             </table>
           </form>
-        </div>
+        </@cell>
+        </@row>
+      <#else>
+          <@row>
+            <@cell>
+              <h3 data-magellan-destination="current-view" id="current-view">${uiLabelMap.WebtoolsEntityCurrentValue}</h3>
+              <#if value?has_content>
+                <#assign alt_row = false>
+                <table class="large-12" cellspacing="0">
+                  <thead>
+                  <tr>
+                    <th class="large-3">${uiLabelMap.WebtoolsFieldName}</th>
+                    <th class="large-9">${uiLabelMap.CommonValue}</th>
+                  </tr>
+                  </thead>
+                  <#list fields as field>
+                    <tr<#if alt_row> class="alternate-row"</#if>>
+                      <td>${field.name}</td>
+                      <td>${field.value}</td>
+                    </tr>
+                    <#assign alt_row = !alt_row>
+                  </#list>
+                </table>
+              <#else>
+                ${uiLabelMap.WebtoolsSpecifiedEntity1} ${entityName} ${uiLabelMap.WebtoolsSpecifiedEntity2}.
       </#if>
+            </@cell>
+        </@row>
     </#if>
+      
     <#if relationFieldList?has_content>
+    <@row>
+        <@cell>
+            <h3 data-magellan-destination="related-view" id="related-view">${uiLabelMap.WebtoolsRelatedEntity}</h3>
+            <@grid>  
       <#list relationFieldList as relation>
-          <div id="area${(relation_index + 2)}" class="topcontainerhidden">
-            <div class="screenlet-title-bar">
-              <ul>
-                <li class="h3">${uiLabelMap.WebtoolsRelatedEntity}: ${relation.title}${relation.relatedTable} (${relation.type})</li>
-                <li><a href="<@ofbizUrl>FindGeneric?${relation.encodeRelatedEntityFindString}&amp;find=true</@ofbizUrl>">${uiLabelMap.CommonFind}</a></li>
+                    <li>
+                            <@pul title="${relation.title}${relation.relatedTable}">
+                            <@pli type="description">${relation.type}</@pli>
                 <#if relation.valueRelated?has_content>
-                  <li><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}</@ofbizUrl>">${uiLabelMap.CommonView}</a></li>
+                              <@pli><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}</@ofbizUrl>">${uiLabelMap.CommonView}</a></@pli>
                 </#if>
                 <#if hasAllCreate || relCreate>
-                  <li><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}&amp;enableEdit=true</@ofbizUrl>">${uiLabelMap.CommonCreate}</a></li>
+                              <@pli><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}&amp;enableEdit=true</@ofbizUrl>">${uiLabelMap.CommonCreate}</a></@pli>
                 </#if>
-              </ul>
-              <br class="clear"/>
-            </div>
+
             <#if relation.valueRelated?has_content>
-              <table class="basic-table" cellspacing="0">
+                            <@pli>
+                              <@modal id="rel_${relation.relatedTable}" label="${uiLabelMap.CommonValues}">                                
+                                  <table cellspacing="0" class="large-12">
+                                    <thead>
+                                        <tr>
+                                            <th class="large-3">${uiLabelMap.WebtoolsFieldName}</th>
+                                            <th class="large-9">${uiLabelMap.CommonValue}</th>
+                                        </tr>
+                                    </thead>
                 <#assign alt_row = false>
                 <tr<#if alt_row> class="alternate-row"</#if>>
-                  <td class="label">${uiLabelMap.WebtoolsPk}</td>
+                                      <td class="">${uiLabelMap.WebtoolsPk}</td>
                   <td>${relation.valueRelatedPk}</td>
                 </tr>
                 <#list relation.relatedFieldsList as relatedField>
                   <tr<#if alt_row> class="alternate-row"</#if>>
-                    <td class="label">${relatedField.name}</td>
+                                        <td class="">${relatedField.name}</td>
                     <td>${relatedField.value}</td>
                   </tr>
                   <#assign alt_row = !alt_row>
                 </#list>
               </table>
+                              </@modal>
+                          </@pli>
+            
             <#else>
               <#if "one" = relation.type>
+                                <#--
+                                    <@pli>
               <b>${uiLabelMap.WebtoolsNoValueFoundFor}</b> ${relation.title}${relation.relatedTable}.
-              <#else/>
-              <a href="<@ofbizUrl>FindGeneric?${relation.encodeRelatedEntityFindString}&amp;find=true</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonFind}</a>
+                                   </@pli>
+                               -->
+                               <#else>
+                               <@pli>
+                                <a href="<@ofbizUrl>FindGeneric?${relation.encodeRelatedEntityFindString}&amp;find=true</@ofbizUrl>">${uiLabelMap.CommonFind}</a>
+                               </@pli>                       
               </#if>
             </#if>
-          </div>
+                        </@pul>
+                    </li>
       </#list>
+
+                </@grid>
+            </@cell>
+      </@row> 
     </#if>
-  </div>
-  <div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3>${uiLabelMap.WebtoolsEntityXMLRepresentation}</h3>
-    </div>
-    <div class="screenlet-body">
-      <p>
-      <#if value?has_content>
-        <#assign valueXmlDoc = Static["org.ofbiz.entity.GenericValue"].makeXmlDocument([value]) />
-        ${Static["org.ofbiz.base.util.UtilXml"].writeXmlDocument(valueXmlDoc)?replace("\n", "<br />")?replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;")}
-      </#if>
-      </p>
-    </div>
-  </div>
-  <br class="clear"/>
-</div>
+</@section>

@@ -15148,5 +15148,17 @@
         <value xml:lang="zh_CN">中文</value>
         <value xml:lang="zh_TW">中文</value>
     </property>
-
+    <property key="CommonActions">
+        <value xml:lang="de">Aktionen</value>
+        <value xml:lang="en">Actions</value>
+        <value xml:lang="fr">Actions</value>
+        <value xml:lang="it">Azioni</value>
+        <value xml:lang="ja">操作</value>
+        <value xml:lang="pt">AÃ§Ãµes</value>
+        <value xml:lang="ro">Actiuni</value>
+        <value xml:lang="th">ขั้นตอน</value>
+        <value xml:lang="vi">Hành động</value>
+        <value xml:lang="zh">操作</value>
+        <value xml:lang="zh_TW">操作</value>
+    </property>
 </resource>

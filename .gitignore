@@ -43,3 +43,5 @@ themes/flatgrey/webapp/flatgrey/mainrtl-min.css
 .*.swp
 .*.swo
 desktop.ini
+framework/entity/lib/jdbc/postgresql-*.jar
+.svn/

@@ -41,7 +41,7 @@ under the License.
         <#if returnItems?has_content>
           <#assign orderId = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(returnItems)).getString("orderId")/>
           <#assign partyId = "${(returnHeader.fromPartyId)!}"/>
-          <a href="<@ofbizUrl>setOrderCurrencyAgreementShipDates?partyId=${partyId!}&amp;originOrderId=${orderId!}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateExchangeOrder} ${uiLabelMap.CommonFor} ${orderId!}</a>
+          <a href="<@ofbizUrl>setOrderCurrencyAgreementShipDates?partyId=${partyId!}&amp;originOrderId=${orderId!}</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateExchangeOrder} ${uiLabelMap.CommonFor} ${orderId!}</a>
         </#if>
         <#if "RETURN_ACCEPTED" == returnHeader.statusId>
           <#assign returnItems = delegator.findByAnd("ReturnItem", {"returnId" : returnId}, null, false)/>
@@ -55,7 +55,7 @@ under the License.
                 <#assign shipmentRouteSegment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("ShipmentRouteSegment", {"shipmentId" : shipGroupShipment.shipmentId}, null, false))>
                 <#if shipmentRouteSegment??>
                   <#if "UPS" == shipmentRouteSegment.carrierPartyId>
-                    <li><a href="javascript:document.upsEmailReturnLabel.submit();" class="buttontext">${uiLabelMap.ProductEmailReturnShippingLabelUPS}</a></li>
+                    <li><a href="javascript:document.upsEmailReturnLabel.submit();" class="button tiny">${uiLabelMap.ProductEmailReturnShippingLabelUPS}</a></li>
                     <li><form name="upsEmailReturnLabel" method="post" action="<@ofbizUrl>upsEmailReturnLabelReturn</@ofbizUrl>">
                       <input type="hidden" name="returnId" value="${returnId}"/>
                       <input type="hidden" name="shipmentId" value="${shipGroupShipment.shipmentId}"/>

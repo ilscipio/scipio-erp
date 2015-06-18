@@ -20,33 +20,30 @@ under the License.
 <#if stepTitleId??>
     <#assign stepTitle = uiLabelMap.get(stepTitleId)>
 </#if>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">
+
+<#assign title>
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
             ${uiLabelMap.OrderPurchaseOrder}
         <#else>
             ${uiLabelMap.OrderSalesOrder}
         </#if>
         :&nbsp;${stepTitle!}
-      </li>
+</#assign>
 
-      <#if isLastStep == "N">
-        <li><a href="javascript:document.checkoutsetupform.submit();">${uiLabelMap.CommonContinue}</a></li>
-      <#else>
-        <li><a href="<@ofbizUrl>processorder</@ofbizUrl>">${uiLabelMap.OrderCreateOrder}</a></li>
-      </#if>
-
+<@section title=title>
+      <ul class="button-group">
       <#list checkoutSteps?reverse as checkoutStep>
         <#assign stepUiLabel = uiLabelMap.get(checkoutStep.label)>
         <#if checkoutStep.enabled == "N">
-            <li><span class="disabled">${stepUiLabel}</span></li>
+            <li><a href="#" class="button tiny disabled">${stepUiLabel}</a></li>
         <#else>
-            <li><a href="<@ofbizUrl>${checkoutStep.uri}</@ofbizUrl>">${stepUiLabel}</a></li>
+            <li><a href="<@ofbizUrl>${checkoutStep.uri}</@ofbizUrl>" class="button tiny">${stepUiLabel}</a></li>
         </#if>
       </#list>
+      <#if isLastStep == "N">
+        <li><a href="javascript:document.checkoutsetupform.submit();" class="button tiny success">${uiLabelMap.CommonContinue}</a></li>
+      <#else>
+        <li><a href="<@ofbizUrl>processorder</@ofbizUrl>" class="button tiny alert">${uiLabelMap.OrderCreateOrder}</a></li>
+      </#if>
     </ul>
-    <br class="clear" />
-  </div>
-</div>
+</@section>

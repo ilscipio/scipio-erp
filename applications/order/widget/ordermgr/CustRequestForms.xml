@@ -23,11 +23,7 @@ under the License.
     <form name="FindRequests" target="FindRequest" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="CustRequest" default-field-type="find"/>
-        <field name="custRequestTypeId" position="2">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="CustRequestType" key-field-name="custRequestTypeId"/>
-            </drop-down>
-        </field>
+        
         <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}">
@@ -36,6 +32,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="fromPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="salesChannelEnumId" title="${uiLabelMap.OrderSalesChannel}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
@@ -44,7 +41,11 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>
+            <field name="custRequestTypeId" position="2">
+                <drop-down allow-empty="true">
+                    <entity-options description="${description}" entity-name="CustRequestType" key-field-name="custRequestTypeId"/>
+                </drop-down>
+            </field>
         <field name="currencyUomId"><ignored/></field>
         <field name="maximumAmountUomId"><ignored/></field>
         <field name="custRequestCategoryId"><ignored/></field>
@@ -117,7 +118,7 @@ under the License.
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>
         <field name="sequenceNum"></field>
         <field name="custRequestId"><hidden/></field>
-        <field name="custRequestItemSeqId" widget-style="buttontext">
+        <field name="custRequestItemSeqId" widget-style="button tiny">
             <hyperlink description="${custRequestItemSeqId}" target="requestitem">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
@@ -154,7 +155,7 @@ under the License.
     <form name="ListRequestQuoteItems" type="list" use-row-submit="true"  title="" list-name="quotes"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItemQuotes">
         <auto-fields-entity entity-name="QuoteItem" default-field-type="display"/>
-        <field name="quoteId" widget-style="buttontext">
+        <field name="quoteId" widget-style="button tiny">
             <hyperlink description="${quoteItemSeqId}" target="EditQuoteItemForRequest">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
@@ -443,7 +444,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate-target="RequestRoles">
         <auto-fields-entity entity-name="CustRequestParty" default-field-type="display"/>
         <field name="custRequestId"><hidden/></field>
-        <field name="partyId" widget-style="buttontext">
+        <field name="partyId" widget-style="button tiny">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -456,7 +457,7 @@ under the License.
         </field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" widget-style="buttontext">
+        <field name="deleteLink" widget-style="button tiny">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteCustRequestParty">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="partyId"/>
@@ -485,7 +486,7 @@ under the License.
     <form name="ListRequestItemRequirements" type="list" title="" list-name="custRequestRequirements"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItemRequirements">
         <auto-fields-entity entity-name="Requirement" default-field-type="display"/>
-        <field name="requirementId" widget-style="buttontext">
+        <field name="requirementId" widget-style="button tiny">
             <hyperlink description="${requirementId}" target="EditRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
@@ -497,13 +498,13 @@ under the License.
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="workEffortId">
             <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink description="[${workEffortId}]" target="/workeffort/control/EditWorkEffort" target-type="inter-app" link-style="buttontext">
+                <sub-hyperlink description="[${workEffortId}]" target="/workeffort/control/EditWorkEffort" target-type="inter-app" link-style="button tiny">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
 
-        <field name="deleteLink" widget-style="buttontext">
+        <field name="deleteLink" widget-style="button tiny">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteCustRequestItemWorkEffort">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="partyId"/>
@@ -617,14 +618,14 @@ under the License.
         <field name="custRequestId"><hidden/></field>
         <field name="contentId">
             <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
-                <sub-hyperlink target="/content/control/ViewSimpleContent" description="[${contentId}]" link-style="buttontext" target-type="inter-app">
+                <sub-hyperlink target="/content/control/ViewSimpleContent" description="[${contentId}]" link-style="button tiny" target-type="inter-app">
                     <parameter param-name="contentId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="mimeTypeId"><display/></field>
         <field name="fromDate"><display/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext" use-when="tabButtonItem!=void&amp;&amp;tabButtonItem.equals(&quot;custRequestContent&quot;)">
+        <field name="deleteLink" title=" " widget-style="button tiny" use-when="tabButtonItem!=void&amp;&amp;tabButtonItem.equals(&quot;custRequestContent&quot;)">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteCustRequestContent">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="contentId"/>

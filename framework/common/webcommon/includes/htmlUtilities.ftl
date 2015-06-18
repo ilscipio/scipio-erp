@@ -1,0 +1,645 @@
+<#--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+<#--
+* 
+* A set of utility macros to be used for page rendering.
+* Automatically included at all times
+*
+-->
+<#include "component://widget/templates/htmlFormMacroLibrary.ftl"/>
+<#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl") /> 
+<#include StringUtil.wrapString("component://widget/templates/htmlMenuMacroLibrary.ftl") />
+ 
+<#-- 
+******************
+* UTILITY MACROS *
+******************
+-->
+<#-- 
+*************
+* Field Macro
+************ macro
+    Usage example:  
+    <@field attr="" />
+    
+    * General Attributes *
+    type            = form element of type [input,textarea,datetime,select,checkbox,radio]
+    label           = form label
+    columns         = int value for columns for field (overrides classes)
+    tooltip         = Small field description - to be displayed to the customer
+    name            = field name
+    value           = field value
+    class           = css classes
+    maxlength       = maxLength
+    id              = field id
+    onClick           = JS Event
+    disabled        = field disabled
+    placeholder     = field placeholder
+    alert           = adds additional css alert class
+    mask            = toggles jQuery mask plugin
+    size            = size attribute (default: 20)
+    collapse        = should the field be collapsing? (default: false)
+    norows          = render without the rows-container
+    norows          = render without the cells-container
+        
+    * input *
+    autoCompleteUrl = if autocomplete function exists, specification of url will make it available
+    postfix          = if set to true, attach submit button (default:false)
+    
+    * textArea *
+    readonly        = readonly
+    rows            = number of rows
+    cols            = number of columns
+    
+    * dateTime *
+    dateType        = type of datetime [date,time] (default: date)
+    
+    * select *
+    multiple        = allow multiple select true/false
+    currentValue    = currently selected value
+    
+    * lookup *
+    formName        = The name of the form that contains the lookup field.
+    fieldForName    = Contains the lookup window form name.
+    
+    * Checkbox *
+    currentValue    = Y/N
+    checked      = checked (true/false)
+    
+-->
+<#macro field type="" label="" name="" value="" class="large-12" size=20 maxlength="" id="" onClick="" 
+        disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
+        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
+        fieldFormName="" formName="" postfix=false>
+
+<#-- fieldIdNum will always increment throughout the page -->
+<#global fieldIdNum="${fieldIdNum!0+1}" />
+
+<#if !id?has_content>
+    <#assign id="field_id_${fieldIdNum!0}">
+</#if>
+<#assign classes = class/>
+<#assign columnspostfix=0/>
+<#if postfix>
+    <#assign columnspostfix=1/>
+    <#local collapse=true/>
+    <#assign classes="small-${12-columnspostfix}"/>
+</#if>
+
+
+<@row collapse=collapse!false norows=norows>
+    <#if label?has_content>
+        <#assign subclasses="small-3 large-2"/>
+        <#assign classes="small-${9-columnspostfix} large-${10-columnspostfix}"/>
+        
+        <#if columns?has_content>
+            <#assign subclasses="small-${12-columns+1} large-${12-columns}"/>
+            <#assign classes="small-${columns-columnspostfix-1} large-${columns-columnspostfix}"/>
+        </#if>
+        
+        <#if type!="radio">
+        <@cell class=subclasses nocells=nocells>
+                <#if type=="checkbox" || collapse==false>
+                    <label class="" for="${id}">${label}</label>
+                <#else>
+                    <span class="prefix">${label}</span>
+                </#if>           
+        </@cell>
+        </#if>
+    </#if>
+    <@cell class="${classes!}" nocells=nocells>
+        <#switch type>
+          <#case "input">
+                <@renderTextField name=name 
+                                  className=class 
+                                  alert=alert 
+                                  value=value 
+                                  textSize=size 
+                                  maxlength=maxlength 
+                                  id=id 
+                                  event="onCLick" 
+                                  action=onCLick 
+                                  disabled=disabled 
+                                  clientAutocomplete="" 
+                                  ajaxUrl=autoCompleteUrl 
+                                  ajaxEnabled="" 
+                                  mask=mask 
+                                  placeholder=placeholder 
+                                  tooltip=tooltip/>
+            <#break>
+          <#case "textarea">
+            <@renderTextareaField name=name 
+                                  className=class 
+                                  alert=alert 
+                                  cols=cols 
+                                  rows=rows 
+                                  id=id 
+                                  readonly=readonly 
+                                  value=value 
+                                  tooltip=tooltip/>
+            <#break>
+          <#case "datetime">
+            <#if dateType == "date"><#assign shortDateInput=true/><#else><#assign shortDateInput=false/></#if>
+            <@renderDateTimeField name=name 
+                                  className=class 
+                                  alert=alert 
+                                  title=label 
+                                  value=value 
+                                  size=size 
+                                  maxlength=maxlength 
+                                  id=id 
+                                  dateType=dateType 
+                                  shortDateInput=shortDateInput 
+                                  timeDropdownParamName="" 
+                                  defaultDateTimeString="" 
+                                  localizedIconTitle="" 
+                                  timeDropdown="" 
+                                  timeHourName="" 
+                                  classString="" 
+                                  hour1="" 
+                                  hour2="" 
+                                  timeMinutesName="" 
+                                  minutes="" 
+                                  isTwelveHour="" 
+                                  ampmName="" 
+                                  amSelected="" 
+                                  pmSelected="" 
+                                  compositeType="" 
+                                  formName=""
+                                  tooltip=tooltip/>                
+            <#break>
+          <#case "select">
+            <@renderDropDownField name=name
+                                    className=class 
+                                    alert=alert 
+                                    id=id 
+                                    multiple=multiple
+                                    formName=""
+                                    otherFieldName="" 
+                                    event="onClick" 
+                                    action=onCLick  
+                                    size=size
+                                    firstInList="" 
+                                    currentValue="" 
+                                    explicitDescription="" 
+                                    allowEmpty=""
+                                    options=[]
+                                    fieldName=name
+                                    otherFieldName="" 
+                                    otherValue="" 
+                                    otherFieldSize=0 
+                                    dDFCurrent=""
+                                    ajaxEnabled=false
+                                    noCurrentSelectedKey=""
+                                    ajaxOptions=""
+                                    frequency=""
+                                    minChars=""
+                                    choices="" 
+                                    autoSelect=""
+                                    partialSearch=""
+                                    partialChars=""
+                                    ignoreCase=""
+                                    fullSearch=""
+                                    tooltip=tooltip><#nested></@renderDropDownField>
+            <#break>
+          <#case "lookup">
+            <@renderLookupField name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
+          <#break>
+          <#case "checkbox">
+                <@renderCheckBox id=id currentValue=value checked=checked name=name action=action />
+            <#break>
+          <#case "radio">
+            <#assign items=[{"description",label!""}]/>
+                <@renderRadioField items=items className=class alert=alert currentValue=value noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+            
+            <#break>
+          <#default>
+            <#if value?has_content>
+                <@renderField text=value/>
+            <#else>
+                <#nested />
+            </#if>
+        </#switch>
+     </@cell>
+     <#if postfix && !nocells>
+         <@cell class="small-1">
+                <span class="postfix"><input type="submit" class="fa fa-button" value="&#xf085;"/</span>
+         </@cell>
+     </#if>
+</@row>
+</#macro>
+
+<#-- 
+*************
+* Fieldset Macro
+************
+    Usage example:  
+    <@fieldset title="">
+        Inner Content
+    </@fieldset>            
+                    
+   * General Attributes *
+    class           = css classes
+    id              = set id
+    title           = fieldset-title
+    collapsed       = show/hide the fieldset
+-->
+<#macro fieldset id="" title="" class="" collapsed=false>
+    <@renderFieldGroupOpen style=class id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip=""/>
+        <#nested />
+    <@renderFieldGroupClose style="" id="" title=""/>
+</#macro>
+
+
+<#--
+*************
+* Row Macro
+************
+    Usage example:  
+    <@row attr="" >
+        <@cell attr=""/>
+    </@row>              
+                    
+   * General Attributes *
+    class           = css classes
+-->
+<#macro row class="" id="" collapse=false norows=false>
+    <#if !norows>
+    <div class="row <#if class?has_content> ${class!}</#if><#if collapse> collapse</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
+    </#if>
+        <#nested />
+    <#if !norows>    
+    </div>
+    </#if>    
+</#macro>
+
+
+<#-- 
+*************
+* Cell Macro
+************
+    Usage example:  
+    <@row attr="" >
+        <@cell attr="">
+            cell content goes in here!
+        </@cell>
+    </@row>              
+                    
+   * General Attributes *
+    class           = css classes
+    columns         = expected number of columns to be rendered (default 12)
+    offset          = offset in number of columns
+-->
+<#macro cell columns=12 offset=0 class="" id="" collapse=false nocells=false>
+    <#if !nocells><div class="<#if class?has_content>${class!}<#else>large-${columns!12}</#if> columns" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
+        <#nested />
+    <#if !nocells></div></#if>
+</#macro>
+
+
+
+<#-- 
+*************
+* Section Macro
+************
+    Usage example:  
+    <@section attr="">
+        Inner Content
+    </@section>            
+                    
+   * General Attributes *
+    class           = css classes
+    id              = set id
+    padded          = 
+-->
+<#macro section id="" title="" classes="" padded=false>
+    <@renderScreenletBegin id=id title=title classes=classes padded=padded/>
+        <#nested />
+    <@renderScreenletEnd />
+</#macro>
+
+
+<#-- 
+*************
+* Modal Macro
+************
+    Usage example:  
+    <@modal id="dsadsa" attr="" >
+    modal Content 
+    </@modal>                
+   * General Attributes *
+    id              = set id (required)
+    label           = set anchor text (required)
+-->
+<#macro modal id label href="">
+    <a href="#" data-reveal-id="${id}_modal" <#if href?has_content>data-reveal-ajax="${href!}"</#if>>${label}</a>
+    <div id="${id}_modal" class="reveal-modal" data-reveal>
+        <#nested>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+</#macro>
+
+
+<#-- 
+*************
+* Pagination Macro
+************
+    Usage example:  
+    <@paginate >            
+                    
+   * General Attributes *
+   url             = Base Url to be used for pagination
+   class           = css classes
+   listSize        = size of the list in total
+   viewIndex       = page currently displayed
+   viewSize        = maximum number of items displayed
+   altParam        = Use viewIndex/viewSize as parameters, instead of VIEW_INDEX / VIEW_SIZE
+-->
+<#macro paginate url="" class="nav-pager" viewIndex=0 listSize=0 viewSize=1 altParam=false>
+    <#local viewIndexLast = ((listSize/viewSize)?ceiling)>
+    <#if altParam>
+        <#local viewIndexString = "viewIndex">
+        <#local viewSizeString = "viewSize">
+    <#else>
+        <#local viewIndexString = "VIEW_INDEX">
+        <#local viewSizeString = "VIEW_SIZE">
+    </#if>
+    <#if (viewIndexLast > (viewIndex))>
+        <#local viewIndexNext = (viewIndex+1)>
+    <#else>
+        <#local viewIndexNext = viewIndex>
+    </#if>
+    <#if (viewIndex > 0)>
+        <#local viewIndexPrevious = (viewIndex-1)>
+    <#else>
+        <#local viewIndexPrevious = viewIndex>
+    </#if>
+    <#if (url?has_content)>
+        <#if (!firstUrl?has_content)>
+            <#local firstUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=0"/>
+        </#if>
+        <#if (!previousUrl?has_content)>
+             <#local previousUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexPrevious}"/>
+        </#if>
+        <#if (!nextUrl?has_content)>
+            <#local nextUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexNext}"/>
+        </#if>
+        <#if (!lastUrl?has_content)>
+            <#local lastUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexLast}"/>
+        </#if>
+        <#if (!selectUrl?has_content)>
+            <#local selectUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}="/>
+        </#if>
+        <#if (!selectSizeUrl?has_content)>
+            <#local selectSizeUrl=url+"?${viewSizeString}='+this.value+'&amp;${viewIndexString}=0"/>
+        </#if>
+    </#if>
+    <@renderNextPrev ajaxEnabled=false javaScriptEnabled=true paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=0 listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying="" paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel=""/>
+</#macro>
+
+
+<#-- 
+*************
+* alert box
+************
+    Usage example:  
+    <@alert type="">
+        <#nested>
+    </@alert>            
+                    
+   * General Attributes *
+    type           = (info|success|warning|secondary|alert)
+    
+-->
+<#macro alert type="">
+<div class="row">
+        <div class="large-12 columns">
+        <div data-alert class="alert-box ${type}">
+           <div class="row">
+              <div class="large-12 columns">
+                  <#nested>
+                  <a href="#" class="close">&times;</a>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</#macro>
+
+<#--
+*************
+* panel box
+************
+    Usage example:  
+    <@panel type="">
+        <#nested>
+    </@panel>            
+                    
+   * General Attributes *
+    type           = (callout|) default:empty
+    title          = Title
+-->
+<#macro panel type="" title="">
+<div class="panel ${type}">
+  <#if title?has_content><h5>${title!}</h5></#if>
+  <p><#nested></p>
+</div>
+</#macro>
+
+
+<#-- 
+*************
+* pricing table
+************
+Since this is very foundation specific, this function may be dropped in future installations
+
+    Usage example:  
+    <@pul >
+        <#pli>Text or <a href="">Anchor</a></#pli>
+    </@pul>            
+                    
+   * General Attributes *
+    title           = fieldset-title
+    
+-->
+
+<#macro pul title="">
+          <ul class="pricing-table">
+              <@pli type="title">${title!}</@pli>
+              <#nested>
+          </ul>
+</#macro>
+
+<#macro pli type="">
+    <#switch type>
+          <#case "price">
+              <li class="price"><#nested></li>
+          <#break>
+          <#case "description">
+              <li class="description"><#nested></li>
+          <#break>
+          <#case "title">
+              <li class="title"><#nested></li>
+          <#break>
+          <#case "button">
+              <li class="cta-button"><#nested></li>
+          <#break>        
+          <#default>
+              <li class="bullet-item"><#nested></li>
+          <#break>
+    </#switch>
+</#macro>
+
+<#-- 
+*************
+* Grid list
+************
+Since this is very foundation specific, this function may be dropped in future installations
+
+    Usage example:  
+    <@grid>
+        <li>Text or <a href="">Anchor</a></li>
+    </@grid>            
+                    
+   * General Attributes *
+    class           = Adds classes - please use "(small|medium|large)-block-grid-#"
+    columns         = Number of columns (default 5)
+    
+-->
+<#macro grid class="small-block-grid-2 medium-block-grid-4 large-block-grid-5" columns=5>
+    <#if columns!=5>
+        <#if columns-2 &gt; 0>
+            <#local class="small-block-grid-${columns-2} medium-block-grid-${columns-1} large-block-grid-${columns}"/>
+        <#else>
+            <#local class="large-block-grid-${columns}"/>
+        </#if>
+    </#if>
+          <ul class="${class}">
+              <#nested>
+          </ul>
+</#macro>
+
+
+<#-- 
+*************
+* Nav list
+************
+Since this is very foundation specific, this function may be dropped in future installations
+
+    Usage example:  
+    <@nav type="">
+        <li>Text or <a href="">Anchor</a></li>
+    </@nav>
+    
+    Or:
+    <@nav type="magellan">
+        <@mli arrival="MyTargetAnchor">Text or <a href="">Anchor</a></@mli>
+    </@nav>
+    
+    <h3 ${mtarget("id")}>Jump Destination</h3>           
+                    
+   * General Attributes *
+    type            = (inline|magellan) (default:inline)
+    class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
+-->
+<#macro nav type="inline">
+    <#switch type>
+        <#case "magellan">
+            <div data-magellan-expedition="fixed">
+              <dl class="sub-nav">
+                <#nested>
+              </dl>
+            </div>
+        <#break>
+        <#default>
+            <ul class="inline-list sub-nav">
+              <#nested>
+            </ul>
+        <#break>
+    </#switch>
+</#macro>
+
+<#macro mli arrival="">
+    <dd data-magellan-arrival="${arrival!}"><#nested></dd>
+</#macro>
+
+<#function mtarget id>
+  <#assign returnValue="data-magellan-destination=\"${id}\""/>
+  <#return returnValue>
+</#function>
+
+
+<#-- 
+*************
+* Code Block
+************
+Creates a very basic wrapper for code blocks
+    Usage example:  
+    <@code type="java">
+       //Some java content
+    </@code>
+                    
+   * General Attributes *
+    type            = (html|java|css|javascript|log) (default:html) 
+-->
+<#macro code type="html">
+    <pre><code data-language="${type!}"><#compress>
+    <#nested>
+    </#compress>
+    </code></pre>
+</#macro>
+
+
+
+<#-- 
+*************
+* Chart Macro
+************
+! The implementation is still experimental and requires the proper includes to actually work.
+
+http://zurb.com/playground/pizza-amore-charts-and-graphs
+
+    Usage example:  
+    <@chart type="bar" >
+        <@chartdata value="36" title="Peperoni"/> 
+    </@chart>              
+                    
+   * General Attributes *
+    type           = (pie|bar|line) (default:pie)
+-->
+
+<#macro chart type="pie">
+    <#global fieldIdNum="${fieldIdNum!0+1}" />    
+    <ul data-${type!}-id="chart_${fieldIdNum!}">
+        <#nested/>
+    </ul>
+    <div id="chart_${fieldIdNum!}"></div>
+</#macro>
+
+<#macro chartdata title value value2="">
+    <li <#if value2?has_content>data-x="${value!}" data-y="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
+</#macro>
+
+
+
+<#-- UTLITY MACROS END -->
+
+

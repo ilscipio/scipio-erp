@@ -111,7 +111,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                                <label  text="${uiLabelMap.AccountingViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

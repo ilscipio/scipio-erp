@@ -20,8 +20,8 @@
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
-    <menu name="SecurityGroupTabBar" default-menu-item-name="EditSecurityGroup" default-selected-style="selected"
-        menu-container-style="button-bar tab-bar" type="simple" selected-menuitem-context-field-name="tabButtonItem">
+    <menu name="SecurityGroupTabBar" default-menu-item-name="EditSecurityGroup" default-selected-style="active" type="simple" 
+        selected-menuitem-context-field-name="active" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="FindUserLogin" title="${uiLabelMap.FindUserLogin}">
             <link target="FindUserLogin"/>
         </menu-item>

@@ -19,12 +19,14 @@ under the License.
 
   <#if days?has_content>
     <table class="basic-table hover-bar" cellspacing="0">
+     <thead>
       <tr class="header-row">
-        <td>${uiLabelMap.CommonStartDateTime}</td>
-        <td>${uiLabelMap.CommonEndDateTime}</td>
-        <td>${uiLabelMap.CommonType}</td>
-        <td>${uiLabelMap.WorkEffortName}</td>
+        <th>${uiLabelMap.CommonStartDateTime}</th>
+        <th>${uiLabelMap.CommonEndDateTime}</th>
+        <th>${uiLabelMap.CommonType}</th>
+        <th>${uiLabelMap.WorkEffortName}</th>
       </tr>
+      </thead>
       <#list days as day>
         <#assign workEfforts = day.calendarEntries>
         <#if workEfforts?has_content>

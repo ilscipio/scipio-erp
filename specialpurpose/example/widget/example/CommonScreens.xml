@@ -65,7 +65,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <and>
@@ -92,18 +92,18 @@ under the License.
                                     <widgets>
                                         <container style="h1"><label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label></container>
                                         <container style="button-bar">
-                                            <link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="buttontext create">
+                                            <link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="button tiny create">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                             </link>
-                                            <link target="ExampleReportHtml" text="${uiLabelMap.CommonPrinterFriendly}" style="buttontext">
+                                            <link target="ExampleReportHtml" text="${uiLabelMap.CommonPrinterFriendly}" style="button tiny">
                                                 <parameter param-name="exampleId"/>
                                                 <image url-mode="raw" src="${iconsLocation}/printer.png"/>
                                             </link>
-                                            <link target="ExampleReportPdf" text="${uiLabelMap.CommonPdf}" style="buttontext">
+                                            <link target="ExampleReportPdf" text="${uiLabelMap.CommonPdf}" style="button tiny">
                                                 <parameter param-name="exampleId"/>
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
-                                            <link target="help" text="${uiLabelMap.CommonHelp}" style="buttontext" target-window="_blank">
+                                            <link target="help" text="${uiLabelMap.CommonHelp}" style="button tiny" target-window="_blank">
                                                 <parameter param-name="topic" value="ExampleEditHelp"/>
                                                 <image url-mode="raw" src="${iconsLocation}/help.png"/>
                                             </link>
@@ -134,7 +134,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <and>
@@ -163,7 +163,7 @@ under the License.
                                             <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${exampleFeature.description} [${exampleFeatureId}]</label>
                                         </container>
                                         <container style="button-bar">
-                                            <link target="EditExampleFeature" text="${uiLabelMap.ExampleNewExampleFeature}" style="buttontext">
+                                            <link target="EditExampleFeature" text="${uiLabelMap.ExampleNewExampleFeature}" style="button tiny">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                             </link>
                                         </container>
@@ -196,7 +196,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <include-menu name="ExampleGeoLocation" location="component://example/widget/example/ExampleMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -220,7 +220,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <include-menu name="ExampleGeoLocation" location="component://example/widget/example/ExampleMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -244,7 +244,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <include-menu name="ExampleCharts" location="component://example/widget/example/ExampleMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">

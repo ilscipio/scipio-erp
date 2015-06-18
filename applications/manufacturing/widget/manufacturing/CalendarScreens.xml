@@ -35,7 +35,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ManufacturingViewPermissionError}</label>
+                                <label >${uiLabelMap.ManufacturingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -85,7 +85,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleFindCalendar}">
                             <container style="button-bar">
-                                <link style="buttontext" target="EditCalendar" text="${uiLabelMap.ManufacturingNewCalendar}"/>
+                                <link style="button tiny" target="EditCalendar" text="${uiLabelMap.ManufacturingNewCalendar}"/>
                             </container>
                             <include-form name="ListTechDataCalendars" location="component://manufacturing/widget/manufacturing/CalendarForms.xml"/>
                         </screenlet>
@@ -111,7 +111,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListCalendarWeek}">
                             <container style="button-bar">
-                                <link style="buttontext" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
+                                <link style="button tiny" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
                             </container>
                             <include-form name="ListCalendarWeek" location="component://manufacturing/widget/manufacturing/CalendarForms.xml"/>
                         </screenlet>
@@ -134,7 +134,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditCalendarWeek}">
                             <container style="button-bar">
-                                <link style="buttontext" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
+                                <link style="button tiny" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
                             </container>
                             <include-form name="UpdateCalendarWeek" location="component://manufacturing/widget/manufacturing/CalendarForms.xml"/>
                         </screenlet>

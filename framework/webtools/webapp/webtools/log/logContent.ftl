@@ -17,6 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#list logLines as logLine>
-  <div class="${logLine.type}">${logLine.line}</div>
-</#list>
+
+<@code type="log"><#list logLines as logLine><div class="${logLine.type!}">${logLine.line}</div></#list><#t>
+</@code>

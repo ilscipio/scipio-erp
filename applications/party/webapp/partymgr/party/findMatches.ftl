@@ -29,27 +29,27 @@ under the License.
     <table class="basic-table" cellspacing="0">
       <form name="matchform" method="post" action="<@ofbizUrl>findAddressMatch?match=true</@ofbizUrl>">
         <tr>
-          <td class="label">${uiLabelMap.PartyLastName}</td>
+          <td >${uiLabelMap.PartyLastName}</td>
           <td><input type="text" name="lastName" class="required" value="${parameters.lastName!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyFirstName}</td>
+          <td >${uiLabelMap.PartyFirstName}</td>
           <td><input type="text" name="firstName" class="required" value="${parameters.firstName!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.CommonAddress1}</td>
+          <td >${uiLabelMap.CommonAddress1}</td>
           <td><input type="text" name="address1" class="required" value="${parameters.address1!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.CommonAddress2}</td>
+          <td >${uiLabelMap.CommonAddress2}</td>
           <td><input type="text" name="address2" value="${parameters.address2!}"/></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.CommonCity}</td>
+          <td >${uiLabelMap.CommonCity}</td>
           <td><input type="text" name="city" class="required" value="${parameters.city!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.CommonStateProvince}</td>
+          <td >${uiLabelMap.CommonStateProvince}</td>
           <td>
             <select name="stateProvinceGeoId">
               <#if currentStateGeo?has_content>
@@ -62,7 +62,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyZipCode}</td>
+          <td >${uiLabelMap.PartyZipCode}</td>
           <td><input type="text" name="postalCode" class="required" value="${parameters.postalCode!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
         </tr>
         <tr>
@@ -76,18 +76,20 @@ under the License.
           <td colspan="2">
             <#if matches?has_content>
               <table cellspacing="0" class="basic-table">
+                <thead>
                 <tr>
-                  <td class="label" colspan="7">${uiLabelMap.PartyAddressMatching} ${lastName} / ${firstName} @ ${addressString}</td>
+                  <td  colspan="7">${uiLabelMap.PartyAddressMatching} ${lastName} / ${firstName} @ ${addressString}</td>
                 </tr>
                 <tr class="header-row">
-                  <td>${uiLabelMap.PartyLastName}</td>
-                  <td>${uiLabelMap.PartyFirstName}</td>
-                  <td>${uiLabelMap.CommonAddress1}</td>
-                  <td>${uiLabelMap.CommonAddress2}</td>
-                  <td>${uiLabelMap.CommonCity}</td>
-                  <td>${uiLabelMap.PartyZipCode}</td>
-                  <td>${uiLabelMap.PartyPartyId}</td>
+                  <th>${uiLabelMap.PartyLastName}</th>
+                  <th>${uiLabelMap.PartyFirstName}</th>
+                  <th>${uiLabelMap.CommonAddress1}</th>
+                  <th>${uiLabelMap.CommonAddress2}</th>
+                  <th>${uiLabelMap.CommonCity}</th>
+                  <th>${uiLabelMap.PartyZipCode}</th>
+                  <th>${uiLabelMap.PartyPartyId}</th>
                 </tr>
+                </thead>
                 <#list matches as match>
                   <#assign person = match.getRelatedOne("Party", false).getRelatedOne("Person", false)!>
                   <#assign group = match.getRelatedOne("Party", false).getRelatedOne("PartyGroup", false)!>

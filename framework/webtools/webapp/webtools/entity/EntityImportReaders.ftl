@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="page-title"><span>${uiLabelMap.WebtoolsImportToDataSource}</span></div>
+<h1>${uiLabelMap.WebtoolsImportToDataSource}</h1>
 <p>${uiLabelMap.WebtoolsXMLImportInfo}</p>
 <hr />
   <form method="post" action="<@ofbizUrl>entityImportReaders</@ofbizUrl>">

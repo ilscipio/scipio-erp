@@ -23,10 +23,7 @@ under the License.
     <#assign clientCerts = request.getAttribute("javax.net.ssl.peer_certificates")!/>
 </#if>
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.WebtoolsCertsX509}</h3>
-  </div>
+<@section title="${uiLabelMap.WebtoolsCertsX509}">
   <#if (isSecure)>
     <#if (clientCerts?has_content)>
       <table class="basic-table">
@@ -34,11 +31,11 @@ under the License.
           <#assign certString = Static["org.ofbiz.base.util.KeyStoreUtil"].certToString(cert)!>
           <#if (certString?has_content)>
             <tr>
-              <td class="label">${uiLabelMap.WebtoolsCertsCert}</td>
+              <td class=>${uiLabelMap.WebtoolsCertsCert}</td>
               <td>${cert.getType()} ${cert.getSubjectX500Principal()}</td>
             </tr>
             <tr>
-              <td class="label">${uiLabelMap.WebtoolsCertsSerialNum}:</td>
+              <td class=>${uiLabelMap.WebtoolsCertsSerialNum}:</td>
               <td>${cert.getSerialNumber().toString(16)}</td>
             </tr>
             <tr>
@@ -58,9 +55,9 @@ ${Static["org.ofbiz.base.util.KeyStoreUtil"].pemToPkHex(certString)}
         </#list>
       </table>
     <#else>
-      <div class="screenlet-body">${uiLabelMap.WebtoolsCertsNotFound}.</div>
+      <@alert type="info">${uiLabelMap.WebtoolsCertsNotFound}.</@alert>
     </#if>
   <#else>
-    <div class="screenlet-body">${uiLabelMap.WebtoolsCertsRequiresSSL}.</div>
+    <@alert type="info">${uiLabelMap.WebtoolsCertsRequiresSSL}.</@alert>
   </#if>
-</div>
+</@section>

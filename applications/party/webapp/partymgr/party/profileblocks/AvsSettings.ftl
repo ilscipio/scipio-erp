@@ -25,7 +25,7 @@ under the License.
       <br class="clear"/>
     </div>
     <div class="screenlet-body">
-      <span class="label">${uiLabelMap.PartyAvsString}</span>${(avsOverride.avsDeclineString)?default("${uiLabelMap.CommonGlobal}")}
+      <span >${uiLabelMap.PartyAvsString}</span>${(avsOverride.avsDeclineString)?default("${uiLabelMap.CommonGlobal}")}
       <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
         <a href="<@ofbizUrl>editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonEdit}</a>
         <#if avsOverride??>

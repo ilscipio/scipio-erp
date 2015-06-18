@@ -28,13 +28,15 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="StatsTabBar" location="component://webtools/widget/Menus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <if-has-permission permission="SERVER_STATS" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="StatsTabBar" location="component://webtools/widget/Menus.xml"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

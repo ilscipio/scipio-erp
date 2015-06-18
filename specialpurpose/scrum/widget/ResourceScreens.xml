@@ -35,8 +35,8 @@ under the License.
                 <decorator-screen name="CommonAdminDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
-                            <link  text="${uiLabelMap.ScrumCreateNewParty}" target="quickAddParty" style="buttontext create"/>
-                            <link  text="${uiLabelMap.ScrumCreatePartyRelationship}" target="quickAddPartyRelationship" style="buttontext create"/>
+                            <link  text="${uiLabelMap.ScrumCreateNewParty}" target="quickAddParty" style="button tiny create"/>
+                            <link  text="${uiLabelMap.ScrumCreatePartyRelationship}" target="quickAddPartyRelationship" style="button tiny create"/>
                         </container>
                         <screenlet id="FindMemberResource" title="${uiLabelMap.ScrumFindScrumMember}" collapsible="true" initially-collapsed="true">
                             <include-form name="FindMemberResource" location="component://scrum/widget/ResourceForms.xml"/>

@@ -27,15 +27,17 @@ under the License.
     <#assign entryWidth = (100 / (maxConcurrentEntries))>
   </#if>
 <table cellspacing="0" class="basic-table calendar">
+ <thead>
   <tr class="header-row">
-    <td>${uiLabelMap.CommonTime}</td>
-    <td colspan="${maxConcurrentEntries}">${uiLabelMap.WorkEffortCalendarEntries}</td>
+    <th>${uiLabelMap.CommonTime}</th>
+    <th colspan="${maxConcurrentEntries}">${uiLabelMap.WorkEffortCalendarEntries}</th>
   </tr>
+  </thead>
   <#list periods as period>
     <#assign currentPeriod = false/>
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>
   <tr<#if currentPeriod> class="current-period"<#else><#if (period.calendarEntries?size > 0)> class="active-period"</#if></#if>>
-    <td class="label">
+    <td >
       ${period.start?time?string.short}<br />
       <a href="<@ofbizUrl>${newCalEventUrl}?period=day&amp;form=edit&amp;parentTypeId=${parentTypeId!}&amp;start=${parameters.start!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">${uiLabelMap.CommonAddNew}</a>
     </td>

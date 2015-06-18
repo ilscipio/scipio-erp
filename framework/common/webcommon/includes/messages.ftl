@@ -16,6 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#--<#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")>--> 
+
 <#escape x as x?html>
   <#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
   <#if requestAttributes.eventMessageList?has_content><#assign eventMessageList=requestAttributes.eventMessageList></#if>
@@ -37,30 +39,38 @@ under the License.
   
   <#-- display the error messages -->
   <#if (errorMessage?has_content || errorMessageList?has_content)>
-    <div id="content-messages" class="content-messages errorMessage" onclick="document.getElementById('content-messages').parentNode.removeChild(this)">
+        <div id="main-alert-box">
+            <@alert type="alert">
       <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
       <#if errorMessage?has_content>
-        <p>${StringUtil.wrapString(errorMessage)}</p>
+                        ${StringUtil.wrapString(errorMessage)}
       </#if>
       <#if errorMessageList?has_content>
+                        <ul>
         <#list errorMessageList as errorMsg>
-          <p>${StringUtil.wrapString(errorMsg)}</p>
+                          <li>${StringUtil.wrapString(errorMsg)}</li>
         </#list>
+                        </ul>
       </#if>
+            </@alert>
     </div>
   </#if>
   <#-- display the event messages -->
   <#if (eventMessage?has_content || eventMessageList?has_content)>
-    <div id="content-messages" class="content-messages eventMessage" onclick="document.getElementById('content-messages').parentNode.removeChild(this)">
+    <div id="main-info-box">
+        <@alert type="info">
       <#noescape><p>${uiLabelMap.CommonFollowingOccurred}:</p></#noescape>
       <#if eventMessage?has_content>
-        <p>${StringUtil.wrapString(eventMessage)}</p>
+                        ${StringUtil.wrapString(eventMessage)}
       </#if>
       <#if eventMessageList?has_content>
+                        <ul>
         <#list eventMessageList as eventMsg>
-          <p>${StringUtil.wrapString(eventMsg)}</p>
+                          <li>${StringUtil.wrapString(eventMsg)}</li>
         </#list>
+                        </ul>
       </#if>
+        </@alert>
     </div>
   </#if>
 </#escape>

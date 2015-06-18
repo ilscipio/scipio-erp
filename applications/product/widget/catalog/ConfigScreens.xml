@@ -42,14 +42,14 @@ under the License.
                                             <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${configItem.configItemName} [${uiLabelMap.CommonId}:${configItemId}]  ${${extraFunctionName}}</label>
                                         </container>
                                         <container style="button-bar">
-                                            <link target="EditProductConfigItem" text="[${uiLabelMap.CommonNew} ${uiLabelMap.ProductConfigItem}]" style="buttontext create"/>
+                                            <link target="EditProductConfigItem" text="[${uiLabelMap.CommonNew} ${uiLabelMap.ProductConfigItem}]" style="button tiny create"/>
                                         </container>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                                <label >${uiLabelMap.ProductCatalogViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -69,7 +69,7 @@ under the License.
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
                                 <container style="button-bar">
-                                    <link target="EditProductConfigItem" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                    <link target="EditProductConfigItem" text="${uiLabelMap.CommonCreateNew}" style="button tiny create"/>
                                 </container>
                             </decorator-section>
                             <decorator-section name="search-options">
@@ -154,7 +154,7 @@ under the License.
                     <condition><not><if-empty field="configOptionId"/></not></condition>
                     <widgets>
                         <screenlet title="${uiLabelMap.PageTitleEditConfigOptions}">
-                            <link style="buttontext" text="${uiLabelMap.ProductCreateNewConfigOptions}" target="EditProductConfigOptions">
+                            <link style="button tiny" text="${uiLabelMap.ProductCreateNewConfigOptions}" target="EditProductConfigOptions">
                                 <parameter param-name="configItemId"/>
                             </link>
                             <include-form name="CreateConfigOption" location="component://product/widget/catalog/ConfigForms.xml"/>
@@ -186,7 +186,7 @@ under the License.
                     </condition>
                     <widgets>
                         <screenlet title="${uiLabelMap.AddProductComponent}">
-                            <link style="buttontext" text="${uiLabelMap.AddProductComponent}" target="EditProductConfigOptions">
+                            <link style="button tiny" text="${uiLabelMap.AddProductComponent}" target="EditProductConfigOptions">
                                 <parameter param-name="configItemId"/>
                                 <parameter param-name="configOptionId"/>
                             </link>
@@ -195,7 +195,7 @@ under the License.
                     </widgets>
                     <fail-widgets>
                         <screenlet title="${uiLabelMap.AddProductComponent}">
-                            <link style="buttontext" text="${uiLabelMap.AddProductComponent}" target="EditProductConfigOptions">
+                            <link style="button tiny" text="${uiLabelMap.AddProductComponent}" target="EditProductConfigOptions">
                                 <parameter param-name="configItemId"/>
                                 <parameter param-name="configOptionId"/>
                             </link>

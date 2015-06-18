@@ -45,7 +45,7 @@ under the License.
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar">
-                                                    <link target="EditJobRequisition" text="${uiLabelMap.HumanResNewJobRequisition}" style="buttontext create"/>
+                                                    <link target="EditJobRequisition" text="${uiLabelMap.HumanResNewJobRequisition}" style="button tiny create"/>
                                                 </container>
                                             </widgets>
                                         </section>
@@ -59,7 +59,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -115,7 +115,7 @@ under the License.
                                         <section>
                                             <widgets>
                                                 <container style="button-bar">
-                                                    <link target="EditInternalJobPosting" text="${uiLabelMap.HumanResNewInternalJobPosting}" style="buttontext create"/>
+                                                    <link target="EditInternalJobPosting" text="${uiLabelMap.HumanResNewInternalJobPosting}" style="button tiny create"/>
                                                 </container>
                                             </widgets>
                                         </section>
@@ -129,7 +129,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -178,7 +178,7 @@ under the License.
                                         <section>
                                             <widgets>
                                                 <container style="button-bar">
-                                                    <link target="EditJobInterview" text="${uiLabelMap.HumanResNewJobInterview}" style="buttontext create"/>
+                                                    <link target="EditJobInterview" text="${uiLabelMap.HumanResNewJobInterview}" style="button tiny create"/>
                                                 </container>
                                             </widgets>
                                         </section>
@@ -192,7 +192,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -254,7 +254,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -307,7 +307,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

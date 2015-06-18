@@ -125,8 +125,8 @@ function runAction() {
 
 <#if invoices?has_content >
   <div>
-    <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} :</span>
-    <span class="label" id="showInvoiceRunningTotal"></span>
+    <span >${uiLabelMap.AccountingRunningTotalOutstanding} :</span>
+    <span  id="showInvoiceRunningTotal"></span>
   </div>
   <form name="listPurchaseInvoices" id="listPurchaseInvoices"  method="post" action="javascript:void(0);">
     <div align="right">
@@ -153,7 +153,7 @@ function runAction() {
     <input type="hidden" name="fromDueDate" value="${parameters.fromDueDate!}"/>
     <input type="hidden" name="thruDueDate" value="${parameters.thruDueDate!}"/>
     <div id="issueChecks" style="display: none;" align="right">
-      <span class="label">${uiLabelMap.AccountingVendorPaymentMethod}</span>
+      <span >${uiLabelMap.AccountingVendorPaymentMethod}</span>
       <select name="paymentMethodId">
         <#if paymentMethods?has_content>
           <#list paymentMethods as paymentMethod>
@@ -168,11 +168,12 @@ function runAction() {
           </#list>
         </#if>
       </select>
-      <span class="label">${uiLabelMap.AccountingCheckNumber}</span>
+      <span >${uiLabelMap.AccountingCheckNumber}</span>
       <input type="text" name="checkStartNumber"/>
     </div>
     <table class="basic-table hover-bar" cellspacing="0">
       <#-- Header Begins -->
+      <thead>
       <tr class="header-row-2">
         <td>${uiLabelMap.FormFieldTitle_invoiceId}</td>
         <td>${uiLabelMap.AccountingInvoiceDate}</td>
@@ -187,6 +188,7 @@ function runAction() {
         <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td> 
         <td>${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
       </tr>
+      </thead>
       <#-- Header Ends-->
       <#assign alt_row = false>
       <#list invoices as invoice>
@@ -194,7 +196,7 @@ function runAction() {
         <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
           <#assign statusItem = invoice.getRelatedOne("StatusItem", true)>
           <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-            <td><a class="buttontext" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></td>
+            <td><a class="button tiny" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></td>
             <td><#if invoice.get("invoiceDate")?has_content>${invoice.get("invoiceDate")?date}</td></#if>
             <td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date}</td></#if>
             <td>${statusItem.description?default(invoice.statusId)}</td>

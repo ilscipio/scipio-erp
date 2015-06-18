@@ -26,9 +26,9 @@ function setWeight(weight) {
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
   <h1>${uiLabelMap.ProductQuickShipOrderFrom} ${facility.facilityName!} [${uiLabelMap.CommonId}:${facilityId!}]</h1>
   <div class="button-bar">
-    <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductNextShipment}</a>
+    <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductNextShipment}</a>
     <#if shipment?has_content>
-      <a href="<@ofbizUrl>EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductEditShipment}</a>
+      <a href="<@ofbizUrl>EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductEditShipment}</a>
     </#if>
   </div>
 
@@ -56,7 +56,7 @@ function setWeight(weight) {
               <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRoute.shipmentRouteSegmentId}"/>
               <table border="0" cellpadding="2" cellspacing="0">
                 <tr>
-                  <td width="20%" align="right"><span class="label">${uiLabelMap.ProductCarrier}</span></td>
+                  <td width="20%" align="right"><span >${uiLabelMap.ProductCarrier}</span></td>
                   <td>&nbsp;</td>
                   <td width="1%" nowrap="nowrap">
                     <select name="carrierPartyId">
@@ -73,11 +73,11 @@ function setWeight(weight) {
                   </td>
                   <td>&nbsp;</td>
                   <td width="80%">
-                    <a href="javascript:document.routeForm.submit();" class="buttontext">${uiLabelMap.ProductConfirmShipmentUps}</a>
+                    <a href="javascript:document.routeForm.submit();" class="button tiny">${uiLabelMap.ProductConfirmShipmentUps}</a>
                   </td>
                 </tr>
                 <tr>
-                  <td width="20%" align="right"><span class="label">${uiLabelMap.ProductShipMethod}</span></td>
+                  <td width="20%" align="right"><span >${uiLabelMap.ProductShipMethod}</span></td>
                   <td>&nbsp;</td>
                   <td width="1%" nowrap="nowrap">
                     <select name="shipmentMethodTypeId">
@@ -94,7 +94,7 @@ function setWeight(weight) {
                   </td>
                   <td>&nbsp;</td>
                   <td width="80%">
-                    <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}&amp;shipmentId=${shipmentId}&amp;reweigh=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReWeighPackage}</a>
+                    <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}&amp;shipmentId=${shipmentId}&amp;reweigh=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductReWeighPackage}</a>
                   </td>
                 </tr>
                 <tr>
@@ -117,8 +117,8 @@ function setWeight(weight) {
             <#-- display the links for label/packing slip -->
             <#assign allDone = "yes">
             <center>
-              <a href="<@ofbizUrl>viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=00001</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductShippingLabel}</a><br />
-              <a href="<@ofbizUrl>ShipmentManifest.pdf?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductPackingSlip}</a>
+              <a href="<@ofbizUrl>viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=00001</@ofbizUrl>" target="_blank" class="button tiny">${uiLabelMap.ProductShippingLabel}</a><br />
+              <a href="<@ofbizUrl>ShipmentManifest.pdf?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="button tiny">${uiLabelMap.ProductPackingSlip}</a>
             </center>
           </#if>
         <#else>
@@ -129,7 +129,7 @@ function setWeight(weight) {
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
             <table cellspacing="0" class="basic-table">
               <tr>
-                <td width="20%" align="right"><span class="label">${uiLabelMap.ProductPackage}</span> ${shipmentPackage.shipmentPackageSeqId} ${uiLabelMap.ProductWeight}</td>
+                <td width="20%" align="right"><span >${uiLabelMap.ProductPackage}</span> ${shipmentPackage.shipmentPackageSeqId} ${uiLabelMap.ProductWeight}</td>
                 <td>&nbsp;</td>
                 <td width="80%">
                   <input type="text" name="weight" />&nbsp;
@@ -148,7 +148,7 @@ function setWeight(weight) {
                 <td colspan="2">&nbsp;</td>
                 <td width="80%">
                   <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.weightForm.submit();"/>
-                  <a href="javascript:document.weightForm.submit();" class="buttontext">${uiLabelMap.ProductSetWeight}</a>
+                  <a href="javascript:document.weightForm.submit();" class="button tiny">${uiLabelMap.ProductSetWeight}</a>
                 </td>
               </tr>
             </table>
@@ -181,7 +181,7 @@ function setWeight(weight) {
       <input type="hidden" name="setPackedOnly" value="Y" />
       <table border='0' cellpadding='2' cellspacing='0'>
         <tr>
-          <td width="25%" align='right'><span class="label">${uiLabelMap.ProductOrderNumber}</span></td>
+          <td width="25%" align='right'><span >${uiLabelMap.ProductOrderNumber}</span></td>
           <td width="1">&nbsp;</td>
           <td width="25%">
             <input type="text" name="orderId" size="20" maxlength="20" value="${requestParameters.orderId!}" />
@@ -192,7 +192,7 @@ function setWeight(weight) {
           <td colspan="2">&nbsp;</td>
           <td colspan="2">
             <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectOrderForm.submit();" />
-            <a href="javascript:document.selectOrderForm.submit();" class="buttontext">${uiLabelMap.ProductShipOrder}</a>
+            <a href="javascript:document.selectOrderForm.submit();" class="button tiny">${uiLabelMap.ProductShipOrder}</a>
           </td>
         </tr>
       </table>

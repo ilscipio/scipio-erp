@@ -149,14 +149,14 @@ under the License.
                     <fail-widgets>
                         <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-results">
-                                <label style="h3" text="${uiLabelMap.ProductNotInAnyLocation}"/>
+                                <label  text="${uiLabelMap.ProductNotInAnyLocation}"/>
                             </decorator-section>
                         </decorator-screen>
                     </fail-widgets>
                 </section>
             </widgets>
             <fail-widgets>
-                <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>

@@ -27,23 +27,20 @@ standard order confirmation page and to be re-usable by other screens.
 <#if !(cart??)><#assign cart = shoppingCart!/></#if>
 
 <#if cart??>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <div class="h3">${uiLabelMap.OrderShippingInformation}</div>
-  </div>
-  <div class="screenlet-body">
-    <table width="100%">
+<@section title="${uiLabelMap.OrderShippingInformation}">
+    <table class="basic-table">
 
       <#-- header -->
 
+      <thead>
       <tr>
-        <td><span>${uiLabelMap.OrderDestination}</span></td>
-        <td><span>${uiLabelMap.PartySupplier}</span></td>
-        <td><span>${uiLabelMap.ProductShipmentMethod}</span></td>
-        <td><span>${uiLabelMap.ProductItem}</span></td>
-        <td><span>${uiLabelMap.ProductQuantity}</span></td>
+        <th>${uiLabelMap.OrderDestination}</th>
+        <th>${uiLabelMap.PartySupplier}</th>
+        <th>${uiLabelMap.ProductShipmentMethod}</th>
+        <th>${uiLabelMap.ProductItem}</th>
+        <th>${uiLabelMap.ProductQuantity}</th>
       </tr>
-
+      </thead>
 
       <#-- BEGIN LIST SHIP GROUPS -->
       <#--
@@ -56,7 +53,6 @@ standard order confirmation page and to be re-usable by other screens.
       <#if (numberOfItems > 0)>
 
       <#-- spacer goes here -->
-      <tr><td colspan="5"><hr /></td></tr>
 
       <tr>
 
@@ -116,6 +112,5 @@ standard order confirmation page and to be re-usable by other screens.
       <#-- END LIST SHIP GROUPS -->
 
     </table>
-  </div>
-</div>
+  </@section>
 </#if>

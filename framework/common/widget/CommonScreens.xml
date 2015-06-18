@@ -20,79 +20,6 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-
-    <!-- Included Screens -->
-    <screen name="states">
-        <section>
-            <widgets>
-                <platform-specific><html><html-template location="component://common/webcommon/includes/states.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="countries">
-        <section>
-            <actions>
-                <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://common/webcommon/includes/countries.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="cctypes">
-        <section>
-            <actions>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/CcTypes.groovy"/>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://common/webcommon/includes/cctypes.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="ccmonths">
-        <section>
-            <widgets>
-                <platform-specific><html><html-template location="component://common/webcommon/includes/ccmonths.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="ccyears">
-        <section>
-            <actions>
-                <set field="thisDate" from-field="nowTimestamp"/>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://common/webcommon/includes/ccyears.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <!--
-        The following screen renders a generic link (implemented by an hidden form)
-        that can be included in other screens in the following way:
-        ...
-        <section>
-            <actions>
-                <set field="genericLinkName" value="formName"/> The name of the hidden form (mandatory)
-                <set field="genericLinkText" value="Link message"/> The link text (mandatory)
-                <set field="genericLinkTarget" value="ApprovedProductRequirementsReport"/> The request name (mandatory)
-                <set field="genericLinkStyle" value="buttontext"/> The style of the link (optional)
-                <set field="genericLinkWindow" value="newWindow"/> The target window (optional): if set, a new browser window is created
-                <set field="excludeParameters" value="N"/> If not set to Y, the requestParameters are included in the form as hidden fields (optional, defaults to N)
-            </actions>
-            <widgets>
-                <include-screen name="genericLink" location="component://common/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-        ...
-    -->
-    <screen name="genericLink">
-        <section>
-            <widgets>
-                <platform-specific><html><html-template location="component://common/webcommon/includes/genericLink.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
     <!-- decorator used in creating a response to an ajax request -->
     <screen name="AjaxGlobalDecorator">
         <section>
@@ -137,26 +64,69 @@ under the License.
     <screen name="GlobalActions">
         <section>
             <actions>
+                            
+                <!-- Foundation Base CSS -->
+                <set field="layoutSettings.styleSheets[+0]" value="/images/styles/base/stylesheets/app.css" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/foundation-datepicker/stylesheets/foundation-datepicker.css" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/images/styles/base/stylesheets/foundation-icons/foundation-icons.css" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/foundation-responsive-tables/responsive-tables.css" global="true"/>
+                
+                <set field="layoutSettings.styleSheets[]" value="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" global="true"/>
+                          
+                <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />
+                <service service-name="getVisualThemeResources">
+                    <field-map field-name="visualThemeId" />
+                    <field-map field-name="themeResources" from-field="layoutSettings" />
+                </service>
+                <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
+ 
+ 
+             
                 <!-- The default (global) java scripts -->
                 <!-- jQuery part -->
+                <!--  Foundation JS -->
+                <set field="layoutSettings.javaScripts[]" value="/images/styles/base/bower_components/modernizr/modernizr.js" global="true" />
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[+0]" value="/images/styles/base/bower_components/jquery/dist/jquery.min.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation.min.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.topbar.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.offcanvas.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation-datepicker/js/foundation-datepicker.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation-responsive-tables/responsive-tables.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/js/app.js" global="true" />
+
+                
+                
+                <!-- Legacy JS TODO: Remove once possible -->
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/selectall.js" global="true" />
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/fieldlookup.js" global="true" />
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/miscAjaxFunctions.js" global="true" />               
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/selectMultipleRelatedValues.js" global="true" />
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/util.js" global="true" />
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
+                
                 <!-- Load available JS Language Files -->
+                <!-- DISABLED FOR CLEAN-UP
                 <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}" />
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.datejs.getFilePath(initialLocaleComplete)}" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.jquery.getFilePath(initialLocaleComplete)}" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.dateTime.getFilePath(initialLocaleComplete)}" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon.min-1.4.3.js" global="true" />
+                    <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" /> // replaced by foundation datepicker
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jquery.maskedinput-1.3.1.min.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/ui/js/jquery-ui-1.10.3.min.js" global="true" />
+                    <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jeditable/jquery.jeditable.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-migrate-1.2.1.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true" />
+                -->
+                    
                 <!-- jQuery CSSs -->
+                <!-- DISABLED FOR CLEAN-UP
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.css" global="true" />
-                
                 <set field="layoutSettings.javaScripts[]" value="/images/OpenLayers-2.13.1.js" global="true" />
                 <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true" />
                 <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true" />
@@ -166,12 +136,8 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/images/selectMultipleRelatedValues.js" global="true" />
                 <set field="layoutSettings.javaScripts[]" value="/images/util.js" global="true" />
                 <set field="layoutSettings.javaScripts[]" value="/images/date/FromThruDateCheck.js" global="true"/>                
-                <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />
-                <service service-name="getVisualThemeResources">
-                    <field-map field-name="visualThemeId" />
-                    <field-map field-name="themeResources" from-field="layoutSettings" />
-                </service>
-                <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
+                -->     
+
             </actions>
             <widgets />
         </section>
@@ -185,7 +151,7 @@ under the License.
                 <section>
                     <actions>
                         <set field="layoutSettings.commonHeaderImageLinkUrl" from-field="layoutSettings.commonHeaderImageLinkUrl" default-value="main" global="true" />
-                        <set field="iconsLocation" from-field="layoutSettings.VT_ICONS_LOC[0]" default-value="/images/icons/famfamfam" global="true" />
+                        <!--<set field="iconsLocation" from-field="layoutSettings.VT_ICONS_LOC[0]" default-value="/images/icons/famfamfam" global="true" />-->
                         <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]" />
                         <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC[0]" />
                         <set field="appbarTemplateLocation" from-field="layoutSettings.VT_NAV_TMPLT_LOC[0]" />
@@ -305,39 +271,100 @@ under the License.
                         </platform-specific>
                     </widgets>
                 </section>
+                <!-- render content area -->
+                <container style="row fullWidth" id="content-main-section">
+                    <decorator-section-include name="pre-body" />
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-empty-section section-name="left-column" />
+                                    <if-empty-section section-name="right-column" />
+                                </and>
+                            </condition>
+                            <widgets>
+                                <container id="content-main-body">
                 <!-- render messages -->
+                                    <container style="large-12 columns" id="main-content">
                 <platform-specific>
                     <html>
                         <html-template location="${messagesTemplateLocation}" />
                     </html>
                 </platform-specific>
-                <!-- render content area -->
-                <container style="contentarea">
-                    <decorator-section-include name="pre-body" />
-                    <container id="column-container">
-                        <section>
-                            <condition>
-                                <if-empty-section section-name="left-column" />
-                            </condition>
-                            <widgets>
-                                <container id="content-main-section">
-                                    <decorator-section-include name="body" />
-                                </container>
-                            </widgets>
-                            <fail-widgets>
-                                <container style="left">
-                                    <decorator-section-include name="left-column" />
-                                </container>
-                                <container id="content-main-section" style="leftonly">
-                                    <container style="no-clear" id="centerdiv">
                                         <decorator-section-include name="body" />
                                     </container>
                                 </container>
-                            </fail-widgets>
+                            </widgets>
                         </section>
-                        <container style="clear"></container>
+                        <section>
+                            <condition>
+                                <and>
+                                    <not>
+                                <if-empty-section section-name="left-column" />
+                                    </not>
+                                    <if-empty-section section-name="right-column" />
+                                </and>
+                            </condition>
+                            <widgets>
+                                <container style="large-2 medium-3 columns" id="sidebar">
+                                    <container style="sidebar">
+                                        <decorator-section-include name="menu-bar" />
+                                        <decorator-section-include name="left-column" />
+                                    </container>
+                                </container>
+                                <container style="large-10 medium-9 columns" id="main-content">
+                                    <decorator-section-include name="body" />
+                                </container>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-empty-section section-name="left-column" />
+                                    <not>
+                                        <if-empty-section section-name="right-column" />
+                                    </not>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <container style="large-10 medium-9 columns" id="main-content">
+                                        <decorator-section-include name="body" />
+                                </container>
+                                <container style="large-2 medium-3 columns" id="right-sidebar">
+                                    <container style="sidebar">
+                                        <decorator-section-include name="right-column" />
+                                    </container>
+                                </container>
+                            </widgets>                            
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <not>
+                                        <if-empty-section section-name="left-column" />
+                                    </not>
+                                    <not>
+                                        <if-empty-section section-name="right-column" />
+                                    </not>
+                                </and>
+                            </condition>
+                                <widgets>
+                                <container style="large-2 medium-3 columns" id="sidebar">
+                                    <container style="sidebar">
+                                        <decorator-section-include name="menu-bar" />
+                                    <decorator-section-include name="left-column" />
+                                </container>
+                                </container>
+                                <container style="large-8 medium-6 columns" id="main-content">
+                                        <decorator-section-include name="body" />
+                                    </container>
+                                <container style="large-2 medium-3 columns" id="right-sidebar">
+                                    <container style="sidebar">
+                                        <decorator-section-include name="right-column" />
+                                </container>
+                                </container>
+                            </widgets>                            
+                        </section>
                     </container>
-                </container>
                 <section>
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
@@ -376,6 +403,8 @@ under the License.
                 <not><if-compare operator="equals" value="Y" field="parameters.ajaxLookup"/></not>
             </condition>
             <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
                 <section>
                     <actions>
                         <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
@@ -405,13 +434,15 @@ under the License.
                                 <platform-specific><html><html-template location="component://common/webcommon/includes/lookup.ftl" /></html></platform-specific>
                             </widgets>
                         </section>
-                        <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
                         <section>
                             <condition>
                                 <not><if-empty-section section-name="body"/></not>
                             </condition>
                             <widgets>
+                                    <container id="content-main-body">
+                                        <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
                                 <decorator-section-include name="body"/>
+                                    </container>
                             </widgets>
                             <fail-widgets>
                                 <screenlet title="${title}" id="findScreenlet" collapsible="true" padded="false">
@@ -436,6 +467,8 @@ under the License.
                         </section>
                     </widgets>
                 </section>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
             <fail-widgets>
                 <section>
@@ -479,12 +512,12 @@ under the License.
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true"/>
 
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon.min-1.4.3.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/ui/js/jquery-ui-1.10.3.min.js" global="true"/>
+                <!-- Replaced by foundation datepicker <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" />-->
+                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jeditable/jquery.jeditable.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-migrate-1.2.1.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>                
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>
                     <!-- jQuery CSSs -->
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.css" global="true"/>
@@ -637,10 +670,10 @@ under the License.
                         <if-empty field="titleProperty"/>
                     </condition>
                     <widgets>
-                        <container style="page-title"><label text="${title}"></label></container>
+                        <container style="page-title"><label text="${title}" style="h1"></label></container>
                     </widgets>
                     <fail-widgets>
-                        <container style="page-title"><label text="${uiLabelMap[titleProperty]}"></label></container>
+                        <container style="page-title"><label text="${uiLabelMap[titleProperty]}" style="h1"></label></container>
                     </fail-widgets>
                 </section>
                 <decorator-section-include name="menu-bar"/>
@@ -651,7 +684,7 @@ under the License.
                     </container>
                 </screenlet>
                 <screenlet padded="false">
-                    <label style="h3" text="${uiLabelMap.CommonSearchResults}"/>
+                    <label style="h2" text="${uiLabelMap.CommonSearchResults}"/>
                     <container id="search-results">
                         <decorator-section-include name="search-results"/>
                     </container>
@@ -700,6 +733,80 @@ under the License.
                 <platform-specific>
                     <html><html-template location="component://common/webcommon/includes/geolocation.ftl"/></html>
                 </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- Included Screens -->
+    <screen name="states">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/states.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="countries">
+        <section>
+            <actions>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/countries.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="cctypes">
+        <section>
+            <actions>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/CcTypes.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/cctypes.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ccmonths">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/ccmonths.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ccyears">
+        <section>
+            <actions>
+                <set field="thisDate" from-field="nowTimestamp"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/ccyears.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <!--
+        The following screen renders a generic link (implemented by an hidden form)
+        that can be included in other screens in the following way:
+        ...
+        <section>
+            <actions>
+                <set field="genericLinkName" value="formName"/> The name of the hidden form (mandatory)
+                <set field="genericLinkText" value="Link message"/> The link text (mandatory)
+                <set field="genericLinkTarget" value="ApprovedProductRequirementsReport"/> The request name (mandatory)
+                <set field="genericLinkStyle" value="button tiny"/> The style of the link (optional)
+                <set field="genericLinkWindow" value="newWindow"/> The target window (optional): if set, a new browser window is created
+                <set field="excludeParameters" value="N"/> If not set to Y, the requestParameters are included in the form as hidden fields (optional, defaults to N)
+            </actions>
+            <widgets>
+                <include-screen name="genericLink" location="component://common/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+        ...
+    -->
+    <screen name="genericLink">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/genericLink.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

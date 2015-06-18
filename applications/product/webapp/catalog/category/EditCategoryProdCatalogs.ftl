@@ -18,19 +18,18 @@ under the License.
 -->
 
 <#if productCategoryId?? && productCategory??>
-  <div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3>${uiLabelMap.PageTitleEditCategoryProductCatalogs}</h3>
-    </div>
-        <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleEditCategoryProductCatalogs}">
+
             <table cellspacing="0" class="basic-table">
+            <thead>
             <tr class="header-row">
-                <td><b>${uiLabelMap.ProductCatalogNameId}</b></td>
-                <td><b>${uiLabelMap.CommonType}</b></td>
-                <td><b>${uiLabelMap.CommonFromDateTime}</b></td>
-                <td align="center"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></td>
-                <td><b>&nbsp;</b></td>
+                <th>${uiLabelMap.ProductCatalogNameId}</th>
+                <th>${uiLabelMap.CommonType}</th>
+                <th>${uiLabelMap.CommonFromDateTime}</th>
+                <th align="center">${uiLabelMap.ProductThruDateTimeSequence}</th>
+                <th>&nbsp;</th>
             </tr>
+            </thead>
             <#assign line = 0>
             <#assign rowClass = "2">
             <#list prodCatalogCategories as prodCatalogCategory>
@@ -38,7 +37,7 @@ under the License.
             <#assign prodCatalog = prodCatalogCategory.getRelatedOne("ProdCatalog", false)>
             <#assign curProdCatalogCategoryType = prodCatalogCategory.getRelatedOne("ProdCatalogCategoryType", true)>
             <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                <td><a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)!}</@ofbizUrl>" class="buttontext"><#if prodCatalog??>${(prodCatalog.catalogName)!}</#if> [${(prodCatalogCategory.prodCatalogId)!}]</a></td>
+                <td><a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)!}</@ofbizUrl>" class="button tiny"><#if prodCatalog??>${(prodCatalog.catalogName)!}</#if> [${(prodCatalogCategory.prodCatalogId)!}]</a></td>
                 <td>
                     ${(curProdCatalogCategoryType.get("description",locale))?default(prodCatalogCategory.prodCatalogCategoryTypeId)}
                 </td>
@@ -54,7 +53,7 @@ under the License.
                         <input type="hidden" name="prodCatalogCategoryTypeId" value="${prodCatalogCategory.prodCatalogCategoryTypeId}"/>
                         <input type="hidden" name="fromDate" value="${(prodCatalogCategory.fromDate)!}"/>
                         <#if hasExpired><#assign class="alert"></#if>
-                        <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="${class!''}" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(prodCatalogCategory.thruDate)!}" size="25" maxlength="30" id="thruDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                        <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(prodCatalogCategory.thruDate)!}" size="25" maxlength="30" id="thruDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         <input type="text" size="5" name="sequenceNum" value="${(prodCatalogCategory.sequenceNum)!}"/>
                         <#-- the prodCatalogCategoryTypeId field is now part of the PK, so it can't be changed, must be re-created
                         <select name="prodCatalogCategoryTypeId" size="1">
@@ -77,7 +76,7 @@ under the License.
                     <input type="hidden" name="productCategoryId" value="${(prodCatalogCategory.productCategoryId)!}"/>
                     <input type="hidden" name="prodCatalogCategoryTypeId" value="${prodCatalogCategory.prodCatalogCategoryTypeId}"/>
                     <input type="hidden" name="fromDate" value="${(prodCatalogCategory.fromDate)!}"/>
-                    <a href="javascript:document.lineForm_delete${line}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.lineForm_delete${line}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </td>
             </tr>
@@ -90,13 +89,11 @@ under the License.
             </#list>
             </table>
             <br />
-        </div>
-    </div>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
+
+<@row>
+    <@cell>
             <h3>${uiLabelMap.ProductAddCatalogProductCategory}</h3>
-        </div>
-        <div class="screenlet-body">
+
             <table cellspacing="0" class="basic-table">
                 <tr><td>
                     <form method="post" action="<@ofbizUrl>category_addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
@@ -111,11 +108,12 @@ under the License.
                             <option value="${(prodCatalogCategoryType.prodCatalogCategoryTypeId)!}">${(prodCatalogCategoryType.get("description",locale))!}</option>
                         </#list>
                         </select>
-                        <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                        <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         <input type="submit" value="${uiLabelMap.CommonAdd}"/>
                     </form>
                 </td></tr>
             </table>
-        </div>
-    </div>
+    </@cell>
+</@row>
+</@section>
 </#if>

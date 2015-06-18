@@ -55,7 +55,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.MarketingViewPermissionError}</label>
+                                <label >${uiLabelMap.MarketingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -116,7 +116,7 @@ under the License.
                             <label text="${uiLabelMap[titleProperty]}" />
                         </container>
                         <container style="button-bar">
-                            <link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="buttontext create">
+                            <link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="button tiny create">
                                 <parameter param-name="DONE_PAGE" from-field="donePage" />
                             </link>
                         </container>
@@ -174,7 +174,7 @@ under the License.
                             <label text="${uiLabelMap[titleProperty]}" />
                         </container>
                         <container style="button-bar">
-                            <link text="${uiLabelMap.MarketingCampaignRoleCreate}" target="EditMarketingCampaignRoles" style="buttontext create">
+                            <link text="${uiLabelMap.MarketingCampaignRoleCreate}" target="EditMarketingCampaignRoles" style="button tiny create">
                                 <parameter param-name="marketingCampaignId" />
                                 <parameter param-name="DONE_PAGE" from-field="donePage" />
                             </link>

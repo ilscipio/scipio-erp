@@ -29,15 +29,15 @@ under the License.
     <form name="addaddrmap" method="post" action="<@ofbizUrl>createAddressMatchMap</@ofbizUrl>">
     <table class="basic-table" cellspacing="0">
         <tr>
-          <td class="label">${uiLabelMap.PartyAddressMatchKey}</td>
+          <td >${uiLabelMap.PartyAddressMatchKey}</td>
           <td><input type="text" name="mapKey"/></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyAddressMatchValue}</td>
+          <td >${uiLabelMap.PartyAddressMatchValue}</td>
           <td><input type="text" name="mapValue"/></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.CommonSequence}</td>
+          <td >${uiLabelMap.CommonSequence}</td>
           <td><input type="text" size="5" name="sequenceNum" value="0"/></td>
         </tr>
         <tr>
@@ -71,13 +71,15 @@ under the License.
   <div class="screenlet-body">
       <#if addressMatchMaps?has_content>
         <table class="basic-table hover-bar" cellspacing="0">
+          <thead>
           <tr class="header-row">
-            <td>${uiLabelMap.PartyAddressMatchKey}</td>
-            <td>=></td>
-            <td>${uiLabelMap.PartyAddressMatchValue}</td>
-            <td>${uiLabelMap.CommonSequence}</td>
-            <td class="button-col"><a href="<@ofbizUrl>clearAddressMatchMap</@ofbizUrl>">${uiLabelMap.CommonClear} ${uiLabelMap.CommonAll}</a></td>
+            <th>${uiLabelMap.PartyAddressMatchKey}</th>
+            <th>=></th>
+            <th>${uiLabelMap.PartyAddressMatchValue}</th>
+            <th>${uiLabelMap.CommonSequence}</th>
+            <th class="button-col"><a href="<@ofbizUrl>clearAddressMatchMap</@ofbizUrl>">${uiLabelMap.CommonClear} ${uiLabelMap.CommonAll}</a></th>
           </tr>
+          </thead>
           <#assign alt_row = false>
           <#list addressMatchMaps as map>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>

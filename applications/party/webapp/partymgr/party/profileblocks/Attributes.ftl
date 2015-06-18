@@ -30,11 +30,13 @@ under the License.
     <div class="screenlet-body">
       <#if attributes?has_content>
         <table class="basic-table hover-bar" cellspacing="0">
+          <thead>
             <tr class="header-row">
-              <td>${uiLabelMap.CommonName}</td>
-              <td>${uiLabelMap.CommonValue}</td>
-              <td>&nbsp;</td>
+              <th>${uiLabelMap.CommonName}</th>
+              <th>${uiLabelMap.CommonValue}</th>
+              <th>&nbsp;</th>
             </tr>
+          </thead>
           <#assign alt_row = false>
           <#list attributes as attr>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>

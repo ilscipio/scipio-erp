@@ -19,12 +19,12 @@ under the License.
 <h1>${title}</h1>
 <#if facilityId?? && locationSeqId??>
   <div class="button-bar">
-    <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductNewFacility}</a>
-    <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId!}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductNewFacilityLocation}</a>
-    <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductNewInventoryItem}</a>
+    <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductNewFacility}</a>
+    <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId!}</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductNewFacilityLocation}</a>
+    <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductNewInventoryItem}</a>
     <#assign latestGeoPoint= Static["org.ofbiz.common.geo.GeoWorker"].findLatestGeoPoint(delegator, "FacilityLocationAndGeoPoint", "facilityId", facilityId, "locationSeqId", locationSeqId)!/>
     <#if latestGeoPoint?has_content>
-      <a href="<@ofbizUrl>FacilityLocationGeoLocation?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonGeoLocation}</a>
+      <a href="<@ofbizUrl>FacilityLocationGeoLocation?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonGeoLocation}</a>
     </#if>
   </div>
 </#if>
@@ -39,11 +39,11 @@ under the License.
     <input type="hidden" name="locationSeqId" value="${locationSeqId}" />
     <table class="basic-table" cellspacing="0">
     <tr>
-        <td class="label">${uiLabelMap.ProductFacilityId}</td>
+        <td >${uiLabelMap.ProductFacilityId}</td>
         <td>${facilityId!}</td>
     </tr>
     <tr>
-        <td class="label">${uiLabelMap.ProductLocationSeqId}</td>
+        <td >${uiLabelMap.ProductLocationSeqId}</td>
         <td>${locationSeqId}</td>
     </tr>
 <#else>
@@ -52,7 +52,7 @@ under the License.
 
 <#if facilityId??>
     <tr>
-        <td class="label">${uiLabelMap.ProductType}</td>
+        <td >${uiLabelMap.ProductType}</td>
         <td>
             <select name="locationTypeEnumId">
                 <#if (facilityLocation.locationTypeEnumId)?has_content>
@@ -67,23 +67,23 @@ under the License.
         </td>
     </tr>
     <tr>
-        <td class="label">${uiLabelMap.CommonArea}</td>
+        <td >${uiLabelMap.CommonArea}</td>
         <td><input type="text" name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" /></td>
     </tr>
     <tr>
-        <td class="label">${uiLabelMap.ProductAisle}</td>
+        <td >${uiLabelMap.ProductAisle}</td>
         <td><input type="text" name="aisleId" value="${(facilityLocation.aisleId)!}" size="19" maxlength="20" /></td>
     </tr>
     <tr>
-        <td class="label">${uiLabelMap.ProductSection}</td>
+        <td >${uiLabelMap.ProductSection}</td>
         <td><input type="text" name="sectionId" value="${(facilityLocation.sectionId)!}" size="19" maxlength="20" /></td>
     </tr>
     <tr>
-        <td class="label">${uiLabelMap.ProductLevel}</td>
+        <td >${uiLabelMap.ProductLevel}</td>
         <td><input type="text" name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" /></td>
     </tr>
     <tr>
-        <td class="label">${uiLabelMap.ProductPosition}</td>
+        <td >${uiLabelMap.ProductPosition}</td>
         <td><input type="text" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" /></td>
     </tr>
     <tr>
@@ -105,10 +105,12 @@ under the License.
     <div class="screenlet-body">
         <#-- ProductFacilityLocation stuff -->
         <table class="basic-table hover-bar" cellspacing="0">
+        <thead>
         <tr class="header-row">
-            <td>${uiLabelMap.ProductProduct}</td>
-            <td>${uiLabelMap.ProductMinimumStockAndMoveQuantity}</td>
+            <th>${uiLabelMap.ProductProduct}</th>
+            <th>${uiLabelMap.ProductMinimumStockAndMoveQuantity}</th>
         </tr>
+        </thead>
         <#list productFacilityLocations! as productFacilityLocation>
             <#assign product = productFacilityLocation.getRelatedOne("Product", false)!>
             <tr>
@@ -121,7 +123,7 @@ under the License.
                         <input type="text" size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)!}"/>
                         <input type="text" size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)!}"/>
                         <input type="submit" value="${uiLabelMap.CommonUpdate}"/>
-                        <a href="javascript:document.getElementById('lineForm${productFacilityLocation_index}').action='<@ofbizUrl>deleteProductFacilityLocation</@ofbizUrl>';document.getElementById('lineForm${productFacilityLocation_index}').submit();" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                        <a href="javascript:document.getElementById('lineForm${productFacilityLocation_index}').action='<@ofbizUrl>deleteProductFacilityLocation</@ofbizUrl>';document.getElementById('lineForm${productFacilityLocation_index}').submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
                     </form>
                 </td>
             </tr>
@@ -138,9 +140,9 @@ under the License.
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <input type="hidden" name="locationSeqId" value="${locationSeqId!}" />
             <input type="hidden" name="useValues" value="true" />
-            <span class="label">${uiLabelMap.ProductProductId}</span><input type="text" size="10" name="productId" />
-            <span class="label">${uiLabelMap.ProductMinimumStock}</span><input type="text" size="10" name="minimumStock" />
-            <span class="label">${uiLabelMap.ProductMoveQuantity}</span><input type="text" size="10" name="moveQuantity" />
+            <span >${uiLabelMap.ProductProductId}</span><input type="text" size="10" name="productId" />
+            <span >${uiLabelMap.ProductMinimumStock}</span><input type="text" size="10" name="minimumStock" />
+            <span >${uiLabelMap.ProductMoveQuantity}</span><input type="text" size="10" name="moveQuantity" />
             <input type="submit" value="${uiLabelMap.CommonAdd}" />
         </form>
     </div>

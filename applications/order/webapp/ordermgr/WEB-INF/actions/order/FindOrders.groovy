@@ -146,11 +146,22 @@ toStr = toTs.toString();
 context.thruDateStr = toStr;
 
 // set the page parameters
-viewIndex = request.getParameter("viewIndex") ? Integer.valueOf(request.getParameter("viewIndex")) : 1;
+if(request.getParameter("viewIndex")){
+    viewIndex = Integer.valueOf(request.getParameter("viewIndex"));
+}else if(parameters.VIEW_INDEX){
+    viewIndex = Integer.valueOf(parameters.VIEW_INDEX);
+}else{
+    viewIndex = 1;
+}
 context.viewIndex = viewIndex;
 
-viewSize = request.getParameter("viewSize") ? Integer.valueOf(request.getParameter("viewSize")) : 
-                                                                EntityUtilProperties.getPropertyValue("widget", "widget.form.defaultViewSize", "20", delegator);
+if(request.getParameter("viewSize")){
+    viewSize = Integer.valueOf(request.getParameter("viewSize"));
+}else if(parameters.VIEW_SIZE){
+    viewSize = Integer.valueOf(parameters.VIEW_SIZE);
+}else{
+    viewSize = UtilProperties.getPropertyValue("widget", "widget.form.defaultViewSize", "20");
+}
 context.viewSize = viewSize;
 
 // get the lookup flag

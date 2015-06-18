@@ -17,11 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.OrderReturnItems}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.OrderReturnItems}">
         <#-- DO NOT CHANGE THE NAME OF THIS FORM, it will break the some of the multi-service pattern features -->
         <#assign selectAllFormName = "selectAllForm"/>
         <form name="selectAllForm" method="post" action="<@ofbizUrl>makeQuickReturn</@ofbizUrl>">
@@ -82,15 +78,15 @@ under the License.
                       </td>
                       <td width="99%" valign="top" nowrap="nowrap">
                         <div>
-                          <#if shippingAddress.toName?has_content><span class="label">${uiLabelMap.CommonTo}</span>&nbsp;${shippingAddress.toName}<br /></#if>
-                          <#if shippingAddress.attnName?has_content><span class="label">${uiLabelMap.CommonAttn}</span></b>&nbsp;${shippingAddress.attnName}<br /></#if>
+                          <#if shippingAddress.toName?has_content><span >${uiLabelMap.CommonTo}</span>&nbsp;${shippingAddress.toName}<br /></#if>
+                          <#if shippingAddress.attnName?has_content><span >${uiLabelMap.CommonAttn}</span></b>&nbsp;${shippingAddress.attnName}<br /></#if>
                           <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
                           <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br /></#if>
                           <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
                           <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                           <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                           <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                          <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>-->
+                          <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="button tiny">[${uiLabelMap.CommonUpdate}]</a>-->
                         </div>
                       </td>
                     </tr>
@@ -100,5 +96,4 @@ under the License.
             </tr>
           </table>
         </form>
-    </div>
-</div>
+    </@section>

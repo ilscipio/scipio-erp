@@ -72,7 +72,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -123,7 +123,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -160,7 +160,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -208,7 +208,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -262,7 +262,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -297,7 +297,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -333,7 +333,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <!--<container style="button-bar">
-                                    <link  text="${uiLabelMap.ContentCreateNewWebSite}" target="EditWebSite" style="buttontext create"/>
+                                    <link  text="${uiLabelMap.ContentCreateNewWebSite}" target="EditWebSite" style="button tiny create"/>
                                 </container>-->
                                 <container>
                                     <include-menu name="websiteMenu" location="component://content/widget/content/ContentMenus.xml"/>
@@ -342,7 +342,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -377,7 +377,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -415,7 +415,7 @@ under the License.
                     <widgets>
                         <container style="responseSelected">
                             <label text="${rsp.contentName} - ${rsp.description} [${rsp.contentId}]" style="responseheader"/>
-                            <link  text="${uiLabelMap.PartyReply}" target="addForumThreadMessage" style="buttontext">
+                            <link  text="${uiLabelMap.PartyReply}" target="addForumThreadMessage" style="button tiny">
                                 <parameter param-name="forumGroupId" from-field="parameters.forumGroupId"/>
                                 <parameter param-name="forumId" from-field="parameters.forumId"/>
                                 <parameter param-name="forumMessageIdTo" from-field="rsp.contentId"/>
@@ -429,7 +429,7 @@ under the License.
                     <fail-widgets>
                         <container>
                             <label text="${rsp.contentName} - ${rsp.description} [${rsp.contentId}]" style="responseheader"/>
-                            <link  text="${uiLabelMap.PartyReply}" target="addForumThreadMessage" style="buttontext">
+                            <link  text="${uiLabelMap.PartyReply}" target="addForumThreadMessage" style="button tiny">
                                 <parameter param-name="forumGroupId" from-field="parameters.forumGroupId"/>
                                 <parameter param-name="forumId" from-field="parameters.forumId"/>
                                 <parameter param-name="forumMessageIdTo" from-field="rsp.contentId"/>
@@ -484,7 +484,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

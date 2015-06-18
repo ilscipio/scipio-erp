@@ -180,10 +180,14 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
         }
         writer.append(">");
 
+        Map<String, Object> linkContext = context;
+        String linkStyle = menuItem.getLinkStyle();
+        linkContext.put("style", linkStyle);
+        
         MenuLink link = menuItem.getLink();
         //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, link(0):" + link,"");
         if (link != null) {
-            renderLink(writer, context, link);
+            renderLink(writer, linkContext, link);
         } else {
             String txt = menuItem.getTitle(context);
             UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");

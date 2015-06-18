@@ -59,7 +59,7 @@ under the License.
     </menu>
 
     <menu name="CatalogSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
-        <menu-item name="EditProductCatalog" title="${uiLabelMap.ProductNewProdCatalog}" widget-style="buttontext create">
+        <menu-item name="EditProductCatalog" title="${uiLabelMap.ProductNewProdCatalog}" widget-style=" create">
             <link target="EditProdCatalog"/>
         </menu-item>
         <menu-item name="CreateSeo" title="${uiLabelMap.ProductCatalogSeoCreate}">
@@ -148,10 +148,10 @@ under the License.
     </menu>
 
     <menu name="CategorySubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
-        <menu-item name="EditCategory" title="${uiLabelMap.ProductNewCategory}" widget-style="buttontext create">
+        <menu-item name="EditCategory" title="${uiLabelMap.ProductNewCategory}" widget-style=" create">
             <link target="EditCategory"/>
         </menu-item>
-        <menu-item name="createProductInCategoryStart" title="${uiLabelMap.ProductCreateProductInCategory}" widget-style="buttontext create">
+        <menu-item name="createProductInCategoryStart" title="${uiLabelMap.ProductCreateProductInCategory}" widget-style=" create">
             <condition>
                 <not><if-empty field="productCategory"/></not>
             </condition>
@@ -159,7 +159,7 @@ under the License.
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>
-        <menu-item name="AdvancedSearch" title="${uiLabelMap.ProductSearchInCategory}" widget-style="buttontext search">
+        <menu-item name="AdvancedSearch" title="${uiLabelMap.ProductSearchInCategory}" widget-style=" search">
             <condition>
                 <not><if-empty field="productCategory"/></not>
             </condition>
@@ -167,7 +167,7 @@ under the License.
                 <parameter param-name="SEARCH_CATEGORY_ID" from-field="productCategoryId"/>
             </link>
         </menu-item>
-        <menu-item name="ProductCategoryPage" title="${uiLabelMap.ProductCategoryPage}" widget-style="buttontext website">
+        <menu-item name="ProductCategoryPage" title="${uiLabelMap.ProductCategoryPage}" widget-style=" website">
             <condition>
                 <not><if-empty field="productCategory"/></not>
             </condition>
@@ -516,11 +516,13 @@ under the License.
         </menu-item>
     </menu>
 
+
+<!-- Deprecated - replaced by component://product/webapp/catalog/menu/ProductSubTabBar.ftl -->
     <menu name="ProductSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
-        <menu-item name="EditProduct" title="${uiLabelMap.ProductNewProduct}" widget-style="buttontext create">
+        <menu-item name="EditProduct" title="${uiLabelMap.ProductNewProduct}" widget-style=" create">
             <link target="EditProduct"/>
         </menu-item>
-        <menu-item name="CreateVirtualWithVariantsForm" title="${uiLabelMap.ProductNewVirtualProduct}" widget-style="buttontext create">
+        <menu-item name="CreateVirtualWithVariantsForm" title="${uiLabelMap.ProductNewVirtualProduct}" widget-style=" create">
             <condition>
                 <not><if-empty field="product"/></not>
             </condition>
@@ -547,7 +549,7 @@ under the License.
         <menu-item name="ProductTags" title="${uiLabelMap.ProductTags}">
             <link target="EditProductTag"/>
         </menu-item>
-        <menu-item name="ExpandAll" title="${uiLabelMap.CommonExpandAll}" widget-style="buttontext expand-all">
+        <menu-item name="ExpandAll" title="${uiLabelMap.CommonExpandAll}" widget-style=" expand-all">
             <condition>
                 <and>
                     <if-compare operator="equals" value="EditProduct" field="tabButtonItem"/>
@@ -555,7 +557,7 @@ under the License.
             </condition>
             <link target="javascript:expandAll(true);" url-mode="plain"/>
         </menu-item>
-        <menu-item name="CollapseAll" title="${uiLabelMap.CommonCollapseAll}" widget-style="buttontext collapse-all">
+        <menu-item name="CollapseAll" title="${uiLabelMap.CommonCollapseAll}" widget-style=" collapse-all">
             <condition>
                 <and>
                     <if-compare operator="equals" value="EditProduct" field="tabButtonItem"/>

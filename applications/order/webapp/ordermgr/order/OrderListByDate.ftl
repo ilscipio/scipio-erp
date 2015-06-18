@@ -17,31 +17,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="findOrdersList" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.OrderOrderReceivedOn} ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(filterDate)}</li>
+<@section title="${uiLabelMap.OrderOrderReceivedOn} ${Static[\"org.ofbiz.base.util.UtilDateTime\"].toDateString(filterDate)}">
       <#assign listSize = state.getSize()>
       <#if (listSize > 10)>
-        <li><a href="/ordermgr/control/orderlist?viewIndex=${state.getViewIndex() + 1}&amp;viewSize=${state.getViewSize()}&amp;filterDate=${filterDate!}">${uiLabelMap.CommonMore}</a></li>
+        <a href="/ordermgr/control/orderlist?viewIndex=${state.getViewIndex() + 1}&amp;viewSize=${state.getViewSize()}&amp;filterDate=${filterDate!}">${uiLabelMap.CommonMore}</a>
       </#if>
       <#if orderHeaderList?has_content> 
-        <li>1-${orderHeaderList.size()} ${uiLabelMap.CommonOf} ${state.getSize()}</li>
+        1-${orderHeaderList.size()} ${uiLabelMap.CommonOf} ${state.getSize()}
       </#if>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+
+  
     <#if orderHeaderList?has_content>
       <table class="basic-table hover-bar" cellspacing='0'>
+        <thead>
         <tr class="header-row">
-          <td width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</td>
-          <td width="15%">${uiLabelMap.OrderOrderBillToParty}</td>
-          <td width="25%">${uiLabelMap.OrderProductStore}</td>
-          <td width="10%">${uiLabelMap.CommonAmount}</td>
-          <td width="20%">${uiLabelMap.OrderTrackingCode}</td>
-          <td width="20%">${uiLabelMap.CommonStatus}</td>
+          <th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</th>
+          <th width="15%">${uiLabelMap.OrderOrderBillToParty}</th>
+          <th width="25%">${uiLabelMap.OrderProductStore}</th>
+          <th width="10%">${uiLabelMap.CommonAmount}</th>
+          <th width="20%">${uiLabelMap.OrderTrackingCode}</th>
+          <th width="20%">${uiLabelMap.CommonStatus}</th>
         </tr>
+        </thead>
         <#assign alt_row = false>
         <#list orderHeaderList as orderHeader>
           <#assign status = orderHeader.getRelatedOne("StatusItem", true)>
@@ -54,7 +51,7 @@ under the License.
           <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
           <tr<#if alt_row> class="alternate-row"</#if>>
             <#assign alt_row = !alt_row>
-            <td><a href="/ordermgr/control/orderview?orderId=${orderHeader.orderId}" class="buttontext">${orderHeader.orderId}</a></td>
+            <td><a href="/ordermgr/control/orderview?orderId=${orderHeader.orderId}" class="button tiny">${orderHeader.orderId}</a></td>
             <td>${billTo!}</td>
             <td><#if productStore?has_content>${productStore.storeName?default(productStore.productStoreId)}</#if></td>
             <td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></td>
@@ -71,7 +68,6 @@ under the License.
         </#list>
       </table>
     <#else>
-      <h3>${uiLabelMap.OrderNoOrderFound}</h3>
+      ${uiLabelMap.OrderNoOrderFound}
     </#if>
-  </div>
-</div>
+  </@section>

@@ -16,7 +16,7 @@
         </Console>
         <RollingFile name="ofbiz" fileName="runtime/logs/ofbiz.log"
                      filePattern="runtime/logs/ofbiz-%d{yyyy-MM-dd}-%i.log">
-            <PatternLayout pattern="%date{DEFAULT} |%-20.20thread |%-30.30logger{1}|%level{length=1}| %message%n"/>
+            <PatternLayout pattern="[%level]|%date{DEFAULT} |%-20.20thread |%-30.30logger{1}|%level{length=1}| %message%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="1 MB"/>

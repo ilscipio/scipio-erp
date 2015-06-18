@@ -229,7 +229,7 @@
                 &quot;projectId&quot;, projectId));
                 return result.get(&quot;hasPermission&quot;); }" type="Boolean"/>
         </actions>
-        <menu-item name="newProject" title="${uiLabelMap.ProjectMgrNewProject}" widget-style="buttontext create">
+        <menu-item name="newProject" title="${uiLabelMap.ProjectMgrNewProject}" widget-style=" create">
             <condition>
                 <and>
                     <if-compare field="hasUpdatePermission" operator="equals" value="true"/>

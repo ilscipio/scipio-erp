@@ -28,7 +28,7 @@ under the License.
                   <input type="hidden" name="productPromoCodeId" value="${productPromoCodeEmail.productPromoCodeId}"/>                
                   <input type="hidden" name="emailAddress" value="${productPromoCodeEmail.emailAddress}"/>                
                   <input type="hidden" name="productPromoId" value="${productPromoId}"/>                
-                  <a href='javascript:document.deleteProductPromoCodeEmail_${productPromoCodeEmail_index}.submit()' class='buttontext'>${uiLabelMap.CommonRemove}</a>&nbsp;${productPromoCodeEmail.emailAddress}
+                  <a href='javascript:document.deleteProductPromoCodeEmail_${productPromoCodeEmail_index}.submit()' class='button tiny'>${uiLabelMap.CommonRemove}</a>&nbsp;${productPromoCodeEmail.emailAddress}
                 </form>
               </div>                
             </#list>
@@ -36,7 +36,7 @@ under the License.
                 <form method="post" action="<@ofbizUrl>createProductPromoCodeEmail</@ofbizUrl>" style="margin: 0;">
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
-                    <span class="label">${uiLabelMap.ProductAddEmail}:</span><input type="text" size="40" name="emailAddress" />
+                    <span >${uiLabelMap.ProductAddEmail}:</span><input type="text" size="40" name="emailAddress" />
                     <input type="submit" value="${uiLabelMap.CommonAdd}" />
                 </form>
                 <#if productPromoCode.requireEmailOrParty! == "N">
@@ -57,13 +57,13 @@ under the License.
         </div>
         <div class="screenlet-body">
             <#list productPromoCodeParties as productPromoCodeParty>
-                <div><a href="<@ofbizUrl>deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&amp;partyId=${productPromoCodeParty.partyId}&amp;productPromoId=${productPromoId}</@ofbizUrl>" class="buttontext">X</a>&nbsp;${productPromoCodeParty.partyId}</div>
+                <div><a href="<@ofbizUrl>deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&amp;partyId=${productPromoCodeParty.partyId}&amp;productPromoId=${productPromoId}</@ofbizUrl>" class="button tiny">X</a>&nbsp;${productPromoCodeParty.partyId}</div>
             </#list>
             <div>
                 <form method="post" action="<@ofbizUrl>createProductPromoCodeParty</@ofbizUrl>">
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
-                    <span class="label">${uiLabelMap.ProductAddPartyId}:</span><input type="text" size="10" name="partyId" />
+                    <span >${uiLabelMap.ProductAddPartyId}:</span><input type="text" size="10" name="partyId" />
                     <input type="submit" value="${uiLabelMap.CommonAdd}" />
                 </form>
             </div>

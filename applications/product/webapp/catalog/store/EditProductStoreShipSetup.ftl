@@ -21,7 +21,7 @@ under the License.
     <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
     <table cellspacing="0" class="basic-table">
         <tr>
-          <td align="right" class="label">${uiLabelMap.ProductCarrierShipmentMethod}</td>
+          <td align="right" >${uiLabelMap.ProductCarrierShipmentMethod}</td>
           <td>
             <select name="carrierShipmentString">
               <option>${uiLabelMap.ProductSelectOne}</option>

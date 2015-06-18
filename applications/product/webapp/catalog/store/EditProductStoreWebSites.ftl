@@ -21,23 +21,25 @@ under the License.
         <h3>${uiLabelMap.PageTitleEditProductStoreWebSites}</h3>
     </div>
     <div class="screenlet-body">
-      <a href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${uiLabelMap.ProductCreateNewProductStoreWebSite}</a>
+      <a href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="button tiny">${uiLabelMap.ProductCreateNewProductStoreWebSite}</a>
         <table cellspacing="0" class="basic-table">
+          <thead>
             <tr class="header-row">
-              <td>${uiLabelMap.ProductWebSiteId}</td>
-              <td>${uiLabelMap.ProductHost}</td>
-              <td>${uiLabelMap.ProductPort}</td>
-              <td>&nbsp;</td>
+              <th>${uiLabelMap.ProductWebSiteId}</th>
+              <th>${uiLabelMap.ProductHost}</th>
+              <th>${uiLabelMap.ProductPort}</th>
+              <th>&nbsp;</th>
             </tr>
+           </thead>
             <#if storeWebSites?has_content>
               <#assign rowClass = "2">
               <#list storeWebSites as webSite>
                 <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                  <td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${webSite.siteName!} [${webSite.webSiteId}]</a></td>
+                  <td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="button tiny">${webSite.siteName!} [${webSite.webSiteId}]</a></td>
                   <td>${webSite.httpHost?default('&nbsp;')}</td>
                   <td>${webSite.httpPort?default('&nbsp;')}</td>
                   <td align="center">
-                    <a href="javascript:document.storeUpdateWebSite_${webSite_index}.submit();" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.storeUpdateWebSite_${webSite_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
                     <form name="storeUpdateWebSite_${webSite_index}" method="post" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>">
                         <input type="hidden" name="viewProductStoreId" value="${productStoreId}"/>
                         <input type="hidden" name="productStoreId" value=""/>

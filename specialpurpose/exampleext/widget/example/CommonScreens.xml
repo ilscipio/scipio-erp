@@ -41,7 +41,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <and>
@@ -67,7 +67,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="h1"><label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label></container>
-                                        <container style="button-bar"><link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="buttontext"/></container>
+                                        <container style="button-bar"><link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="button tiny"/></container>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

@@ -35,7 +35,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ManufacturingViewPermissionError}</label>
+                                <label >${uiLabelMap.ManufacturingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -143,7 +143,7 @@ under the License.
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <container style="button-bar"><link target="EditProductBom" text="${uiLabelMap.ManufacturingCreateBom}" style="buttontext"/></container>
+                                <container style="button-bar"><link target="EditProductBom" text="${uiLabelMap.ManufacturingCreateBom}" style="button tiny"/></container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="findBom" location="component://manufacturing/widget/manufacturing/BomForms.xml"/>

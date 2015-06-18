@@ -20,13 +20,13 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <!-- Apparently this Decorator was declared twice - removing here
     <screen name="CommonRequirementDecorator">
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for ORDERMGR, _VIEW permission -->
                             <condition>
                                 <if-has-permission permission="ORDERMGR" action="_VIEW"/>
                             </condition>
@@ -40,23 +40,37 @@ under the License.
                                 <container>
                                     <label style="h1">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
                                 </container>
-
+                                    <decorator-section name="left-column">
+                                        <section>
+                                            <widgets>
+                                                <include-menu name="MainTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                            </widgets>
+                                        </section>
+                                    </decorator-section>
+                                    <decorator-section name="body">
                                 <decorator-section-include name="body"/>
-
+                                    </decorator-section>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.OrderViewPermissionError}</label>
+                                <label >${uiLabelMap.OrderViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen>-->
     <screen name="CommonRequirementsDecorator">
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <section>
+                            <widgets>
+                                <include-menu name="MainTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ORDERMGR, _VIEW permission -->
@@ -66,12 +80,12 @@ under the License.
                             <widgets>
                                 <include-menu name="RequirementsTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                                 <container>
-                                    <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="buttontext"/>
+                                    <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="button tiny"/>
                                 </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.OrderViewPermissionError}</label>
+                                <label >${uiLabelMap.OrderViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -155,7 +169,7 @@ under the License.
                                 <set field="genericLinkName" value="print"/>
                                 <set field="genericLinkText" value="${uiLabelMap.CommonPrint}"/>
                                 <set field="genericLinkTarget" value="ApprovedProductRequirementsReport"/>
-                                <set field="genericLinkStyle" value="buttontext"/>
+                                <set field="genericLinkStyle" value="button tiny"/>
                                 <set field="genericLinkWindow" value="reportWindow"/>
                             </actions>
                             <widgets>
@@ -341,10 +355,10 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListRequirementRoles}">
                             <container>
-                                <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="buttontext">
+                                <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="button tiny">
                                     <parameter param-name="requirementId"/>
                                 </link>
-                                <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="buttontext">
+                                <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="button tiny">
                                     <parameter param-name="requirementId"/>
                                 </link>
                             </container>

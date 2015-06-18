@@ -16,18 +16,19 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.PageTitleScheduleJob}</h3>
-  </div>
-  <div class="screenlet-body" align="center">
-    <form method="post" action="<@ofbizUrl>saveServiceResultsToSession</@ofbizUrl>"
+<@section>${uiLabelMap.PageTitleScheduleJob}</h3>
+
+    <@row>
+        <@cell>
+        <form method="post" action="<@ofbizUrl>saveServiceResultsToSession</@ofbizUrl>">
         <table class="basic-table" cellspacing="0">
+              <thead>
           <tr class="header-row">
-            <td>${uiLabelMap.WebtoolsParameterName}</td>
-            <td>${uiLabelMap.WebtoolsParameterValue}</td>
-            <td>${uiLabelMap.WebtoolsServiceSaveValue} ?</td>
+                <th>${uiLabelMap.WebtoolsParameterName}</th>
+                <th>${uiLabelMap.WebtoolsParameterValue}</th>
+                <th>${uiLabelMap.WebtoolsServiceSaveValue} ?</th>
           </tr>
+              </thead>
             <#if serviceResultList?has_content>
               <#list serviceResultList as srl>
                 <tr>
@@ -43,10 +44,11 @@ under the License.
             </#if>
           <tr>
             <td>&nbsp;</td>
-            <td class="label">${uiLabelMap.WebtoolsServiceClearPreviousParams} ? <input type="checkbox" name="_CLEAR_PREVIOUS_PARAMS_" /></td>
+                <td class=>${uiLabelMap.WebtoolsServiceClearPreviousParams} ? <input type="checkbox" name="_CLEAR_PREVIOUS_PARAMS_" /></td>
             <td><input type="submit" value="${uiLabelMap.CommonSubmit}"/></td>
           </tr>
         </table>
       </form>
-  </div>
-</div>
+        </@cell>
+    </@row>
+</@section>

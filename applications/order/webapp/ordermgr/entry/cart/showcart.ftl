@@ -31,29 +31,41 @@ under the License.
 <#else>
   <#assign target="getProductInventoryAvailable">
 </#if>
-<div class="screenlet">
-    <div class="screenlet-body">
+
+
+<ul class="button-group">
+    <li><a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="button tiny">${uiLabelMap.OrderQuickLookup}</a></li>
+    <li><a href="javascript:quicklookupGiftCertificate()" class="button tiny">${uiLabelMap.OrderAddGiftCertificate}</a></li>
+  <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>
+        <li><a href="javascript:showQohAtp()" class="button tiny">${uiLabelMap.ProductAtpQoh}</a></li>
+  </#if>
+</ul>
+
+<@section title="${uiLabelMap.CommonCreate} ${uiLabelMap.OrderOrder}">
       <#if shoppingCart.getOrderType() == "SALES_ORDER">
-        <div>
           <#if quantityOnHandTotal?? && availableToPromiseTotal?? && (productId)??>
-            <ul>
-              <li>
-                <label>${uiLabelMap.ProductQuantityOnHand}</label>: ${quantityOnHandTotal}
-              </li>
-              <li>
-                <label>${uiLabelMap.ProductAvailableToPromise}</label>: ${availableToPromiseTotal}
-              </li>
-            </ul>
+            <@row>
+              <@cell>
+                ${uiLabelMap.ProductQuantityOnHand}: ${quantityOnHandTotal}
+              </@cell>
+              <@cell>
+                ${uiLabelMap.ProductAvailableToPromise}: ${availableToPromiseTotal}
+              </@cell>
+            </@row>
           </#if>
-        </div>
       <#else>
+
         <#if parameters.availabalityList?has_content>
+        <@row>
+        <@cell>
           <table>
+            <thead>
             <tr>
-              <td>${uiLabelMap.Facility}</td>
-              <td>${uiLabelMap.ProductQuantityOnHand}</td>
-              <td>${uiLabelMap.ProductAvailableToPromise}</td>
+                  <th>${uiLabelMap.Facility}</td>
+                  <th>${uiLabelMap.ProductQuantityOnHand}</td>
+                  <th>${uiLabelMap.ProductAvailableToPromise}</td>
             </tr>
+            </thead>
             <#list parameters.availabalityList as availabality>
                <tr>
                  <td>${availabality.facilityId}</td>
@@ -62,24 +74,23 @@ under the License.
                </tr>
             </#list>
           </table>
+          </@cell>
+        </@row>
         </#if>
+        
       </#if>
-      <table border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td>
+      <@row>
+        <@cell>
             <form name="qohAtpForm" method="post" action="<@ofbizUrl>${target}</@ofbizUrl>">
-              <fieldset>
                 <input type="hidden" name="facilityId" value="${facilityId!}"/>
                 <input type="hidden" name="productId"/>
                 <input type="hidden" id="ownerPartyId" name="ownerPartyId" value="${shoppingCart.getBillToCustomerPartyId()!}" />
-              </fieldset>
             </form>
+                
+                
+
+              
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
-              <table border="0">
-                <tr>
-                  <td align="right"><div>${uiLabelMap.ProductProductId} :</div></td>
-                  <td>
-                    <span class='tabletext'>
                       <#if orderType=="PURCHASE_ORDER">                        
                         <#if partyId?has_content>                                               
                           <#assign fieldFormName="LookupSupplierProduct?partyId=${partyId}">
@@ -89,104 +100,76 @@ under the License.
                       <#else>
                         <#assign fieldFormName="LookupProduct">
                       </#if>
-                      <@htmlTemplate.lookupField formName="quickaddform" name="add_product_id" id="add_product_id" fieldFormName="${fieldFormName}"/>
-                      <a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="buttontext">${uiLabelMap.OrderQuickLookup}</a>
-                      <a href="javascript:quicklookupGiftCertificate()" class="buttontext">${uiLabelMap.OrderAddGiftCertificate}</a>
-                      <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>
-                        <a href="javascript:showQohAtp()" class="buttontext">${uiLabelMap.ProductAtpQoh}</a>
-                      </#if>
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="right"><div>${uiLabelMap.OrderQuantity} :</div></td>
-                  <td><input type="text" size="6" name="quantity" value=""/></td>
-                </tr>
-                <tr>
-                  <td align="right"><div>${uiLabelMap.OrderDesiredDeliveryDate} :</div></td>
-                  <td>
-                    <div>
+                          
+                          <@field type="lookup" formName="quickaddform" name="add_product_id" id="add_product_id" fieldFormName=fieldFormName label="${uiLabelMap.ProductProductId}"/>
+                          
+                          <@field type="input" size="6" name="quantity" value="" label="${uiLabelMap.OrderQuantity}"/>
+                          
+                          
                       <#if useAsDefaultDesiredDeliveryDate??> 
                         <#assign value = defaultDesiredDeliveryDate>
                       </#if>
-                      <@htmlTemplate.renderDateTimeField name="itemDesiredDeliveryDate" value="${value!''}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="item1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                      <input type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true"<#if useAsDefaultDesiredDeliveryDate??> checked="checked"</#if>/>
-                      ${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="right"><div>${uiLabelMap.OrderShipAfterDate} :</div></td>
-                  <td>
-                    <div>
-                      <@htmlTemplate.renderDateTimeField name="shipAfterDate" value="${shoppingCart.getDefaultShipAfterDate()!''}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="item2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="right"><div>${uiLabelMap.OrderShipBeforeDate} :</div></td>
-                  <td>
-                    <div>
-                      <@htmlTemplate.renderDateTimeField name="shipBeforeDate" value="${shoppingCart.getDefaultShipBeforeDate()!''}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="item3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    </div>
-                  </td>
-                </tr>
+
+
+                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderDesiredDeliveryDate}" name="itemDesiredDeliveryDate" value="${value!}" size="25" maxlength="30" id="item1" />
+                         <@row>
+                         <@cell class="small-3 large-2"></@cell>
+                         <@cell class="small-9 large-10">
+                            <input type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true"/>&nbsp;${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
+                         </@cell>
+                         </@row>
+                          
+                         <#--<@field type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true" checked=(useAsDefaultDesiredDeliveryDate??) label="${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}"/>-->
+
+
+                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate" value="${shoppingCart.getDefaultShipAfterDate()!}" size="25" maxlength="30" id="item1" />
+                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate" value="${shoppingCart.getDefaultShipBeforeDate()!}" size="25" maxlength="30" id="item1"/>
+
+                   
                 <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-                <tr>
-                  <td align="right"><div>${uiLabelMap.OrderOrderItemType} :</div></td>
-                  <td>
-                    <div>
-                      <select name="add_item_type">
+                       <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
                         <option value="">&nbsp;</option>
                         <#list purchaseOrderItemTypeList as orderItemType>
                         <option value="${orderItemType.orderItemTypeId}">${orderItemType.description}</option>
                         </#list>
-                      </select>
-                    </div>
-                  </td>
-                </tr>
+                          </@field>
                 </#if>
-                <tr>
-                  <td align="right"><div>${uiLabelMap.CommonComment} :</div></td>
-                  <td>
-                    <div>
-                      <input type="text" size="25" name="itemComment" value="${defaultComment!}" />
-                      <input type="checkbox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment??>checked="checked"</#if> />
-                      ${uiLabelMap.OrderUseDefaultComment}
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td><input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToOrder}"/></td>
-                </tr>
-              </table>
+                    
+                    
+                    <@row>
+                         <@cell class="small-3 large-2"></@cell>
+                         <@cell class="small-9 large-10">
+                          <input type="checkbox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment??>checked="checked"</#if> />&nbsp;${uiLabelMap.OrderUseDefaultComment}
+                         </@cell>
+                    </@row>
+                    <@field type="input" size="25" name="itemComment" value="${defaultComment!}" label="${uiLabelMap.CommonComment}"/>
+
+                    <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToOrder}"/></td>
             </form>
-          </td>
-        </tr>
+
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-        <tr><td><hr /></td></tr>
-        <tr>
-          <td>
+
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
-                <div>
-                    ${uiLabelMap.OrderOrderItemType}:&nbsp;<select name="add_item_type"><option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option></select>
-                    <br/>${uiLabelMap.ProductProductCategory}:&nbsp;
-                    <@htmlTemplate.lookupField formName="bulkworkaddform" value="${requestParameters.add_category_id!}" name="add_category_id" id="add_category_id" fieldFormName="LookupProductCategory"/>
-                </div>
-                <div>
-                    ${uiLabelMap.CommonDescription}:&nbsp;<input type="text" size="25" name="add_item_description" value=""/>
-                    ${uiLabelMap.OrderQuantity}:&nbsp;<input type="text" size="3" name="quantity" value="${requestParameters.quantity?default("1")}"/>
-                    ${uiLabelMap.OrderPrice}:&nbsp;<input type="text" size="6" name="price" value="${requestParameters.price!}"/>
+                    
+
+                        <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
+                        <option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option>
+                        </@field>
+                        
+                        <@field type="lookup" formName="bulkworkaddform" value="${requestParameters.add_category_id!}" name="add_category_id" id="add_category_id" fieldFormName="LookupProductCategory" label="${uiLabelMap.ProductProductCategory}"/>
+                        
+                        <@field type="input" size="25" name="add_item_description" value="" label="${uiLabelMap.CommonDescription}"/>
+                        <@field type="input" size="3" name="quantity" value="${requestParameters.quantity?default('1')}" label="${uiLabelMap.OrderQuantity}"/>
+                        <@field type="input" size="6" name="price" value="${requestParameters.price!}" label="${uiLabelMap.OrderPrice}"/>
+                    
                     <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToOrder}"/>
-                </div>
             </form>
-          </td>
-        </tr>
+
         </#if>
-      </table>
-    </div>
-</div>
+
+      </@cell>
+   </@row>
+</@section>
 
 <script language="JavaScript" type="text/javascript">
   document.quickaddform.add_product_id.focus();

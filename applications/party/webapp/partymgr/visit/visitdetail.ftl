@@ -28,59 +28,59 @@ under the License.
   <div class="screenlet-body">
       <table class="basic-table" cellspacing="0">
         <tr>
-          <td class="label">${uiLabelMap.PartyVisitIDSessionID}</td>
+          <td >${uiLabelMap.PartyVisitIDSessionID}</td>
           <td>${visit.visitId!} / ${visit.sessionId!}</td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyVisitorId}</td>
+          <td >${uiLabelMap.PartyVisitorId}</td>
           <td>${visit.visitorId?default("${uiLabelMap.CommonNot} ${uiLabelMap.CommonFound}")}</td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyPartyIDUserLoginID}</td>
+          <td >${uiLabelMap.PartyPartyIDUserLoginID}</td>
           <td><a href="<@ofbizUrl>viewprofile?partyId=${visit.partyId!}</@ofbizUrl>">${visit.partyId!}</a> / <a href="<@ofbizUrl>viewprofile?partyId=${visit.partyId!}</@ofbizUrl>">${visit.userLoginId!}</a></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyUserCreated}</td>
+          <td >${uiLabelMap.PartyUserCreated}</td>
           <td>${visit.userCreated!}</td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyWebApp}</td>
+          <td >${uiLabelMap.PartyWebApp}</td>
           <td>${visit.webappName!}</td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyServer}</td>
+          <td >${uiLabelMap.PartyServer}</td>
           <td><a href="http://uptime.netcraft.com/up/graph/?site=${visit.serverIpAddress!}" target="_blank">${visit.serverIpAddress!}</a> / <a href="http://uptime.netcraft.com/up/graph/?site=${visit.serverIpAddress!}" target="_blank">${visit.serverHostName!}</a></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyClient}</td>
+          <td >${uiLabelMap.PartyClient}</td>
           <td><a href="http://ws.arin.net/cgi-bin/whois.pl?queryinput=${visit.clientIpAddress!}" target="_blank">${visit.clientIpAddress!}</a> / <a href="http://www.networksolutions.com/cgi-bin/whois/whois?STRING=${visit.clientHostName!}&amp;SearchType=do" target="_blank">${visit.clientHostName!}</a></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyClientUser}</td>
+          <td >${uiLabelMap.PartyClientUser}</td>
           <td>${visit.clientUser!}</td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyInitialLocale}</td>
+          <td >${uiLabelMap.PartyInitialLocale}</td>
           <td>${visit.initialLocale!}</td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyInitialRequest}</td>
+          <td >${uiLabelMap.PartyInitialRequest}</td>
           <td><a href="${visit.initialRequest!}" >${visit.initialRequest!}</a></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyInitialReferer}</td>
+          <td >${uiLabelMap.PartyInitialReferer}</td>
           <td><a href="${visit.initialReferrer!}" >${visit.initialReferrer!}</a></td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyInitialUserAgent}</td>
+          <td >${uiLabelMap.PartyInitialUserAgent}</td>
           <td>${visit.initialUserAgent!}</td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.PartyCookie}</td>
+          <td >${uiLabelMap.PartyCookie}</td>
           <td>${visit.cookie!}</td>
         </tr>
         <tr>
-          <td class="label">${uiLabelMap.CommonFromDateThruDate}</td>
+          <td >${uiLabelMap.CommonFromDateThruDate}</td>
           <td>${(visit.fromDate?string)!} / ${(visit.thruDate?string)?default(uiLabelMap.PartyStillActive)}</td>
         </tr>
       </table>
@@ -96,7 +96,7 @@ under the License.
   <div class="screenlet-body">
       <#if serverHits?has_content>
         <div class="align-float">
-          <span class="label">
+          <span >
             <#if 0 < viewIndex>
               <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonPrevious}</a> |
             </#if>
@@ -111,14 +111,16 @@ under the License.
         <br class="clear"/>
       </#if>
       <table class="basic-table hover-bar" cellspacing="0">
+       <thead>
         <tr class="header-row">
-          <td>${uiLabelMap.PartyContentId}</td>
-          <td>${uiLabelMap.PartyType}</td>
-          <td>${uiLabelMap.PartySize}</td>
-          <td>${uiLabelMap.PartyStartTime}</td>
-          <td>${uiLabelMap.PartyTime}</td>
-          <td>${uiLabelMap.PartyURI}</td>
+          <th>${uiLabelMap.PartyContentId}</th>
+          <th>${uiLabelMap.PartyType}</th>
+          <th>${uiLabelMap.PartySize}</th>
+          <th>${uiLabelMap.PartyStartTime}</th>
+          <th>${uiLabelMap.PartyTime}</th>
+          <th>${uiLabelMap.PartyURI}</th>
         </tr>
+        </thead>
         <#-- set initial row color -->
         <#assign alt_row = false>
         <#if serverHits?has_content>
@@ -152,7 +154,7 @@ under the License.
       </table>
       <#if serverHits?has_content>
         <div class="align-float">
-          <span class="label">
+          <span >
             <#if 0 < viewIndex>
               <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonPrevious}</a> |
             </#if>

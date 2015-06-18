@@ -18,17 +18,19 @@ under the License.
 -->
 <h1>${uiLabelMap.PageTitleViewActivityAndTaskList}</h1>
 <div class="button-bar">
-  <a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION</@ofbizUrl>" class="buttontext create">${uiLabelMap.WorkEffortNewTask}</a>
+  <a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION</@ofbizUrl>" class="button tiny create">${uiLabelMap.WorkEffortNewTask}</a>
 </div>
   <h2>${uiLabelMap.WorkEffortAssignedTasks}</h2>
   <br />
   <table class="basic-table hover-bar" cellspacing="0">
+   <thead>
     <tr class="header-row-2">
-      <td>${uiLabelMap.CommonStartDateTime}</td>
-      <td>${uiLabelMap.WorkEffortTaskName}</td>
-      <td>${uiLabelMap.WorkEffortPriority}</td>
-      <td>${uiLabelMap.WorkEffortStatus}</td>
+      <th>${uiLabelMap.CommonStartDateTime}</th>
+      <th>${uiLabelMap.WorkEffortTaskName}</th>
+      <th>${uiLabelMap.WorkEffortPriority}</th>
+      <th>${uiLabelMap.WorkEffortStatus}</th>
     </tr>
+    </thead>
     <#assign alt_row = false>
     <#list tasks as workEffort>
       <tr<#if alt_row> class="alternate-row"</#if>>

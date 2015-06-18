@@ -125,8 +125,8 @@ function setServiceName(selection) {
             <#if paymentList?has_content>
                 <div class="clearfix">
                 <div class="float-left">
-                    <span class="label">${uiLabelMap.AccountingRunningTotal} :</span>
-                    <span class="label" id="showPaymentRunningTotal"></span>
+                    <span >${uiLabelMap.AccountingRunningTotal} :</span>
+                    <span  id="showPaymentRunningTotal"></span>
                 </div>
                 <div class="align-float">
                     <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
@@ -191,7 +191,7 @@ function setServiceName(selection) {
                     <#assign alt_row = false>
                     <#list paymentList as payment>
                       <tr <#if alt_row> class="alternate-row"</#if>>
-                        <td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="buttontext">${payment.paymentId}</a></td>
+                        <td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="button tiny">${payment.paymentId}</a></td>
                         <td>
                           ${payment.paymentTypeDesc?default(payment.paymentTypeId)}
                         </td>

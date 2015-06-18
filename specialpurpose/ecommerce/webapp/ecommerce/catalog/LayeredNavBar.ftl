@@ -29,14 +29,14 @@ under the License.
         <#assign currentSearchCategoryName = categoryContentWrapper.get("CATEGORY_NAME")?string />
         <#list searchConstraintStrings as searchConstraintString>
           <#if searchConstraintString.indexOf(currentSearchCategoryName) != -1>
-            <div id="searchConstraints">&nbsp;<a href="<@ofbizUrl>category/~category_id=${productCategoryId}?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N<#if previousCategoryId??>&amp;searchCategoryId=${previousCategoryId}</#if></@ofbizUrl>" class="buttontext">X</a><#noescape>&nbsp;${searchConstraintString}</#noescape></div>
+            <div id="searchConstraints">&nbsp;<a href="<@ofbizUrl>category/~category_id=${productCategoryId}?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N<#if previousCategoryId??>&amp;searchCategoryId=${previousCategoryId}</#if></@ofbizUrl>" class="button tiny">X</a><#noescape>&nbsp;${searchConstraintString}</#noescape></div>
           </#if>
         </#list>
       </#if>
     </#escape>
     <#list searchConstraintStrings as searchConstraintString>
       <#if searchConstraintString.indexOf("Category: ") = -1 && searchConstraintString != "Exclude Variants">
-        <div id="searchConstraints">&nbsp;<a href="<@ofbizUrl>category/~category_id=${productCategoryId}?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N<#if currentSearchCategory??>&amp;searchCategoryId=${currentSearchCategory.productCategoryId}</#if></@ofbizUrl>" class="buttontext">X</a>&nbsp;${searchConstraintString}</div>
+        <div id="searchConstraints">&nbsp;<a href="<@ofbizUrl>category/~category_id=${productCategoryId}?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N<#if currentSearchCategory??>&amp;searchCategoryId=${currentSearchCategory.productCategoryId}</#if></@ofbizUrl>" class="button tiny">X</a>&nbsp;${searchConstraintString}</div>
       </#if>
     </#list>
     <#if showSubCats>

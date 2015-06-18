@@ -30,14 +30,10 @@ under the License.
   <#assign telecomNumber = fulfillContactMech.getRelatedOne("TelecomNumber", true)!>
 </#if>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.PartyContactInformation}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.PartyContactInformation}">
         <table cellspacing="0" class="basic-table">
             <tr>
-                <td align="right" valign="top" width="25%" class="label">
+                <td align="right" valign="top" width="25%" >
                     &nbsp;${label?default(uiLabelMap.PartyUnknown)}
                 </td>
                 <td width="5%">&nbsp;</td>
@@ -46,8 +42,8 @@ under the License.
                       <#if emailAddress?has_content>${emailAddress}</#if>
 
                       <#if postalAddress?has_content>
-                        <#if postalAddress.toName?has_content><span class="label">${uiLabelMap.PartyAddrToName}</span>&nbsp;${postalAddress.toName}<br /></#if>
-                        <#if postalAddress.attnName?has_content><span class="label">${uiLabelMap.PartyAddrAttnName}</span>&nbsp;${postalAddress.attnName}<br /></#if>
+                        <#if postalAddress.toName?has_content><span >${uiLabelMap.PartyAddrToName}</span>&nbsp;${postalAddress.toName}<br /></#if>
+                        <#if postalAddress.attnName?has_content><span >${uiLabelMap.PartyAddrAttnName}</span>&nbsp;${postalAddress.attnName}<br /></#if>
                         ${postalAddress.address1!}<br />
                         <#if postalAddress.address2?has_content>${postalAddress.address2}<br /></#if>
                         ${postalAddress.city!},
@@ -66,14 +62,13 @@ under the License.
                         ${telecomNumber.countryCode!}
                         <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode?default("000")}-</#if>${telecomNumber.contactNumber?default("000-0000")}
                         <#if (telecomNumber?has_content && !telecomNumber.countryCode?has_content) || telecomNumber.countryCode = "011">
-                          <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="buttontext">${uiLabelMap.CommonLookupAnywho}</a>
-                          <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="buttontext">${uiLabelMap.CommonLookupWhitepages}</a>
+                          <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="button tiny">${uiLabelMap.CommonLookupAnywho}</a>
+                          <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="button tiny">${uiLabelMap.CommonLookupWhitepages}</a>
                         </#if>
                       </#if>
                     </div>
                 </td>
             </tr>
         </table>
-    </div>
-</div>
+    </@section>
 </#if>

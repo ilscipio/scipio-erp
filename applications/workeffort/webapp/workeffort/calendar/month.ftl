@@ -25,20 +25,22 @@ under the License.
     <#assign newCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
 <table cellspacing="0" class="basic-table calendar">
+  <thead>
   <tr class="header-row">
-    <td width="1%">&nbsp;</td>
+    <th width="1%">&nbsp;</th>
     <#list periods as day>
-      <td>${day.start?date?string("EEEE")?cap_first}</td>
+      <th>${day.start?date?string("EEEE")?cap_first}</th>
       <#if (day_index > 5)><#break></#if>
     </#list>
   </tr>
+  </thead>
   <#list periods as period>
     <#assign currentPeriod = false/>
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>
     <#assign indexMod7 = period_index % 7>
     <#if indexMod7 = 0>
       <tr>
-        <td class="label" ${styleTd}>
+        <td  ${styleTd}>
           <a href='<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>'>${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
         </td>
     </#if>

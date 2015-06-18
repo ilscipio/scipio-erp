@@ -108,7 +108,7 @@ under the License.
 
         <field name="subscriptionResourceId">
             <display-entity entity-name="SubscriptionResource" description="${description}">
-                <sub-hyperlink target="EditSubscriptionResource" description="${subscriptionResourceId}" link-style="buttontext">
+                <sub-hyperlink target="EditSubscriptionResource" description="${subscriptionResourceId}" link-style="button tiny">
                     <parameter param-name="subscriptionResourceId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -119,7 +119,7 @@ under the License.
 
         <field name="originatedFromPartyId">
             <display-entity entity-name="PartyNameView" description="${groupName} ${firstName} ${lastName}" key-field-name="partyId">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${originatedFromPartyId}" link-style="buttontext">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${originatedFromPartyId}" link-style="button tiny">
                     <parameter param-name="partyId" from-field="originatedFromPartyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -128,28 +128,28 @@ under the License.
 
         <field name="partyId">
             <display-entity entity-name="PartyNameView" description="${groupName} ${firstName} ${lastName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="button tiny">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}" key-field-name="roleTypeId"/></field>
 
-        <field name="orderId" widget-style="buttontext">
+        <field name="orderId" widget-style="button tiny">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}">
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
         <field name="productId">
             <display-entity entity-name="Product" description="${productName}">
-                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}" link-style="buttontext">
+                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}" link-style="button tiny">
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="productCategoryId">
             <display-entity entity-name="ProductCategory" description="${categoryName}">
-                <sub-hyperlink target="/catalog/control/EditProductCategory" target-type="inter-app" description="${productCategoryId}" link-style="buttontext">
+                <sub-hyperlink target="/catalog/control/EditProductCategory" target-type="inter-app" description="${productCategoryId}" link-style="button tiny">
                     <parameter param-name="productCategoryId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -177,7 +177,7 @@ under the License.
         <field name="purchaseFromDate"><ignored/></field>
         <field name="purchaseThruDate"><ignored/></field>
 
-        <field name="subscriptionId" widget-style="buttontext">
+        <field name="subscriptionId" widget-style="button tiny">
             <hyperlink description="${subscriptionId}" target="EditSubscription" also-hidden="false">
                 <parameter param-name="subscriptionId"/>
             </hyperlink>
@@ -209,7 +209,7 @@ under the License.
 
         <field name="originatedFromPartyId">
             <lookup target-form-name="LookupPartyName">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${subscription.originatedFromPartyId}" link-style="buttontext">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${subscription.originatedFromPartyId}" link-style="button tiny">
                 <parameter param-name="partyId" from-field="subscription.originatedFromPartyId"/>
             </sub-hyperlink>
             </lookup>
@@ -224,7 +224,7 @@ under the License.
 
         <field name="partyId">
             <lookup target-form-name="LookupPartyName">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${subscription.partyId}" link-style="buttontext">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${subscription.partyId}" link-style="button tiny">
                 <parameter param-name="partyId" from-field="subscription.partyId"/>
             </sub-hyperlink>
             </lookup>
@@ -239,7 +239,7 @@ under the License.
 
         <field name="partyNeedId">
             <lookup target-form-name="LookupPartyName">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${subscription.partyId}" link-style="buttontext">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${subscription.partyId}" link-style="button tiny">
                 <parameter param-name="partyId" from-field="subscription.partyNeedId"/>
             </sub-hyperlink>
             </lookup>
@@ -254,21 +254,21 @@ under the License.
 
         <field name="orderId">
             <lookup target-form-name="LookupOrderHeader">
-                <sub-hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${subscription.orderId}" link-style="buttontext">
+                <sub-hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${subscription.orderId}" link-style="button tiny">
                 <parameter param-name="orderId" from-field="subscription.orderId"/>
             </sub-hyperlink>
             </lookup>
         </field>
         <field name="productId">
             <lookup target-form-name="LookupProduct">
-                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${subscription.productId}" link-style="buttontext">
+                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${subscription.productId}" link-style="button tiny">
                 <parameter param-name="productId" from-field="subscription.productId"/>
             </sub-hyperlink>
             </lookup>
         </field>
         <field name="productCategoryId">
             <lookup target-form-name="LookupProductCategory">
-                <sub-hyperlink target="/catalog/control/EditProductCategory" target-type="inter-app" description="${subscription.productCategoryId}" link-style="buttontext">
+                <sub-hyperlink target="/catalog/control/EditProductCategory" target-type="inter-app" description="${subscription.productCategoryId}" link-style="button tiny">
                 <parameter param-name="productCategoryId" from-field="subscription.productCategoryId"/>
             </sub-hyperlink>
             </lookup>
@@ -323,20 +323,20 @@ under the License.
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="contentId">
             <display-entity entity-name="Content" description="${contentName}">
-                <sub-hyperlink target="/content/control/EditContent" target-type="inter-app" description="${contentId}" link-style="buttontext">
+                <sub-hyperlink target="/content/control/EditContent" target-type="inter-app" description="${contentId}" link-style="button tiny">
                     <parameter param-name="contentId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="webSiteId">
             <display-entity entity-name="WebSite" description="${siteName}">
-                <sub-hyperlink target="/content/control/EditWebSite" target-type="inter-app" description="${webSiteId}" link-style="buttontext">
+                <sub-hyperlink target="/content/control/EditWebSite" target-type="inter-app" description="${webSiteId}" link-style="button tiny">
                     <parameter param-name="webSiteId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
 
-        <field name="subscriptionResourceId" widget-style="buttontext">
+        <field name="subscriptionResourceId" widget-style="button tiny">
             <hyperlink also-hidden="false" description="${subscriptionResourceId}" target="EditSubscriptionResource">
                 <parameter param-name="subscriptionResourceId"/>
             </hyperlink>
@@ -409,7 +409,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="button tiny">
             <hyperlink target="deleteProductSubscriptionResourceSr" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="subscriptionResourceId"/>
                 <parameter param-name="productId"/>
@@ -479,7 +479,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="subscriptionId"><hidden/></field>
-        <field name="communicationEventId" widget-style="buttontext">
+        <field name="communicationEventId" widget-style="button tiny">
             <hyperlink also-hidden="false" description="${communicationEventId}" target="/partymgr/control/EditCommunicationEvent" target-type="inter-app">
                 <parameter param-name="communicationEventId"/>
             </hyperlink>
@@ -497,7 +497,7 @@ under the License.
         <field name="roleTypeIdTo"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><display/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><display/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
             <hyperlink target="removeSubscriptionCommEvent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="subscriptionId"/>
                 <parameter param-name="communicationEventId"/>
@@ -510,7 +510,7 @@ under the License.
         <field name="subscriptionId"><hidden value="${parameters.subscriptionId}"/></field>
         <field name="communicationEventId">
             <lookup target-form-name="LookupCommEvent">
-                <sub-hyperlink target="/partymgr/control/ViewCommunicationEvent" target-type="inter-app" link-type="hidden-form" description="${subscription.communicationEventId}" link-style="buttontext">
+                <sub-hyperlink target="/partymgr/control/ViewCommunicationEvent" target-type="inter-app" link-type="hidden-form" description="${subscription.communicationEventId}" link-style="button tiny">
                 <parameter param-name="communicationEventId" from-field="subscription.communicationEventId"/>
             </sub-hyperlink>
             </lookup>

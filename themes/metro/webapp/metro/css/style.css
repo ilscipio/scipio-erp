@@ -1,0 +1,41 @@
+body {
+	background: #fff;
+    background: url('/metro-theme/images/background2.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: #fff;
+}
+
+h1,h2,h3,h4,h5{color:#fff;font-family: 'Open Sans', sans-serif;}
+label {color: #fff;}
+
+a {color:#fff;}
+a:hover {color: #333;}
+
+.pricing-table a, td a, th a {color:#008cba;}
+.pricing-table a:hover, td a:hover, th a:hover {color:#333;}
+
+.top-bar{
+	background: rgba(255,255,255,.15);
+}
+.pagination-centered {}
+ul.pagination li{color:#fff; line-height:24px; }
+ul.pagination li a, ul.pagination li button {color:#fff; background:rgba(255,255,255,0.15);}
+ul.pagination li a:hover, ul.pagination li button:hover {color:#333;}
+
+
+.sidebar {background: rgba(255,255,255,0.9);color:#333;}
+
+.sidebar h1, .sidebar h2, .sidebar h3, .sidebar h4, .sidebar h5, .sidebar h6,.sidebar label,li.ui-menu-item  {color:#333;}
+
+fieldset {border:none;}
+
+fieldset legend {
+	color:#fff;
+}
+
+fieldset legend:hover{
+    color: #ccc;
+}

@@ -17,15 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign docLangAttr = locale.toString()?replace("_", "-")>
-<#assign initialLocale = locale.toString()>
-<#assign langDir = "ltr">
-<#if "ar.iw"?contains(docLangAttr?substring(0, 2))>
-    <#assign langDir = "rtl">
-</#if>
-<html lang="${docLangAttr}" dir="${langDir}" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<@renderScreenBegin />
     <title>${title!}</title>
     <#-- the trick "<scr" + "ipt below is because browsers should not parse the contents of CDATA elements, but apparently they do. -->
     <script language="JavaScript" type="text/javascript">//<![CDATA[
@@ -103,8 +95,7 @@ under the License.
                     eval(evalString);
                 }
             }
-            window.close();
          }
     </script>
 </head>
-<body style="background-color: WHITE;">
+<body>

@@ -18,42 +18,45 @@ under the License.
 -->
 
 <#if !sessionAttributes.userLogin??>
-  <div class='label'> ${uiLabelMap.ProductGeneralMessage}.</div>
+      <@panel>${uiLabelMap.ProductGeneralMessage}</@panel>
 </#if>
-<br />
+
 <#if security.hasEntityPermission("CATALOG", "_VIEW", session)>
-  <div class="label">${uiLabelMap.ProductEditCatalogWithCatalogId}:</div>
+    <@grid columns=2>
+        <li>
   <form method="post" action="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" style="margin: 0;" name="EditProdCatalogForm">
-    <input type="text" size="20" maxlength="20" name="prodCatalogId" value=""/>
-    <input type="submit" value=" ${uiLabelMap.ProductEditCatalog}" class="smallSubmit"/>
+                <@pul title="${uiLabelMap.ProductEditCatalogWithCatalogId}"> 
+                    <@pli><@field type="input" size="20" maxlength="20" name="prodCatalogId" value="" postfix=true/></@pli>
+                    <@pli><a href="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" class="tiny success">${uiLabelMap.ProductCreateNewCatalog}</a></@pli>
+               </@pul>
   </form>
-  <div class="label">${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductCreateNewCatalog}</a></div>
-  <br />
-  <div class="label">${uiLabelMap.ProductEditCategoryWithCategoryId}:</div>
+         </li>      
+        <li>  
   <form method="post" action="<@ofbizUrl>EditCategory</@ofbizUrl>" style="margin: 0;" name="EditCategoryForm">
-    <@htmlTemplate.lookupField name="productCategoryId" id="productCategoryId" formName="EditCategoryForm" fieldFormName="LookupProductCategory"/>
-    <input type="submit" value="${uiLabelMap.ProductEditCategory}" class="smallSubmit"/>
+            <@pul title="${uiLabelMap.ProductEditCategoryWithCategoryId}">
+                <@pli><@field type="lookup" name="productCategoryId" id="productCategoryId" formName="EditCategoryForm" fieldFormName="LookupProductCategory" postfix=true/></@pli>
+                <@pli><a href="<@ofbizUrl>EditCategory</@ofbizUrl>" class="tiny success">${uiLabelMap.ProductCreateNewCategory}</a></@pli>
+            </@pul>
   </form>
-  <br />
-  <div class="label">${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>EditCategory</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductCreateNewCategory}</a></div>
-  <br />
-  <div class="label">${uiLabelMap.ProductEditProductWithProductId}:</div>
+         </li>
+          
+        <li>  
   <form method="post" action="<@ofbizUrl>EditProduct</@ofbizUrl>" style="margin: 0;" name="EditProductForm">
-    <@htmlTemplate.lookupField name="productId" id="productId" formName="EditProductForm" fieldFormName="LookupProduct"/>
-    <input type="submit" value=" ${uiLabelMap.ProductEditProduct}" class="smallSubmit"/>
+          <@pul title="${uiLabelMap.ProductEditProductWithProductId}">
+                <@pli><@field type="lookup" name="productId" id="productId" formName="EditProductForm" fieldFormName="LookupProduct" postfix=true/></@pli>
+                <@pli><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="tiny success">${uiLabelMap.ProductCreateNewProduct}</a></@pli>
+                <@pli><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>" class="tiny">${uiLabelMap.ProductQuickCreateVirtualFromVariants}</a></@pli>
+            </@pul>
   </form>
-  <br />
-  <div class="label">${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductCreateNewProduct}</a></div>
-  <br />
-  <div class="label">${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductQuickCreateVirtualFromVariants}</a></div>
-  <br />
-  <div class="label">${uiLabelMap.ProductFindProductWithIdValue}:</div>
+        </li>
+        <li>
   <form method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>" style="margin: 0;">
-    <input type="text" size="20" maxlength="20" name="idValue" value=""/>
-    <input type="submit" value=" ${uiLabelMap.ProductFindProduct}" class="smallSubmit"/>
+            <@pul title="${uiLabelMap.ProductFindProductWithIdValue}">
+                <@pli><@field type="input" size="20" maxlength="20" name="idValue" value="" postfix=true/></@pli>
+                <@pli><a href="<@ofbizUrl>UpdateAllKeywords</@ofbizUrl>" class=""> ${uiLabelMap.ProductAutoCreateKeywordsForAllProducts}</a></@pli>
+                <@pli><a href="<@ofbizUrl>FastLoadCache</@ofbizUrl>" class=""> ${uiLabelMap.ProductFastLoadCatalogIntoCache}</a></@pli>
+            </@pul>
   </form>
-  <br />
-  <div><a href="<@ofbizUrl>UpdateAllKeywords</@ofbizUrl>" class="buttontext"> ${uiLabelMap.ProductAutoCreateKeywordsForAllProducts}</a></div>
-  <div><a href="<@ofbizUrl>FastLoadCache</@ofbizUrl>" class="buttontext"> ${uiLabelMap.ProductFastLoadCatalogIntoCache}</a></div>
-  <br />
+       </li>
+    </@grid>
 </#if>

@@ -78,18 +78,16 @@ function submitForm(form, mode, value) {
   <input type="hidden" name="checkoutpage" value="quick"/>
   <input type="hidden" name="BACK_PAGE" value="quickcheckout"/>
 
-  <table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tr valign="top">
-      <td height="100%">
-        <div class="screenlet" style="height: 100%;">
-            <div class="screenlet-title-bar">
+
+<#assign title>
                 <#if shipping == true>
-                    <div class="h3">1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?</div>
+    1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?
                 <#else>
-                    <div class="h3">1)&nbsp;${uiLabelMap.OrderInformationAboutYou}</div>
+    &nbsp;${uiLabelMap.OrderInformationAboutYou}
                 </#if>
-            </div>
-            <div class="screenlet-body" style="height: 100%;">
+</#assign>
+
+<@section title=title>
                 <table width="100%" border="0" cellpadding="1" cellspacing="0">
                   <tr>
                     <td colspan="2">
@@ -104,14 +102,14 @@ function submitForm(form, mode, value) {
                   <tr>
                     <td colspan="2">
                       <span>${uiLabelMap.CommonAdd}:</span>
-                      <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">${uiLabelMap.PartyAddNewAddress}</a>
+                      <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="button tiny">${uiLabelMap.PartyAddNewAddress}</a>
                     </td>
                   </tr>
                   <#if (shoppingCart.getTotalQuantity() > 1) && !shoppingCart.containAllWorkEffortCartItems()> <#-- no splitting when only rental items -->
                     <tr><td colspan="2"><hr /></td></tr>
                     <tr>
                       <td colspan="2" align="center">
-                        <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderSplitIntoMultipleShipments}</a>
+                        <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderSplitIntoMultipleShipments}</a>
                         <#if (shoppingCart.getShipGroupSize() > 1)>
                           <div style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExist}.</div>
                         </#if>
@@ -136,7 +134,7 @@ function submitForm(form, mode, value) {
                              <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                              <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                              <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                             <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
+                             <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="button tiny">${uiLabelMap.CommonUpdate}</a>
                            </div>
                          </td>
                        </tr>
@@ -153,20 +151,15 @@ function submitForm(form, mode, value) {
                 <div>&nbsp;${uiLabelMap.PartyTaxIdentification}</div>
                 ${screens.render("component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo")}
                 -->
-            </div>
-        </div>
-      </td>
-      <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
-      <td height="100%">
-        <div class="screenlet" style="height: 100%;">
-            <div class="screenlet-title-bar">
+        </@section>
+        <#assign title>
                 <#if shipping == true>
-                    <div class="h3">2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?</div>
+                    2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?
                 <#else>
-                    <div class="h3">2)&nbsp;${uiLabelMap.OrderOptions}?</div>
+                    2)&nbsp;${uiLabelMap.OrderOptions}?
                 </#if>
-            </div>
-            <div class="screenlet-body" style="height: 100%;">
+        </#assign>
+        <@section title=title>
                 <table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
                  <#if shipping == true>
                   <#list carrierShipmentMethodList as carrierShipmentMethod>
@@ -278,42 +271,32 @@ function submitForm(form, mode, value) {
                       </b>
                       </div>
                       <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<#if customerDetailLink??>${customerDetailLink}${shoppingCart.getPartyId()}" target="partymgr"
-                        <#else><@ofbizUrl>viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>"</#if> class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
+                        <#else><@ofbizUrl>viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>"</#if> class="button tiny">${uiLabelMap.PartyProfile}</a>.</div>
                       <br />
                       <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                       <input type="text" size="30" name="order_additional_emails" value="${shoppingCart.getOrderAdditionalEmails()!}"/>
                     </td>
                   </tr>
                 </table>
-            </div>
-        </div>
+            </@section>
 
-      </td>
-      <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
-      <td height="100%">
-          <#-- Payment Method Selection -->
-
-        <div class="screenlet" style="height: 100%;">
-            <div class="screenlet-title-bar">
-                <div class="h3">3)${uiLabelMap.OrderHowShallYouPay}?</div>
-            </div>
-            <div class="screenlet-body" style="height: 100%;">
-                <table width="100%" cellpadding="1" cellspacing="0" border="0">
+            <@section title="3)${uiLabelMap.OrderHowShallYouPay}?">
+                <table class="basic-table">
                   <tr>
                     <td colspan="2">
                       <span>${uiLabelMap.CommonAdd}:</span>
                       <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">${uiLabelMap.AccountingCreditCard}</a>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="button tiny">${uiLabelMap.AccountingCreditCard}</a>
                       </#if>
                       <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">${uiLabelMap.AccountingEFTAccount}</a>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="button tiny">${uiLabelMap.AccountingEFTAccount}</a>
                       </#if>
                     </td>
                   </tr>
                   <tr><td colspan="2"><hr /></td></tr>
                   <tr>
                     <td colspan="2" align="center">
-                      <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="buttontext">${uiLabelMap.AccountingSplitPayment}</a>
+                      <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="button tiny">${uiLabelMap.AccountingSplitPayment}</a>
                     </td>
                   </tr>
                   <tr><td colspan="2"><hr /></td></tr>
@@ -390,7 +373,7 @@ function submitForm(form, mode, value) {
                         </td>
                         <td width="50%">
                           <span>CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="button tiny">${uiLabelMap.CommonUpdate}</a>
                           <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
                           &nbsp;${uiLabelMap.OrderCardSecurityCode}&nbsp;<input type="text" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value=""/>
                         </td>
@@ -405,7 +388,7 @@ function submitForm(form, mode, value) {
                         </td>
                         <td width="50%">
                           <span>${uiLabelMap.AccountingEFTAccount}:&nbsp;${eftAccount.bankName!}: ${eftAccount.accountNumber!}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="button tiny">${uiLabelMap.CommonUpdate}</a>
                           <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
                         </td>
                       </tr>
@@ -436,7 +419,7 @@ function submitForm(form, mode, value) {
                         </td>
                         <td width="50%">
                           <span>${uiLabelMap.AccountingGift}:&nbsp;${giftCardNumber}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="button tiny">[${uiLabelMap.CommonUpdate}]</a>
                           <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
                         </td>
                       </tr>
@@ -514,21 +497,10 @@ function submitForm(form, mode, value) {
                   </tr>
                 </#if>
                 </table>
-            </div>
-        </div>
-        <#-- End Payment Method Selection -->
-      </td>
-    </tr>
-  </table>
+            </@section>
 </form>
 
-<table width="100%">
-  <tr valign="top">
-    <td>
-      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">${uiLabelMap.OrderBacktoShoppingCart}</a>
-    </td>
-    <td align="right">
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
-    </td>
-  </tr>
-</table>
+<@section>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="button tiny">${uiLabelMap.OrderBacktoShoppingCart}</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="button tiny">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
+</@section>

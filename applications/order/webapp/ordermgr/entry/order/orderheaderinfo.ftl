@@ -17,71 +17,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <div class="screenlet-body">
-        <table width="100%" border="0" cellpadding="1">
+<@section title="${uiLabelMap.OrderOrderHeaderInfo}">
+        <table class="basic-table">
         <#-- order name -->
         <#if (orderName?has_content)>
             <tr>
-                <td align="right" valign="top" width="15%">
+                <td class="large-3">
                     <span>&nbsp;<b>${uiLabelMap.OrderOrderName}</b> </span>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
+                <td colspan="2">
                     ${orderName}
                 </td>
             </tr>
-            <tr><td colspan="7"><hr /></td></tr>
         </#if>
         <#-- order for party -->
         <#if (orderForParty??)>
             <tr>
-                <td align="right" valign="top" width="15%">
+                <td class="large-3">
                     <span>&nbsp;<b>${uiLabelMap.OrderOrderFor}</b> </span>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
+                <td colspan="2">
                     ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(orderForParty, false)} [${orderForParty.partyId}]
                 </td>
             </tr>
-            <tr><td colspan="7"><hr /></td></tr>
         </#if>
         <#if (cart.getPoNumber()?has_content)>
             <tr>
-                <td align="right" valign="top" width="15%">
+                <td class="large-3">
                     <span>&nbsp;<b>${uiLabelMap.OrderPONumber}</b> </span>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
+                <td colspan="2">
                     ${cart.getPoNumber()}
                 </td>
             </tr>
-            <tr><td colspan="7"><hr /></td></tr>
         </#if>
         <#if orderTerms?has_content>
             <tr>
-                <td align="right" valign="top" width="15%">
-                    <div>&nbsp;<b>${uiLabelMap.OrderOrderTerms}</b></div>
+                <td class="large-3">
+                    &nbsp;<b>${uiLabelMap.OrderOrderTerms}</b>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
+                <td colspan="2">
                     <table>
                         <tr>
-                            <td width="35%"><div><b>${uiLabelMap.OrderOrderTermType}</b></div></td>
-                            <td width="10%"><div><b>${uiLabelMap.OrderOrderTermValue}</b></div></td>
-                            <td width="10%"><div><b>${uiLabelMap.OrderOrderTermDays}</b></div></td>
-                            <td width="10%"><div><b>${uiLabelMap.OrderOrderTextValue}</b></div></td>
-                            <td width="35%"><div><b>${uiLabelMap.CommonDescription}</b></div></td>
+                            <td width="35%"><b>${uiLabelMap.OrderOrderTermType}</b></td>
+                            <td width="10%"><b>${uiLabelMap.OrderOrderTermValue}</b></td>
+                            <td width="10%"><b>${uiLabelMap.OrderOrderTermDays}</b></td>
+                            <td width="10%"><b>${uiLabelMap.OrderOrderTextValue}</b></td>
+                            <td width="35%"><b>${uiLabelMap.CommonDescription}</b></td>
                         </tr>
                         <tr><td colspan="4"><hr /></td></tr>
                         <#assign index=0/>
                         <#list orderTerms as orderTerm>
                         <tr>
-                            <td width="35%"><div>${orderTerm.getRelatedOne("TermType", false).get("description",locale)}</div></td>
-                            <td width="10%"><div>${orderTerm.termValue?default("")}</div></td>
-                            <td width="10%"><div>${orderTerm.termDays?default("")}</div></td>
-                            <td width="10%"><div>${orderTerm.textValue?default("")}</div></td>
-                            <td width="35%"><div>${orderTerm.description?default("")}</div></td>
+                            <td width="35%">${orderTerm.getRelatedOne("TermType", false).get("description",locale)}</td>
+                            <td width="10%">${orderTerm.termValue?default("")}</td>
+                            <td width="10%">${orderTerm.termDays?default("")}</td>
+                            <td width="10%">${orderTerm.textValue?default("")}</td>
+                            <td width="35%">${orderTerm.description?default("")}</td>
                         </tr>
                             <#if orderTerms.size()&lt;index>
                         <tr><td colspan="5"><hr /></td></tr>
@@ -91,99 +83,85 @@ under the License.
                     </table>
                 </td>
             </tr>
-            <tr><td colspan="7"><hr /></td></tr>
         </#if>
         <#-- tracking number -->
         <#if trackingNumber?has_content>
             <tr>
-                <td align="right" valign="top" width="15%">
-                    <div>&nbsp;<b>${uiLabelMap.OrderTrackingNumber}</b></div>
+                <td class="large-3">
+                    &nbsp;<b>${uiLabelMap.OrderTrackingNumber}</b>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
+                <td colspan="2">
                     <#-- TODO: add links to UPS/FEDEX/etc based on carrier partyId  -->
-                    <div>${trackingNumber}</div>
+                    ${trackingNumber}
                 </td>
             </tr>
-            <tr><td colspan="7"><hr /></td></tr>
         </#if>
         <#-- splitting preference -->
             <tr>
-                <td align="right" valign="top" width="15%">
-                    <div>&nbsp;<b>${uiLabelMap.OrderSplittingPreference}</b></div>
+                <td class="large-3">
+                    &nbsp;<b>${uiLabelMap.OrderSplittingPreference}</b>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
-                    <div>
+                <td colspan="2">
+                    
                         <#if maySplit?default("N") == "N">${uiLabelMap.FacilityWaitEntireOrderReady}</#if>
                         <#if maySplit?default("Y") == "Y">${uiLabelMap.FacilityShipAvailable}</#if>
-                    </div>
+                    
                 </td>
             </tr>
         <#-- shipping instructions -->
         <#if shippingInstructions?has_content>
-            <tr><td colspan="7"><hr /></td></tr>
             <tr>
-                <td align="right" valign="top" width="15%">
-                    <div>&nbsp;<b>${uiLabelMap.OrderSpecialInstructions}</b></div>
+                <td class="large-3">
+                    &nbsp;<b>${uiLabelMap.OrderSpecialInstructions}</b>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
-                    <div>${shippingInstructions}</div>
+                <td colspan="2">
+                    ${shippingInstructions}
                 </td>
             </tr>
         </#if>
-            <tr><td colspan="7"><hr /></td></tr>
         <#if orderType != "PURCHASE_ORDER" && (productStore.showCheckoutGiftOptions)! != "N">
         <#-- gift settings -->
             <tr>
-                <td align="right" valign="top" width="15%">
-                    <div>&nbsp;<b>${uiLabelMap.OrderGift}</b></div>
+                <td class="large-3">
+                    &nbsp;<b>${uiLabelMap.OrderGift}</b>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
-                    <div>
+                <td colspan="2">
+                    
                         <#if isGift?default("N") == "N">${uiLabelMap.OrderThisOrderNotGift}</#if>
                         <#if isGift?default("N") == "Y">${uiLabelMap.OrderThisOrderGift}</#if>
-                    </div>
+                    
                 </td>
             </tr>
-            <tr><td colspan="7"><hr /></td></tr>
             <#if giftMessage?has_content>
             <tr>
-                <td align="right" valign="top" width="15%">
-                    <div>&nbsp;<b>${uiLabelMap.OrderGiftMessage}</b></div>
+                <td class="large-3">
+                    &nbsp;<b>${uiLabelMap.OrderGiftMessage}</b>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
-                    <div>${giftMessage}</div>
+                <td colspan="2">
+                    ${giftMessage}
                 </td>
             </tr>
-            <tr><td colspan="7"><hr /></td></tr>
             </#if>
         </#if>
         <#if shipAfterDate?has_content>
             <tr>
-                <td align="right" valign="top" width="15%">
-                    <div>&nbsp;<b>${uiLabelMap.OrderShipAfterDate}</b></div>
+                <td class="large-3">
+                    &nbsp;<b>${uiLabelMap.OrderShipAfterDate}</b>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
-                    <div>${shipAfterDate}</div>
+                <td colspan="2">
+                    ${shipAfterDate}
                 </td>
             </tr>
         </#if>
         <#if shipBeforeDate?has_content>
             <tr>
-                <td align="right" valign="top" width="15%">
-                    <div>&nbsp;<b>${uiLabelMap.OrderShipBeforeDate}</b></div>
+                <td class="large-3">
+                    &nbsp;<b>${uiLabelMap.OrderShipBeforeDate}</b>
                 </td>
-                <td width="5">&nbsp;</td>
-                <td valign="top" width="80%">
-                  <div>${shipBeforeDate}</div>
+                <td colspan="2">
+                  ${shipBeforeDate}
                 </td>
             </tr>
         </#if>
         </table>
-    </div>
-</div>
+</@section>

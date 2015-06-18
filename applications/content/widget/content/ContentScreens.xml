@@ -43,8 +43,8 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <!--<link target="EditContent" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
-                                            <link target="ContentSearchOptions" text="${uiLabelMap.CommonAdvancedSearch}" style="buttontext"/>-->
+                                            <!--<link target="EditContent" text="${uiLabelMap.CommonCreateNew}" style="button tiny create"/>
+                                            <link target="ContentSearchOptions" text="${uiLabelMap.CommonAdvancedSearch}" style="button tiny"/>-->
                                             <include-menu name="contentMenu" location="component://content/widget/content/ContentMenus.xml"/>
                                         </container>
                                     </decorator-section>
@@ -63,7 +63,7 @@ under the License.
             <fail-widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="h3">${uiLabelMap.ContentUpdatePermissionError}</label>
+                        <label >${uiLabelMap.ContentUpdatePermissionError}</label>
                     </decorator-section>
                 </decorator-screen>
             </fail-widgets>
@@ -387,7 +387,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label >${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

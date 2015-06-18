@@ -28,11 +28,11 @@ under the License.
         <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <div>
-                <span class="label">${uiLabelMap.ProductOrderId}</span>
+                <span >${uiLabelMap.ProductOrderId}</span>
                 <span>
                   <@htmlTemplate.lookupField value="${orderId!}" formName="additemsfromorder" name="orderId" id="orderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
                 </span>
-                <span class="label">${uiLabelMap.ProductOrderShipGroupId}</span>
+                <span >${uiLabelMap.ProductOrderShipGroupId}</span>
                 <input type="text" size="20" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
                 <input type="submit" value="${uiLabelMap.CommonSelect}" class="smallSubmit"/>
             </div>
@@ -83,24 +83,26 @@ under the License.
         <input type="hidden" name="shipmentId" value="${shipmentId}" />
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <table cellspacing="0" cellpadding="2" class="basic-table hover-bar">
+          <thead>
             <tr class="header-row">
-                <td>${uiLabelMap.ProductOrderId}<br />${uiLabelMap.ProductOrderShipGroupId}<br />${uiLabelMap.ProductOrderItem}</td>
-                <td>${uiLabelMap.ProductProduct}</td>
+                <th>${uiLabelMap.ProductOrderId}<br />${uiLabelMap.ProductOrderShipGroupId}<br />${uiLabelMap.ProductOrderItem}</th>
+                <th>${uiLabelMap.ProductProduct}</th>
                 <#if isSalesOrder>
-                    <td>${uiLabelMap.ProductItemsIssuedReserved}</td>
-                    <td>${uiLabelMap.ProductIssuedReservedTotalOrdered}</td>
-                    <td>${uiLabelMap.ProductReserved}</td>
-                    <td>${uiLabelMap.ProductNotAvailable}</td>
+                    <th>${uiLabelMap.ProductItemsIssuedReserved}</th>
+                    <th>${uiLabelMap.ProductIssuedReservedTotalOrdered}</th>
+                    <th>${uiLabelMap.ProductReserved}</th>
+                    <th>${uiLabelMap.ProductNotAvailable}</th>
                 <#else>
-                    <td>${uiLabelMap.ProductItemsIssued}</td>
-                    <td>${uiLabelMap.ProductIssuedOrdered}</td>
+                    <th>${uiLabelMap.ProductItemsIssued}</th>
+                    <th>${uiLabelMap.ProductIssuedOrdered}</th>
                 </#if>
-                <td>${uiLabelMap.ProductIssue}</td>
-                <td align="right">
+                <th>${uiLabelMap.ProductIssue}</th>
+                <th align="right">
                     <div>${uiLabelMap.CommonSubmit} ?</div>
                     <div>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'orderItemData_tableRow_', 'selectAllForm');" /></div>
-                </td>
+                </th>
             </tr>
+            </thead>
             <#assign alt_row = false>
             <#list orderItemDatas! as orderItemData>
                 <#assign orderItemAndShipGroupAssoc = orderItemData.orderItemAndShipGroupAssoc>

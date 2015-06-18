@@ -21,14 +21,16 @@ under the License.
     <p>${uiLabelMap.WebtoolsThisThread}<b> ${Static["java.lang.Thread"].currentThread().getName()} (${Static["java.lang.Thread"].currentThread().getId()})</b></p>
     <br />
     <table class="basic-table hover-bar" cellspacing="0">
+     <thead>
       <tr class="header-row">
-        <td>${uiLabelMap.WebtoolsGroup}</td>
-        <td>${uiLabelMap.WebtoolsThreadId}</td>
-        <td>${uiLabelMap.WebtoolsThread}</td>
-        <td>${uiLabelMap.CommonStatus}</td>
-        <td>${uiLabelMap.WebtoolsPriority}</td>
-        <td>${uiLabelMap.WebtoolsDaemon}</td>
+        <th>${uiLabelMap.WebtoolsGroup}</th>
+        <th>${uiLabelMap.WebtoolsThreadId}</th>
+        <th>${uiLabelMap.WebtoolsThread}</th>
+        <th>${uiLabelMap.CommonStatus}</th>
+        <th>${uiLabelMap.WebtoolsPriority}</th>
+        <th>${uiLabelMap.WebtoolsDaemon}</th>
       </tr>
+      </thead>
       <#assign alt_row = false>
       <#list allThreadList as javaThread>
       <#if javaThread??>

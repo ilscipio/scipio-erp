@@ -85,16 +85,11 @@ under the License.
 </#macro>
 
 <#if topLevelList?has_content>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.ProductBrowseCategories}</div>
-    </div>
-    <div class="screenlet-body">
+    <@section title="${uiLabelMap.ProductBrowseCategories}">
         <div class="browsecategorylist">
           <#list topLevelList as category>
             <@categoryList parentCategory=category category=category/>
           </#list>
         </div>
-    </div>
-</div>
+    </@section>
 </#if>

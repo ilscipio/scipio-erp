@@ -45,7 +45,7 @@ under the License.
                                 </platform-specific>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                                <label  text="${uiLabelMap.PartyMgrViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -136,7 +136,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container>
-                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                    <label >${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
                                 </container>
                             </fail-widgets>
                         </section>
@@ -235,7 +235,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3" text="${uiLabelMap.PartyPermissionError}"/>
+                                <label  text="${uiLabelMap.PartyPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -283,7 +283,7 @@ under the License.
                         <screenlet title="${uiLabelMap.PartyRelationships}" navigation-form-name="ListPartyRelationships">
                             <include-form name="ListPartyRelationships" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
-                        <container style="lefthalf">
+                        <container style="large-6">
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
@@ -295,7 +295,7 @@ under the License.
                             </widgets>
                         </section>
                         </container>
-                        <container style="righthalf">
+                        <container style="large-6">
                         <screenlet title="${uiLabelMap.PartyAddOtherRelationship}">
                             <include-form name="AddOtherPartyRelationship" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
@@ -459,7 +459,7 @@ under the License.
                                     <link target="backHome" text="[${uiLabelMap.CommonBack}]" style="smallSubmit"/>
                                 </container>
                                 <container>
-                                    <label style="h3">${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
+                                    <label >${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
                                 </container>
                             </fail-widgets>
                         </section>
@@ -680,7 +680,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                                <label >${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -726,7 +726,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                                <label >${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -771,7 +771,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                                <label >${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -816,7 +816,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                                <label >${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -1159,7 +1159,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="addGeoLocation" text="${uiLabelMap.CommonUpdate}" style="buttontext">
+                                    <link target="addGeoLocation" text="${uiLabelMap.CommonUpdate}" style="button tiny">
                                         <parameter param-name="partyId" from-field="parameters.partyId"/>
                                     </link>
                                 </container>
@@ -1170,7 +1170,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container style="button-bar">
-                                    <link target="addGeoLocation" text="${uiLabelMap.CommonCreateNew}" style="buttontext create">
+                                    <link target="addGeoLocation" text="${uiLabelMap.CommonCreateNew}" style="button tiny create">
                                         <parameter param-name="partyId" from-field="parameters.partyId"/>
                                     </link>
                                 </container>
@@ -1315,11 +1315,11 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyParty} ${uiLabelMap.CommonImportExport} ID Name, single role (employee, customer, supplier) and contactmechs">
-                            <container style="lefthalf">
+                            <container style="large-6">
                                 <label style="h2">${uiLabelMap.CommonImport}</label>
                                 <include-form name="ImportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
                             </container>
-                            <container style="righthalf">
+                            <container style="large-6">
                                 <label style="h2">${uiLabelMap.CommonExport}</label>
                                 <include-form name="ExportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
                             </container>

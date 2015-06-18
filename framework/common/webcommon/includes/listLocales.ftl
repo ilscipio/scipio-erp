@@ -16,15 +16,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="lists screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.CommonLanguageTitle}</li>
-      <li><a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonCancel}</a></li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <table cellspacing="0" class="basic-table hover-bar">
+<@section title="${uiLabelMap.CommonLanguageTitle}">
+
+  <ul class="no-bullet">
     <#assign altRow = true>
     <#assign availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocales()/>
     <#list availableLocales as availableLocale>
@@ -34,11 +28,9 @@ under the License.
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>
             <#assign langDir = "rtl">
         </#if>
-        <tr <#if altRow>class="alternate-row"</#if>>
-            <td lang="${langAttr}" dir="${langDir}">
+            <li lang="${langAttr}" dir="${langDir}">
                 <a href="<@ofbizUrl>setSessionLocale</@ofbizUrl>?newLocale=${availableLocale.toString()}">${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</a>
-            </td>
-        </tr>
+            </li>
     </#list>
-  </table>
-</div>
+  </ul>
+</@section>

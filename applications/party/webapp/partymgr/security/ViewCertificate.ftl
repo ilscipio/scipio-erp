@@ -30,9 +30,9 @@ under the License.
   </div>
   <div class="screenlet-body">
     <#if (cert?has_content)>
-        <span class="label">${uiLabelMap.PartyCertType}</span>&nbsp;${cert.getType()} : ${cert.getSubjectX500Principal()}
-        <span class="label">${uiLabelMap.PartyCertName}</span>&nbsp;${cert.getSubjectX500Principal().getName()}
-        <span class="label">${uiLabelMap.PartyCertSerialNumber}</span>&nbsp;${cert.getSerialNumber().toString(16)}
+        <span >${uiLabelMap.PartyCertType}</span>&nbsp;${cert.getType()} : ${cert.getSubjectX500Principal()}
+        <span >${uiLabelMap.PartyCertName}</span>&nbsp;${cert.getSubjectX500Principal().getName()}
+        <span >${uiLabelMap.PartyCertSerialNumber}</span>&nbsp;${cert.getSerialNumber().toString(16)}
     <#else>
         <h3>${uiLabelMap.PartyCertInvalid}</h3>
     </#if>
@@ -46,14 +46,16 @@ under the License.
     <br class="clear" />
   </div>
   <div class="screenlet-body">
-    <table cellspacing="0" class="basic-table">
+    <table cellspacing="0">
+    <thead>
       <tr class="header-row">
-        <td>${uiLabelMap.PartyCertComponent}</td>
-        <td>${uiLabelMap.PartyCertKeyStore}</td>
-        <td>${uiLabelMap.PartyCertImportIssuer}</td>
-        <td>${uiLabelMap.PartyCertKeyAlias}</td>
-        <td>&nbsp;</td>
+        <th>${uiLabelMap.PartyCertComponent}</th>
+        <th>${uiLabelMap.PartyCertKeyStore}</th>
+        <th>${uiLabelMap.PartyCertImportIssuer}</th>
+        <th>${uiLabelMap.PartyCertKeyAlias}</th>
+        <th>&nbsp;</th>
       </tr>
+      </thead>
       <#list components as component>
         <#assign keystores = component.getKeystoreInfos()!/>
           <#list keystores as store>

@@ -29,13 +29,15 @@ under the License.
   </div>
   <h3>${uiLabelMap.WorkEffortAssignedTasks}</h3>
   <table class="basic-table hover-bar" cellspacing="0">
+   <thead>
     <tr class="header-row">
-      <td>${uiLabelMap.CommonStartDateTime}</td>
-      <td>${uiLabelMap.WorkEffortPriority}</td>
-      <td>${uiLabelMap.WorkEffortStatus}</td>
-      <td>${uiLabelMap.WorkEffortTaskName}</td>
-      <td>${uiLabelMap.CommonEdit}</td>
+      <th>${uiLabelMap.CommonStartDateTime}</th>
+      <th>${uiLabelMap.WorkEffortPriority}</th>
+      <th>${uiLabelMap.WorkEffortStatus}</th>
+      <th>${uiLabelMap.WorkEffortTaskName}</th>
+      <th>${uiLabelMap.CommonEdit}</th>
     </tr>
+    </thead>
     <#assign alt_row = false>
     <#list tasks as workEffort>
       <tr<#if alt_row> class="alternate-row"</#if>>
@@ -51,16 +53,18 @@ under the License.
   <#if (activities.size() > 0)>
     <h3>${uiLabelMap.WorkEffortWorkflowActivitiesUser}</h3>
     <table class="basic-table hover-bar" cellspacing="0">
+      <thead>
       <tr class="header-row">
-        <td>${uiLabelMap.CommonStartDateTime}</td>
-        <td>${uiLabelMap.WorkEffortPriority}</td>
-        <td>${uiLabelMap.WorkEffortActivityStatus}</td>
-        <td>${uiLabelMap.WorkEffortMyStatus}</td>
-        <#-- <td>${uiLabelMap.PartyPartyId}</td> -->
-        <td>${uiLabelMap.PartyRole}</td>
-        <td>${uiLabelMap.WorkEffortActivityName}</td>
-        <td>${uiLabelMap.CommonEdit}</td>
+        <th>${uiLabelMap.CommonStartDateTime}</th>
+        <th>${uiLabelMap.WorkEffortPriority}</th>
+        <th>${uiLabelMap.WorkEffortActivityStatus}</th>
+        <th>${uiLabelMap.WorkEffortMyStatus}</th>
+        <#-- <th>${uiLabelMap.PartyPartyId}</th> -->
+        <th>${uiLabelMap.PartyRole}</th>
+        <th>${uiLabelMap.WorkEffortActivityName}</th>
+        <th>${uiLabelMap.CommonEdit}</th>
       </tr>
+      </thead>
       <#assign alt_row = false>
       <#list activities as workEffort>
         <tr<#if alt_row> class="alternate-row"</#if>>
@@ -80,16 +84,18 @@ under the License.
   <#if (roleActivities.size() > 0)>
     <h3>${uiLabelMap.WorkEffortWorkflowActivitiesUserRole}</h3>
     <table class="basic-table hover-bar" cellspacing="0">
+      <thead>
       <tr class="header-row">
-        <td>${uiLabelMap.CommonStartDateTime}</td>
-        <td>${uiLabelMap.WorkEffortPriority}</td>
-        <td>${uiLabelMap.WorkEffortActivityStatus}</td>
-        <td>${uiLabelMap.WorkEffortMyStatus}</td>
-        <#-- <td>${uiLabelMap.PartyPartyId}</td> -->
-        <td>${uiLabelMap.PartyRole}</td>
-        <td>${uiLabelMap.WorkEffortActivityName}</td>
-        <td>${uiLabelMap.CommonEdit}</td>
+        <th>${uiLabelMap.CommonStartDateTime}</th>
+        <th>${uiLabelMap.WorkEffortPriority}</th>
+        <th>${uiLabelMap.WorkEffortActivityStatus}</th>
+        <th>${uiLabelMap.WorkEffortMyStatus}</th>
+        <#-- <th>${uiLabelMap.PartyPartyId}</th> -->
+        <th>${uiLabelMap.PartyRole}</th>
+        <th>${uiLabelMap.WorkEffortActivityName}</th>
+        <th>${uiLabelMap.CommonEdit}</th>
       </tr>
+      </thead>
       <#assign alt_row = false>
       <#list roleActivities as workEffort>
         <tr<#if alt_row> class="alternate-row"</#if>>
@@ -109,16 +115,18 @@ under the License.
   <#if (groupActivities.size() > 0)>
     <h3>${uiLabelMap.WorkEffortWorkflowActivitiesUserGroup}</h3>
     <table class="basic-table hover-bar" cellspacing="0">
+     <thead>
       <tr class="header-row">
-        <td>${uiLabelMap.CommonStartDateTime}</td>
-        <td>${uiLabelMap.WorkEffortPriority}</td>
-        <td>${uiLabelMap.WorkEffortActivityStatus}</td>
-        <td>${uiLabelMap.WorkEffortMyStatus}</td>
-        <td>${uiLabelMap.PartyGroupPartyId}</td>
-        <#-- <td>${uiLabelMap.PartyRole}</td> -->
-        <td>${uiLabelMap.WorkEffortActivityName}</td>
-        <td>${uiLabelMap.CommonEdit}</td>
+        <th>${uiLabelMap.CommonStartDateTime}</th>
+        <th>${uiLabelMap.WorkEffortPriority}</th>
+        <th>${uiLabelMap.WorkEffortActivityStatus}</th>
+        <th>${uiLabelMap.WorkEffortMyStatus}</th>
+        <th>${uiLabelMap.PartyGroupPartyId}</th>
+        <#-- <th>${uiLabelMap.PartyRole}</th> -->
+        <th>${uiLabelMap.WorkEffortActivityName}</th>
+        <th>${uiLabelMap.CommonEdit}</th>
       </tr>
+      </thead>
       <#assign alt_row = false>
       <#list groupActivities as workEffort>
         <tr<#if alt_row> class="alternate-row"</#if>>

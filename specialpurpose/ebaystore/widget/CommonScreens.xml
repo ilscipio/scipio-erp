@@ -45,6 +45,9 @@
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="EbayStoreFunctionTabBar"  location="component://ebaystore/widget/EbayStoreMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -72,7 +75,6 @@
                                         <widgets>
                                            <include-form location="component://ebaystore/widget/EbayStoreForms.xml" name="EbayAccountSelection"/>
                                               <label text="${uiLabelMap.EbayAccount} : ${person.firstName} ${person.lastName}" style="h1"></label>
-                                            <include-menu name="EbayStoreFunctionTabBar"  location="component://ebaystore/widget/EbayStoreMenus.xml"/>
                                         </widgets>
                                     </section>
                                 </container>
@@ -94,6 +96,9 @@
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="EbayConfigTabBar"  location="component://ebay/widget/EbayMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for Ebay, _VIEW permission -->
@@ -101,7 +106,6 @@
                                 <if-has-permission permission="EBAY" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="EbayConfigTabBar"  location="component://ebay/widget/EbayMenus.xml"/>
                                 <section>
                                     <condition><not><if-empty field="ebayConfig"/></not>
                                     </condition>
@@ -127,10 +131,12 @@
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu location="component://ebaystore/widget/EbayStoreMenus.xml" name="EbaySellingManagerTabBar"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <include-menu location="component://ebaystore/widget/EbayStoreMenus.xml" name="EbaySellingManagerTabBar"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                         </section>
@@ -146,10 +152,12 @@
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu location="component://ebaystore/widget/EbayStoreMenus.xml" name="EbayAccountTabBar"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <include-menu location="component://ebaystore/widget/EbayStoreMenus.xml" name="EbayAccountTabBar"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                         </section>

@@ -17,24 +17,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-<div class="screenlet-title-bar">
-    <ul>
     <#if orderHeader?has_content>
-    <li class="h3">
-        ${uiLabelMap.PageTitleLookupBulkAddProduct}
-    </li>
+    <@section title="${uiLabelMap.PageTitleLookupBulkAddProduct}"/>
     <#else>
-    <li class="h3">
-        ${uiLabelMap.CommonCreate}&nbsp;
+    <#assign title>
+        ${uiLabelMap.CommonCreate}
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
             ${uiLabelMap.OrderPurchaseOrder}
         <#else>
             ${uiLabelMap.OrderSalesOrder}
         </#if>
-    </li>
-    <li><a href="<@ofbizUrl>orderentry</@ofbizUrl>">${uiLabelMap.OrderOrderItems}</a></li>
-    </#if>
+    </#assign>
+    <@section title=title!>
+        <ul class="button-group">
+            <li><a href="<@ofbizUrl>orderentry</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderOrderItems}</a></li>
     </ul>
-</div>
-</div>
+    </@section>
+</#if>

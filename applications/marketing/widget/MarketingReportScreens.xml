@@ -36,7 +36,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.MarketingViewPermissionError}</label>
+                                <label >${uiLabelMap.MarketingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -56,7 +56,7 @@ under the License.
                         <container style="h1">
                             <label text="${uiLabelMap.MarketingReports}"/>
                         </container>
-                        <container style="lefthalf">
+                        <container style="large-6">
                             <screenlet title="${uiLabelMap.MarketingTrackingCodeReportTitle}">
                                 <include-form name="TrackingCodeReportOptions" location="component://marketing/widget/ReportForms.xml"/>
                             </screenlet>
@@ -64,7 +64,7 @@ under the License.
                                 <include-form name="EmailStatusOptions" location="component://marketing/widget/ReportForms.xml"/>
                             </screenlet>
                         </container> 
-                        <container style="righthalf">
+                        <container style="large-6">
                             <screenlet title="${uiLabelMap.MarketingCampaignReportTitle}">
                                 <include-form name="MarketingCampaignOptions" location="component://marketing/widget/ReportForms.xml"/>
                             </screenlet>

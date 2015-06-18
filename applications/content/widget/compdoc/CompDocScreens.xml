@@ -51,7 +51,7 @@ under the License.
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <link target="ListWaitingContentApproval" text="${uiLabelMap.ContentCompDocViewWaitingApprovals}" style="buttontext">
+                            <link target="ListWaitingContentApproval" text="${uiLabelMap.ContentCompDocViewWaitingApprovals}" style="button tiny">
                                 <parameter param-name="contentId"/>
                                 <parameter param-name="contentRevisionSeqId"/>
                             </link>
@@ -297,8 +297,8 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="AddRootCompDocTemplate" text="${uiLabelMap.PageTitleCreateNewRootCompDocTemplate}" style="buttontext create"/>
-                                            <link target="ListWaitingContentApproval" text="${uiLabelMap.ContentCompDocViewWaitingApprovals}" style="buttontext"/>
+                                            <link target="AddRootCompDocTemplate" text="${uiLabelMap.PageTitleCreateNewRootCompDocTemplate}" style="button tiny create"/>
+                                            <link target="ListWaitingContentApproval" text="${uiLabelMap.ContentCompDocViewWaitingApprovals}" style="button tiny"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -334,7 +334,7 @@ under the License.
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <link target="FindCompDoc" style="buttontext" text="${uiLabelMap.CommonFind">
+                            <link target="FindCompDoc" style="button tiny" text="${uiLabelMap.CommonFind">
                         <parameter param-name="contentId"/>
                         <parameter param-name="contentRevisionSeqId"/>
                         <parameter param-name="rootTemplateContentId"/>
@@ -342,7 +342,7 @@ under the License.
                         <parameter param-name="rootInstanceContentId"/>
                         <parameter param-name="rootInstanceRevSeqId" from-field="rootInstanceRevSeqId"/>
                       </link>
-                            <link target="AddRootCompDocTemplate"  text="${ContentCreateNewRootCompDocTemplate}" style="buttontext">
+                            <link target="AddRootCompDocTemplate"  text="${ContentCreateNewRootCompDocTemplate}" style="button tiny">
                         <parameter param-name="contentId"/>
                         <parameter param-name="contentRevisionSeqId"/>
                         <parameter param-name="rootTemplateContentId"/>
@@ -383,7 +383,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentCompDocViewInstances}">
                             <container>
-                                <link target="AddRootCompDocTemplate" text="${uiLabelMap.PageTitleCreateNewRootCompDocTemplate}" style="buttontext">
+                                <link target="AddRootCompDocTemplate" text="${uiLabelMap.PageTitleCreateNewRootCompDocTemplate}" style="button tiny">
                                     <parameter param-name="contentId"/>
                                     <parameter param-name="contentRevisionSeqId"/>
                                 </link>
@@ -432,7 +432,7 @@ under the License.
                             <decorator-section name="body">
                                 <screenlet title="${uiLabelMap.PageTitleEditCompDocTemplate}">
                                     <container>
-                                        <link target="AddRootCompDocInstance" text="${uiLabelMap.PageTitleCreateInstanceOfThisTemplate}" style="buttontext">
+                                        <link target="AddRootCompDocInstance" text="${uiLabelMap.PageTitleCreateInstanceOfThisTemplate}" style="button tiny">
                                             <parameter param-name="contentId" from-field="rootContentId"/>
                                             <parameter param-name="contentRevisionSeqId" from-field="rootContentRevisionSeqId"/>
                                         </link>
@@ -556,7 +556,7 @@ under the License.
                                     <widgets>
                                         <container>
                                             <label style="tableheadtext" text="${uiLabelMap.ContentCompDocRevisions} [${rootContentRevisionSeqId}], Latest is [${mostRecentRevisionSeqId}]"/>
-                                            <link style="buttontext" text="${uiLabelMap.ContentLatest}" target="EditChildCompDoc">
+                                            <link style="button tiny" text="${uiLabelMap.ContentLatest}" target="EditChildCompDoc">
                                                 <parameter param-name="contentId"/>
                                                 <parameter param-name="rootContentId"/>
                                                 <parameter param-name="caFromDate" from-field="fromDate"/>
@@ -634,7 +634,7 @@ under the License.
                     </actions>
                     <widgets>
                         <container>
-                            <link target="ViewCompDocContentBinary" text="${uiLabelMap.PageTitleViewCompDocContentBinary}" style="buttontext">
+                            <link target="ViewCompDocContentBinary" text="${uiLabelMap.PageTitleViewCompDocContentBinary}" style="button tiny">
                             <parameter param-name="contentId"/>
                             <parameter param-name="contentRevisionSeqId" from-field="itemContentRevisionSeqId"/>
                             <parameter param-name="rootContentId"/>
@@ -653,7 +653,7 @@ under the License.
                     </actions>
                     <widgets>
                         <container>
-                        <link target="ViewCompDocContentHtml" text="${uiLabelMap.PageTitleViewCompDocContentHtml}" style="buttontext">
+                        <link target="ViewCompDocContentHtml" text="${uiLabelMap.PageTitleViewCompDocContentHtml}" style="button tiny">
                             <parameter param-name="contentId"/>
                             <parameter param-name="contentRevisionSeqId" from-field="itemContentRevisionSeqId"/>
                             <parameter param-name="rootContentId"/>
@@ -670,7 +670,7 @@ under the License.
                     <widgets>
                         <!-- link on form
                         <container>
-                            <link target="EditSurvey" text="${uiLabelMap.PageTitleViewCompDocContent}" style="buttontext">
+                            <link target="EditSurvey" text="${uiLabelMap.PageTitleViewCompDocContent}" style="button tiny">
                                 <parameter param-name="surveyId from-field="dataResource.relatedDetailId"/>
                                 <parameter param-name="rootContentId"/>
                             </link>
@@ -687,7 +687,7 @@ under the License.
                     <widgets>
                         <!-- link on form
                         <container>
-                            <link target="EditSurveyResponse" text="${uiLabelMap.PageTitleViewCompDocContent}" style="buttontext">
+                            <link target="EditSurveyResponse" text="${uiLabelMap.PageTitleViewCompDocContent}" style="button tiny">
                                 <parameter param-name="surveyResponseId from-field="dataResource.relatedDetailId"/>
                                 <parameter param-name="rootContentId"/>
                             </link>
@@ -984,11 +984,11 @@ under the License.
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                                 <container>
-                                    <link target="ViewInstances" text="${uiLabelMap.ContentCompDocViewInstances}" style="buttontext">
+                                    <link target="ViewInstances" text="${uiLabelMap.ContentCompDocViewInstances}" style="button tiny">
                                         <parameter param-name="rootContentId"/>
                                         <parameter param-name="contentRevisionSeqId" from-field="rootContentRevisionSeqId"/>
                                     </link>
-                                    <link target="AddRootCompDocInstance" text="${uiLabelMap.PageTitleCreateInstanceOfThisTemplate}" style="buttontext">
+                                    <link target="AddRootCompDocInstance" text="${uiLabelMap.PageTitleCreateInstanceOfThisTemplate}" style="button tiny">
                                         <parameter param-name="rootContentId"/>
                                         <parameter param-name="rootContentRevisionSeqId"/>
                                     </link>
@@ -1035,7 +1035,7 @@ under the License.
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                        <container>
-                            <link target="GenCompDocPdf" text="${uiLabelMap.ContentCompDocGeneratePDF}" style="buttontext">
+                            <link target="GenCompDocPdf" text="${uiLabelMap.ContentCompDocGeneratePDF}" style="button tiny">
                                 <parameter param-name="contentId" from-field="rootContentId"/>
                                 <parameter param-name="contentRevisionSeqId"/>
                             </link>
@@ -1083,7 +1083,7 @@ under the License.
                             </and>
                         </condition>
                         <widgets>
-                            <link text="${uiLabelMap.ContentCompDocStartApprovalProcess}" target="prepForApproval" style="buttontext">
+                            <link text="${uiLabelMap.ContentCompDocStartApprovalProcess}" target="prepForApproval" style="button tiny">
                                 <parameter param-name="rootContentId"/>
                                 <parameter param-name="rootContentRevisionSeqId"/>
                             </link>
@@ -1156,7 +1156,7 @@ under the License.
                             <if-compare-field field="mostRecentRevisionSeqId" operator="equals" to-field="rootContentRevisionSeqId"/>
                         </condition>
                         <widgets>
-                            <link text="${uiLabelMap.PageTitleAddCompDocInstance}" target="AddChildCompDocInstance" style="buttontext">
+                            <link text="${uiLabelMap.PageTitleAddCompDocInstance}" target="AddChildCompDocInstance" style="button tiny">
                                 <parameter param-name="rootContentId"/>
                                 <parameter param-name="instanceOfContentId" from-field="contentId"/>
                                 <parameter param-name="caSequenceNum" from-field="maxRevisionSeqId"/>
@@ -1177,7 +1177,7 @@ under the License.
                         <widgets>
                             <container>
                                 <label text="- ${instanceContent.contentName} [${instanceContent.contentId}] - ${instanceDataResource.objectInfo} ${instanceDataResource.relatedDetailId}" style="tableheadtext"/>
-                                <link text="${uiLabelMap.PageTitleEditCompDocInstance}" target="EditChildCompDoc"  style="buttontext">
+                                <link text="${uiLabelMap.PageTitleEditCompDocInstance}" target="EditChildCompDoc"  style="button tiny">
                                     <parameter param-name="contentId" from-field="assocRevisionItemView.contentId"/>
                                     <parameter param-name="rootContentId" from-field="assocRevisionItemView.contentIdTo"/>
                                     <parameter param-name="caContentAssocTypeId" from-field="assocRevisionItemView.contentAssocTypeId"/>
@@ -1185,7 +1185,7 @@ under the License.
                                     <parameter param-name="contentRevisionSeqId" from-field="assocRevisionItemView.maxRevisionSeqId"/>
                                     <parameter param-name="rootContentRevisionSeqId"/>
                                 </link>
-                                <link text="${uiLabelMap.ContentCompDocGeneratePDF}" target="GenContentPdf" style="buttontext">
+                                <link text="${uiLabelMap.ContentCompDocGeneratePDF}" target="GenContentPdf" style="button tiny">
                                     <parameter param-name="contentId" from-field="assocRevisionItemView.contentId"/>
                                     <parameter param-name="caSequenceNum" from-field="sequenceNum"/>
                                 </link>

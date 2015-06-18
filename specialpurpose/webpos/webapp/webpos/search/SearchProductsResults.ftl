@@ -51,10 +51,10 @@ under the License.
     <table cellspacing="0" cellpadding="2" class="basic-table">
       <thead class="searchProductsResultsHead">
         <tr class="header-row">
-          <td nowrap>&nbsp;</td>
-          <td nowrap><b>${uiLabelMap.ProductProductId}</b></td>
-          <td nowrap><b>${uiLabelMap.ProductProductName}</b></td>
-          <td nowrap><b>${uiLabelMap.ProductProductDescription}</b></td>
+          <th nowrap>&nbsp;</th>
+          <th nowrap>${uiLabelMap.ProductProductId}</th>
+          <th nowrap>${uiLabelMap.ProductProductName}</th>
+          <th nowrap>${uiLabelMap.ProductProductDescription}</th>
         </tr>
       </thead>
       <tbody id="searchProductsResultsList" class="searchProductsResultsCartBody">

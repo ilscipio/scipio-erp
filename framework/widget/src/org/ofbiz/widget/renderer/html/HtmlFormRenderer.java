@@ -1558,8 +1558,6 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
             writer.append(" class=\"");
             writer.append(areaStyle);
             writer.append("\"");
-        } else {
-            writer.append(" class=\"label\"");
         }
         writer.append(">");
         //appendWhitespace(writer);

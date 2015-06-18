@@ -27,15 +27,17 @@ under the License.
     </div>
     <div class="screenlet-body">
         <table cellspacing="0" class="basic-table">
+          </thead>
             <tr class="header-row">
-                <td>${uiLabelMap.ProductItem}</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>${uiLabelMap.ProductQuantity}</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
+                <th>${uiLabelMap.ProductItem}</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th>${uiLabelMap.ProductQuantity}</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
             </tr>
+        </thead>
         <#assign alt_row = false>
         <#list shipmentItemDatas as shipmentItemData>
             <#assign shipmentItem = shipmentItemData.shipmentItem>
@@ -47,10 +49,10 @@ under the License.
             <#assign totalQuantityToPackage = shipmentItemData.totalQuantityToPackage>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                 <td>${shipmentItem.shipmentItemSeqId}</td>
-                <td colspan="2">${(product.internalName)!} <a href="/catalog/control/EditProduct?productId=${shipmentItem.productId!}" class="buttontext">${shipmentItem.productId!}</a></td>
+                <td colspan="2">${(product.internalName)!} <a href="/catalog/control/EditProduct?productId=${shipmentItem.productId!}" class="button tiny">${shipmentItem.productId!}</a></td>
                 <td>${shipmentItem.quantity?default("&nbsp;")}</td>
                 <td colspan="2">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</td>
-                <td><a href="javascript:document.deleteShipmentItem${shipmentItemData_index}.submit();" class="buttontext">${uiLabelMap.CommonDelete}</a></td>
+                <td><a href="javascript:document.deleteShipmentItem${shipmentItemData_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a></td>
             </tr>
             <form name="deleteShipmentItem${shipmentItemData_index}" method="post" action="<@ofbizUrl>deleteShipmentItem</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -59,37 +61,37 @@ under the License.
             <#list orderShipments as orderShipment>
                 <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                     <td>&nbsp;</td>
-                    <td><span class="label">${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}" class="buttontext">${orderShipment.orderId!}</a> ${orderShipment.orderItemSeqId!}</td>
+                    <td><span >${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}" class="button tiny">${orderShipment.orderId!}</a> ${orderShipment.orderItemSeqId!}</td>
                     <td>&nbsp;</td>
                     <td>${orderShipment.quantity!}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a> --></td>
+                    <td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonDelete}</a> --></td>
                 </tr>
             </#list>
             <#list itemIssuances as itemIssuance>
                 <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                     <td>&nbsp;</td>
-                    <td><span class="label">${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}" class="buttontext">${itemIssuance.orderId!}</a> ${itemIssuance.orderItemSeqId!}</td>
-                    <td><span class="label">${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId!}</a></td>
+                    <td><span >${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}" class="button tiny">${itemIssuance.orderId!}</a> ${itemIssuance.orderItemSeqId!}</td>
+                    <td><span >${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" class="button tiny">${itemIssuance.inventoryItemId!}</a></td>
                     <td>${itemIssuance.quantity!}</td>
                     <td>${itemIssuance.issuedDateTime!}</td>
-                    <td class="label">${uiLabelMap.ProductFuturePartyRoleList}</td>
-                    <td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a> --></td>
+                    <td >${uiLabelMap.ProductFuturePartyRoleList}</td>
+                    <td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonDelete}</a> --></td>
                 </tr>
             </#list>
             <#list shipmentPackageContents as shipmentPackageContent>
                 <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
                     <td>&nbsp;</td>
-                    <td colspan="2"><span class="label">${uiLabelMap.ProductPackage}</span> ${shipmentPackageContent.shipmentPackageSeqId}</td>
+                    <td colspan="2"><span >${uiLabelMap.ProductPackage}</span> ${shipmentPackageContent.shipmentPackageSeqId}</td>
                     <td>${shipmentPackageContent.quantity!}&nbsp;</td>
                     <#if shipmentPackageContent.subProductId?has_content>
-                    <td><span class="label">${uiLabelMap.ProductSubProduct}</span> ${shipmentPackageContent.subProductId}</td>
+                    <td><span >${uiLabelMap.ProductSubProduct}</span> ${shipmentPackageContent.subProductId}</td>
                     <td>${shipmentPackageContent.subProductQuantity!}</td>
                     <#else>
                     <td colspan="2">&nbsp;</td>
                     </#if>
-                    <td><a href="javascript:document.deleteShipmentItemPackageContent${shipmentItemData_index}${shipmentPackageContent_index}.submit();" class="buttontext">${uiLabelMap.CommonDelete}</a></td>
+                    <td><a href="javascript:document.deleteShipmentItemPackageContent${shipmentItemData_index}${shipmentPackageContent_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a></td>
                 </tr>
                 <form name="deleteShipmentItemPackageContent${shipmentItemData_index}${shipmentPackageContent_index}" method="post" action="<@ofbizUrl>deleteShipmentItemPackageContent</@ofbizUrl>">
                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -104,7 +106,7 @@ under the License.
                     <input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
                     <td>&nbsp;</td>
                     <td colspan="2">
-                        <div><span class="label">${uiLabelMap.ProductAddToPackage}</span>
+                        <div><span >${uiLabelMap.ProductAddToPackage}</span>
                         <select name="shipmentPackageSeqId">
                             <#list shipmentPackages as shipmentPackage>
                                 <option>${shipmentPackage.shipmentPackageSeqId}</option>
@@ -116,7 +118,7 @@ under the License.
                     <td>
                         <div>
                             <input type="text" name="quantity" size="5" value="${totalQuantityToPackage}"/>
-                            <a href="javascript:document.createShipmentPackageContentForm${shipmentItemData_index}.submit()" class="buttontext">${uiLabelMap.CommonAdd}</a>
+                            <a href="javascript:document.createShipmentPackageContentForm${shipmentItemData_index}.submit()" class="button tiny">${uiLabelMap.CommonAdd}</a>
                         </div>
                     </td>
                     <td colspan="2">&nbsp;</td>
@@ -130,13 +132,13 @@ under the License.
         <tr>
             <form action="<@ofbizUrl>createShipmentItem</@ofbizUrl>" method="post" name="createShipmentItemForm">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-                <td><span class="label">${uiLabelMap.ProductNewItem}</span></td>
-                <td colspan="2"><span class="label">${uiLabelMap.ProductProductId}</span> 
+                <td><span >${uiLabelMap.ProductNewItem}</span></td>
+                <td colspan="2"><span >${uiLabelMap.ProductProductId}</span> 
                   <@htmlTemplate.lookupField formName="createShipmentItemForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
                 </td>
                 <td><input type="text" name="quantity" size="5" value="0"/></td>
-                <td colspan="2"><span class="label">${uiLabelMap.ProductProductDescription}</span> <input name="shipmentContentDescription" size="30" maxlength="255"/></td>
-                <td><a href="javascript:document.createShipmentItemForm.submit()" class="buttontext">${uiLabelMap.CommonCreate}</a></td>
+                <td colspan="2"><span >${uiLabelMap.ProductProductDescription}</span> <input name="shipmentContentDescription" size="30" maxlength="255"/></td>
+                <td><a href="javascript:document.createShipmentItemForm.submit()" class="button tiny">${uiLabelMap.CommonCreate}</a></td>
             </form>
         </tr>
         </table>

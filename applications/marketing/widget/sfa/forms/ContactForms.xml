@@ -63,7 +63,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="assignToMe" use-when="existRelationship==null&amp;&amp;!&quot;false&quot;.equals(parameters.get(&quot;all&quot;))"
-                title="${uiLabelMap.SfaAssignToMe}" widget-style="buttontext">
+                title="${uiLabelMap.SfaAssignToMe}" widget-style="button tiny">
             <hyperlink target="createPartyRelationshipAndRole" description="${uiLabelMap.SfaAssignToMe}">
                 <parameter param-name="partyIdFrom" from-field="userLogin.partyId"/>
                 <parameter param-name="roleTypeIdFrom"/>
@@ -160,7 +160,7 @@ under the License.
                 <list-options list-name="partyList" key-name="contact.partyId"  list-entry-name="contact" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${contact.partyId}"/>
             </drop-down>
         </field>
-        <field name="submitButton" position="3" title="${uiLabelMap.SfaMergeContacts}" widget-style="buttontext" tooltip-style="button-text"><submit button-type="text-link"/></field>
+        <field name="submitButton" position="3" title="${uiLabelMap.SfaMergeContacts}" widget-style="button tiny" tooltip-style="button-text"><submit button-type="text-link"/></field>
     </form>
 
     <form name="NewContactFromVCard" type="upload" target="createContactFromVCard" header-row-style="header-row" default-table-style="basic-table">

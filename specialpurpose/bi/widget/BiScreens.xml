@@ -117,7 +117,7 @@ under the License.
                                 </platform-specific>
                             </container>
                             <container>
-                                <link target="quickInitDataWarehouse" text="${uiLabelMap.BusinessIntelligenceQuickInitDataWarehouse}" style="buttontext">
+                                <link target="quickInitDataWarehouse" text="${uiLabelMap.BusinessIntelligenceQuickInitDataWarehouse}" style="button tiny">
                                     <parameter param-name="fromDate"/>
                                     <parameter param-name="thruDate"/>
                                 </link>

@@ -46,7 +46,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="fixedAssetId" widget-style="buttontext">
+        <field name="fixedAssetId" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.CommonName}"><display/></field>
@@ -78,7 +78,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="fixedAssetId" widget-style="buttontext">
+        <field name="fixedAssetId" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.CommonName}"><display/></field>
@@ -105,7 +105,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="billingAccountId" title="${uiLabelMap.AccountingBillingAccountId}" widget-style="buttontext">
+        <field name="billingAccountId" title="${uiLabelMap.AccountingBillingAccountId}" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${billingAccountId}" target="javascript:set_value('${billingAccountId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -144,7 +144,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}" widget-style="buttontext">
+        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${glAccountId}" target="javascript:set_value('${glAccountId}')"/>
         </field>
         <field name="accountName" title="${uiLabelMap.CommonName}"><display/></field>
@@ -172,7 +172,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="paymentId" widget-style="buttontext">
+        <field name="paymentId" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${paymentId}" target="javascript:set_value('${paymentId}')"/>
         </field>
         <field name="partyIdFrom"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
@@ -216,7 +216,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="invoiceId" widget-style="buttontext">
+        <field name="invoiceId" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${invoiceId}" target="javascript:set_value('${invoiceId}')"/>
         </field>
         <field name="invoiceTypeId"><display-entity entity-name="InvoiceType"/></field>
@@ -246,7 +246,7 @@ under the License.
                 <field-map field-name="entityName" value="Agreement"/>
             </service>
         </actions>
-        <field name="agreementId" widget-style="buttontext">
+        <field name="agreementId" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${agreementId}" target="javascript:set_value('${agreementId}')"/>
         </field>
         <field name="productId"><display/></field>
@@ -280,7 +280,7 @@ under the License.
             </service>
         </actions>
         <field name="agreementId"><display/></field>
-        <field name="agreementItemSeqId" widget-style="buttontext">
+        <field name="agreementItemSeqId" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${agreementItemSeqId}" target="javascript:set_value('${agreementItemSeqId}')"/>
         </field>
         <field name="agreementItemTypeId"><display/></field>
@@ -306,7 +306,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="paymentGroupId" widget-style="buttontext">
+        <field name="paymentGroupId" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${paymentGroupId}" target="javascript:set_value('${paymentGroupId}')"/>
         </field>
         <field name="paymentId"><display/></field>
@@ -333,7 +333,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="glReconciliationId" widget-style="buttontext">
+        <field name="glReconciliationId" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${glReconciliationId}" target="javascript:set_value('${glReconciliationId}')"/>
         </field>
         <field name="glReconciliationName"><display/></field>
@@ -376,7 +376,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="customTimePeriodId" widget-style="buttontext">
+        <field name="customTimePeriodId" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${customTimePeriodId}" target="javascript:set_value('${customTimePeriodId}')"/>
         </field>
         <field name="parentPeriodId"><display/></field>

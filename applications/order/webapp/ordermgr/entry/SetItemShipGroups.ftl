@@ -22,36 +22,33 @@ under the License.
   <input type="hidden" name="finalizeMode" value="removeEmptyShipGroups"/>
 </form>
 
-<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-<tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
+
+
+<@section>
             <#list 1..shoppingCart.getShipGroupSize() as currIndex>
               <#assign shipGroupIndex = currIndex - 1>
               <#assign supplier =  delegator.findOne("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", shoppingCart.getSupplierPartyId(shipGroupIndex)), false)! />
-              <table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
+          <#assign sectionTitle>${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}<#if supplier?has_content> - ${uiLabelMap.OrderDropShipped} - ${supplier.groupName?default(supplier.partyId)}</#if></#assign>
+          <@section title=sectionTitle>
+              <@row>
+                  <@cell>
+                  <table class="basic-table">
+                  <thead>
               <tr>
-                <td colspan="2">
-                    <h1>${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}<#if supplier?has_content> - ${uiLabelMap.OrderDropShipped} - ${supplier.groupName?default(supplier.partyId)}</#if></h1>
-                </td>
+                    <th>
+                        ${uiLabelMap.ProductProduct}
+                    </th>
+                    <th>
+                        ${uiLabelMap.CommonQuantity}
+                    </th>
+                    <th>
+                        ${uiLabelMap.ProductMoveQuantity}
+                    </th>
+                    <th>
+                        ${uiLabelMap.OrderShipGroupTo}
+                    </th>
               </tr>
-              <tr>
-                <td>
-                    <div>${uiLabelMap.ProductProduct}</div>
-                </td>
-                <td>
-                    <div>${uiLabelMap.CommonQuantity}</div>
-                </td>
-                <td>
-                    <div>${uiLabelMap.ProductMoveQuantity}</div>
-                </td>
-                <td>
-                    <div>${uiLabelMap.OrderShipGroupTo}</div>
-                </td>
-              </tr>
-
+                  </thead>
               <#assign shipGroupItems = shoppingCart.getShipGroupItems(shipGroupIndex)>
               <#assign shoppingCartItems = shipGroupItems.keySet().iterator()>
               <form method="post" action="<@ofbizUrl>assignItemToShipGroups</@ofbizUrl>" name="assignitemtoshipgroup${shipGroupIndex}">
@@ -96,15 +93,14 @@ under the License.
               </tr>
               </#if>
               </table>
+                  </@cell>
+            </@row>
+        </@section>
             <input type="hidden" name="_rowCount" value="${rowCount}" />
             </form>
             </#list>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
+
+</@section>
 
 <br />
 <#else>

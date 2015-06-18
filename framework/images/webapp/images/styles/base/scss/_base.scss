@@ -1,0 +1,235 @@
+/* GRID */
+$include-html-reveal-classes: $include-html-classes;
+
+body {}
+
+.fullWidth {
+    width: 100%;
+    /*max-width: 85em;*/
+    max-width:100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.v-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+
+/* NAVIGATION */
+  
+
+.sidebar {
+    margin-top:0px;
+    background: #FAFAFA;
+    padding: 10px; 
+
+    form {padding:0px;}
+
+    input[type="search"]:focus {
+        box-shadow: 0 0 0 !important; }
+}
+
+
+.sub-top-bar {@include sub-nav(); 
+    margin-top:8px;
+    
+    dt a, dd a, li a {
+        background-color: $ghost;
+        color: $primary-color;
+        border-radius: $button-radius;
+    }
+}
+
+/* CONTENT */
+#content-main-section{
+    padding-top:32px;
+    padding-bottom:32px;
+}
+
+#content-main-body {
+    width:100%;
+    min-height: 100%;
+    position: relative;
+}
+
+// Using the default styles
+input[type="button"], input[type="submit"],.buttontext  { @include button; @include button-size($padding:$button-tny); }
+
+// tables
+table.basic-table {
+    width: 100%;
+    tr{
+        background: none;
+        
+        td {
+            height:auto;
+            vertical-align: top;
+        }
+    }
+    tr.even {}
+    tr.odd {background: $ghost;}
+    
+    input {margin:0px;}
+            
+}
+
+.reveal-modal {
+  @include reveal-modal-style(
+    $top-offset:rem-calc(200)
+  );
+}
+
+.login-box {
+  margin: 200px 0;
+  padding:0px;
+  
+  #login-box-title {
+      
+    h1 {
+
+    }
+  }
+  
+  #login-box-content {
+      margin-top:20px;
+      padding: 40px 20px 0 20px;
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, .25);
+      -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, .25);
+      -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, .25);
+      border: 1px solid #fafafa;
+  }
+}
+
+@media (max-width:610px) {
+    .login-box  {position:static; width:100%;margin-left:0;padding:10px;margin-top:50px;}
+}
+
+.inline-list {
+    li {margin-bottom:10px;}
+
+}
+
+td {word-break:break-all;}
+
+
+// collapsible fieldset
+.toggleField fieldset{
+    border:none;
+    color: $primary-color;
+    margin:10px 0px;
+    padding:8px 0px;
+}
+fieldset {
+    border:none;
+    
+    legend{
+        padding:0px;
+        margin:0px;
+        text-align:right;
+        background:none;
+    }
+    
+    legend:hover{
+        color: scale-color($primary-color, $lightness: -14%);
+        cursor: pointer;
+    }
+}
+
+
+.collapsed{
+    display:inline-block;
+}
+
+.rotate-90{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    writing-mode: tb-rl;
+    }
+
+.rotate-180{
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    writing-mode: tb-rl;
+    }
+
+.rotate-270{
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    writing-mode: tb-rl;
+    }
+
+pre {
+    /* original is white background with no border */
+    background-color: #fff;
+    white-space: pre-wrap; /* CSS3 */
+    white-space: -moz-pre-wrap; /* Mozilla, post millennium */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word;
+    padding: 4px;
+    color: #333;
+    font-size: 11px;
+    line-height: 16px;
+    margin-bottom: 20px;
+    background-color: #f8f8f8;
+    border-color: #dfdfdf;
+    border-style: solid;
+    border-width: 1px;
+}
+
+pre, code {
+}
+
+code {
+    margin:0px;
+    padding:0px;
+    border:none;
+    background:none;
+    .INFO {color:$oil;}
+    .DEBUG {}
+    .WARN {color:$warning-color;}
+    .ERROR {color:$alert-color;}
+    .FATAL {color:$alert-color;font-weight:bold;}
+    .TRACE {color:$aluminum;}
+}
+
+.postfix input[type="submit"], .postfix button {
+        background: $input-prefix-bg;
+        border-color: $input-prefix-border-color;
+        border-size: $input-prefix-border-size;
+        border-type: $input-prefix-border-type;
+        color: $input-prefix-font-color;
+        padding-left:0px;
+        padding-right:0px;
+        font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size:1rem;
+}
+
+/*  FOOTER */
+#body-content {
+  min-height: 100%;
+  margin-bottom: -26px; 
+} 
+
+#body-content:after {
+  content: "";
+  display: block;
+}
+
+#body-content:after, #footer{
+  height: 26px;
+}
+ 
+#footer {
+  background: $oil;
+  color: $smoke;
+  width: 100%;
+}

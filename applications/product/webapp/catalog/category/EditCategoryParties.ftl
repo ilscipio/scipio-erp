@@ -24,20 +24,22 @@ under the License.
         </div>
         <div class="screenlet-body">
             <table cellspacing="0" class="basic-table">
+            <thead>
             <tr class="header-row">
-            <td>${uiLabelMap.PartyPartyId}</td>
-            <td>${uiLabelMap.PartyRole}</td>
-            <td>${uiLabelMap.CommonFromDateTime}</td>
-            <td align="center">${uiLabelMap.CommonThruDateTime}</td>
-            <td>&nbsp;</td>
+                <th>${uiLabelMap.PartyPartyId}</th>
+                <th>${uiLabelMap.PartyRole}</th>
+                <th>${uiLabelMap.CommonFromDateTime}</th>
+                <th align="center">${uiLabelMap.CommonThruDateTime}</th>
+                <th>&nbsp;</th>
             </tr>
+            </thead>
             <#assign line = 0>
             <#assign rowClass = "2">
             <#list productCategoryRoles as productCategoryRole>
             <#assign line = line + 1>
             <#assign curRoleType = productCategoryRole.getRelatedOne("RoleType", true)>
             <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-            <td><a href="/partymgr/control/viewprofile?party_id=${(productCategoryRole.partyId)!}" target="_blank" class="buttontext">${(productCategoryRole.partyId)!}</a></td>
+            <td><a href="/partymgr/control/viewprofile?party_id=${(productCategoryRole.partyId)!}" target="_blank" class="button tiny">${(productCategoryRole.partyId)!}</a></td>
             <td>${(curRoleType.get("description",locale))!}</td>
             <#assign hasntStarted = false>
             <#if (productCategoryRole.getTimestamp("fromDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productCategoryRole.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
@@ -51,7 +53,7 @@ under the License.
                     <input type="hidden" name="roleTypeId" value="${(productCategoryRole.roleTypeId)!}" />
                     <input type="hidden" name="fromDate" value="${(productCategoryRole.getTimestamp("fromDate"))!}" />
                     <#if hasExpired><#assign class="alert"></#if>
-                    <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="${class!''}" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(productCategoryRole. getTimestamp('thruDate'))!}" size="25" maxlength="30" id="thruDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(productCategoryRole. getTimestamp('thruDate'))!}" size="25" maxlength="30" id="thruDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
                 </form>
             </td>
@@ -62,7 +64,7 @@ under the License.
                     <input type="hidden" name="partyId" value="${(productCategoryRole.partyId)!}" />
                     <input type="hidden" name="roleTypeId" value="${(productCategoryRole.roleTypeId)!}" />
                     <input type="hidden" name="fromDate" value="${(productCategoryRole.getTimestamp("fromDate"))!}" />
-                    <a href="javascript:document.lineForm_delete${line}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.lineForm_delete${line}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
                 </form>
             </td>
             </tr>
@@ -93,7 +95,7 @@ under the License.
                             </#list>
                             </select>
 
-                            <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                            <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                             <input type="submit" value="${uiLabelMap.CommonAdd}" />
                         </form>
                     </td>

@@ -259,7 +259,7 @@ under the License.
                             <label text="${uiLabelMap.PageTitleFindSecurityGroup}"/>
                         </container>
                         <container style="button-bar">
-                            <link target="CreateNewSecurityGroup" style="buttontext create" text="${uiLabelMap.CommonCreateNew}"/>
+                            <link target="CreateNewSecurityGroup" style="button tiny create" text="${uiLabelMap.CommonCreateNew}"/>
                         </container>
                         <include-form name="ListSecurityGroups" location="component://common/widget/SecurityForms.xml"/>
                     </decorator-section>
@@ -284,7 +284,7 @@ under the License.
                             <label text="${uiLabelMap.FindUserLogin}"/>
                         </container>
                         <container style="button-bar">
-                            <link target="createnewlogin" style="buttontext create" text="${uiLabelMap.CommonCreateNew}"/>
+                            <link target="createnewlogin" style="button tiny create" text="${uiLabelMap.CommonCreateNew}"/>
                         </container>
                         <include-form name="ListUserLogins" location="component://common/widget/SecurityForms.xml"/>
                     </decorator-section>
@@ -300,7 +300,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
@@ -319,7 +319,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.SecurityViewPermissionError}</label>
+                                <label >${uiLabelMap.SecurityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

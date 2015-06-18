@@ -46,12 +46,12 @@ function lookupShipments() {
             <input type="hidden" name="lookupFlag" value="Y" />
             <table cellspacing="0" cellpadding="2" class="basic-table">
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.ProductShipmentId}</td>
+                <td width="25%" align="right" >${uiLabelMap.ProductShipmentId}</td>
                 <td width="5%">&nbsp;</td>
                 <td><input type="text" name="shipmentId" value="${shipmentId!}" /></td>
               </tr>
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.ProductShipmentType}</td>
+                <td width="25%" align="right" >${uiLabelMap.ProductShipmentType}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="shipmentTypeId">
@@ -67,7 +67,7 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.ProductOriginFacility}</td>
+                <td width="25%" align="right" >${uiLabelMap.ProductOriginFacility}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="originFacilityId">
@@ -83,7 +83,7 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.ProductDestinationFacility}</td>
+                <td width="25%" align="right" >${uiLabelMap.ProductDestinationFacility}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="destinationFacilityId">
@@ -99,7 +99,7 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.CommonStatus}</td>
+                <td width="25%" align="right" >${uiLabelMap.CommonStatus}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="statusId">
@@ -127,20 +127,20 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" class="label">${uiLabelMap.ProductDateFilter}</td>
+                <td width="25%" align="right" >${uiLabelMap.ProductDateFilter}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <table cellspacing="0" class="basic-table">
                     <tr>
                       <td>
-                        <@htmlTemplate.renderDateTimeField name="minDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <span class="label">${uiLabelMap.CommonFrom}</span>
+                        <@htmlTemplate.renderDateTimeField name="minDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                        <span >${uiLabelMap.CommonFrom}</span>
                       </td>
                     </tr>
                     <tr>
                       <td>
-                        <@htmlTemplate.renderDateTimeField name="maxDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <span class="label">${uiLabelMap.CommonThru}</span>
+                        <@htmlTemplate.renderDateTimeField name="maxDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                        <span >${uiLabelMap.CommonThru}</span>
                       </td>
                     </tr>
                   </table>
@@ -174,13 +174,15 @@ function lookupShipments() {
     <div class="screenlet-body">
         <table cellspacing="0" cellpadding="2" class="basic-table hover-bar">
         <tr class="header-row">
-          <td width="5%">${uiLabelMap.ProductShipmentId}</td>
-          <td width="15%">${uiLabelMap.ProductShipmentType}</td>
-          <td width="10%">${uiLabelMap.CommonStatus}</td>
-          <td width="25%">${uiLabelMap.ProductOriginFacility}</td>
-          <td width="25%">${uiLabelMap.ProductDestFacility}</td>
-          <td width="15%">${uiLabelMap.ProductShipDate}</td>
-          <td width="5%">&nbsp;</td>
+         <thead>
+          <th width="5%">${uiLabelMap.ProductShipmentId}</th>
+          <th width="15%">${uiLabelMap.ProductShipmentType}</th>
+          <th width="10%">${uiLabelMap.CommonStatus}</th>
+          <th width="25%">${uiLabelMap.ProductOriginFacility}</th>
+          <th width="25%">${uiLabelMap.ProductDestFacility}</th>
+          <th width="15%">${uiLabelMap.ProductShipDate}</th>
+          <th width="5%">&nbsp;</th>
+         </thead>
         </tr>
         <#if shipmentList?has_content>
           <#assign alt_row = false>
@@ -190,14 +192,14 @@ function lookupShipments() {
             <#assign statusItem = delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", shipment.statusId), true)!/>
             <#assign shipmentType = delegator.findOne("ShipmentType", Static["org.ofbiz.base.util.UtilMisc"].toMap("shipmentTypeId", shipment.shipmentTypeId), true)!/>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">${shipment.shipmentId}</a></td>
+              <td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="button tiny">${shipment.shipmentId}</a></td>
               <td>${(shipmentType.get("description",locale))?default(shipmentType.shipmentTypeId?default(""))}</td>
               <td>${(statusItem.get("description",locale))?default(statusItem.statusId?default("N/A"))}</td>
               <td>${(originFacility.facilityName)!} [${shipment.originFacilityId!}]</td>
               <td>${(destinationFacility.facilityName)!} [${shipment.destinationFacilityId!}]</td>
               <td><span style="white-space: nowrap;">${(shipment.estimatedShipDate.toString())!}</span></td>
               <td align="right">
-                <a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
+                <a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonView}</a>
               </td>
             </tr>
             <#-- toggle the row color -->

@@ -37,7 +37,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="SalesForecast" default-field-type="display"/>
-        <field name="salesForecastId" widget-style="buttontext">
+        <field name="salesForecastId" widget-style="button tiny">
             <hyperlink target="EditSalesForecast" description="${salesForecastId}" also-hidden="false">
                 <parameter param-name="salesForecastId"/>
             </hyperlink>
@@ -104,7 +104,7 @@ under the License.
             <lookup target-form-name="LookupProductCategory"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title="" widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="button tiny">
             <hyperlink target="deleteSalesForecastDetail" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="salesForecastId"/>
                 <parameter param-name="salesForecastDetailId"/>

@@ -29,12 +29,12 @@ under the License.
         <table class="basic-table" cellspacing="0">
         <#if !(facilityId??)>
             <tr>
-                <td class="label">${uiLabelMap.ProductFacility}</td>
+                <td >${uiLabelMap.ProductFacility}</td>
                 <td><input type="text" value="" size="19" maxlength="20" /></td>
             </tr>
         </#if>
         <tr>
-            <td class="label">${uiLabelMap.ProductLocationSeqId}</td>
+            <td >${uiLabelMap.ProductLocationSeqId}</td>
             <td>
                 <#if parameters.facilityId??>
                     <#assign LookupFacilityLocationView="LookupFacilityLocation?facilityId=${facilityId}">
@@ -45,23 +45,23 @@ under the License.
             </td>
         </tr>
         <tr>
-            <td class="label">${uiLabelMap.CommonArea}</td>
+            <td >${uiLabelMap.CommonArea}</td>
             <td><input type="text" name="areaId" value="" size="19" maxlength="20" /></td>
         </tr>
         <tr>
-            <td class="label">${uiLabelMap.ProductAisle}</td>
+            <td >${uiLabelMap.ProductAisle}</td>
             <td><input type="text" name="aisleId" value="" size="19" maxlength="20" /></td>
         </tr>
         <tr>
-            <td class="label">${uiLabelMap.ProductSection}</td>
+            <td >${uiLabelMap.ProductSection}</td>
             <td><input type="text" name="sectionId" value="" size="19" maxlength="20" /></td>
         </tr>
         <tr>
-            <td class="label">${uiLabelMap.ProductLevel}</td>
+            <td >${uiLabelMap.ProductLevel}</td>
             <td><input type="text" name="levelId" value="" size="19" maxlength="20" /></td>
         </tr>
         <tr>
-            <td class="label">${uiLabelMap.ProductPosition}</td>
+            <td >${uiLabelMap.ProductPosition}</td>
             <td><input type="text" name="positionId" value="" size="19" maxlength="20" /></td>
         </tr>
         <tr>
@@ -77,17 +77,19 @@ under the License.
         <h3>${uiLabelMap.CommonFound}:&nbsp;${foundLocations.size()}&nbsp;${uiLabelMap.ProductLocationsFor}&nbsp;<#if facility??>${(facility.facilityName)!}</#if> [ID:${facilityId!}]</h3>
         <br />
         <table class="basic-table hover-bar" cellspacing="0">
+        <thead>
         <tr class="header-row-2">
-            <td>${uiLabelMap.ProductFacility}</td>
-            <td>${uiLabelMap.ProductLocationSeqId}</td>
-            <td>${uiLabelMap.ProductType}</td>
-            <td>${uiLabelMap.CommonArea}</td>
-            <td>${uiLabelMap.ProductAisle}</td>
-            <td>${uiLabelMap.ProductSection}</td>
-            <td>${uiLabelMap.ProductLevel}</td>
-            <td>${uiLabelMap.ProductPosition}</td>
-            <td>&nbsp;</td>
+            <th>${uiLabelMap.ProductFacility}</th>
+            <th>${uiLabelMap.ProductLocationSeqId}</th>
+            <th>${uiLabelMap.ProductType}</th>
+            <th>${uiLabelMap.CommonArea}</th>
+            <th>${uiLabelMap.ProductAisle}</th>
+            <th>${uiLabelMap.ProductSection}</th>
+            <th>${uiLabelMap.ProductLevel}</th>
+            <th>${uiLabelMap.ProductPosition}</th>
+            <th>&nbsp;</th>
         </tr>
+        </thead>
         <#assign rowClass = "2">
         <#list foundLocations as location>
         <#assign locationTypeEnum = location.getRelatedOne("TypeEnumeration", true)!>

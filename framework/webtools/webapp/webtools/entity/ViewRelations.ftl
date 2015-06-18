@@ -33,13 +33,15 @@ under the License.
         </div>
         <br />
         <table class="basic-table hover-bar" cellspacing="0">
+          <thead>
             <tr class="header-row">
-                <td>${uiLabelMap.WebtoolsTitle}</td>
-                <td>${uiLabelMap.WebtoolsRelatedEntity}</td>
-                <td>${uiLabelMap.WebtoolsRelationType}</td>
-                <td>${uiLabelMap.WebtoolsFKName}</td>
-                <td>${uiLabelMap.WebtoolsFieldsList}</td>
+                <th>${uiLabelMap.WebtoolsTitle}</th>
+                <th>${uiLabelMap.WebtoolsRelatedEntity}</th>
+                <th>${uiLabelMap.WebtoolsRelationType}</th>
+                <th>${uiLabelMap.WebtoolsFKName}</th>
+                <th>${uiLabelMap.WebtoolsFieldsList}</th>
             </tr>
+           </thead>
             <#assign alt_row = false>
             <#list relations as relation>
                 <tr<#if alt_row> class="alternate-row"</#if>>

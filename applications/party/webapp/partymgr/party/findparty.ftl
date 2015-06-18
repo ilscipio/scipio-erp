@@ -35,7 +35,7 @@ under the License.
 <#else>
   <#assign createUrl = "createnew"/>
 </#if>
-<div class="button-bar"><a href="<@ofbizUrl>${createUrl}</@ofbizUrl>" class="buttontext create">${uiLabelMap.CommonCreateNew}</a></div>
+<div class="button-bar"><a href="<@ofbizUrl>${createUrl}</@ofbizUrl>" class="button tiny create">${uiLabelMap.CommonCreateNew}</a></div>
 <div class="screenlet">
   <div class="screenlet-title-bar">
 <#if partyList?has_content>
@@ -62,7 +62,7 @@ under the License.
         <input type="hidden" name="hideFields" value="Y"/>
         <table class="basic-table" cellspacing="0">
           <tr>
-            <td class="label">${uiLabelMap.PartyContactInformation}</td>
+            <td >${uiLabelMap.PartyContactInformation}</td>
             <td>
               <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked="checked"</#if>/>${uiLabelMap.CommonNone}&nbsp;
               <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked="checked"</#if>/>${uiLabelMap.PartyPostal}&nbsp;
@@ -71,27 +71,27 @@ under the License.
             </td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyPartyId}</td>
+            <td >${uiLabelMap.PartyPartyId}</td>
             <td><input type="text" name="partyId" value="${parameters.partyId!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyUserLogin}</td>
+            <td >${uiLabelMap.PartyUserLogin}</td>
             <td><input type="text" name="userLoginId" value="${parameters.userLoginId!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyLastName}</td>
+            <td >${uiLabelMap.PartyLastName}</td>
             <td><input type="text" name="lastName" value="${parameters.lastName!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyFirstName}</td>
+            <td >${uiLabelMap.PartyFirstName}</td>
             <td><input type="text" name="firstName" value="${parameters.firstName!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyPartyGroupName}</td>
+            <td >${uiLabelMap.PartyPartyGroupName}</td>
             <td><input type="text" name="groupName" value="${parameters.groupName!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyRoleType}</td>
+            <td >${uiLabelMap.PartyRoleType}</td>
             <td>
               <select name="roleTypeId">
 <#if currentRole?has_content>
@@ -106,7 +106,7 @@ under the License.
             </td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyType}</td>
+            <td >${uiLabelMap.PartyType}</td>
             <td>
               <select name="partyTypeId">
 <#if currentPartyType?has_content>
@@ -121,33 +121,33 @@ under the License.
             </td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.ProductInventoryItemId}</td>
+            <td >${uiLabelMap.ProductInventoryItemId}</td>
             <td><input type="text" name="inventoryItemId" value="${parameters.inventoryItemId!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.ProductSerialNumber}</td>
+            <td >${uiLabelMap.ProductSerialNumber}</td>
             <td><input type="text" name="serialNumber" value="${parameters.serialNumber!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.ProductSoftIdentifier}</td>
+            <td >${uiLabelMap.ProductSoftIdentifier}</td>
             <td><input type="text" name="softIdentifier" value="${parameters.softIdentifier!}"/></td>
           </tr>
 <#if extInfo == "P">
           <tr><td colspan="3"><hr /></td></tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonAddress1}</td>
+            <td >${uiLabelMap.CommonAddress1}</td>
             <td><input type="text" name="address1" value="${parameters.address1!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonAddress2}</td>
+            <td >${uiLabelMap.CommonAddress2}</td>
             <td><input type="text" name="address2" value="${parameters.address2!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonCity}</td>
+            <td >${uiLabelMap.CommonCity}</td>
             <td><input type="text" name="city" value="${parameters.city!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonStateProvince}</td>
+            <td >${uiLabelMap.CommonStateProvince}</td>
             <td>
               <select name="stateProvinceGeoId">
   <#if currentStateGeo?has_content>
@@ -160,29 +160,29 @@ under the License.
             </td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyPostalCode}</td>
+            <td >${uiLabelMap.PartyPostalCode}</td>
             <td><input type="text" name="postalCode" value="${parameters.postalCode!}"/></td>
           </tr>
 </#if>
 <#if extInfo == "T">
           <tr><td colspan="3"><hr /></td></tr>
           <tr>
-            <td class="label">${uiLabelMap.CommonCountryCode}</td>
+            <td >${uiLabelMap.CommonCountryCode}</td>
             <td><input type="text" name="countryCode" value="${parameters.countryCode!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyAreaCode}</td>
+            <td >${uiLabelMap.PartyAreaCode}</td>
             <td><input type="text" name="areaCode" value="${parameters.areaCode!}"/></td>
           </tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyContactNumber}</td>
+            <td >${uiLabelMap.PartyContactNumber}</td>
             <td><input type="text" name="contactNumber" value="${parameters.contactNumber!}"/></td>
           </tr>
 </#if>
 <#if extInfo == "O">
           <tr><td colspan="3"><hr /></td></tr>
           <tr>
-            <td class="label">${uiLabelMap.PartyContactInformation}</td>
+            <td >${uiLabelMap.PartyContactInformation}</td>
             <td><input type="text" name="infoString" value="${parameters.infoString!}"/></td>
           </tr>
 </#if>
@@ -218,43 +218,45 @@ under the License.
     <#assign commonDisplaying = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)/>
     <@nextPrev commonUrl=commonUrl ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=partyListSize viewSize=viewSize ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying=commonDisplaying paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" />
     <table class="basic-table hover-bar" cellspacing="0">
+     <thead>
       <tr class="header-row-2">
-        <td>${uiLabelMap.PartyPartyId}</td>
-        <td>${uiLabelMap.PartyUserLogin}</td>
-        <td>${uiLabelMap.PartyName}</td>
+        <th>${uiLabelMap.PartyPartyId}</th>
+        <th>${uiLabelMap.PartyUserLogin}</th>
+        <th>${uiLabelMap.PartyName}</th>
     <#if extInfo?default("") == "P" >
-        <td>${uiLabelMap.PartyCity}</td>
+        <th>${uiLabelMap.PartyCity}</th>
     </#if>
     <#if extInfo?default("") == "P">
-        <td>${uiLabelMap.PartyPostalCode}</td>
+        <th>${uiLabelMap.PartyPostalCode}</th>
     </#if>
     <#if extInfo?default("") == "T">
-        <td>${uiLabelMap.PartyAreaCode}</td>
+        <th>${uiLabelMap.PartyAreaCode}</th>
     </#if>
     <#if inventoryItemId?default("") != "">
-        <td>${uiLabelMap.ProductInventoryItemId}</td>
+        <th>${uiLabelMap.ProductInventoryItemId}</th>
     </#if>
     <#if serialNumber?default("") != "">
-        <td>${uiLabelMap.ProductSerialNumber}</td>
+        <th>${uiLabelMap.ProductSerialNumber}</th>
     </#if>
     <#if softIdentifier?default("") != "">
-        <td>${uiLabelMap.ProductSoftIdentifier}</td>
+        <th>${uiLabelMap.ProductSoftIdentifier}</th>
     </#if>
-        <td>${uiLabelMap.PartyRelatedCompany}</td>
-        <td>${uiLabelMap.PartyType}</td>
-        <td>${uiLabelMap.PartyMainRole}</td>
-        <td>
+        <th>${uiLabelMap.PartyRelatedCompany}</th>
+        <th>${uiLabelMap.PartyType}</th>
+        <th>${uiLabelMap.PartyMainRole}</th>
+        <th>
             <a href="<@ofbizUrl>findparty</@ofbizUrl>?<#if sortField?has_content><#if sortField == "createdDate">sortField=-createdDate<#elseif sortField == "-createdDate">sortField=createdDate<#else>sortField=createdDate</#if><#else>sortField=createdDate</#if>${paramList!}&VIEW_SIZE=${viewSize!}&VIEW_INDEX=${viewIndex!}" 
                 <#if sortField?has_content><#if sortField == "createdDate">class="sort-order-desc"<#elseif sortField == "-createdDate">class="sort-order-asc"<#else>class="sort-order"</#if><#else>class="sort-order"</#if>>${uiLabelMap.FormFieldTitle_createdDate}
             </a>
-        </td>
-        <td>
+        </th>
+        <th>
             <a href="<@ofbizUrl>findparty</@ofbizUrl>?<#if sortField?has_content><#if sortField == "lastModifiedDate">sortField=-lastModifiedDate<#elseif sortField == "-lastModifiedDate">sortField=lastModifiedDate<#else>sortField=lastModifiedDate</#if><#else>sortField=lastModifiedDate</#if>${paramList!}&VIEW_SIZE=${viewSize!}&VIEW_INDEX=${viewIndex!}" 
                 <#if sortField?has_content><#if sortField == "lastModifiedDate">class="sort-order-desc"<#elseif sortField == "-lastModifiedDate">class="sort-order-asc"<#else>class="sort-order"</#if><#else>class="sort-order"</#if>>${uiLabelMap.FormFieldTitle_lastModifiedDate}
             </a>
-        </td>
-        <td>&nbsp;</td>
+        </th>
+        <th>&nbsp;</th>
       </tr>
+    </thead>
     <#assign alt_row = false>
     <#assign rowCount = 0>
     <#list partyList as partyRow>

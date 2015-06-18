@@ -90,7 +90,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
         <field name="budgetId"><hidden/></field>
-        <field name="partyId" widget-style="buttontext">
+        <field name="partyId" widget-style="button tiny">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -117,7 +117,7 @@ under the License.
     <form name="BudgetReviews" list-name="budgetReviews" target="" title="" type="list" separate-columns="true" paginate-target="BudgetOverview"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="budgetReviewId"><display/></field>
-        <field name="partyId" widget-style="buttontext">
+        <field name="partyId" widget-style="button tiny">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -136,7 +136,7 @@ under the License.
        <field name="viewSize"><hidden value="${viewSize}"/></field>
        <field name="viewIndex"><hidden value="${viewIndex}"/></field>
        <field name="budgetId"><hidden/></field>
-       <field name="budgetItemSeqId" widget-style="buttontext">
+       <field name="budgetItemSeqId" widget-style="button tiny">
            <hyperlink target="EditBudgetItems"  description="${budgetItemSeqId}">
                 <parameter param-name="budgetId"/>
                 <parameter param-name="budgetItemSeqId"/>
@@ -150,8 +150,8 @@ under the License.
        <field name="amount" ><text size="10"/></field>
        <field name="purpose" ><text size="50"/></field>
        <field name="justification" ><text size="50"/></field>
-       <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" ><submit button-type="text-link"/></field>
-       <field name="removeButton" title=" " widget-style="buttontext">
+       <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="button tiny" ><submit button-type="text-link"/></field>
+       <field name="removeButton" title=" " widget-style="button tiny">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeBudgetItem">
                 <parameter param-name="budgetId"/>
                 <parameter param-name="budgetItemSeqId"/>
@@ -198,7 +198,7 @@ under the License.
     <form name="ListBudgetRoles" type="list" use-row-submit="true" title="" list-name="budgetRoles" paginate-target="BudgetRoles"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="budgetId"><hidden/></field>
-        <field name="partyId" widget-style="buttontext">
+        <field name="partyId" widget-style="button tiny">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -209,7 +209,7 @@ under the License.
         <field name="roleTypeId">
             <display-entity also-hidden="false" entity-name="RoleType"/>
         </field>
-        <field name="removeButton" widget-style="buttontext">
+        <field name="removeButton" widget-style="button tiny">
            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeBudgetRole">
                 <parameter param-name="budgetId"/>
                 <parameter param-name="partyId"/>
@@ -239,7 +239,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="budgetId"><hidden/></field>
         <field name="budgetReviewId"><display/></field>
-        <field name="partyId" widget-style="buttontext">
+        <field name="partyId" widget-style="button tiny">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -251,7 +251,7 @@ under the License.
             <display-entity also-hidden="false" entity-name="BudgetReviewResultType"/>
         </field>
         <field name="reviewDate"><display/></field>
-        <field name="removeButton" widget-style="buttontext">
+        <field name="removeButton" widget-style="button tiny">
            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeBudgetReview">
                 <parameter param-name="budgetId"/>
                 <parameter param-name="budgetReviewId"/>

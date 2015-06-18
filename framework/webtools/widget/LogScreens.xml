@@ -27,7 +27,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
@@ -102,17 +102,18 @@ under the License.
                               my guess is that the base/config/debug.properties file is not found in the classpath -->
                  <property-to-field resource="debug" property="log4j.appender.css.File" field="logFileName" default="runtime/logs/ofbiz.log" no-locale="true"/>
                  <script location="component://webtools/webapp/webtools/WEB-INF/actions/log/LogView.groovy"/>
+
              </actions>
              <widgets>
                  <decorator-screen name="log-decorator">
                      <decorator-section name="body">
                          <screenlet>
                              <container style="button-bar">
-                                 <link target="LogView" text="${uiLabelMap.CommonRefresh}" style="buttontext refresh"/>
+                                 <link target="LogView" text="${uiLabelMap.CommonRefresh}" style="button tiny refresh"/>
                              </container>
-                             <container style="button-bar">
-                                 <label style="label">${uiLabelMap.WebtoolsLogFileName}:</label>
-                                 <label>${logFileName}</label>
+                             <container style="">
+                                 <label style="">${uiLabelMap.WebtoolsLogFileName}:</label>
+                                 <label style="">${logFileName}</label>
                              </container>
                              <platform-specific>
                                  <html><html-template location="component://webtools/webapp/webtools/log/logContent.ftl"/></html>

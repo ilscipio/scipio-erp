@@ -29,8 +29,8 @@ under the License.
       <div class="screenlet-body">
         <#if invoiceIds?has_content>
           <div>
-            ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
-            ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">${shipmentId}</a>
+            ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="button tiny">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
+            ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="button tiny">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="button tiny">${shipmentId}</a>
           </div>
           <#if invoiceIds?? && invoiceIds?has_content>
             <div>
@@ -38,8 +38,8 @@ under the License.
               <ul>
                 <#list invoiceIds as invoiceId>
                   <li>
-                    ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="buttontext">${invoiceId}</a>
-                    (<a href="/accounting/control/invoice.pdf?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="buttontext">PDF</a>)
+                    ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="button tiny">${invoiceId}</a>
+                    (<a href="/accounting/control/invoice.pdf?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="button tiny">PDF</a>)
                   </li>
                 </#list>
               </ul>
@@ -53,9 +53,9 @@ under the License.
               <input type="hidden" name ="shipmentPackageSeqId" value = "${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}"/>
               <input type="hidden" name="shipmentRouteSegmentId" value ="${(shipmentPackageRouteSeg.shipmentRouteSegmentId)!}"/>
               <div>
-                <span class="label">${uiLabelMap.ProductPackage}</span> ${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}
+                <span >${uiLabelMap.ProductPackage}</span> ${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}
                 <#if shipmentPackageRouteSeg.labelImage??>
-                  <a href="javascript:document.viewShipmentPackageRouteSegLabelImageForm_${shipmentPackageRouteSeg_index}.submit();" class="buttontext">${uiLabelMap.ProductViewLabelImage}</a>
+                  <a href="javascript:document.viewShipmentPackageRouteSegLabelImageForm_${shipmentPackageRouteSeg_index}.submit();" class="button tiny">${uiLabelMap.ProductViewLabelImage}</a>
                 </#if>
               </div>
             </form>
@@ -67,7 +67,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
             <table cellspacing="0" class="basic-table">
               <tr>
-                <td width="25%" align="right"><span class="label">${uiLabelMap.ProductOrderId}</span></td>
+                <td width="25%" align="right"><span >${uiLabelMap.ProductOrderId}</span></td>
                 <td width="1">&nbsp;</td>
                 <td width="25%">
                   <input type="text" name="orderId" size="20" maxlength="20" value="${primaryOrderId!}"/>
@@ -79,8 +79,8 @@ under the License.
               <tr>
                 <td colspan="2">&nbsp;</td>
                 <td colspan="2">
-                  <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectOrderForm.submit();" class="buttontext">${uiLabelMap.ProductPackOrder}</a>
-                  <a href="javascript:document.selectOrderForm.submit();" class="buttontext">${uiLabelMap.ProductWeighPackageOnly}</a>
+                  <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectOrderForm.submit();" class="button tiny">${uiLabelMap.ProductPackOrder}</a>
+                  <a href="javascript:document.selectOrderForm.submit();" class="button tiny">${uiLabelMap.ProductWeighPackageOnly}</a>
                 </td>
               </tr>
             </table>
@@ -91,7 +91,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
             <table cellspacing="0" class="basic-table">
               <tr>
-                <td width="25%" align='right'><span class="label">${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
+                <td width="25%" align='right'><span >${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
                 <td width="1">&nbsp;</td>
                 <td width="25%">
                   <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
@@ -101,8 +101,8 @@ under the License.
               <tr>
                 <td colspan="2">&nbsp;</td>
                 <td colspan="1">
-                  <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="buttontext">${uiLabelMap.ProductPackOrder}</a>
-                  <a href="javascript:document.selectPicklistBinForm.submit();" class="buttontext">${uiLabelMap.ProductWeighPackageOnly}</a>
+                  <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="button tiny">${uiLabelMap.ProductPackOrder}</a>
+                  <a href="javascript:document.selectPicklistBinForm.submit();" class="button tiny">${uiLabelMap.ProductWeighPackageOnly}</a>
                 </td>
               </tr>
             </table>
@@ -130,15 +130,15 @@ under the License.
                     <input type="hidden" name="weightPackageSeqId" value ="${packedLine.getWeightPackageSeqId()}"/>
                     <tr>
                       <td>
-                        <span class="label">
+                        <span >
                           ${uiLabelMap.ProductPackage} ${packedLine.getWeightPackageSeqId()}
                           <input type="text" size="7" name="packageWeight" value="${(packedLine.getPackageWeight())!}" />
                         </span>
                       </td>
                       <td>
-                        <span class="label">${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="${(packedLine.getPackageLength())!}" size="5"/></span>
-                        <span class="label">${uiLabelMap.ProductWidth}<input type="text" name="packageWidth" value="${(packedLine.getPackageWidth())!}" size="5"/></span>
-                        <span class="label">${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="${(packedLine.getPackageHeight())!}" size="5"/></span>
+                        <span >${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="${(packedLine.getPackageLength())!}" size="5"/></span>
+                        <span >${uiLabelMap.ProductWidth}<input type="text" name="packageWidth" value="${(packedLine.getPackageWidth())!}" size="5"/></span>
+                        <span >${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="${(packedLine.getPackageHeight())!}" size="5"/></span>
                       </td>
                       <td>
                         <select name="shipmentBoxTypeId">
@@ -156,14 +156,14 @@ under the License.
                           </#if>
                         </select>
                       </td>
-                      <td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit()" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
-                      <td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="buttontext">${uiLabelMap.CommonDelete}</a></div>
+                      <td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit()" class="button tiny">${uiLabelMap.CommonUpdate}</a></td>
+                      <td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a></div>
                     </tr>
                   </form>
                 </#list>
               </table>
               <div align="right">
-                <a href="javascript:document.completePackageForm.submit()" class="buttontext">${uiLabelMap.ProductComplete}</a>
+                <a href="javascript:document.completePackageForm.submit()" class="button tiny">${uiLabelMap.ProductComplete}</a>
               </div>
               <form name="completePackageForm" method ="post" action="<@ofbizUrl>completePackage</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -189,21 +189,21 @@ under the License.
                 </#if>
                 <tr>
                   <td>
-                    <span class="label">${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
+                    <span >${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
                       <br />
                       ${uiLabelMap.ProductPackage}
                       <input type="text" size="7" name="packageWeight" value=""/>
                     </span>
                   </td>
                   <td>
-                    <span class="label">${uiLabelMap.CommonDimension} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultDimensionUomId)?eval}):</span>
+                    <span >${uiLabelMap.CommonDimension} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultDimensionUomId)?eval}):</span>
                     <br />
-                    <span class="label">${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="" size="5"/></span>
-                    <span class="label">${uiLabelMap.ProductWidth}<input type="text" name="packageWidth" value="" size="5"/></span>
-                    <span class="label">${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="" size="5"/></span>
+                    <span >${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="" size="5"/></span>
+                    <span >${uiLabelMap.ProductWidth}<input type="text" name="packageWidth" value="" size="5"/></span>
+                    <span >${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="" size="5"/></span>
                   </td>
                   <td>
-                    <span class="label">${uiLabelMap.ProductPackageInputBox}:</span>
+                    <span >${uiLabelMap.ProductPackageInputBox}:</span>
                     <br />
                     <select name="shipmentBoxTypeId">
                       <#if shipmentBoxTypes?has_content>
@@ -214,7 +214,7 @@ under the License.
                       </#if>
                     </select>
                   </td>
-                  <td align="right"><a href="javascript:document.weightPackageForm.submit()" class="buttontext">${uiLabelMap.ProductNextPackage}</a></td>
+                  <td align="right"><a href="javascript:document.weightPackageForm.submit()" class="button tiny">${uiLabelMap.ProductNextPackage}</a></td>
                 </tr>
               </form>
             </table>
@@ -241,15 +241,15 @@ under the License.
                 <#list shipmentPackages?sort_by("shipmentPackageSeqId") as shipmentPackage>
                   <tr>
                     <td>
-                      <span class="label">
+                      <span >
                         ${uiLabelMap.ProductPackage} ${(shipmentPackage_index + 1)}
                         <input type="text" size="7" readonly="readonly" name="packageWeight" value="${(shipmentPackage.weight)!}" />
                       </span>
                     </td>
                     <td>
-                      <span class="label">${uiLabelMap.CommonLength}<input type="text" readonly="readonly" name="packageLength" value="${(shipmentPackage.boxLength)!}" size="5"/></span>
-                      <span class="label">${uiLabelMap.ProductWidth}<input type="text" readonly="readonly" name="packageWidth" value="${(shipmentPackage.boxWidth)!}" size="5"/></span>
-                      <span class="label">${uiLabelMap.PartyHeight}<input type="text" readonly="readonly" name="packageHeight" value="${(shipmentPackage.boxHeight)!}" size="5"/></span>
+                      <span >${uiLabelMap.CommonLength}<input type="text" readonly="readonly" name="packageLength" value="${(shipmentPackage.boxLength)!}" size="5"/></span>
+                      <span >${uiLabelMap.ProductWidth}<input type="text" readonly="readonly" name="packageWidth" value="${(shipmentPackage.boxWidth)!}" size="5"/></span>
+                      <span >${uiLabelMap.PartyHeight}<input type="text" readonly="readonly" name="packageHeight" value="${(shipmentPackage.boxHeight)!}" size="5"/></span>
                     </td>
                     <td>
                       <#if (shipmentPackage.shipmentBoxTypeId)?has_content>
@@ -262,7 +262,7 @@ under the License.
               </form>
             </table>
             <div align="right">
-              <a href="javascript:document.completePackForm.submit()" class="buttontext">${uiLabelMap.ProductComplete}</a>
+              <a href="javascript:document.completePackForm.submit()" class="button tiny">${uiLabelMap.ProductComplete}</a>
             </div>
           </#if>
         </#if>
@@ -292,9 +292,9 @@ under the License.
           <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
         </form>
         <div>
-          <a href="javascript:document.shipNowForm.submit()" class="buttontext">${uiLabelMap.FacilityShip} ${uiLabelMap.CommonNow}</a>
+          <a href="javascript:document.shipNowForm.submit()" class="button tiny">${uiLabelMap.FacilityShip} ${uiLabelMap.CommonNow}</a>
           &nbsp;
-          <a href="javascript:document.holdShipmentForm.submit()" class="buttontext">${uiLabelMap.FacilityHoldShipment}</a>
+          <a href="javascript:document.holdShipmentForm.submit()" class="button tiny">${uiLabelMap.FacilityHoldShipment}</a>
         </div>
       </div>
     </div>

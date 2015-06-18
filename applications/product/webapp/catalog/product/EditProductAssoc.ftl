@@ -30,17 +30,17 @@ under the License.
                 <input type="hidden" name="UPDATE_MODE" value="CREATE" />
                 <table cellspacing="0" class="basic-table">
                 <tr>
-                <td align="right" class="label">${uiLabelMap.ProductProductId}</td>
+                <td align="right" >${uiLabelMap.ProductProductId}</td>
                 <td>&nbsp;</td>
                 <td><input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="${productId!}" /></td>
                 </tr>
                 <tr>
-                <td align="right" class="label">${uiLabelMap.ProductProductIdTo}</td>
+                <td align="right" >${uiLabelMap.ProductProductIdTo}</td>
                 <td>&nbsp;</td>
                 <td><input type="text" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo!}" /></td>
                 </tr>
                 <tr>
-                <td align="right" class="label">${uiLabelMap.ProductAssociationTypeId}</td>
+                <td align="right" >${uiLabelMap.ProductAssociationTypeId}</td>
                 <td>&nbsp;</td>
                 <td>
                     <select name="PRODUCT_ASSOC_TYPE_ID" size="1">
@@ -58,11 +58,11 @@ under the License.
                 </td>
                 </tr>
                 <tr>
-                <td align="right" class="label">${uiLabelMap.CommonFromDate}</td>
+                <td align="right" >${uiLabelMap.CommonFromDate}</td>
                 <td>&nbsp;</td>
                 <td>
                     <div>
-                        <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                        <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         ${uiLabelMap.CommonSetNowEmpty}
                     </div>
                 </td>
@@ -71,19 +71,19 @@ under the License.
                 <input type="hidden" name="UPDATE_MODE" value="CREATE" />
                 <table cellspacing="0" class="basic-table">
                 <tr>
-                <td align="right" class="label">${uiLabelMap.ProductProductId}</td>
+                <td align="right" >${uiLabelMap.ProductProductId}</td>
                 <td>&nbsp;</td>
                 <td><input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="${productId!}" /></td>
                 </tr>
                 <tr>
-                <td align="right" class="label">${uiLabelMap.ProductProductIdTo}</td>
+                <td align="right" >${uiLabelMap.ProductProductIdTo}</td>
                 <td>&nbsp;</td>
                 <td>
                   <@htmlTemplate.lookupField formName="editProductAssocForm" name="PRODUCT_ID_TO" id="PRODUCT_ID_TO" fieldFormName="LookupProduct"/>
                 </td>
                 </tr>
                 <tr>
-                <td align="right" class="label">${uiLabelMap.ProductAssociationTypeId}</td>
+                <td align="right" >${uiLabelMap.ProductAssociationTypeId}</td>
                 <td>&nbsp;</td>
                 <td>
                     <select name="PRODUCT_ASSOC_TYPE_ID" size="1">
@@ -95,12 +95,12 @@ under the License.
                 </td>
                 </tr>
                 <tr>
-                <td align="right" class="label">${uiLabelMap.CommonFromDate}</td>
+                <td align="right" >${uiLabelMap.CommonFromDate}</td>
                 <td>&nbsp;</td>
                 <td>
                     <div>
                         ${fromDate!}
-                        <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                        <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         ${uiLabelMap.CommonSetNowEmpty}
                     </div>
                 </td>
@@ -116,28 +116,28 @@ under the License.
             <input type="hidden" name="FROM_DATE" value="${fromDate!}" />
             <table cellspacing="0" class="basic-table">
             <tr>
-                <td align="right" class="label">${uiLabelMap.ProductProductId}</td>
+                <td align="right" >${uiLabelMap.ProductProductId}</td>
                 <td>&nbsp;</td>
                 <td><b>${productId!}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
             </tr>
             <tr>
-                <td align="right" class="label">${uiLabelMap.ProductProductIdTo}</td>
+                <td align="right" >${uiLabelMap.ProductProductIdTo}</td>
                 <td>&nbsp;</td>
                 <td><b>${productIdTo!}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
             </tr>
             <tr>
-                <td align="right" class="label">${uiLabelMap.ProductAssociationType}</td>
+                <td align="right" >${uiLabelMap.ProductAssociationType}</td>
                 <td>&nbsp;</td>
                 <td><b><#if curProductAssocType??>${(curProductAssocType.get("description",locale))!}<#else> ${productAssocTypeId!}</#if></b> ${uiLabelMap.ProductRecreateAssociation}</td>
             </tr>
             <tr>
-                <td align="right" class="label">${uiLabelMap.CommonFromDate}</td>
+                <td align="right" >${uiLabelMap.CommonFromDate}</td>
                 <td>&nbsp;</td>
                 <td><b>${fromDate!}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
             </tr>
         </#if>
         <tr>
-            <td width="26%" align="right" class="label">${uiLabelMap.CommonThruDate}</td>
+            <td width="26%" align="right" >${uiLabelMap.CommonThruDate}</td>
             <td>&nbsp;</td>
             <td width="74%">
             <div>
@@ -146,29 +146,29 @@ under the License.
               <#else> 
                 <#assign value = (request.getParameter("THRU_DATE"))!>
               </#if>            
-                <@htmlTemplate.renderDateTimeField name="THRU_DATE" event="" action="" value="${value}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>                
+                <@htmlTemplate.renderDateTimeField name="THRU_DATE" event="" action="" value="${value}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>                
             </div>
             </div>
             </td>
         </tr>
         <tr>
-            <td width="26%" align="right" class="label">${uiLabelMap.ProductSequenceNum}</td>
+            <td width="26%" align="right" >${uiLabelMap.ProductSequenceNum}</td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" name="SEQUENCE_NUM" <#if useValues>value="${(productAssoc.sequenceNum)!}"<#else>value="${(request.getParameter("SEQUENCE_NUM"))!}"</#if> size="5" maxlength="10" /></td>
         </tr>
         <tr>
-            <td width="26%" align="right" class="label">${uiLabelMap.ProductReason}</td>
+            <td width="26%" align="right" >${uiLabelMap.ProductReason}</td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" name="REASON" <#if useValues>value="${(productAssoc.reason)!}"<#else>value="${(request.getParameter("REASON"))!}"</#if> size="60" maxlength="255" /></td>
         </tr>
         <tr>
-            <td width="26%" align="right" class="label">${uiLabelMap.ProductInstruction}</td>
+            <td width="26%" align="right" >${uiLabelMap.ProductInstruction}</td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" name="INSTRUCTION" <#if useValues>value="${(productAssoc.instruction)!}"<#else>value="${(request.getParameter("INSTRUCTION"))!}"</#if> size="60" maxlength="255" /></td>
         </tr>
 
         <tr>
-            <td width="26%" align="right" class="label">${uiLabelMap.ProductQuantity}</td>
+            <td width="26%" align="right" >${uiLabelMap.ProductQuantity}</td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" name="QUANTITY" <#if useValues>value="${(productAssoc.quantity)!}"<#else>value="${(request.getParameter("QUANTITY"))!}"</#if> size="10" maxlength="15" /></td>
         </tr>
@@ -188,24 +188,26 @@ under the License.
     </div>
     <div class="screenlet-body">
         <table cellspacing="0" class="basic-table">
+         <thead>
             <tr class="header-row">
-            <td><b>${uiLabelMap.ProductProductId}</b></td>
-            <td><b>${uiLabelMap.ProductName}</b></td>
-            <td><b>${uiLabelMap.CommonFromDateTime}</b></td>
-            <td><b>${uiLabelMap.CommonThruDateTime}</b></td>
-            <td><b>${uiLabelMap.ProductSeqNum}</b></td>
-            <td><b>${uiLabelMap.CommonQuantity}</b></td>
-            <td><b>${uiLabelMap.ProductAssociationType}</b></td>
-            <td><b>&nbsp;</b></td>
-            <td><b>&nbsp;</b></td>
+                <th>${uiLabelMap.ProductProductId}</th>
+                <th>${uiLabelMap.ProductName}</th>
+                <th>${uiLabelMap.CommonFromDateTime}</th>
+                <th>${uiLabelMap.CommonThruDateTime}</th>
+                <th>${uiLabelMap.ProductSeqNum}</th>
+                <th>${uiLabelMap.CommonQuantity}</th>
+                <th>${uiLabelMap.ProductAssociationType}</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
             </tr>
+          </thead>
             <#assign rowClass = "2">
             <#list assocFromProducts as assocFromProduct>
             <#assign listToProduct = assocFromProduct.getRelatedOne("AssocProduct", true)>
             <#assign curProductAssocType = assocFromProduct.getRelatedOne("ProductAssocType", true)>
             <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                <td><a href="<@ofbizUrl>EditProduct?productId=${(assocFromProduct.productIdTo)!}</@ofbizUrl>" class="buttontext">${(assocFromProduct.productIdTo)!}</a></td>
-                <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocFromProduct.productIdTo)!}</@ofbizUrl>" class="buttontext">${(listToProduct.internalName)!}</a></#if>&nbsp;</td>
+                <td><a href="<@ofbizUrl>EditProduct?productId=${(assocFromProduct.productIdTo)!}</@ofbizUrl>" class="button tiny">${(assocFromProduct.productIdTo)!}</a></td>
+                <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocFromProduct.productIdTo)!}</@ofbizUrl>" class="button tiny">${(listToProduct.internalName)!}</a></#if>&nbsp;</td>
                 <td <#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))> style="color: red;"</#if>>
                 ${(assocFromProduct.fromDate)!}&nbsp;</td>
                 <td <#if (assocFromProduct.getTimestamp("thruDate"))?? && nowDate.after(assocFromProduct.getTimestamp("thruDate"))> style="color: red;"</#if>>
@@ -214,11 +216,11 @@ under the License.
                 <td>&nbsp;${(assocFromProduct.quantity)!}</td>
                 <td><#if curProductAssocType??> ${(curProductAssocType.get("description",locale))!}<#else>${(assocFromProduct.productAssocTypeId)!}</#if></td>
                 <td>
-                <a href="<@ofbizUrl>UpdateProductAssoc?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;PRODUCT_ID=${productId}&amp;PRODUCT_ID_TO=${(assocFromProduct.productIdTo)!}&amp;PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)!}&amp;FROM_DATE=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>UpdateProductAssoc?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;PRODUCT_ID=${productId}&amp;PRODUCT_ID_TO=${(assocFromProduct.productIdTo)!}&amp;PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)!}&amp;FROM_DATE=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="button tiny">
                 ${uiLabelMap.CommonDelete}</a>
                 </td>
                 <td>
-                <a href="<@ofbizUrl>EditProductAssoc?productId=${productId}&amp;PRODUCT_ID=${productId}&amp;PRODUCT_ID_TO=${(assocFromProduct.productIdTo)!}&amp;PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)!}&amp;FROM_DATE=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>EditProductAssoc?productId=${productId}&amp;PRODUCT_ID=${productId}&amp;PRODUCT_ID_TO=${(assocFromProduct.productIdTo)!}&amp;PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)!}&amp;FROM_DATE=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="button tiny">
                 ${uiLabelMap.CommonEdit}</a>
                 </td>
             </tr>
@@ -238,26 +240,28 @@ under the License.
     </div>
     <div class="screenlet-body">
         <table cellspacing="0" class="basic-table">
+          <thead>
             <tr class="header-row">
-            <td><b>${uiLabelMap.ProductProductId}</b></td>
-            <td><b>${uiLabelMap.ProductName}</b></td>
-            <td><b>${uiLabelMap.CommonFromDateTime}</b></td>
-            <td><b>${uiLabelMap.CommonThruDateTime}</b></td>
-            <td><b>${uiLabelMap.ProductAssociationType}</b></td>
-            <td><b>&nbsp;</b></td>
+            <th>${uiLabelMap.ProductProductId}</th>
+            <th>${uiLabelMap.ProductName}</th>
+            <th>${uiLabelMap.CommonFromDateTime}</th>
+            <th>${uiLabelMap.CommonThruDateTime}</th>
+            <th>${uiLabelMap.ProductAssociationType}</th>
+            <th>&nbsp;</b></th>
             </tr>
+            </thead>
             <#assign rowClass = "2">
             <#list assocToProducts as assocToProduct>
             <#assign listToProduct = assocToProduct.getRelatedOne("MainProduct", true)>
             <#assign curProductAssocType = assocToProduct.getRelatedOne("ProductAssocType", true)>
             <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                <td><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="buttontext">${(assocToProduct.productId)!}</a></td>
-                <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="buttontext">${(listToProduct.internalName)!}</a></#if></td>
+                <td><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="button tiny">${(assocToProduct.productId)!}</a></td>
+                <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="button tiny">${(listToProduct.internalName)!}</a></#if></td>
                 <td>${(assocToProduct.getTimestamp("fromDate"))!}&nbsp;</td>
                 <td>${(assocToProduct.getTimestamp("thruDate"))!}&nbsp;</td>
                 <td><#if curProductAssocType??> ${(curProductAssocType.get("description",locale))!}<#else> ${(assocToProduct.productAssocTypeId)!}</#if></td>
                 <td>
-                <a href="<@ofbizUrl>UpdateProductAssoc?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productIdTo)!}&amp;PRODUCT_ID=${(assocToProduct.productId)!}&amp;PRODUCT_ID_TO=${(assocToProduct.productIdTo)!}&amp;PRODUCT_ASSOC_TYPE_ID=${(assocToProduct.productAssocTypeId)!}&amp;FROM_DATE=${(assocToProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>UpdateProductAssoc?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productIdTo)!}&amp;PRODUCT_ID=${(assocToProduct.productId)!}&amp;PRODUCT_ID_TO=${(assocToProduct.productIdTo)!}&amp;PRODUCT_ASSOC_TYPE_ID=${(assocToProduct.productAssocTypeId)!}&amp;FROM_DATE=${(assocToProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="button tiny">
                 ${uiLabelMap.CommonDelete}</a>
                 </td>
             </tr>

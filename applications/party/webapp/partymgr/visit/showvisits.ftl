@@ -36,7 +36,7 @@ under the License.
   <div class="screenlet-body">
       <br />
         <div class="align-float">
-            <span class="label">
+            <span >
             <#if (visitSize > 0)>
                 <#if (viewIndex > 1)>
                   <a href="<@ofbizUrl>showvisits?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}<#if sort?has_content>&amp;sort=${sort}</#if><#if partyId?has_content>&amp;partyId=${partyId}</#if>&amp;showAll=${showAll}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonPrevious}</a> |
@@ -51,17 +51,19 @@ under the License.
         <br class="clear"/>
       <br />
       <table class="basic-table hover-bar" cellspacing="0">
+       <thead>
         <tr class="header-row">
-          <td><a href="<@ofbizUrl>showvisits?sort=visitId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyVisitId}</a></td>
-          <td><a href="<@ofbizUrl>showvisits?sort=visitorId&amp;showAll=${showAll}<#if visitorId?has_content>&amp;visitorId=${visitorId}</#if></@ofbizUrl>">${uiLabelMap.PartyVisitorId}</a></td>
-          <td><a href="<@ofbizUrl>showvisits?sort=partyId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyPartyId}</a></td>
-          <td><a href="<@ofbizUrl>showvisits?sort=userLoginId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonUserLoginId}</a></td>
-          <td><a href="<@ofbizUrl>showvisits?sort=-userCreated&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyNewUser}</a></td>
-          <td><a href="<@ofbizUrl>showvisits?sort=webappName&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyWebApp}</a></td>
-          <td><a href="<@ofbizUrl>showvisits?sort=clientIpAddress&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyClientIP}</a></td>
-          <td><a href="<@ofbizUrl>showvisits?sort=fromDate&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonFromDate}</a></td>
-          <td><a href="<@ofbizUrl>showvisits?sort=thruDate&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonThruDate}</a></td>
+          <th><a href="<@ofbizUrl>showvisits?sort=visitId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyVisitId}</a></th>
+          <th><a href="<@ofbizUrl>showvisits?sort=visitorId&amp;showAll=${showAll}<#if visitorId?has_content>&amp;visitorId=${visitorId}</#if></@ofbizUrl>">${uiLabelMap.PartyVisitorId}</a></th>
+          <th><a href="<@ofbizUrl>showvisits?sort=partyId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyPartyId}</a></th>
+          <th><a href="<@ofbizUrl>showvisits?sort=userLoginId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonUserLoginId}</a></th>
+          <th><a href="<@ofbizUrl>showvisits?sort=-userCreated&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyNewUser}</a></th>
+          <th><a href="<@ofbizUrl>showvisits?sort=webappName&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyWebApp}</a></th>
+          <th><a href="<@ofbizUrl>showvisits?sort=clientIpAddress&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyClientIP}</a></th>
+          <th><a href="<@ofbizUrl>showvisits?sort=fromDate&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonFromDate}</a></th>
+          <th><a href="<@ofbizUrl>showvisits?sort=thruDate&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonThruDate}</a></th>
         </tr>
+        </thead>
         <#assign alt_row = false>
         <#list visitList as visitObj>
           <tr<#if alt_row> class="alternate-row"</#if>>
@@ -80,7 +82,7 @@ under the License.
       </table>
       <br />
       <div class="align-float">
-          <span class="label">
+          <span >
           <#if (visitSize > 0)>
               <#if (viewIndex > 1)>
                 <a href="<@ofbizUrl>showvisits?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}<#if sort?has_content>&amp;sort=${sort}</#if><#if partyId?has_content>&amp;partyId=${partyId}</#if>&amp;showAll=${showAll}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonPrevious}</a> |

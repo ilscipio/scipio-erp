@@ -29,9 +29,9 @@ under the License.
             </entity-condition>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="partyId" widget-style="buttontext">
+        <field name="partyId" widget-style="button tiny">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="button tiny">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>

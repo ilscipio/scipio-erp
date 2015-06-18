@@ -31,16 +31,16 @@ under the License.
     </#if>
     <#if shipmentId?has_content>
       <div>
-        <span class="label">${uiLabelMap.ProductShipmentId}</span><a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">${shipmentId}</a>
+        <span >${uiLabelMap.ProductShipmentId}</span><a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="button tiny">${shipmentId}</a>
       </div>
       <#if invoiceIds?? && invoiceIds?has_content>
         <div>
-          <span class="label">${uiLabelMap.AccountingInvoices}:</span>
+          <span >${uiLabelMap.AccountingInvoices}:</span>
           <ul>
             <#list invoiceIds as invoiceId>
               <li>
-                ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="buttontext">${invoiceId}</a>
-                (<a href="/accounting/control/invoice.pdf?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="buttontext">PDF</a>)
+                ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="button tiny">${invoiceId}</a>
+                (<a href="/accounting/control/invoice.pdf?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="button tiny">PDF</a>)
               </li>
             </#list>
           </ul>
@@ -53,7 +53,7 @@ under the License.
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
         <table cellspacing="0" class="basic-table">
           <tr>
-            <td width="25%" align="right"><span class="label">${uiLabelMap.ProductOrderId}</span></td>
+            <td width="25%" align="right"><span >${uiLabelMap.ProductOrderId}</span></td>
             <td width="1">&nbsp;</td>
             <td width="25%">
               <#if shipmentId?has_content>
@@ -80,7 +80,7 @@ under the License.
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
         <table cellspacing="0" class="basic-table">
           <tr>
-            <td width="25%" align='right'><span class="label">${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
+            <td width="25%" align='right'><span >${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
             <td width="1">&nbsp;</td>
             <td width="25%">
               <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
@@ -117,7 +117,7 @@ under the License.
           <table cellpadding="4" cellspacing="4" class="basic-table">
             <tr>
               <td valign="top">
-                <span class="label">${uiLabelMap.ProductShipToAddress}</span>
+                <span >${uiLabelMap.ProductShipToAddress}</span>
                 <br />
                 ${uiLabelMap.CommonTo}: ${postalAddress.toName?default("")}
                 <br />
@@ -138,7 +138,7 @@ under the License.
               </td>
               <td>&nbsp;</td>
               <td valign="top">
-                <span class="label">${uiLabelMap.ProductCarrierShipmentMethod}</span>
+                <span >${uiLabelMap.ProductCarrierShipmentMethod}</span>
                 <br />
                 <#if carrier == "USPS">
                   <#assign color = "red">
@@ -155,7 +155,7 @@ under the License.
               </td>
               <td>&nbsp;</td>
               <td valign="top">
-                <span class="label">${uiLabelMap.OrderInstructions}</span>
+                <span >${uiLabelMap.OrderInstructions}</span>
                 <br />
                 ${orderItemShipGroup.shippingInstructions?default("(${uiLabelMap.CommonNone})")}
               </td>
@@ -171,7 +171,7 @@ under the License.
             <tr>
               <td>
                 <div>
-                  <span class="label">${uiLabelMap.ProductProductNumber}</span>
+                  <span >${uiLabelMap.ProductProductNumber}</span>
                   <input type="text" name="productId" size="20" maxlength="20" value=""/>
                   @
                   <input type="text" name="quantity" size="6" maxlength="6" value="1"/>
@@ -189,16 +189,18 @@ under the License.
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
           <table class="basic-table" cellspacing='0'>
+           <thead>
             <tr class="header-row">
-              <td>&nbsp;</td>
-              <td>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</td>
-              <td>${uiLabelMap.ProductProductId}</td>
-              <td>${uiLabelMap.ProductInternalName}</td>
-              <td>${uiLabelMap.ProductCountryOfOrigin}</td>
-              <td align="right">${uiLabelMap.ProductOrderedQuantity}</td>
-              <td align="right">${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.CommonQuantity}</td>
-              <td align="center">${uiLabelMap.CommonQty}&nbsp;${uiLabelMap.CommonTo}&nbsp;${uiLabelMap.ProductVerify}</td>
+              <th>&nbsp;</th>
+              <th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</th>
+              <th>${uiLabelMap.ProductProductId}</th>
+              <th>${uiLabelMap.ProductInternalName}</th>
+              <th>${uiLabelMap.ProductCountryOfOrigin}</th>
+              <th align="right">${uiLabelMap.ProductOrderedQuantity}</th>
+              <th align="right">${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.CommonQuantity}</th>
+              <th align="center">${uiLabelMap.CommonQty}&nbsp;${uiLabelMap.CommonTo}&nbsp;${uiLabelMap.ProductVerify}</th>
             </tr>
+            </thead>
             <#if orderItems?has_content>
               <#assign rowKey = 1>
               <#assign counter = 1>
@@ -234,7 +236,7 @@ under the License.
                   <td>${orderItemSeqId!}</td>
                   <td>${product.productId?default("N/A")}</td>
                   <td>
-                    <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="buttontext" target="_blank">${(product.internalName)!}</a>
+                    <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" target="_blank">${(product.internalName)!}</a>
                   </td>
                   <td>
                     <select name="geo_${rowKey}">
@@ -333,13 +335,15 @@ under the License.
           </div>
           <div class="screenlet-body">
             <table class="basic-table" cellspacing='0'>
+             <thead>
               <tr class="header-row">
-                <td>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</td>
-                <td>${uiLabelMap.ProductProductId}</td>
-                <td>${uiLabelMap.ProductInventoryItem} ${uiLabelMap.CommonNbr}</td>
-                <td align="right">${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.CommonQuantity}</td>
-                <td>&nbsp;</td>
+                <th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</th>
+                <th>${uiLabelMap.ProductProductId}</th>
+                <th>${uiLabelMap.ProductInventoryItem} ${uiLabelMap.CommonNbr}</th>
+                <th align="right">${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.CommonQuantity}</th>
+                <th>&nbsp;</th>
               </tr>
+              </thead>
               <#list pickRows as pickRow>
                 <#if (pickRow.getOrderId()!).equals(orderId)>
                   <tr>
@@ -352,7 +356,7 @@ under the License.
               </#list>
             </table>
             <div align="right">
-              <a href="javascript:document.completePickForm.submit()" class="buttontext">${uiLabelMap.ProductComplete}</a>
+              <a href="javascript:document.completePickForm.submit()" class="button tiny">${uiLabelMap.ProductComplete}</a>
             </div>
           </div>
         </div>

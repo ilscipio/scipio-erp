@@ -26,7 +26,7 @@ under the License.
     <br class="clear"/>
   </div>
   <div class="screenlet-body">
-  <div class="button-bar"><a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="buttontext">${uiLabelMap.ManufacturingNewCalendar}</a></div>
+  <div class="button-bar"><a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="button tiny">${uiLabelMap.ManufacturingNewCalendar}</a></div>
   <form name="calendarform" method="post" action="<@ofbizUrl>UpdateCalendar</@ofbizUrl>">
     <input type="hidden" name="calendarId" value="${techDataCalendar.calendarId}" />
 <#else>
@@ -38,30 +38,30 @@ under the License.
     <br class="clear"/>
   </div>
   <div class="screenlet-body">
-  <a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="buttontext">${uiLabelMap.ManufacturingNewCalendar}</a>
+  <a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="button tiny">${uiLabelMap.ManufacturingNewCalendar}</a>
   <form name="calendarform" method="post" action="<@ofbizUrl>CreateCalendar</@ofbizUrl>">
 </#if>
   <table class="basic-table" cellspacing="0">
     <#if techDataCalendar?has_content>
     <tr>
-      <td width='26%' align='right' valign='top' class="label">${uiLabelMap.ManufacturingCalendarId}</td>
+      <td width='26%' align='right' valign='top' >${uiLabelMap.ManufacturingCalendarId}</td>
       <td width="5">&nbsp;</td>
-      <td width="74%" valign="top"><span class="label">${techDataCalendar.calendarId!}</span> <span class="tooltip">(${uiLabelMap.CommonNotModifRecreat})</span></td>
+      <td width="74%" valign="top"><span >${techDataCalendar.calendarId!}</span> <span class="tooltip">(${uiLabelMap.CommonNotModifRecreat})</span></td>
     </tr>
     <#else>
     <tr>
-      <td width='26%' align='right' valign="top" class="label">${uiLabelMap.ManufacturingCalendarId}</td>
+      <td width='26%' align='right' valign="top" >${uiLabelMap.ManufacturingCalendarId}</td>
       <td width="5">&nbsp;</td>
       <td width="74%"><input type="text" size="12" name="calendarId" value="${calendarData.calendarId!}" /></td>
     </tr>
     </#if>
     <tr>
-      <td width='26%' align='right' valign='top' class="label">${uiLabelMap.CommonDescription}</td>
+      <td width='26%' align='right' valign='top' >${uiLabelMap.CommonDescription}</td>
       <td width="5">&nbsp;</td>
       <td width="74%"><input type="text" size="40" name="description" value="${calendarData.description!}" /></td>
     </tr>
     <tr>
-      <td width='26%' align='right' valign='top' class="label">${uiLabelMap.ManufacturingCalendarWeekId}</td>
+      <td width='26%' align='right' valign='top' >${uiLabelMap.ManufacturingCalendarWeekId}</td>
       <td width="5">&nbsp;</td>
       <td width="74%">
          <select name="calendarWeekId">

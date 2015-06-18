@@ -202,13 +202,13 @@
             <set field="actualHours" from-field="result.taskInfo.actualHours"/>
             <set field="currentStatusId" from-field="result.taskInfo.currentStatusId"/>
         </row-actions>
-        <field name="workEffortId" title="${uiLabelMap.ProjectMgrTaskId}" widget-style="buttontext">
+        <field name="workEffortId" title="${uiLabelMap.ProjectMgrTaskId}" widget-style="button tiny">
             <hyperlink also-hidden="false" description="${workEffortName}" target="taskView">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
         <field name="phaseName" title="${uiLabelMap.ProjectMgrPhaseName}"><display/></field>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="buttontext" sort-field="true">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="button tiny" sort-field="true">
             <hyperlink also-hidden="false" description="${projectName}" target="projectView">
                 <parameter param-name="projectId"/>
             </hyperlink>
@@ -237,7 +237,7 @@
         <field name="workEffortId"><hidden/></field>
         <field name="oldRoleTypeId" parameter-name="roleTypeId"><hidden value="${roleTypeId}"/></field>
         <field name="oldPartyId" parameter-name="partyId"><hidden value="${partyId}"/></field>
-        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="buttontext">
+        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="button tiny">
             <hyperlink also-hidden="false" description="${workEffortName}" target="taskView">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="my"/>
@@ -412,7 +412,7 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="workEffortId" title="${uiLabelMap.ProjectMgrWorkEffortId}">
             <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink target="EditTask" description="${workEffortId}" link-style="buttontext">
+                <sub-hyperlink target="EditTask" description="${workEffortId}" link-style="button tiny">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -476,7 +476,7 @@
         <field name="invoiceInfo"><hidden/></field>
         <field name="comments"><text size="60"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
             <hyperlink target="deleteTimeEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="timeEntryId"/>
@@ -524,14 +524,14 @@
         <field name="workEffortId"><hidden/></field>
         <field name="noteParty" title="${uiLabelMap.CommonBy}"><display description="${bsh:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, noteParty, true)} at ${bsh: org.ofbiz.base.util.UtilDateTime.timeStampToString(noteDateTime, &quot;dd-MM-yyyy HH:mm&quot;, TimeZone.getDefault(), context.get(&quot;locale&quot;))}"/></field>
 
-        <field name="internalNote" widget-style="buttontext" title="${uiLabelMap.ProjectMgrPrivateOrPublic}" use-when="internalNote.equals(&quot;N&quot;)">
+        <field name="internalNote" widget-style="button tiny" title="${uiLabelMap.ProjectMgrPrivateOrPublic}" use-when="internalNote.equals(&quot;N&quot;)">
             <hyperlink target="updateTaskNote" description="${uiLabelMap.OrderNotesPrivate}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="noteId"/>
                 <parameter param-name="internalNote" value="Y"/>
             </hyperlink>
         </field>
-        <field name="internalNote" widget-style="buttontext" title="${uiLabelMap.ProjectMgrPrivateOrPublic}" use-when="internalNote.equals(&quot;Y&quot;)">
+        <field name="internalNote" widget-style="button tiny" title="${uiLabelMap.ProjectMgrPrivateOrPublic}" use-when="internalNote.equals(&quot;Y&quot;)">
             <hyperlink target="updateTaskNote" description="${uiLabelMap.OrderNotesPublic}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="noteId"/>
@@ -570,9 +570,9 @@
         <alt-target use-when="thruDate!=null" target="removeTaskPartyAssign"/>
         <field name="workEffortId"><hidden/></field>
         <field name="projectId"><hidden/></field>
-        <field name="partyId" widget-style="buttontext">
+        <field name="partyId" widget-style="button tiny">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="viewprofile" description="${partyId}" link-style="buttontext">
+                <sub-hyperlink target="viewprofile" description="${partyId}" link-style="button tiny">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -634,7 +634,7 @@
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="custRequestId" widget-style="buttontext">
+        <field name="custRequestId" widget-style="button tiny">
             <hyperlink description="${custRequestName} [${custRequestId}]" target="/projectmgr/control/ViewRequest" target-type="inter-app">
                 <parameter param-name="custRequestId"/>
             </hyperlink>

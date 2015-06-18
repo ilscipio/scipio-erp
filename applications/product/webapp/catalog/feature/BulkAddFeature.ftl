@@ -26,13 +26,15 @@ under the License.
           <input type="hidden" name="_useRowSubmit" value="Y" />
           <input type="hidden" name="_checkGlobalScope" value="N" />
           <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
+          <thead>
           <tr class="header-row">
-            <td><b>${uiLabelMap.CommonDescription}</b></td>
-            <td><b>${uiLabelMap.ProductFeatureType}</b></td>
-            <td><b>${uiLabelMap.ProductIdSeqNum}</b></td>
-            <td><b>${uiLabelMap.ProductIdCode}</b></td>
-            <td align="right"><b>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="Y" checked="checked" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureTypeId_tableRow_', 'selectAllForm');" /></td>
+            <th>${uiLabelMap.CommonDescription}</th>
+            <th>${uiLabelMap.ProductFeatureType}</th>
+            <th>${uiLabelMap.ProductIdSeqNum}</th>
+            <th>${uiLabelMap.ProductIdCode}</th>
+            <th align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="Y" checked="checked" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureTypeId_tableRow_', 'selectAllForm');" /></th>
           </tr>
+          </thead>
         <#assign rowClass = "2">
         <#list 0..featureNum-1 as feature>
           <tr id="productFeatureTypeId_tableRow_${feature_index}" valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>

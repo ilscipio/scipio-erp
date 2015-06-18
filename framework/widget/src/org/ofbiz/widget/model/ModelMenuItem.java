@@ -88,6 +88,7 @@ public class ModelMenuItem extends ModelWidget {
     private final FlexibleStringExpander tooltip;
     private final String tooltipStyle;
     private final String widgetStyle;
+    private final String linkStyle;
 
     // ===== CONSTRUCTORS =====
 
@@ -106,6 +107,7 @@ public class ModelMenuItem extends ModelWidget {
         this.titleStyle = menuItemElement.getAttribute("title-style");
         this.disabledTitleStyle = menuItemElement.getAttribute("disabled-title-style");
         this.widgetStyle = menuItemElement.getAttribute("widget-style");
+        this.linkStyle = menuItemElement.getAttribute("link-style");
         this.tooltipStyle = menuItemElement.getAttribute("tooltip-style");
         this.selectedStyle = menuItemElement.getAttribute("selected-style");
         String hideIfSelected = menuItemElement.getAttribute("hide-if-selected");
@@ -197,6 +199,7 @@ public class ModelMenuItem extends ModelWidget {
         this.tooltip = FlexibleStringExpander.getInstance("");
         this.tooltipStyle = "";
         this.widgetStyle = "";
+        this.linkStyle = "";
         this.link = new MenuLink(portalPage, parentMenuItem, locale);
         this.modelMenu = parentMenuItem.modelMenu;
     }
@@ -244,6 +247,11 @@ public class ModelMenuItem extends ModelWidget {
             this.widgetStyle = overrideMenuItem.widgetStyle;
         } else {
             this.widgetStyle = existingMenuItem.widgetStyle;
+        }
+        if (UtilValidate.isNotEmpty(overrideMenuItem.linkStyle)) {
+            this.linkStyle = overrideMenuItem.linkStyle;
+        } else {
+            this.linkStyle = existingMenuItem.linkStyle;
         }
         if (overrideMenuItem.position != null) {
             this.position = overrideMenuItem.position;
@@ -477,6 +485,16 @@ public class ModelMenuItem extends ModelWidget {
             return this.modelMenu.getDefaultWidgetStyle();
         }
     }
+    
+    public String getLinkStyle() {
+        if (!this.linkStyle.isEmpty()) {
+            return this.linkStyle;
+        } else if (parentMenuItem != null) {
+            return parentMenuItem.getLinkStyle();
+        } else {
+            return this.modelMenu.getDefaultLinkStyle();
+        }
+    }
 
     public boolean isSelected(Map<String, Object> context) {
         return getName().equals(modelMenu.getSelectedMenuItemContextFieldName(context));
@@ -525,7 +543,7 @@ public class ModelMenuItem extends ModelWidget {
                 linkElement.setAttribute("text", parentMenuItem.getTitle().getOriginal());
             }
             if (linkElement.getAttribute("style").isEmpty()) {
-                linkElement.setAttribute("style", parentMenuItem.getWidgetStyle());
+                linkElement.setAttribute("style", parentMenuItem.getLinkStyle());
             }
             this.link = new Link(linkElement);
         }

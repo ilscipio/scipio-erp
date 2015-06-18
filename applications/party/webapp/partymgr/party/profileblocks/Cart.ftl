@@ -36,12 +36,14 @@ under the License.
       <div class="screenlet-body">
         <#if savedCartItems?has_content>
           <table class="basic-table" cellspacing="0">
+           <thead>
             <tr class="header-row">
-              <td>${uiLabelMap.PartySequenceId}</td>
-              <td>${uiLabelMap.PartyProductId}</td>
-              <td>${uiLabelMap.PartyQuantity}</td>
-              <td>${uiLabelMap.PartyQuantityPurchased}</td>
+              <th>${uiLabelMap.PartySequenceId}</th>
+              <th>${uiLabelMap.PartyProductId}</th>
+              <th>${uiLabelMap.PartyQuantity}</th>
+              <th>${uiLabelMap.PartyQuantityPurchased}</th>
             </tr>
+            </thead>
             <#list savedCartItems as savedCartItem>
               <tr>
                 <td>${savedCartItem.shoppingListItemSeqId!}</td>

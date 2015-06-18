@@ -19,6 +19,16 @@ under the License.
 -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="OrderAppBar" title="${uiLabelMap.OrderManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
+                </or>
+            </condition>
+            <link target="main"/>
+        </menu-item>
+        
         <menu-item name="request" title="${uiLabelMap.OrderRequests}">
             <condition>
                 <or>
@@ -89,7 +99,88 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="RequirementsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="MainTabBar" title="${uiLabelMap.OrderManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
+                </or>
+            </condition>
+            <link target="main"/>
+        </menu-item>
+        <menu-item name="request" title="${uiLabelMap.OrderRequests}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
+                </or>
+            </condition>
+            <link target="FindRequest"/>
+        </menu-item>
+
+        <menu-item name="quote" title="${uiLabelMap.OrderOrderQuotes}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
+                </or>
+            </condition>
+            <link target="FindQuote"/>
+        </menu-item>
+
+        <menu-item name="orderlist" title="${uiLabelMap.OrderOrderList}">
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+            </condition>
+            <link target="orderlist"/>
+        </menu-item>
+
+        <menu-item name="findorders" title="${uiLabelMap.OrderFindOrder}">
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+            </condition>
+            <link target="findorders"/>
+        </menu-item>
+
+        <menu-item name="orderentry" title="${uiLabelMap.OrderOrderEntry}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_CREATE"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_CREATE"/>
+                </or>
+            </condition>
+            <link target="orderentry" link-type="anchor"/>
+        </menu-item>
+
+        <menu-item name="return" title="${uiLabelMap.OrderOrderReturns}">
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_RETURN"/>
+            </condition>
+            <link target="findreturn"/>
+        </menu-item>
+
+        <menu-item name="requirement" title="${uiLabelMap.OrderRequirements}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                    <if-has-permission permission="ORDERMGR_ROLE" action="_VIEW"/>
+                </or>
+            </condition>
+            <link target="FindRequirements"/>
+        </menu-item>
+
+        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
+            <link target="OrderPurchaseReportOptions"/>
+        </menu-item>
+
+        <menu-item name="stats" title="${uiLabelMap.CommonStats}">
+            <link target="orderstats"/>
+        </menu-item>
+    </menu>
+
+    <menu name="RequirementsTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="FindRequirements" title="${uiLabelMap.OrderRequirements}">
             <link target="FindRequirements"/>
         </menu-item>
@@ -104,7 +195,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="RequirementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RequirementTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditRequirement" title="${uiLabelMap.OrderRequirement}">
             <link target="EditRequirement">
                 <parameter param-name="requirementId" from-field="requirement.requirementId"/>
@@ -127,7 +218,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="QuoteTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="QuoteTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="ViewQuote" title="${uiLabelMap.OrderViewQuote}">
             <link target="ViewQuote">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
@@ -245,7 +336,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="QuoteSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="QuoteSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
         <menu-item name="quoteReport" title="${uiLabelMap.CommonReport}">
             <link target="QuoteReport">
@@ -275,7 +366,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="RequestTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RequestTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="ViewRequest" title="${uiLabelMap.OrderRequestOverview}">
             <link target="ViewRequest">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
@@ -331,7 +422,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="RequestSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="RequestSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
         <menu-item name="newRequest" title="${uiLabelMap.OrderNewRequest}">
             <link target="EditRequest"/>
@@ -349,14 +440,14 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="RequestScreenletMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="RequestScreenletMenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2 no-clear">
         <menu-item name="newRequest" title="${uiLabelMap.OrderNewRequest}">
             <link target="EditRequest"/>
         </menu-item>
     </menu>
 
-    <menu name="editrequestitemmenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="editrequestitemmenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="requestitem" title="${uiLabelMap.OrderRequestItem}">
             <link id="requestitem" target="requestitem">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
@@ -382,7 +473,7 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    <menu name="quoteTermSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="quoteTermSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
         <menu-item name="EditQuoteTerm" title="${uiLabelMap.OrderCreateOrderQuoteTerm}" >
             <condition>
@@ -391,7 +482,7 @@ under the License.
                         <not><if-empty field="quote.quoteId"/></not>
                     </and>
             </condition>
-            <link target="EditQuoteTerm" text="" style="buttontext">
+            <link target="EditQuoteTerm" text="" style="button tiny">
                 <parameter param-name="quoteId" from-field="parameters.quoteId"/>
             </link>
         </menu-item>
@@ -402,16 +493,16 @@ under the License.
                         <not><if-empty field="quote.quoteId"/></not>
                     </and>
             </condition>
-            <link target="EditQuoteTermItem" text="" style="buttontext">
+            <link target="EditQuoteTermItem" text="" style="button tiny">
                 <parameter param-name="quoteId" from-field="parameters.quoteId"/>
                 <parameter param-name="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
             </link>
         </menu-item>
     </menu>
-    <menu name="quoteItemSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="quoteItemSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
         <menu-item name="EditQuoteTerm" title="${uiLabelMap.OrderCreateOrderQuoteTerm}" >
-            <link target="EditQuoteItem" text="${uiLabelMap.OrderCreateOrderQuoteItem}" style="buttontext">
+            <link target="EditQuoteItem" text="${uiLabelMap.OrderCreateOrderQuoteItem}" style="button tiny">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>

@@ -72,6 +72,7 @@ public class ModelMenu extends ModelWidget {
     private final String defaultTitleStyle;
     private final String defaultTooltipStyle;
     private final String defaultWidgetStyle;
+    private final String defaultLinkStyle;
     private final FlexibleStringExpander extraIndex;
     private final String fillStyle;
     private final String id;
@@ -119,6 +120,7 @@ public class ModelMenu extends ModelWidget {
         String defaultTitleStyle = "";
         String defaultTooltipStyle = "";
         String defaultWidgetStyle = "";
+        String defaultLinkStyle = "";
         FlexibleStringExpander extraIndex = FlexibleStringExpander.getInstance("");
         String fillStyle = "";
         String id = "";
@@ -169,6 +171,7 @@ public class ModelMenu extends ModelWidget {
                 defaultTitleStyle = parent.defaultTitleStyle;
                 defaultSelectedStyle = parent.defaultSelectedStyle;
                 defaultWidgetStyle = parent.defaultWidgetStyle;
+                defaultLinkStyle = parent.defaultLinkStyle;
                 defaultTooltipStyle = parent.defaultTooltipStyle;
                 defaultMenuItemName = parent.defaultMenuItemName;
                 menuItemList.addAll(parent.menuItemList);
@@ -210,6 +213,8 @@ public class ModelMenu extends ModelWidget {
             defaultSelectedStyle = menuElement.getAttribute("default-selected-style");
         if (!menuElement.getAttribute("default-widget-style").isEmpty())
             defaultWidgetStyle = menuElement.getAttribute("default-widget-style");
+        if (!menuElement.hasAttribute("default-link-style").isEmpty())
+            defaultLinkStyle = menuElement.getAttribute("default-link-style");
         if (!menuElement.getAttribute("default-tooltip-style").isEmpty())
             defaultTooltipStyle = menuElement.getAttribute("default-tooltip-style");
         if (!menuElement.getAttribute("default-menu-item-name").isEmpty())
@@ -265,6 +270,7 @@ public class ModelMenu extends ModelWidget {
         this.defaultTitleStyle = defaultTitleStyle;
         this.defaultTooltipStyle = defaultTooltipStyle;
         this.defaultWidgetStyle = defaultWidgetStyle;
+        this.defaultLinkStyle = defaultLinkStyle;
         this.extraIndex = extraIndex;
         this.fillStyle = fillStyle;
         this.id = id;
@@ -384,6 +390,10 @@ public class ModelMenu extends ModelWidget {
 
     public String getDefaultWidgetStyle() {
         return this.defaultWidgetStyle;
+    }
+    
+    public String getDefaultLinkStyle() {
+        return this.defaultLinkStyle;
     }
 
     public FlexibleStringExpander getExtraIndex() {

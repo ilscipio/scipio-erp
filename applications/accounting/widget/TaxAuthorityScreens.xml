@@ -53,13 +53,13 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="TaxAuthorityTabBar" location="component://accounting/widget/TaxAuthorityMenus.xml"/>
-                                        <container><link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="buttontext"/></container>
+                                        <container><link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="button tiny"/></container>
                                         <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${uiLabelMap.AccountingTaxAuthorityParty} &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${uiLabelMap.CommonId}:${taxAuthPartyId}], ${uiLabelMap.CommonGeo} &quot;${taxAuthGeo.geoName}&quot; [${uiLabelMap.CommonId}:${taxAuthGeoId}] ${${extraFunctionName}}"/>
                                     </widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.AccountingViewPermissionError}</label>
+                                <label >${uiLabelMap.AccountingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                         <decorator-section-include name="body"/>
@@ -79,7 +79,7 @@ under the License.
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
-                            <link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="buttontext create"/>
+                            <link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="button tiny create"/>
                         </container>
                         <screenlet title="${uiLabelMap.PageTitleFindTaxAuthority}">
                             <include-form name="FindTaxAuthority" location="component://accounting/widget/TaxAuthorityForms.xml"/>
@@ -193,10 +193,10 @@ under the License.
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="TaxAuthorityCategoryPanel" title="${uiLabelMap.PageTitleAddTaxAuthorityCategory}" collapsible="true">
-                            <label style="h3">${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>
+                            <label >${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>
                             <include-form name="AddTaxAuthorityRateProduct" location="component://accounting/widget/TaxAuthorityForms.xml"/>
                         </screenlet>
-                        <label style="h3">${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>                        
+                        <label >${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>                        
                         <include-form name="ListTaxAuthorityRateProducts" location="component://accounting/widget/TaxAuthorityForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -219,7 +219,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListTaxAuthorityParties}">
                             <container>
-                                <link target="EditTaxAuthorityPartyInfo" text="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" style="buttontext">
+                                <link target="EditTaxAuthorityPartyInfo" text="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" style="button tiny">
                                     <parameter param-name="taxAuthPartyId"/>
                                     <parameter param-name="taxAuthGeoId"/>
                                 </link>
@@ -252,7 +252,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditTaxAuthorityPartyInfo}">
                             <container>
-                                <link target="EditTaxAuthorityPartyInfo" text="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" style="buttontext">
+                                <link target="EditTaxAuthorityPartyInfo" text="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" style="button tiny">
                                     <parameter param-name="taxAuthPartyId"/>
                                     <parameter param-name="taxAuthGeoId"/>
                                 </link>

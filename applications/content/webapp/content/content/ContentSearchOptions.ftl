@@ -25,7 +25,7 @@ under the License.
       <input type="hidden" name="VIEW_SIZE" value="25"/>
       <table class="basic-table" cellspacing="0">
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.ContentKeywords}</td>
+          <td align="right" valign="middle" >${uiLabelMap.ContentKeywords}</td>
           <td valign="middle">
             <div>
               <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
@@ -35,7 +35,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.FormFieldTitle_contentId}</td>
+          <td align="right" valign="middle" >${uiLabelMap.FormFieldTitle_contentId}</td>
           <td valign="middle">
             <div>
               <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CONTENT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_CONTENT_ID" id="SEARCH_CONTENT_ID" fieldFormName="LookupContent"/>
@@ -43,7 +43,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" nowrap="nowrap" class="label">${uiLabelMap.FormFieldTitle_contentAssocTypeId}</td>
+          <td align="right" valign="middle" nowrap="nowrap" >${uiLabelMap.FormFieldTitle_contentAssocTypeId}</td>
           <td valign="middle" nowrap="nowrap">
             <div>
               <select name="contentAssocTypeId">
@@ -59,7 +59,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.PartyPartyId}</td>
+          <td align="right" valign="middle" >${uiLabelMap.PartyPartyId}</td>
           <td valign="middle">
             <div>
               <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
@@ -67,7 +67,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.PartyRoleTypeId}</td>
+          <td align="right" valign="middle" >${uiLabelMap.PartyRoleTypeId}</td>
           <td valign="middle">
             <div>
               <select name="partyRoleTypeId">
@@ -85,13 +85,13 @@ under the License.
             <table class="basic-table" cellspacing="0">
                <tr>
                   <td nowrap="nowrap">
-                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.fromDate!}" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.fromDate!}" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <span>${uiLabelMap.CommonFrom}</span>
                   </td>
                </tr>
                <tr>
                   <td nowrap="nowrap">
-                    <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.thruDate!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.thruDate!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <span>${uiLabelMap.CommonThru}</span>
                   </td>
                </tr>
@@ -99,7 +99,7 @@ under the License.
           </td>
           </tr>
         <tr>
-          <td align="right" valign="middle" class="label">${uiLabelMap.CommonSortedBy}</td>
+          <td align="right" valign="middle" >${uiLabelMap.CommonSortedBy}</td>
           <td valign="middle">
             <div>
               <select name="sortOrder">
@@ -113,12 +113,12 @@ under the License.
         </tr>
         <#if searchConstraintStrings?has_content>
           <tr>
-            <td align="right" valign="top" class="label">${uiLabelMap.ProductLastSearch}</td>
+            <td align="right" valign="top" >${uiLabelMap.ProductLastSearch}</td>
             <td valign="top">
                 <#list searchConstraintStrings as searchConstraintString>
                     <div>&nbsp;-&nbsp;${searchConstraintString}</div>
                 </#list>
-                <div class="label">${uiLabelMap.CommonSortedBy} ${searchSortOrderString}</div>
+                <div >${uiLabelMap.CommonSortedBy} ${searchSortOrderString}</div>
                 <div>
                   ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked="checked"/>
                   ${uiLabelMap.CommonRefineSearch}<input type="radio" name="clearSearch" value="N"/>
@@ -129,7 +129,7 @@ under the License.
         <tr>
           <td colspan="2" align="center">
             <div>
-              <a href="javascript:document.advToKeyWordSearchForm.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
+              <a href="javascript:document.advToKeyWordSearchForm.submit()" class="button tiny">${uiLabelMap.CommonFind}</a>
             </div>
           </td>
         </tr>

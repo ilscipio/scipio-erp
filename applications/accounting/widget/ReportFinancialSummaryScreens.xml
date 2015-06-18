@@ -231,7 +231,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="h3">
+                        <container >
                             <label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}"/>
                         </container>
                         <include-form name="TrialBalanceFinancialTimePeriodSelection" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -241,19 +241,19 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.AccountingTrialBalance}">
-                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext" target="TrialBalanceSearchResultsCsv.csv">
+                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="button tiny" target="TrialBalanceSearchResultsCsv.csv">
                                         <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link>
-                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext" target="TrialBalanceSearchResultsPdf.pdf" target-window="_BLANK">
+                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="button tiny" target="TrialBalanceSearchResultsPdf.pdf" target-window="_BLANK">
                                         <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link>
                                     <include-form name="TrialBalanceReport" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                                    <container style="h3">
+                                    <container >
                                         <label text="${uiLabelMap.AccountingDebitFlag}: ${postedDebitsTotal}"/>
                                     </container>
-                                    <container style="h3">
+                                    <container >
                                         <label text="${uiLabelMap.AccountingCreditFlag}: ${postedCreditsTotal}"/>
                                     </container>
                                 </screenlet>
@@ -312,18 +312,18 @@ under the License.
             <widgets>
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <container style="h3">
+                        <container >
                             <label text="${uiLabelMap.AccountingTrialBalance}"/>
                         </container>
-                        <container style="h3">
+                        <container >
                             <label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}"/>
                         </container>
                         <include-form name="TrialBalanceFinancialTimePeriodSelection" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         <include-form name="TrialBalanceReport" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                        <container style="h3">
+                        <container >
                             <label text="${uiLabelMap.AccountingDebitFlag}: ${postedDebitsTotal}"/>
                         </container>
-                        <container style="h3">
+                        <container >
                             <label text="${uiLabelMap.AccountingCreditFlag}: ${postedCreditsTotal}"/>
                         </container>
                     </decorator-section>
@@ -366,13 +366,13 @@ under the License.
                             <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
                         </link>
                         <screenlet title="${uiLabelMap.AccountingBalanceSheet}">
-                            <label style="h3" text="${uiLabelMap.AccountingAssets}"/>
+                            <label  text="${uiLabelMap.AccountingAssets}"/>
                             <include-form name="BalanceSheetAssets" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingLiabilities}"/>
+                            <label  text="${uiLabelMap.AccountingLiabilities}"/>
                             <include-form name="BalanceSheetLiabilities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingEquities}"/>
+                            <label  text="${uiLabelMap.AccountingEquities}"/>
                             <include-form name="BalanceSheetEquities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="BalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>                            
                         </screenlet>
                     </decorator-section>
@@ -401,13 +401,13 @@ under the License.
                         <container>
                             <label style="h1" text="${uiLabelMap.AccountingBalanceSheet}"/>
                             <include-form name="BalanceSheetParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingAssets}"/>
+                            <label  text="${uiLabelMap.AccountingAssets}"/>
                             <include-form name="BalanceSheetAssets" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingLiabilities}"/>
+                            <label  text="${uiLabelMap.AccountingLiabilities}"/>
                             <include-form name="BalanceSheetLiabilities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingEquities}"/>
+                            <label  text="${uiLabelMap.AccountingEquities}"/>
                             <include-form name="BalanceSheetEquities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="BalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </container>
                     </decorator-section>
@@ -431,11 +431,11 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/BalanceSheet.groovy"/>
             </actions>
             <widgets>
-                <label style="h3" text="${uiLabelMap.AccountingAssets}"/>
+                <label  text="${uiLabelMap.AccountingAssets}"/>
                 <include-form name="BalanceSheetAssets" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingLiabilities}"/>
+                <label  text="${uiLabelMap.AccountingLiabilities}"/>
                 <include-form name="BalanceSheetLiabilities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingEquities}"/>
+                <label  text="${uiLabelMap.AccountingEquities}"/>
                 <include-form name="BalanceSheetEquities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
             </widgets>
         </section>
@@ -513,13 +513,13 @@ under the License.
                             <parameter param-name="period2GlFiscalTypeId" from-field="period2GlFiscalTypeId"/>
                         </link>
                         <screenlet title="${uiLabelMap.AccountingComparativeBalanceSheet}">
-                            <label style="h3" text="${uiLabelMap.AccountingAssets}"/>
+                            <label  text="${uiLabelMap.AccountingAssets}"/>
                             <include-form name="ComparativeBalanceSheetAssets" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingLiabilities}"/>
+                            <label  text="${uiLabelMap.AccountingLiabilities}"/>
                             <include-form name="ComparativeBalanceSheetLiabilities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingEquities}"/>
+                            <label  text="${uiLabelMap.AccountingEquities}"/>
                             <include-form name="ComparativeBalanceSheetEquities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="ComparativeBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -586,13 +586,13 @@ under the License.
                         <container>
                             <label style="h1" text="${uiLabelMap.AccountingComparativeBalanceSheet}"/>
                             <include-form name="ComparativeBalanceSheetParametersOneColumn" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingAssets}"/>
+                            <label  text="${uiLabelMap.AccountingAssets}"/>
                             <include-form name="ComparativeBalanceSheetAssets" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingLiabilities}"/>
+                            <label  text="${uiLabelMap.AccountingLiabilities}"/>
                             <include-form name="ComparativeBalanceSheetLiabilities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingEquities}"/>
+                            <label  text="${uiLabelMap.AccountingEquities}"/>
                             <include-form name="ComparativeBalanceSheetEquities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="ComparativeBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </container>
                     </decorator-section>
@@ -653,13 +653,13 @@ under the License.
 
             </actions>
             <widgets>
-                <label style="h3" text="${uiLabelMap.AccountingAssets}"/>
+                <label  text="${uiLabelMap.AccountingAssets}"/>
                 <include-form name="ComparativeBalanceSheetAssets" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingLiabilities}"/>
+                <label  text="${uiLabelMap.AccountingLiabilities}"/>
                 <include-form name="ComparativeBalanceSheetLiabilities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingEquities}"/>
+                <label  text="${uiLabelMap.AccountingEquities}"/>
                 <include-form name="ComparativeBalanceSheetEquities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                <label  text="${uiLabelMap.CommonTotal}"/>
                 <include-form name="ComparativeBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
             </widgets>
         </section>
@@ -844,13 +844,13 @@ under the License.
                                 <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
                                 <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
                             </link>
-                            <label style="h3" text="${uiLabelMap.AccountingRevenues}"/>
+                            <label  text="${uiLabelMap.AccountingRevenues}"/>
                             <include-form name="IncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingExpenses}"/>
+                            <label  text="${uiLabelMap.AccountingExpenses}"/>
                             <include-form name="IncomeStatementExpenses" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingIncome}"/>
+                            <label  text="${uiLabelMap.AccountingIncome}"/>
                             <include-form name="IncomeStatementIncome" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="BalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -876,13 +876,13 @@ under the License.
                         <container>
                             <label style="h1" text="${uiLabelMap.AccountingIncomeStatement}"/>
                             <include-form name="FindTransactionTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingRevenues}"/>
+                            <label  text="${uiLabelMap.AccountingRevenues}"/>
                             <include-form name="IncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingExpenses}"/>
+                            <label  text="${uiLabelMap.AccountingExpenses}"/>
                             <include-form name="IncomeStatementExpenses" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingIncome}"/>
+                            <label  text="${uiLabelMap.AccountingIncome}"/>
                             <include-form name="IncomeStatementIncome" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="BalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </container>
                     </decorator-section>
@@ -903,13 +903,13 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/IncomeStatement.groovy"/>
             </actions>
             <widgets>
-                <label style="h3" text="${uiLabelMap.AccountingRevenues}"/>
+                <label  text="${uiLabelMap.AccountingRevenues}"/>
                 <include-form name="IncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingExpenses}"/>
+                <label  text="${uiLabelMap.AccountingExpenses}"/>
                 <include-form name="IncomeStatementExpenses" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingIncome}"/>
+                <label  text="${uiLabelMap.AccountingIncome}"/>
                 <include-form name="IncomeStatementIncome" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                <label  text="${uiLabelMap.CommonTotal}"/>
                 <include-form name="BalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
             </widgets>
         </section>
@@ -1002,13 +1002,13 @@ under the License.
                                 <parameter param-name="organizationPartyId"/>
                                 <parameter param-name="currencyUomId"/>
                             </link>
-                            <label style="h3" text="${uiLabelMap.AccountingRevenues}"/>
+                            <label  text="${uiLabelMap.AccountingRevenues}"/>
                             <include-form name="ComparativeIncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingExpenses}"/>
+                            <label  text="${uiLabelMap.AccountingExpenses}"/>
                             <include-form name="ComparativeIncomeStatementExpenses" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingIncome}"/>
+                            <label  text="${uiLabelMap.AccountingIncome}"/>
                             <include-form name="ComparativeIncomeStatementIncome" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="ComparativeBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -1083,13 +1083,13 @@ under the License.
                         <container>
                             <label style="h1" text="${uiLabelMap.AccountingComparativeIncomeStatement}"/>
                             <include-form name="ComparativeIncomeStatementParametersOneColumn" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingRevenues}"/>
+                            <label  text="${uiLabelMap.AccountingRevenues}"/>
                             <include-form name="ComparativeIncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingExpenses}"/>
+                            <label  text="${uiLabelMap.AccountingExpenses}"/>
                             <include-form name="ComparativeIncomeStatementExpenses" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingIncome}"/>
+                            <label  text="${uiLabelMap.AccountingIncome}"/>
                             <include-form name="ComparativeIncomeStatementIncome" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="ComparativeBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </container>
                     </decorator-section>
@@ -1160,13 +1160,13 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/ComparativeIncomeStatement.groovy"/>
             </actions>
             <widgets>
-                <label style="h3" text="${uiLabelMap.AccountingRevenues}"/>
+                <label  text="${uiLabelMap.AccountingRevenues}"/>
                 <include-form name="ComparativeIncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingExpenses}"/>
+                <label  text="${uiLabelMap.AccountingExpenses}"/>
                 <include-form name="ComparativeIncomeStatementExpenses" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingIncome}"/>
+                <label  text="${uiLabelMap.AccountingIncome}"/>
                 <include-form name="ComparativeIncomeStatementIncome" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                <label  text="${uiLabelMap.CommonTotal}"/>
                 <include-form name="ComparativeBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
             </widgets>
         </section>
@@ -1443,13 +1443,13 @@ under the License.
                                 <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                 <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
                             </link>
-                            <label style="h3" text="${uiLabelMap.AccountingOpeningCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingOpeningCashBalance}"/>
                             <include-form name="CashFlowStatementOpeningCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingPeriodCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingPeriodCashBalance}"/>
                             <include-form name="CashFlowStatementPeriodCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingClosingCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingClosingCashBalance}"/>
                             <include-form name="CashFlowStatementClosingCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="CashFlowBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -1474,13 +1474,13 @@ under the License.
                         <container>
                             <label style="h1" text="${uiLabelMap.AccountingCashFlowStatement}"/>
                             <include-form name="FindCashFlowTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingOpeningCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingOpeningCashBalance}"/>
                             <include-form name="CashFlowStatementOpeningCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingPeriodCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingPeriodCashBalance}"/>
                             <include-form name="CashFlowStatementPeriodCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingClosingCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingClosingCashBalance}"/>
                             <include-form name="CashFlowStatementClosingCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="CashFlowBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </container>
                     </decorator-section>
@@ -1500,13 +1500,13 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/CashFlowStatement.groovy"/>
             </actions>
             <widgets>
-                <label style="h3" text="${uiLabelMap.AccountingOpeningCashBalance}"/>
+                <label  text="${uiLabelMap.AccountingOpeningCashBalance}"/>
                 <include-form name="CashFlowStatementOpeningCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingPeriodCashBalance}"/>
+                <label  text="${uiLabelMap.AccountingPeriodCashBalance}"/>
                 <include-form name="CashFlowStatementPeriodCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingClosingCashBalance}"/>
+                <label  text="${uiLabelMap.AccountingClosingCashBalance}"/>
                 <include-form name="CashFlowStatementClosingCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                <label  text="${uiLabelMap.CommonTotal}"/>
                 <include-form name="CashFlowBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
             </widgets>
         </section>
@@ -1582,13 +1582,13 @@ under the License.
                                 <parameter param-name="organizationPartyId"/>
                                 <parameter param-name="currencyUomId"/>
                             </link>
-                            <label style="h3" text="${uiLabelMap.AccountingOpeningCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingOpeningCashBalance}"/>
                             <include-form name="ComparativeCashFlowStatementOpeningCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingPeriodCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingPeriodCashBalance}"/>
                             <include-form name="ComparativeCashFlowStatementPeriodCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingClosingCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingClosingCashBalance}"/>
                             <include-form name="ComparativeCashFlowStatementClosingCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="ComparativeCashFlowBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -1647,13 +1647,13 @@ under the License.
                         <container>
                             <label style="h1" text="${uiLabelMap.AccountingComparativeCashFlowStatement}"/>
                             <include-form name="ComparativeCashFlowStatementParametersOneColumn" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingOpeningCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingOpeningCashBalance}"/>
                             <include-form name="ComparativeCashFlowStatementOpeningCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingPeriodCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingPeriodCashBalance}"/>
                             <include-form name="ComparativeCashFlowStatementPeriodCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingClosingCashBalance}"/>
+                            <label  text="${uiLabelMap.AccountingClosingCashBalance}"/>
                             <include-form name="ComparativeCashFlowStatementClosingCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                            <label  text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="ComparativeCashFlowBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </container>
                     </decorator-section>
@@ -1707,13 +1707,13 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/ComparativeCashFlowStatement.groovy"/>
             </actions>
             <widgets>
-                <label style="h3" text="${uiLabelMap.AccountingOpeningCashBalance}"/>
+                <label  text="${uiLabelMap.AccountingOpeningCashBalance}"/>
                 <include-form name="ComparativeCashFlowStatementOpeningCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingPeriodCashBalance}"/>
+                <label  text="${uiLabelMap.AccountingPeriodCashBalance}"/>
                 <include-form name="ComparativeCashFlowStatementPeriodCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.AccountingClosingCashBalance}"/>
+                <label  text="${uiLabelMap.AccountingClosingCashBalance}"/>
                 <include-form name="ComparativeCashFlowStatementClosingCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                <label style="h3" text="${uiLabelMap.CommonTotal}"/>
+                <label  text="${uiLabelMap.CommonTotal}"/>
                 <include-form name="ComparativeCashFlowBalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
             </widgets>
         </section>

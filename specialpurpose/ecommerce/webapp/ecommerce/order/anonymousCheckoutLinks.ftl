@@ -26,26 +26,26 @@ function submitForm(form) {
     <#if (enableShippingAddress)??>
         <a href="<@ofbizUrl>setShipping</@ofbizUrl>" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Shipping Address</a>
     <#else>
-        <span class="buttontextdisabled">Shipping Address</span>
+        <span class="button tinydisabled">Shipping Address</span>
     </#if>
     <#if (enableShipmentMethod)??>
         <a href="<@ofbizUrl>setShipOptions</@ofbizUrl>" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Shipping Options</a>
     <#else>
-        <span class="buttontextdisabled">Shipping Options</span>
+        <span class="button tinydisabled">Shipping Options</span>
     </#if>
     <#if (enablePaymentOptions)??>
         <a href="<@ofbizUrl>setPaymentOption</@ofbizUrl>" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Payment Options</a>
     <#else>
-        <span class="buttontextdisabled">Payment Options</span>
+        <span class="button tinydisabled">Payment Options</span>
     </#if>
     <#if (enablePaymentInformation)??>
         <a href="<@ofbizUrl>setPaymentInformation?paymentMethodTypeId=${requestParameters.paymentMethodTypeId!}</@ofbizUrl>" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Payment Information</a>
     <#else>
-        <span class="buttontextdisabled">Payment Information</span>
+        <span class="button tinydisabled">Payment Information</span>
     </#if>
     <#if (enableReviewOrder)??>
         <a href="<@ofbizUrl>reviewOrder</@ofbizUrl>" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Review Order</a>
     <#else>
-        <span class="buttontextdisabled">Review Order</span>
+        <span class="button tinydisabled">Review Order</span>
     </#if>
 </div>

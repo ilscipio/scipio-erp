@@ -30,7 +30,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="attrValue"><text size="60"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="button tiny">
             <hyperlink target="deleteProductCategoryAttribute" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productCategoryId"/>
                 <parameter param-name="attrName"/>
@@ -76,7 +76,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="contentId" title="${uiLabelMap.ProductContent}">
             <display-entity entity-name="Content" description="${description}" also-hidden="true">
-                <sub-hyperlink target="EditCategoryContentContent" description="${contentId}" link-style="buttontext">
+                <sub-hyperlink target="EditCategoryContentContent" description="${contentId}" link-style="button tiny">
                     <parameter param-name="productCategoryId"/>
                     <parameter param-name="contentId"/>
                     <parameter param-name="prodCatContentTypeId"/>
@@ -101,12 +101,12 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         -->
-        <field name="editLink" title="${uiLabelMap.ProductEditContent}" widget-style="buttontext">
+        <field name="editLink" title="${uiLabelMap.ProductEditContent}" widget-style="button tiny">
             <hyperlink target="/content/control/EditContent" target-type="inter-app" description="${contentId}">
                 <parameter param-name="contentId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="button tiny">
             <hyperlink target="removeContentFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productCategoryId"/>
                 <parameter param-name="contentId"/>
@@ -172,7 +172,7 @@ under the License.
         <field name="detailSubScreen"><ignored/></field>
         <field name="imageUrl"><ignored/></field>
         <field name="imageTwoUrl"><ignored/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title=" " widget-style="button tiny">
             <hyperlink target="deleteProductCategoryLink" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productCategoryId"/>
                 <parameter param-name="linkSeqId"/>
@@ -213,7 +213,7 @@ under the License.
     </form>
 
     <form name="ListTopCategory" type="list" list-name="noParentCategories" odd-row-style="alternate-row" default-table-style="basic-table">
-        <field name="productCategoryId"  widget-style="buttontext">
+        <field name="productCategoryId"  widget-style="button tiny">
             <hyperlink target="EditCategory" description="${productCategoryId}" also-hidden="false">
                 <parameter param-name="CATALOG_TOP_CATEGORY" value="${productCategoryId}"/>
                 <parameter param-name="productCategoryId" value="${productCategoryId}"/>

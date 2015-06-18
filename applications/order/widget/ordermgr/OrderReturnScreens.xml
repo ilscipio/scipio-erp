@@ -22,6 +22,13 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <section>
+                            <widgets>
+                                <include-menu name="MainTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -49,10 +56,18 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <section>
+                            <widgets>
+                                <include-menu name="MainTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleFindReturn}">
+                        <label text="${uiLabelMap.PageTitleFindReturn}" style="h1"/>
+                        <screenlet>
                             <container>
-                                <link style="buttontext" target="returnMain" text="${uiLabelMap.OrderCreateNewReturn}"/>
+                                <link style="button tiny" target="returnMain" text="${uiLabelMap.OrderCreateNewReturn}"/>
                             </container>
                             <include-form name="FindReturns" location="component://order/widget/ordermgr/ReturnForms.xml"/>
                             <include-form name="ListReturns" location="component://order/widget/ordermgr/ReturnForms.xml"/>

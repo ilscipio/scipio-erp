@@ -21,15 +21,15 @@ under the License.
             <div class="errorMessage">${illegalInventoryItem}</div>
       </#if>
         <div class="button-bar">
-          <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductNewFacility}</a>
-          <a href="<@ofbizUrl>PickMoveStockSimple?facilityId=${facilityId!}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrint}</a>
+          <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductNewFacility}</a>
+          <a href="<@ofbizUrl>PickMoveStockSimple?facilityId=${facilityId!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrint}</a>
         </div>
        <#if !(inventoryItem??)>
             <form method="post" action="<@ofbizUrl>TransferInventoryItem</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${facilityId}" />
             <table cellspacing="0" class="basic-table">
             <tr>
-                <td class="label">${uiLabelMap.ProductInventoryItemId}</td>
+                <td >${uiLabelMap.ProductInventoryItemId}</td>
                 <td>
                   <input type="text" name="inventoryItemId" size="20" maxlength="20" />
                   <input type="submit" value="${uiLabelMap.ProductGetItem}" />
@@ -55,13 +55,13 @@ under the License.
             <input type="hidden" name="locationSeqId" value="${(inventoryItem.locationSeqId)!}" />
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%"align="right"><span class="label">${uiLabelMap.ProductInventoryItemId}</span></td>
+                <td width="6%"align="right"><span >${uiLabelMap.ProductInventoryItemId}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">${inventoryItemId}</td>
             </tr>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" class="label">${uiLabelMap.ProductInventoryItemTypeId}</td>
+                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductInventoryItemTypeId}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                 <#if inventoryItemType??>
@@ -71,31 +71,31 @@ under the License.
             </tr>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductProductId}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductProductId}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                     <#if inventoryItem?? && (inventoryItem.productId)??>
-                        <a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)!}" class="buttontext">${(inventoryItem.productId)!}</a>
+                        <a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)!}" class="button tiny">${(inventoryItem.productId)!}</a>
                     </#if>
                 </td>
             </tr>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.CommonStatus}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.CommonStatus}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">${(inventoryStatus.get("description",locale))?default("--")}</td>
             </tr>
 
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductComments}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductComments}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">${(inventoryItem.comments)?default("--")}</td>
             </tr>
 
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductSerialAtpQoh}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductSerialAtpQoh}</span></td>
                 <td width="6%">&nbsp;</td>
                 <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
                     <td width="74%">
@@ -114,7 +114,7 @@ under the License.
         </tr>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductTransferStatus}</span></td>
+            <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductTransferStatus}</span></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <select name="statusId">
@@ -130,17 +130,17 @@ under the License.
         </tr>
         <tr>
            <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductTransferSendDate}</span></td>
+            <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductTransferSendDate}</span></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <input type="text" name="sendDate" value="${(inventoryTransfer.sendDate)!}" size="22" />
-            <a href="#" onclick="setNow('sendDate')" class="buttontext">${uiLabelMap.CommonNow}</a>
+            <a href="#" onclick="setNow('sendDate')" class="button tiny">${uiLabelMap.CommonNow}</a>
             </td>
         </tr>
         <#if !(inventoryTransfer??)>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductToFacilityContainer}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductToFacilityContainer}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                     <div>
@@ -158,7 +158,7 @@ under the License.
             </tr>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductToLocation}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductToLocation}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation"/>
@@ -166,7 +166,7 @@ under the License.
             </tr>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductComments}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductComments}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                 <input type="text" name="comments" size="60" maxlength="250" />
@@ -174,7 +174,7 @@ under the License.
             </tr>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductQuantityToTransfer}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductQuantityToTransfer}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                 <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
@@ -190,23 +190,23 @@ under the License.
         <#else>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductTransferReceiveDate}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductTransferReceiveDate}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                 <input type="text" name="receiveDate" value="${(inventoryTransfer.receiveDate)!}" size="22" />
-                <a href="#" onclick="setNow('receiveDate')" class="buttontext">${uiLabelMap.CommonNow}</a>
+                <a href="#" onclick="setNow('receiveDate')" class="button tiny">${uiLabelMap.CommonNow}</a>
                 </td>
             </tr>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductToFacilityContainer}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductToFacilityContainer}</span></td>
                 <td width="6%">&nbsp;</td>
                 <#assign fac = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", inventoryTransfer.facilityIdTo), false)>
                 <td width="74%">${(fac.facilityName)?default("&nbsp;")}</td>
             </tr>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductToLocation}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductToLocation}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
@@ -214,7 +214,7 @@ under the License.
             </tr>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap"><span class="label">${uiLabelMap.ProductComments}</span></td>
+                <td width="6%" align="right" nowrap="nowrap"><span >${uiLabelMap.ProductComments}</span></td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                 <input type="text" name="comments" value="${(inventoryTransfer.comments)!}" size="60" maxlength="250" />

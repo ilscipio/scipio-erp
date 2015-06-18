@@ -19,10 +19,11 @@ under the License.
 
 <#if commissionReportList?has_content>
   <div>
-    <a href="<@ofbizUrl>CommissionReport.pdf?isSearch=Y&amp;productId=${parameters.productId!}&amp;partyId=${parameters.partyId!}&amp;fromDate=${parameters.fromDate!}&amp;thruDate=${parameters.thruDate!}</@ofbizUrl>" target="_BLANK" class="buttontext">${uiLabelMap.AccountingInvoicePDF}</a>
+    <a href="<@ofbizUrl>CommissionReport.pdf?isSearch=Y&amp;productId=${parameters.productId!}&amp;partyId=${parameters.partyId!}&amp;fromDate=${parameters.fromDate!}&amp;thruDate=${parameters.thruDate!}</@ofbizUrl>" target="_BLANK" class="button tiny">${uiLabelMap.AccountingInvoicePDF}</a>
   </div>
   <table class="basic-table hover-bar" cellspacing="0">
     <#-- Header Begins -->
+    <thead>
     <tr class="header-row-2">
       <th>${uiLabelMap.AccountingLicensedProduct}</th>
       <th>${uiLabelMap.AccountingQuantity}</th>
@@ -31,6 +32,7 @@ under the License.
       <th>${uiLabelMap.AccountingNetSale}</th>
       <th>${uiLabelMap.AccountingSalesAgents} / ${uiLabelMap.AccountingTermAmount}</th>
     </tr>
+    </thead>
     <#-- Header Ends-->
     <#assign alt_row = false>
     <#list commissionReportList as commissionReport>
@@ -64,13 +66,13 @@ under the License.
   </table>
   <div class="screenlet">
     <ul>
-      <li class="label"></li>
-      <li class="label"><h3>${uiLabelMap.CommonSummary} :</h3></li>
-      <li class="label"></li>
-      <li class="label">${uiLabelMap.ManufacturingTotalQuantity} : ${totalQuantity!}</li>
-      <li class="label">${uiLabelMap.AccountingTotalCommissionAmount} : <@ofbizCurrency amount = totalCommissionAmount!/></li>
-      <li class="label">${uiLabelMap.AccountingTotalNetSales} : <@ofbizCurrency amount = totalNetSales!/></li>
-      <li class="label">${uiLabelMap.AccountingTotalNumberOfOrders} : ${totalNumberOfOrders!}</li>
+      <li ></li>
+      <li ><h3>${uiLabelMap.CommonSummary} :</h3></li>
+      <li ></li>
+      <li >${uiLabelMap.ManufacturingTotalQuantity} : ${totalQuantity!}</li>
+      <li >${uiLabelMap.AccountingTotalCommissionAmount} : <@ofbizCurrency amount = totalCommissionAmount!/></li>
+      <li >${uiLabelMap.AccountingTotalNetSales} : <@ofbizCurrency amount = totalNetSales!/></li>
+      <li >${uiLabelMap.AccountingTotalNumberOfOrders} : ${totalNumberOfOrders!}</li>
     </ul>
   </div>
 <#else>

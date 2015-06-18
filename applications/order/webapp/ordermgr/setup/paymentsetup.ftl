@@ -44,16 +44,18 @@ under the License.
         <tr>
           <td>
             <table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <thead>
               <tr class="header-row">
-                <td nowrap="nowrap"><div>WebSite</div></td>
-                <td nowrap="nowrap"><div>PayMethod Type</div></td>
-                <td nowrap="nowrap"><div>Auth Service</div></td>
-                <td nowrap="nowrap"><div>Re-Auth Service</td>
-                <td nowrap="nowrap"><div>Capture Service</div></td>
-                <td nowrap="nowrap"><div>Refund Service</td>
-                <td nowrap="nowrap"><div>Payment Config</div></td>
-                <td nowrap="nowrap"><div>&nbsp;</div></td>
+                <th nowrap="nowrap"><div>WebSite</div></th>
+                <th nowrap="nowrap"><div>PayMethod Type</div></th>
+                <th nowrap="nowrap"><div>Auth Service</div></th>
+                <th nowrap="nowrap"><div>Re-Auth Service</th>
+                <th nowrap="nowrap"><div>Capture Service</div></th>
+                <th nowrap="nowrap"><div>Refund Service</th>
+                <th nowrap="nowrap"><div>Payment Config</div></th>
+                <th nowrap="nowrap"><div>&nbsp;</div></th>
               </tr>
+              </thead>
               <#if paymentSetups?has_content>
                 <#list paymentSetups as paymentSetting>
                   <#if rowStyle?? && rowStyle == "alternate-row">
@@ -72,10 +74,10 @@ under the License.
                     <td nowrap="nowrap">
                       <div>&nbsp;
                         <#if security.hasEntityPermission("PAYPROC", "_UPDATE", session)>
-                        <a href="<@ofbizUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="buttontext">Edit</a>&nbsp;
+                        <a href="<@ofbizUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="button tiny">Edit</a>&nbsp;
                         </#if>
                         <#if security.hasEntityPermission("PAYPROC", "_DELETE", session)>
-                        <a href="<@ofbizUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="buttontext">Remove</a>&nbsp;
+                        <a href="<@ofbizUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="button tiny">Remove</a>&nbsp;
                         </#if>
                       </div>
                     </td>
@@ -109,7 +111,7 @@ under the License.
             </#if>
           </td>
           <#if webSitePayment?has_content>
-            <td align='right' width='10%'><a href="<@ofbizUrl>paysetup</@ofbizUrl>" class="lightbuttontext">Add New</a></td>
+            <td align='right' width='10%'><a href="<@ofbizUrl>paysetup</@ofbizUrl>" class="button tiny">Add New</a></td>
           <#else>
             <td align='right' width='10%'></td>
           </#if>

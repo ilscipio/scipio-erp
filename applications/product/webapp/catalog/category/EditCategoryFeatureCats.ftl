@@ -19,7 +19,7 @@ under the License.
 <form method="post" action="<@ofbizUrl>attachProductFeaturesToCategory</@ofbizUrl>" name="attachProductFeaturesToCategory">
     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
 </form>
-<a href="javascript:document.attachProductFeaturesToCategory.submit()" class="buttontext">${uiLabelMap.ProductFeatureCategoryAttach}</a>
+<a href="javascript:document.attachProductFeaturesToCategory.submit()" class="button tiny">${uiLabelMap.ProductFeatureCategoryAttach}</a>
 
 <#if productCategoryId?? && productCategory??>
   <div class="screenlet">
@@ -29,19 +29,21 @@ under the License.
         <div class="screenlet-body">
             <#-- Feature Groups -->
             <table cellspacing="0" class="basic-table">
+              <thead>
                 <tr class="header-row">
-                    <td><b>${uiLabelMap.ProductFeatureGroup}</b></td>
-                    <td><b>${uiLabelMap.CommonFromDateTime}</b></td>
-                    <td align="center"><b>${uiLabelMap.CommonThruDateTime}</b></td>
-                    <td><b>&nbsp;</b></td>
+                    <th>${uiLabelMap.ProductFeatureGroup}</th>
+                    <th>${uiLabelMap.CommonFromDateTime}</th>
+                    <th align="center">${uiLabelMap.CommonThruDateTime}</th>
+                    <th>&nbsp;</th>
                 </tr>
+                </thead>
                 <#assign line = 0>
                 <#assign rowClass = "2">
                 <#list productFeatureCatGrpAppls as productFeatureCatGrpAppl>
                 <#assign line = line + 1>
                 <#assign productFeatureGroup = (productFeatureCatGrpAppl.getRelatedOne("ProductFeatureGroup", false))?default(null)>
                 <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                    <td><a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)!}</@ofbizUrl>" class="buttontext"><#if productFeatureGroup??>${(productFeatureGroup.description)!}</#if> [${(productFeatureCatGrpAppl.productFeatureGroupId)!}]</a></td>
+                    <td><a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)!}</@ofbizUrl>" class="button tiny"><#if productFeatureGroup??>${(productFeatureGroup.description)!}</#if> [${(productFeatureCatGrpAppl.productFeatureGroupId)!}]</a></td>
                     <#assign hasntStarted = false>
                     <#if (productFeatureCatGrpAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productFeatureCatGrpAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                     <td><div<#if hasntStarted> style="color: red;</#if>>${(productFeatureCatGrpAppl.fromDate)!}</div></td>
@@ -53,12 +55,12 @@ under the License.
                             <input type="hidden" name="productFeatureGroupId" value="${(productFeatureCatGrpAppl.productFeatureGroupId)!}" />
                             <input type="hidden" name="fromDate" value="${(productFeatureCatGrpAppl.fromDate)!}" />
                             <#if hasExpired><#assign class="alert"></#if>
-                            <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" value="${(productFeatureCatGrpAppl.thruDate)!}" className="${class!''}" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                            <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" value="${(productFeatureCatGrpAppl.thruDate)!}" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
                         </form>
                     </td>
                     <td align="center">
-                        <a href="javascript:document.removeProductFeatureCatGrpApplForm_${productFeatureCatGrpAppl_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                        <a href="javascript:document.removeProductFeatureCatGrpApplForm_${productFeatureCatGrpAppl_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
                         <form method="post" action="<@ofbizUrl>removeProductFeatureCatGrpAppl</@ofbizUrl>" name="removeProductFeatureCatGrpApplForm_${productFeatureCatGrpAppl_index}">
                             <input type="hidden" name="productFeatureGroupId" value="${(productFeatureCatGrpAppl.productFeatureGroupId)!}" />
                             <input type="hidden" name="productCategoryId" value="${(productFeatureCatGrpAppl.productCategoryId)!}" />
@@ -91,7 +93,7 @@ under the License.
                         <option value="${(productFeatureGroup.productFeatureGroupId)!}">${(productFeatureGroup.description)!} [${(productFeatureGroup.productFeatureGroupId)!}]</option>
                     </#list>
                     </select>
-                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <input type="submit" value="${uiLabelMap.CommonAdd}" />
                     </form>
                 </td></tr>
@@ -108,19 +110,21 @@ under the License.
         <div class="screenlet-body">
             <#-- Feature Categories -->
             <table cellspacing="0" class="basic-table">
+              <thead>
                 <tr class="header-row">
-                    <td><b>${uiLabelMap.ProductFeatureCategory}</b></td>
-                    <td><b>${uiLabelMap.CommonFromDateTime}</b></td>
-                    <td align="center"><b>${uiLabelMap.CommonThruDateTime}</b></td>
-                    <td><b>&nbsp;</b></td>
+                    <th>${uiLabelMap.ProductFeatureCategory}</th>
+                    <th>${uiLabelMap.CommonFromDateTime}</th>
+                    <th align="center">${uiLabelMap.CommonThruDateTime}</th>
+                    <th>&nbsp;</th>
                 </tr>
+               </thead> 
                 <#assign line = 0>
                 <#assign rowClass = "2">
                 <#list productFeatureCategoryAppls as productFeatureCategoryAppl>
                 <#assign line = line + 1>
                 <#assign productFeatureCategory = (productFeatureCategoryAppl.getRelatedOne("ProductFeatureCategory", false))?default(null)>
                 <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                    <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)!}</@ofbizUrl>" class="buttontext"><#if productFeatureCategory??>${(productFeatureCategory.description)!}</#if> [${(productFeatureCategoryAppl.productFeatureCategoryId)!}]</a></td>
+                    <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)!}</@ofbizUrl>" class="button tiny"><#if productFeatureCategory??>${(productFeatureCategory.description)!}</#if> [${(productFeatureCategoryAppl.productFeatureCategoryId)!}]</a></td>
                     <#assign hasntStarted = false>
                     <#if (productFeatureCategoryAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productFeatureCategoryAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                     <td <#if hasntStarted> style="color: red;"</#if>>${(productFeatureCategoryAppl.fromDate)!}</td>
@@ -132,12 +136,12 @@ under the License.
                             <input type="hidden" name="productFeatureCategoryId" value="${(productFeatureCategoryAppl.productFeatureCategoryId)!}" />
                             <input type="hidden" name="fromDate" value="${(productFeatureCategoryAppl.fromDate)!}" />
                             <#if hasExpired><#assign class="alert"></#if>
-                            <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" value="${(productFeatureCategoryAppl.thruDate)!}" className="${class!''}" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                            <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" value="${(productFeatureCategoryAppl.thruDate)!}" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
                         </form>
                     </td>
                     <td align="center">
-                    <a href="javascript:document.removeProductFeatureCategoryApplForm_${productFeatureCategoryAppl_index}.submit()" class="buttontext">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.removeProductFeatureCategoryApplForm_${productFeatureCategoryAppl_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
                     <form method="post" action="<@ofbizUrl>removeProductFeatureCategoryAppl</@ofbizUrl>" name="removeProductFeatureCategoryApplForm_${productFeatureCategoryAppl_index}">
                         <input type="hidden" name="productFeatureCategoryId" value="${(productFeatureCategoryAppl.productFeatureCategoryId)!}" />
                         <input type="hidden" name="productCategoryId" value="${(productFeatureCategoryAppl.productCategoryId)!}" />
@@ -169,7 +173,7 @@ under the License.
                             <option value="${(productFeatureCategory.productFeatureCategoryId)!}">${(productFeatureCategory.description)!} [${(productFeatureCategory.productFeatureCategoryId)!}]</option>
                         </#list>
                         </select>
-                        <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                        <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         <input type="submit" value="${uiLabelMap.CommonAdd}" />
                     </form>
                 </td></tr>

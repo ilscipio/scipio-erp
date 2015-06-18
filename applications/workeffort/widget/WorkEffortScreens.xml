@@ -47,7 +47,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -77,7 +77,7 @@ under the License.
                                 <platform-specific><html><html-template location="component://workeffort/webapp/workeffort/task/mytasks.ftl"/></html></platform-specific>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -111,7 +111,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container style="button-bar">
-                                    <link text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort" style="buttontext">
+                                    <link text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort" style="button tiny">
                                         <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                     </link>
                                 </container>
@@ -144,10 +144,10 @@ under the License.
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
                                 <container style="button-bar">
-                                    <link  text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort" style="buttontext">
+                                    <link  text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort" style="button tiny">
                                         <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                     </link>
-                                    <link  text="${uiLabelMap.CommonAdvancedSearch}" target="WorkEffortSearchOptions" style="buttontext"/>
+                                    <link  text="${uiLabelMap.CommonAdvancedSearch}" target="WorkEffortSearchOptions" style="button tiny"/>
                                 </container>
                             </decorator-section>
                             <decorator-section name="search-options">
@@ -199,10 +199,10 @@ under the License.
                         <section>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="AddWorkEffortAndAssoc" text="${uiLabelMap.WorkEffortAddChild}" style="buttontext">
+                                    <link target="AddWorkEffortAndAssoc" text="${uiLabelMap.WorkEffortAddChild}" style="button tiny">
                                         <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>
                                     </link>
-                                    <link target="AddWorkEffortAssoc" text="${uiLabelMap.WorkEffortAddExistingWorkEffortChild}" style="buttontext">
+                                    <link target="AddWorkEffortAssoc" text="${uiLabelMap.WorkEffortAddExistingWorkEffortChild}" style="button tiny">
                                         <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>
                                     </link>
                                 </container>
@@ -804,7 +804,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -831,13 +831,13 @@ under the License.
                                     <label text="${uiLabelMap.WorkEffortICalendarFind}"/>
                                 </container>
                                 <container style="button-bar">
-                                    <link text="${uiLabelMap.CommonCreate}" target="EditICalendar" style="buttontext"/>
-                                    <link text="${uiLabelMap.CommonHelp}" target="ICalendarHelp" style="buttontext"/>
+                                    <link text="${uiLabelMap.CommonCreate}" target="EditICalendar" style="button tiny"/>
+                                    <link text="${uiLabelMap.CommonHelp}" target="ICalendarHelp" style="button tiny"/>
                                 </container>
                                 <include-form name="ListIcalendars" location="component://workeffort/widget/WorkEffortForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -881,7 +881,7 @@ under the License.
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar">
-                                            <link text="${uiLabelMap.CommonCreate}" target="EditICalendar" style="buttontext"/>
+                                            <link text="${uiLabelMap.CommonCreate}" target="EditICalendar" style="button tiny"/>
                                         </container>
                                         <include-form name="EditICalendar" location="component://workeffort/widget/WorkEffortForms.xml"/>
                                     </fail-widgets>

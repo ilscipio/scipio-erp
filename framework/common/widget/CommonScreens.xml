@@ -84,9 +84,17 @@ under the License.
              
                 <!-- The default (global) java scripts -->
                 <!-- jQuery part -->
+                
+                <!-- Legacy JS TODO: Remove once possible -->
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
+                
                 <!--  Foundation JS -->
+                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery/dist/jquery.min.js" global="true" />
+                
                 <set field="layoutSettings.javaScripts[]" value="/images/styles/base/bower_components/modernizr/modernizr.js" global="true" />
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[+0]" value="/images/styles/base/bower_components/jquery/dist/jquery.min.js" global="true" />
+                
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation.min.js" global="true" />
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.topbar.js" global="true" />
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.offcanvas.js" global="true" />
@@ -95,16 +103,12 @@ under the License.
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/js/app.js" global="true" />
 
-                
-                
                 <!-- Legacy JS TODO: Remove once possible -->
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/selectall.js" global="true" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/fieldlookup.js" global="true" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/miscAjaxFunctions.js" global="true" />               
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/selectMultipleRelatedValues.js" global="true" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/util.js" global="true" />
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
                 
                 <!-- Load available JS Language Files -->
                 <!-- DISABLED FOR CLEAN-UP

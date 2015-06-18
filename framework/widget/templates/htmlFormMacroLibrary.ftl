@@ -111,6 +111,9 @@ under the License.
 
 <#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip="">
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
+
+  <#-- TODO: Foundation: This does not properly support the case where dateType=="time" (but it's rare); shouldn't get _i18n or datepicker in that case (?) --> 
+  
   <div class="row collapse date" data-date="" data-date-format="<#if shortDateInput?? && shortDateInput>yyyy-MM-dd<#else>yyyy-MM-dd HH:mm:ss</#if>">
         <div class="small-11 columns">
             <input type="text" name="${name}_i18n" <@renderClass className alert /><#rt/>
@@ -120,12 +123,17 @@ under the License.
             <#if size?has_content> size="${size}"</#if><#rt/>
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
             <#if id?has_content> id="${id}_i18n"</#if> class="small-3 columns"/><#rt/>
+
+            <input type="hidden" name="${name}" <#if id?has_content> id="${id}"</#if> <#if value?has_content> value="${value}"</#if> />
         </div>
         <div class="small-1 columns">
         <span class="postfix"><i class="fa fa-calendar"></i></span>
         </div>
         <script type="text/javascript">
             $(function() {
+                jQuery("#${id}_i18n").change(function() {
+                    jQuery("#${id}").val(this.value);
+                });
                 <#if name??>$("input[name='${name?html}_i18n']").fdatepicker(${fdatepickerOptions});<#else>$("input").last().fdatepicker(${fdatepickerOptions});</#if>
             });
         </script>

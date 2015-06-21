@@ -46,11 +46,11 @@ under the License.
                         ${StringUtil.wrapString(errorMessage)}
       </#if>
       <#if errorMessageList?has_content>
-                        <ul>
+                        <ol>
         <#list errorMessageList as errorMsg>
                           <li>${StringUtil.wrapString(errorMsg)}</li>
         </#list>
-                        </ul>
+                        </ol>
       </#if>
             </@alert>
     </div>
@@ -64,11 +64,11 @@ under the License.
                         ${StringUtil.wrapString(eventMessage)}
       </#if>
       <#if eventMessageList?has_content>
-                        <ul>
+                        <ol>
         <#list eventMessageList as eventMsg>
                           <li>${StringUtil.wrapString(eventMsg)}</li>
         </#list>
-                        </ul>
+                        </ol>
       </#if>
         </@alert>
     </div>

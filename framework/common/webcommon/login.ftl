@@ -27,7 +27,7 @@ under the License.
   <#assign focusName = true>
 </#if>
 
-<div class="large-3 large-centered columns login-box" id="login">
+<div class="${style_grid_large!}3 ${style_grid_large!}centered columns login-box" id="login">
 <div id="login-box-title">
     <h1>${logo} ${uiLabelMap.CommonLogin!}</h1>
     </div>
@@ -40,28 +40,28 @@ under the License.
   </@alert>
   </#if>
   <@row>
-    <div class="large-12 columns auth-plain">
+    <div class="${style_grid_large!}12 columns auth-plain">
      <div class="signup-panel right-solid">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
        <@row>
-        <div class="large-12 columns">
+        <div class="${style_grid_large!}12 columns">
           <div class="row collapse">
-            <div class="small-3 columns">
+            <div class="${style_grid_small!}3 columns">
               <span class="prefix"><i class="fi-torso-female"></i></span>
             </div>
-            <div class="small-9 columns">
+            <div class="${style_grid_small!}9 columns">
               <input type="text" name="USERNAME" value="${username}" size="20" placeholder="${uiLabelMap.CommonUsername}" title="${uiLabelMap.CommonUsername}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
             </div>
           </div>
         </div>
        </@row>
       <@row>
-        <div class="large-12 columns">
+        <div class="${style_grid_large!}12 columns">
           <div class="row collapse">
-            <div class="small-3 columns">
+            <div class="${style_grid_small!}3 columns">
               <span class="prefix"><i class="fi-lock"></i></span>
             </div>
-            <div class="small-9 columns">
+            <div class="${style_grid_small!}9 columns">
               <input type="password" name="PASSWORD" value="" size="20" placeholder="${uiLabelMap.CommonPassword}" title="${uiLabelMap.CommonPassword}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
             </div>
           </div>
@@ -70,12 +70,12 @@ under the License.
           <#if ("Y" == useMultitenant) >
               <#if !requestAttributes.userTenantId??>
               <div class="row">
-                <div class="large-12 columns">
+                <div class="${style_grid_large!}12 columns">
                   <div class="row collapse">
-                    <div class="small-3 columns">
+                    <div class="${style_grid_small!}3 columns">
                       <span class="prefix">${uiLabelMap.CommonTenantId}</span>
                     </div>
-                    <div class="small-9 columns">
+                    <div class="${style_grid_small!}9 columns">
                       <input type="text" name="userTenantId" value="${parameters.userTenantId!}" size="20"/>
                     </div>
                   </div>
@@ -87,11 +87,11 @@ under the License.
           </#if>
          
          <@row>
-             <@cell class="large-9 columns text-left">
+             <@cell class="${style_grid_large!}9 columns text-left">
                 <small><a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a></small>
                 
              </@cell>
-            <@cell class="large-12 large-centered columns text-right">
+            <@cell class="${style_grid_large!}12 ${style_grid_large!}centered columns text-right">
         <input type="hidden" name="JavaScriptEnabled" value="N"/>
                 <input type="submit" value="${uiLabelMap.CommonLogin}" class="button"/>
             </@cell>

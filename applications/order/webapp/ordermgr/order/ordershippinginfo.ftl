@@ -214,7 +214,7 @@ under the License.
         <input type="hidden" name="oldContactMechId" value="${shipGroup.contactMechId!}"/>
         <table class="basic-table" cellspacing='0'>
                 <tr>
-                    <td scope="row" class="large-3">
+                    <td scope="row" class="${style_grid_large!}3">
                         ${uiLabelMap.OrderAddress}
                     </td>
                     <td width="5">&nbsp;</td>
@@ -243,7 +243,7 @@ under the License.
                 <#-- the setting of shipping method is only supported for sales orders at this time -->
                 <#if orderHeader.orderTypeId == "SALES_ORDER">
                   <tr>
-                    <td scope="row" class="large-3">
+                    <td scope="row" class="${style_grid_large!}3">
                         <b>${uiLabelMap.CommonMethod}</b>
                     </td>
                     <td width="5">&nbsp;</td>
@@ -279,7 +279,7 @@ under the License.
                 </#if>
                 <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
                 <tr>
-                    <td scope="row" class="large-3">&nbsp;</td>
+                    <td scope="row" class="${style_grid_large!}3">&nbsp;</td>
                     <td width="5">&nbsp;</td>
                     <td valign="top" width="80%">
                         <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
@@ -385,7 +385,7 @@ under the License.
            </tr>
            </#if>
           <tr>
-            <td scope="row" class="large-3">
+            <td scope="row" class="${style_grid_large!}3">
               ${uiLabelMap.ProductDropShipment} - ${uiLabelMap.PartySupplier}
             </td>
             <td width="5">&nbsp;</td>
@@ -447,7 +447,7 @@ under the License.
         <#if shipGroup.trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
 
           <tr>
-            <td scope="row" class="large-3">
+            <td scope="row" class="${style_grid_large!}3">
               ${uiLabelMap.OrderTrackingNumber}
             </td>
             <td width="5">&nbsp;</td>
@@ -474,7 +474,7 @@ under the License.
         <#if shipGroup.maySplit?has_content && noShipment?default("false") != "true">
 
           <tr>
-            <td scope="row" class="large-3">
+            <td scope="row" class="${style_grid_large!}3">
               ${uiLabelMap.OrderSplittingPreference}
             </td>
             <td width="5">&nbsp;</td>
@@ -501,7 +501,7 @@ under the License.
 
 
         <tr>
-          <td scope="row" class="large-3">
+          <td scope="row" class="${style_grid_large!}3">
             ${uiLabelMap.OrderInstructions}
           </td>
           <td width="5">&nbsp;</td>
@@ -540,7 +540,7 @@ under the License.
         <#if shipGroup.isGift?has_content && noShipment?default("false") != "true">
 
         <tr>
-          <td scope="row" class="large-3">
+          <td scope="row" class="${style_grid_large!}3">
             ${uiLabelMap.OrderGiftMessage}
           </td>
           <td width="5">&nbsp;</td>
@@ -562,7 +562,7 @@ under the License.
         </#if>
 
          <tr>
-            <td scope="row" class="large-3">
+            <td scope="row" class="${style_grid_large!}3">
               ${uiLabelMap.OrderShipAfterDate}<br/>
               ${uiLabelMap.OrderShipBeforeDate}
             </td>
@@ -582,7 +582,7 @@ under the License.
        <#if shipGroupShipments?has_content>
 
           <tr>
-            <td scope="row" class="large-3">
+            <td scope="row" class="${style_grid_large!}3">
               ${uiLabelMap.FacilityShipments}
             </td>
             <td width="5">&nbsp;</td>

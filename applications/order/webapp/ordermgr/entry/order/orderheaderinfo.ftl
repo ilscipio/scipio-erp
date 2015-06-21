@@ -22,7 +22,7 @@ under the License.
         <#-- order name -->
         <#if (orderName?has_content)>
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     <span>&nbsp;<b>${uiLabelMap.OrderOrderName}</b> </span>
                 </td>
                 <td colspan="2">
@@ -33,7 +33,7 @@ under the License.
         <#-- order for party -->
         <#if (orderForParty??)>
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     <span>&nbsp;<b>${uiLabelMap.OrderOrderFor}</b> </span>
                 </td>
                 <td colspan="2">
@@ -43,7 +43,7 @@ under the License.
         </#if>
         <#if (cart.getPoNumber()?has_content)>
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     <span>&nbsp;<b>${uiLabelMap.OrderPONumber}</b> </span>
                 </td>
                 <td colspan="2">
@@ -53,7 +53,7 @@ under the License.
         </#if>
         <#if orderTerms?has_content>
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     &nbsp;<b>${uiLabelMap.OrderOrderTerms}</b>
                 </td>
                 <td colspan="2">
@@ -87,7 +87,7 @@ under the License.
         <#-- tracking number -->
         <#if trackingNumber?has_content>
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     &nbsp;<b>${uiLabelMap.OrderTrackingNumber}</b>
                 </td>
                 <td colspan="2">
@@ -98,7 +98,7 @@ under the License.
         </#if>
         <#-- splitting preference -->
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     &nbsp;<b>${uiLabelMap.OrderSplittingPreference}</b>
                 </td>
                 <td colspan="2">
@@ -111,7 +111,7 @@ under the License.
         <#-- shipping instructions -->
         <#if shippingInstructions?has_content>
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     &nbsp;<b>${uiLabelMap.OrderSpecialInstructions}</b>
                 </td>
                 <td colspan="2">
@@ -122,7 +122,7 @@ under the License.
         <#if orderType != "PURCHASE_ORDER" && (productStore.showCheckoutGiftOptions)! != "N">
         <#-- gift settings -->
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     &nbsp;<b>${uiLabelMap.OrderGift}</b>
                 </td>
                 <td colspan="2">
@@ -134,7 +134,7 @@ under the License.
             </tr>
             <#if giftMessage?has_content>
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     &nbsp;<b>${uiLabelMap.OrderGiftMessage}</b>
                 </td>
                 <td colspan="2">
@@ -145,7 +145,7 @@ under the License.
         </#if>
         <#if shipAfterDate?has_content>
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     &nbsp;<b>${uiLabelMap.OrderShipAfterDate}</b>
                 </td>
                 <td colspan="2">
@@ -155,7 +155,7 @@ under the License.
         </#if>
         <#if shipBeforeDate?has_content>
             <tr>
-                <td class="large-3">
+                <td class="${style_grid_large!}3">
                     &nbsp;<b>${uiLabelMap.OrderShipBeforeDate}</b>
                 </td>
                 <td colspan="2">

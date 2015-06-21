@@ -29,13 +29,13 @@ under the License.
 <table class="basic-table">
             <#if orderHeader.orderName?has_content>
             <tr>
-        <td class="large-2">${uiLabelMap.OrderOrderName}
+        <td class="${style_grid_large!}2">${uiLabelMap.OrderOrderName}
         </td>
         <td colspan="3">${orderHeader.orderName}</td>
             </tr>
             </#if>
             <tr>
-    <td scope="row" class="large-3">${uiLabelMap.OrderStatusHistory}</td>
+    <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderStatusHistory}</td>
     <td colspan="3">
     ${uiLabelMap.OrderCurrentStatus}: ${currentStatus.get("description",locale)} 
     <@modal id="${orderId}_info" label="${uiLabelMap.CommonDetail}">
@@ -58,7 +58,7 @@ under the License.
             </tr>
 
             <tr>
-    <td scope="row" class="large-3">${uiLabelMap.OrderDateOrdered}</td>
+    <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderDateOrdered}</td>
     <td colspan="3">
 
     <#if orderHeader.orderDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderHeader.orderDate, "", locale, timeZone)!}</#if>
@@ -66,20 +66,20 @@ under the License.
             </tr>
 
             <tr>
-    <td scope="row" class="large-3">${uiLabelMap.CommonCurrency}</td>
+    <td scope="row" class="${style_grid_large!}3">${uiLabelMap.CommonCurrency}</td>
     <td colspan="3">${orderHeader.currencyUom?default("???")}</td>
             </tr>
 
             <#if orderHeader.internalCode?has_content>
             <tr>
-        <td scope="row" class="large-3">${uiLabelMap.OrderInternalCode}</td>
+        <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderInternalCode}</td>
         <td colspan="3">
         ${orderHeader.internalCode}</td>
             </tr>
             </#if>
 
             <tr>
-        <td scope="row" class="large-3">${uiLabelMap.OrderSalesChannel}</td>
+        <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderSalesChannel}</td>
         <td colspan="3">
                   <#if orderHeader.salesChannelEnumId?has_content>
                     <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration", false)>
@@ -92,7 +92,7 @@ under the License.
 
             <#if productStore?has_content>
               <tr>
-        <td scope="row" class="large-3">${uiLabelMap.OrderProductStore}</td>
+        <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderProductStore}</td>
         <td colspan="3">
             ${productStore.storeName!}&nbsp;<a href="/catalog/control/EditProductStore?productStoreId=${productStore.productStoreId}${StringUtil.wrapString(externalKeyParam)}" target="catalogmgr" >(${productStore.productStoreId})</a>
                 </td>
@@ -101,7 +101,7 @@ under the License.
 
 
             <tr>
-        <td scope="row" class="large-3">${uiLabelMap.OrderOriginFacility}</td>
+        <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderOriginFacility}</td>
         <td colspan="3">
                   <#if orderHeader.originFacilityId?has_content>
             <a href="/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${StringUtil.wrapString(externalKeyParam)}" target="facilitymgr">${orderHeader.originFacilityId}</a>
@@ -112,7 +112,7 @@ under the License.
             </tr>
       
             <tr>
-        <td scope="row" class="large-3">${uiLabelMap.CommonCreatedBy}</td>
+        <td scope="row" class="${style_grid_large!}3">${uiLabelMap.CommonCreatedBy}</td>
         <td colspan="3">
                   <#if orderHeader.createdBy?has_content>
             <a href="/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="">${orderHeader.createdBy}</a>
@@ -124,7 +124,7 @@ under the License.
 
             <#if (orderItem.cancelBackOrderDate)??>
               <tr>
-        <td scope="row" class="large-3">${uiLabelMap.FormFieldTitle_cancelBackOrderDate}</td>
+        <td scope="row" class="${style_grid_large!}3">${uiLabelMap.FormFieldTitle_cancelBackOrderDate}</td>
         <td colspan="3">
           <#if orderItem.cancelBackOrderDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderItem.cancelBackOrderDate, "", locale, timeZone)!}</#if>
         </td>
@@ -135,7 +135,7 @@ under the License.
 
             <#if distributorId??>
             <tr>
-        <td scope="row" class="large-3">${uiLabelMap.OrderDistributor}</td>
+        <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderDistributor}</td>
         <td colspan="3">
                   <#assign distPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", distributorId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
                   ${distPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}

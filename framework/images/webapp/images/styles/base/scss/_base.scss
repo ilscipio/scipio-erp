@@ -21,6 +21,20 @@ input,select,text-area {max-width:50em;}
     transform: translate(-50%, -50%);
 }
 
+.row.display {
+  background: #eee;
+  font-size: 11px;
+  margin-bottom: 10px;
+  line-height: 2rem;
+  border: solid 1px #c6c6c6;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.row.display .columns:nth-child(even), .row.display .columns.small-centered, .row.display .columns.large-centered {
+  background: #e1e1e1;
+}
+
 
 /* NAVIGATION */
   

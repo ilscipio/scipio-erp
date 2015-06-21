@@ -115,18 +115,18 @@ under the License.
   <#-- TODO: Foundation: This does not properly support the case where dateType=="time" (but it's rare); shouldn't get _i18n or datepicker in that case (?) --> 
   
   <div class="row collapse date" data-date="" data-date-format="<#if shortDateInput?? && shortDateInput>yyyy-MM-dd<#else>yyyy-MM-dd HH:mm:ss</#if>">
-        <div class="small-11 columns">
+        <div class="${style_grid_small!}11 columns">
             <input type="text" name="${name}_i18n" <@renderClass className alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
             <#if title?has_content> title="${title}"</#if>
             <#if value?has_content> value="${value}"</#if>
             <#if size?has_content> size="${size}"</#if><#rt/>
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
-            <#if id?has_content> id="${id}_i18n"</#if> class="small-3 columns"/><#rt/>
+            <#if id?has_content> id="${id}_i18n"</#if> class="${style_grid_small!}3 columns"/><#rt/>
 
             <input type="hidden" name="${name}" <#if id?has_content> id="${id}"</#if> <#if value?has_content> value="${value}"</#if> />
         </div>
-        <div class="small-1 columns">
+        <div class="${style_grid_small!}1 columns">
         <span class="postfix"><i class="fa fa-calendar"></i></span>
         </div>
         <script type="text/javascript">
@@ -475,7 +475,7 @@ under the License.
 
 <#macro renderFormatFieldRowOpen collapse=false style="">
    <div class="row">
-    <div class="<#if style?has_content>${style}<#else>large-6</#if> columns">
+    <div class="<#if style?has_content>${style}<#else>${style_grid_large!}6</#if> columns">
       <div class="row <#if collapse>collapse</#if>">
 </#macro>
 <#macro renderFormatFieldRowClose>
@@ -484,7 +484,7 @@ under the License.
   </div>
 </#macro>
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
-  <div class="<#if style?has_content>${style}<#else>small-3 large-2</#if> columns ">
+  <div class="<#if style?has_content>${style}<#else>${style_grid_small!}3 ${style_grid_large!}2</#if> columns ">
       <#if collapse><span class="prefix"><#else><label></#if>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false>
@@ -493,7 +493,7 @@ under the License.
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="">
-  <div class="<#if style?has_content>${style}<#else>small-9 large-10</#if> columns">
+  <div class="<#if style?has_content>${style}<#else>${style_grid_small!}9 ${style_grid_large!}10</#if> columns">
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>
   </div>
@@ -505,14 +505,14 @@ under the License.
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase>
   <@row collapse=collapse!false>
   <#if opEquals?has_content>
-            <#assign class1="small-3 large-3"/>
-            <#assign class2="small-6 large-6"/>
-            <#assign class3="small-3 large-3"/>
+            <#assign class1="${style_grid_small!}3 ${style_grid_large!}3"/>
+            <#assign class2="${style_grid_small!}6 ${style_grid_large!}6"/>
+            <#assign class3="${style_grid_small!}3 ${style_grid_large!}3"/>
             
         <#else>
             <#assign class1=""/>
-            <#assign class2="small-9 large-9"/>
-            <#assign class3="small-3 large-3"/>
+            <#assign class2="${style_grid_small!}9 ${style_grid_large!}9"/>
+            <#assign class3="${style_grid_small!}3 ${style_grid_large!}3"/>
       </#if>      
       <#if opEquals?has_content>
         <#assign newName = "${name}"/>
@@ -550,13 +550,13 @@ under the License.
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <div class="row collapse date" data-date="" 
     data-date-format="<#if dateType == "date">dd-mm-yyyy<#else>HH:mm:ss</#if>">
-        <div class="small-5 columns">
-        <input class="small-3 columns" id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
+        <div class="${style_grid_small!}5 columns">
+        <input class="${style_grid_small!}3 columns" id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
         </div>
-        <div class="small-1 columns">
+        <div class="${style_grid_small!}1 columns">
         <span class="postfix"><i class="fa fa-calendar"></i></span>
         </div>
-        <div class="small-5 columns small-offset-1">
+        <div class="${style_grid_small!}5 columns ${style_grid_small!}offset-1">
         <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
           <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
           <option value="sameDay"<#if defaultOptionFrom=="sameDay"> selected="selected"</#if>>${opSameDay}</option><#rt/>
@@ -832,7 +832,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel>
   <#if listSize gt viewSize>
    <div class="row">
-   <div class="large-12 columns">
+   <div class="${style_grid_large!}12 columns">
         <div class="pagination-centered ${paginateStyle}">
           <ul class="pagination">
             <li class="${paginateFirstStyle}<#if viewIndex gt 0>"><a href="${firstUrl}">${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
@@ -886,7 +886,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible>
 <div class="row">
-  <div class="fieldgroup large-12 columns <#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> collapsed</#if></#if>"<#if id?has_content> id="${id}"</#if>>
+  <div class="fieldgroup ${style_grid_large!}12 columns <#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> collapsed</#if></#if>"<#if id?has_content> id="${id}"</#if>>
     <fieldset<#if style?has_content || collapsed> class="${style!}"</#if>>
       <#--<#if collapsible>
         <ul>

@@ -227,11 +227,11 @@ function ShowTab(lname) {
               <h3 data-magellan-destination="current-view" id="current-view">${uiLabelMap.WebtoolsEntityCurrentValue}</h3>
               <#if value?has_content>
                 <#assign alt_row = false>
-                <table class="large-12" cellspacing="0">
+                <table class="${style_grid_large!}12" cellspacing="0">
                   <thead>
                   <tr>
-                    <th class="large-3">${uiLabelMap.WebtoolsFieldName}</th>
-                    <th class="large-9">${uiLabelMap.CommonValue}</th>
+                    <th class="${style_grid_large!}3">${uiLabelMap.WebtoolsFieldName}</th>
+                    <th class="${style_grid_large!}9">${uiLabelMap.CommonValue}</th>
                   </tr>
                   </thead>
                   <#list fields as field>
@@ -268,11 +268,11 @@ function ShowTab(lname) {
             <#if relation.valueRelated?has_content>
                             <@pli>
                               <@modal id="rel_${relation.relatedTable}" label="${uiLabelMap.CommonValues}">                                
-                                  <table cellspacing="0" class="large-12">
+                                  <table cellspacing="0" class="${style_grid_large!}12">
                                     <thead>
                                         <tr>
-                                            <th class="large-3">${uiLabelMap.WebtoolsFieldName}</th>
-                                            <th class="large-9">${uiLabelMap.CommonValue}</th>
+                                            <th class="${style_grid_large!}3">${uiLabelMap.WebtoolsFieldName}</th>
+                                            <th class="${style_grid_large!}9">${uiLabelMap.CommonValue}</th>
                                         </tr>
                                     </thead>
                 <#assign alt_row = false>

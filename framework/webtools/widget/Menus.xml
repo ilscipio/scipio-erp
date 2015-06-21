@@ -364,5 +364,22 @@ under the License.
         <menu-item name="Disabled" title="${uiLabelMap.CommonDisabled}" widget-style="disabled">
         </menu-item>
     </menu>
+    
+    <menu name="LayoutDemoButton" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="Selected" title="${uiLabelMap.CommonSelected}">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
+        </menu-item>
+        <menu-item name="Enabled" title="${uiLabelMap.CommonEnabled}">
+            <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
+        </menu-item>
+    </menu>
 
 </menus>

@@ -75,7 +75,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <and>
@@ -96,81 +96,34 @@ under the License.
                                 <section name="Standard Page Start">
                                     <widgets>
                                         <container style="page-title">
-                                            <label text="${uiLabelMap.WebtoolsLayoutDemo}"/>
-                                        </container>
-                                        <container style="button-bar button-style-1">
-                                            <!-- Typically used for intra-app links -->
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonNew}" style="create" />
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonDelete}" style="delete"/>
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonRefresh}" style="refresh"/>
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonSearch}" style="search"/>
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonSelected}" style="selected"/>
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonEnabled}"/>
-                                            <link text="${uiLabelMap.CommonDisabled}" style="disabled"/>
-                                        </container>
-                                        <container style="button-bar button-style-2">
-                                            <!-- Typically used for inter-app links -->
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonNew}" style="create" link-type="auto">
-                                                <parameter param-name="demoParam1"/>
-                                                <parameter param-name="demoParam2"/>
-                                                <parameter param-name="demoParam3"/>
-                                            </link>
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonDelete}" style="delete" link-type="anchor">
-                                                <parameter param-name="demoParam1"/>
-                                                <parameter param-name="demoParam2"/>
-                                                <parameter param-name="demoParam3"/>
-                                            </link>
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonRefresh}" style="refresh" link-type="hidden-form">
-                                                <parameter param-name="demoParam1"/>
-                                                <parameter param-name="demoParam2"/>
-                                                <parameter param-name="demoParam3"/>
-                                            </link>
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonSearch}" style="search">
-                                                <parameter param-name="demoParam1"/>
-                                                <parameter param-name="demoParam2"/>
-                                                <parameter param-name="demoParam3"/>
-                                            </link>
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonSelected}" style="selected">
-                                                <parameter param-name="demoParam1"/>
-                                                <parameter param-name="demoParam2"/>
-                                                <parameter param-name="demoParam3"/>
-                                            </link>
-                                            <link target="${demoTargetUrl}" text="${uiLabelMap.CommonEnabled}">
-                                                <parameter param-name="demoParam1"/>
-                                                <parameter param-name="demoParam2"/>
-                                                <parameter param-name="demoParam3"/>
-                                            </link>
-                                            <link text="${uiLabelMap.CommonDisabled}" style="disabled">
-                                                <parameter param-name="demoParam1"/>
-                                                <parameter param-name="demoParam2"/>
-                                                <parameter param-name="demoParam3"/>
-                                            </link>
-                                        </container>
+                                            <label text="${uiLabelMap.WebtoolsLayoutDemo}" style="h1"/>
+                                        </container>                                    </widgets>
+                                </section>
+                                <section name="Grid">
+                                    <widgets>
+                                        <platform-specific><html><html-template location="component://webtools/webapp/webtools/layout/layoutdemo.ftl"/></html></platform-specific> 
                                     </widgets>
                                 </section>
                                 <section name="h1-h6 Styles">
                                     <widgets>
                                         <horizontal-separator/>
-                                        <label style="h1" text="${demoText} (h1)"/>
-                                        <label style="h2" text="${demoText} (h2)"/>
-                                        <label style="h3" text="${demoText} (h3)"/>
-                                        <label style="h4" text="${demoText} (h4)"/>
-                                        <label style="h5" text="${demoText} (h5)"/>
-                                        <label style="h6" text="${demoText} (h6)"/>
+                                        <label style="h1" text="H1."/>
+                                        <label style="h2" text="H2."/>
+                                        <label style="h3" text="H3."/>
+                                        <label style="h4" text="H4."/>
+                                        <label style="h5" text="H5."/>
+                                        <label style="h6" text="H6."/>
                                     </widgets>
                                 </section>
                                 <section name="Form/List Styles">
                                     <widgets>
                                         <horizontal-separator/>
-                                        <include-form name="LayoutDemoForm" location="component://webtools/widget/MiscForms.xml"/>
-                                        <include-form name="LayoutDemoList" location="component://webtools/widget/MiscForms.xml"/>
-                                        <section>
+                                        <include-form name="LayoutDemoForm" location="component://webtools/widget/MiscForms.xml"/>                                        <section>
                                             <actions>
                                                 <set field="tableStyle" value="basic-table dark-grid"/>
                                             </actions>
                                             <widgets/>
                                         </section>
-                                        <include-form name="LayoutDemoList" location="component://webtools/widget/MiscForms.xml"/>
                                         <section>
                                             <actions>
                                                 <set field="altRowStyle" value="alternate-row"/>
@@ -184,28 +137,6 @@ under the License.
                                 </section>
                                 <section name="Screenlet Styles">
                                     <widgets>
-                                        <horizontal-separator/>
-                                        <screenlet>
-                                            <label text="${demoText}"/>
-                                        </screenlet>
-                                        <screenlet title="${uiLabelMap.WebtoolsLayoutDemo}" padded="false">
-                                            <!-- For aligning screenlet body h3 elements with screenlet title h3 elements -->
-                                            <label style="h3" text="${demoText}"/>
-                                        </screenlet>
-                                        <screenlet title="${uiLabelMap.WebtoolsLayoutDemo}" id="screenlet-demo" collapsible="true">
-                                            <include-form name="LayoutDemoForm" location="component://webtools/widget/MiscForms.xml"/>
-                                        </screenlet>
-                                        <screenlet title="${uiLabelMap.WebtoolsLayoutDemo}" padded="false">
-                                            <section>
-                                                <actions>
-                                                    <set field="altRowStyle" value="alternate-row"/>
-                                                    <set field="headerStyle" value="header-row-1"/>
-                                                    <set field="tableStyle" value="basic-table light-grid hover-bar"/>
-                                                </actions>
-                                                <widgets/>
-                                            </section>
-                                            <include-form name="LayoutDemoList" location="component://webtools/widget/MiscForms.xml"/>
-                                        </screenlet>
                                         <screenlet title="${uiLabelMap.WebtoolsLayoutDemo}" padded="false">
                                             <section>
                                                 <actions>
@@ -216,12 +147,6 @@ under the License.
                                                 </actions>
                                                 <widgets/>
                                             </section>
-                                            <container style="button-bar button-style-1">
-                                                <link target="${demoTargetUrl}" text="${uiLabelMap.CommonNew}" style="create"/>
-                                                <link target="${demoTargetUrl}" text="${uiLabelMap.CommonSelected}" style="selected"/>
-                                                <link target="${demoTargetUrl}" text="${uiLabelMap.CommonEnabled}"/>
-                                                <link text="${uiLabelMap.CommonDisabled}" style="disabled"/>
-                                            </container>
                                             <include-form name="LayoutDemoList" location="component://webtools/widget/MiscForms.xml"/>
                                         </screenlet>
                                     </widgets>

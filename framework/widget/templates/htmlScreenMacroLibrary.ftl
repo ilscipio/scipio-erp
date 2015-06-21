@@ -184,7 +184,7 @@ under the License.
 <div <#if collapsed>class="toggleField"</#if>>
 <#if collapsed><p class="alert legend">[ <i class="fa fa-arrow-right"></i> ] ${title!}</p></#if>
 <div class="row"<#if id?has_content> id="${id}"</#if>><#rt/>
-<div class="<#if classes?has_content>${classes}<#else>large-12</#if> columns">
+<div class="<#if classes?has_content>${classes}<#else>${style_grid_large!}12</#if> columns">
 
 <#if showMore>
 <#if title?has_content><h2> ${title}</h2></#if>    
@@ -227,7 +227,7 @@ ${menuString}
   </#if>
   -->
   <div class="row"><#rt/>
-<div class="large-12 columns">
+<div class="${style_grid_large!}12 columns">
 </#macro>
 
 <#macro renderPortalPageEnd>

@@ -52,9 +52,9 @@ under the License.
            <#assign partyName = delegator.findOne("PartyNameView", {"partyId" : payment.partyIdTo}, true)>
            <tr>
              <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-               <td scope="row" class="large-3"><a href="/accounting/control/paymentOverview?paymentId=${payment.paymentId}">${payment.paymentId}</a></td>
+               <td scope="row" class="${style_grid_large!}3"><a href="/accounting/control/paymentOverview?paymentId=${payment.paymentId}">${payment.paymentId}</a></td>
              <#else>
-               <td scope="row" class="large-3">${payment.paymentId}</td>
+               <td scope="row" class="${style_grid_large!}3">${payment.paymentId}</td>
              </#if>
              <td>${partyName.groupName!}${partyName.lastName!} ${partyName.firstName!} ${partyName.middleName!}
              <#if security.hasPermission("PARTYMGR_VIEW", session) || security.hasPermission("PARTYMGR_ADMIN", session)>
@@ -72,7 +72,7 @@ under the License.
        <#if invoices?has_content>
          
          <tr>
-           <td scope="row" class="large-3">${uiLabelMap.OrderInvoices}</td>
+           <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderInvoices}</td>
            <td>&nbsp;</td>
            <td>
              <#list invoices as invoice>
@@ -87,7 +87,7 @@ under the License.
 
      <#-- order payment status -->
      <tr>
-       <td scope="row" class="large-3">&nbsp;${uiLabelMap.OrderStatusHistory}</td>
+       <td scope="row" class="${style_grid_large!}3">&nbsp;${uiLabelMap.OrderStatusHistory}</td>
        <td colspan="3">
          <#assign orderPaymentStatuses = orderReadHelper.getOrderPaymentStatuses()>
          <#if orderPaymentStatuses?has_content>
@@ -134,7 +134,7 @@ under the License.
                     
                   </#if>
                   <tr>
-                    <td scope="row" class="large-3">
+                    <td scope="row" class="${style_grid_large!}3">
                       <#-- billing accounts require a special OrderPaymentPreference because it is skipped from above section of OPPs -->
                       <div>${uiLabelMap.AccountingBillingAccount}&nbsp;
                           <#if billingAccountMaxAmount?has_content>
@@ -179,7 +179,7 @@ under the License.
                 <#assign gatewayResponses = orderPaymentPreference.getRelated("PaymentGatewayResponse", null, null, false)>
                 <#assign finAccountType = finAccount.getRelatedOne("FinAccountType", false)!/>
                 <tr>
-                  <td scope="row" class="large-3">
+                  <td scope="row" class="${style_grid_large!}3">
                     <div>
                     ${uiLabelMap.AccountingFinAccount}
                     <#if orderPaymentPreference.maxAmount?has_content>
@@ -257,7 +257,7 @@ under the License.
               </#if>
             <#else>
               <tr>
-                <td scope="row" class="large-3">
+                <td scope="row" class="${style_grid_large!}3">
                   <div>${paymentMethodType.get("description",locale)!}&nbsp;
                   <#if orderPaymentPreference.maxAmount?has_content>
                   <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
@@ -300,7 +300,7 @@ under the License.
                 </tr>
                 <#if paymentList?has_content>
                     <tr>
-                    <td scope="row" class="large-3">
+                    <td scope="row" class="${style_grid_large!}3">
                       <div>${uiLabelMap.AccountingInvoicePayments}</div>
                     </td>
                       <td colspan="3">
@@ -321,7 +321,7 @@ under the License.
                 <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress", false)!>
               </#if>
               <tr>
-                <td scope="row" class="large-3">
+                <td scope="row" class="${style_grid_large!}3">
                   <div>${uiLabelMap.AccountingCreditCard}
                   <#if orderPaymentPreference.maxAmount?has_content>
                      <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
@@ -400,7 +400,7 @@ under the License.
                 <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress", false)!>
               </#if>
               <tr>
-                <td scope="row" class="large-3">
+                <td scope="row" class="${style_grid_large!}3">
                   <div>${uiLabelMap.AccountingEFTAccount}
                   <#if orderPaymentPreference.maxAmount?has_content>
                   <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
@@ -435,7 +435,7 @@ under the License.
               </tr>
               <#if paymentList?has_content>
                 <tr>
-                <td scope="row" class="large-3">
+                <td scope="row" class="${style_grid_large!}3">
                   <div>${uiLabelMap.AccountingInvoicePayments}</div>
                 </td>
                   <td colspan="3">
@@ -453,7 +453,7 @@ under the License.
                 <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress", false)!>
               </#if>
               <tr>
-                <td scope="row" class="large-3">
+                <td scope="row" class="${style_grid_large!}3">
                   <div>${uiLabelMap.OrderGiftCard}
                   <#if orderPaymentPreference.maxAmount?has_content>
                   <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
@@ -492,7 +492,7 @@ under the License.
               </tr>
               <#if paymentList?has_content>
                 <tr>
-                <td scope="row" class="large-3">
+                <td scope="row" class="${style_grid_large!}3">
                   <div>${uiLabelMap.AccountingInvoicePayments}</div>
                 </td>
                   <td colspan="3">
@@ -523,7 +523,7 @@ under the License.
             </tr>
             <#if paymentList?has_content>
             <tr>
-            <td scope="row" class="large-3">
+            <td scope="row" class="${style_grid_large!}3">
               <div>${uiLabelMap.AccountingInvoicePayments}</div>
             </td>
               <td colspan="3">
@@ -541,7 +541,7 @@ under the License.
         <#if customerPoNumber?has_content>
           
           <tr>
-            <td scope="row" class="large-3">${uiLabelMap.OrderPONumber}</td>
+            <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderPONumber}</td>
             <td colspan="3">${customerPoNumber!}</td>
           </tr>
         </#if>
@@ -550,7 +550,7 @@ under the License.
         <#if invoices?has_content>
           
           <tr>
-            <td scope="row" class="large-3">${uiLabelMap.OrderInvoices}</td>
+            <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderInvoices}</td>
             <td colspan="3">
               <#list invoices as invoice>
                 <div>${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">${invoice}</a>
@@ -569,7 +569,7 @@ under the License.
    <form name="addPaymentMethodToOrder" method="post" action="<@ofbizUrl>addPaymentMethodToOrder</@ofbizUrl>">
    
    <tr>
-       <td scope="row" class="large-3">
+       <td scope="row" class="${style_grid_large!}3">
             <input type="hidden" name="orderId" value="${orderId!}"/>${uiLabelMap.AccountingPaymentMethod}
        </td>
       <td>&nbsp;</td>
@@ -599,7 +599,7 @@ under the License.
    </tr>
    <#assign openAmount = orderReadHelper.getOrderOpenAmount()>
    <tr>
-      <td scope="row" class="large-3">${uiLabelMap.AccountingAmount}</td>
+      <td scope="row" class="${style_grid_large!}3">${uiLabelMap.AccountingAmount}</td>
       <td colspan="3">
          <input type="text" name="maxAmount" value="${openAmount}"/>
       </td>

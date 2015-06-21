@@ -48,7 +48,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
       </#if>
       
       <#if style?contains("menu-button")>
-        <ul class="button-group force-button">
+        <ul class="${style_button_group!} ${style_button_force!}">
       </#if>
       
       

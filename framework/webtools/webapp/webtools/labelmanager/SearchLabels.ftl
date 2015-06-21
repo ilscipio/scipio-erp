@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
     <@row>
-    <@cell class="large-6 columns">
+    <@cell class="${style_grid_large!}6 columns">
     ${uiLabelMap.WebtoolsLabelManagerTemporarySearchTitle}<br/><br/><br/>
     
   <form action="<@ofbizUrl>SearchLabels</@ofbizUrl>" method="post">

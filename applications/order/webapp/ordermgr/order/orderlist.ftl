@@ -42,12 +42,12 @@ under the License.
       <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
         <input type="hidden" name="changeStatusAndTypeState" value="Y" />
        <div class="row">
-        <div class="large-12 columns">
+        <div class="${style_grid_large!}12 columns">
           <div class="row collapse prefix-radius">
-            <div class="small-3 columns">
+            <div class="${style_grid_small!}3 columns">
               <span class="">${uiLabelMap.CommonStatus}</span>
                 </div>
-            <div class="small-9 columns">
+            <div class="${style_grid_small!}9 columns">
                 <span class=" text-left">
                 <input type="checkbox" name="viewall" value="Y" onclick="javascript:setCheckboxes()" <#if state.hasAllStatus()>checked="checked"</#if> /><label>${uiLabelMap.CommonAll}</label>
                 <input type="checkbox" name="viewcreated" value="Y" <#if state.hasStatus('viewcreated')>checked="checked"</#if> /><label>${uiLabelMap.CommonCreated}</label>
@@ -64,12 +64,12 @@ under the License.
         </div>
        </div>
       <div class="row">
-        <div class="large-12 columns">
+        <div class="${style_grid_large!}12 columns">
           <div class="row collapse prefix-radius">
-            <div class="small-3 columns">
+            <div class="${style_grid_small!}3 columns">
               <span class="">${uiLabelMap.CommonType}</span>
             </div>
-            <div class="small-9 columns">
+            <div class="${style_grid_small!}9 columns">
                 <span class=" text-left">
                     <input type="checkbox" name="view_SALES_ORDER" value="Y" <#if state.hasType('view_SALES_ORDER')>checked="checked"</#if>/>
                 <label>${descr_SALES_ORDER}</label>
@@ -81,12 +81,12 @@ under the License.
         </div>
        </div>
        <div class="row">
-        <div class="large-12 columns">
+        <div class="${style_grid_large!}12 columns">
           <div class="row collapse prefix-radius">
-            <div class="small-3 columns">
+            <div class="${style_grid_small!}3 columns">
               <span class="">${uiLabelMap.CommonFilter}</span>
             </div>
-            <div class="small-9 columns">
+            <div class="${style_grid_small!}9 columns">
                 <span class=" text-left">
                     <input type="checkbox" name="filterInventoryProblems" value="Y"
                         <#if state.hasFilter('filterInventoryProblems')>checked="checked"</#if>/>
@@ -100,12 +100,12 @@ under the License.
         </div>
        </div>
        <div class="row">
-        <div class="large-12 columns">
+        <div class="${style_grid_large!}12 columns">
           <div class="row collapse prefix-radius">
-            <div class="small-3 columns">
+            <div class="${style_grid_small!}3 columns">
               <span class="">${uiLabelMap.CommonFilter} (${uiLabelMap.OrderFilterPOs})</span>
             </div>
-            <div class="small-9 columns">
+            <div class="${style_grid_small!}9 columns">
                 <span class=" text-left">
                     <input type="checkbox" name="filterPartiallyReceivedPOs" value="Y"
                         <#if state.hasFilter('filterPartiallyReceivedPOs')>checked="checked"</#if>/>
@@ -122,9 +122,9 @@ under the License.
  </div>
        </div>
        <div class="row">
-        <div class="large-12 columns">
+        <div class="${style_grid_large!}12 columns">
           <div class="row collapse prefix-radius">
-            <div class="small-12 columns">
+            <div class="${style_grid_small!}12 columns">
               <input type="submit" value="${uiLabelMap.CommonFind}" class="button tiny"/>
             </div>
           </div>

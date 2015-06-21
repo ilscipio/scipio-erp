@@ -85,7 +85,7 @@ under the License.
     checked      = checked (true/false)
     
 -->
-<#macro field type="" label="" name="" value="" class="large-12" size=20 maxlength="" id="" onClick="" 
+<#macro field type="" label="" name="" value="" class="${style_grid_large!}12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
         fieldFormName="" formName="" postfix=false>
@@ -101,18 +101,18 @@ under the License.
 <#if postfix>
     <#assign columnspostfix=1/>
     <#local collapse=true/>
-    <#assign classes="small-${12-columnspostfix}"/>
+    <#assign classes="${style_grid_small!}${12-columnspostfix}"/>
 </#if>
 
 
 <@row collapse=collapse!false norows=norows>
     <#if label?has_content>
-        <#assign subclasses="small-3 large-2"/>
-        <#assign classes="small-${9-columnspostfix} large-${10-columnspostfix}"/>
+        <#assign subclasses="${style_grid_small!}-3 ${style_grid_large!}2"/>
+        <#assign classes="${style_grid_small!}-${9-columnspostfix} ${style_grid_large!}${10-columnspostfix}"/>
         
         <#if columns?has_content>
-            <#assign subclasses="small-${12-columns+1} large-${12-columns}"/>
-            <#assign classes="small-${columns-columnspostfix-1} large-${columns-columnspostfix}"/>
+            <#assign subclasses="${style_grid_small!}-${12-columns+1} ${style_grid_large!}${12-columns}"/>
+            <#assign classes="${style_grid_small!}-${columns-columnspostfix-1} ${style_grid_large!}${columns-columnspostfix}"/>
         </#if>
         
         <#if type!="radio">
@@ -240,7 +240,7 @@ under the License.
         </#switch>
      </@cell>
      <#if postfix && !nocells>
-         <@cell class="small-1">
+         <@cell class="${style_grid_small!}1">
                 <span class="postfix"><input type="submit" class="fa fa-button" value="&#xf085;"/</span>
          </@cell>
      </#if>
@@ -309,7 +309,7 @@ under the License.
     offset          = offset in number of columns
 -->
 <#macro cell columns=12 offset=0 class="" id="" collapse=false nocells=false>
-    <#if !nocells><div class="<#if class?has_content>${class!}<#else>large-${columns!12}</#if> columns" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
+    <#if !nocells><div class="<#if class?has_content>${class!}<#else>${style_grid_large!}${columns!12}</#if><#if offset&gt;0>${style_grid_offset!}${offset!}</#if> columns" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
         <#nested />
     <#if !nocells></div></#if>
 </#macro>
@@ -431,10 +431,10 @@ under the License.
 -->
 <#macro alert type="">
 <div class="row">
-        <div class="large-12 columns">
+        <div class="${style_grid_large!}12 columns">
         <div data-alert class="alert-box ${type}">
            <div class="row">
-              <div class="large-12 columns">
+              <div class="${style_grid_large!}12 columns">
                   <#nested>
                   <a href="#" class="close">&times;</a>
                 </div>
@@ -458,9 +458,9 @@ under the License.
     title          = Title
 -->
 <#macro panel type="" title="">
-<div class="panel ${type}">
-  <#if title?has_content><h5>${title!}</h5></#if>
-  <p><#nested></p>
+<div class="${style_panel_wrap!} ${type}">
+  <div class="${style_panel_head!}"><#if title?has_content><h5 class="${style_panel_title!}">${title!}</h5></#if></div>
+  <div class="${style_panel_body!}"><p><#nested></p></div>
 </div>
 </#macro>
 
@@ -520,16 +520,16 @@ Since this is very foundation specific, this function may be dropped in future i
     </@grid>            
                     
    * General Attributes *
-    class           = Adds classes - please use "(small|medium|large)-block-grid-#"
+    class           = Adds classes - please use "(small|medium|large)-${style_grid_block!}#"
     columns         = Number of columns (default 5)
     
 -->
-<#macro grid class="small-block-grid-2 medium-block-grid-4 large-block-grid-5" columns=5>
+<#macro grid class="${style_grid_small!}${style_grid_block!}2 ${style_grid_medium!}${style_grid_block!}4 ${style_grid_large!}${style_grid_block!}5" columns=5>
     <#if columns!=5>
         <#if columns-2 &gt; 0>
-            <#local class="small-block-grid-${columns-2} medium-block-grid-${columns-1} large-block-grid-${columns}"/>
+            <#local class="${style_grid_small!}${style_grid_block!}${columns-2} ${style_grid_medium!}${style_grid_block!}${columns-1} ${style_grid_large!}${style_grid_block!}${columns}"/>
         <#else>
-            <#local class="large-block-grid-${columns}"/>
+            <#local class="${style_grid_large!}${style_grid_block!}${columns}"/>
         </#if>
     </#if>
           <ul class="${class}">
@@ -557,7 +557,7 @@ Since this is very foundation specific, this function may be dropped in future i
     <h3 ${mtarget("id")}>Jump Destination</h3>           
                     
    * General Attributes *
-    type            = (inline|magellan) (default:inline)
+    type            = (inline|magellan|breadcrumbs) (default:inline)
     class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
 -->
 <#macro nav type="inline">
@@ -568,6 +568,11 @@ Since this is very foundation specific, this function may be dropped in future i
                 <#nested>
               </dl>
             </div>
+        <#break>
+        <#case "breadcrumbs">
+            <ul class="${style_nav_breadcrumbs!}">
+                <#nested>
+            </ul>
         <#break>
         <#default>
             <ul class="inline-list sub-nav">

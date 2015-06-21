@@ -46,12 +46,12 @@ under the License.
 <footer id="footer">
     <#--
     <div class="row"> 
-        <div class="small-12 medium-4 large-4 columns">
+        <div class="${style_grid_small!}12 ${style_grid_medium!}4 ${style_grid_large!}4 columns">
             <p></p>
         </div>
     </div>-->
     <div class="row">
-        <div class="small-12 medium-12 large-12 columns text-center">
+        <div class="${style_grid_small!}12 ${style_grid_medium!}12 ${style_grid_large!}12 columns text-center">
          <small>
          ${uiLabelMap.CommonCopyright} (c) 2001-${nowTimestamp?string("yyyy")} <a href="http://www.apache.org" target="_blank">The Apache Software Foundation</a>. ${uiLabelMap.CommonPoweredBy} <a href="http://ofbiz.apache.org" target="_blank">Apache OFBiz.</a>
          <#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" />

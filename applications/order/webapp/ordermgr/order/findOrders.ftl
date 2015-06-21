@@ -145,13 +145,13 @@ function submitFindForm(val){
 
   <#if parameters.hideFields?default("N") != "Y">
     <@row>
-    <@cell class="large-9 columns">
+    <@cell class="${style_grid_large!}9 columns">
 
       <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
       
       <@row collapse=true>
-                <@cell class="large-2 small-3"> <label>${uiLabelMap.CommonDateFilter}</label></@cell>
-                <@cell class="large-10 small-9">
+                <@cell class="${style_grid_large!}2 ${style_grid_small!}3"> <label>${uiLabelMap.CommonDateFilter}</label></@cell>
+                <@cell class="${style_grid_large!}10 ${style_grid_small!}9">
                     <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" collapse=true/>
                     <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate" collapse=true/>
                 </@cell>
@@ -188,10 +188,10 @@ function submitFindForm(val){
                     </#list>
           </@field>     
           <@row collapse=true>
-                <@cell class="small-3 large-2">
+                <@cell class="${style_grid_small!}3 ${style_grid_large!}2">
                     <label class="inline">${uiLabelMap.PartyPartyId}</label>
                 </@cell>
-                <@cell class="small-9 large-10">
+                <@cell class="${style_grid_small!}9 ${style_grid_large!}10">
                   <@htmlTemplate.lookupField value='${requestParameters.partyId!}' formName="lookuporder" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
                 </@cell>
            </@row>
@@ -285,14 +285,14 @@ function submitFindForm(val){
             
             
             <@row collapse=false>
-                <@cell class="large-4">
+                <@cell class="${style_grid_large!}4">
                     <@renderCheckBox name="filterInventoryProblems" currentValue="Y" checked=requestParameters.filterInventoryProblems?default("N")/> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterInventoryProblems}
                 </@cell>
-                <@cell class="large-4">
+                <@cell class="${style_grid_large!}4">
                     <@renderCheckBox name="filterPOsOpenPastTheirETA" currentValue="Y" checked=requestParameters.filterPOsOpenPastTheirETA?default("N") /> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsOpenPastTheirETA}
                 </@cell>
     
-                <@cell class="large-4">
+                <@cell class="${style_grid_large!}4">
                     <@renderCheckBox name="filterPOsWithRejectedItems" currentValue="Y" checked=requestParameters.filterPOsWithRejectedItems?default("N")/> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsWithRejectedItems}      
                 </@cell>
             </@row>
@@ -351,7 +351,7 @@ document.lookuporder.orderId.focus();
         -->
         
             <div class="row">
-               <div class="large-12 columns">
+               <div class="${style_grid_large!}12 columns">
                     <div class="pagination-centered">
                       <ul class="pagination">
                             <#if (viewIndex > 1)>

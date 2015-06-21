@@ -474,9 +474,9 @@ under the License.
 </#macro>
 
 <#macro renderFormatFieldRowOpen collapse=false style="">
-   <div class="row">
-    <div class="<#if style?has_content>${style}<#else>${style_grid_large!}6</#if> columns">
-      <div class="row <#if collapse>collapse</#if>">
+   <div class="${style_grid_row!}">
+    <div class="<#if style?has_content>${style}<#else>${style_grid_large!}6</#if> ${style_grid_cell!}">
+      <div class="${style_grid_row!} <#if collapse>${style_collapse!}</#if>">
 </#macro>
 <#macro renderFormatFieldRowClose>
         </div>
@@ -484,7 +484,7 @@ under the License.
   </div>
 </#macro>
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
-  <div class="<#if style?has_content>${style}<#else>${style_grid_small!}3 ${style_grid_large!}2</#if> columns ">
+  <div class="<#if style?has_content>${style}<#else>${style_grid_small!}3 ${style_grid_large!}2</#if> ${style_grid_cell!} ">
       <#if collapse><span class="prefix"><#else><label></#if>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false>
@@ -493,7 +493,7 @@ under the License.
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="">
-  <div class="<#if style?has_content>${style}<#else>${style_grid_small!}9 ${style_grid_large!}10</#if> columns">
+  <div class="<#if style?has_content>${style}<#else>${style_grid_small!}9 ${style_grid_large!}10</#if> ${style_grid_cell!}">
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>
   </div>
@@ -831,8 +831,8 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel>
   <#if listSize gt viewSize>
-   <div class="row">
-   <div class="${style_grid_large!}12 columns">
+   <div class="${style_grid_row!}">
+   <div class="${style_grid_large!}12 ${style_grid_cell!}">
         <div class="pagination-centered ${paginateStyle}">
           <ul class="pagination">
             <li class="${paginateFirstStyle}<#if viewIndex gt 0>"><a href="${firstUrl}">${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>

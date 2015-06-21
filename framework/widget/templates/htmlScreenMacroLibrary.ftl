@@ -183,8 +183,8 @@ under the License.
 <#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true>
 <div <#if collapsed>class="toggleField"</#if>>
 <#if collapsed><p class="alert legend">[ <i class="fa fa-arrow-right"></i> ] ${title!}</p></#if>
-<div class="row"<#if id?has_content> id="${id}"</#if>><#rt/>
-<div class="<#if classes?has_content>${classes}<#else>${style_grid_large!}12</#if> columns">
+<div class="${style_grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
+<div class="<#if classes?has_content>${classes}<#else>${style_grid_large!}12</#if> ${style_grid_cell!}">
 
 <#if showMore>
 <#if title?has_content><h2> ${title}</h2></#if>    
@@ -226,8 +226,8 @@ ${menuString}
     </form>
   </#if>
   -->
-  <div class="row"><#rt/>
-<div class="${style_grid_large!}12 columns">
+  <div class="${style_grid_row!}"><#rt/>
+<div class="${style_grid_large!}12 ${style_grid_cell!}">
 </#macro>
 
 <#macro renderPortalPageEnd>
@@ -251,7 +251,7 @@ ${menuString}
   <td class="portal-column<#if confMode == "true">-config</#if> connectedSortable" style="vertical-align: top; <#if width?has_content> width:${width};</#if>" id="portalColumn_${columnSeqId}">
   
   -->
-    <div class="row">
+    <div class="${style_grid_row!}">
     <#if confMode == "true">
       <div class="portal-column-config-title-bar">
         <ul>

@@ -350,7 +350,7 @@ document.lookuporder.orderId.focus();
             <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true/>
         -->
         
-            <div class="row">
+            <div class="${style_grid_row!}">
                <div class="${style_grid_large!}12 columns">
                     <div class="pagination-centered">
                       <ul class="pagination">

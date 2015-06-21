@@ -41,13 +41,13 @@ under the License.
 <@section title="${uiLabelMap.OrderLookupOrder}">
       <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
         <input type="hidden" name="changeStatusAndTypeState" value="Y" />
-       <div class="row">
-        <div class="${style_grid_large!}12 columns">
-          <div class="row collapse prefix-radius">
-            <div class="${style_grid_small!}3 columns">
+       <@row>
+        <@cell>
+          <@row class="prefix-radius">
+            <@cell columns=3>
               <span class="">${uiLabelMap.CommonStatus}</span>
-                </div>
-            <div class="${style_grid_small!}9 columns">
+            </@cell>
+            <@cell columns=9>
                 <span class=" text-left">
                 <input type="checkbox" name="viewall" value="Y" onclick="javascript:setCheckboxes()" <#if state.hasAllStatus()>checked="checked"</#if> /><label>${uiLabelMap.CommonAll}</label>
                 <input type="checkbox" name="viewcreated" value="Y" <#if state.hasStatus('viewcreated')>checked="checked"</#if> /><label>${uiLabelMap.CommonCreated}</label>
@@ -59,34 +59,34 @@ under the License.
                 <input type="checkbox" name="viewrejected" value="Y" <#if state.hasStatus('viewrejected')>checked="checked"</#if> /><label>${uiLabelMap.CommonRejected}</label>
                 <input type="checkbox" name="viewcancelled" value="Y" <#if state.hasStatus('viewcancelled')>checked="checked"</#if> /><label>${uiLabelMap.CommonCancelled}</label>
                 </span>
-            </div>
-          </div>
-        </div>
-       </div>
-      <div class="row">
-        <div class="${style_grid_large!}12 columns">
-          <div class="row collapse prefix-radius">
-            <div class="${style_grid_small!}3 columns">
+            </@cell>
+          </@row>
+        </@cell>
+      </@row>
+      <@row>
+        <@cell>
+          <@row class="prefix-radius">
+            <@cell columns=3>
               <span class="">${uiLabelMap.CommonType}</span>
-            </div>
-            <div class="${style_grid_small!}9 columns">
+            </@cell>
+            <@cell columns=9>
                 <span class=" text-left">
                     <input type="checkbox" name="view_SALES_ORDER" value="Y" <#if state.hasType('view_SALES_ORDER')>checked="checked"</#if>/>
                 <label>${descr_SALES_ORDER}</label>
                     <input type="checkbox" name="view_PURCHASE_ORDER" value="Y" <#if state.hasType('view_PURCHASE_ORDER')>checked="checked"</#if>/>
                 <label>${descr_PURCHASE_ORDER}</label>
                 </span>
-                </div>
-          </div>
-        </div>
-       </div>
-       <div class="row">
-        <div class="${style_grid_large!}12 columns">
-          <div class="row collapse prefix-radius">
-            <div class="${style_grid_small!}3 columns">
+            </@cell>
+          </@row>
+        </@cell>
+       </@row>
+       <@row>
+        <@cell>
+          <@row class="prefix-radius">
+            <@cell columns=3>
               <span class="">${uiLabelMap.CommonFilter}</span>
-            </div>
-            <div class="${style_grid_small!}9 columns">
+            </@cell>
+            <@cell columns=9>
                 <span class=" text-left">
                     <input type="checkbox" name="filterInventoryProblems" value="Y"
                         <#if state.hasFilter('filterInventoryProblems')>checked="checked"</#if>/>
@@ -95,17 +95,17 @@ under the License.
                         <#if state.hasFilter('filterAuthProblems')>checked="checked"</#if>/>
                 <label>${uiLabelMap.OrderFilterAuthProblems}</label>
                 </span>
-                </div>
-          </div>
-        </div>
-       </div>
-       <div class="row">
-        <div class="${style_grid_large!}12 columns">
-          <div class="row collapse prefix-radius">
-            <div class="${style_grid_small!}3 columns">
+            </@cell>
+          </@row>
+        </@cell>
+       </@row>
+       <@row>
+        <@cell>
+          <@row class="prefix-radius">
+            <@cell columns=3>
               <span class="">${uiLabelMap.CommonFilter} (${uiLabelMap.OrderFilterPOs})</span>
-            </div>
-            <div class="${style_grid_small!}9 columns">
+            </@cell>
+            <@cell columns=9>
                 <span class=" text-left">
                     <input type="checkbox" name="filterPartiallyReceivedPOs" value="Y"
                         <#if state.hasFilter('filterPartiallyReceivedPOs')>checked="checked"</#if>/>
@@ -117,19 +117,19 @@ under the License.
                         <#if state.hasFilter('filterPOsWithRejectedItems')>checked="checked"</#if>/>
                     <label>${uiLabelMap.OrderFilterPOsWithRejectedItems}</label>
                  </span>
-                </div>
-    </div>
- </div>
-       </div>
-       <div class="row">
-        <div class="${style_grid_large!}12 columns">
-          <div class="row collapse prefix-radius">
-            <div class="${style_grid_small!}12 columns">
+              </@cell>
+            </@row>
+         </@cell>
+       </@row>
+       <@row>
+        <@cell>
+          <@row class="prefix-radius">
+            <@cell>
               <input type="submit" value="${uiLabelMap.CommonFind}" class="button tiny"/>
-            </div>
-          </div>
-        </div>
-       </div>
+            </@cell>
+          </@row>
+        </@cell>
+       </@row>
       </form>
    </@section>
  

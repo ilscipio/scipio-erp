@@ -44,6 +44,7 @@ under the License.
 <#global "style_round"              = "round" />
 <#global "style_radius"             = "radius" />
 <#global "style_expand"             = "expand" />
+<#global "style_collapse"           = "collapse" />
 
 <#-- Colors -->
 <#global "style_color_green"        = "success" />
@@ -67,8 +68,8 @@ under the License.
 <#global "style_grid_block"         = "block-grid-" />
 
 <#-- Breadcrumbs -->
-<#global "style_nav_breadcrumbs"    = "breadcrumbs" />
-<#global "style_nav_breadcrumbs_disabled"    = "unavailable" />
+<#global "style_nav_breadcrumbs"            = "breadcrumbs" />
+<#global "style_nav_breadcrumbs_disabled"   = "unavailable" />
 <#global "style_nav_breadcrumbs_active"     = "current" />
 
 <#-- Panels -->

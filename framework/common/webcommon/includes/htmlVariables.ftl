@@ -32,7 +32,7 @@ under the License.
 -->
 
 <#-- Misc -->
-<#global "style_disabled"            = "disabled" />
+<#global "style_disabled"           = "disabled" />
 <#global "style_active"             = "active" />
 <#global "style_button"             = "button" />
 <#global "style_button_group"       = "button-group" />
@@ -49,15 +49,21 @@ under the License.
 <#global "style_color_green"        = "success" />
 <#global "style_color_red"          = "alert" />
 <#global "style_color_grey"         = "secondary" />
+<#global "style_color_secondary"    = "secondary" />
 <#global "style_color_info"         = "info" />
-
+<#global "style_color_warning"      = "warning" />
+<#global "style_color_success"      = "success" />  
+<#global "style_color_alert"        = "alert" />        <#-- Bootstrap: "danger" -->
 
 <#-- Grid -->
-<#global "style_grid_display"       = "display" /> <#-- display grid -->
-<#global "style_grid_small"         = "small-" />
-<#global "style_grid_medium"        = "medium-" />
-<#global "style_grid_large"         = "large-" />
-<#global "style_grid_offset"        = "offset-" />
+<#global "style_grid_row"           = "row" />
+<#global "style_grid_cell"          = "columns" />
+
+<#global "style_grid_display"       = "display" />      <#-- display grid -->
+<#global "style_grid_small"         = "small-" />       <#-- Bootstrap: "col-sm-" -->
+<#global "style_grid_medium"        = "medium-" />      <#-- Bootstrap: "col-md-" -->
+<#global "style_grid_large"         = "large-" />       <#-- Bootstrap: "col-lg-" -->
+<#global "style_grid_offset"        = "offset-" />      <#-- Bootstrap: "col-md-offset-" -->
 <#global "style_grid_block"         = "block-grid-" />
 
 <#-- Breadcrumbs -->
@@ -71,6 +77,15 @@ under the License.
 <#global "style_panel_title"        = "" />
 <#global "style_panel_body"         = "" />
 
+<#-- Alert Box -->
+<#global "style_alert_wrap"         = "alert-box" />    <#-- Bootstrap: "alert" -->
+<#global "style_alert_prefix_type"  = "" />             <#-- Bootstrap: "alert-" -->
+
+<#-- Pricing Tables -->
+<#global "style_panel_wrap"         = "panel" />
+<#global "style_panel_head"         = "" />
+<#global "style_panel_title"        = "" />
+<#global "style_panel_body"         = "" />
 
 <#-- UTLITY VARIABLES END -->
 

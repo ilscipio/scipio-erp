@@ -283,7 +283,7 @@ under the License.
 -->
 <#macro row class="" id="" collapse=false norows=false>
     <#if !norows>
-    <div class="row <#if class?has_content> ${class!}</#if><#if collapse> collapse</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
+    <div class="${style_grid_row!} <#if class?has_content> ${class!}</#if><#if collapse> collapse</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
     </#if>
         <#nested />
     <#if !norows>    
@@ -309,7 +309,7 @@ under the License.
     offset          = offset in number of columns
 -->
 <#macro cell columns=12 offset=0 class="" id="" collapse=false nocells=false>
-    <#if !nocells><div class="<#if class?has_content>${class!}<#else>${style_grid_large!}${columns!12}</#if><#if offset&gt;0>${style_grid_offset!}${offset!}</#if> columns" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
+    <#if !nocells><div class="<#if class?has_content>${class!}<#else>${style_grid_large!}${columns!12}</#if><#if offset&gt;0>${style_grid_offset!}${offset!}</#if> ${style_grid_cell!}" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
         <#nested />
     <#if !nocells></div></#if>
 </#macro>
@@ -430,11 +430,11 @@ under the License.
     
 -->
 <#macro alert type="">
-<div class="row">
-        <div class="${style_grid_large!}12 columns">
-        <div data-alert class="alert-box ${type}">
-           <div class="row">
-              <div class="${style_grid_large!}12 columns">
+<div class="${style_grid_row!}">
+        <div class="${style_grid_large!}12 ${style_grid_cell!}">
+        <div data-alert class="${style_alert_wrap!} ${style_alert_prefix_type!}${type}">
+           <div class="${style_grid_row!}">
+              <div class="${style_grid_large!}12 ${style_grid_cell!}">
                   <#nested>
                   <a href="#" class="close">&times;</a>
                 </div>

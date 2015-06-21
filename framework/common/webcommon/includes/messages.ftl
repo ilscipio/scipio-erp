@@ -39,7 +39,7 @@ under the License.
   
   <#-- display the error messages -->
   <#if (errorMessage?has_content || errorMessageList?has_content)>
-        <div id="main-alert-box">
+        <div id="main-${style_alert_wrap!}">
             <@alert type="alert">
       <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
       <#if errorMessage?has_content>

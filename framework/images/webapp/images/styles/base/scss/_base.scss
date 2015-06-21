@@ -3,6 +3,8 @@ $include-html-reveal-classes: $include-html-classes;
 
 body {}
 
+input,select,text-area {max-width:50em;}
+
 .fullWidth {
     width: 100%;
     /*max-width: 85em;*/
@@ -200,6 +202,7 @@ code {
     .FATAL {color:$alert-color;font-weight:bold;}
     .TRACE {color:$aluminum;}
 }
+
 
 .postfix input[type="submit"], .postfix button {
         background: $input-prefix-bg;

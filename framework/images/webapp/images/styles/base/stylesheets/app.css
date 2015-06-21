@@ -9056,6 +9056,11 @@ th.hide-for-touch {
 }
 /* GRID */
 /* line 6, ../scss/_base.scss */
+input, select, text-area {
+  max-width: 50em;
+}
+
+/* line 8, ../scss/_base.scss */
 .fullWidth {
   width: 100%;
   /*max-width: 85em;*/
@@ -9064,7 +9069,7 @@ th.hide-for-touch {
   margin-right: auto;
 }
 
-/* line 14, ../scss/_base.scss */
+/* line 16, ../scss/_base.scss */
 .v-center {
   position: absolute;
   top: 50%;
@@ -9074,22 +9079,22 @@ th.hide-for-touch {
 }
 
 /* NAVIGATION */
-/* line 26, ../scss/_base.scss */
+/* line 28, ../scss/_base.scss */
 .sidebar {
   margin-top: 0px;
   background: #FAFAFA;
   padding: 10px;
 }
-/* line 31, ../scss/_base.scss */
+/* line 33, ../scss/_base.scss */
 .sidebar form {
   padding: 0px;
 }
-/* line 33, ../scss/_base.scss */
+/* line 35, ../scss/_base.scss */
 .sidebar input[type="search"]:focus {
   box-shadow: 0 0 0 !important;
 }
 
-/* line 38, ../scss/_base.scss */
+/* line 40, ../scss/_base.scss */
 .sub-top-bar {
   display: block;
   width: auto;
@@ -9146,7 +9151,7 @@ th.hide-for-touch {
 .sub-top-bar li.active a:hover {
   background: #0078a0;
 }
-/* line 41, ../scss/_base.scss */
+/* line 43, ../scss/_base.scss */
 .sub-top-bar dt a, .sub-top-bar dd a, .sub-top-bar li a {
   background-color: #fafafa;
   color: #008cba;
@@ -9154,20 +9159,20 @@ th.hide-for-touch {
 }
 
 /* CONTENT */
-/* line 49, ../scss/_base.scss */
+/* line 51, ../scss/_base.scss */
 #content-main-section {
   padding-top: 32px;
   padding-bottom: 32px;
 }
 
-/* line 54, ../scss/_base.scss */
+/* line 56, ../scss/_base.scss */
 #content-main-body {
   width: 100%;
   min-height: 100%;
   position: relative;
 }
 
-/* line 61, ../scss/_base.scss */
+/* line 63, ../scss/_base.scss */
 input[type="button"], input[type="submit"], .buttontext {
   border-style: solid;
   border-width: 0;
@@ -9206,41 +9211,41 @@ input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hov
   color: white;
 }
 
-/* line 64, ../scss/_base.scss */
+/* line 66, ../scss/_base.scss */
 table.basic-table {
   width: 100%;
 }
-/* line 66, ../scss/_base.scss */
+/* line 68, ../scss/_base.scss */
 table.basic-table tr {
   background: none;
 }
-/* line 69, ../scss/_base.scss */
+/* line 71, ../scss/_base.scss */
 table.basic-table tr td {
   height: auto;
   vertical-align: top;
 }
-/* line 75, ../scss/_base.scss */
+/* line 77, ../scss/_base.scss */
 table.basic-table tr.odd {
   background: #fafafa;
 }
-/* line 77, ../scss/_base.scss */
+/* line 79, ../scss/_base.scss */
 table.basic-table input {
   margin: 0px;
 }
 
 @media only screen and (min-width: 40.063em) {
-  /* line 81, ../scss/_base.scss */
+  /* line 83, ../scss/_base.scss */
   .reveal-modal, dialog {
     top: 12.5rem;
   }
 }
 
-/* line 87, ../scss/_base.scss */
+/* line 89, ../scss/_base.scss */
 .login-box {
   margin: 200px 0;
   padding: 0px;
 }
-/* line 98, ../scss/_base.scss */
+/* line 100, ../scss/_base.scss */
 .login-box #login-box-content {
   margin-top: 20px;
   padding: 40px 20px 0 20px;
@@ -9251,7 +9256,7 @@ table.basic-table input {
 }
 
 @media (max-width: 610px) {
-  /* line 109, ../scss/_base.scss */
+  /* line 111, ../scss/_base.scss */
   .login-box {
     position: static;
     width: 100%;
@@ -9260,17 +9265,17 @@ table.basic-table input {
     margin-top: 50px;
   }
 }
-/* line 113, ../scss/_base.scss */
+/* line 115, ../scss/_base.scss */
 .inline-list li {
   margin-bottom: 10px;
 }
 
-/* line 117, ../scss/_base.scss */
+/* line 119, ../scss/_base.scss */
 td {
   word-break: break-all;
 }
 
-/* line 121, ../scss/_base.scss */
+/* line 123, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -9278,29 +9283,29 @@ td {
   padding: 8px 0px;
 }
 
-/* line 127, ../scss/_base.scss */
+/* line 129, ../scss/_base.scss */
 fieldset {
   border: none;
 }
-/* line 130, ../scss/_base.scss */
+/* line 132, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-/* line 137, ../scss/_base.scss */
+/* line 139, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 144, ../scss/_base.scss */
+/* line 146, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 148, ../scss/_base.scss */
+/* line 150, ../scss/_base.scss */
 .rotate-90 {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -9308,7 +9313,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 155, ../scss/_base.scss */
+/* line 157, ../scss/_base.scss */
 .rotate-180 {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -9316,7 +9321,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 162, ../scss/_base.scss */
+/* line 164, ../scss/_base.scss */
 .rotate-270 {
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -9324,7 +9329,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 169, ../scss/_base.scss */
+/* line 171, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -9348,36 +9353,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 191, ../scss/_base.scss */
+/* line 193, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 196, ../scss/_base.scss */
+/* line 198, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 198, ../scss/_base.scss */
+/* line 200, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 199, ../scss/_base.scss */
+/* line 201, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 200, ../scss/_base.scss */
+/* line 202, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 201, ../scss/_base.scss */
+/* line 203, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 204, ../scss/_base.scss */
+/* line 207, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -9391,24 +9396,24 @@ code .TRACE {
 }
 
 /*  FOOTER */
-/* line 217, ../scss/_base.scss */
+/* line 220, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 222, ../scss/_base.scss */
+/* line 225, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 227, ../scss/_base.scss */
+/* line 230, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 231, ../scss/_base.scss */
+/* line 234, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;

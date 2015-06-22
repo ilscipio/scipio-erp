@@ -1,6 +1,7 @@
 <#--<@nav type="magellan">
     <@mli arrival="breadcrumbs"><a href="#breadcrumbs">Breadcrumbs</a></@mli>
     <@mli arrival="grid"><a href="#grid">Grid</a></@mli>
+    <@mli arrival="blockgrid"><a href="#blockgrid">Block-Grid</a></@mli>
     <@mli arrival="buttons"><a href="#buttons">Buttons</a></@mli>
     <@mli arrival="panel"><a href="#panel">Panel</a></@mli>
 </@nav>-->
@@ -42,6 +43,15 @@
         <@cell columns=6>6</@cell>
         <@cell columns=6>6</@cell>
     </@row>
+</@section>
+
+<@section>
+    <h2 ${mtarget("blockgrid")} id="blockgrid">Grid</h2>
+    <@tile type="small" color=0 title="Test"></@tile>
+    <@tile type="wide" color=1 title="2"></@tile>
+    <@tile type="big" color=2 title="Test 3" icon="fi-heart">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
+    <@tile type="large" color=3 icon="fi-compass"></@tile>
+    <@tile type="super" color=4 icon="fi-music"></@tile>
 </@section>
 
 <@section>

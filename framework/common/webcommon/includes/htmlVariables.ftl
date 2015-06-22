@@ -67,6 +67,14 @@ under the License.
 <#global "style_grid_offset"        = "offset-" />      <#-- Bootstrap: "col-md-offset-" -->
 <#global "style_grid_block"         = "block-grid-" />
 
+<#-- Tile -->
+<#global "style_tile_wrap"       = "tile" />
+<#global "style_tile_color"      = "tile-color-" />
+<#global "style_tile_content"    = "tile-content" />
+<#global "style_tile_icon"       = "tile-icon" />
+<#global "style_tile_title"      = "tile-title" />
+<#global "style_tile_overlay"    = "tile-overlay" />
+
 <#-- Breadcrumbs -->
 <#global "style_nav_breadcrumbs"            = "breadcrumbs" />
 <#global "style_nav_breadcrumbs_disabled"   = "unavailable" />

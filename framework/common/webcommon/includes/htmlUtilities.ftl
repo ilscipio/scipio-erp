@@ -522,6 +522,7 @@ Since this is very foundation specific, this function may be dropped in future i
    * General Attributes *
     class           = Adds classes - please use "(small|medium|large)-${style_grid_block!}#"
     columns         = Number of columns (default 5)
+    type            = (tiles|) default:empty
     
 -->
 <#macro grid class="${style_grid_small!}${style_grid_block!}2 ${style_grid_medium!}${style_grid_block!}4 ${style_grid_large!}${style_grid_block!}5" columns=5>
@@ -612,7 +613,37 @@ Creates a very basic wrapper for code blocks
     </code></pre>
 </#macro>
 
+<#-- 
+*************
+* Tile
+************
+Creates a very basic wrapper for tiles (can be used in metro designs).
+Please be aware that this is neither based on standard bootstrap, nor foundation. 
+It is loosely based on http://metroui.org.ua/tiles.html 
 
+    Usage example:  
+    <@tile type="small">
+       // content
+    </@tile>
+                    
+   * General Attributes *
+    type            = (small|normal|wide|large|big|super) (default:normal)
+    title           = Title
+    class           = css classes
+    id              = field id
+    color           = (0|1|2|3|4|5|6|7) defaul:0 (empty)   
+    icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
+-->
+<#macro tile type="" title="normal" class="" id="" color=0 icon="">
+    <#assign nested><#nested></#assign>
+    <div class="${style_tile_wrap!} ${style_tile_wrap!}-${type!}<#if class?has_content> ${class!}</#if> ${style_tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if>>
+        <div class="${style_tile_content!}">
+            <#if icon?has_content><span class="${style_tile_icon!}"><i class="${icon!}"></i></span></#if>
+            <#if nested?has_content><span class="${style_tile_overlay!}"><#nested></span></#if>
+            <#if title?has_content><span class="${style_tile_title!}">${title!}</span></#if>
+        </div>
+    </div>  
+</#macro>
 
 <#-- 
 *************

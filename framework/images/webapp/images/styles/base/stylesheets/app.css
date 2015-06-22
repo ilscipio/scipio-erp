@@ -9645,8 +9645,9 @@ table.basic-table input {
 .login-box {
   margin: 200px 0;
   padding: 0px;
+  min-width: 500px;
 }
-/* line 114, ../scss/_base.scss */
+/* line 115, ../scss/_base.scss */
 .login-box #login-box-content {
   margin-top: 20px;
   padding: 40px 20px 0 20px;
@@ -9658,7 +9659,7 @@ table.basic-table input {
 }
 
 @media (max-width: 610px) {
-  /* line 126, ../scss/_base.scss */
+  /* line 127, ../scss/_base.scss */
   .login-box {
     position: static;
     width: 100%;
@@ -9667,17 +9668,17 @@ table.basic-table input {
     margin-top: 50px;
   }
 }
-/* line 130, ../scss/_base.scss */
+/* line 131, ../scss/_base.scss */
 .inline-list li {
   margin-bottom: 10px;
 }
 
-/* line 134, ../scss/_base.scss */
+/* line 135, ../scss/_base.scss */
 td {
   word-break: break-all;
 }
 
-/* line 138, ../scss/_base.scss */
+/* line 139, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -9685,29 +9686,29 @@ td {
   padding: 8px 0px;
 }
 
-/* line 144, ../scss/_base.scss */
+/* line 145, ../scss/_base.scss */
 fieldset {
   border: none;
 }
-/* line 147, ../scss/_base.scss */
+/* line 148, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-/* line 154, ../scss/_base.scss */
+/* line 155, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 161, ../scss/_base.scss */
+/* line 162, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 165, ../scss/_base.scss */
+/* line 166, ../scss/_base.scss */
 .rotate-90 {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -9715,7 +9716,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 172, ../scss/_base.scss */
+/* line 173, ../scss/_base.scss */
 .rotate-180 {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -9723,7 +9724,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 179, ../scss/_base.scss */
+/* line 180, ../scss/_base.scss */
 .rotate-270 {
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -9731,7 +9732,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 186, ../scss/_base.scss */
+/* line 187, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -9755,36 +9756,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 208, ../scss/_base.scss */
+/* line 209, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 213, ../scss/_base.scss */
+/* line 214, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 215, ../scss/_base.scss */
+/* line 216, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 216, ../scss/_base.scss */
+/* line 217, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 217, ../scss/_base.scss */
+/* line 218, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 218, ../scss/_base.scss */
+/* line 219, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 222, ../scss/_base.scss */
+/* line 223, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -9798,24 +9799,24 @@ code .TRACE {
 }
 
 /*  FOOTER */
-/* line 235, ../scss/_base.scss */
+/* line 236, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 240, ../scss/_base.scss */
+/* line 241, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 245, ../scss/_base.scss */
+/* line 246, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 249, ../scss/_base.scss */
+/* line 250, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -9823,7 +9824,7 @@ code .TRACE {
 }
 
 @media only screen and (min-width: 40.0625em) {
-  /* line 260, ../scss/_base.scss */
+  /* line 261, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }

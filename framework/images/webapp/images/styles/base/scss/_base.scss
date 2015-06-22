@@ -103,6 +103,7 @@ table.basic-table {
 .login-box {
   margin: 200px 0;
   padding:0px;
+  min-width: 500px;
   
   #login-box-title {
       
@@ -257,7 +258,5 @@ code {
 // Medium and small devices
 
 @media #{$medium-up} { 
-input,select,text-area {max-width:100%;}
-
-
+    input,select,text-area {max-width:100%;}
 }

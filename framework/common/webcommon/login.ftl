@@ -87,11 +87,12 @@ under the License.
           </#if>
          
          <@row>
-             <@cell class="${style_grid_large!}9 text-left">
+             <@cell class="${style_grid_large!}12 text-left">
                 <small><a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a></small>
-                
              </@cell>
-            <@cell class="${style_grid_large!}12 ${style_grid_large!}centered text-right">
+        </@row>
+        <@row>
+            <@cell class="${style_grid_large!}12 text-right">
                 <input type="hidden" name="JavaScriptEnabled" value="N"/>
                 <input type="submit" value="${uiLabelMap.CommonLogin}" class="button"/>
             </@cell>

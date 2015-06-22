@@ -9798,7 +9798,55 @@ code .TRACE {
   font-size: 1rem;
 }
 
-/* line 236, ../scss/_base.scss */
+/*  FOOTER */
+/* line 237, ../scss/_base.scss */
+#body-content {
+  min-height: 100%;
+  margin-bottom: -26px;
+}
+
+/* line 242, ../scss/_base.scss */
+#body-content:after {
+  content: "";
+  display: block;
+}
+
+/* line 247, ../scss/_base.scss */
+#body-content:after, #footer {
+  height: 26px;
+}
+
+/* line 251, ../scss/_base.scss */
+#footer {
+  background: #333333;
+  color: #eeeeee;
+  width: 100%;
+}
+
+@media only screen and (min-width: 40.0625em) and (max-width: 64em) {
+  /* line 262, ../scss/_base.scss */
+  input, select, text-area {
+    max-width: 100%;
+  }
+}
+@media only screen and (max-width: 40em) {
+  /* line 267, ../scss/_base.scss */
+  input, select, text-area {
+    max-width: 100%;
+  }
+
+  /* line 269, ../scss/_base.scss */
+  .login-box {
+    min-width: 0;
+  }
+}
+/* line 1, ../scss/_ui_autocomplete.scss */
+.ui-helper-hidden-accessible {
+  display: none;
+}
+
+/* Experimental Tiles Design */
+/* line 2, ../scss/_tiles.scss */
 .tile {
   width: 150px;
   height: 150px;
@@ -9816,7 +9864,7 @@ code .TRACE {
   -ms-user-select: none;
   user-select: none;
 }
-/* line 253, ../scss/_base.scss */
+/* line 19, ../scss/_tiles.scss */
 .tile .tile-content {
   position: absolute;
   top: 0;
@@ -9825,11 +9873,11 @@ code .TRACE {
   height: inherit;
   overflow: hidden;
 }
-/* line 261, ../scss/_base.scss */
+/* line 27, ../scss/_tiles.scss */
 .tile .tile-content :first-child {
   display: block;
 }
-/* line 265, ../scss/_base.scss */
+/* line 31, ../scss/_tiles.scss */
 .tile .tile-content .tile-icon {
   position: absolute;
   width: 64px;
@@ -9841,7 +9889,7 @@ code .TRACE {
   margin-left: -32px;
   text-align: center;
 }
-/* line 277, ../scss/_base.scss */
+/* line 43, ../scss/_tiles.scss */
 .tile .tile-content .tile-title {
   position: absolute;
   bottom: 0;
@@ -9849,7 +9897,7 @@ code .TRACE {
   padding: .425rem .25rem;
   z-index: 999;
 }
-/* line 285, ../scss/_base.scss */
+/* line 51, ../scss/_tiles.scss */
 .tile .tile-content .tile-overlay {
   width: 100%;
   height: inherit;
@@ -9865,22 +9913,22 @@ code .TRACE {
   opacity: 0.8;
 }
 
-/* line 302, ../scss/_base.scss */
+/* line 68, ../scss/_tiles.scss */
 .tile:hover {
   outline: #999999 solid 3px;
 }
-/* line 305, ../scss/_base.scss */
+/* line 71, ../scss/_tiles.scss */
 .tile:hover .tile-overlay {
   top: 0;
   transition: all 0.3s ease;
 }
 
-/* line 312, ../scss/_base.scss */
+/* line 78, ../scss/_tiles.scss */
 .tile-small {
   width: 70px;
   height: 70px;
 }
-/* line 317, ../scss/_base.scss */
+/* line 83, ../scss/_tiles.scss */
 .tile-small .tile-content .tile-icon {
   width: 32px;
   height: 32px;
@@ -9889,24 +9937,24 @@ code .TRACE {
   margin-left: -16px;
 }
 
-/* line 327, ../scss/_base.scss */
+/* line 93, ../scss/_tiles.scss */
 .tile-normal {
   width: 150px;
   height: 150px;
 }
 
-/* line 328, ../scss/_base.scss */
+/* line 94, ../scss/_tiles.scss */
 .tile-wide {
   width: 310px;
   height: 150px;
 }
 
-/* line 329, ../scss/_base.scss */
+/* line 95, ../scss/_tiles.scss */
 .tile-large {
   width: 310px;
   height: 310px;
 }
-/* line 331, ../scss/_base.scss */
+/* line 97, ../scss/_tiles.scss */
 .tile-large .tile-content .tile-icon {
   width: 128px;
   height: 128px;
@@ -9915,12 +9963,12 @@ code .TRACE {
   margin-left: -64px;
 }
 
-/* line 341, ../scss/_base.scss */
+/* line 107, ../scss/_tiles.scss */
 .tile-big {
   width: 470px;
   height: 470px;
 }
-/* line 343, ../scss/_base.scss */
+/* line 109, ../scss/_tiles.scss */
 .tile-big .tile-content .tile-icon {
   width: 172px;
   height: 172px;
@@ -9929,12 +9977,12 @@ code .TRACE {
   margin-left: -96px;
 }
 
-/* line 353, ../scss/_base.scss */
+/* line 119, ../scss/_tiles.scss */
 .tile-super {
   width: 630px;
   height: 630px;
 }
-/* line 355, ../scss/_base.scss */
+/* line 121, ../scss/_tiles.scss */
 .tile-super .tile-content .tile-icon {
   width: 256px;
   height: 256px;
@@ -9943,89 +9991,42 @@ code .TRACE {
   margin-left: -128px;
 }
 
-/* line 367, ../scss/_base.scss */
+/* line 133, ../scss/_tiles.scss */
 .tile-color-0 {
   background-color: #008cba;
 }
 
-/* line 368, ../scss/_base.scss */
+/* line 134, ../scss/_tiles.scss */
 .tile-color-1 {
   background-color: #e7e7e7;
 }
 
-/* line 369, ../scss/_base.scss */
+/* line 135, ../scss/_tiles.scss */
 .tile-color-2 {
   background-color: #f04124;
 }
 
-/* line 370, ../scss/_base.scss */
+/* line 136, ../scss/_tiles.scss */
 .tile-color-3 {
   background-color: #43ac6a;
 }
 
-/* line 371, ../scss/_base.scss */
+/* line 137, ../scss/_tiles.scss */
 .tile-color-4 {
   background-color: #f08a24;
 }
 
-/* line 372, ../scss/_base.scss */
+/* line 138, ../scss/_tiles.scss */
 .tile-color-5 {
   background-color: #a0d3e8;
 }
 
-/* line 373, ../scss/_base.scss */
+/* line 139, ../scss/_tiles.scss */
 .tile-color-6 {
   background-color: #333333;
 }
 
-/* line 374, ../scss/_base.scss */
+/* line 140, ../scss/_tiles.scss */
 .tile-color-7 {
   background-color: #cccccc;
-}
-
-/*  FOOTER */
-/* line 378, ../scss/_base.scss */
-#body-content {
-  min-height: 100%;
-  margin-bottom: -26px;
-}
-
-/* line 383, ../scss/_base.scss */
-#body-content:after {
-  content: "";
-  display: block;
-}
-
-/* line 388, ../scss/_base.scss */
-#body-content:after, #footer {
-  height: 26px;
-}
-
-/* line 392, ../scss/_base.scss */
-#footer {
-  background: #333333;
-  color: #eeeeee;
-  width: 100%;
-}
-
-@media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 403, ../scss/_base.scss */
-  input, select, text-area {
-    max-width: 100%;
-  }
-}
-@media only screen and (max-width: 40em) {
-  /* line 408, ../scss/_base.scss */
-  input, select, text-area {
-    max-width: 100%;
-  }
-
-  /* line 410, ../scss/_base.scss */
-  .login-box {
-    min-width: 0;
-  }
-}
-/* line 1, ../scss/_ui_autocomplete.scss */
-.ui-helper-hidden-accessible {
-  display: none;
 }

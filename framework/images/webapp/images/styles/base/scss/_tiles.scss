@@ -1,0 +1,140 @@
+/* Experimental Tiles Design */
+.tile{
+    width: 150px; 
+    height:150px;
+    display: block;
+    float: left;
+    margin: 5px;
+    color:#fff;
+    background-color: #eeeeee;
+    box-shadow: inset 0 0 1px #FFFFCC;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    .tile-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: inherit;
+        overflow: hidden;
+
+        :first-child {
+          display: block;
+        }
+        
+        .tile-icon {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            font-size: 64px;
+            top: 50%;
+            margin-top: -40px;
+            left: 50%;
+            margin-left: -32px;
+            text-align: center;
+        }
+        
+        .tile-title {
+            position: absolute;
+            bottom: 0;
+            left: .625rem;
+            padding: .425rem .25rem;
+            z-index: 999;
+        }
+        
+        .tile-overlay {
+          width: 100%;
+          height: inherit;
+          display: block;
+          position: absolute;
+          box-shadow: inset 0 0 1px #FFFFCC;
+          padding: 30px 15px 15px 15px;
+          top: 200%;
+          z-index: 2;
+          height: 100%;
+          transition: all 0.3s ease;
+          background: $primary-color;
+          opacity: 0.8;
+        }
+    }
+}
+
+.tile:hover {
+    outline: #999999 solid 3px;
+    
+    .tile-overlay{
+            top: 0;
+            transition: all 0.3s ease;
+          }
+} 
+
+// tile sizes
+.tile-small {
+       width: 70px; 
+       height:70px;
+       
+       .tile-content {
+           .tile-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 32px;
+                margin-top: -30px;
+                margin-left: -16px;
+                }
+            }
+}
+
+.tile-normal{width: 150px; height:150px;} 
+.tile-wide  {width: 310px; height:150px;}
+.tile-large {width: 310px; height:310px;
+   .tile-content {
+       .tile-icon {
+            width: 128px;
+            height: 128px;
+            font-size: 128px;
+            margin-top: -90px;
+            margin-left: -64px;
+            }
+        }
+
+}
+.tile-big   {width: 470px; height:470px;
+    .tile-content {
+       .tile-icon {
+            width: 172px;
+            height: 172px;
+            font-size: 172px;
+            margin-top: -120px;
+            margin-left: -96px;
+            }
+        }
+
+}
+.tile-super {width: 630px; height:630px;
+.tile-content {
+       .tile-icon {
+            width: 256px;
+            height: 256px;
+            font-size: 256px;
+            margin-top: -180px;
+            margin-left: -128px;
+            }
+        }
+
+}
+
+// tile colors    
+.tile-color-0 {background-color:$primary-color;}
+.tile-color-1 {background-color:$secondary-color;}
+.tile-color-2 {background-color:$alert-color;}
+.tile-color-3 {background-color:$success-color;}
+.tile-color-4 {background-color:$warning-color;}
+.tile-color-5 {background-color:$info-color;}
+.tile-color-6 {background-color:$oil;}
+.tile-color-7 {background-color:$iron;}

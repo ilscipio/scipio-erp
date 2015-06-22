@@ -9823,10 +9823,21 @@ code .TRACE {
   width: 100%;
 }
 
-@media only screen and (min-width: 40.0625em) {
+@media only screen and (min-width: 40.0625em) and (max-width: 64em) {
   /* line 261, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
+  }
+}
+@media only screen and (max-width: 40em) {
+  /* line 266, ../scss/_base.scss */
+  input, select, text-area {
+    max-width: 100%;
+  }
+
+  /* line 268, ../scss/_base.scss */
+  .login-box {
+    min-width: 0;
   }
 }
 /* line 1, ../scss/_ui_autocomplete.scss */

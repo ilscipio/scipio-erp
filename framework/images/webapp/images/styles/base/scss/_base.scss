@@ -255,8 +255,17 @@ code {
 
 
 
-// Medium and small devices
+// Medium devices
 
-@media #{$medium-up} { 
+@media #{$medium-only} { 
     input,select,text-area {max-width:100%;}
+}
+
+// Medium devices
+@media #{$small-only} {
+    input,select,text-area {max-width:100%;}
+    
+    .login-box {
+      min-width: 0;
+      }
 }

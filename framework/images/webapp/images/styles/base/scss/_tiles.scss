@@ -1,4 +1,13 @@
 /* Experimental Tiles Design */
+.tiles-container {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        margin: 4em 2%;
+}
+
 .tile{
     width: 150px; 
     height:150px;

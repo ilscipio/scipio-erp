@@ -525,17 +525,33 @@ Since this is very foundation specific, this function may be dropped in future i
     type            = (tiles|) default:empty
     
 -->
-<#macro grid class="${style_grid_small!}${style_grid_block!}2 ${style_grid_medium!}${style_grid_block!}4 ${style_grid_large!}${style_grid_block!}5" columns=5>
-    <#if columns!=5>
-        <#if columns-2 &gt; 0>
-            <#local class="${style_grid_small!}${style_grid_block!}${columns-2} ${style_grid_medium!}${style_grid_block!}${columns-1} ${style_grid_large!}${style_grid_block!}${columns}"/>
-        <#else>
-            <#local class="${style_grid_large!}${style_grid_block!}${columns}"/>
+<#macro grid type="" class="" columns=5>
+    <#if type=="tiles">
+        <#global freewallNum="${freewallNum!0+1}" />
+        <#assign id="freewall_id_${freewallNum!0}">
+        <div class="${style_tile_container!}" id="${id!}">
+            <#nested>
+        </div>
+        <script>
+         $(function() {
+            $('#${id}').freetile({
+                selector: '.${style_tile_wrap!}'
+            });
+         });
+        </script>
+    <#else>
+        <#assign defaultClass="${style_grid_small!}${style_grid_block!}2 ${style_grid_medium!}${style_grid_block!}4 ${style_grid_large!}${style_grid_block!}5">
+        <#if columns!=5>
+            <#if columns-2 &gt; 0>
+                <#local class="${style_grid_small!}${style_grid_block!}${columns-2} ${style_grid_medium!}${style_grid_block!}${columns-1} ${style_grid_large!}${style_grid_block!}${columns}"/>
+            <#else>
+                <#local class="${style_grid_large!}${style_grid_block!}${columns}"/>
+            </#if>
         </#if>
-    </#if>
-          <ul class="${class}">
+          <ul class="${class!defaultClass!}">
               <#nested>
           </ul>
+    </#if>
 </#macro>
 
 
@@ -634,7 +650,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     color           = (0|1|2|3|4|5|6|7) defaul:0 (empty)   
     icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
 -->
-<#macro tile type="" title="normal" class="" id="" color=0 icon="">
+<#macro tile type="normal" title="" class="" id="" color=0 icon="">
     <#assign nested><#nested></#assign>
     <div class="${style_tile_wrap!} ${style_tile_wrap!}-${type!}<#if class?has_content> ${class!}</#if> ${style_tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if>>
         <div class="${style_tile_content!}">

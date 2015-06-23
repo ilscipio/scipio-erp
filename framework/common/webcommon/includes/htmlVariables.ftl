@@ -68,6 +68,7 @@ under the License.
 <#global "style_grid_block"         = "block-grid-" />
 
 <#-- Tile -->
+<#global "style_tile_container"  = "tile-container" />
 <#global "style_tile_wrap"       = "tile" />
 <#global "style_tile_color"      = "tile-color-" />
 <#global "style_tile_content"    = "tile-content" />

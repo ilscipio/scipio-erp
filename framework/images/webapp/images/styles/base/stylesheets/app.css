@@ -9847,6 +9847,16 @@ code .TRACE {
 
 /* Experimental Tiles Design */
 /* line 2, ../scss/_tiles.scss */
+.tiles-container {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  margin: 4em 2%;
+}
+
+/* line 11, ../scss/_tiles.scss */
 .tile {
   width: 150px;
   height: 150px;
@@ -9864,7 +9874,7 @@ code .TRACE {
   -ms-user-select: none;
   user-select: none;
 }
-/* line 19, ../scss/_tiles.scss */
+/* line 28, ../scss/_tiles.scss */
 .tile .tile-content {
   position: absolute;
   top: 0;
@@ -9873,11 +9883,11 @@ code .TRACE {
   height: inherit;
   overflow: hidden;
 }
-/* line 27, ../scss/_tiles.scss */
+/* line 36, ../scss/_tiles.scss */
 .tile .tile-content :first-child {
   display: block;
 }
-/* line 31, ../scss/_tiles.scss */
+/* line 40, ../scss/_tiles.scss */
 .tile .tile-content .tile-icon {
   position: absolute;
   width: 64px;
@@ -9889,7 +9899,7 @@ code .TRACE {
   margin-left: -32px;
   text-align: center;
 }
-/* line 43, ../scss/_tiles.scss */
+/* line 52, ../scss/_tiles.scss */
 .tile .tile-content .tile-title {
   position: absolute;
   bottom: 0;
@@ -9897,7 +9907,7 @@ code .TRACE {
   padding: .425rem .25rem;
   z-index: 999;
 }
-/* line 51, ../scss/_tiles.scss */
+/* line 60, ../scss/_tiles.scss */
 .tile .tile-content .tile-overlay {
   width: 100%;
   height: inherit;
@@ -9913,22 +9923,22 @@ code .TRACE {
   opacity: 0.8;
 }
 
-/* line 68, ../scss/_tiles.scss */
+/* line 77, ../scss/_tiles.scss */
 .tile:hover {
   outline: #999999 solid 3px;
 }
-/* line 71, ../scss/_tiles.scss */
+/* line 80, ../scss/_tiles.scss */
 .tile:hover .tile-overlay {
   top: 0;
   transition: all 0.3s ease;
 }
 
-/* line 78, ../scss/_tiles.scss */
+/* line 87, ../scss/_tiles.scss */
 .tile-small {
   width: 70px;
   height: 70px;
 }
-/* line 83, ../scss/_tiles.scss */
+/* line 92, ../scss/_tiles.scss */
 .tile-small .tile-content .tile-icon {
   width: 32px;
   height: 32px;
@@ -9937,24 +9947,24 @@ code .TRACE {
   margin-left: -16px;
 }
 
-/* line 93, ../scss/_tiles.scss */
+/* line 102, ../scss/_tiles.scss */
 .tile-normal {
   width: 150px;
   height: 150px;
 }
 
-/* line 94, ../scss/_tiles.scss */
+/* line 103, ../scss/_tiles.scss */
 .tile-wide {
   width: 310px;
   height: 150px;
 }
 
-/* line 95, ../scss/_tiles.scss */
+/* line 104, ../scss/_tiles.scss */
 .tile-large {
   width: 310px;
   height: 310px;
 }
-/* line 97, ../scss/_tiles.scss */
+/* line 106, ../scss/_tiles.scss */
 .tile-large .tile-content .tile-icon {
   width: 128px;
   height: 128px;
@@ -9963,12 +9973,12 @@ code .TRACE {
   margin-left: -64px;
 }
 
-/* line 107, ../scss/_tiles.scss */
+/* line 116, ../scss/_tiles.scss */
 .tile-big {
   width: 470px;
   height: 470px;
 }
-/* line 109, ../scss/_tiles.scss */
+/* line 118, ../scss/_tiles.scss */
 .tile-big .tile-content .tile-icon {
   width: 172px;
   height: 172px;
@@ -9977,12 +9987,12 @@ code .TRACE {
   margin-left: -96px;
 }
 
-/* line 119, ../scss/_tiles.scss */
+/* line 128, ../scss/_tiles.scss */
 .tile-super {
   width: 630px;
   height: 630px;
 }
-/* line 121, ../scss/_tiles.scss */
+/* line 130, ../scss/_tiles.scss */
 .tile-super .tile-content .tile-icon {
   width: 256px;
   height: 256px;
@@ -9991,42 +10001,42 @@ code .TRACE {
   margin-left: -128px;
 }
 
-/* line 133, ../scss/_tiles.scss */
+/* line 142, ../scss/_tiles.scss */
 .tile-color-0 {
   background-color: #008cba;
 }
 
-/* line 134, ../scss/_tiles.scss */
+/* line 143, ../scss/_tiles.scss */
 .tile-color-1 {
   background-color: #e7e7e7;
 }
 
-/* line 135, ../scss/_tiles.scss */
+/* line 144, ../scss/_tiles.scss */
 .tile-color-2 {
   background-color: #f04124;
 }
 
-/* line 136, ../scss/_tiles.scss */
+/* line 145, ../scss/_tiles.scss */
 .tile-color-3 {
   background-color: #43ac6a;
 }
 
-/* line 137, ../scss/_tiles.scss */
+/* line 146, ../scss/_tiles.scss */
 .tile-color-4 {
   background-color: #f08a24;
 }
 
-/* line 138, ../scss/_tiles.scss */
+/* line 147, ../scss/_tiles.scss */
 .tile-color-5 {
   background-color: #a0d3e8;
 }
 
-/* line 139, ../scss/_tiles.scss */
+/* line 148, ../scss/_tiles.scss */
 .tile-color-6 {
   background-color: #333333;
 }
 
-/* line 140, ../scss/_tiles.scss */
+/* line 149, ../scss/_tiles.scss */
 .tile-color-7 {
   background-color: #cccccc;
 }

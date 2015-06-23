@@ -36,7 +36,7 @@ under the License.
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
     <@section title="${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}">
-            <@row>
+        <@row>
             <@cell class="${style_grid_large!}6">
             <table class="basic-table">
                 <#assign i = 0>
@@ -97,23 +97,27 @@ under the License.
                 </#if>
                 </#list>
             </table>
-        </@cell>
+            </@cell>
         </@row>
     </@section>
 </#list>
-  <#-- TODO: Convert to Foundation: New in OFbiz 14.12 branch (was outside list, as extra rows in a table)
-        <#if shipToPartyShippingContactMechList?has_content>
-          <tr><td colspan="4"><hr /></td></tr>
-          <tr><td colspan="4">${uiLabelMap.OrderShipToAnotherParty}: <b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(shipToParty)}</b></td></tr>
-          <tr><td colspan="4"><hr /></td></tr>
+
+<#-- Foundation: New in OFbiz 14.12 branch (was outside list, as extra rows in a table; now need new table) -->
+<#if shipToPartyShippingContactMechList?has_content>  
+  <@section title="${uiLabelMap.OrderShipToAnotherParty}">
+    <@row>
+      <@cell class="${style_grid_large!}6">
+        <table class='basic-table'>
+        
+          <tr><td colspan="3">${uiLabelMap.OrderShipToAnotherParty}: <b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(shipToParty)}</b></td></tr>
+          <tr><td colspan="3"><hr /></td></tr>
           <#list shipToPartyShippingContactMechList as shippingContactMech>
             <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
             <tr>
-              <td valign="top" nowrap="nowrap">
+              <td class="${style_grid_large!}3">
                 <input type="radio" name="${shipGroupIndex?default("0")}_shipping_contact_mech_id" value="${shippingAddress.contactMechId}"/>
               </td>
-              <td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp;</td>
-              <td valign="top" width="100%" nowrap="nowrap">
+              <td class="${style_grid_large!}6">
                 <div>
                   <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                   <#if shippingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
@@ -126,15 +130,20 @@ under the License.
                 </div>
               </td>
               <td>
-                <div><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></div>
+                <div><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></div>
               </td>
             </tr>
             <#if shippingContactMech_has_next>
-              <tr><td colspan="4"><hr /></td></tr>
+              <tr><td colspan="3"><hr /></td></tr>
             </#if>
           </#list>
-        </#if>
-    -->
+          
+        </table>
+      </@cell>
+    </@row>
+  </@section> 
+</#if>
+
 
 
             </form>
@@ -249,7 +258,9 @@ under the License.
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                       </div>
                     </td>
-                    <td>&nbsp;</td>
+                    <td>
+                      <div><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></div>
+                    </td>
                   </tr>
                   <#if shippingContactMech_has_next>
                   <tr><td colspan="3"><hr /></td></tr>

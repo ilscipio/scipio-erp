@@ -929,7 +929,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#macro renderClass className alert="false">
-  <#if className?? || (alert?has_content && alert=="true")> class="${className!}<#if alert?? && alert?string=="false"> alert</#if>" </#if>
+  <#if className?? || (alert?has_content && alert=="true")> class="${className!}<#if alert?? && alert?string=="true"> alert</#if>" </#if>
 </#macro>
 
 <#macro renderAsterisks requiredField requiredStyle>

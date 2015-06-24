@@ -66,6 +66,19 @@
     </@grid>
 </@section>
 
+<#-- Currently not included
+<@section>
+    <h2 ${mtarget("charts")} id="charts">Charts</h2>
+    <@chart type="bar" >
+        <@chartdata value="36" title="Peperoni"/>
+        <@chartdata value="2" title="Sausage"/> 
+        <@chartdata value="19" title="Cheese"/> 
+        <@chartdata value="6" title="Chicken"/> 
+        <@chartdata value="27" title="Other"/>  
+    </@chart>
+    
+</@section>-->
+
 <@section>
 <h2 ${mtarget("buttons")} id="buttons">Buttons</h2>
 <h3>Shapes</h3>

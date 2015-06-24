@@ -136,7 +136,7 @@ under the License.
                               </#list>
                           </#if>
                   </td>
-                  <td width="20%">
+                  <td width="20%" class="text-right">
                       <div id="displayQuantity${index}${rowCount}">${OISGAssContent.quantity!}</div>
                           <#if (orderShipments.size()?default(0)) == 0>
                       <div id="editQuantity${index}${rowCount}" style="display: none;"><input id="edit${index}_o_${rowCount}" name="quantity_o_${rowCount}" size="5" value="${OISGAssContent.quantity!}" title="${OISGAssContent.quantity!}" /></div>
@@ -159,14 +159,14 @@ under the License.
           <tr>
               
               <td colspan="3">&nbsp;</td>
-              <td>
+              <td colspan="2">
                 <form method="post" action="<@ofbizUrl>AddOrderItemShipGroupAssoc?view=OISGA</@ofbizUrl>" name="addOISGForm${index}"/>
                 <input type="hidden" name="editQuantity" value="edit"/>
                 <input type="hidden" name="editQuantityIndex" value="${index}"/>
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
                 <input type="hidden" name="quantity" value="0"/>
-                  <table class="basic-table" cellspacing='0'>
+                  <table class="basic-table" cellspacing="0">
                       <tr>
                           <td>
                              <div class="label">${uiLabelMap.OrderAddToshipGroup} : </div>
@@ -179,13 +179,12 @@ under the License.
                                  </select>
                              </div>
                          </td>
-                         <td></td>
                      </tr>
                      <tr>
                          <td>
                              <div style="display:none" id="shipByDate${index}">
                                  <div class="label">${uiLabelMap.OrderShipBeforeDate} : </div>
-                                 <span class="view-calendar"><@htmlTemplate.renderDateTimeField name="shipByDate" event="" action="" value="${requestParameters.maxDate!}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipByDate_${index}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></span>
+                                 <div><@htmlTemplate.renderDateTimeField name="shipByDate" event="" action="" value="${requestParameters.maxDate!}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipByDate_${index}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></div>
                              </div>
                          </td>
                      </tr>
@@ -197,7 +196,6 @@ under the License.
                  </table>
                </form>
              </td>
-             <td></td>
              
          </tr>
                   </#if>
@@ -228,7 +226,7 @@ under the License.
         <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId!}"/>
         <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
         <input type="hidden" name="oldContactMechId" value="${shipGroup.contactMechId!}"/>
-        <table class="basic-table" cellspacing='0'>
+        <table class="basic-table" cellspacing="0">
                 <tr>
                     <td scope="row" class="${style_grid_large!}3">
                         ${uiLabelMap.OrderAddress}

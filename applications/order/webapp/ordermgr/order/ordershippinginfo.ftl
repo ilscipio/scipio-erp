@@ -51,23 +51,24 @@ under the License.
 <#if shipGroups?has_content && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
   <#if parameters.view?has_content && parameters.view = "OISGA">
 <#-- TODO: Convert to Foundation: New in Ofbiz 14.12 -->
-  <div class="screenlet">
-     <div class="screenlet-title-bar">
-        <ul>
-           <li class="h3">&nbsp;${uiLabelMap.OrderShipmentInformation}</li>
-           <li><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>">${uiLabelMap.OrderShipmentInformationByOISG}</a></li>
+  <@section title="${uiLabelMap.OrderShipmentInformation}">
+        <ul class="button-group">
+           <li><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderShipmentInformationByOISG}</a></li>
         </ul>
-        <br class="clear"/>
-     </div>
-     <div class="screenlet-body">
-      <table width="100%" cellspacing="0" cellpadding="2" border="1" class="basic-table">
+        
+    <div>
+      <table cellspacing="0" class="basic-table" role="grid">
+        <thead>
           <tr class="header-row">
-              <td width="10%">${uiLabelMap.OrderItemId}</td>
-              <td width="25%">${uiLabelMap.ProductProduct}</td>
-              <td width="10%">${uiLabelMap.CommonQuantity}</td>
-              <td width="40%">${uiLabelMap.ProductQuantityNotAvailable}</td>
-              <td width="5%"> </td>
+              <th width="15%">${uiLabelMap.OrderItemId}</th>
+              <th width="35%">${uiLabelMap.ProductProduct}</th>
+              <th width="15%">${uiLabelMap.CommonQuantity}</th>
+              <th width="15%">${uiLabelMap.ProductQuantityNotAvailable}</th>
+              <th width="10%">&nbsp;</th>
+              <th width="10%">&nbsp;</th>
           </tr>
+        </thead>
+        <tbody>
           <#assign index = 0>
           <#list orderItemDatas as orderItemData>
               <#assign orderItem = orderItemData.orderItem>
@@ -82,17 +83,17 @@ under the License.
           <tr><td colspan="4"><hr/></td></tr>
               </#if>
               <#if (quantityOrdered > 0) >
-          <tr id="tableevenrow">
+          <tr class="tableevenrow">
               <td><div><a name="orderItem${index}">${orderItem.orderItemSeqId}</a></div></td>
               <td><div>${product.internalName!} [<a href="/catalog/control/EditProduct?productId=${orderItem.productId!}" class="link">${orderItem.productId!}</a>]</div></td>
               <td><div>${quantityOrdered}</div></td>
               <td><div>${quantityNotAvailable}</div></td>
               <td>
                   <#if !orderItem.statusId?exists || orderItem.statusId == "ITEM_CREATED" || orderItem.statusId == "ITEM_APPROVED">
-                  <div class="tabletext" id="display${index}">
+                  <div id="display${index}">
                       <a name="display${index}" href="javascript: showEdit('edit', '${index}');" class="smallSubmit"> ${uiLabelMap.CommonEdit}</a>
                   </div>
-                  <div class="tabletext" id="edit${index}" style="display: none">
+                  <div id="edit${index}" style="display: none">
                       <a style="float: left;" href="javascript: document.UpdateOrderItemShipGroupAssoc${index}.submit()" class="smallSubmit">${uiLabelMap.CommonValidate}</a>
                       <a style="float: left;" href="javascript:showEdit('display', '${index}'); restoreEditField('${index}');" class="smallSubmit">${uiLabelMap.CommonCancel}</a>
                   </div>
@@ -115,7 +116,7 @@ under the License.
               <input type="hidden" name="rowCount_o_${rowCount}" value="${rowCount}"/>
               <td colspan="2">&nbsp;</td>
               <td colspan="2">
-                  <div class="tabletext"> [${OISG.shipGroupSeqId}] <#if OISG.shipByDate?has_content>, ${uiLabelMap.OrderShipBeforeDate} : ${OISG.shipByDate?date}</#if></div>
+                  <div> [${OISG.shipGroupSeqId}] <#if OISG.shipByDate?has_content>, ${uiLabelMap.OrderShipBeforeDate} : ${OISG.shipByDate?date}</#if></div>
                       <#if orderType == "SALES_ORDER">
                           <#list orderShipments as orderShipment>
                   <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}" class="button tiny" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
@@ -132,7 +133,7 @@ under the License.
                       </#if>
               </td>
               <td class="tableList">
-                  <div id="displayQuantity${index}${rowCount}" class="tabletext">${OISGAssContent.quantity!}</div>
+                  <div id="displayQuantity${index}${rowCount}">${OISGAssContent.quantity!}</div>
                       <#if (orderShipments.size()?default(0)) == 0>
                   <div id="editQuantity${index}${rowCount}" style="display: none;"><input id="edit${index}_o_${rowCount}" name="quantity_o_${rowCount}" size="5" value="${OISGAssContent.quantity!}" title="${OISGAssContent.quantity!}" class="inputBox"/></div>
                       <#else>
@@ -173,14 +174,14 @@ under the License.
                      <tr>
                          <td>
                              <div style="display:none" id="shipByDate${index}">
-                                 <span class="tabletext">${uiLabelMap.OrderShipBeforeDate}</span>
+                                 <span>${uiLabelMap.OrderShipBeforeDate}</span>
                                  <span class="view-calendar"><@htmlTemplate.renderDateTimeField name="shipByDate" event="" action="" value="${requestParameters.maxDate!}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipByDate_${index}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></span>
                              </div>
                          </td>
                      </tr>
                      <tr>
                          <td>
-                             <span class="tabletext">
+                             <span>
                                  <a href="javascript:document.addOISGForm${index}.submit()" class="smallSubmit">${uiLabelMap.CommonAdd}</a>
                              </span>
                          </td>
@@ -193,16 +194,17 @@ under the License.
               </#if>
               <#assign index = index + 1>
           </#list>
+        </tbody>
       </table>
     </div>
-  </div>
+  </@section>
 <#else>
 <#list shipGroups as shipGroup>
   <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
     <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}">
        <ul class="button-group">
-         <li class="expanded"><a onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" title="Collapse">&nbsp;</a></li>
+         <#--<li class="expanded"><a onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" title="Collapse">&nbsp;</a></li>-->
          <li><a target="_BLANK" class="button tiny" href="<@ofbizUrl>shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}</@ofbizUrl>">${uiLabelMap.OrderShipGroup} PDF</a></li>
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>

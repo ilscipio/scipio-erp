@@ -351,7 +351,7 @@ under the License.
 -->
 <#macro modal id label href="">
     <a href="#" data-reveal-id="${id}_modal" <#if href?has_content>data-reveal-ajax="${href!}"</#if>>${label}</a>
-    <div id="${id}_modal" class="reveal-modal" data-reveal>
+    <div id="${id}_modal" class="${style_modal_wrap!}" data-reveal>
         <#nested>
         <a class="close-reveal-modal">&#215;</a>
     </div>
@@ -482,7 +482,7 @@ Since this is very foundation specific, this function may be dropped in future i
 -->
 
 <#macro pul title="">
-          <ul class="pricing-table">
+          <ul class="${style_pricing_wrap!}">
               <@pli type="title">${title!}</@pli>
               <#nested>
           </ul>
@@ -491,19 +491,19 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro pli type="">
     <#switch type>
           <#case "price">
-              <li class="price"><#nested></li>
+              <li class="${style_pricing_price!}"><#nested></li>
           <#break>
           <#case "description">
-              <li class="description"><#nested></li>
+              <li class="${style_pricing_description!}"><#nested></li>
           <#break>
           <#case "title">
-              <li class="title"><#nested></li>
+              <li class="${style_pricing_title!}"><#nested></li>
           <#break>
           <#case "button">
-              <li class="cta-button"><#nested></li>
+              <li class="${style_pricing_cta!}"><#nested></li>
           <#break>        
           <#default>
-              <li class="bullet-item"><#nested></li>
+              <li class="${style_pricing_bullet!}"><#nested></li>
           <#break>
     </#switch>
 </#macro>
@@ -592,7 +592,7 @@ Since this is very foundation specific, this function may be dropped in future i
             </ul>
         <#break>
         <#default>
-            <ul class="inline-list sub-nav">
+            <ul class="${style_list_inline!} ${style_nav_subnav!}">
               <#nested>
             </ul>
         <#break>

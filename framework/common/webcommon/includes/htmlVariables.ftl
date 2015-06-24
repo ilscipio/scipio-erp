@@ -67,6 +67,12 @@ under the License.
 <#global "style_grid_offset"        = "offset-" />      <#-- Bootstrap: "col-md-offset-" -->
 <#global "style_grid_block"         = "block-grid-" />
 
+<#-- Navigation -->
+<#global "style_nav_subnav"        = "sub-nav" />
+
+<#-- Lists -->
+<#global "style_list_inline"        = "inline-list" />
+
 <#-- Tile -->
 <#global "style_tile_container"  = "tile-container" />
 <#global "style_tile_wrap"       = "tile" />
@@ -92,10 +98,19 @@ under the License.
 <#global "style_alert_prefix_type"  = "" />             <#-- Bootstrap: "alert-" -->
 
 <#-- Pricing Tables -->
-<#global "style_panel_wrap"         = "panel" />
-<#global "style_panel_head"         = "" />
-<#global "style_panel_title"        = "" />
-<#global "style_panel_body"         = "" />
+<#global "style_pricing_wrap"         = "pricing-table" />
+<#global "style_pricing_price"        = "price" />
+<#global "style_pricing_description"  = "description" />
+<#global "style_pricing_title"        = "title" />
+<#global "style_pricing_cta"          = "cta-button" />
+<#global "style_pricing_bullet"       = "bullet-item" />
+
+
+<#-- Modal -->
+<#global "style_modal_wrap"         ="reveal-modal" />
+
+
+
 
 <#-- UTLITY VARIABLES END -->
 

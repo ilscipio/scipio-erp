@@ -766,6 +766,15 @@ under the License.
         </section>
     </screen>
     
+    <screen name="breadcrumbs">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://common/webcommon/includes/breadcrumbs.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
     
     <!-- Included Screens -->
     <screen name="states">

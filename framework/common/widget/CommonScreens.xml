@@ -104,7 +104,9 @@ under the License.
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/js/app.js" global="true" />
 
                 <!-- Custom installs -->
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/js/freetile.min.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/js/freetile.min.js" global="true" /> <!-- Tiles -->
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/Snap.svg/dist/snap.svg-min.js" global="true" /> <!-- Charts -->
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/pizza/dist/js/pizza.min.js" global="true" /> <!-- Charts -->
                 
                 <!-- Legacy JS TODO: Remove once possible -->
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/selectall.js" global="true" />

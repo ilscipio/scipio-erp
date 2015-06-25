@@ -104,6 +104,7 @@ under the License.
                                         <platform-specific><html><html-template location="component://webtools/webapp/webtools/layout/layoutdemo.ftl"/></html></platform-specific> 
                                     </widgets>
                                 </section>
+                                <!--
                                 <section name="h1-h6 Styles">
                                     <widgets>
                                         <horizontal-separator/>
@@ -115,6 +116,7 @@ under the License.
                                         <label style="h6" text="H6."/>
                                     </widgets>
                                 </section>
+                                 
                                 <section name="Form/List Styles">
                                     <widgets>
                                         <horizontal-separator/>
@@ -151,7 +153,9 @@ under the License.
                                         </screenlet>
                                     </widgets>
                                 </section>
+                             -->
                             </widgets>
+                            
                             <fail-widgets>
                                 <label style="h3">${uiLabelMap.WebtoolsViewPermissionError}</label>
                             </fail-widgets>

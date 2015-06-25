@@ -22,7 +22,7 @@ $(function(){
 	$(document).foundation();
 	collapseFieldset();
 	$('.ui-autocomplete').addClass('f-dropdown');
-	// Pizza.init(); Create charts
+	Pizza.init(); //Create charts
 });
 
 

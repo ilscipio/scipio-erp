@@ -66,21 +66,16 @@
     </@grid>
 </@section>
 
-<#-- Currently not included
-<@section>
-    <h2 ${mtarget("charts")} id="charts">Charts</h2>
-    <@chart type="bar" >
-        <@chartdata value="36" title="Peperoni"/>
-        <@chartdata value="2" title="Sausage"/> 
-        <@chartdata value="19" title="Cheese"/> 
-        <@chartdata value="6" title="Chicken"/> 
-        <@chartdata value="27" title="Other"/>  
-    </@chart>
-    
-</@section>-->
-
 <@section>
 <h2 ${mtarget("buttons")} id="buttons">Buttons</h2>
+<h3>Heading</h3>
+<h1>h1.<h1>
+<h2>h2.<h2>
+<h3>h3.<h3>
+<h4>h4.<h4>
+<h5>h5.<h5>
+<h6>h6.<h6>
+
 <h3>Shapes</h3>
 <a href="#" class="${style_button!} ${style_tiny!}">Tiny Button</a>
 <a href="#" class="${style_button!} ${style_small!}">Small Button</a>
@@ -125,6 +120,42 @@
             <@panel type="callout">
                 I have reset the sensors to scan for frequencies outside the usual range. By emitting harmonic vibrations to shatter the lattices. We will monitor and adjust the frequency of the resonators. He has this ability of instantly interpreting and extrapolating any verbal communication he hears. It may be due to the envelope over the structure, causing hydrogen-carbon helix patterns throughout. I'm comparing the molecular integrity of that bubble against our phasers.
             </@panel>
+        </@cell>
+    </@row>
+</@section>
+
+<#-- Currently not included-->
+<@section>
+    <h2 ${mtarget("charts")} id="charts">Charts</h2>
+    <@row>
+        <@cell columns="4">
+            <@chart type="pie">
+                <@chartdata value="36" title="Peperoni"/>
+                <@chartdata value="2" title="Sausage"/> 
+                <@chartdata value="19" title="Cheese"/> 
+                <@chartdata value="6" title="Chicken"/> 
+                <@chartdata value="27" title="Other"/>  
+            </@chart>
+        </@cell>
+        
+        <@cell columns="4">
+            <@chart type="bar">
+                <@chartdata value="36" title="Peperoni"/>
+                <@chartdata value="14" title="Sausage"/> 
+                <@chartdata value="8" title="Cheese"/> 
+                <@chartdata value="11" title="Chicken"/> 
+                <@chartdata value="7" title="Other"/>  
+            </@chart>
+        </@cell>
+        
+        <@cell columns="4">
+            <@chart type="line">
+                <@chartdata value="36" value2="1" title="Peperoni"/>
+                <@chartdata value="2" value2="2" title="Sausage"/> 
+                <@chartdata value="19" value2="3" title="Cheese"/> 
+                <@chartdata value="6" value2="4" title="Chicken"/> 
+                <@chartdata value="27" value2="5" title="Other"/>  
+            </@chart>
         </@cell>
     </@row>
 </@section>

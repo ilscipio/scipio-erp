@@ -10040,3 +10040,56 @@ code .TRACE {
 .tile-color-7 {
   background-color: #cccccc;
 }
+
+/* line 7, ../bower_components/pizza/scss/pizza.scss */
+[data-pie-id] > *:nth-child(7n+1), [data-bar-id] > *:nth-child(7n+1), [data-line-id] > *:nth-child(7n+1) {
+  color: #f23d3d;
+}
+/* line 7, ../bower_components/pizza/scss/pizza.scss */
+[data-pie-id] > *:nth-child(7n+2), [data-bar-id] > *:nth-child(7n+2), [data-line-id] > *:nth-child(7n+2) {
+  color: #f02020;
+}
+/* line 7, ../bower_components/pizza/scss/pizza.scss */
+[data-pie-id] > *:nth-child(7n+3), [data-bar-id] > *:nth-child(7n+3), [data-line-id] > *:nth-child(7n+3) {
+  color: #e50f0f;
+}
+/* line 7, ../bower_components/pizza/scss/pizza.scss */
+[data-pie-id] > *:nth-child(7n+4), [data-bar-id] > *:nth-child(7n+4), [data-line-id] > *:nth-child(7n+4) {
+  color: #cf0e0e;
+}
+/* line 7, ../bower_components/pizza/scss/pizza.scss */
+[data-pie-id] > *:nth-child(7n+5), [data-bar-id] > *:nth-child(7n+5), [data-line-id] > *:nth-child(7n+5) {
+  color: #ba0d0d;
+}
+/* line 7, ../bower_components/pizza/scss/pizza.scss */
+[data-pie-id] > *:nth-child(7n+6), [data-bar-id] > *:nth-child(7n+6), [data-line-id] > *:nth-child(7n+6) {
+  color: #a70b0b;
+}
+/* line 7, ../bower_components/pizza/scss/pizza.scss */
+[data-pie-id] > *:nth-child(7n+7), [data-bar-id] > *:nth-child(7n+7), [data-line-id] > *:nth-child(7n+7) {
+  color: #970a0a;
+}
+
+/* line 27, ../bower_components/pizza/scss/pizza.scss */
+#pie, #donut, #bar {
+  max-height: 450px;
+}
+
+/* line 35, ../bower_components/pizza/scss/pizza.scss */
+svg {
+  width: 100%;
+  height: auto;
+}
+
+/* line 40, ../bower_components/pizza/scss/pizza.scss */
+.tooltip {
+  margin-left: -5px;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+/* line 50, ../bower_components/pizza/scss/pizza.scss */
+ul[data-pie-id] {
+  list-style: none;
+  padding: 10px;
+}

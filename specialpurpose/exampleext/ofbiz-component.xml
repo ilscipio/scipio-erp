@@ -24,5 +24,6 @@ under the License.
     <resource-loader name="main" type="component"/>
 
     <webapp name="exampleext" title="ExampleExt" menu-name="secondary" server="default-server" location="webapp/exampleext"
-        base-permission="OFBTOOLS,EXAMPLE" mount-point="/exampleext"/>
+        base-permission="OFBTOOLS,EXAMPLE" mount-point="/exampleext"
+        app-bar-display="false"/>
 </ofbiz-component>

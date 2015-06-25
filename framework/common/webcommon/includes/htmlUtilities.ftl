@@ -686,12 +686,12 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
         <#nested/>
     </ul>
     </@cell>
-    <@cell columns=9><div id="chart_${fieldIdNum!}"></div></@cell>
+    <@cell columns=9><div id="chart_${fieldIdNum!}" style="min-height:200px;"></div></@cell>
     </@row>
 </#macro>
 
 <#macro chartdata title value value2="">
-    <li <#if value2?has_content>data-x="${value!}" data-y="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
+    <li <#if value2?has_content>data-y="${value!}" data-x="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
 </#macro>
 
 

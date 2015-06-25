@@ -44,5 +44,6 @@ under the License.
         location="webapp/projectmgr"
         base-permission="PROJECTMGR"
         mount-point="/projectmgr"
-        app-bar-display="true"/>
+        app-bar-display="true"
+        menu-name="secondary"/>
 </ofbiz-component>

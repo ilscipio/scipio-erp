@@ -109,13 +109,52 @@ under the License.
   -->
 </#macro>
 
+<#-- Merges a yyyy-MM-dd into a full timestamp
+     TODO: move this out to js file -->
+<#assign mergeStdDateTimeJs>
+                var mergeStdDateTime = function(oldDate, newDate) {
+                    var result;
+                    if (oldDate.match(/^\d\d\d\d-\d\d-\d\d\s/)) {
+                       if (newDate.length >= oldDate.length) {
+                           result = newDate;
+                       }
+                       else {
+                           <#-- preserve everything after days -->
+                           result = newDate + oldDate.substr(newDate.length);
+                       }
+                    }
+                    else {
+                       var zeroPat = "0000-00-00 00:00:00.000";
+                       if (newDate.length >= zeroPat.length) {
+                           result = newDate;
+                       }
+                       else {
+                           <#-- append zeroes -->
+                           result = newDate + zeroPat.substr(newDate.length);
+                       }
+                    }
+                    return result;
+                };
+</#assign>
+
 <#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip="">
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
+  <#-- Note: ofbiz never handled dateType=="date" here because it pass shortDateInput=true in renderer instead-->
+  <#-- These should be ~uiLabelMap.CommonFormatDate/Time/DateTime -->
+  <#local dateFormat><#if (shortDateInput!false) == true>yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#local useTsFormat = (((shortDateInput!false) == false) && dateType!="time")>
 
-  <#-- TODO: Foundation: This does not properly support the case where dateType=="time" (but it's rare); shouldn't get _i18n or datepicker in that case (?) --> 
-  
-  <div class="row collapse date" data-date="" data-date-format="<#if shortDateInput?? && shortDateInput>yyyy-MM-dd<#else>yyyy-MM-dd HH:mm:ss</#if>">
+  <div class="row collapse date" data-date="" data-date-format="${dateFormat}">
         <div class="${style_grid_small!}11 columns">
+          <#if dateType == "time">
+            <input type="text" name="${name}" <@renderClass className alert /><#rt/>
+            <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+            <#if title?has_content> title="${title}"</#if>
+            <#if value?has_content> value="${value}"</#if>
+            <#if size?has_content> size="${size}"</#if><#rt/>
+            <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
+            <#if id?has_content> id="${id}"</#if> class="${style_grid_small!}3 columns"/><#rt/>
+          <#else>
             <input type="text" name="${name}_i18n" <@renderClass className alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
             <#if title?has_content> title="${title}"</#if>
@@ -124,19 +163,53 @@ under the License.
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
             <#if id?has_content> id="${id}_i18n"</#if> class="${style_grid_small!}3 columns"/><#rt/>
 
-            <input type="hidden" name="${name}" <#if id?has_content> id="${id}"</#if> <#if value?has_content> value="${value}"</#if> />
+            <input type="hidden" name="${name}" <#if id?has_content> id="${id}"</#if> <#if value?has_content> value="${value}"</#if> />            
+          </#if>
         </div>
         <div class="${style_grid_small!}1 columns">
         <span class="postfix"><i class="fa fa-calendar"></i></span>
         </div>
+      <#if dateType != "time">
         <script type="text/javascript">
             $(function() {
+            
+                var dateI18nToNorm = function(date) {
+                    <#-- TODO (note: depends on dateType) -->
+                    return date;
+                };
+                
+                var dateNormToI18n = function(date) {
+                    <#-- TODO (note: depends on dateType) -->
+                    return date;
+                };
+            
                 jQuery("#${id}_i18n").change(function() {
-                    jQuery("#${id}").val(this.value);
+                    jQuery("#${id}").val(dateI18nToNorm(this.value));
                 });
-                <#if name??>$("input[name='${name?html}_i18n']").fdatepicker(${fdatepickerOptions});<#else>$("input").last().fdatepicker(${fdatepickerOptions});</#if>
+                
+              <#if useTsFormat>
+                ${mergeStdDateTimeJs}
+              </#if>
+                
+                var oldDate = "";
+                var onFDatePopup = function(ev) {
+                    oldDate = dateI18nToNorm(jQuery("#${id}_i18n").val());
+                };
+                var onFDateChange = function(ev) {
+                  <#if useTsFormat>
+                    jQuery("#${id}_i18n").val(dateNormToI18n(mergeStdDateTime(oldDate, dateI18nToNorm(jQuery("#${id}_i18n").val()))));
+                  </#if>
+                };
+                
+                <#if name??>
+                    <#local dateElemJs>$("input[name='${name?html}_i18n']")</#local>
+                <#else>
+                    <#local dateElemJs>$("input")</#local>
+                </#if>
+                ${dateElemJs}.fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
             });
         </script>
+      </#if>
   </div>
   
 
@@ -548,8 +621,11 @@ under the License.
 
 <#macro renderDateFindField className alert name localizedInputTitle value value2 size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty>
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
-  <div class="row collapse date" data-date="" 
-    data-date-format="<#if dateType == "date">dd-mm-yyyy<#else>HH:mm:ss</#if>">
+  <#-- note: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
+  <#local dateFormat><#if dateType == "date">yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#local useTsFormat = (dateType != "date" && dateType != "time")>
+  
+  <div class="row collapse date" data-date="" data-date-format="${dateFormat}">
         <div class="${style_grid_small!}5 columns">
         <input class="${style_grid_small!}3 columns" id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
         </div>
@@ -564,11 +640,33 @@ under the License.
           <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
         </select><#rt/>
         </div>
+      <#if dateType != "time">
         <script type="text/javascript">
             $(function() {
-                <#if name??>$('#${name?html}_fld0_value').fdatepicker(${fdatepickerOptions});<#else>$('input').last().fdatepicker(${fdatepickerOptions});</#if>
+            
+              <#if useTsFormat>
+                ${mergeStdDateTimeJs}
+              </#if>
+                
+                var oldDate = "";
+                var onFDatePopup = function(ev) {
+                    oldDate = jQuery("#${name?html}_fld0_value").val();
+                };
+                var onFDateChange = function(ev) {
+                  <#if useTsFormat>
+                    jQuery("#${name?html}_fld0_value").val(mergeStdDateTime(oldDate, jQuery("#${name?html}_fld0_value").val()));
+                  </#if>
+                };
+            
+                <#if name??>
+                    <#local dateElemJs>$('#${name?html}_fld0_value')</#local>
+                <#else>
+                    <#local dateElemJs>$('input')</#local>
+                </#if>
+                ${dateElemJs}.fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
             });
         </script>
+      </#if>
   </div>
   
   

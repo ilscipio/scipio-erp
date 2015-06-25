@@ -91,7 +91,7 @@ under the License.
         fieldFormName="" formName="" postfix=false>
 
 <#-- fieldIdNum will always increment throughout the page -->
-<#global fieldIdNum="${fieldIdNum!0+1}" />
+<#global fieldIdNum="${(fieldIdNum!0)+1}" />
 
 <#if !id?has_content>
     <#assign id="field_id_${fieldIdNum!0}">
@@ -527,7 +527,7 @@ Since this is very foundation specific, this function may be dropped in future i
 -->
 <#macro grid type="" class="" columns=5>
     <#if type=="tiles">
-        <#global freewallNum="${freewallNum!0+1}" />
+        <#global freewallNum="${(freewallNum!0)+1}" />
         <#assign id="freewall_id_${freewallNum!0}">
         <div class="${style_tile_container!}" id="${id!}">
             <#nested>
@@ -679,11 +679,15 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
 -->
 
 <#macro chart type="pie">
-    <#global fieldIdNum="${fieldIdNum!0+1}" />    
+    <#global fieldIdNum="${(fieldIdNum!0)+1}" />
+    <@row>
+    <@cell columns=3>    
     <ul data-${type!}-id="chart_${fieldIdNum!}">
         <#nested/>
     </ul>
-    <div id="chart_${fieldIdNum!}"></div>
+    </@cell>
+    <@cell columns=9><div id="chart_${fieldIdNum!}"></div></@cell>
+    </@row>
 </#macro>
 
 <#macro chartdata title value value2="">

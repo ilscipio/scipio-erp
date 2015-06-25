@@ -682,7 +682,7 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
     <#global fieldIdNum="${(fieldIdNum!0)+1}" />
     <@row>
     <@cell columns=3>    
-    <ul data-${type!}-id="chart_${fieldIdNum!}">
+    <ul data-${type!}-id="chart_${fieldIdNum!}" class="${style_chart_legend!}">
         <#nested/>
     </ul>
     </@cell>

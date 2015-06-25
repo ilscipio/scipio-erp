@@ -1,6 +1,5 @@
 /* GRID */
 $include-html-reveal-classes: $include-html-classes;
-
 body {}
 
 input,select,text-area {max-width:50em;}
@@ -232,6 +231,12 @@ code {
         font-size:1rem;
 }
 
+ul {
+    &.chart-legend{
+        list-style:none;
+    }
+}
+
 
 /*  FOOTER */
 #body-content {
@@ -253,6 +258,9 @@ code {
   color: $smoke;
   width: 100%;
 }
+
+/*MISC*/
+$pie-color: $primary-color; // chart-color
 
 
 

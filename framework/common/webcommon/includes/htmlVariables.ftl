@@ -109,7 +109,8 @@ under the License.
 <#-- Modal -->
 <#global "style_modal_wrap"         ="reveal-modal" />
 
-
+<#-- Chart -->
+<#global "style_chart_legend"       ="chart-legend" />
 
 
 <#-- UTLITY VARIABLES END -->

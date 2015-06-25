@@ -9446,12 +9446,12 @@ th.hide-for-touch {
   }
 }
 /* GRID */
-/* line 6, ../scss/_base.scss */
+/* line 5, ../scss/_base.scss */
 input, select, text-area {
   max-width: 50em;
 }
 
-/* line 8, ../scss/_base.scss */
+/* line 7, ../scss/_base.scss */
 .fullWidth {
   width: 100%;
   /*max-width: 85em;*/
@@ -9460,7 +9460,7 @@ input, select, text-area {
   margin-right: auto;
 }
 
-/* line 16, ../scss/_base.scss */
+/* line 15, ../scss/_base.scss */
 .v-center {
   position: absolute;
   top: 50%;
@@ -9469,7 +9469,7 @@ input, select, text-area {
   transform: translate(-50%, -50%);
 }
 
-/* line 24, ../scss/_base.scss */
+/* line 23, ../scss/_base.scss */
 .row.display {
   background: #eee;
   font-size: 11px;
@@ -9480,28 +9480,28 @@ input, select, text-area {
   margin-right: 0 !important;
 }
 
-/* line 34, ../scss/_base.scss */
+/* line 33, ../scss/_base.scss */
 .row.display .columns:nth-child(even), .row.display .columns.small-centered, .row.display .columns.large-centered {
   background: #e1e1e1;
 }
 
 /* NAVIGATION */
-/* line 42, ../scss/_base.scss */
+/* line 41, ../scss/_base.scss */
 .sidebar {
   margin-top: 0px;
   background: #FAFAFA;
   padding: 10px;
 }
-/* line 47, ../scss/_base.scss */
+/* line 46, ../scss/_base.scss */
 .sidebar form {
   padding: 0px;
 }
-/* line 49, ../scss/_base.scss */
+/* line 48, ../scss/_base.scss */
 .sidebar input[type="search"]:focus {
   box-shadow: 0 0 0 !important;
 }
 
-/* line 54, ../scss/_base.scss */
+/* line 53, ../scss/_base.scss */
 .sub-top-bar {
   display: block;
   margin: -0.25rem 0 1.125rem;
@@ -9557,7 +9557,7 @@ input, select, text-area {
 .sub-top-bar li.active a:hover {
   background: #0078a0;
 }
-/* line 57, ../scss/_base.scss */
+/* line 56, ../scss/_base.scss */
 .sub-top-bar dt a, .sub-top-bar dd a, .sub-top-bar li a {
   background-color: #fafafa;
   color: #008cba;
@@ -9565,20 +9565,20 @@ input, select, text-area {
 }
 
 /* CONTENT */
-/* line 65, ../scss/_base.scss */
+/* line 64, ../scss/_base.scss */
 #content-main-section {
   padding-top: 32px;
   padding-bottom: 32px;
 }
 
-/* line 70, ../scss/_base.scss */
+/* line 69, ../scss/_base.scss */
 #content-main-body {
   width: 100%;
   min-height: 100%;
   position: relative;
 }
 
-/* line 77, ../scss/_base.scss */
+/* line 76, ../scss/_base.scss */
 input[type="button"], input[type="submit"], .buttontext {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -9612,42 +9612,42 @@ input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hov
   color: white;
 }
 
-/* line 80, ../scss/_base.scss */
+/* line 79, ../scss/_base.scss */
 table.basic-table {
   width: 100%;
 }
-/* line 82, ../scss/_base.scss */
+/* line 81, ../scss/_base.scss */
 table.basic-table tr {
   background: none;
 }
-/* line 85, ../scss/_base.scss */
+/* line 84, ../scss/_base.scss */
 table.basic-table tr td {
   height: auto;
   vertical-align: top;
 }
-/* line 91, ../scss/_base.scss */
+/* line 90, ../scss/_base.scss */
 table.basic-table tr.odd {
   background: #fafafa;
 }
-/* line 93, ../scss/_base.scss */
+/* line 92, ../scss/_base.scss */
 table.basic-table input {
   margin: 0px;
 }
 
 @media only screen and (min-width: 40.0625em) {
-  /* line 97, ../scss/_base.scss */
+  /* line 96, ../scss/_base.scss */
   .reveal-modal {
     top: 12.5rem;
   }
 }
 
-/* line 103, ../scss/_base.scss */
+/* line 102, ../scss/_base.scss */
 .login-box {
   margin: 200px 0;
   padding: 0px;
   min-width: 500px;
 }
-/* line 115, ../scss/_base.scss */
+/* line 114, ../scss/_base.scss */
 .login-box #login-box-content {
   margin-top: 20px;
   padding: 40px 20px 0 20px;
@@ -9659,7 +9659,7 @@ table.basic-table input {
 }
 
 @media (max-width: 610px) {
-  /* line 127, ../scss/_base.scss */
+  /* line 126, ../scss/_base.scss */
   .login-box {
     position: static;
     width: 100%;
@@ -9668,17 +9668,17 @@ table.basic-table input {
     margin-top: 50px;
   }
 }
-/* line 131, ../scss/_base.scss */
+/* line 130, ../scss/_base.scss */
 .inline-list li {
   margin-bottom: 10px;
 }
 
-/* line 135, ../scss/_base.scss */
+/* line 134, ../scss/_base.scss */
 td {
   word-break: break-all;
 }
 
-/* line 139, ../scss/_base.scss */
+/* line 138, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -9686,29 +9686,29 @@ td {
   padding: 8px 0px;
 }
 
-/* line 145, ../scss/_base.scss */
+/* line 144, ../scss/_base.scss */
 fieldset {
   border: none;
 }
-/* line 148, ../scss/_base.scss */
+/* line 147, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-/* line 155, ../scss/_base.scss */
+/* line 154, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 162, ../scss/_base.scss */
+/* line 161, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 166, ../scss/_base.scss */
+/* line 165, ../scss/_base.scss */
 .rotate-90 {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -9716,7 +9716,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 173, ../scss/_base.scss */
+/* line 172, ../scss/_base.scss */
 .rotate-180 {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -9724,7 +9724,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 180, ../scss/_base.scss */
+/* line 179, ../scss/_base.scss */
 .rotate-270 {
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -9732,7 +9732,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 187, ../scss/_base.scss */
+/* line 186, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -9756,36 +9756,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 209, ../scss/_base.scss */
+/* line 208, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 214, ../scss/_base.scss */
+/* line 213, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 216, ../scss/_base.scss */
+/* line 215, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 217, ../scss/_base.scss */
+/* line 216, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 218, ../scss/_base.scss */
+/* line 217, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 219, ../scss/_base.scss */
+/* line 218, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 223, ../scss/_base.scss */
+/* line 222, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -9798,44 +9798,50 @@ code .TRACE {
   font-size: 1rem;
 }
 
+/* line 235, ../scss/_base.scss */
+ul.chart-legend {
+  list-style: none;
+}
+
 /*  FOOTER */
-/* line 237, ../scss/_base.scss */
+/* line 242, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 242, ../scss/_base.scss */
+/* line 247, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 247, ../scss/_base.scss */
+/* line 252, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 251, ../scss/_base.scss */
+/* line 256, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
   width: 100%;
 }
 
+/*MISC*/
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 262, ../scss/_base.scss */
+  /* line 270, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 267, ../scss/_base.scss */
+  /* line 275, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 269, ../scss/_base.scss */
+  /* line 277, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }
@@ -10043,31 +10049,31 @@ code .TRACE {
 
 /* line 7, ../bower_components/pizza/scss/pizza.scss */
 [data-pie-id] > *:nth-child(7n+1), [data-bar-id] > *:nth-child(7n+1), [data-line-id] > *:nth-child(7n+1) {
-  color: #f23d3d;
+  color: #007ea7;
 }
 /* line 7, ../bower_components/pizza/scss/pizza.scss */
 [data-pie-id] > *:nth-child(7n+2), [data-bar-id] > *:nth-child(7n+2), [data-line-id] > *:nth-child(7n+2) {
-  color: #f02020;
+  color: #007197;
 }
 /* line 7, ../bower_components/pizza/scss/pizza.scss */
 [data-pie-id] > *:nth-child(7n+3), [data-bar-id] > *:nth-child(7n+3), [data-line-id] > *:nth-child(7n+3) {
-  color: #e50f0f;
+  color: #006688;
 }
 /* line 7, ../bower_components/pizza/scss/pizza.scss */
 [data-pie-id] > *:nth-child(7n+4), [data-bar-id] > *:nth-child(7n+4), [data-line-id] > *:nth-child(7n+4) {
-  color: #cf0e0e;
+  color: #005c7a;
 }
 /* line 7, ../bower_components/pizza/scss/pizza.scss */
 [data-pie-id] > *:nth-child(7n+5), [data-bar-id] > *:nth-child(7n+5), [data-line-id] > *:nth-child(7n+5) {
-  color: #ba0d0d;
+  color: #00536e;
 }
 /* line 7, ../bower_components/pizza/scss/pizza.scss */
 [data-pie-id] > *:nth-child(7n+6), [data-bar-id] > *:nth-child(7n+6), [data-line-id] > *:nth-child(7n+6) {
-  color: #a70b0b;
+  color: #004a63;
 }
 /* line 7, ../bower_components/pizza/scss/pizza.scss */
 [data-pie-id] > *:nth-child(7n+7), [data-bar-id] > *:nth-child(7n+7), [data-line-id] > *:nth-child(7n+7) {
-  color: #970a0a;
+  color: #004359;
 }
 
 /* line 27, ../bower_components/pizza/scss/pizza.scss */

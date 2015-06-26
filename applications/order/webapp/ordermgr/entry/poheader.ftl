@@ -18,24 +18,18 @@ under the License.
 -->
 
 <@section title="PO For ${partyId!}" classes="${style_grid_large!}6">
-                <table width="100%" border="0" cellpadding="1" cellspacing="0">
+
+                <table width="100%" cellspacing="0">
                     <tr><td><div>Supplier Information Here</div></td></tr>
                 </table>
-            </div>
-        </div>
+
       <#-- end of header box -->
 
       <#-- payment box -->
-        <div class="screenlet">
-            <div class="screenlet-title-bar">
-                <div class="h3">Place Holder</div>
-            </div>
-            <div class="screenlet-body">
-                  <table width="100%" border="0" cellpadding="1" cellspacing="0">
-
+        <@section title="Place Holder">
+                  <table width="100%" cellspacing="0">
                   </table>
-            </div>
-        </div>
+        </@section>
 </@section>
 
 <#-- content box -->

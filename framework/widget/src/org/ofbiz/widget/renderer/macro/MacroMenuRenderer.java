@@ -270,6 +270,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         Map<String, Object> parameters = null;
         if (ModelWidget.widgetBoundaryCommentsEnabled(context)) {
             parameters = new HashMap<String, Object>();
+            
+            parameters.put("style", menu.getMenuContainerStyle(context));
+            
             StringBuilder sb = new StringBuilder("End Menu Widget ");
             sb.append(menu.getBoundaryCommentName());
             parameters.put("boundaryComment", sb.toString());

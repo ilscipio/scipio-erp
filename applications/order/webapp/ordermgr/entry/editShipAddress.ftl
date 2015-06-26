@@ -19,8 +19,10 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 
-   <div class="screenlet-body">
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+   <@section>
+     <@row>
+       <@cell class="${style_grid_large!}12">
+      <table class="${style_grid_large!}12" cellspacing="0">
         <tr>
           <td>
               <#if postalAddress?has_content>
@@ -45,46 +47,40 @@ under the License.
                 <#else>
                   <#assign toName = "">
                 </#if>
-                <table width="100%" border="0" cellpadding="1" cellspacing="0">
+                <table class="${style_grid_large!}12" cellspacing="0">
                   <tr>
-                    <td width="26%" align="right" valign="top"><div>${uiLabelMap.CommonToName}</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
+                    <td class="${style_grid_large!}3" valign="top"><div>${uiLabelMap.CommonToName}</div></td>
+                    <td class="${style_grid_large!}9">
                       <input type="text" size="30" maxlength="60" name="toName" value="${toName}"/>
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align="right" valign="top"><div>${uiLabelMap.CommonAttentionName}</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
+                    <td class="${style_grid_large!}3" valign="top"><div>${uiLabelMap.CommonAttentionName}</div></td>
+                    <td class="${style_grid_large!}9">
                       <input type="text" size="30" maxlength="60" name="attnName" value="${parameters.attnName!}"/>
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align="right" valign="top"><div>${uiLabelMap.CommonAddressLine} 1</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
+                    <td class="${style_grid_large!}3" valign="top"><div>${uiLabelMap.CommonAddressLine} 1 *</div></td>
+                    <td class="${style_grid_large!}9">
                       <input type="text" size="30" maxlength="30" name="address1" value="${parameters.address1!}"/>
-                    *</td>
+                    </td>
                   </tr>
                   <tr>
-                    <td width="26%" align="right" valign="top"><div>${uiLabelMap.CommonAddressLine} 2</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
+                    <td class="${style_grid_large!}3" valign="top"><div>${uiLabelMap.CommonAddressLine} 2</div></td>
+                    <td class="${style_grid_large!}9">
                       <input type="text" size="30" maxlength="30" name="address2" value="${parameters.address2!}"/>
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align="right" valign="top"><div>${uiLabelMap.CommonCity}</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
-                      <input type="text" size="30" maxlength="30" name="city" value="${parameters.city!}"/>
-                    *</td>
+                    <td class="${style_grid_large!}3" valign="top"><div>${uiLabelMap.CommonCity} *</div></td>
+                    <td class="${style_grid_large!}9">
+                      <input type="text" size="30" maxlength="30" name="city" value="${parameters.city!}"/> 
+                    </td>
                   </tr>
                   <tr>
-                    <td width="26%" align="right" valign="top"><div>${uiLabelMap.CommonStateProvince}</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
+                    <td class="${style_grid_large!}3" valign="top"><div>${uiLabelMap.CommonStateProvince}</div></td>
+                    <td class="${style_grid_large!}9">
                       <select name="stateProvinceGeoId">
                         <option value=""></option>
                         ${screens.render("component://common/widget/CommonScreens.xml#states")}
@@ -92,25 +88,22 @@ under the License.
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align="right" valign="top"><div>${uiLabelMap.CommonZipPostalCode}</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
-                      <input type="text" size="12" maxlength="10" name="postalCode" value="${parameters.postalCode!}"/>
-                    *</td>
+                    <td class="${style_grid_large!}3" valign="top"><div>${uiLabelMap.CommonZipPostalCode} *</div></td>
+                    <td class="${style_grid_large!}9">
+                      <input type="text" size="12" maxlength="10" name="postalCode" value="${parameters.postalCode!}"/> 
+                    </td>
                   </tr>
                   <tr>
-                    <td width="26%" align="right" valign="top"><div>${uiLabelMap.CommonCountry}</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
+                    <td class="${style_grid_large!}3" valign="top"><div>${uiLabelMap.CommonCountry} *</div></td>
+                    <td class="${style_grid_large!}9">
                       <select name="countryGeoId">
                         ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-                      </select>
-                    *</td>
+                      </select> 
+                    </td>
                   </tr>
                   <tr>
-                    <td width="26%" align="right" valign="top"><div>${uiLabelMap.OrderAllowSolicitation}</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
+                    <td class="${style_grid_large!}3" valign="top"><div>${uiLabelMap.OrderAllowSolicitation}</div></td>
+                    <td class="${style_grid_large!}9">
                       <select name="allowSolicitation">
                         <#assign selectedValue = parameters.allowSolicitation?default("")/>
                         <option></option><option ${(selectedValue=="Y")?string("selected=\"selected\"","")}>Y</option><option ${(selectedValue=="N")?string("selected=\"selected\"","")}>N</option>
@@ -122,7 +115,9 @@ under the License.
           </td>
         </tr>
       </table>
-   </div>
+       </@cell>
+     </@row>
+   </@section>
 <#else>
   <@section title="${uiLabelMap.OrderViewPermissionError}"/>
 </#if>

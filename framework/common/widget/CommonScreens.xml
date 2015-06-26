@@ -160,14 +160,14 @@ under the License.
                 <section>
                     <actions>
                         <set field="layoutSettings.commonHeaderImageLinkUrl" from-field="layoutSettings.commonHeaderImageLinkUrl" default-value="main" global="true" />
-                        <!--<set field="iconsLocation" from-field="layoutSettings.VT_ICONS_LOC[0]" default-value="/images/icons/famfamfam" global="true" />-->
+                        <!--<set field="iconsLocation" from-field="layoutSettings.VT_ICONS_LOC[0]" default-value="/images/icons/famfamfam" global="true" /> -->
                         <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]" />
                         <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC[0]" />
                         <set field="appbarTemplateLocation" from-field="layoutSettings.VT_NAV_TMPLT_LOC[0]" />
                         <set field="appbarOpenTemplateLocation" from-field="layoutSettings.VT_NAV_OPEN_TMPLT[0]" />
                         <set field="appbarCloseTemplateLocation" from-field="layoutSettings.VT_NAV_CLOSE_TMPLT[0]" />
                         <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" />
-                        <set field="layoutSettings.suppressTab" value="ofbizsetup"/><!-- diseable ofbiz setup by default -->
+                        <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
                     </actions>
                     <widgets />
                 </section>
@@ -211,7 +211,7 @@ under the License.
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
                     <widgets>
-                        <!-- render appheader: both menu widget style and ftl template style menus are supported-->
+                        <!-- render appheader: both menu widget style and ftl template style menus are supported -->
                         <section name="Render-App-Nav">
                             <condition>
                                 <not>
@@ -283,119 +283,119 @@ under the License.
                 <!-- render content area -->
                 <container style="row fullWidth" id="content-main-section">
                     <decorator-section-include name="pre-body" />
-                        <section>
-                            <!-- Not Authenticated Screens -->
-                            <condition>
-                                <if-empty field="userLogin" />
-                            </condition>
-                            <widgets>
-                                <container id="content-main-body">
-                                    <!-- render messages -->
-                                    <container style="large-12 columns" id="main-content">
-                                        <platform-specific>
-                                            <html>
-                                                <html-template location="${messagesTemplateLocation}" />
-                                            </html>
-                                        </platform-specific>
-                                        <decorator-section-include name="body" />
-                                    </container>
-                                </container>
-                            </widgets>
-                            <!-- Authenticated Screens -->
-                            <fail-widgets>
-                                <section>
-                                    <condition>
-                                <and>
-                                    <if-empty-section section-name="left-column" />
-                                    <if-empty-section section-name="right-column" />
-                                </and>
-                            </condition>
-                            <widgets>
-                                <container id="content-main-body">
-                <!-- render messages -->
-                                    <container style="large-12 columns" id="main-content">
-                <platform-specific>
-                    <html>
-                        <html-template location="${messagesTemplateLocation}" />
-                    </html>
-                </platform-specific>
-                                        <decorator-section-include name="body" />
-                                    </container>
-                                </container>
-                            </widgets>
-                        </section>
-                        <section>
-                            <condition>
-                                <and>
-                                    <not>
-                                <if-empty-section section-name="left-column" />
-                                    </not>
-                                    <if-empty-section section-name="right-column" />
-                                </and>
-                            </condition>
-                            <widgets>
-                                <container style="large-2 medium-3 columns" id="sidebar">
-                                    <container style="sidebar">
-                                        <decorator-section-include name="menu-bar" />
-                                        <decorator-section-include name="left-column" />
-                                    </container>
-                                </container>
-                                <container style="large-10 medium-9 columns" id="main-content">
+                    <section>
+                        <!-- Not Authenticated Screens -->
+                        <condition>
+                            <if-empty field="userLogin" />
+                        </condition>
+                        <widgets>
+                            <container id="content-main-body">
+                                <!-- render messages -->
+                                <container style="large-12 columns" id="main-content">
+                                    <platform-specific>
+                                        <html>
+                                            <html-template location="${messagesTemplateLocation}" />
+                                        </html>
+                                    </platform-specific>
                                     <decorator-section-include name="body" />
                                 </container>
-                            </widgets>
-                        </section>
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-empty-section section-name="left-column" />
-                                    <not>
-                                        <if-empty-section section-name="right-column" />
-                                    </not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <container style="large-10 medium-9 columns" id="main-content">
-                                        <decorator-section-include name="body" />
-                                </container>
-                                <container style="large-2 medium-3 columns" id="right-sidebar">
-                                    <container style="sidebar">
-                                        <decorator-section-include name="right-column" />
-                                    </container>
-                                </container>
-                            </widgets>                            
-                        </section>
-                        <section>
-                            <condition>
-                                <and>
-                                    <not>
+                            </container>
+                        </widgets>
+                        <!-- Authenticated Screens -->
+                        <fail-widgets>
+                            <section>
+                                <condition>
+                                    <and>
                                         <if-empty-section section-name="left-column" />
-                                    </not>
-                                    <not>
                                         <if-empty-section section-name="right-column" />
-                                    </not>
-                                </and>
-                            </condition>
+                                    </and>
+                                </condition>
                                 <widgets>
-                                <container style="large-2 medium-3 columns" id="sidebar">
-                                    <container style="sidebar">
-                                        <decorator-section-include name="menu-bar" />
-                                    <decorator-section-include name="left-column" />
-                                </container>
-                                </container>
-                                <container style="large-8 medium-6 columns" id="main-content">
+                                    <container id="content-main-body">
+                                        <!-- render messages -->
+                                        <container style="large-12 columns" id="main-content">
+                                            <platform-specific>
+                                                <html>
+                                                    <html-template location="${messagesTemplateLocation}" />
+                                                </html>
+                                            </platform-specific>
+                                            <decorator-section-include name="body" />
+                                        </container>
+                                    </container>
+                                </widgets>
+                            </section>
+                            <section>
+                                <condition>
+                                    <and>
+                                        <not>
+                                            <if-empty-section section-name="left-column" />
+                                        </not>
+                                        <if-empty-section section-name="right-column" />
+                                    </and>
+                                </condition>
+                                <widgets>
+                                    <container style="large-2 medium-3 columns" id="sidebar">
+                                        <container style="sidebar">
+                                            <decorator-section-include name="menu-bar" />
+                                            <decorator-section-include name="left-column" />
+                                        </container>
+                                    </container>
+                                    <container style="large-10 medium-9 columns" id="main-content">
                                         <decorator-section-include name="body" />
                                     </container>
-                                <container style="large-2 medium-3 columns" id="right-sidebar">
-                                    <container style="sidebar">
-                                        <decorator-section-include name="right-column" />
-                                </container>
-                                </container>
-                            </widgets>                            
-                        </section>
-                            </fail-widgets>
-                        </section>                       
-                    </container>
+                                </widgets>
+                            </section>
+                            <section>
+                                <condition>
+                                    <and>
+                                        <if-empty-section section-name="left-column" />
+                                        <not>
+                                            <if-empty-section section-name="right-column" />
+                                        </not>
+                                    </and>
+                                </condition>
+                                <widgets>
+                                    <container style="large-10 medium-9 columns" id="main-content">
+                                        <decorator-section-include name="body" />
+                                    </container>
+                                    <container style="large-2 medium-3 columns" id="right-sidebar">
+                                        <container style="sidebar">
+                                            <decorator-section-include name="right-column" />
+                                        </container>
+                                    </container>
+                                </widgets>
+                            </section>
+                            <section>
+                                <condition>
+                                    <and>
+                                        <not>
+                                            <if-empty-section section-name="left-column" />
+                                        </not>
+                                        <not>
+                                            <if-empty-section section-name="right-column" />
+                                        </not>
+                                    </and>
+                                </condition>
+                                <widgets>
+                                    <container style="large-2 medium-3 columns" id="sidebar">
+                                        <container style="sidebar">
+                                            <decorator-section-include name="menu-bar" />
+                                            <decorator-section-include name="left-column" />
+                                        </container>
+                                    </container>
+                                    <container style="large-8 medium-6 columns" id="main-content">
+                                        <decorator-section-include name="body" />
+                                    </container>
+                                    <container style="large-2 medium-3 columns" id="right-sidebar">
+                                        <container style="sidebar">
+                                            <decorator-section-include name="right-column" />
+                                        </container>
+                                    </container>
+                                </widgets>
+                            </section>
+                        </fail-widgets>
+                    </section>
+                </container>
                 <section>
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />

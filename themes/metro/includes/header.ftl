@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#compress>
+
 <#-- Applications -->
 <#if (requestAttributes.externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + requestAttributes.externalLoginKey!></#if>
 <#if (externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + requestAttributes.externalLoginKey!></#if>
@@ -291,4 +291,3 @@ so for now we have to split the screens in half and rely on the menu widget rend
                 </ul>
               </li>
         </#if>
-</#compress>

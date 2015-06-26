@@ -30,4 +30,5 @@ under the License.
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://base-theme/includes/appbarClose.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/metro-theme/css/style.css" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="//fonts.googleapis.com/css?family=Open+Sans:400,600,300" sequenceId="03"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://metro-theme/includes/messages.ftl" sequenceId="01"/>
 </entity-engine-xml>

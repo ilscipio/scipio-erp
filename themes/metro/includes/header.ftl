@@ -276,11 +276,11 @@ so for now we have to split the screens in half and rely on the menu widget rend
         
         <#if userLogin?has_content>
             <ul class="left">
-                <li class="has-dropdown not-click"><a href="#">${uiLabelMap["CommonApplications"]}</a>
+              <li class="has-dropdown not-click"><a href="#">${uiLabelMap["CommonApplications"]}</a>
                 <ul class="dropdown">
                   <li class="has-dropdown not-click"><a href="#">${uiLabelMap["CommonPrimaryApps"]}</a>
                     <ul class="dropdown">
-                        <@primaryAppsMenu/>
+                      <@primaryAppsMenu/>
                     </ul>
                   </li>
                   <li class="has-dropdown not-click"><a href="#">${uiLabelMap["CommonSecondaryApps"]}</a>

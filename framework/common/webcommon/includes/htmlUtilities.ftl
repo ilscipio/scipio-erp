@@ -107,12 +107,12 @@ under the License.
 
 <@row collapse=collapse!false norows=norows>
     <#if label?has_content>
-        <#assign subclasses="${style_grid_small!}-3 ${style_grid_large!}2"/>
-        <#assign classes="${style_grid_small!}-${9-columnspostfix} ${style_grid_large!}${10-columnspostfix}"/>
+        <#assign subclasses="${style_grid_small!}3 ${style_grid_large!}2"/>
+        <#assign classes="${style_grid_small!}${9-columnspostfix} ${style_grid_large!}${10-columnspostfix}"/>
         
         <#if columns?has_content>
-            <#assign subclasses="${style_grid_small!}-${12-columns+1} ${style_grid_large!}${12-columns}"/>
-            <#assign classes="${style_grid_small!}-${columns-columnspostfix-1} ${style_grid_large!}${columns-columnspostfix}"/>
+            <#assign subclasses="${style_grid_small!}${12-columns+1} ${style_grid_large!}${12-columns}"/>
+            <#assign classes="${style_grid_small!}${columns-columnspostfix-1} ${style_grid_large!}${columns-columnspostfix}"/>
         </#if>
         
         <#if type!="radio">

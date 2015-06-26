@@ -23,12 +23,11 @@ under the License.
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAME" resourceValue="METRO" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/metro-theme/screenshot.jpg" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://metro-theme/includes/header.ftl" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://common/webcommon/includes/messages.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://metro-theme/includes/messages.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://metro-theme/includes/footer.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://metro-theme/includes/appbar.ftl" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://base-theme/includes/appbarOpen.ftl" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://base-theme/includes/appbarClose.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://metro-theme/includes/appbarOpen.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://metro-theme/includes/appbarClose.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/metro-theme/css/style.css" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="//fonts.googleapis.com/css?family=Open+Sans:400,600,300" sequenceId="03"/>
-    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://metro-theme/includes/messages.ftl" sequenceId="01"/>
 </entity-engine-xml>

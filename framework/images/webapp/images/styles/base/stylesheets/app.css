@@ -9922,29 +9922,28 @@ ul.chart-legend {
   box-shadow: inset 0 0 1px #FFFFCC;
   padding: 30px 15px 15px 15px;
   top: 200%;
-  z-index: 2;
+  z-index: 1000;
   height: 100%;
   transition: all 0.3s ease;
   background: #008cba;
-  opacity: 0.8;
 }
 
-/* line 77, ../scss/_tiles.scss */
+/* line 76, ../scss/_tiles.scss */
 .tile:hover {
   outline: #999999 solid 3px;
 }
-/* line 80, ../scss/_tiles.scss */
+/* line 79, ../scss/_tiles.scss */
 .tile:hover .tile-overlay {
   top: 0;
   transition: all 0.3s ease;
 }
 
-/* line 87, ../scss/_tiles.scss */
+/* line 86, ../scss/_tiles.scss */
 .tile-small {
   width: 70px;
   height: 70px;
 }
-/* line 92, ../scss/_tiles.scss */
+/* line 91, ../scss/_tiles.scss */
 .tile-small .tile-content .tile-icon {
   width: 32px;
   height: 32px;
@@ -9953,24 +9952,24 @@ ul.chart-legend {
   margin-left: -16px;
 }
 
-/* line 102, ../scss/_tiles.scss */
+/* line 101, ../scss/_tiles.scss */
 .tile-normal {
   width: 150px;
   height: 150px;
 }
 
-/* line 103, ../scss/_tiles.scss */
+/* line 102, ../scss/_tiles.scss */
 .tile-wide {
   width: 310px;
   height: 150px;
 }
 
-/* line 104, ../scss/_tiles.scss */
+/* line 103, ../scss/_tiles.scss */
 .tile-large {
   width: 310px;
   height: 310px;
 }
-/* line 106, ../scss/_tiles.scss */
+/* line 105, ../scss/_tiles.scss */
 .tile-large .tile-content .tile-icon {
   width: 128px;
   height: 128px;
@@ -9979,12 +9978,12 @@ ul.chart-legend {
   margin-left: -64px;
 }
 
-/* line 116, ../scss/_tiles.scss */
+/* line 115, ../scss/_tiles.scss */
 .tile-big {
   width: 470px;
   height: 470px;
 }
-/* line 118, ../scss/_tiles.scss */
+/* line 117, ../scss/_tiles.scss */
 .tile-big .tile-content .tile-icon {
   width: 172px;
   height: 172px;
@@ -9993,12 +9992,12 @@ ul.chart-legend {
   margin-left: -96px;
 }
 
-/* line 128, ../scss/_tiles.scss */
+/* line 127, ../scss/_tiles.scss */
 .tile-super {
   width: 630px;
   height: 630px;
 }
-/* line 130, ../scss/_tiles.scss */
+/* line 129, ../scss/_tiles.scss */
 .tile-super .tile-content .tile-icon {
   width: 256px;
   height: 256px;
@@ -10007,42 +10006,42 @@ ul.chart-legend {
   margin-left: -128px;
 }
 
-/* line 142, ../scss/_tiles.scss */
+/* line 141, ../scss/_tiles.scss */
 .tile-color-0 {
   background-color: #008cba;
 }
 
-/* line 143, ../scss/_tiles.scss */
+/* line 142, ../scss/_tiles.scss */
 .tile-color-1 {
   background-color: #e7e7e7;
 }
 
-/* line 144, ../scss/_tiles.scss */
+/* line 143, ../scss/_tiles.scss */
 .tile-color-2 {
   background-color: #f04124;
 }
 
-/* line 145, ../scss/_tiles.scss */
+/* line 144, ../scss/_tiles.scss */
 .tile-color-3 {
   background-color: #43ac6a;
 }
 
-/* line 146, ../scss/_tiles.scss */
+/* line 145, ../scss/_tiles.scss */
 .tile-color-4 {
   background-color: #f08a24;
 }
 
-/* line 147, ../scss/_tiles.scss */
+/* line 146, ../scss/_tiles.scss */
 .tile-color-5 {
   background-color: #a0d3e8;
 }
 
-/* line 148, ../scss/_tiles.scss */
+/* line 147, ../scss/_tiles.scss */
 .tile-color-6 {
   background-color: #333333;
 }
 
-/* line 149, ../scss/_tiles.scss */
+/* line 148, ../scss/_tiles.scss */
 .tile-color-7 {
   background-color: #cccccc;
 }

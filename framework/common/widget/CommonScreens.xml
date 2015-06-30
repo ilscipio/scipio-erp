@@ -64,57 +64,38 @@ under the License.
     <screen name="GlobalActions">
         <section>
             <actions>
-                            
-                <!-- Foundation Base CSS -->
-                <set field="layoutSettings.styleSheets[+0]" value="/images/styles/base/stylesheets/app.css" global="true"/>
-                <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/foundation-datepicker/stylesheets/foundation-datepicker.css" global="true"/>
-                <set field="layoutSettings.styleSheets[]" value="/images/styles/base/stylesheets/foundation-icons/foundation-icons.css" global="true"/>
-                <set field="layoutSettings.styleSheets[]" value="/images/styles/base/bower_components/foundation-responsive-tables/responsive-tables.css" global="true"/>
+                <!-- traditionally layoutSettings.VT_*_JAVASCRIPT[] are only for theme resources (styling-related);
+                     app logic (e.g. ajax date retrieval; heavy app interaction?) should use layoutSettings.javaScripts[];
+                     when overlap and both depends, on a file, should go in layoutSettings.javaScripts[];
+                     same for styles -->            
+                                           
+                <!-- Application-provided styles (common to all themes) - keep to minimum so themes can switch
                 
-                <set field="layoutSettings.styleSheets[]" value="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" global="true"/>
-                          
-                <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />
-                <service service-name="getVisualThemeResources">
-                    <field-map field-name="visualThemeId" />
-                    <field-map field-name="themeResources" from-field="layoutSettings" />
-                </service>
-                <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
- 
- 
-             
-                <!-- The default (global) java scripts -->
-                <!-- jQuery part -->
+                <set field="layoutSettings.styleSheets[]" value="" global="true"/>  
+                              
+                -->
+                                   
+                <!-- Application scripts (common to all apps; may be shared by themes) - needed for app function (ajax, basic function, etc.)
+                     Can be forced to put some theme scripts here if apps depend heavily on them -->
                 
-                <!-- Legacy JS TODO: Remove once possible -->
+                <!-- Legacy jQuery; TODO: Remove once possible -->
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
-                
-                <!--  Foundation JS -->
+                <!--  Foundation jQuery + extras-->
+                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/modernizr/modernizr.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery/dist/jquery.min.js" global="true" />
-                
-                <set field="layoutSettings.javaScripts[]" value="/images/styles/base/bower_components/modernizr/modernizr.js" global="true" />
-                
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation.min.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.topbar.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.offcanvas.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation-datepicker/js/foundation-datepicker.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation-responsive-tables/responsive-tables.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/js/app.js" global="true" />
+                <!-- Legacy JS; TODO: Remove once possible -->
+                <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true" />
+                <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true" />
+                <set field="layoutSettings.javaScripts[]" value="/images/miscAjaxFunctions.js" global="true" />               
+                <set field="layoutSettings.javaScripts[]" value="/images/selectMultipleRelatedValues.js" global="true" />
+                <set field="layoutSettings.javaScripts[]" value="/images/util.js" global="true" />
+                  
+                <!-- Can now be set in footer
+                <set field="layoutSettings.javaScriptsFooter[]" value="" global="true" />
+                -->
 
-                <!-- Custom installs -->
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/js/freetile.min.js" global="true" /> <!-- Tiles -->
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/Snap.svg/dist/snap.svg-min.js" global="true" /> <!-- Charts -->
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/pizza/dist/js/pizza.min.js" global="true" /> <!-- Charts -->
-                
-                <!-- Legacy JS TODO: Remove once possible -->
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/selectall.js" global="true" />
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/fieldlookup.js" global="true" />
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/miscAjaxFunctions.js" global="true" />               
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/selectMultipleRelatedValues.js" global="true" />
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/util.js" global="true" />
-                
                 <!-- Load available JS Language Files -->
                 <!-- DISABLED FOR CLEAN-UP
                 <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}" />
@@ -146,7 +127,40 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/images/util.js" global="true" />
                 <set field="layoutSettings.javaScripts[]" value="/images/date/FromThruDateCheck.js" global="true"/>                
                 -->     
+                
+                
+                <!-- Theme styles (common to all themes) - included after layoutSettings.styleSheets (which should be rarely used) -->
+                
+                <!-- Foundation Base CSS -->
+                <set field="layoutSettings.VT_STYLESHEET[]" value="/images/styles/base/stylesheets/app.css" global="true"/>
+                <set field="layoutSettings.VT_STYLESHEET[]" value="/images/styles/base/bower_components/foundation-datepicker/stylesheets/foundation-datepicker.css" global="true"/>
+                <set field="layoutSettings.VT_STYLESHEET[]" value="/images/styles/base/stylesheets/foundation-icons/foundation-icons.css" global="true"/>
+                <set field="layoutSettings.VT_STYLESHEET[]" value="/images/styles/base/bower_components/foundation-responsive-tables/responsive-tables.css" global="true"/>
+                
+                <set field="layoutSettings.VT_STYLESHEET[]" value="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" global="true"/>
 
+                
+                <!-- Theme scripts, styling-related (common to all themes) - that apps could be functional without; substitutable - included after layoutSettings.javaScripts -->
+                            
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/js/freetile.min.js" global="true" /> <!-- Tiles -->
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/Snap.svg/dist/snap.svg-min.js" global="true" /> <!-- Charts -->
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/pizza/dist/js/pizza.min.js" global="true" /> <!-- Charts -->
+                
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation.min.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.topbar.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation/foundation.offcanvas.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation-datepicker/js/foundation-datepicker.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation-responsive-tables/responsive-tables.js" global="true" />
+                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/js/app.js" global="true" />
+                                  
+                <!-- Note: Must be run last after all layoutSettings assignments due to a Ofbiz widget vars bug -->    
+                <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />
+                <service service-name="getVisualThemeResources">
+                    <field-map field-name="visualThemeId" />
+                    <field-map field-name="themeResources" from-field="layoutSettings" />
+                </service>
+                <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
             </actions>
             <widgets />
         </section>

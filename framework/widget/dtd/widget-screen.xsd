@@ -418,6 +418,22 @@ under the License.
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" />
+            <xs:attribute name="auto-decorator-section-include" default="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        (Cato feature) If true, the decorator will automatically produce decorator-sections for incoming sections (normally 
+                        included with decorator-section-include) for all incoming sections except those having decorator-sections with the
+                        same name in this decorator. This can be used to automatically pass decorator sections from screen to global decorator in an
+                        intermediate decorator (NOT IMPLEMENTED)
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="decorator-section">
@@ -428,7 +444,8 @@ under the License.
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="use-when">
                 <xs:annotation>
-                    <xs:documentation>(Cato feature) Minilang/EL/groovy/bsh-style condition string - only pass this section for rendering if the given condition 
+                    <xs:documentation>
+                        (Cato feature) Minilang/EL/groovy/bsh-style condition string - only pass this section for rendering if the given condition 
                         evaluates to true; else the section will be absent from the "sections" context variable passed to the decorator.
                         Expression must evaluation to a boolean, using ${...}, ${groovy: ...} or ${bsh: ...}. 
                         Does not use bsh-only expressions as do the old form widgets use-when attributes.

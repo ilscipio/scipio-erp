@@ -827,6 +827,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
         private final Map<String, ModelScreenWidget> sectionMap;
+        private final boolean autoDecorationSectionIncludes;
 
         public DecoratorScreen(ModelScreen modelScreen, Element decoratorScreenElement) {
             super(modelScreen, decoratorScreenElement);
@@ -839,6 +840,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 sectionMap.put(decoratorSection.getName(), decoratorSection);
             }
             this.sectionMap = Collections.unmodifiableMap(sectionMap);
+            
+            this.autoDecorationSectionIncludes = "true".equals(decoratorScreenElement.getAttribute("auto-decorator-section-include"));
         }
 
         @Override

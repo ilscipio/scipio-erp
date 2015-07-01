@@ -426,6 +426,15 @@ under the License.
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllWidgets" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="use-when">
+                <xs:annotation>
+                    <xs:documentation>(Cato feature) Minilang/EL/groovy/bsh-style condition string - only pass this section for rendering if the given condition 
+                        evaluates to true; else the section will be absent from the "sections" context variable passed to the decorator.
+                        Expression must evaluation to a boolean, using ${...}, ${groovy: ...} or ${bsh: ...}. 
+                        Does not use bsh-only expressions as do the old form widgets use-when attributes.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="decorator-section-include" substitutionGroup="AllWidgets">

@@ -31,10 +31,13 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -57,6 +60,9 @@ import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+
+import bsh.EvalError;
+import bsh.Interpreter;
 
 
 /**
@@ -838,6 +844,18 @@ public abstract class ModelScreenWidget extends ModelWidget {
         @Override
         @SuppressWarnings("unchecked")
         public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+            
+            // Cato: filter the sections to render by the new use-when condition
+            Map<String, ModelScreenWidget> filteredSectionMap = new HashMap<String, ModelScreenWidget>();
+            for(Map.Entry<String, ModelScreenWidget> entry : this.sectionMap.entrySet()) {
+                ModelScreenWidget section = entry.getValue();
+                if (section != null && section instanceof DecoratorSection) {
+                    if (((DecoratorSection) section).shouldUse(context)) {
+                        filteredSectionMap.put(entry.getKey(), section);
+                    }
+                }
+            }
+            
             // isolate the scope
             if (!(context instanceof MapStack)) {
                 context = MapStack.create(context);
@@ -848,7 +866,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
             MapStack standAloneStack = contextMs.standAloneChildStack();
             standAloneStack.put("screens", new ScreenRenderer(writer, standAloneStack, screenStringRenderer));
-            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, standAloneStack, writer, screenStringRenderer);
+            SectionsRenderer sections = new SectionsRenderer(filteredSectionMap, standAloneStack, writer, screenStringRenderer);
 
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
             contextMs.push();
@@ -892,14 +910,16 @@ public abstract class ModelScreenWidget extends ModelWidget {
     public static final class DecoratorSection extends ModelScreenWidget {
         public static final String TAG_NAME = "decorator-section";
         private final List<ModelScreenWidget> subWidgets;
+        private final FlexibleStringExpander useWhen;
 
         public DecoratorSection(ModelScreen modelScreen, Element decoratorSectionElement) {
             super(modelScreen, decoratorSectionElement);
             // read sub-widgets
             List<? extends Element> subElementList = UtilXml.childElementList(decoratorSectionElement);
             this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
+            this.useWhen = FlexibleStringExpander.getInstance(decoratorSectionElement.getAttribute("use-when"));
         }
-
+        
         @Override
         public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             // render sub-widgets
@@ -910,6 +930,53 @@ public abstract class ModelScreenWidget extends ModelWidget {
             return subWidgets;
         }
 
+        public FlexibleStringExpander getUseWhen() {
+            return useWhen;
+        }
+        
+        /**
+         * Returns true if this section should be used,
+         * based on the decorator-section use-when minilang/EL/bsh/groovy-style condition
+         * and current screen context.
+         * <p>
+         * Based on {@link ModelFormField#shouldUse(Map)} but converted
+         * to support more than just the bsh interpreter.
+         * <p>
+         * Cato addition.
+         */
+        public boolean shouldUse(Map<String, Object> context) {
+            if (this.getUseWhen() == null || UtilValidate.isEmpty(this.getUseWhen().toString())) {
+                // no use-when
+                return true;
+            }
+            
+            boolean condTrue;
+            Object retVal;
+            
+            try {
+                retVal = this.getUseWhen().expand(context);
+            }
+            catch(Exception e) {
+                String errMsg = "Error evaluating use-when condition [" + this.getUseWhen().toString() + "] on the "
+                        + "decoration-section " + this.getName() + " of screen " 
+                        + this.getModelScreen().getSourceLocation() + "#" + this.getModelScreen().getName()
+                        + ": " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg, e);
+            }
+            
+            if (retVal instanceof Boolean) {
+                Boolean boolVal = (Boolean) retVal;
+                condTrue = boolVal.booleanValue();
+            } else {
+                throw new IllegalArgumentException("Return value from use-when condition eval was not a Boolean: "
+                        + " [" + this.getUseWhen().toString() + "] on the "
+                        + "decoration-section " + this.getName() + " of screen " 
+                        + this.getModelScreen().getSourceLocation() + "#" + this.getModelScreen().getName());
+            }
+            return condTrue;
+        }
+        
         @Override
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             visitor.visit(this);

@@ -855,6 +855,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                     }
                 }
             }
+            filteredSectionMap = Collections.unmodifiableMap(filteredSectionMap);
             
             // isolate the scope
             if (!(context instanceof MapStack)) {

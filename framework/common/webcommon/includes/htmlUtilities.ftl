@@ -525,7 +525,7 @@ Since this is very foundation specific, this function may be dropped in future i
     type            = (tiles|) default:empty
     
 -->
-<#macro grid type="" class="" columns=5>
+<#macro grid type="" class="" columns=4>
     <#if type=="tiles">
         <#global freewallNum="${(freewallNum!0)+1}" />
         <#assign id="freewall_id_${freewallNum!0}">
@@ -541,13 +541,11 @@ Since this is very foundation specific, this function may be dropped in future i
         </script>
     <#else>
         <#assign defaultClass="${style_grid_small!}${style_grid_block!}2 ${style_grid_medium!}${style_grid_block!}4 ${style_grid_large!}${style_grid_block!}5">
-        <#if columns!=5>
             <#if columns-2 &gt; 0>
                 <#local class="${style_grid_small!}${style_grid_block!}${columns-2} ${style_grid_medium!}${style_grid_block!}${columns-1} ${style_grid_large!}${style_grid_block!}${columns}"/>
             <#else>
                 <#local class="${style_grid_large!}${style_grid_block!}${columns}"/>
             </#if>
-        </#if>
           <ul class="${class!defaultClass!}">
               <#nested>
           </ul>

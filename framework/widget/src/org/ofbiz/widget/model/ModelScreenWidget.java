@@ -114,6 +114,16 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final ScreenStringRenderer screenStringRenderer;
         private final Map<String, Object> context;
         private final Appendable writer;
+        
+        // Cato feature: ability to render previously-defined sections (from a caller) as if part of these sections.
+        // Essentially we mix sections from different decorators therefore different contexts.
+        // This is not well encapsulated; SectionsRenderer implements
+        // Map and that part is public. but context is private so it should be
+        // impossible for other code to apply the wrong context on the sections; must go through render(String).
+        private final Map<String, ModelScreenWidget> localSectionMap;
+        private final Map<String, ModelScreenWidget> prevSectionMap; // Need separate from prevSections so can filter further
+        private final SectionsRenderer prevSections;
+        private final boolean includePrevSections;
 
         public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, Map<String, Object> context, Appendable writer,
                 ScreenStringRenderer screenStringRenderer) {
@@ -123,16 +133,70 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.context = context;
             this.writer = writer;
             this.screenStringRenderer = screenStringRenderer;
+            
+            this.includePrevSections = false;
+            this.localSectionMap = this.sectionMap;
+            this.prevSectionMap = null;
+            this.prevSections = null;
+        }
+        
+        public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, Map<String, Object> context, Appendable writer,
+                ScreenStringRenderer screenStringRenderer, 
+                SectionsRenderer prevSections, Map<String, ModelScreenWidget> prevSectionMap, boolean includePrevSections) {
+            Map<String, ModelScreenWidget> localMap = new HashMap<String, ModelScreenWidget>();
+            if (includePrevSections && prevSections != null && prevSectionMap != null) {
+                localMap.putAll(prevSectionMap);
+                // overridden by local sections
+            }
+            localMap.putAll(sectionMap);
+            this.sectionMap = Collections.unmodifiableMap(localMap);
+            this.context = context;
+            this.writer = writer;
+            this.screenStringRenderer = screenStringRenderer;
+            
+            this.includePrevSections = includePrevSections;
+            if (includePrevSections) {
+                Map<String, ModelScreenWidget> localSectionMap = new HashMap<String, ModelScreenWidget>();
+                localSectionMap.putAll(sectionMap);
+                this.localSectionMap = Collections.unmodifiableMap(localSectionMap);
+            }
+            else {
+                this.localSectionMap = this.sectionMap;
+            }
+            if (prevSectionMap != null) {
+                Map<String, ModelScreenWidget> tempPrevSectionMap = new HashMap<String, ModelScreenWidget>();
+                tempPrevSectionMap.putAll(prevSectionMap);
+                this.prevSectionMap = Collections.unmodifiableMap(tempPrevSectionMap);
+            }
+            else {
+                this.prevSectionMap = null;
+            }
+            this.prevSections = prevSections;
         }
 
         /** This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker */
         public String render(String sectionName) throws GeneralException, IOException {
-            ModelScreenWidget section = sectionMap.get(sectionName);
-            // if no section by that name, write nothing
-            if (section != null) {
-                section.renderWidgetString(this.writer, this.context, this.screenStringRenderer);
+            if (includePrevSections) {
+                // Cato: new handling for previous section support
+                ModelScreenWidget section = localSectionMap.get(sectionName);
+                // if no section by that name, write nothing
+                if (section != null) {
+                    section.renderWidgetString(this.writer, this.context, this.screenStringRenderer);
+                }
+                else if (prevSections != null && prevSectionMap != null && prevSectionMap.get(sectionName) != null) {
+                    // render previous sections with previous renderer so that it uses the right context
+                    prevSections.render(sectionName);
+                }
+                return "";
             }
-            return "";
+            else {
+                ModelScreenWidget section = sectionMap.get(sectionName);
+                // if no section by that name, write nothing
+                if (section != null) {
+                    section.renderWidgetString(this.writer, this.context, this.screenStringRenderer);
+                }
+                return "";
+            }
         }
 
         @Override
@@ -827,7 +891,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
         private final Map<String, ModelScreenWidget> sectionMap;
-        private final boolean autoDecorationSectionIncludes;
+        
+        // Cato: if true, automatically include sections defined in higher screens
+        private final boolean autoDecoratorSectionIncludes;
 
         public DecoratorScreen(ModelScreen modelScreen, Element decoratorScreenElement) {
             super(modelScreen, decoratorScreenElement);
@@ -841,13 +907,13 @@ public abstract class ModelScreenWidget extends ModelWidget {
             }
             this.sectionMap = Collections.unmodifiableMap(sectionMap);
             
-            this.autoDecorationSectionIncludes = "true".equals(decoratorScreenElement.getAttribute("auto-decorator-section-include"));
+            this.autoDecoratorSectionIncludes = "true".equals(decoratorScreenElement.getAttribute("auto-decorator-section-include"));
         }
 
         @Override
         @SuppressWarnings("unchecked")
         public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
-            
+
             // Cato: filter the sections to render by the new use-when condition
             Map<String, ModelScreenWidget> filteredSectionMap = new HashMap<String, ModelScreenWidget>();
             for(Map.Entry<String, ModelScreenWidget> entry : this.sectionMap.entrySet()) {
@@ -860,6 +926,25 @@ public abstract class ModelScreenWidget extends ModelWidget {
             }
             filteredSectionMap = Collections.unmodifiableMap(filteredSectionMap);
             
+            // Cato: get previous sections renderer and include if auto-decorator-section-include enabled
+            SectionsRenderer prevSections = (SectionsRenderer) context.get("sections");
+            // Must not recognize any sections from prev for which this decorator-screen already had a decorator-section in xml
+            Map<String, ModelScreenWidget> filteredPrevSectionMap = new HashMap<String, ModelScreenWidget>();
+            if (prevSections != null) {
+                for(Map.Entry<String, ModelScreenWidget> entry : prevSections.entrySet()) {
+                    ModelScreenWidget section = entry.getValue();
+                    if (section != null && section instanceof DecoratorSection) {
+                        String name = entry.getKey();
+                        // use sectionMap here, not filteredSectionMap, so that use-when 
+                        // doesn't permit auto-includes when it evaluates to false.
+                        if (!this.sectionMap.containsKey(name)) {
+                            filteredPrevSectionMap.put(name, section);
+                        }
+                    }
+                }
+            }
+            filteredPrevSectionMap = Collections.unmodifiableMap(filteredPrevSectionMap);
+            
             // isolate the scope
             if (!(context instanceof MapStack)) {
                 context = MapStack.create(context);
@@ -870,8 +955,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
             // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
             MapStack standAloneStack = contextMs.standAloneChildStack();
             standAloneStack.put("screens", new ScreenRenderer(writer, standAloneStack, screenStringRenderer));
-            SectionsRenderer sections = new SectionsRenderer(filteredSectionMap, standAloneStack, writer, screenStringRenderer);
-
+            
+            SectionsRenderer sections;
+            if (this.autoDecoratorSectionIncludes) {
+                sections = new SectionsRenderer(filteredSectionMap, standAloneStack, writer, screenStringRenderer, prevSections, filteredPrevSectionMap, true);
+            }
+            else {
+                sections = new SectionsRenderer(filteredSectionMap, standAloneStack, writer, screenStringRenderer);
+            }
+            
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
             contextMs.push();
             context.put("sections", sections);

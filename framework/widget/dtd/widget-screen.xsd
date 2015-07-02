@@ -421,9 +421,10 @@ under the License.
             <xs:attribute name="auto-decorator-section-include" default="false">
                 <xs:annotation>
                     <xs:documentation>
-                        (Cato feature) If true, the decorator-screen will automatically produce decorator-sections for all parent/incoming decorator-sections to include 
-                        them (as if included with decorator-section-include) except those having the same names as the decorator-sections explicitly defined 
-                        in this decorator-screen. It can be seen as passing-through the incoming decorator-sections from a parent screen/decorator to a lower decorator
+                        (Cato feature) If true, this decorator-screen definition will automatically inherit all decorator-sections coming from 
+                        the calling screen (as if producing a decorator-section element having only a decorator-section-include with same section name)
+                        except those having the same names as the decorator-sections explicitly defined in this decorator-screen. 
+                        It can be seen as passing-through the incoming decorator-sections from a calling screen to a lower decorator,
                         in an intermediate decorator. Mainly intended for intermediate decorators.
                     </xs:documentation>
                 </xs:annotation>

@@ -936,9 +936,17 @@ public abstract class ModelScreenWidget extends ModelWidget {
                     if (section != null && section instanceof DecoratorSection) {
                         String name = entry.getKey();
                         // use sectionMap here, not filteredSectionMap, so that use-when 
-                        // doesn't permit auto-includes when it evaluates to false.
+                        // doesn't permit auto-includes when it evaluates to false...
                         if (!this.sectionMap.containsKey(name)) {
                             filteredPrevSectionMap.put(name, section);
+                        }
+                        else {
+                            // ... unless use fallback is set
+                            ModelScreenWidget defSection = this.sectionMap.get(name);
+                            if (defSection instanceof DecoratorSection && 
+                                ((DecoratorSection) defSection).isFallbackAutoInclude()) {
+                                filteredPrevSectionMap.put(name, section);
+                            }
                         }
                     }
                 }
@@ -1006,7 +1014,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
     public static final class DecoratorSection extends ModelScreenWidget {
         public static final String TAG_NAME = "decorator-section";
         private final List<ModelScreenWidget> subWidgets;
+        
+        // Cato feature: conditional section definitions
         private final FlexibleStringExpander useWhen;
+        private final boolean fallbackAutoInclude;
 
         public DecoratorSection(ModelScreen modelScreen, Element decoratorSectionElement) {
             super(modelScreen, decoratorSectionElement);
@@ -1014,6 +1025,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             List<? extends Element> subElementList = UtilXml.childElementList(decoratorSectionElement);
             this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
             this.useWhen = FlexibleStringExpander.getInstance(decoratorSectionElement.getAttribute("use-when"));
+            this.fallbackAutoInclude = "true".equals(decoratorSectionElement.getAttribute("fallback-auto-include"));
         }
         
         @Override
@@ -1028,6 +1040,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getUseWhen() {
             return useWhen;
+        }
+        
+        public boolean isFallbackAutoInclude() {
+            return fallbackAutoInclude;  
         }
         
         /**

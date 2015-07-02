@@ -22,13 +22,6 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
-                        <section>
-                            <widgets>
-                                <include-menu name="MainTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -56,13 +49,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
-                        <section>
-                            <widgets>
-                                <include-menu name="MainTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <label text="${uiLabelMap.PageTitleFindReturn}" style="h1"/>
                         <screenlet>

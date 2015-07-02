@@ -187,6 +187,7 @@ under the License.
                         <set field="appbarCloseTemplateLocation" from-field="layoutSettings.VT_NAV_CLOSE_TMPLT[0]" />
                         <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" />
                         <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
+                        <set field="headerTitle" value="${headerTitle}" default-value="${uiLabelMap[page.titleProperty]}"/>
                     </actions>
                     <widgets />
                 </section>
@@ -316,6 +317,7 @@ under the License.
                                             <html-template location="${messagesTemplateLocation}" />
                                         </html>
                                     </platform-specific>
+                                    <label style="h1" text="${headerTitle}"/>
                                     <decorator-section-include name="body" />
                                 </container>
                             </container>
@@ -338,6 +340,7 @@ under the License.
                                                     <html-template location="${messagesTemplateLocation}" />
                                                 </html>
                                             </platform-specific>
+                                            <label style="h1" text="${headerTitle}"/>
                                             <decorator-section-include name="body" />
                                         </container>
                                     </container>
@@ -365,6 +368,7 @@ under the License.
                                                 <html-template location="${messagesTemplateLocation}" />
                                             </html>
                                         </platform-specific>
+                                        <label style="h1" text="${headerTitle}"/>
                                         <decorator-section-include name="body" />
                                     </container>
                                 </widgets>
@@ -385,6 +389,7 @@ under the License.
                                                 <html-template location="${messagesTemplateLocation}" />
                                             </html>
                                         </platform-specific>
+                                        <label style="h1" text="${headerTitle}"/>
                                         <decorator-section-include name="body" />
                                     </container>
                                     <container style="large-2 medium-3 columns" id="right-sidebar">
@@ -418,6 +423,7 @@ under the License.
                                                 <html-template location="${messagesTemplateLocation}" />
                                             </html>
                                         </platform-specific>
+                                        <label style="h1" text="${headerTitle}"/>
                                         <decorator-section-include name="body" />
                                     </container>
                                     <container style="large-2 medium-3 columns" id="right-sidebar">

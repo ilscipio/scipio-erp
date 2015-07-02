@@ -270,7 +270,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
             </ul>
           </li>
           <li class="divider"></li>
-          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
+          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
           <#if helpLink?has_content><li class="has-form"><@modal label="${uiLabelMap.CommonHelp}" id="help" href="${helpLink}"></@modal></li></#if>       
         </ul>
         

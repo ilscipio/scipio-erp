@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofbiz-component name="admin"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
+    <!-- define resource loaders; most common is to use the component resource loader -->
+    <resource-loader name="main" type="component"/>
+
+    <!-- place the config directory on the classpath to access configuration files -->
+    <classpath type="dir" location="config"/>
+
+    <!-- load single or multiple external libraries -->
+    <classpath type="jar" location="build/lib/*"/>
+    <classpath type="jar" location="lib/*"/>
+
+    <!-- entity resources: model(s), eca(s), group, and data definitions -->
+    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
+
+    <!-- service resources: model(s), eca(s) and group definitions -->
+    <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+    <!--
+    <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
+    <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
+    -->
+
+    <!-- web applications; will be mounted when using the embedded container -->
+    <!-- Disabled from app bar, as this is not really an app, but an overview application -->
+    <webapp name="admin"
+        title="Admin"
+        server="default-server"
+        location="webapp/admin"
+        base-permission="OFBTOOLS"
+        mount-point="/admin"
+        app-bar-display="false"
+        />
+</ofbiz-component>

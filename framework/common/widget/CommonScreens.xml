@@ -187,7 +187,7 @@ under the License.
                         <set field="appbarCloseTemplateLocation" from-field="layoutSettings.VT_NAV_CLOSE_TMPLT[0]" />
                         <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" />
                         <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
-                        <set field="headerTitle" value="${headerTitle}" default-value="${uiLabelMap[page.titleProperty]}"/>
+                        <set field="headerTitle" value="${title}" default-value="${uiLabelMap[page.titleProperty]}"/>
                     </actions>
                     <widgets />
                 </section>
@@ -669,6 +669,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleLogin" />
+                <set field="title" value=" "/><!-- Hack to remove the header element -->
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -736,6 +737,7 @@ under the License.
     <screen name="FindScreenDecorator">
         <section>
             <widgets>
+                <!-- ToDo: Decide on what to do with this. In theory this should either be h2 or not existent at all
                 <section>
                     <condition>
                         <if-empty field="titleProperty"/>
@@ -746,7 +748,7 @@ under the License.
                     <fail-widgets>
                         <container style="page-title"><label text="${uiLabelMap[titleProperty]}" style="h1"></label></container>
                     </fail-widgets>
-                </section>
+                </section>-->
                 <decorator-section-include name="menu-bar"/>
                 <container style="clear"/>
                 <screenlet id="searchOptions" name="findScreenlet" collapsible="true" title="${uiLabelMap.CommonSearchOptions}">

@@ -310,7 +310,8 @@ under the License.
                             <if-empty field="userLogin" />
                         </condition>
                         <actions>
-                            <set field="columnMainStyle" value="large-12 columns"/>                            
+                            <set field="columnMainStyle" value="large-12 columns"/>
+                            <set field="noTitle" value="true"/>                        
                         </actions>
                         <widgets>
                             <container id="content-main-body">
@@ -612,7 +613,7 @@ under the License.
                             <html-template location="${messagesTemplateLocation}" />
                         </html>
                     </platform-specific>
-                    <label style="h1" text="${headerTitle}"/>
+                    <label style="h1" text="${noTitle} ${headerTitle}"/>
                     <decorator-section-include name="body" />
                 </container>
             </widgets>
@@ -684,7 +685,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleLogin" />
-                <set field="noTitle" value="true" global="true"/><!-- Hack to remove the header element -->
+                <set field="noTitle" value="true" global="true" /><!-- Hack to remove the header element -->
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

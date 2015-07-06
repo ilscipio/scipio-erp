@@ -7,6 +7,9 @@
             <actions>
                 <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
                 <set field="titleProperty" value="AdminViewTitleMain" global="true"/>
+                
+                <!-- Groovy scripts -->
+                <script location="component://admin/webapp/admin/WEB-INF/actions/MainOverview.groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

@@ -3,8 +3,6 @@
   "version": "0.0.1",
   "private": "true",
   "dependencies": {
-    "foundation": "zurb/bower-foundation",
-    "Chart.js": "~1.0.2",
-    "pizza": "~0.2.2"
+    "foundation": "zurb/bower-foundation"
   }
 }

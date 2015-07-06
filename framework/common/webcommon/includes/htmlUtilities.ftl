@@ -545,7 +545,7 @@ Since this is very foundation specific, this function may be dropped in future i
     
 -->
 <#macro grid type="" class="" columns=4>
-    <#if type=="tiles">
+    <#if type=="tiles" || type="freetiles">
         <#global freewallNum="${(freewallNum!0)+1}" />
         <#assign id="freewall_id_${freewallNum!0}">
         <div class="${style_tile_container!}" id="${id!}">
@@ -556,6 +556,14 @@ Since this is very foundation specific, this function may be dropped in future i
             $('#${id}').freetile({
                 selector: '.${style_tile_wrap!}'
             });
+            <#--
+            Alternative implementation of gridster.js
+            $('#${id}').gridster({
+                widget_selector: '.${style_tile_wrap!}',
+                min_cols:${columns},
+                autogenerate_stylesheet:false
+            }).disable();
+            -->
          });
         </script>
     <#else>
@@ -671,7 +679,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
 -->
 <#macro tile type="normal" title="" class="" id="" link="" color=0 icon="" image="">
     <#assign nested><#nested></#assign>
-    <div class="${style_tile_wrap!} ${style_tile_wrap!}-${type!}<#if class?has_content> ${class!}</#if> ${style_tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if>>
+    <div class="${style_tile_wrap!} ${style_tile_wrap!}-${type!}<#if class?has_content> ${class!}</#if> ${style_tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if> data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
         <#if image?has_content><div class="${style_tile_image!}" style="background-image: url(${image!})"></div></#if>
         <div class="${style_tile_content!}">
             <#if link?has_content><a href="${link!}"></#if>
@@ -682,6 +690,16 @@ It is loosely based on http://metroui.org.ua/tiles.html
         </div>
     </div>  
 </#macro>
+
+<#function calcTileSize type="x" value="normal">
+    <#assign tileSizeX={"small":0,"normal":1,"wide":2,"large":2,"big":3,"super":4}/>
+    <#assign tileSizeY={"small":0,"normal":1,"wide":1,"large":2,"big":3,"super":4}/>
+    <#if type="x">
+        <#return tileSizeX[value]/>
+    <#else>
+        <#return tileSizeY[value]/>
+    </#if>
+</#function>
 
 <#-- 
 *************

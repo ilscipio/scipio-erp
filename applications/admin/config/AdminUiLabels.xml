@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="AdminApplication">
-        <value xml:lang="en">Admin Application</value>
-        <value xml:lang="zh">Admin应用程序</value>
-        <value xml:lang="zh_TW">Admin應用程式</value>
+        <value xml:lang="en">Admin</value>
+        <value xml:lang="zh">Admin</value>
+        <value xml:lang="zh_TW">Admin</value>
     </property>
     <property key="AdminCompanyName">
         <value xml:lang="en">OFBiz: Admin</value>
@@ -24,5 +24,183 @@
         <value xml:lang="en">Dashboard</value>
         <value xml:lang="de">Dashboard</value>
         <value xml:lang="fr">Dashboard</value>
+    </property>
+    
+    <!-- Tile Icon Configuration -->
+    <property key="AdminTileIconaccounting">
+        <value xml:lang="en">fi-book</value>
+    </property>
+    <property key="AdminTileIconap">
+        <value xml:lang="en">fi-book</value>
+    </property>
+    <property key="AdminTileIconar">
+        <value xml:lang="en">fi-book</value>
+    </property>
+    <property key="AdminTileIconassetmaint">
+        <value xml:lang="en">fi-wrench</value>
+    </property>
+    <property key="AdminTileIconbi">
+        <value xml:lang="en">fi-graph-trend</value>
+    </property>
+    <property key="AdminTileIconcatalog">
+        <value xml:lang="en">fi-pricetag-multiple</value>
+    </property>
+    <property key="AdminTileIconcontent">
+        <value xml:lang="en">fi-page</value>
+    </property>
+        <property key="AdminTileIconebay">
+        <value xml:lang="en">fi-shopping-bag</value>
+    </property>
+    <property key="AdminTileIconexample">
+        <value xml:lang="en">fi-layout</value>
+    </property>
+    <property key="AdminTileIconfacility">
+        <value xml:lang="en">fi-book</value>
+    </property>
+    <property key="AdminTileIcongooglebase">
+        <value xml:lang="en">fi-social-google-plus</value>
+    </property>
+    <property key="AdminTileIcongooglecheckout">
+        <value xml:lang="en">fi-shopping-cart</value>
+    </property>
+    <property key="AdminTileIconhumanres">
+        <value xml:lang="en">fi-torsos-male-female</value>
+    </property>
+    <property key="AdminTileIconhhfacility">
+        <value xml:lang="en">fi-mobile-signal</value>
+    </property>
+    <property key="AdminTileIconoagis">
+        <value xml:lang="en">fi-arrows-out</value>
+    </property>
+    <property key="AdminTileIconorder">
+        <value xml:lang="en">fi-clipboard-notes</value>
+    </property>
+    <property key="AdminTileIconmyportal">
+        <value xml:lang="en">fi-bookmark</value>
+    </property>
+    <property key="AdminTileIconmanufacturing">
+        <value xml:lang="en">fi-wrench</value>
+    </property>
+    <property key="AdminTileIconmarketing">
+        <value xml:lang="en">fi-megaphone</value>
+    </property>
+    <property key="AdminTileIconparty">
+        <value xml:lang="en">fi-page-search</value>
+    </property>
+    <property key="AdminTileIconparty">
+        <value xml:lang="en">fi-torso-business</value>
+    </property>
+    <property key="AdminTileIconprojectmgr">
+        <value xml:lang="en">fi-elevator</value>
+    </property>
+    <property key="AdminTileIconSalesForceAutomation">
+        <value xml:lang="en">fi-widget</value>
+    </property>
+    <property key="AdminTileIconscrum">
+        <value xml:lang="en">fi-comment-quotes</value>
+    </property>
+    <property key="AdminTileIconofbizsetup">
+        <value xml:lang="en">fi-widget</value>
+    </property>
+    <property key="AdminTileIconwebpos">
+        <value xml:lang="en">fi-price-tag</value>
+    </property>
+    <property key="AdminTileIconwebtools">
+        <value xml:lang="en">fi-wrench</value>
+    </property>
+    <property key="AdminTileIconworkeffort">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileIconebaystore">
+        <value xml:lang="en"></value>
+    </property>
+    
+    <!-- Tile Image Background Configuration - remember to wrap in CDATA, e.g.: <![CDATA[http://myurl.com/image.jpg]]> -->
+    <property key="AdminTileBackgroundaccounting">
+        <value xml:lang="en"><![CDATA[]]></value>
+    </property>
+    <property key="AdminTileBackgroundap">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundar">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundassetmaint">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundbi">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundcatalog">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundcontent">
+        <value xml:lang="en"></value>
+    </property>
+        <property key="AdminTileBackgroundebay">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundexample">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundfacility">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundgooglebase">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundgooglecheckout">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundhumanres">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundhhfacility">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundoagis">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundorder">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundmyportal">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundmanufacturing">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundmarketing">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundparty">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundparty">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundprojectmgr">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundSalesForceAutomation">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundscrum">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundofbizsetup">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundwebpos">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundwebtools">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundworkeffort">
+        <value xml:lang="en"></value>
+    </property>
+    <property key="AdminTileBackgroundebaystore">
+        <value xml:lang="en"></value>
     </property>
 </resource>

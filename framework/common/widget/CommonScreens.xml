@@ -140,13 +140,14 @@ under the License.
                 <set field="layoutSettings.VT_STYLESHEET[]" value="/images/styles/base/bower_components/foundation-datepicker/stylesheets/foundation-datepicker.css" global="true"/>
                 <set field="layoutSettings.VT_STYLESHEET[]" value="/images/styles/base/stylesheets/foundation-icons/foundation-icons.css" global="true"/>
                 <set field="layoutSettings.VT_STYLESHEET[]" value="/images/styles/base/bower_components/foundation-responsive-tables/responsive-tables.css" global="true"/>
-                
-                <set field="layoutSettings.VT_STYLESHEET[]" value="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" global="true"/>
+                <!--<set field="layoutSettings.VT_STYLESHEET[]" value="/images/styles/base/bower_components/gridster/dist/jquery.gridster.min.css" global="true"/>-->
 
+                <set field="layoutSettings.VT_STYLESHEET[]" value="/images/styles/base/bower_components/foundation-responsive-tables/responsive-tables.css" global="true"/>
                 
                 <!-- Theme scripts, styling-related (common to all themes) - that apps could be functional without; substitutable - included after layoutSettings.javaScripts -->
                 <!-- ToDo: Move to Themes -->            
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/js/freetile.min.js" global="true" /> <!-- Tiles -->
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/js/freetile.min.js" global="true" /> <!-- Free Tiles -->
+                <!--<set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/gridster/dist/jquery.gridster.with-extras.min.js" global="true" />  Grid Tiles -->
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/Snap.svg/dist/snap.svg-min.js" global="true" /> <!-- Charts -->
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/pizza/dist/js/pizza.min.js" global="true" /> <!-- Charts -->
                 

@@ -68,9 +68,6 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="h1">
-                            <label text="${uiLabelMap.WebtoolsLabelManagerAddNew}"/>
-                        </container>
                             <platform-specific><html><html-template location="component://webtools/webapp/webtools/labelmanager/UpdateLabel.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>

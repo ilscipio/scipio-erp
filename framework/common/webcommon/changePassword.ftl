@@ -20,12 +20,11 @@ under the License.
 <#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
 <#assign tenantId = requestParameters.userTenantId!>
 
-<center>
-<div class="screenlet login-screenlet">
-  <div class="screenlet-title-bar">
+<div class="${style_grid_large!}3 ${style_grid_large!}centered columns login-box" id="login">
+<div id="login-box-title">
     <h1>${uiLabelMap.CommonPasswordChange}</h1>
   </div>
-  <div class="screenlet-body">
+  <@section id="login-box-content">
     <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
       <input type="hidden" name="requirePasswordChange" value="Y"/>
       <input type="hidden" name="USERNAME" value="${username}"/>
@@ -54,9 +53,7 @@ under the License.
         </tr>
       </table>
     </form>
-  </div>
-</div>
-</center>
+</@section>
 
 <script language="JavaScript" type="text/javascript">
   document.loginform.PASSWORD.focus();

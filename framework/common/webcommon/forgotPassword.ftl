@@ -16,37 +16,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#assign logo><img src="<@ofbizContentUrl>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
 
-
-<@row>
-    <@cell>
-      <h1>${uiLabelMap.CommonRegistered}</h1>
-        <@panel>
-          <form method="post" action="<@ofbizUrl>forgotPassword${previousParams!}</@ofbizUrl>" name="forgotpassword">
-           <@row>
-            <@cell columns=6>
-              <@row collapse=true class="prefix-radius">
-                <@cell columns=3>
-                  <span class="prefix">${uiLabelMap.CommonUsername}</span>
+<div class="${style_grid_large!}3 ${style_grid_large!}centered columns login-box" id="login">
+    <div id="login-box-title">
+        <h1>${logo} ${uiLabelMap.CommonRegistered!}</h1>
+    </div>
+    <@section id="login-box-content">
+            <@panel>
+              <form method="post" action="<@ofbizUrl>forgotPassword${previousParams!}</@ofbizUrl>" name="forgotpassword">
+               <@row>
+                <@cell class="auth-plain">
+                  <@row collapse=true class="prefix-radius">
+                    <@cell columns=3>
+                      <span class="prefix">${uiLabelMap.CommonUsername}</span>
+                    </@cell>
+                    <@cell columns=9>
+                      <input type="text" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>" size="20" placeholder="admin"/>
+                    </@cell>
+                  </@row>
                 </@cell>
-                <@cell columns=9>
-                  <input type="text" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>" size="20" placeholder="admin"/>
+               </@row>
+              <@row>
+                <@cell columns=12>
+                      <input type="submit" name="GET_PASSWORD_HINT" class="smallSubmit" value="${uiLabelMap.CommonGetPasswordHint}"/>
+                      <input type="submit" name="EMAIL_PASSWORD" class="smallSubmit" value="${uiLabelMap.CommonEmailPassword}"/>
+                      <#--<a href='<@ofbizUrl>authview</@ofbizUrl>' class="button">${uiLabelMap.CommonGoBack}</a>-->
                 </@cell>
-              </@row>
-            </@cell>
-           </@row>
-          <@row>
-            <@cell columns=6>
-              <@row collapse=true class="prefix-radius">
-                <@cell>
-                  <input type="submit" name="GET_PASSWORD_HINT" class="smallSubmit" value="${uiLabelMap.CommonGetPasswordHint}"/>&nbsp;<input type="submit" name="EMAIL_PASSWORD" class="smallSubmit" value="${uiLabelMap.CommonEmailPassword}"/>
-                    <#--<a href='<@ofbizUrl>authview</@ofbizUrl>' class="button">${uiLabelMap.CommonGoBack}</a>-->
-                  <input type="hidden" name="JavaScriptEnabled" value="N"/>
-                </@cell>
-              </@row>
-            </@cell>
-           </@row>
-          </form>
-        </@panel>
-  </@cell>
-</@row>
+               </@row>
+               <input type="hidden" name="JavaScriptEnabled" value="N"/>
+              </form>
+            </@panel>
+    </@section>
+</div>

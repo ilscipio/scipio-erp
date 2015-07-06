@@ -9860,9 +9860,10 @@ ul.chart-legend {
   right: 0px;
   bottom: 0px;
   margin: 4em 2%;
+  align: center;
 }
 
-/* line 11, ../scss/_tiles.scss */
+/* line 12, ../scss/_tiles.scss */
 .tile {
   width: 150px;
   height: 150px;
@@ -9880,7 +9881,7 @@ ul.chart-legend {
   -ms-user-select: none;
   user-select: none;
 }
-/* line 28, ../scss/_tiles.scss */
+/* line 29, ../scss/_tiles.scss */
 .tile .tile-content {
   position: absolute;
   top: 0;
@@ -9889,11 +9890,11 @@ ul.chart-legend {
   height: inherit;
   overflow: hidden;
 }
-/* line 36, ../scss/_tiles.scss */
+/* line 37, ../scss/_tiles.scss */
 .tile .tile-content :first-child {
   display: block;
 }
-/* line 40, ../scss/_tiles.scss */
+/* line 41, ../scss/_tiles.scss */
 .tile .tile-content .tile-icon {
   position: absolute;
   width: 64px;
@@ -9905,15 +9906,21 @@ ul.chart-legend {
   margin-left: -32px;
   text-align: center;
 }
-/* line 52, ../scss/_tiles.scss */
+/* line 53, ../scss/_tiles.scss */
 .tile .tile-content .tile-title {
   position: absolute;
   bottom: 0;
-  left: .625rem;
-  padding: .425rem .25rem;
+  padding: .425rem .425rem;
+  width: 100%;
   z-index: 999;
+  border-bottom: 1px solid #eee;
+  background: #f9f9f9;
+  color: #222222;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
 }
-/* line 60, ../scss/_tiles.scss */
+/* line 68, ../scss/_tiles.scss */
 .tile .tile-content .tile-overlay {
   width: 100%;
   height: inherit;
@@ -9927,23 +9934,42 @@ ul.chart-legend {
   transition: all 0.3s ease;
   background: #008cba;
 }
-
-/* line 76, ../scss/_tiles.scss */
+/* line 83, ../scss/_tiles.scss */
+.tile .tile-image {
+  background-color: #ffffff;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: all 0.6s ease;
+}
+/* line 94, ../scss/_tiles.scss */
+.tile a, .tile a:active, .tile a:visited {
+  color: #fff;
+}
+/* line 97, ../scss/_tiles.scss */
 .tile:hover {
   outline: #999999 solid 3px;
 }
-/* line 79, ../scss/_tiles.scss */
+/* line 100, ../scss/_tiles.scss */
 .tile:hover .tile-overlay {
   top: 0;
   transition: all 0.3s ease;
 }
+/* line 105, ../scss/_tiles.scss */
+.tile:hover .tile-image {
+  -webkit-transform: scale(1.5);
+  transform: scale(1.5);
+  transition: all 0.6s ease;
+}
 
-/* line 86, ../scss/_tiles.scss */
+/* line 115, ../scss/_tiles.scss */
 .tile-small {
   width: 70px;
   height: 70px;
 }
-/* line 91, ../scss/_tiles.scss */
+/* line 120, ../scss/_tiles.scss */
 .tile-small .tile-content .tile-icon {
   width: 32px;
   height: 32px;
@@ -9952,24 +9978,24 @@ ul.chart-legend {
   margin-left: -16px;
 }
 
-/* line 101, ../scss/_tiles.scss */
+/* line 130, ../scss/_tiles.scss */
 .tile-normal {
   width: 150px;
   height: 150px;
 }
 
-/* line 102, ../scss/_tiles.scss */
+/* line 131, ../scss/_tiles.scss */
 .tile-wide {
   width: 310px;
   height: 150px;
 }
 
-/* line 103, ../scss/_tiles.scss */
+/* line 132, ../scss/_tiles.scss */
 .tile-large {
   width: 310px;
   height: 310px;
 }
-/* line 105, ../scss/_tiles.scss */
+/* line 134, ../scss/_tiles.scss */
 .tile-large .tile-content .tile-icon {
   width: 128px;
   height: 128px;
@@ -9978,12 +10004,12 @@ ul.chart-legend {
   margin-left: -64px;
 }
 
-/* line 115, ../scss/_tiles.scss */
+/* line 144, ../scss/_tiles.scss */
 .tile-big {
   width: 470px;
   height: 470px;
 }
-/* line 117, ../scss/_tiles.scss */
+/* line 146, ../scss/_tiles.scss */
 .tile-big .tile-content .tile-icon {
   width: 172px;
   height: 172px;
@@ -9992,12 +10018,12 @@ ul.chart-legend {
   margin-left: -96px;
 }
 
-/* line 127, ../scss/_tiles.scss */
+/* line 156, ../scss/_tiles.scss */
 .tile-super {
   width: 630px;
   height: 630px;
 }
-/* line 129, ../scss/_tiles.scss */
+/* line 158, ../scss/_tiles.scss */
 .tile-super .tile-content .tile-icon {
   width: 256px;
   height: 256px;
@@ -10006,42 +10032,42 @@ ul.chart-legend {
   margin-left: -128px;
 }
 
-/* line 141, ../scss/_tiles.scss */
+/* line 170, ../scss/_tiles.scss */
 .tile-color-0 {
   background-color: #008cba;
 }
 
-/* line 142, ../scss/_tiles.scss */
+/* line 171, ../scss/_tiles.scss */
 .tile-color-1 {
   background-color: #e7e7e7;
 }
 
-/* line 143, ../scss/_tiles.scss */
+/* line 172, ../scss/_tiles.scss */
 .tile-color-2 {
   background-color: #f04124;
 }
 
-/* line 144, ../scss/_tiles.scss */
+/* line 173, ../scss/_tiles.scss */
 .tile-color-3 {
   background-color: #43ac6a;
 }
 
-/* line 145, ../scss/_tiles.scss */
+/* line 174, ../scss/_tiles.scss */
 .tile-color-4 {
   background-color: #f08a24;
 }
 
-/* line 146, ../scss/_tiles.scss */
+/* line 175, ../scss/_tiles.scss */
 .tile-color-5 {
   background-color: #a0d3e8;
 }
 
-/* line 147, ../scss/_tiles.scss */
+/* line 176, ../scss/_tiles.scss */
 .tile-color-6 {
   background-color: #333333;
 }
 
-/* line 148, ../scss/_tiles.scss */
+/* line 177, ../scss/_tiles.scss */
 .tile-color-7 {
   background-color: #cccccc;
 }

@@ -644,17 +644,22 @@ It is loosely based on http://metroui.org.ua/tiles.html
     type            = (small|normal|wide|large|big|super) (default:normal)
     title           = Title
     class           = css classes
+    link            = Link URL
     id              = field id
     color           = (0|1|2|3|4|5|6|7) defaul:0 (empty)   
     icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
+    image           = Set a background image-url
 -->
-<#macro tile type="normal" title="" class="" id="" color=0 icon="">
+<#macro tile type="normal" title="" class="" id="" link="" color=0 icon="" image="">
     <#assign nested><#nested></#assign>
     <div class="${style_tile_wrap!} ${style_tile_wrap!}-${type!}<#if class?has_content> ${class!}</#if> ${style_tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if>>
+        <#if image?has_content><div class="${style_tile_image!}" style="background-image: url(${image!})"></div></#if>
         <div class="${style_tile_content!}">
+            <#if link?has_content><a href="${link!}"></#if>
             <#if icon?has_content><span class="${style_tile_icon!}"><i class="${icon!}"></i></span></#if>
             <#if nested?has_content><span class="${style_tile_overlay!}"><#nested></span></#if>
             <#if title?has_content><span class="${style_tile_title!}">${title!}</span></#if>
+            <#if link?has_content></a></#if>
         </div>
     </div>  
 </#macro>

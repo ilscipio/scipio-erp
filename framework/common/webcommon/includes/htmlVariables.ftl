@@ -81,6 +81,7 @@ under the License.
 <#global "style_tile_icon"       = "tile-icon" />
 <#global "style_tile_title"      = "tile-title" />
 <#global "style_tile_overlay"    = "tile-overlay" />
+<#global "style_tile_image"      = "tile-image" />
 
 <#-- Breadcrumbs -->
 <#global "style_nav_breadcrumbs"            = "breadcrumbs" />

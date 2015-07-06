@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>${uiLabelMap.AccountingManualTransaction}</h1>
+<h2>${uiLabelMap.AccountingManualTransaction}</h2>
 <br />
 
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>

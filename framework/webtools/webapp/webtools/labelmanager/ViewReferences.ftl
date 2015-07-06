@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<h1>${uiLabelMap.WebtoolsLabelManagerViewReferences}</h1>
+<h2>${uiLabelMap.WebtoolsLabelManagerViewReferences}</h2>
         <table class="basic-table" cellspacing="0">
         <thead>
             <tr>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>${uiLabelMap.AccountingEditCustomTimePeriods}</h1>
+<h2>${uiLabelMap.AccountingEditCustomTimePeriods}</h2>
 <br />
 <#if security.hasPermission("PERIOD_MAINT", session)>
    <div class="screenlet">

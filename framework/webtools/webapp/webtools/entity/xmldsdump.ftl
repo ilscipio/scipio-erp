@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if tobrowser?? && tobrowser>
-<h1>${uiLabelMap.WebtoolsExportFromDataSource}</h1>
+<h2>${uiLabelMap.WebtoolsExportFromDataSource}</h2>
 <br />
 <p>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</p>
 <hr />

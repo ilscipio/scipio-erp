@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#include "component://webtools/webapp/webtools/tempexpr/tempExprMacros.ftl"/>
-<h1>${title}</h1>
+
 <#if temporalExpression?has_content>
   <#-- Edit existing expression -->
   <#if !"INTERSECTION.UNION.DIFFERENCE.SUBSTITUTION"?contains(temporalExpression.tempExprTypeId)>

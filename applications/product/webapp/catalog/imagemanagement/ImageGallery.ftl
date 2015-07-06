@@ -21,7 +21,7 @@ under the License.
     <#assign imageIndex = 0>
     <#if productImageList?has_content>
         <#if product?has_content>
-            <h1><b>${product.productId}</b></h1>
+            <h2>${product.productId}</h2>
         </#if>
         <#-- <#assign productName = productTextData >
         <#assign seoUrl = productName.replaceAll(" ", "-") > -->

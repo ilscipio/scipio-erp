@@ -68,7 +68,7 @@ under the License.
 
       <#if messages?has_content>
         <hr />
-        <h1>${uiLabelMap.CommonFollowingOccurred}:</h1>
+        <h2>${uiLabelMap.CommonFollowingOccurred}:</h2>
         <div>
           <#list messages as message>
             <p>${message}</p>

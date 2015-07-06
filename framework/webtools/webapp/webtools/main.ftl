@@ -33,9 +33,6 @@ under the License.
 
     <#if userLogin?has_content>
     <@alert type="info">${uiLabelMap.WebtoolsNoteAntRunInstall}</@alert>
-
-    <h1>${uiLabelMap.WebtoolsMainPage}</h1>
-
     <@section>
         <@grid columns=4>
           <li><ul class="pricing-table">

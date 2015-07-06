@@ -27,7 +27,7 @@ under the License.
           <span >${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}:</span> <input type="text" name="idValue" size="20" maxlength="50" value="${idValue!}" />&nbsp;<a href="javascript:document.idsearchform.submit()" class="button tiny">${uiLabelMap.CommonFind}</a>
         </form>
         <br />
-        <h1>${uiLabelMap.ProductSearchResultsWithIdValue}: ${idValue!}</h1>
+        <h2>${uiLabelMap.ProductSearchResultsWithIdValue}: ${idValue!}</h2>
         <#if !goodIdentifications?has_content && !idProduct?has_content>
           <br />
           <h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>

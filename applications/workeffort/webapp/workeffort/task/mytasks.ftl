@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<h1>${uiLabelMap.PageTitleViewActivityAndTaskList}</h1>
+<h2>${uiLabelMap.PageTitleViewActivityAndTaskList}</h2>
 <div class="button-bar">
   <a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION</@ofbizUrl>" class="button tiny create">${uiLabelMap.WorkEffortNewTask}</a>
 </div>

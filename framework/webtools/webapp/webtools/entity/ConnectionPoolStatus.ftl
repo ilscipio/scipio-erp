@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<h1>Connection Pool Status</h1>
+<h2>Connection Pool Status</h2>
 
 <#assign groups = delegator.getModelGroupReader().getGroupNames(delegator.getDelegatorName())!/>
 <table class="basic-table light-grid hover-bar">

@@ -30,7 +30,7 @@ under the License.
               ${surveyWrapper.render()}
             </form>
         <#else>
-            <h1>${uiLabelMap.OrderNothingToDoHere}</h1>
+            <h2>${uiLabelMap.OrderNothingToDoHere}</h2>
         </#if>
     </div>
 </div>

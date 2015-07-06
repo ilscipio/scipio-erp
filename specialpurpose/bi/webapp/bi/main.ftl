@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>${uiLabelMap.BusinessIntelligenceIntegratedFramework}</h1>
+<#--<h1>${uiLabelMap.BusinessIntelligenceIntegratedFramework}</h1>-->
 <p>
     ${uiLabelMap.BusinessIntelligenceNote1}
     ${uiLabelMap.BusinessIntelligenceNote2}

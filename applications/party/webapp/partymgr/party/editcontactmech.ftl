@@ -19,7 +19,7 @@ under the License.
 <#if !mechMap.contactMech??>
   <#-- When creating a new contact mech, first select the type, then actually create -->
   <#if !preContactMechTypeId?has_content>
-    <h1>${uiLabelMap.PartyCreateNewContact}</h1>
+    <h2>${uiLabelMap.PartyCreateNewContact}</h2>
     <form method="post" action="<@ofbizUrl>editcontactmech</@ofbizUrl>" name="createcontactmechform">
       <input type="hidden" name="partyId" value="${partyId}" />
       <table class="basic-table" cellspacing="0">
@@ -40,7 +40,7 @@ under the License.
 </#if>
 <#if mechMap.contactMechTypeId?has_content>
   <#if !mechMap.contactMech?has_content>
-    <h1>${uiLabelMap.PartyCreateNewContact}</h1>
+    <h2>${uiLabelMap.PartyCreateNewContact}</h2>
     <div id="mech-purpose-types">
     <#if contactMechPurposeType??>
       <p>(${uiLabelMap.PartyMsgContactHavePurpose} <b>"${contactMechPurposeType.get("description",locale)!}"</b>)</p>
@@ -55,7 +55,7 @@ under the License.
         <#if contactMechPurposeTypeId??><input type="hidden" name="contactMechPurposeTypeId" value="${contactMechPurposeTypeId!}" /></#if>
         <#if paymentMethodId?has_content><input type='hidden' name='paymentMethodId' value='${paymentMethodId}' /></#if>
   <#else>  
-    <h1>${uiLabelMap.PartyEditContactInformation}</h1>
+    <h2>${uiLabelMap.PartyEditContactInformation}</h2>
     <div id="mech-purpose-types">
       <table class="basic-table" cellspacing="0">
       <#if mechMap.purposeTypes?has_content>

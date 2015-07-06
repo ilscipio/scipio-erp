@@ -82,7 +82,7 @@ under the License.
             <#list records as record>
                 <tr <#if alt_row> class="alternate-row"</#if> >
                 <#list record as field>
-                    <td>${field!}</td>
+                    <td><#if field?has_content>${field}</#if></td>
                 </#list>
                 </tr>
                 <#assign alt_row = !alt_row>

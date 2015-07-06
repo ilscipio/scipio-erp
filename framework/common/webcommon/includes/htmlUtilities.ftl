@@ -27,6 +27,25 @@ under the License.
 <#include "component://widget/templates/htmlFormMacroLibrary.ftl"/>
 <#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl") /> 
 <#include StringUtil.wrapString("component://widget/templates/htmlMenuMacroLibrary.ftl") />
+
+<#-- 
+*************
+* label function
+************
+Returns empty string if no label is found
+-->
+<#function label value="">
+  <#if value?has_content>
+      <#assign var="${uiLabelMap[value]}" />
+      <#if var!=value>
+        <#return var>
+        <#else>
+        <#return "">
+      </#if>
+  <#else>
+      <#return ""> 
+  </#if>
+</#function>
  
 <#-- 
 ******************
@@ -36,7 +55,7 @@ under the License.
 <#-- 
 *************
 * Field Macro
-************ macro
+************ 
     Usage example:  
     <@field attr="" />
     
@@ -648,7 +667,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     id              = field id
     color           = (0|1|2|3|4|5|6|7) defaul:0 (empty)   
     icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
-    image           = Set a background image-url
+    image           = Set a background image-url (icon won't be shown if not empty)
 -->
 <#macro tile type="normal" title="" class="" id="" link="" color=0 icon="" image="">
     <#assign nested><#nested></#assign>
@@ -656,7 +675,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
         <#if image?has_content><div class="${style_tile_image!}" style="background-image: url(${image!})"></div></#if>
         <div class="${style_tile_content!}">
             <#if link?has_content><a href="${link!}"></#if>
-            <#if icon?has_content><span class="${style_tile_icon!}"><i class="${icon!}"></i></span></#if>
+            <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${style_tile_icon!}"><i class="${icon!}"></i></span></#if>
             <#if nested?has_content><span class="${style_tile_overlay!}"><#nested></span></#if>
             <#if title?has_content><span class="${style_tile_title!}">${title!}</span></#if>
             <#if link?has_content></a></#if>

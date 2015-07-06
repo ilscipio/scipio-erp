@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>DemoSuite Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+        <service name="createOrderData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/OrderData.groovy" invoke="createDemoOrder">
+        <description>Creates a number of demo data</description>
+        <attribute name="num" type="Integer" mode="IN" optional="false"/>
+    </service>
+    
+</services>

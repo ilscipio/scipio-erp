@@ -41,5 +41,6 @@ under the License.
     <load-component component-location="bi"/>
     <load-component component-location="example"/>
     <load-component component-location="exampleext"/>
+    <load-component component-location="demosuite"/>
     <!-- <load-component component-location="jetty"/> -->
 </component-loader>

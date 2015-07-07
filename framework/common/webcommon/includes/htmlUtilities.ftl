@@ -766,6 +766,7 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
                     datasetFill : true,
                     tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
                     multiTooltipTemplate: "<%= value %>",
+                    bezierCurve : false,
                     legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
                     };
                 var ctx_${fieldIdNum!} = $('#${chartId!}').get(0).getContext("2d");

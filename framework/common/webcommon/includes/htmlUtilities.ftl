@@ -730,12 +730,12 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
             <#nested/>
         </ul>
         </@cell>
-        <@cell columns=9><div id="chart_${fieldIdNum!}" style="min-height:200px;"></div></@cell>
+        <@cell columns=9><div id="chart_${fieldIdNum!}" style="min-height:150px;"></div></@cell>
         </@row>
     <#else>
         <#global chartId = "chart_${fieldIdNum!}"/>
         <#global chartType = type/>
-        <canvas id="${chartId!}" class="${style_grid_large!}12 chart-data"></canvas>
+        <canvas id="${chartId!}" class="${style_grid_large!}12 chart-data" height="150"></canvas>
         <script>
             $(function(){
                 var chartDataEl = $('.chart-data:first-of-type');

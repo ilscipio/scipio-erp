@@ -37,11 +37,11 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="main"/>
+                <set field="titleProperty" value="OrderManager"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.OrderManager}" style="h2"/>
                         <container style="large-12 columns">
                         <include-portal-page id="OrderPortalPage"/>
                         </container>

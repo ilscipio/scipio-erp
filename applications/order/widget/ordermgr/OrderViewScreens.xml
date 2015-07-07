@@ -41,7 +41,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.OrderManager}" style="h1"/>
+                        <label text="${uiLabelMap.OrderManager}" style="h2"/>
                         <container style="large-12 columns">
                         <include-portal-page id="OrderPortalPage"/>
                         </container>
@@ -91,7 +91,7 @@ under the License.
             <widgets>
                     <container style="row">
                         <container style="large-12 columns">
-                            <label style="h1" text="${uiLabelMap.OrderInfo}"/>
+                            <label style="h2" text="${uiLabelMap.OrderInfo}"/>
                             <include-screen name="orderactions"/>
                         </container>
                     </container>
@@ -461,7 +461,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderViewDecorator">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.OrderOrderHistory} #${orderId}" style="h1"/>
+                        <label text="${uiLabelMap.OrderOrderHistory} #${orderId}" style="h2"/>
                         <screenlet>
                             <container>
                                 <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="button tiny"/>

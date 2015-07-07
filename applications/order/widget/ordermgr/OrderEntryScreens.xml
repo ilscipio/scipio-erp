@@ -64,12 +64,6 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
-                        <container>
-                            <label style="h1" text="${uiLabelMap.OrderRequirements}"/>
-                        </container>
-                        <container>
-                            <label style="h2" text="${uiLabelMap.OrderFindRequirements}"/>
-                        </container>
                         <include-form name="FindRequirements" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
                         <section>
                             <condition>
@@ -104,9 +98,6 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
-                        <container>
-                            <label style="h1">${uiLabelMap.OrderOrderQuotes}</label>
-                        </container>
                         <include-form name="FindQuotes" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
                         <include-form name="ListQuotes" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
                     </decorator-section>

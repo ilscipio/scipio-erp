@@ -32,11 +32,9 @@ under the License.
                             </condition>
                             <widgets>
                                 <container>
-                                    <label style="h1">${uiLabelMap.CommonId}:${orderHeader.orderId}</label>
+                                    <label style="h2">${uiLabelMap.CommonId}:${orderHeader.orderId}</label>
                                 </container>
-
                                 <decorator-section-include name="body"/>
-
                             </widgets>
                             <fail-widgets>
                                 <label >${uiLabelMap.OrderViewPermissionError}</label>

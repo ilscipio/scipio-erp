@@ -70,7 +70,6 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.OrderOrderQuotes}" style="h1" />
                         <screenlet>
                             <container>
                                 <link target="EditQuote" text="${uiLabelMap.OrderCreateOrderQuote}" style="button tiny"/>

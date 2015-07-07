@@ -50,7 +50,6 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.PageTitleFindReturn}" style="h1"/>
                         <screenlet>
                             <container>
                                 <link style="button tiny" target="returnMain" text="${uiLabelMap.OrderCreateNewReturn}"/>

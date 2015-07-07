@@ -94,7 +94,7 @@ under the License.
                                     <not><if-empty field="custRequest"/></not>
                                 </condition>
                                 <widgets>
-                                    <label style="h1">${custRequest.custRequestName} [${uiLabelMap.CommonId}:${custRequest.custRequestId}] </label>
+                                    <label style="h2">${custRequest.custRequestName} [${uiLabelMap.CommonId}:${custRequest.custRequestId}] </label>
                                 </widgets>
                             </section>
                         </container>

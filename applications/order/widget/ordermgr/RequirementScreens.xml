@@ -38,7 +38,7 @@ under the License.
                                     </widgets>
                                 </section>
                                 <container>
-                                    <label style="h1">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
+                                    <label style="h2">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
                                 </container>
                                     <decorator-section name="body">
                                 <decorator-section-include name="body"/>

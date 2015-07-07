@@ -306,7 +306,7 @@ under the License.
                 </section>
                 <!-- render content area -->
                 <container style="row fullWidth" id="content-main-section">
-                    <decorator-section-include name="pre-body" />
+                    <!-- Closer to body: <decorator-section-include name="pre-body" /> -->
                     <section>
                         <!-- Not Authenticated Screens -->
                         <condition>
@@ -616,6 +616,7 @@ under the License.
                             <html-template location="${messagesTemplateLocation}" />
                         </html>
                     </platform-specific>
+                    <decorator-section-include name="pre-body" />
                     <label style="h1" text="${noTitle} ${headerTitle}"/>
                     <decorator-section-include name="body" />
                 </container>
@@ -627,6 +628,7 @@ under the License.
                             <html-template location="${messagesTemplateLocation}" />
                         </html>
                     </platform-specific>
+                    <decorator-section-include name="pre-body" />
                     <decorator-section-include name="body" />
                 </container>
             </fail-widgets>

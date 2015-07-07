@@ -776,7 +776,7 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
                         labels :[],
                         datasets: [
                             {
-                              label: "Total Bills",
+                              label: "",
                               fillColor: chartData.fillColor,
                               strokeColor: chartData.strokeColor,
                               pointColor: chartData.pointColor,
@@ -790,7 +790,6 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
                 </#if>
                 var ${chartId!} = new Chart(ctx_${fieldIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
                 <#nested/>
-                ${chartId!}.generateLegend();
             });
         </script>
     </#if>

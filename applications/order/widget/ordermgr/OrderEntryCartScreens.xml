@@ -89,7 +89,7 @@ under the License.
                         </container>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/showcartitems.ftl"/></html></platform-specific>
                     </decorator-section>
-                    <decorator-section name="sidebar">
+                    <decorator-section name="right-column">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/promoCodes.ftl"/></html></platform-specific>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/manualPromotions.ftl"/></html></platform-specific>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/promoText.ftl"/></html></platform-specific>

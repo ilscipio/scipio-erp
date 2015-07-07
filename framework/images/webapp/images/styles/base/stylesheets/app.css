@@ -10123,3 +10123,9 @@ ul[data-pie-id] {
   list-style: none;
   padding: 10px;
 }
+
+/* line 24, ../scss/_chartsjs.scss */
+.chart-data:before {
+  content: '{"fillColor":"#a0d3e8","strokeColor":"#fafafa","pointColor":"white","pointStrokeColor":"#aaaaaa","pointHighlightFill":"#fafafa","pointHighlightStroke":"#aaaaaa","scaleLineColor":"rgba(0,0,0,.1)","scaleFontFamily":["Helvetica Neue","Helvetica","Roboto","Arial","sans-serif"],"scaleFontSize":14,"scaleFontColor":"#222222","tooltipFillColor":"rgba(0,0,0,0.8)","tooltipFontSize":14,"tooltipFontColor":"white","tooltipFontFamily":["Helvetica Neue","Helvetica","Roboto","Arial","sans-serif"],"tooltipTitleFontFamily":["Helvetica Neue","Helvetica","Roboto","Arial","sans-serif"],"tooltipTitleFontSize":14,"tooltipTitleFontStyle":"bold","tooltipTitleFontColor":"white"}';
+  display: none;
+}

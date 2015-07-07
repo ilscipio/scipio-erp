@@ -1,0 +1,72 @@
+@import "./utils/formatters";
+@import "./utils/list-to-js";
+@import "./utils/map-to-js";
+
+//---
+// [$propName] - optional param (otherwise $value is taken as first)
+// if provided- function returns {'propName': sassToJs($value)}
+//
+// $value [map, list] - Converts provided value to JSON string
+// $value [bool, nulls, number, string, color] - Converts provided value to a proper format for JSON
+//
+// Data types in Sass: http://sass-lang.com/documentation/file.SASS_REFERENCE.html#data_types
+//
+// Examples of usage:
+//
+// .breakpoints-data{
+//   font-family: sassToJs($mediaBreakPointsMap);
+// }
+//
+// .zoom-control:before{
+//   content: sassToJs("maxZoomStep", $zoomStep);
+// }
+//
+//---
+@function sassToJs($propName: null, $value: null) {
+  @if ($value == null) {
+    $value: $propName; // emulates sassToJs($value)
+  } @else {
+    @return '{#{sassToJs($propName)}:#{sassToJs($value)}}'; // returns {'propName': sassToJs($value)}
+  }
+
+  //--- VARS ---
+  $valueType: type-of($value);
+  $jsonPropValue: '';
+
+  //--- CHECKING TYPE ---
+
+  // BOOL
+  @if ($valueType == 'bool') {
+    $jsonPropValue: $value;
+
+    // NULLS
+  } @else if ($valueType == 'null') {
+    $jsonPropValue: 'null';
+
+    // NUMBER
+  } @else if ($valueType == 'number') {
+    // '100px' has also type "number" but after multiplying to "0" gives "0px"
+    @if ('#{$value*0}' == '0') {
+      // e.g. 100
+      $jsonPropValue: $value;
+    } @else {
+      // e.g. 100px
+      $jsonPropValue: sassToJs_formatAsString($value);
+    }
+
+    // MAP
+  } @else if ($valueType == 'map') {
+    $jsonPropValue: sassToJs_Map($value);
+
+    // LIST
+  } @else if ($valueType == 'list') {
+    $jsonPropValue: sassToJs_List($value);
+
+    // STRING, COLOR
+  } @else {
+    $jsonPropValue: sassToJs_formatAsString($value);
+  }
+
+  //--- RETURN ---
+  @return $jsonPropValue;
+}

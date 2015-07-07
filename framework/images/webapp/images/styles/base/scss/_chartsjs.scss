@@ -1,0 +1,28 @@
+@import "sass-to-js";
+$chartMap: (
+  fillColor: rgba($info-color,1.0),
+  strokeColor: $ghost,
+  pointColor: $white,
+  pointStrokeColor: $base,
+  pointHighlightFill: $ghost,
+  pointHighlightStroke: $base,
+  scaleLineColor: "rgba(0,0,0,.1)",
+  scaleFontFamily: $body-font-family,
+  scaleFontSize: 14,
+  scaleFontColor: $body-font-color,
+  tooltipFillColor: "rgba(0,0,0,0.8)",
+  tooltipFontSize: 14,
+  tooltipFontColor: $white,
+  tooltipFontFamily: $body-font-family,
+  tooltipTitleFontFamily: $body-font-family,
+  tooltipTitleFontSize: 14,
+  tooltipTitleFontStyle: $font-weight-bold,
+  tooltipTitleFontColor: $white
+);
+
+.chart-data{
+  &:before{
+    content: sassToJs($chartMap);
+    display: none;
+  }
+}

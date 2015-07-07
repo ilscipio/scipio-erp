@@ -1,0 +1,26 @@
+//----------
+// Converts Sass list to JSON string
+//----------
+@function sassToJs_List($list) {
+  //--- VARS ---
+  $list-map-length: length($list);
+  $iteration: 0;
+  $json: '['; // open square bracket
+
+  // add each property from Sass list
+  @each $item in $list {
+    // ITEM VALUE
+    $json: $json + sassToJs($item);
+
+    // Add comma if not the last item
+    $iteration: $iteration + 1;
+    @if ($iteration < $list-map-length) {
+      $json: $json + ',';
+    }
+  }
+
+  $json: $json + ']'; // close square bracket
+
+  //--- RETURN ---
+  @return $json;
+}

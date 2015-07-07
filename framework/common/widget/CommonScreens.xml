@@ -148,8 +148,11 @@ under the License.
                 <!-- ToDo: Move to Themes -->            
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/js/freetile.min.js" global="true" /> <!-- Free Tiles -->
                 <!--<set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/gridster/dist/jquery.gridster.with-extras.min.js" global="true" />  Grid Tiles -->
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/Snap.svg/dist/snap.svg-min.js" global="true" /> <!-- Charts -->
-                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/pizza/dist/js/pizza.min.js" global="true" /> <!-- Charts -->
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/sass-to-js/js/dist/sass-to-js.min.js" global="true" /> <!-- Library to pass SASS Styles to JS -->
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/Chart.js/Chart.min.js" global="true" /> <!-- Charts.js Charts -->
+                
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/Snap.svg/dist/snap.svg-min.js" global="true" /> <!-- Foundation Pizza Charts -->
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/images/styles/base/bower_components/pizza/dist/js/pizza.min.js" global="true" /> <!-- Foundation Pizza Charts -->
                 
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
                 <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/styles/base/bower_components/foundation/js/foundation.min.js" global="true" />

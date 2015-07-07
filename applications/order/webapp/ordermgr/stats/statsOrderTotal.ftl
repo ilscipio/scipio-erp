@@ -47,7 +47,7 @@ under the License.
             <h3>Monthly Sales</h3>
             <@chart type="line">
                 <#list monthlyStats.keySet() as key>
-                    <@chartdata value="${monthlyStats[key].count}" value2="${monthlyStats[key].day}" title="${key}"/>
+                    <@chartdata value="${monthlyStats[key].count}" title="${key}"/>
                 </#list>  
             </@chart>
         </@cell>
@@ -56,7 +56,7 @@ under the License.
             <h3>Monthly Gross</h3>
             <@chart type="bar">
                 <#list monthlyStats.keySet() as key>
-                    <@chartdata value="${monthlyStats[key].count}" title="${key}"/>
+                    <@chartdata value="${monthlyStats[key].total}" title="${key}"/>
                 </#list>  
             </@chart>
         </@cell>
@@ -65,7 +65,7 @@ under the License.
              <h3>Weekly Sales</h3>
             <@chart type="line">
                 <#list weeklyStats.keySet() as key>
-                    <@chartdata value="${weeklyStats[key].count}" value2="${weeklyStats[key].day}" title=""/>
+                    <@chartdata value="${weeklyStats[key].count}" title="${key}"/>
                 </#list> 
             </@chart>
         </@cell>

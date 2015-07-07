@@ -110,7 +110,7 @@ Returns empty string if no label is found
         fieldFormName="" formName="" postfix=false>
 
 <#-- fieldIdNum will always increment throughout the page -->
-<#global fieldIdNum="${(fieldIdNum!0)+1}" />
+<#global fieldIdNum=(fieldIdNum!0)+1 />
 
 <#if !id?has_content>
     <#assign id="field_id_${fieldIdNum!0}">
@@ -716,22 +716,95 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
                     
    * General Attributes *
     type           = (pie|bar|line) (default:pie)
+    library        = (foundation|chart) (default:chart)
+    title          = Data Title  (default:empty)
 -->
 
-<#macro chart type="pie">
-    <#global fieldIdNum="${(fieldIdNum!0)+1}" />
-    <@row>
-    <@cell columns=3>    
-    <ul data-${type!}-id="chart_${fieldIdNum!}" class="${style_chart_legend!}">
-        <#nested/>
-    </ul>
-    </@cell>
-    <@cell columns=9><div id="chart_${fieldIdNum!}" style="min-height:200px;"></div></@cell>
-    </@row>
+<#macro chart type="pie" library="chart" title="">
+    <#global fieldIdNum=(fieldIdNum!0)+1 />
+    <#if library=="foundation">
+        <@row>
+        <@cell columns=3>    
+        <ul data-${type!}-id="chart_${fieldIdNum!}" class="${style_chart_legend!}">
+            <#nested/>
+        </ul>
+        </@cell>
+        <@cell columns=9><div id="chart_${fieldIdNum!}" style="min-height:200px;"></div></@cell>
+        </@row>
+    <#else>
+        <#global chartId = "chart_${fieldIdNum!}"/>
+        <#global chartType = type/>
+        <canvas id="${chartId!}" class="${style_grid_large!}12 chart-data"></canvas>
+        <script>
+            $(function(){
+                var chartDataEl = $('.chart-data:first-of-type');
+                var chartData = chartDataEl.sassToJs({pseudoEl:":before", cssProperty: "content"});
+                var options ={
+                    animation: false,
+                    scaleLineColor: chartData.scaleLineColor,
+                    scaleFontFamily: chartData.scaleFontFamily,
+                    scaleFontSize: chartData.scaleFontSize,
+                    scaleFontColor: chartData.scaleFontColor,
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    showTooltips: true,
+                    tooltipEvents: ["mousemove", "touchstart", "touchmove"],
+                    tooltipFillColor: chartData.tooltipFillColor,
+                    tooltipFontFamily: chartData.tolltipFontFamily,
+                    tooltipFontSize: chartData.tooltipFontSize,
+                    tooltipFontStyle: "normal",
+                    tooltipFontColor: chartData.tooltipFontColor,
+                    tooltipTitleFontFamily: chartData.tooltipTitleFontFamily,
+                    tooltipTitleFontSize: chartData.tooltipTitleFontSize,
+                    tooltipTitleFontStyle: chartData.tooltipTitleFontStyle,
+                    tooltipTitleFontColor: chartData.tooltipTitleFontColor,
+                    tooltipYPadding: 6,
+                    tooltipXPadding: 6,
+                    tooltipCaretSize: 8,
+                    tooltipCornerRadius: 6,
+                    datasetFill : true,
+                    tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
+                    multiTooltipTemplate: "<%= value %>",
+                    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+                    };
+                var ctx_${fieldIdNum!} = $('#${chartId!}').get(0).getContext("2d");
+                <#if type=="pie">
+                var data = [];
+                <#else>
+                var data = {
+                        labels :[],
+                        datasets: [
+                            {
+                              label: "Total Bills",
+                              fillColor: chartData.fillColor,
+                              strokeColor: chartData.strokeColor,
+                              pointColor: chartData.pointColor,
+                              pointStrokeColor: chartData.pointStrokeColor,
+                              pointHighlightFill: chartData.pointHighlightFill,
+                              pointHighlightStroke: chartData.pointHighlightStroke,
+                              data: []
+                            }
+                            ]
+                    };
+                </#if>
+                var ${chartId!} = new Chart(ctx_${fieldIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
+                <#nested/>
+                ${chartId!}.generateLegend();
+            });
+        </script>
+    </#if>
 </#macro>
 
-<#macro chartdata title value value2="">
-    <li <#if value2?has_content>data-y="${value!}" data-x="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
+<#macro chartdata title value value2="" library="chart">
+    <#if library=="foundation">
+        <li <#if value2?has_content>data-y="${value!}" data-x="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
+    <#else>
+        <#if chartType="line" || chartType="bar">
+            ${chartId!}.addData([<#if value?has_content>${value!}</#if><#if value2?has_content>,${value2}</#if>]<#if title?has_content>,"${title!}"</#if>);
+        <#else>
+            ${chartId!}.addData({value:${value!},color:"#F7464A",highlight: "#FF5A5E"<#if title?has_content>,label:"${title!}"</#if>});
+        </#if>
+    </#if>
 </#macro>
 
 

@@ -722,6 +722,7 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
 
 <#macro chart type="pie" library="chart" title="">
     <#global fieldIdNum=(fieldIdNum!0)+1 />
+    <#global chartLibrary = library!/>
     <#if library=="foundation">
         <@row>
         <@cell columns=3>    
@@ -795,12 +796,12 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
     </#if>
 </#macro>
 
-<#macro chartdata title value value2="" library="chart">
-    <#if library=="foundation">
+<#macro chartdata title value value2="">
+    <#if chartLibrary=="foundation">
         <li <#if value2?has_content>data-y="${value!}" data-x="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
     <#else>
         <#if chartType="line" || chartType="bar">
-            ${chartId!}.addData([<#if value?has_content>${value!}</#if><#if value2?has_content>,${value2}</#if>]<#if title?has_content>,"${title!}"</#if>);
+            ${chartId!}.addData([<#if value?has_content>${value!}</#if>]<#if title?has_content>,"${title!}"</#if>);
         <#else>
             ${chartId!}.addData({value:${value!},color:"#F7464A",highlight: "#FF5A5E"<#if title?has_content>,label:"${title!}"</#if>});
         </#if>

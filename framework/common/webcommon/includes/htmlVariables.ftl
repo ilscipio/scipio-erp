@@ -67,6 +67,19 @@ under the License.
 <#global "style_grid_offset"        = "offset-" />      <#-- Bootstrap: "col-md-offset-" -->
 <#global "style_grid_block"         = "block-grid-" />
 
+<#global "style_grid_columns_1"     = "${style_grid_large!}-1 ${style_grid_cell!}"/>
+<#global "style_grid_columns_2"     = "${style_grid_large!}-2 ${style_grid_medium!}-3 ${style_grid_cell!}"/>
+<#global "style_grid_columns_3"     = "${style_grid_large!}-3 ${style_grid_medium!}-4 ${style_grid_cell!}"/>
+<#global "style_grid_columns_4"     = "${style_grid_large!}-4 ${style_grid_medium!}-5 ${style_grid_cell!}"/>
+<#global "style_grid_columns_5"     = "${style_grid_large!}-5 ${style_grid_medium!}-6 ${style_grid_cell!}"/>
+<#global "style_grid_columns_6"     = "${style_grid_large!}-6 columns"/>
+<#global "style_grid_columns_7"     = "${style_grid_large!}-7 ${style_grid_medium!}-6 ${style_grid_cell!}"/>
+<#global "style_grid_columns_8"     = "${style_grid_large!}-8 ${style_grid_medium!}-7 ${style_grid_cell!}"/>
+<#global "style_grid_columns_9"     = "${style_grid_large!}-9 ${style_grid_medium!}-8 ${style_grid_cell!}"/>
+<#global "style_grid_columns_10"    = "${style_grid_large!}-10 ${style_grid_medium!}-9 ${style_grid_cell!}"/>
+<#global "style_grid_columns_11"    = "${style_grid_large!}-11 ${style_grid_medium!}-10 ${style_grid_cell!}"/>
+<#global "style_grid_columns_12"    = "${style_grid_large!}-12 ${style_grid_cell!}"/>
+
 <#-- Navigation -->
 <#global "style_nav_subnav"        = "sub-nav" />
 

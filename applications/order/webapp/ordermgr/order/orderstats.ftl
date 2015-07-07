@@ -18,7 +18,6 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-<h1>${uiLabelMap.OrderOrderStatisticsPage}</h1>
 <@section>
         <table class="basic-table" cellspacing='0'>
           <thead>

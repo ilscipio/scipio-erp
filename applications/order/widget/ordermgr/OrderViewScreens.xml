@@ -347,9 +347,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderViewDecorator">
                     <decorator-section name="body">
+                        <include-screen name="DashboardStatsOrderTotal" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/order/orderstats.ftl"/></html>
-                        </platform-specific>
+                        </platform-specific>                         
                     </decorator-section>
                 </decorator-screen>
             </widgets>

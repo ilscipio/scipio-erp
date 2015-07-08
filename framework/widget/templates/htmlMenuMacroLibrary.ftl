@@ -25,9 +25,9 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 
 -->
 <#macro renderMenuBegin boundaryComment="" id="" style="" title="">
-      <#if boundaryComment?has_content>
-      <!-- ${boundaryComment} -->
-      </#if>
+<#if boundaryComment?has_content>
+<!-- ${boundaryComment} -->
+</#if>
       <#--
           <nav>
               <h2>${navigation!}</h2>
@@ -35,31 +35,28 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
                   <li>
       -->
       
-      <#if style?contains("menu-main")>
+    <#if style?contains("menu-main")>
         <li class="has-dropdown not-click active"><a href="#">${title!}</a>
             <ul class="dropdown">
-      </#if>
-      
-      <#if style?contains("menu-sidebar")>
+    <#elseif style?contains("menu-sidebar")>
         <nav>
               <h2>${navigation!}</h2>
               <ul class="side-nav">
                   <li>
-      </#if>
-      
-      <#if style?contains("menu-button")>
+    <#elseif style?contains("menu-button")>
         <ul class="${style_button_group!} ${style_button_force!}">
-      </#if>
-      
-      
-      <#if style?contains("menu-tab")></#if>     
-       
-      <#if style?contains("button-bar")>
+    <#elseif style?contains("menu-tab")>    
+        <#-- none -->
+    <#elseif style?contains("button-bar")>
         <#-- right now translating button-bar menu-container-style here to avoid modifying all menu 
              styles, but this limits possible styles
-             TODO: button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear -->
+             note: button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear -->
         <ul class="${style_button_group!} ${style_button_force!}">
-      </#if>   
+    <#else>
+        <#-- This is a fallback so unhandled cases don't produce invalid HTML and classes can pass through -->
+        <div class="${style!}">
+            <ul>
+    </#if>   
        
 </#macro>
 
@@ -81,22 +78,19 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     <#if style?contains("menu-main")>
             </ul>
         </li>
-    </#if>
-    
-    <#if style?contains("menu-sidebar")>
-        </li>
-    </ul>
-    </nav>
-    </#if>
-    
-    <#if style?contains("menu-button")>
+    <#elseif style?contains("menu-sidebar")>
+                </li>
             </ul>
-    </#if>
-    
-    <#if style?contains("menu-tab")></#if>
-    
-    <#if style?contains("button-bar")>
-      </ul>
+        </nav>
+    <#elseif style?contains("menu-button")>
+        </ul>
+    <#elseif style?contains("menu-tab")>
+        <#-- none -->
+    <#elseif style?contains("button-bar")>
+        </ul>
+    <#else>
+            </ul>
+        </div>
     </#if> 
     
 <#if boundaryComment?has_content>

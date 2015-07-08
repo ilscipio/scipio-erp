@@ -129,7 +129,6 @@ function submitFindForm(val){
 <input type="hidden" name="viewSize" value="${viewSize}"/>
 <input type="hidden" name="viewIndex" value="${viewIndex}"/>
 
-<h1>${uiLabelMap.OrderFindOrder}</h1>
 <@section>
    
 

@@ -824,8 +824,12 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 if (!(context instanceof MapStack<?>)) {
                     context = MapStack.create(context);
                 }
-
+                int renderSeqNumber = (Integer) (context.get("renderSeqNumber") != null ? context.get("renderSeqNumber") : 0);
+                renderSeqNumber++;
+                context.put("renderSeqNumber", renderSeqNumber);
+                
                 UtilGenerics.<MapStack<String>>cast(context).push();
+                
 
                 // build the widgetpath
                 List<String> widgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
@@ -1105,6 +1109,14 @@ public abstract class ModelScreenWidget extends ModelWidget {
         @Override
         public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             Map<String, ? extends Object> preRenderedContent = UtilGenerics.checkMap(context.get("preRenderedContent"));
+            if (!(context instanceof MapStack<?>)) {
+                context = MapStack.create(context);
+            }
+            int renderSeqNumber = (Integer) (context.get("renderSeqNumber") != null ? context.get("renderSeqNumber") : 0);
+            renderSeqNumber++;
+            context.put("renderSeqNumber", renderSeqNumber);
+            
+            UtilGenerics.<MapStack<String>>cast(context).push();
             if (preRenderedContent != null && preRenderedContent.containsKey(getName())) {
                 try {
                     writer.append((String) preRenderedContent.get(getName()));

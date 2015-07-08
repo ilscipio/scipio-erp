@@ -104,6 +104,8 @@ public class FreeMarkerWorker {
         newConfig.setTemplateLoader(new FlexibleTemplateLoader());
         newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));
         Properties includeProperties = UtilProperties.getProperties("freemarkerIncludes");
+        Properties sharedVarsProperties = UtilProperties.getProperties("freemarkerSharedVars");
+        loadSharedVars(sharedVarsProperties,newConfig);
         List includeFreemarkerTemplates = new ArrayList(includeProperties.values()); 
         if(includeFreemarkerTemplates.size()>0) newConfig.setAutoIncludes(includeFreemarkerTemplates);
         newConfig.setTemplateExceptionHandler(new FreeMarkerWorker.OFBizTemplateExceptionHandler());
@@ -150,6 +152,24 @@ public class FreeMarkerWorker {
                 config.setSharedVariable(key, loader.loadClass(className).newInstance());
             } catch (Exception e) {
                 Debug.logError(e, "Could not pre-initialize dynamically loaded class: " + className + ": " + e, module);
+            }
+        }
+    }
+    
+    /**
+     * Protected helper method to add .
+     */
+    protected static void loadSharedVars(Properties props, Configuration config) {
+        for (Iterator<Object> i = props.keySet().iterator(); i.hasNext();) {
+            String key = (String) i.next();
+            String value = props.getProperty(key);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Adding FTL shared var " + key + " with value " + value, module);
+            }
+            try {
+                config.setSharedVariable(key, value);
+            } catch (Exception e) {
+                Debug.logError(e, "Could not pre-initialize dynamically loaded shared var: " + key + ": " + e, module);
             }
         }
     }

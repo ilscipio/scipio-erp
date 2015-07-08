@@ -43,8 +43,14 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="row">
-                            <container style="large-6 columns">
+                            <container style="large-4 columns">
+                                <include-screen name="DashboardStatsOrderTotalDay" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
+                            </container>
+                            <container style="large-4 columns">
                                 <include-screen name="DashboardStatsOrderCountWeek" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
+                            </container>
+                            <container style="large-4 columns">
+                                <include-screen name="DashboardStatsOrderTotalMonth" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                             </container>
                         </container>
                         <container style="row">

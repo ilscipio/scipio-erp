@@ -56,7 +56,6 @@ if(context.chartIntervalScope != null){
 
 end = UtilDateTime.getYearEnd(nowTimestamp, timeZone, locale);
 beginText = sdf.format(begin);
-System.out.println(beginText);
 endText = sdf.format(end);
 cacheId = "order_"+begin+"-"+end;
 

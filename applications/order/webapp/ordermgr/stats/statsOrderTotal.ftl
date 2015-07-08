@@ -16,60 +16,23 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#assign chartType=chartType!"bar"/>    <#-- (line|bar|pie) default: line -->
+<#assign chartValue=chartValue!"total"/> <#-- (total|count) default: total -->
+<#assign chartData=chartData!"week"/>
+<#assign library=chartLibrary!"foundation"/>
+<#assign chartDataMap={"day":dailyStats,"week":weeklyStats,"month":monthlyStats}/>
+<#assign currData=chartDataMap[chartData]/>
+<#assign fieldIdNum=fieldIdNum!0/>
+<#-- OrderOrdersTotals -->
 
-
-<@section title="${uiLabelMap['OrderOrdersTotals']}">
-
-       <#--
-       <@cell columns="4"> 
-            <@chart type="pie">
-                <@chartdata value="36" title="Peperoni"/>
-                <@chartdata value="2" title="Sausage"/> 
-                <@chartdata value="19" title="Cheese"/> 
-                <@chartdata value="6" title="Chicken"/> 
-                <@chartdata value="27" title="Other"/>  
-            </@chart>
-        </@cell>
-        -->
+<#if title?has_content><h3>${title!}</h3></#if>
+<@chart type=chartType library=library>
+    <#list currData.keySet() as key>
+        <#if chartType=="line">
+        <@chartdata value="${currData[key][chartValue]}" value2="${currData[key].pos}" title="${key}"/>
+        <#else>
+        <@chartdata value="${currData[key][chartValue]}" title="${key}"/>
+        </#if>
+    </#list>  
+</@chart>
         
-        <#--
-        <@cell columns="4">
-             <h3>Daily Order Item Counts</h3>
-            <@chart type="line">
-                <#list dailyStats.keySet() as day>
-                    <@chartdata value="${dailyStats[day].count}" value2="${dailyStats[day].day}" title="${day!}"/>
-                </#list>
-            </@chart>
-        </@cell>
-        -->
-        
-        <@cell columns="4">
-            <h3>Monthly Sales</h3>
-            <@chart type="line" library="foundation">
-                <#list monthlyStats.keySet() as key>
-                    <@chartdata value="${monthlyStats[key].count}" value2="${monthlyStats[key].day}" title="${key}"/>
-                </#list>  
-            </@chart>
-        </@cell>
-        
-        <@cell columns="4">
-            <h3>Monthly Gross</h3>
-            <@chart type="bar" library="foundation">
-                <#list monthlyStats.keySet() as key>
-                    <@chartdata value="${monthlyStats[key].total}" title="${key}"/>
-                </#list>  
-            </@chart>
-        </@cell>
-        
-        <@cell columns="4">
-             <h3>Weekly Sales</h3>
-            <@chart type="line">
-                <#list weeklyStats.keySet() as key>
-                    <@chartdata value="${weeklyStats[key].count}" value2="${weeklyStats[key].day}" title="${key}"/>
-                </#list> 
-            </@chart>
-        </@cell>
-
-</@section>
-
-<br/>

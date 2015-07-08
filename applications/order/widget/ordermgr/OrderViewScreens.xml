@@ -42,8 +42,15 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="large-12 columns">
-                        <include-portal-page id="OrderPortalPage"/>
+                        <container style="row">
+                            <container style="large-6 columns">
+                                <include-screen name="DashboardStatsOrderCountWeek" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
+                            </container>
+                        </container>
+                        <container style="row">
+                            <container style="large-12 columns">
+                                <include-portal-page id="OrderPortalPage"/>
+                            </container>
                         </container>
                     </decorator-section>
                 </decorator-screen>

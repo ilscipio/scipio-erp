@@ -24,22 +24,44 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
+
 import com.ibm.icu.text.SimpleDateFormat;
+import org.ofbiz.base.util.cache.UtilCache;
 
+
+contentCache = UtilCache.getOrCreateUtilCache("stats.order", 0, 0, 0, true, false, null);
+
+
+def begin, end,dailyStats,weeklyStats,monthlyStats;
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-yearBegin = UtilDateTime.getYearStart(nowTimestamp, timeZone, locale);
-yearBeginText = sdf.format(yearBegin);
-yearEnd = UtilDateTime.getYearEnd(nowTimestamp, timeZone, locale);
-yearEndText = sdf.format(yearEnd);
-GenericValue userLogin = context.get("userLogin");
+if(context.chartIntervalScope != null){
+	String iscope = context.chartIntervalScope; //day|week|month|year
+	int icount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 0;
+	icount = icount *(-1);
+	if(iscope=="day"){
+		begin = UtilDateTime.getDayStart(nowTimestamp, icount, timeZone, locale);
+	}
+	if(iscope=="week"){
+		begin = UtilDateTime.getWeekStart(nowTimestamp, 0, icount, timeZone, locale);
+	}
+	if(iscope=="month"){
+		begin = UtilDateTime.getMonthStart(nowTimestamp, 0, icount, timeZone, locale);
+	}
+	if(iscope=="year"){
+		begin = UtilDateTime.getYearStart(nowTimestamp, 0, icount, timeZone, locale);
+	}
+}else{
+	begin = UtilDateTime.getYearStart(nowTimestamp, timeZone, locale);
+}
 
-// Lookup results
-Map findOrderMap = dispatcher.runSync("findOrdersFull", UtilMisc.toMap("minDate",yearBeginText,"maxDate",yearEndText,"userLogin",userLogin));
-// Result-set processing
-List orderList = findOrderMap.orderList;
+end = UtilDateTime.getYearEnd(nowTimestamp, timeZone, locale);
+beginText = sdf.format(begin);
+System.out.println(beginText);
+endText = sdf.format(end);
+cacheId = "order_"+begin+"-"+end;
 
 Map	processResult(List orderList,String dateType){
-	Map dateFormats = ["day":new SimpleDateFormat("YYYY-MM-DD"),
+	Map dateFormats = ["day":new SimpleDateFormat("YYYY-MM-dd"),
 		"week":new SimpleDateFormat("YYYY-'W'ww"),
 		"month":new SimpleDateFormat("YYYY-MM"),
 		"year":new SimpleDateFormat("YYYY"),
@@ -58,7 +80,7 @@ Map	processResult(List orderList,String dateType){
 			newMap.put("total", total);
 			int count = newMap.get("count");
 			newMap.put("count", count+1);
-			newMap.put("day", ((SimpleDateFormat) dateFormats.get("singleday")).format(header.orderDate));
+			newMap.put("pos", ((SimpleDateFormat) dateFormats.get("singleday")).format(header.orderDate));
 			resultMap.put(date, newMap);
 		}else{
 			Map newMap = [:];
@@ -66,13 +88,40 @@ Map	processResult(List orderList,String dateType){
 			total = total.plus(header.grandTotal ?: BigDecimal.ZERO);
 			newMap.put("total", total);
 			newMap.put("count", 1);
-			newMap.put("day", ((SimpleDateFormat) dateFormats.get("singleday")).format(header.orderDate));
+			newMap.put("pos", ((SimpleDateFormat) dateFormats.get("singleday")).format(header.orderDate));
 			resultMap.put(date,newMap);
 		}
 	}
 	return resultMap;
 }
 
-context.dailyStats = processResult(orderList,"day");						  
-context.weeklyStats = processResult(orderList,"week");
-context.monthlyStats = processResult(orderList,"month");
+
+if(contentCache.get(cacheId)==null){
+	GenericValue userLogin = context.get("userLogin");
+	Map cacheMap = [:];
+	// Lookup results
+	Map findOrderMap = dispatcher.runSync("findOrdersFull", UtilMisc.toMap("minDate",beginText,"maxDate",endText,"userLogin",userLogin));
+	// Result-set processing
+	List orderList = findOrderMap.orderList;
+	
+	dailyStats = processResult(orderList,"day");
+	weeklyStats = processResult(orderList,"week");
+	monthlyStats = processResult(orderList,"month");
+	yearlyStats = processResult(orderList,"year");
+	
+	cacheMap.dailyStats = processResult(orderList,"day");
+	cacheMap.weeklyStats = processResult(orderList,"week");
+	cacheMap.monthlyStats = processResult(orderList,"month");
+	cacheMap.yearlyStats = processResult(orderList,"year");
+	contentCache.put(cacheId,cacheMap);
+}else{
+	cacheMap = contentCache.get(cacheId);
+	dailyStats = cacheMap.dailyStats;
+	weeklyStats = cacheMap.weeklyStats;
+	monthlyStats = cacheMap.monthlyStats;
+	yearlyStats = cacheMap.yearlyStats;
+}
+context.dailyStats = dailyStats;						  
+context.weeklyStats = weeklyStats;
+context.monthlyStats = monthlyStats;
+context.yearlyStats = yearlyStats;

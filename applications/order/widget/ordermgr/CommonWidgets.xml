@@ -20,11 +20,28 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-  
+        
   <screen name="DashboardStatsOrderTotal">
       <section>
+            <widgets>
+                <container style="large-4 columns"><include-screen name="DashboardStatsOrderTotalDay"/></container>
+                <container style="large-4 columns"><include-screen name="DashboardStatsOrderTotalWeek"/></container>
+                <container style="large-4 columns"><include-screen name="DashboardStatsOrderTotalMonth"/></container>
+            </widgets>
+      </section>
+  </screen>
+  
+  <screen name="DashboardStatsOrderTotalDay">
+      <section>
             <actions> 
+                <set field="chartType" value="line"/>
+                <set field="chartValue" value="total"/>
+                <set field="chartData" value="day"/>
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="month"/> <!-- day|week|month|year -->
+                <set field="chartIntervalCount" value="1"/>     <!-- Look back x days/weeks/months/years -->
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+                <set field="title" value="Gross Sales (per day)"/>
             </actions>
             <widgets>
                 <platform-specific>
@@ -34,5 +51,96 @@ under the License.
       </section>
   </screen>
   
+  <screen name="DashboardStatsOrderTotalWeek">
+      <section>
+            <actions> 
+                <set field="chartType" value="line"/>
+                <set field="chartValue" value="total"/>
+                <set field="chartData" value="week"/>
+                <set field="chartLibrary" value="chart"/>
+                <set field="title" value="Gross Sales (per week)"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                </platform-specific>
+            </widgets>
+      </section>
+  </screen>      
+  
+  <screen name="DashboardStatsOrderTotalMonth">
+      <section>
+            <actions> 
+                <set field="chartType" value="bar"/>
+                <set field="chartValue" value="total"/>
+                <set field="chartData" value="month"/>
+                <set field="chartLibrary" value="foundation"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+                <set field="title" value="Gross Sales (per month)"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                </platform-specific>
+            </widgets>
+      </section>
+  </screen>
+  
+   <screen name="DashboardStatsOrderCountDay">
+      <section>
+            <actions> 
+                <set field="chartType" value="line"/>
+                <set field="chartValue" value="count"/>
+                <set field="chartData" value="day"/>
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="month"/> <!-- day|week|month|year -->
+                <set field="chartIntervalCount" value="1"/>     <!-- Look back x days/weeks/months/years -->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+                <set field="title" value="Orders (per day)"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                </platform-specific>
+            </widgets>
+      </section>
+  </screen>
+  
+  <screen name="DashboardStatsOrderCountWeek">
+      <section>
+            <actions> 
+                <set field="chartType" value="line"/>
+                <set field="chartValue" value="count"/>
+                <set field="chartData" value="week"/>
+                <set field="chartLibrary" value="chart"/>
+                <set field="title" value="Orders (per week)"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                </platform-specific>
+            </widgets>
+      </section>
+  </screen>      
+  
+  <screen name="DashboardStatsOrderCountMonth">
+      <section>
+            <actions> 
+                <set field="chartType" value="bar"/>
+                <set field="chartValue" value="count"/>
+                <set field="chartData" value="month"/>
+                <set field="chartLibrary" value="foundation"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+                <set field="title" value="Orders (per month)"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                </platform-specific>
+            </widgets>
+      </section>
+  </screen> 
 </screens>
 

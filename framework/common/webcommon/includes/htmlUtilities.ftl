@@ -27,7 +27,6 @@ under the License.
 <#include "component://widget/templates/htmlFormMacroLibrary.ftl"/>
 <#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl") /> 
 <#include StringUtil.wrapString("component://widget/templates/htmlMenuMacroLibrary.ftl") />
-
 <#-- 
 *************
 * label function
@@ -108,12 +107,11 @@ Returns empty string if no label is found
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
         fieldFormName="" formName="" postfix=false>
-
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum=(fieldIdNum!0)+1 />
 
 <#if !id?has_content>
-    <#assign id="field_id_${fieldIdNum!0}">
+    <#assign id="field_id_${renderSeqNumber!}_${fieldIdNum!0}">
 </#if>
 <#assign classes = class/>
 <#assign columnspostfix=0/>
@@ -716,26 +714,26 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
                     
    * General Attributes *
     type           = (pie|bar|line) (default:pie)
-    library        = (foundation|chart) (default:chart)
+    library        = (foundation|chart) (default:foundation)
     title          = Data Title  (default:empty)
 -->
 
-<#macro chart type="pie" library="chart" title="">
+<#macro chart type="pie" library="foundation" title="">
     <#global fieldIdNum=(fieldIdNum!0)+1 />
-    <#global chartLibrary = library!/>
-    <#if library=="foundation">
+    <#global chartLibrary = library!"foundation"/>
+    <#if chartLibrary=="foundation">
         <@row>
         <@cell columns=3>    
-        <ul data-${type!}-id="chart_${fieldIdNum!}" class="${style_chart_legend!}">
+        <ul data-${type!}-id="chart_${renderSeqNumber!}_${fieldIdNum!}" class="${style_chart_legend!}">
             <#nested/>
         </ul>
         </@cell>
-        <@cell columns=9><div id="chart_${fieldIdNum!}" style="min-height:150px;"></div></@cell>
+        <@cell columns=9><div id="chart_${renderSeqNumber!}_${fieldIdNum!}" style="height:300px;"></div></@cell>
         </@row>
     <#else>
-        <#global chartId = "chart_${fieldIdNum!}"/>
+        <#global chartId = "chart_${renderSeqNumber!}_${fieldIdNum!}"/>
         <#global chartType = type/>
-        <canvas id="${chartId!}" class="${style_grid_large!}12 chart-data" height="150"></canvas>
+        <canvas id="${chartId!}" class="${style_grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
         <script>
             $(function(){
                 var chartDataEl = $('.chart-data:first-of-type');
@@ -769,7 +767,7 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
                     bezierCurve : false,
                     legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
                     };
-                var ctx_${fieldIdNum!} = $('#${chartId!}').get(0).getContext("2d");
+                var ctx_${renderSeqNumber!}_${fieldIdNum!} = $('#${chartId!}').get(0).getContext("2d");
                 <#if type=="pie">
                 var data = [];
                 <#else>
@@ -789,7 +787,7 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
                             ]
                     };
                 </#if>
-                var ${chartId!} = new Chart(ctx_${fieldIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
+                var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${fieldIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
                 <#nested/>
             });
         </script>

@@ -35,10 +35,8 @@ under the License.
 
 </script>
 
-<h1>${uiLabelMap.OrderList}</h1>
-
 <#-- order list -->
-<@section title="${uiLabelMap.OrderLookupOrder}">
+<@section>
       <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
         <input type="hidden" name="changeStatusAndTypeState" value="Y" />
        <@row>

@@ -38,7 +38,7 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
 </#assign>
 
 <h1>${title!}</h1>
-<@section classes="${style_grid_large!}6">
+<@section classes="${style_grid_large!}9">
     <ul class="button-group">
       <li><a href="javascript:document.salesentryform.submit();" class="button tiny">${uiLabelMap.CommonContinue}</a></li>
       <li><a href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${uiLabelMap.PartyFindParty}</a></li>
@@ -102,7 +102,7 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
     <#assign title>
         ${uiLabelMap.OrderPurchaseOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgress}</#if>
     </#assign>
-    <@section title=title classes="${style_grid_large!}6">
+    <@section title=title classes="${style_grid_large!}9">
       <ul class="button-group">
         <li><a href="javascript:document.poentryform.submit();" class="button tiny">${uiLabelMap.CommonContinue}</a></li>
         <li><a href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${uiLabelMap.PartyFindParty}</a></li>

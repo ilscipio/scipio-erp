@@ -81,7 +81,7 @@ under the License.
                 <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
                         <container style="row ">
-                            <container style="large-6 columns">
+                            <container style="large-9 columns">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/javascript.ftl"/></html></platform-specific>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/showcart.ftl"/></html></platform-specific>
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/addItemsToShoppingList.ftl"/></html></platform-specific>

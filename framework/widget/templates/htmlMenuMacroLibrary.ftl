@@ -54,6 +54,13 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
       
       <#if style?contains("menu-tab")></#if>     
        
+      <#if style?contains("button-bar")>
+        <#-- right now translating button-bar menu-container-style here to avoid modifying all menu 
+             styles, but this limits possible styles
+             TODO: button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear -->
+        <ul class="${style_button_group!} ${style_button_force!}">
+      </#if>   
+       
 </#macro>
 
 <#macro renderMenuEnd boundaryComment="" style="">
@@ -87,6 +94,10 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     </#if>
     
     <#if style?contains("menu-tab")></#if>
+    
+    <#if style?contains("button-bar")>
+      </ul>
+    </#if> 
     
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->

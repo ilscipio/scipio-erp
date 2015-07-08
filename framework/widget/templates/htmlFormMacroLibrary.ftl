@@ -548,7 +548,7 @@ under the License.
 
 <#macro renderFormatFieldRowOpen collapse=false style="">
    <div class="${style_grid_row!}">
-    <div class="<#if style?has_content>${style}<#else>${style_grid_large!}6</#if> ${style_grid_cell!}">
+    <div class="<#if style?has_content>${style}<#else>${style_grid_large!}9</#if> ${style_grid_cell!}">
       <div class="${style_grid_row!} <#if collapse>${style_collapse!}</#if>">
 </#macro>
 <#macro renderFormatFieldRowClose>

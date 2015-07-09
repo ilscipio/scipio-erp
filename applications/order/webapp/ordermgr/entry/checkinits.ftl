@@ -37,7 +37,7 @@ under the License.
 ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgress}</#if>
 </#assign>
 
-<h1>${title!}</h1>
+<h2>${title!}</h2>
 <@section classes="${style_grid_large!}9">
     <ul class="button-group">
       <li><a href="javascript:document.salesentryform.submit();" class="button tiny">${uiLabelMap.CommonContinue}</a></li>

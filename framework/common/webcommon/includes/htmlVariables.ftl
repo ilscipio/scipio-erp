@@ -46,9 +46,9 @@ under the License.
 <#global "style_expand"             = "expand" />
 <#global "style_collapse"           = "collapse" />
 
-<#global "style_icon"               = "" />
+<#global "style_icon"               = "fi" />
 <#global "style_icon_button"        = "fi-widget" />
-<#global "style_icon_button_value"  = "" />
+<#global "style_icon_button_value"  = "&#xf214;" />
 <#global "style_icon_calendar"      = "fi-calendar" />
 <#global "style_icon_arrow"         = "fi-arrow-right" />
 

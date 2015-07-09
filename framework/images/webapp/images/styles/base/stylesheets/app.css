@@ -9794,39 +9794,46 @@ code .TRACE {
   color: #333333;
   padding-left: 0px;
   padding-right: 0px;
-  font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 1rem;
+  font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1.2rem;
 }
 
 /* line 234, ../scss/_base.scss */
 .postfix i {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
-/* line 237, ../scss/_base.scss */
+/* line 236, ../scss/_base.scss */
+.postfix .fi {
+  font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1.2rem;
+  line-height: 0.9rem;
+}
+
+/* line 243, ../scss/_base.scss */
 ul.chart-legend {
   list-style: none;
 }
 
 /*  FOOTER */
-/* line 244, ../scss/_base.scss */
+/* line 250, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 249, ../scss/_base.scss */
+/* line 255, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 254, ../scss/_base.scss */
+/* line 260, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 258, ../scss/_base.scss */
+/* line 264, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -9835,18 +9842,18 @@ ul.chart-legend {
 
 /*MISC*/
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 272, ../scss/_base.scss */
+  /* line 278, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 277, ../scss/_base.scss */
+  /* line 283, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 279, ../scss/_base.scss */
+  /* line 285, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }

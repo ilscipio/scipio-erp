@@ -227,11 +227,17 @@ code {
         color: $input-prefix-font-color;
         padding-left:0px;
         padding-right:0px;
-        font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size:1rem;
+        font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size:1.2rem;
 }
 
-.postfix i {font-size:1.5rem;}
+.postfix i {font-size:1.2rem;}
+
+.postfix .fi {
+    font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size:1.2rem;
+    line-height:0.9rem;
+}
 
 ul {
     &.chart-legend{

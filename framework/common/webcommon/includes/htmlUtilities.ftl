@@ -799,7 +799,7 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
         <li <#if value2?has_content>data-y="${value!}" data-x="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
     <#else>
         <#if chartType="line" || chartType="bar">
-            ${chartId!}.addData([<#if value?has_content>${value!}</#if>]<#if title?has_content>,"${title!}"</#if>);
+            ${chartId!}.addData(<<#if value?has_content>${value!}</#if>><#if title?has_content>,"${title!}"</#if>);
         <#else>
             ${chartId!}.addData({value:${value!},color:"#F7464A",highlight: "#FF5A5E"<#if title?has_content>,label:"${title!}"</#if>});
         </#if>
@@ -810,4 +810,72 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
 
 <#-- UTLITY MACROS END -->
 
+<#-- DEV MACROS -->
+<#-- 
+*************
+* printVars macro
+************
+Iterates over all variable attributes & functions and prints in table; useful for determining current vars in context
 
+Usage example:  
+    <@printVars />           
+                    
+   * General Attributes *
+    var           = Custom var to be printed (default:context)
+-->
+<#macro printVars var=context>
+    <table>
+    <#list var?keys as key>
+        <@printVar key=key value=var.get(key)/>
+    </#list>
+    </table>
+</#macro>
+
+<#macro printVar key value="">
+  <tr><td style="width:200px;">${key}</td>
+  <td>
+  <#assign var = value/>
+  <#if var?has_content>
+      <#attempt><#compress>
+         <#if var?is_string>
+            ${var}
+         </#if>
+        
+        <#if var?is_boolean]
+            ${var?string}
+        </#if>
+    
+        <#if var?is_date>
+            ${var?time}
+        </#if>
+    
+        <#if var?is_number>
+            ${var?string}
+        </#if>
+        
+        <#if var?is_collection>
+            <table>
+            <#list var?sort()?keys as key>
+                <tr><td>${key}</td><td><@printVar var=var[key]/></td></tr>
+            </#list>
+            </table>
+        </#if>
+        
+        <#if var?is_sequence>
+            <ol>
+            <#list var?sort() as i>
+                <li><@printVar var=i/></li>
+            </#list>
+            </ol>
+        </#if>
+        
+      </#compress>
+      <#recover>
+        <@alert type="error">${(.error)!"(generic)"}</@alert>
+      </#attempt>
+      </td>
+    </tr>
+  <#else>
+  </#if>
+</#macro>
+<#-- DEV MACROS END -->

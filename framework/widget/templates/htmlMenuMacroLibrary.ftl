@@ -54,8 +54,12 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
         <ul class="${style_button_group!} ${style_button_force!}">
     <#else>
         <#-- This is a fallback so unhandled cases don't produce invalid HTML and classes can pass through -->
-        <div class="${style!}">
-            <ul>
+        <#if style?has_content>
+            <div class="${style}">
+        <#else>
+            <div>
+        </#if>
+                <ul>
     </#if>   
        
 </#macro>

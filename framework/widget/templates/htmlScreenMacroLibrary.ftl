@@ -182,7 +182,7 @@ under the License.
 
 <#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true>
 <div <#if collapsed>class="toggleField"</#if>>
-<#if collapsed><p class="alert legend">[ <i class="fa fa-arrow-right"></i> ] ${title!}</p></#if>
+<#if collapsed><p class="alert legend">[ <i class="${style_icon!} ${style_icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${style_grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
 <div class="<#if classes?has_content>${classes}<#else>${style_grid_large!}12</#if> ${style_grid_cell!}">
 

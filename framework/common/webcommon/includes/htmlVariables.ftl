@@ -46,6 +46,12 @@ under the License.
 <#global "style_expand"             = "expand" />
 <#global "style_collapse"           = "collapse" />
 
+<#global "style_icon"               = "" />
+<#global "style_icon_button"        = "fi-wrench" />
+<#global "style_icon_button_value"  = "" />
+<#global "style_icon_calendar"      = "fi-calendar" />
+<#global "style_icon_arrow"         = "fi-arrow-right" />
+
 <#-- Colors -->
 <#global "style_color_green"        = "success" />
 <#global "style_color_red"          = "alert" />

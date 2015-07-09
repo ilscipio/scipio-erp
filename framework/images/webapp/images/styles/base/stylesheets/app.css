@@ -9798,30 +9798,35 @@ code .TRACE {
   font-size: 1rem;
 }
 
-/* line 235, ../scss/_base.scss */
+/* line 234, ../scss/_base.scss */
+.postfix i {
+  font-size: 1.5rem;
+}
+
+/* line 237, ../scss/_base.scss */
 ul.chart-legend {
   list-style: none;
 }
 
 /*  FOOTER */
-/* line 242, ../scss/_base.scss */
+/* line 244, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 247, ../scss/_base.scss */
+/* line 249, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 252, ../scss/_base.scss */
+/* line 254, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 256, ../scss/_base.scss */
+/* line 258, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -9830,18 +9835,18 @@ ul.chart-legend {
 
 /*MISC*/
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 270, ../scss/_base.scss */
+  /* line 272, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 275, ../scss/_base.scss */
+  /* line 277, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 277, ../scss/_base.scss */
+  /* line 279, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }

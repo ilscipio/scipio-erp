@@ -219,7 +219,7 @@ code {
 }
 
 
-.postfix input[type="submit"], .postfix button {
+.postfix input[type="submit"], .postfix button, {
         background: $input-prefix-bg;
         border-color: $input-prefix-border-color;
         border-size: $input-prefix-border-size;
@@ -230,6 +230,8 @@ code {
         font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size:1rem;
 }
+
+.postfix i {font-size:1.5rem;}
 
 ul {
     &.chart-legend{

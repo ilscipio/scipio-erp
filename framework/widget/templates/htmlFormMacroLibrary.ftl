@@ -167,7 +167,7 @@ under the License.
           </#if>
         </div>
         <div class="${style_grid_small!}1 columns">
-        <span class="postfix"><i class="fa fa-calendar"></i></span>
+        <span class="postfix"><i class="${style_icon!} ${style_icon_calendar!}"></i></span>
         </div>
       <#if dateType != "time">
         <script type="text/javascript">
@@ -630,7 +630,7 @@ under the License.
         <input class="${style_grid_small!}3 columns" id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
         </div>
         <div class="${style_grid_small!}1 columns">
-        <span class="postfix"><i class="fa fa-calendar"></i></span>
+        <span class="postfix"><i class="${style_icon} ${style_icon_calendar!}"></i></span>
         </div>
         <div class="${style_grid_small!}5 columns ${style_grid_small!}offset-1">
         <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
@@ -1002,7 +1002,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </div>
     <div id="${collapsibleAreaId}" class="fieldgroup-body" <#if collapsed && collapsible> style="display: none;"</#if>>
     -->
-    <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="fa fa-arrow-right"></i> ] </#if>${title}</legend></#if>
+    <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${style_icon!} ${style_icon_arrow!}"></i> ] </#if>${title}</legend></#if>
 </#macro>
 
 <#macro renderFieldGroupClose style id title>

@@ -258,7 +258,7 @@ Returns empty string if no label is found
      </@cell>
      <#if postfix && !nocells>
          <@cell class="${style_grid_small!}1">
-                <span class="postfix"><input type="submit" class="fa fa-button" value="&#xf085;"/</span>
+                <span class="postfix"><input type="submit" class="${style_icon!} ${style_icon_button!}" value="${style_icon_button_value!}"/></span>
          </@cell>
      </#if>
 </@row>

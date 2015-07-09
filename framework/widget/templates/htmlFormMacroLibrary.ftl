@@ -947,7 +947,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
             <li class="${paginateLastStyle}<#if highIndex lt listSize>"><a href="${lastUrl}">${paginateLastLabel}</a><#else> unavailable">${paginateLastLabel}</#if></li>
             <li class="nav-displaying">${commonDisplaying}</li>
              <#if javaScriptEnabled><li class=""><label for="pageSize">${paginateViewSizeLabel} <select name="pageSize" size="1" onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else>submitPagination(this, '${selectSizeUrl}')</#if>"><#rt/>
-            <#assign availPageSizes = [20, 30, 50, 100, 200]>
+            <#assign availPageSizes = [10, 20, 30, 50, 100, 200]>
           <#list availPageSizes as ps>
             <option <#if viewSize == ps> selected="selected" </#if> value="${ps}">${ps}</option>
           </#list>

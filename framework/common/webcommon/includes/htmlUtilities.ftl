@@ -391,7 +391,12 @@ Returns empty string if no label is found
    altParam        = Use viewIndex/viewSize as parameters, instead of VIEW_INDEX / VIEW_SIZE
 -->
 <#macro paginate url="" class="nav-pager" viewIndex=0 listSize=0 viewSize=1 altParam=false>
-    <#local viewIndexLast = ((listSize/viewSize)?ceiling)>
+    <#local viewIndexLast = ((listSize/viewSize)?ceiling-1)>
+    <#local lowIndex = viewIndex * viewSize/>
+    <#local highIndex = (viewIndex + 1) * viewSize/>
+    <#if listSize lt highIndex>
+    <#local highIndex = listSize/>
+    </#if>
     <#if altParam>
         <#local viewIndexString = "viewIndex">
         <#local viewSizeString = "viewSize">
@@ -429,7 +434,7 @@ Returns empty string if no label is found
             <#local selectSizeUrl=url+"?${viewSizeString}='+this.value+'&amp;${viewIndexString}=0"/>
         </#if>
     </#if>
-    <@renderNextPrev ajaxEnabled=false javaScriptEnabled=true paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=0 listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying="" paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel=""/>
+    <@renderNextPrev ajaxEnabled=false javaScriptEnabled=true paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying="" paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel=""/>
 </#macro>
 
 

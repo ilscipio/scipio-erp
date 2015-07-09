@@ -802,7 +802,6 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                             ]
                     };
                 </#if>
-                console.log(chartData);
                 var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${fieldIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
                 <#nested/>
             });

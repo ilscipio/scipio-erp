@@ -799,7 +799,7 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
         <li <#if value2?has_content>data-y="${value!}" data-x="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
     <#else>
         <#if chartType="line" || chartType="bar">
-            ${chartId!}.addData(<<#if value?has_content>${value!}</#if>><#if title?has_content>,"${title!}"</#if>);
+            ${chartId!}.addData([<#if value?has_content>${value!}</#if>]<#if title?has_content>,"${title!}"</#if>);
         <#else>
             ${chartId!}.addData({value:${value!},color:"#F7464A",highlight: "#FF5A5E"<#if title?has_content>,label:"${title!}"</#if>});
         </#if>

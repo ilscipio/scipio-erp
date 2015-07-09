@@ -38,48 +38,64 @@ public Map createDemoOrder() {
 	List<String> orderStatusTypes = [
 		"ORDER_CREATED",
 		"ORDER_COMPLETED"
-	]
+	];
+	
+	List<String> products = [
+			 ["productId":"GZ-2644","itemDescription":"Round Gizmo","unitPrice":38.4,"unitListPrice":48.0],
+			 ["productId":"WG-1111","itemDescription":"Micro Chrome Widget","unitPrice":59.99,"unitListPrice":60.0]
+		];
 	
 	Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - ORDER DATA-=-=-=-", "");
 	Map result = ServiceUtil.returnSuccess();
 	
 	
 	List<GenericValue> toBeStored = new ArrayList<GenericValue>();
+	List<GenericValue> orderItems = new ArrayList<GenericValue>();
 	int num = context.num;
 	
 	for(int i = 0; i <num; i++){
 		// Create OrderHeader
 		String orderId = "GEN_"+delegator.getNextSeqId("demo-orderheader");
+		// Create OrderItem (between 1 and 3)
+		int orderItemCount = getRandomInt(1,3);
+		BigDecimal remainingSubTotal = new BigDecimal(0.00);
+		BigDecimal grandTotal = new BigDecimal(0.00);
+		
+		for(int orderItemSeqId = 1; orderItemSeqId <= orderItemCount; orderItemSeqId++){
+			Map product = products[getRandomInt(0,products.size()-1)];
+			
+			String productId = product.productId;
+			String prodCatalogId="DemoCatalog";
+			BigDecimal quantity = new BigDecimal(getRandomInt(0,10));
+			BigDecimal unitPrice= new BigDecimal(product.unitPrice);
+			BigDecimal unitListPrice= new BigDecimal(product.unitListPrice);
+			BigDecimal selectedAmount = new BigDecimal(0.0);
+			BigDecimal itemCost = BigDecimal.ZERO;
+			itemCost = unitPrice.multiply(new BigDecimal(quantity));
+			remainingSubTotal =  remainingSubTotal.add(itemCost);
+			grandTotal = grandTotal.add(itemCost);
+			
+			fields = UtilMisc.toMap("orderId", orderId,"orderItemSeqId","0000"+orderItemSeqId,"orderItemTypeId","PRODUCT_ORDER_ITEM","productId",
+									productId,"prodCatalogId",prodCatalogId,"isPromo","N","quantity",quantity,"selectedAmount",selectedAmount,
+									"unitPrice",unitPrice,"unitListPrice",unitListPrice,"isModifiedPrice","N","itemDescription","Round Gizmo",
+									"correspondingPoId","","statusId","ITEM_APPROVED");
+		
+			GenericValue orderItem = delegator.makeValue("OrderItem", fields);
+			orderItems.add(orderItem);
+		}
+		
 		String orderTypeId = orderTypes.get(random(orderTypes));
 		String orderName="Demo Order";
 		String salesChannelEnumId = "UNKNWN_SALES_CHANNEL";
 		Timestamp orderDate = Timestamp.valueOf(generateRandomDate());
 		String statusId = orderStatusTypes.get(random(orderStatusTypes));
-		BigDecimal remainingSubTotal = new BigDecimal(48.00);
-		BigDecimal grandTotal = new BigDecimal(48.00);
-	
 		Map fields = UtilMisc.toMap("orderId", orderId,"orderTypeId",orderTypeId,"orderName",orderName,"salesChannelEnumId",
 									salesChannelEnumId,"orderDate",orderDate,"priority","2","entryDate",orderDate,"statusId",statusId,
 									"currencyUom","USD","webSiteId","OrderEntry","remainingSubTotal",remainingSubTotal,"grandTotal",grandTotal);
 	
 		GenericValue orderHeader = delegator.makeValue("OrderHeader", fields);
 		toBeStored.add(orderHeader);
-	
-		// Create OrderItem (only 1 for now)
-		String productId = "GZ-2644";
-		String prodCatalogId="DemoCatalog";
-		//float quantity = 2.0;
-		BigDecimal unitPrice= new BigDecimal(38.4);
-		BigDecimal unitListPrice= new BigDecimal(48.0);
-		BigDecimal selectedAmount = new BigDecimal(0.0);
-		
-		fields = UtilMisc.toMap("orderId", orderId,"orderItemSeqId","00001","orderItemTypeId","PRODUCT_ORDER_ITEM","productId",
-								productId,"prodCatalogId",prodCatalogId,"isPromo","N","quantity",2.0,"selectedAmount",selectedAmount,
-								"unitPrice",unitPrice,"unitListPrice",unitListPrice,"isModifiedPrice","N","itemDescription","Round Gizmo",
-								"correspondingPoId","","statusId","ITEM_APPROVED");
-	
-		GenericValue orderItem = delegator.makeValue("OrderItem", fields);
-		toBeStored.add(orderItem);
+		toBeStored.addAll(orderItems);
 		
 		// Create orderRole
 		fields = UtilMisc.toMap("orderId", orderId,"partyId","Company","roleTypeId","BILL_FROM_VENDOR");
@@ -138,12 +154,24 @@ public Map createDemoOrder() {
  * @return
  */
 private long getRandomTimeBetweenTwoDates () {
+	long beginTime,endTime;
 	Calendar cal = Calendar.getInstance();
-	long endTime = cal.getTimeInMillis();
-	cal.add(Calendar.DATE, -180);
-	long beginTime = cal.getTimeInMillis();
+	
+	if(context.maxDate != null){
+		endTime = ((Timestamp)context.endTime).getTime();
+	}else{
+		endTime = cal.getTimeInMillis();
+	}
+		
+	if(context.minDate != null){
+		beginTime = ((Timestamp)context.minDate).getTime();
+	}else{
+		cal.add(Calendar.DATE, -180);
+		beginTime = cal.getTimeInMillis();
+	}
 	long diff = endTime - beginTime + 1;
-	return beginTime + (long) (Math.random() * diff);
+	beginTime = beginTime + (long) (Math.random() * diff);
+	return beginTime;
 }
 
 
@@ -163,3 +191,9 @@ public int random(List myList){
 public static boolean getRandomBoolean() {
 	return Math.random() < 0.5;
 }
+
+public static int getRandomInt(int min, int max) {
+		Random rand = new Random();
+		int x = rand.nextInt(max - min + 1) + min;
+		return x;
+	}

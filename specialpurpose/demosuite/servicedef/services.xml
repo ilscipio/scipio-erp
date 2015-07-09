@@ -8,6 +8,8 @@
         <service name="createOrderData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/OrderData.groovy" invoke="createDemoOrder">
         <description>Creates a number of demo data</description>
         <attribute name="num" type="Integer" mode="IN" optional="false"/>
+        <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
     
 </services>

@@ -46,7 +46,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     <#elseif style?contains("menu-button")>
         <ul class="${style_button_group!} ${style_button_force!}">
     <#elseif style?contains("menu-tab")>    
-        <#-- none -->
+        <ul class="${style_button_group!} ${style_button_force!}">
     <#elseif style?contains("button-bar")>
         <#-- right now translating button-bar menu-container-style here to avoid modifying all menu 
              styles, but this limits possible styles
@@ -89,7 +89,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     <#elseif style?contains("menu-button")>
         </ul>
     <#elseif style?contains("menu-tab")>
-        <#-- none -->
+        </ul>
     <#elseif style?contains("button-bar")>
         </ul>
     <#else>

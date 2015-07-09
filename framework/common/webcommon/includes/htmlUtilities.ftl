@@ -703,9 +703,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
 *************
 * Chart Macro
 ************
-! The implementation is still experimental and requires the proper includes to actually work.
-
-http://zurb.com/playground/pizza-amore-charts-and-graphs
+Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss)
+Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 
     Usage example:  
     <@chart type="bar" >
@@ -740,32 +739,48 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
                 var chartData = chartDataEl.sassToJs({pseudoEl:":before", cssProperty: "content"});
                 var options ={
                     animation: false,
+                    responsive: true,
+                    maintainAspectRatio: true,
                     scaleLineColor: chartData.scaleLineColor,
                     scaleFontFamily: chartData.scaleFontFamily,
                     scaleFontSize: chartData.scaleFontSize,
                     scaleFontColor: chartData.scaleFontColor,
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    showTooltips: true,
-                    tooltipEvents: ["mousemove", "touchstart", "touchmove"],
+                    scaleShowLabels: chartData.scaleShowLabels,
+                    scaleShowLabels: chartData.scaleShowLabels,
+                    scaleShowLine : chartData.scaleShowLine,
+                    angleShowLineOut : chartData.angleShowLineOut,
+                    scaleBeginAtZero : chartData.scaleBeginAtZero,
+                    showTooltips: chartData.showTooltips,
                     tooltipFillColor: chartData.tooltipFillColor,
                     tooltipFontFamily: chartData.tolltipFontFamily,
                     tooltipFontSize: chartData.tooltipFontSize,
-                    tooltipFontStyle: "normal",
+                    tooltipFontStyle: chartData.tooltipFontStyle,
                     tooltipFontColor: chartData.tooltipFontColor,
                     tooltipTitleFontFamily: chartData.tooltipTitleFontFamily,
                     tooltipTitleFontSize: chartData.tooltipTitleFontSize,
                     tooltipTitleFontStyle: chartData.tooltipTitleFontStyle,
                     tooltipTitleFontColor: chartData.tooltipTitleFontColor,
-                    tooltipYPadding: 6,
-                    tooltipXPadding: 6,
-                    tooltipCaretSize: 8,
-                    tooltipCornerRadius: 6,
-                    datasetFill : true,
+                    tooltipYPadding: chartData.tooltipYPadding,
+                    tooltipXPadding: chartData.tooltipXPadding,
+                    tooltipCaretSize: chartData.tooltipCaretSize,
+                    tooltipCornerRadius: chartData.tooltipCornerRadius,
+                    datasetFill : chartData.datasetFill,
                     tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
                     multiTooltipTemplate: "<%= value %>",
-                    bezierCurve : false,
+                    pointDot : chartData.pointDot,
+                    pointHitDetectionRadius : chartData.pointHitDetectionRadius,
+                    pointDotRadius : chartData.pointDotRadius,
+                    pointDotStrokeWidth : chartData.pointDotStrokeWidth,
+                    <#if type=="line">
+                    bezierCurve : chartData.bezierCurve,
+                    bezierCurveTension : chartData.bezierCurveTension,
+                    legendTemplate : "<ul class=\"legend <%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li style=\"color:<%=datasets[i].strokeColor%> !important \"><span style=\"color:#efefef !important \"><%=datasets[i].value%>  <%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>",
+                    dataLabels: chartData.dataLabels
+                    <#elseif type=="pie">
+                    legendTemplate : "<ul class=\"legend <%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li style=\"color:<%=segments[i].fillColor%> !important \"><span style=\"color:#efefef !important \"><%=segments[i].value%>  <%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"
+                    <#else>
                     legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+                    </#if>
                     };
                 var ctx_${renderSeqNumber!}_${fieldIdNum!} = $('#${chartId!}').get(0).getContext("2d");
                 <#if type=="pie">
@@ -775,18 +790,19 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
                         labels :[],
                         datasets: [
                             {
-                              label: "",
                               fillColor: chartData.fillColor,
                               strokeColor: chartData.strokeColor,
                               pointColor: chartData.pointColor,
                               pointStrokeColor: chartData.pointStrokeColor,
                               pointHighlightFill: chartData.pointHighlightFill,
                               pointHighlightStroke: chartData.pointHighlightStroke,
+                              label: "",
                               data: []
                             }
                             ]
                     };
                 </#if>
+                console.log(chartData);
                 var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${fieldIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
                 <#nested/>
             });
@@ -801,7 +817,7 @@ http://zurb.com/playground/pizza-amore-charts-and-graphs
         <#if chartType="line" || chartType="bar">
             ${chartId!}.addData([<#if value?has_content>${value!}</#if>]<#if title?has_content>,"${title!}"</#if>);
         <#else>
-            ${chartId!}.addData({value:${value!},color:"#F7464A",highlight: "#FF5A5E"<#if title?has_content>,label:"${title!}"</#if>});
+            ${chartId!}.addData({value:${value!},color:chartData.color,highlight: chartData.highlight<#if title?has_content>,label:"${title!}"</#if>});
         </#if>
     </#if>
 </#macro>

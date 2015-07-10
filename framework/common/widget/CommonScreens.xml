@@ -345,7 +345,7 @@ under the License.
                                         <not>
                                             <if-empty-section section-name="left-column" />
                                         </not>
-                                            <if-empty-section section-name="right-column" />
+                                        <if-empty-section section-name="right-column" />
                                     </and>
                                 </condition>
                                 <actions>
@@ -476,7 +476,7 @@ under the License.
                             <widgets>
                                     <container id="content-main-body">
                                         <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
-                                <decorator-section-include name="body"/>
+                                        <decorator-section-include name="body"/>
                                     </container>
                             </widgets>
                             <fail-widgets>
@@ -774,7 +774,14 @@ under the License.
                         <container style="page-title"><label text="${uiLabelMap[titleProperty]}" style="h1"></label></container>
                     </fail-widgets>
                 </section>-->
-                <decorator-section-include name="menu-bar"/>
+                <section>
+                    <condition>
+                        <not><if-empty-section section-name="menu-bar"/></not>
+                    </condition>
+                    <widgets>
+                        <decorator-section-include name="menu-bar"/>
+                    </widgets>
+                </section>
                 <container style="clear"/>
                 <screenlet id="searchOptions" name="findScreenlet" collapsible="true" title="${uiLabelMap.CommonSearchOptions}">
                     <container id="search-options">

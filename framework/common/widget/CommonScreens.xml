@@ -761,6 +761,9 @@ under the License.
 
     <screen name="FindScreenDecorator">
         <section>
+            <actions>
+                <set field="httpMethod" value="${groovy: request?.getMethod()?.toLowerCase()}" />
+            </actions>
             <widgets>
                 <!-- ToDo: Decide on what to do with this. In theory this should either be h2 or not existent at all
                 <section>
@@ -788,12 +791,40 @@ under the License.
                         <decorator-section-include name="search-options" />
                     </container>
                 </screenlet>
-                <screenlet padded="false">
-                    <label style="h2" text="${uiLabelMap.CommonSearchResults}"/>
-                    <container id="search-results">
-                        <decorator-section-include name="search-results"/>
-                    </container>
-                </screenlet>
+                <!-- Hack: don't show results title (or results) if a query not posted; 
+                     only way to know if a query was made from here.
+                     Special case params for webtools: find
+                     Other special cases: VIEW_SIZE, VIEW_INDEX, noConditionFind, inputFields, etc. 
+                     findScreenShowResults context var overrides all if present but screen must do logic. -->
+                <section>
+                    <condition>
+                        <or>
+                            <if-compare field="findScreenShowResults" operator="equals" type="Boolean" value="true" />
+                            <and>
+                                <not><if-compare field="findScreenShowResults" operator="equals" type="Boolean" value="false" /></not>
+                                <or>
+                                    <if-compare field="httpMethod" operator="equals" value="post" />
+                                    <if-compare field="parameters.find" operator="equals" value="true" />
+                                    <if-compare field="parameters.find" operator="equals" value="Y" />
+                                    <not><if-empty field="parameters.VIEW_SIZE" /></not>
+                                    <not><if-empty field="parameters.VIEW_INDEX" /></not>
+                                    <not><if-empty field="parameters.viewSize" /></not>
+                                    <not><if-empty field="parameters.viewIndex" /></not>
+                                    <not><if-empty field="parameters.noConditionFind" /></not>
+                                    <not><if-empty field="parameters.inputFields" /></not>
+                                </or>
+                            </and>
+                        </or>
+                    </condition>
+                    <widgets>
+                        <screenlet padded="false">
+                            <label style="h2" text="${uiLabelMap.CommonSearchResults}"/>
+                            <container id="search-results">
+                                <decorator-section-include name="search-results"/>
+                            </container>
+                        </screenlet>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>

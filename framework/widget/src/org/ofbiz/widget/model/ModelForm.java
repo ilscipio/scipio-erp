@@ -192,7 +192,10 @@ public abstract class ModelForm extends ModelWidget {
     /** Keeps track of conditional fields to help ensure that only one is rendered
      */
     private final Set<String> useWhenFields;
-
+    
+    private final boolean hideHeaderNoList;
+    private final boolean hideHeaderEmptyList;
+    
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
         super(formElement);
@@ -366,6 +369,20 @@ public abstract class ModelForm extends ModelWidget {
         } else {
             this.hideHeader = "true".equals(hideHeader);
         }
+        
+        String hideHeaderNoList = formElement.getAttribute("hide-header-no-list");
+        if (hideHeaderNoList.isEmpty() && parentModel != null) {
+            this.hideHeaderNoList = parentModel.hideHeaderNoList;
+        } else {
+            this.hideHeaderNoList = "true".equals(hideHeaderNoList);
+        }
+        String hideHeaderEmptyList = formElement.getAttribute("hide-header-empty-list");
+        if (hideHeaderEmptyList.isEmpty() && parentModel != null) {
+            this.hideHeaderEmptyList = parentModel.hideHeaderEmptyList;
+        } else {
+            this.hideHeaderEmptyList = "true".equals(hideHeaderEmptyList);
+        }
+        
         String clientAutocompleteFields = formElement.getAttribute("client-autocomplete-fields");
         if (clientAutocompleteFields.isEmpty() && parentModel != null) {
             this.clientAutocompleteFields = parentModel.clientAutocompleteFields;
@@ -1021,6 +1038,14 @@ public abstract class ModelForm extends ModelWidget {
 
     public boolean getHideHeader() {
         return this.hideHeader;
+    }
+    
+    public boolean getHideHeaderNoList() {
+        return hideHeaderNoList;
+    }
+
+    public boolean getHideHeaderEmptyList() {
+        return hideHeaderEmptyList;
     }
 
     public String getItemIndexSeparator() {

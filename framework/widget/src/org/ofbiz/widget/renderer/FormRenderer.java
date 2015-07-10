@@ -69,12 +69,6 @@ public class FormRenderer {
 
     public static final String module = FormRenderer.class.getName();
 
-    /**
-     * Cato: If enabled, form table header of a data list table will only be printed
-     * if a row query was made (but will still render if zero results).
-     */
-    public static boolean DATA_TABLE_HEADER_QUERYONLY = true;
-    
     public static String getCurrentContainerId(ModelForm modelForm, Map<String, Object> context) {
         Locale locale = UtilMisc.ensureLocale(context.get("locale"));
         String retVal = FlexibleStringExpander.expandString(modelForm.getContainerId(), context, locale);
@@ -705,11 +699,12 @@ public class FormRenderer {
 
         if (iter != null) {
             
+            // Cato: Only render header if we had a query (list)
+            boolean headerRendered = false;
             // ===== render header row =====
-            if (DATA_TABLE_HEADER_QUERYONLY) {
-                if (!modelForm.getHideHeader()) {
-                    numOfColumns = this.renderHeaderRow(writer, context);
-                }
+            if (!modelForm.getHideHeader() && !modelForm.getHideHeaderEmptyList() && modelForm.getHideHeaderNoList()) {
+                numOfColumns = this.renderHeaderRow(writer, context);
+                headerRendered = true;
             }
             
             // render item rows
@@ -718,6 +713,15 @@ public class FormRenderer {
             context.put("wholeFormContext", context);
             Map<String, Object> previousItem = new HashMap<String, Object>();
             while ((item = safeNext(iter)) != null) {
+                
+                // Cato: Only render header if we had a result (in list)
+                // ===== render header row =====
+                if (!headerRendered && !modelForm.getHideHeader() && modelForm.getHideHeaderEmptyList()) {
+                    numOfColumns = this.renderHeaderRow(writer, context);
+                    headerRendered = true;
+                }
+                
+                
                 itemIndex++;
                 if (itemIndex >= highIndex) {
                     break;
@@ -936,10 +940,8 @@ public class FormRenderer {
 
         int numOfColumns = 0;
         // ===== render header row =====
-        if (!DATA_TABLE_HEADER_QUERYONLY) {
-            if (!modelForm.getHideHeader()) {
-                numOfColumns = this.renderHeaderRow(writer, context);
-            }
+        if (!modelForm.getHideHeader() && !modelForm.getHideHeaderNoList() && !modelForm.getHideHeaderEmptyList()) {
+            numOfColumns = this.renderHeaderRow(writer, context);
         }
 
         // ===== render the item rows =====

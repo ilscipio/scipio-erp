@@ -298,7 +298,7 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="hide-header-list-empty" default="false">
+            <xs:attribute name="hide-header-empty-list" default="false">
                 <xs:annotation>
                     <xs:documentation>Cato: For list forms, if list variable is empty or null (in other words, there was no query or no results), do not print table header.</xs:documentation>
                 </xs:annotation>

@@ -664,7 +664,8 @@ public class FormRenderer {
     }
 
     private void renderItemRows(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer,
-            boolean formPerItem, int numOfColumns) throws IOException {
+            boolean formPerItem, int numOfColumns, 
+            boolean wrapperOpened, boolean headerRendered) throws IOException {
         String lookupName = modelForm.getListName();
         if (UtilValidate.isEmpty(lookupName)) {
             Debug.logError("No value for list or iterator name found.", module);
@@ -697,14 +698,24 @@ public class FormRenderer {
             highIndex = ((Integer) context.get("viewSize")).intValue();
         }
 
+        boolean delayedWrapperOpened = false; // record, to close
         if (iter != null) {
             
-            // Cato: Only render header if we had a query (list)
-            boolean headerRendered = false;
-            // ===== render header row =====
-            if (!modelForm.getHideHeader() && !modelForm.getHideHeaderEmptyList() && modelForm.getHideHeaderNoList()) {
-                numOfColumns = this.renderHeaderRow(writer, context);
-                headerRendered = true;
+            // Cato: Delay render table til know we had a query (list)
+            if (!wrapperOpened && !modelForm.getHideTableEmptyList()) {
+                // render formatting wrapper open
+                formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
+                delayedWrapperOpened = true;
+                wrapperOpened = true;
+            }
+            
+            if (wrapperOpened) {
+                // Cato: Only render header if we had a query (list)
+                // ===== render header row =====
+                if (!headerRendered && !modelForm.getHideHeader() && !modelForm.getHideHeaderEmptyList()) {
+                    numOfColumns = this.renderHeaderRow(writer, context);
+                    headerRendered = true;
+                }
             }
             
             // render item rows
@@ -714,13 +725,21 @@ public class FormRenderer {
             Map<String, Object> previousItem = new HashMap<String, Object>();
             while ((item = safeNext(iter)) != null) {
                 
-                // Cato: Only render header if we had a result (in list)
-                // ===== render header row =====
-                if (!headerRendered && !modelForm.getHideHeader() && modelForm.getHideHeaderEmptyList()) {
-                    numOfColumns = this.renderHeaderRow(writer, context);
-                    headerRendered = true;
+                // Cato: Last chance to delay-open wrapper til know query had results (in list)
+                if (!wrapperOpened) {
+                    formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
+                    delayedWrapperOpened = true;
+                    wrapperOpened = true;
                 }
                 
+                if (wrapperOpened) {
+                    // Cato: Only render header if we had a result (in list)
+                    // ===== render header row =====
+                    if (!headerRendered && !modelForm.getHideHeader()) {
+                        numOfColumns = this.renderHeaderRow(writer, context);
+                        headerRendered = true;
+                    }
+                }
                 
                 itemIndex++;
                 if (itemIndex >= highIndex) {
@@ -926,6 +945,11 @@ public class FormRenderer {
                 }
             }
         }
+        
+        if (delayedWrapperOpened) {
+            // render formatting wrapper close
+            formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
+        }
     }
 
     private void renderListFormString(Appendable writer, Map<String, Object> context,
@@ -935,21 +959,32 @@ public class FormRenderer {
         // prepare the items iterator and compute the pagination parameters
         Paginator.preparePager(modelForm, context);
 
-        // render formatting wrapper open
-        formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
-
+        boolean wrapperOpened = false;
+        // Cato: Only print table wrapper now if no requirements on list
+        if (!modelForm.getHideTableNoList() && !modelForm.getHideTableEmptyList()) {
+            // render formatting wrapper open
+            formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
+            wrapperOpened = true;
+        }
+        
+        boolean headerRendered = false;
         int numOfColumns = 0;
-        // ===== render header row =====
-        if (!modelForm.getHideHeader() && !modelForm.getHideHeaderNoList() && !modelForm.getHideHeaderEmptyList()) {
-            numOfColumns = this.renderHeaderRow(writer, context);
+        if (wrapperOpened) {
+            // ===== render header row =====
+            if (!modelForm.getHideHeader() && !modelForm.getHideHeaderNoList() && !modelForm.getHideHeaderEmptyList()) {
+                numOfColumns = this.renderHeaderRow(writer, context);
+                headerRendered = true;
+            }
         }
 
         // ===== render the item rows =====
-        this.renderItemRows(writer, context, formStringRenderer, true, numOfColumns);
+        this.renderItemRows(writer, context, formStringRenderer, true, numOfColumns, 
+                wrapperOpened, headerRendered);
 
-        // render formatting wrapper close
-        formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
-
+        if (wrapperOpened) {
+            // render formatting wrapper close
+            formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
+        }
     }
 
     private void renderMultiFormString(Appendable writer, Map<String, Object> context, 
@@ -961,19 +996,31 @@ public class FormRenderer {
         // prepare the items iterator and compute the pagination parameters
         Paginator.preparePager(modelForm, context);
 
-        // render formatting wrapper open
-        formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
-
+        boolean wrapperOpened = false;
+        // Cato: Only print table wrapper now if no requirements on list
+        if (!modelForm.getHideTableNoList() && !modelForm.getHideTableEmptyList()) {
+            // render formatting wrapper open
+            formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
+            wrapperOpened = true;
+        }
+        
+        boolean headerRendered = false;
         int numOfColumns = 0;
-        // ===== render header row =====
-        if (!modelForm.getHideHeader()) {
-            numOfColumns = this.renderHeaderRow(writer, context);
+        if (wrapperOpened) {
+            // ===== render header row =====
+            if (!modelForm.getHideHeader() && !modelForm.getHideHeaderNoList() && !modelForm.getHideHeaderEmptyList()) {
+                numOfColumns = this.renderHeaderRow(writer, context);
+                headerRendered = true;
+            }
         }
 
         // ===== render the item rows =====
-        this.renderItemRows(writer, context, formStringRenderer, false, numOfColumns);
+        this.renderItemRows(writer, context, formStringRenderer, false, numOfColumns,
+                wrapperOpened, headerRendered);
 
-        formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
+        if (wrapperOpened) {
+            formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
+        }
 
         if (!modelForm.getSkipEnd()) {
             formStringRenderer.renderMultiFormClose(writer, context, modelForm);

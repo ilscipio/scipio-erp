@@ -40,9 +40,7 @@ under the License.
                                 <container>
                                     <label style="h2">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
                                 </container>
-                                    <decorator-section name="body">
                                 <decorator-section-include name="body"/>
-                                    </decorator-section>
                             </widgets>
                             <fail-widgets>
                                 <label >${uiLabelMap.OrderViewPermissionError}</label>

@@ -2330,7 +2330,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         // Page select dropdown
-        if (listSize > 0 && this.javaScriptEnabled) {
+        if (listSize > 0) {
             if (ajaxEnabled) {
                 ajaxSelectUrl = createAjaxParamsFromUpdateAreas(updateAreas, prepLinkText + "' + this.value + '", context);
             } else {
@@ -2361,7 +2361,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         // Page size select dropdown
-        if (listSize > 0 && this.javaScriptEnabled) {
+        if (listSize > 0) {
             if (ajaxEnabled) {
                 ajaxSelectSizeUrl = createAjaxParamsFromUpdateAreas(updateAreas, prepLinkSizeText + anchor, context);
             } else {

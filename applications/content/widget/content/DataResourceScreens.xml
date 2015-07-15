@@ -59,7 +59,7 @@ under the License.
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <include-form name="ListDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
+                <include-form name="ListLookupDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
             </widgets>
         </section>
     </screen>

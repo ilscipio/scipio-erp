@@ -416,21 +416,27 @@ Returns empty string if no label is found
         <#local viewIndexPrevious = viewIndex>
     </#if>
     <#if (url?has_content)>
+        <#local firstUrl = "">
         <#if (!firstUrl?has_content)>
             <#local firstUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=0"/>
         </#if>
+        <#local previousUrl = "">
         <#if (!previousUrl?has_content)>
              <#local previousUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexPrevious}"/>
         </#if>
+        <#local nextUrl="">
         <#if (!nextUrl?has_content)>
             <#local nextUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexNext}"/>
         </#if>
+        <#local lastUrl="">
         <#if (!lastUrl?has_content)>
             <#local lastUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexLast}"/>
         </#if>
+        <#local selectUrl="">
         <#if (!selectUrl?has_content)>
             <#local selectUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}="/>
         </#if>
+        <#local selectSizeUrl="">
         <#if (!selectSizeUrl?has_content)>
             <#local selectSizeUrl=url+"?${viewSizeString}='+this.value+'&amp;${viewIndexString}=0"/>
         </#if>

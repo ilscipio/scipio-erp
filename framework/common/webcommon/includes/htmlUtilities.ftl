@@ -45,6 +45,29 @@ Returns empty string if no label is found
       <#return ""> 
   </#if>
 </#function>
+
+<#-- 
+*************
+* addUrlParamDelimEsc function
+************
+Adds an escaped param delimiter ("?" or "&amp;") to end of url if needed.
+                    
+   * Parameters *
+    url             = url to which to append delimiter
+-->
+<#function addUrlParamDelimEsc url>
+  <#if url?contains("?")>
+    <#if url?ends_with("?")>
+        <#return url>
+    <#elseif url?ends_with("&amp;")>
+        <#return url>
+    <#else>
+        <#return url + "&amp;">
+    </#if>
+  <#else>
+    <#return url + "?">
+  </#if>
+</#function> 
  
 <#-- 
 ******************
@@ -416,29 +439,31 @@ Returns empty string if no label is found
         <#local viewIndexPrevious = viewIndex>
     </#if>
     <#if (url?has_content)>
+        <#local commonUrl = addUrlParamDelimEsc(url)>
+        
         <#local firstUrl = "">
         <#if (!firstUrl?has_content)>
-            <#local firstUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=0"/>
+            <#local firstUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=0"/>
         </#if>
         <#local previousUrl = "">
         <#if (!previousUrl?has_content)>
-             <#local previousUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexPrevious}"/>
+             <#local previousUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexPrevious}"/>
         </#if>
         <#local nextUrl="">
         <#if (!nextUrl?has_content)>
-            <#local nextUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexNext}"/>
+            <#local nextUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexNext}"/>
         </#if>
         <#local lastUrl="">
         <#if (!lastUrl?has_content)>
-            <#local lastUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexLast}"/>
+            <#local lastUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexLast}"/>
         </#if>
         <#local selectUrl="">
         <#if (!selectUrl?has_content)>
-            <#local selectUrl=url+"?${viewSizeString}=${viewSize}&amp;${viewIndexString}="/>
+            <#local selectUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}="/>
         </#if>
         <#local selectSizeUrl="">
         <#if (!selectSizeUrl?has_content)>
-            <#local selectSizeUrl=url+"?${viewSizeString}='+this.value+'&amp;${viewIndexString}=0"/>
+            <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'&amp;${viewIndexString}=0"/>
         </#if>
     </#if>
     <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying="" paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost />

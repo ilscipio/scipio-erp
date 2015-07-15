@@ -413,8 +413,9 @@ Adds an escaped param delimiter ("?" or "&amp;") to end of url if needed.
    viewSize        = maximum number of items displayed
    altParam        = Use viewIndex/viewSize as parameters, instead of VIEW_INDEX / VIEW_SIZE
    forcePost       = Always use POST for non-ajax browsing (note: even if false, large requests are coerced to POST)
+   paramStr        = Extra URL parameters in string format, escaped (param1=val1&amp;param2=val2)
 -->
-<#macro paginate url="" class="nav-pager" viewIndex=0 listSize=0 viewSize=1 altParam=false forcePost=false>
+<#macro paginate url="" class="nav-pager" viewIndex=0 listSize=0 viewSize=1 altParam=false forcePost=false paramStr="">
     <#local viewIndexLast = ((listSize/viewSize)?ceiling-1)>
     <#local lowIndex = viewIndex * viewSize/>
     <#local highIndex = (viewIndex + 1) * viewSize/>
@@ -440,6 +441,9 @@ Adds an escaped param delimiter ("?" or "&amp;") to end of url if needed.
     </#if>
     <#if (url?has_content)>
         <#local commonUrl = addUrlParamDelimEsc(url)>
+        <#if paramStr?has_content>
+            <#local commonUrl = commonUrl + paramStr + "&amp;">
+        </#if>
         
         <#local firstUrl = "">
         <#if (!firstUrl?has_content)>

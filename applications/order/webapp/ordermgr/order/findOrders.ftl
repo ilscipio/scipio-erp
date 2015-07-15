@@ -322,7 +322,7 @@ function submitFindForm(val){
                         </#list>
             </@field>
         </@fieldset>
-                    <input type="hidden" name="showAll" value="Y"/>
+        <input type="hidden" name="showAll" value="Y"/>
         <input type="submit" value='${uiLabelMap.CommonFind}'/>
       </@cell>
   </@row>    
@@ -343,7 +343,7 @@ document.lookuporder.orderId.focus();
 <#if orderList?has_content>
 <@section title="${uiLabelMap.OrderOrderFound}">
 
-      <#if (orderList?has_content && 0 < orderList?size)>
+      <#if (orderList?has_content && (0 < orderList?size))>
         <#--
             <#assign url><@ofbizUrl>searchorders</@ofbizUrl></#assign>
             <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true/>
@@ -375,6 +375,10 @@ document.lookuporder.orderId.focus();
             
       </#if>
     <form name="paginationForm" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
+      <#-- not included in paramIdList -->
+      <#if (showAll!"")=="Y">
+        <input type="hidden" name="showAll" value="Y"/>
+      </#if>
       <input type="hidden" name="viewSize"/>
       <input type="hidden" name="viewIndex"/>
       <input type="hidden" name="hideFields"/>

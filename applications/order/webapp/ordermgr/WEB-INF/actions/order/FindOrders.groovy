@@ -192,3 +192,7 @@ context.lowIndex = lowIndex;
 
 highIndex = request.getAttribute("highIndex");
 context.highIndex = highIndex;
+
+showAll = request.getAttribute("showAll");
+context.showAll = showAll;
+

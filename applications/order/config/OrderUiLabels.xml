@@ -15102,4 +15102,9 @@
         <value xml:lang="zh">租赁</value>
         <value xml:lang="zh_TW">租賃</value>
     </property>
+    <property key="OrderIncludeCountry">
+        <value xml:lang="de">Schließen Land</value>
+        <value xml:lang="en">Include Country</value>
+        <value xml:lang="fr">Pays inclus</value>
+    </property>
 </resource>

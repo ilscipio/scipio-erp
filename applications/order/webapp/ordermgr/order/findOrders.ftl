@@ -306,7 +306,7 @@ function submitFindForm(val){
                     </#if>
                     ${screens.render("component://common/widget/CommonScreens.xml#countries")}
             </@field>
-            <@field type="select" name="includeCountry" label="IncludeCountry">
+            <@field type="select" name="includeCountry" label="${uiLabelMap.OrderIncludeCountry}">
                     <#if requestParameters.includeCountry?has_content>
                        <#assign includeCountry = requestParameters.includeCountry>
                        <option value="${includeCountry}"><#if "Y" == includeCountry>${uiLabelMap.OrderOnlyInclude}<#elseif "N" == includeCountry>${uiLabelMap.OrderDoNotInclude}</#if></option>

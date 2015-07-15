@@ -927,28 +927,56 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   </#if>
 </#macro>
 
+<#function escapeUrlParamDelims url>
+    <#if url?contains('&amp;')>
+        <#return url>
+    <#else>
+        <#return url?replace('&', '&amp;')>
+    </#if>
+</#function>
+
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel>
-  <#-- Fixing up ajaxSelectUrl here so doesn't affect other renderer types (?) -->
+  
+  <#-- Fix up ajaxSelectUrl here so doesn't affect other render types (?) -->
   <#local ajaxSelectUrl = ajaxSelectUrl?replace("' + this.value + '", "' + '")>
+  
+  <#-- This is workaround for Ofbiz bug (?), passes URLs params unescaped, but only for some (?)... 
+       unclear if should be fixed in java or FTL but safer/easier here... 
+       java comments say intentional but unclear why (?) -->
+  <#local ajaxFirstUrl = escapeUrlParamDelims(ajaxFirstUrl)>
+  <#local firstUrl = escapeUrlParamDelims(firstUrl)>
+  <#local ajaxPreviousUrl = escapeUrlParamDelims(ajaxPreviousUrl)>
+  <#local previousUrl = escapeUrlParamDelims(previousUrl)>
+  <#local ajaxSelectUrl = escapeUrlParamDelims(ajaxSelectUrl)>
+  <#local selectUrl = escapeUrlParamDelims(selectUrl)>
+  <#local ajaxSelectSizeUrl = escapeUrlParamDelims(ajaxSelectSizeUrl)>
+  <#local selectSizeUrl = escapeUrlParamDelims(selectSizeUrl)>
+  <#local ajaxNextUrl = escapeUrlParamDelims(ajaxNextUrl)>
+  <#local nextUrl = escapeUrlParamDelims(nextUrl)>
+  <#local ajaxLastUrl = escapeUrlParamDelims(ajaxLastUrl)>
+  <#local lastUrl = escapeUrlParamDelims(lastUrl)>
   
   <#if (listSize > viewSize)>
    <div class="${style_grid_row!}">
    <div class="${style_grid_large!}12 ${style_grid_cell!}">
         <div class="pagination-centered ${paginateStyle}">
           <ul class="pagination">
-            <li class="${paginateFirstStyle}<#if viewIndex gt 0>"><a <#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxFirstUrl}')"<#else>href="${firstUrl}"</#if>>${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
-            <li class="${paginatePreviousStyle}<#if viewIndex gt 0>"><a <#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPreviousUrl}')"<#else>href="${previousUrl}"</#if>>${paginatePreviousLabel}</a><#else> unavailable">${paginatePreviousLabel}</#if></li>
-        <#if (listSize > 0) && javaScriptEnabled> 
+            <li class="${paginateFirstStyle}<#if (viewIndex > 0)>"><a <#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxFirstUrl}')"<#else>href="${firstUrl}"</#if>>${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
+            <li class="${paginatePreviousStyle}<#if (viewIndex > 0)>"><a <#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPreviousUrl}')"<#else>href="${previousUrl}"</#if>>${paginatePreviousLabel}</a><#else> unavailable">${paginatePreviousLabel}</#if></li>
+
+        <#if (listSize > 0)> 
           <#assign x=(listSize/viewSize)?ceiling>
             <#list 1..x as i>
-                    <li class="<#if i == (viewIndex+1)>current</#if>"><a <#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${i-1}')"<#else>href="${selectUrl}${i-1}"</#if>>${i}</a></li>
-                  </li>
+              <li class="<#if i == (viewIndex+1)>current</#if>"><a <#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${i-1}')"<#else>href="${selectUrl}${i-1}"</#if>>${i}</a></li>
             </#list>
         </#if>
-            <li class="${paginateNextStyle}<#if highIndex lt listSize>"><a <#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxNextUrl}')"<#else>href="${nextUrl}"</#if>>${paginateNextLabel}</a><#else> unavailable">${paginateNextLabel}</#if></li>
-            <li class="${paginateLastStyle}<#if highIndex lt listSize>"><a <#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxLastUrl}')"<#else>href="${lastUrl}"</#if>>${paginateLastLabel}</a><#else> unavailable">${paginateLastLabel}</#if></li>
+        
+            <li class="${paginateNextStyle}<#if (highIndex < listSize)>"><a <#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxNextUrl}')"<#else>href="${nextUrl}"</#if>>${paginateNextLabel}</a><#else> unavailable">${paginateNextLabel}</#if></li>
+            <li class="${paginateLastStyle}<#if (highIndex < listSize)>"><a <#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxLastUrl}')"<#else>href="${lastUrl}"</#if>>${paginateLastLabel}</a><#else> unavailable">${paginateLastLabel}</#if></li>
             <li class="nav-displaying">${commonDisplaying}</li>
-        <#if javaScriptEnabled><li class=""><label for="pageSize">${paginateViewSizeLabel} <select name="pageSize" size="1" onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else>submitPagination(this, '${selectSizeUrl}')</#if>"><#rt/>
+            
+        <#if javaScriptEnabled>
+            <li class=""><label for="pageSize">${paginateViewSizeLabel} <select name="pageSize" size="1" onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else>submitPagination(this, '${selectSizeUrl}')</#if>"><#rt/>
             <#assign availPageSizes = [10, 20, 30, 50, 100, 200]>
           <#list availPageSizes as ps>
             <option <#if viewSize == ps> selected="selected" </#if> value="${ps}">${ps}</option>

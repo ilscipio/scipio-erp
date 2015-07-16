@@ -70,14 +70,6 @@ function submitFindForm(val){
 }
 
 // -->
-
-    function paginateOrderList(viewSize, viewIndex, hideFields) {
-        document.paginationForm.viewSize.value = viewSize;
-        document.paginationForm.viewIndex.value = viewIndex;
-        document.paginationForm.hideFields.value = hideFields;
-        document.paginationForm.submit();
-    }
-
 </script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
@@ -123,6 +115,7 @@ function submitFindForm(val){
   <input type='hidden' name='gatewayScoreResult' value='${requestParameters.gatewayScoreResult!}'/>
 </form>
 </#if>
+
 <form method="post" name="lookuporder" id="lookuporder" action="<@ofbizUrl>searchorders</@ofbizUrl>" onsubmit="javascript:lookupOrders();">
 <input type="hidden" name="lookupFlag" value="Y"/>
 <input type="hidden" name="hideFields" value="Y"/>
@@ -131,7 +124,6 @@ function submitFindForm(val){
 
 <@section>
    
-
     <ul class="button-group">
       <#if (requestParameters.hideFields!"N") == "Y">
         <li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" class="tiny button">${uiLabelMap.CommonShowLookupFields}</a></li>
@@ -343,53 +335,14 @@ document.lookuporder.orderId.focus();
 <#if orderList?has_content>
 <@section title="${uiLabelMap.OrderOrderFound}">
 
-      <#if (orderList?has_content && (0 < orderList?size))>
-        <#--
-            <#assign url><@ofbizUrl>searchorders</@ofbizUrl></#assign>
-            <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true/>
-        -->
-        
-            <div class="${style_grid_row!}">
-               <div class="${style_grid_large!}12 columns">
-                    <div class="pagination-centered">
-                      <ul class="pagination">
-                            <#if (viewIndex > 1)>
-                              <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}', '${requestParameters.hideFields!"N"}')">${uiLabelMap.CommonPrevious}</a></li>
-        <#else>
-                              <li class="unavailable">${uiLabelMap.CommonPrevious}</li>
-        </#if>
-                            
-        <#if (orderListSize > 0)>
-          <li><span>${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${orderListSize}</span></li>
-        </#if>
-                            <#if (orderListSize > highIndex)>
-                              <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}', '${requestParameters.hideFields!"N"}')">${uiLabelMap.CommonNext}</a></li>
-        <#else>
-                              <li class="unavailable">${uiLabelMap.CommonNext}</li>
-        </#if>
-                    
-    </ul>
-  </div>
-                  </div>
-                </div>
-            
-      </#if>
-    <form name="paginationForm" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
-      <#-- not included in paramIdList -->
-      <#if (showAll!"")=="Y">
-        <input type="hidden" name="showAll" value="Y"/>
-      </#if>
-      <input type="hidden" name="viewSize"/>
-      <input type="hidden" name="viewIndex"/>
-      <input type="hidden" name="hideFields"/>
-      <#if paramIdList?? && paramIdList?has_content>
-        <#list paramIdList as paramIds>
-          <#assign paramId = paramIds.split("=")/>
-          <input type="hidden" name="${paramId[0]}" value="${paramId[1]}"/>
-        </#list>
-      </#if>
-    </form>
-    
+    <#assign paginationSection></#assign>
+    <#if (orderList?has_content && (0 < orderList?size))>
+        <#assign url><@ofbizUrl>searchorders</@ofbizUrl></#assign>
+        <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
+        <#-- forcePost required because search done from service event with https="true" -->
+        <#assign paginationSection><@paginate url=url viewSize=viewSize!?number viewIndex=viewIndex!?number listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 /></#assign>
+        ${paginationSection}
+    </#if>
     
     <form name="massOrderChangeForm" method="post" action="javascript:void(0);">
         <input type="hidden" name="screenLocation" value="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF"/>
@@ -567,7 +520,11 @@ document.lookuporder.orderId.focus();
         </#if>
       </table>
       <@massOrderChangeButton id="2"/>
+      
     </form>
+    
+    ${paginationSection}
+    
 </@section>
 </#if>
 <#else>

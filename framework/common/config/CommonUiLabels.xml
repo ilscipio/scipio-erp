@@ -15160,5 +15160,28 @@
         <value xml:lang="vi">Hành động</value>
         <value xml:lang="zh">操作</value>
         <value xml:lang="zh_TW">操作</value>
+    </property>  
+    <property key="CommonError">
+        <value xml:lang="ar">خطأ</value>
+        <value xml:lang="cs">Chyba</value>
+        <value xml:lang="de">Fehler</value>
+        <value xml:lang="en">Error</value>
+        <value xml:lang="es">Error</value>
+        <value xml:lang="fr">Erreur</value>
+        <value xml:lang="hi_IN">त्रुटि</value>
+        <value xml:lang="it">Errore</value>
+        <value xml:lang="ja">エラー</value>
+        <value xml:lang="pt_BR">Erro</value>
+        <value xml:lang="ro">Eroare</value>
+        <value xml:lang="ru">Ошибка</value>
+        <value xml:lang="th">Error</value>
+        <value xml:lang="vi">Có lỗi xảy ra</value>
+        <value xml:lang="zh">错误</value>
+        <value xml:lang="zh_TW">錯誤</value>
+    </property>
+    <property key="CommonWarning">
+        <value xml:lang="de">Warnung</value>
+        <value xml:lang="en">Warning</value>
+        <value xml:lang="fr">Avertissement</value>
     </property>
 </resource>

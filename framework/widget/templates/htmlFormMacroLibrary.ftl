@@ -1000,8 +1000,12 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
           <#assign x=(listSize/viewSize)?ceiling>
             <#list 1..x as i>
               <#local vi = viewIndexFirst + (i - 1)>
-              <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${vi}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectUrl}${vi}')"</#if><#else>href="${selectUrl}${vi}"</#if></#local>
-              <li class="<#if vi == viewIndex>current</#if>"><a ${actionStr}>${i}</a></li>
+              <#if vi == viewIndex>
+                <li class="current"><a href="javascript:void(0)">${i}</a></li>
+              <#else>
+                <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${vi}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectUrl}${vi}')"</#if><#else>href="${selectUrl}${vi}"</#if></#local>
+                <li><a ${actionStr}>${i}</a></li>
+              </#if>
             </#list>
         </#if>
         

@@ -457,13 +457,14 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
    altParam        = Use viewIndex/viewSize as parameters, instead of VIEW_INDEX / VIEW_SIZE
    forcePost       = Always use POST for non-ajax browsing (note: even if false, large requests are coerced to POST)
    paramStr        = Extra URL parameters in string format, escaped (param1=val1&amp;param2=val2)
+   viewIndexFirst  = First viewIndex value number (0 or 1, only affects param values, not display)
 -->
-<#macro paginate url="" class="nav-pager" viewIndex=0 listSize=0 viewSize=1 altParam=false forcePost=false paramStr="">
-    <#local viewIndexLast = ((listSize/viewSize)?ceiling-1)>
-    <#local lowIndex = viewIndex * viewSize/>
-    <#local highIndex = (viewIndex + 1) * viewSize/>
-    <#if listSize lt highIndex>
-    <#local highIndex = listSize/>
+<#macro paginate url="" class="nav-pager" viewIndex=0 listSize=0 viewSize=1 altParam=false forcePost=false paramStr="" viewIndexFirst=0>
+    <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
+    <#local lowIndex = (viewIndex - viewIndexFirst) * viewSize/>
+    <#local highIndex = ((viewIndex - viewIndexFirst) + 1) * viewSize/>
+    <#if (listSize < highIndex)>
+        <#local highIndex = listSize/>
     </#if>
     <#if altParam>
         <#local viewIndexString = "viewIndex">
@@ -477,7 +478,7 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
     <#else>
         <#local viewIndexNext = viewIndex>
     </#if>
-    <#if (viewIndex > 0)>
+    <#if (viewIndex > viewIndexFirst)>
         <#local viewIndexPrevious = (viewIndex-1)>
     <#else>
         <#local viewIndexPrevious = viewIndex>
@@ -490,7 +491,7 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
         
         <#local firstUrl = "">
         <#if (!firstUrl?has_content)>
-            <#local firstUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=0"/>
+            <#local firstUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexFirst}"/>
         </#if>
         <#local previousUrl = "">
         <#if (!previousUrl?has_content)>
@@ -510,10 +511,10 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
         </#if>
         <#local selectSizeUrl="">
         <#if (!selectSizeUrl?has_content)>
-            <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'&amp;${viewIndexString}=0"/>
+            <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'&amp;${viewIndexString}=${viewIndexFirst}"/>
         </#if>
     </#if>
-    <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying="" paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost />
+    <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying="" paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst />
 </#macro>
 
 

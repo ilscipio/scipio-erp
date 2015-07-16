@@ -935,8 +935,8 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </#if>
 </#function>
 
-<#-- Cato: new params: forcePost -->
-<#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel forcePost=false>
+<#-- Cato: new params: forcePost, viewIndexFirst -->
+<#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel forcePost=false viewIndexFirst=0>
   
   <#-- Fix up ajaxSelectUrl here so doesn't affect other render types (?) -->
   <#local ajaxSelectUrl = ajaxSelectUrl?replace("' + this.value + '", "' + '")>
@@ -969,17 +969,19 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
         <div class="pagination-centered ${paginateStyle}">
           <ul class="pagination">
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxFirstUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${firstUrl}')"</#if><#else>href="${firstUrl}"</#if></#local>
-            <li class="${paginateFirstStyle}<#if (viewIndex > 0)>"><a ${actionStr}>${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
+            <li class="${paginateFirstStyle}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPreviousUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${previousUrl}')"</#if><#else>href="${previousUrl}"</#if></#local>
-            <li class="${paginatePreviousStyle}<#if (viewIndex > 0)>"><a ${actionStr}>${paginatePreviousLabel}</a><#else> unavailable">${paginatePreviousLabel}</#if></li>
+            <li class="${paginatePreviousStyle}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${paginatePreviousLabel}</a><#else> unavailable">${paginatePreviousLabel}</#if></li>
 
         <#if (listSize > 0)> 
           <#assign x=(listSize/viewSize)?ceiling>
             <#list 1..x as i>
-              <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${i-1}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectUrl}${i-1}')"</#if><#else>href="${selectUrl}${i-1}"</#if></#local>
-              <li class="<#if i == (viewIndex+1)>current</#if>"><a ${actionStr}>${i}</a></li>
+              <#local vi = viewIndexFirst + (i - 1)>
+              <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${vi}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectUrl}${vi}')"</#if><#else>href="${selectUrl}${vi}"</#if></#local>
+              <li class="<#if vi == viewIndex>current</#if>"><a ${actionStr}>${i}</a></li>
             </#list>
         </#if>
+        
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxNextUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${nextUrl}')"</#if><#else>href="${nextUrl}"</#if></#local>
             <li class="${paginateNextStyle}<#if (highIndex < listSize)>"><a ${actionStr}>${paginateNextLabel}</a><#else> unavailable">${paginateNextLabel}</#if></li>
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxLastUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${lastUrl}')"</#if><#else>href="${lastUrl}"</#if></#local>

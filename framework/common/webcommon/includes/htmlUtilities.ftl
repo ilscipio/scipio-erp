@@ -458,9 +458,33 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
    forcePost       = Always use POST for non-ajax browsing (note: even if false, large requests are coerced to POST)
    paramStr        = Extra URL parameters in string format, escaped (param1=val1&amp;param2=val2)
    viewIndexFirst  = First viewIndex value number (0 or 1, only affects param values, not display)
+   showCount       = If true show "Displaying..." count or string provided in countMsg; if false don't
+   countMsg        = Custom message for count, optional
 -->
-<#macro paginate url="" class="nav-pager" viewIndex=0 listSize=0 viewSize=1 altParam=false forcePost=false paramStr="" viewIndexFirst=0>
+<#macro paginate url="" class="nav-pager" viewIndex=0 listSize=0 viewSize=1 altParam=false forcePost=false paramStr="" viewIndexFirst=0 showCount=true countMsg="">
+    
+    <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
+    <#if (!viewSize?is_number)>
+        ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlUtilitiesPaginate")!}<#t>
+        <#local viewSize = viewSize?number>
+    </#if>
+    <#local viewSize = viewSize?floor>
+    <#if (!viewIndex?is_number)>
+        ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlUtilitiesPaginate")!}<#t>
+        <#local viewIndex = viewIndex?number>
+    </#if>
+    <#local viewIndex = viewIndex?floor>
+    
     <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
+    <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
+        ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlUtilitiesPaginate")!}<#t>
+        <#if (viewIndex < viewIndexFirst)>
+            <#local viewIndex = viewIndexFirst>
+        <#else>
+            <#local viewIndex = viewIndexLast>
+        </#if>
+    </#if>
+    
     <#local lowIndex = (viewIndex - viewIndexFirst) * viewSize/>
     <#local highIndex = ((viewIndex - viewIndexFirst) + 1) * viewSize/>
     <#if (listSize < highIndex)>
@@ -514,7 +538,13 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
             <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'&amp;${viewIndexString}=${viewIndexFirst}"/>
         </#if>
     </#if>
-    <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying="" paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst />
+    
+    <#if showCount && (!countMsg?has_content)>
+       <#local messageMap = {"lowCount": lowIndex+1, "highCount": highIndex, "total": listSize}>
+       <#local countMsg = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)!"">
+    </#if>
+    
+    <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst />
 </#macro>
 
 

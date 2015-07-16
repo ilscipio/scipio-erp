@@ -340,7 +340,7 @@ document.lookuporder.orderId.focus();
         <#assign url><@ofbizUrl>searchorders</@ofbizUrl></#assign>
         <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
         <#-- forcePost required because search done from service event with https="true" -->
-        <#assign paginationSection><@paginate url=url viewSize=viewSize!?number viewIndex=viewIndex!?number listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 /></#assign>
+        <#assign paginationSection><@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 /></#assign>
         ${paginationSection}
     </#if>
     

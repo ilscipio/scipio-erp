@@ -942,13 +942,16 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   
   <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
   <#if (!viewSize?is_number)>
-      ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number: " + viewSize, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
+      ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
       <#local viewSize = viewSize?number>
   </#if>
+  <#local viewSize = viewSize?floor>
   <#if (!viewIndex?is_number)>
-      ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
+      ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
       <#local viewIndex = viewIndex?number>
   </#if>
+  <#local viewIndex = viewIndex?floor>
+  
   <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
   <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
       ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!}<#t>

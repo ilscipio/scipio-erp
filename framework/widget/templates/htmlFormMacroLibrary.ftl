@@ -938,7 +938,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#-- Cato: new params: forcePost, viewIndexFirst -->
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel forcePost=false viewIndexFirst=0>
   <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
-  <#local minPageSize = availPageSizes?sort?first>
+  <#local minPageSize = availPageSizes?first>
   
   <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
   <#if (!viewSize?is_number)>

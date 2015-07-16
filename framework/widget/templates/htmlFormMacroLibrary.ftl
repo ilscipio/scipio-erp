@@ -938,6 +938,17 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#-- Cato: new params: forcePost, viewIndexFirst -->
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel forcePost=false viewIndexFirst=0>
   
+  <#-- this apparently happens a lot, enforce here cause screens never catch -->
+  <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
+  <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
+      ${Static["org.ofbiz.base.util.Debug"].logWarning("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
+      <#if (viewIndex < viewIndexFirst)>
+          <#local viewIndex = viewIndexFirst>
+      <#else>
+          <#local viewIndex = viewIndexLast>
+      </#if>
+  </#if>  
+  
   <#-- Fix up ajaxSelectUrl here so doesn't affect other render types (?) -->
   <#local ajaxSelectUrl = ajaxSelectUrl?replace("' + this.value + '", "' + '")>
   

@@ -52,5 +52,5 @@ under the License.
          <@panel>${uiLabelMap.WebtoolsNoEntityRecordsFound} ${entityName}.</@panel>
             </#if>
         <#if (arraySize > 0)>
-            <@htmlTemplate.nextPrev commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex  highIndex=highIndex />
+            <@htmlTemplate.nextPrev commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex  highIndex=highIndex commonDisplaying=commonDisplaying />
         </#if>

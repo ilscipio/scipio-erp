@@ -335,13 +335,13 @@ document.lookuporder.orderId.focus();
 <#if orderList?has_content>
 <@section title="${uiLabelMap.OrderOrderFound}">
 
-    <#assign paginationSection></#assign>
+    <#assign paginated = false>
     <#if (orderList?has_content && (0 < orderList?size))>
         <#assign url><@ofbizUrl>searchorders</@ofbizUrl></#assign>
         <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
         <#-- forcePost required because search done from service event with https="true" -->
-        <#assign paginationSection><@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 /></#assign>
-        ${paginationSection}
+        <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 />
+        <#assign paginated = true>
     </#if>
     
     <form name="massOrderChangeForm" method="post" action="javascript:void(0);">
@@ -523,7 +523,9 @@ document.lookuporder.orderId.focus();
       
     </form>
     
-    ${paginationSection}
+    <#if paginated>
+        <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 />
+    </#if>
     
 </@section>
 </#if>

@@ -48,27 +48,70 @@ Returns empty string if no label is found
 
 <#-- 
 *************
-* addUrlParamDelimEsc function
+* addParamDelimToUrl function
 ************
-Adds an escaped param delimiter ("?" or "&amp;") to end of url if needed.
+Adds a param delimiter to end of url if needed.
                     
    * Parameters *
-    url             = url to which to append delimiter
+    url             = Url to which to append delimiter
+    paramDelim      = Param delimiter to use (escaped, "&amp;" by default)
 -->
-<#function addUrlParamDelimEsc url>
+<#function addParamDelimToUrl url paramDelim="&amp;">
   <#if url?contains("?")>
     <#if url?ends_with("?")>
         <#return url>
-    <#elseif url?ends_with("&amp;")>
+    <#elseif url?ends_with(paramDelim)>
         <#return url>
     <#else>
-        <#return url + "&amp;">
+        <#return url + paramDelim>
     </#if>
   <#else>
     <#return url + "?">
   </#if>
 </#function> 
- 
+
+<#-- 
+*************
+* addParamsToStr function
+************
+Adds parameters from a hash to a URL param string (no full URL logic).
+                    
+   * Parameters *
+    paramStr        = Escaped param string
+    paramMap        = Hash of keys to values to add (FIXME: java Maps from ofbiz widgets may not work)
+    paramDelim      = Param delimiter (escaped, "&amp;" by default)
+    includeEmpty    = Include empty values, or if false omit empty values
+-->
+<#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true>
+  <#local res = paramStr>
+  <#list paramMap?keys as key>
+    <#if res?has_content && (!res?ends_with(paramDelim))>
+      <#local res = res + paramDelim>
+    </#if>
+    <#if includeEmpty || paramMap[key]?has_content>
+        <#local res = res + key + "=" + paramMap[key]!?string>
+    </#if>
+  </#list>
+  <#return res>
+</#function> 
+
+<#-- 
+*************
+* addParamsToUrl function
+************
+Adds parameters from a hash to a URL. appends delimiters as needed.
+                    
+   * Parameters *
+    url             = Url
+    paramMap        = Hash of keys to values to add (FIXME: java Maps from ofbiz widgets may not work)
+    paramDelim      = Param delimiter (escaped, "&amp;" by default)
+    includeEmpty    = Include empty values, or if false omit empty values
+-->
+<#function addParamsToUrl url paramMap paramDelim="&amp;" includeEmpty=true>
+  <#return addParamsToStr(addParamDelimToUrl(url, paramDelim), paramMap, paramDelim, includeEmpty)>
+</#function> 
+
+
 <#-- 
 ******************
 * UTILITY MACROS *
@@ -440,7 +483,7 @@ Adds an escaped param delimiter ("?" or "&amp;") to end of url if needed.
         <#local viewIndexPrevious = viewIndex>
     </#if>
     <#if (url?has_content)>
-        <#local commonUrl = addUrlParamDelimEsc(url)>
+        <#local commonUrl = addParamDelimToUrl(url, "&amp;")>
         <#if paramStr?has_content>
             <#local commonUrl = commonUrl + paramStr + "&amp;">
         </#if>

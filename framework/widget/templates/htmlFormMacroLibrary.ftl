@@ -937,17 +937,27 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#-- Cato: new params: forcePost, viewIndexFirst -->
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel forcePost=false viewIndexFirst=0>
+  <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
+  <#local minPageSize = availPageSizes?sort?first>
   
-  <#-- this apparently happens a lot, enforce here cause screens never catch -->
+  <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
+  <#if (!viewSize?is_number)>
+      ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number: " + viewSize, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
+      <#local viewSize = viewSize?number>
+  </#if>
+  <#if (!viewIndex?is_number)>
+      ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
+      <#local viewIndex = viewIndex?number>
+  </#if>
   <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
   <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
-      ${Static["org.ofbiz.base.util.Debug"].logWarning("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
+      ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
       <#if (viewIndex < viewIndexFirst)>
           <#local viewIndex = viewIndexFirst>
       <#else>
           <#local viewIndex = viewIndexLast>
       </#if>
-  </#if>  
+  </#if>
   
   <#-- Fix up ajaxSelectUrl here so doesn't affect other render types (?) -->
   <#local ajaxSelectUrl = ajaxSelectUrl?replace("' + this.value + '", "' + '")>
@@ -974,7 +984,9 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
        FIXME: POST/forcePost currently only supported when js enabled (non-js need extra markup for a form, ugly),
               currently non-js falls back to GET only, won't always work -->
   
-  <#if (listSize > viewSize)>
+  <#if (listSize > minPageSize)>
+    <#local multiPage = (listSize > viewSize)>
+  
    <div class="${style_grid_row!}">
    <div class="${style_grid_large!}12 ${style_grid_cell!}">
         <div class="pagination-centered ${paginateStyle}">
@@ -1002,7 +1014,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
         <#if javaScriptEnabled>
             <#local actionStr>onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else><#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectSizeUrl}')</#if>"</#local>
             <li class=""><label for="pageSize">${paginateViewSizeLabel} <select name="pageSize" size="1" ${actionStr}><#rt/>
-            <#assign availPageSizes = [10, 20, 30, 50, 100, 200]>
+            
           <#list availPageSizes as ps>
             <option <#if viewSize == ps> selected="selected" </#if> value="${ps}">${ps}</option>
           </#list>

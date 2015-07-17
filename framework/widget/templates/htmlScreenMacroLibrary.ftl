@@ -298,10 +298,6 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 <#macro renderPortalPagePortletBegin originalPortalPageId portalPageId portalPortletId portletSeqId prevPortletId="" prevPortletSeqId="" nextPortletId="" nextPortletSeqId="" columnSeqId="" prevColumnSeqId="" nextColumnSeqId="" confMode="false" delPortletHint="Remove this portlet" editAttribute="false" editAttributeHint="Edit portlet parameters">
   <#assign portletKey = portalPageId+portalPortletId+portletSeqId>
   <#assign portletKeyFields = '<input name="portalPageId" value="' + portalPageId + '" type="hidden"/><input name="portalPortletId" value="' + portalPortletId + '" type="hidden"/><input name="portletSeqId" value="' + portletSeqId  + '" type="hidden"/>'>
-  
-  <#-- FIXME: Portal page columns not yet implemented, but need this for now so viewable -->
-  <div class="${style_grid_row!}">
-    <div class="${style_grid_large!}12 columns">
     
   <div id="PP_${portletKey}" name="portalPortlet" class="noClass" portalPageId="${portalPageId}" portalPortletId="${portalPortletId}" columnSeqId="${columnSeqId}" portletSeqId="${portletSeqId}">
     <#if confMode == "true">
@@ -382,9 +378,6 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
   <#if confMode == "true">
     </div>
   </#if>
-  
-    </div>
-  </div>
 </#macro>
 
 <#macro renderColumnContainerBegin id style>

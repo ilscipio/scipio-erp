@@ -199,7 +199,7 @@ under the License.
       document.lookupparty.partyId.focus();
     </script>
 
-<#if partyList??>
+<#if partyList?? && (parameters.lookupFlag!)=="Y">
   <#if hideFields != "Y">
     <hr />
   </#if>

@@ -17,17 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <div id="partyContactInfo" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.PartyContactInformation}</li>
+  <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}">
+
+      <ul class="${style_button_group!} ${style_button_force!}">
         <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
-          <li><a href="<@ofbizUrl>editcontactmech?partyId=${partyId}</@ofbizUrl>">${uiLabelMap.CommonCreateNew}</a></li>
+          <li><a href="<@ofbizUrl>editcontactmech?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
         </#if>
       </ul>
-      <br class="clear" />
-    </div>
-    <div class="screenlet-body">
+
+    <@row>
+      <@cell>
+      
       <#if contactMeches?has_content>
         <table class="basic-table" cellspacing="0">
           <tr>
@@ -41,7 +41,7 @@ under the License.
             <#assign partyContactMech = contactMechMap.partyContactMech>
             <tr><td colspan="4"><hr /></td></tr>
             <tr>
-              <td class="label align-top">${contactMechMap.contactMechType.get("description",locale)}</td>
+              <td>${contactMechMap.contactMechType.get("description",locale)}</td>
               <td>
                 <#list contactMechMap.partyContactMechPurposes as partyContactMechPurpose>
                   <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
@@ -122,10 +122,10 @@ under the License.
                   </form>
                 </#if>
               </td>
-              <td valign="top"><b>(${partyContactMech.allowSolicitation!})</b></td>
+              <td><b>(${partyContactMech.allowSolicitation!})</b></td>
               <td class="button-col">
                 <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId>
-                  <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
+                  <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonUpdate}</a>
                 </#if>
                 <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session) || userLogin.partyId == partyId>
                   <form name="partyDeleteContact" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)">
@@ -141,5 +141,7 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoContactInformation}
       </#if>
-    </div>
-  </div>
+      
+      </@cell>
+    </@row>
+  </@section>

@@ -114,14 +114,14 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}">
+                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="button tiny">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                             </link>
                                         </container>
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}">
+                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="button tiny">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                                 <parameter param-name="SHOW_OLD" value="true"/>
                                             </link>
@@ -136,7 +136,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container>
-                                    <label >${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                    <label>${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
                                 </container>
                             </fail-widgets>
                         </section>

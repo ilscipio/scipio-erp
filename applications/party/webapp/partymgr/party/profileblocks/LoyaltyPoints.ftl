@@ -18,15 +18,12 @@ under the License.
 -->
 
   <#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>
-    <div id="totalOrders" class="screenlet">
-      <div class="screenlet-title-bar">
-        <ul>
-          <li class="h3">${uiLabelMap.PartyLoyaltyPoints}</li>
-        </ul>
-        <br class="clear" />
-      </div>
-      <div class="screenlet-body">
-        ${uiLabelMap.PartyYouHave} ${totalSubRemainingAmount} ${uiLabelMap.PartyPointsFrom} ${totalOrders} ${uiLabelMap.PartyOrderInLast} ${monthsToInclude} ${uiLabelMap.CommonMonths}.
-      </div>
-    </div>
+    <@section id="totalOrders" title="${uiLabelMap.PartyLoyaltyPoints}">
+      <@row>
+        <@cell>
+          ${uiLabelMap.PartyYouHave} ${totalSubRemainingAmount} ${uiLabelMap.PartyPointsFrom} ${totalOrders} ${uiLabelMap.PartyOrderInLast} ${monthsToInclude} ${uiLabelMap.CommonMonths}.
+        </@cell>
+      </@row>
+    </@section>
   </#if>
+  

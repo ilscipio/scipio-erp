@@ -34,20 +34,20 @@ under the License.
   ${cardNumberDisplay!}
 </#macro>
 
-  <div id="partyPaymentMethod" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.PartyPaymentMethodInformation}</li>
+  <@section id="partyPaymentMethod" title="${uiLabelMap.PartyPaymentMethodInformation}">
+
+      <ul class="${style_button_group!} ${style_button_force!}">
         <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
-          <li><a href="<@ofbizUrl>editeftaccount?partyId=${partyId}</@ofbizUrl>">${uiLabelMap.AccountingCreateNewEftAccount}</a></li>
-          <li><a href="<@ofbizUrl>editgiftcard?partyId=${partyId}</@ofbizUrl>">${uiLabelMap.AccountingCreateNewGiftCard}</a></li>
-          <li><a href="<@ofbizUrl>editcreditcard?partyId=${partyId}</@ofbizUrl>">${uiLabelMap.AccountingCreateNewCreditCard}</a></li>
-          <li><a href="<@ofbizUrl>EditBillingAccount?partyId=${partyId}</@ofbizUrl>">${uiLabelMap.AccountingCreateBillingAccount}</a></li>
+          <li><a href="<@ofbizUrl>editeftaccount?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewEftAccount}</a></li>
+          <li><a href="<@ofbizUrl>editgiftcard?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewGiftCard}</a></li>
+          <li><a href="<@ofbizUrl>editcreditcard?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewCreditCard}</a></li>
+          <li><a href="<@ofbizUrl>EditBillingAccount?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateBillingAccount}</a></li>
         </#if>
       </ul>
-      <br class="clear" />
-    </div>
-    <div class="screenlet-body">
+
+    <@row>
+      <@cell>
+      
       <#if paymentMethodValueMaps?has_content || billingAccounts?has_content>
         <table class="basic-table" cellspacing="0">
         <#if paymentMethodValueMaps?has_content>
@@ -84,20 +84,20 @@ under the License.
                     <a href="/accounting/control/manualETx?paymentMethodId=${paymentMethod.paymentMethodId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.PartyManualTx}</a>
                   </#if>
                   <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
-                    <a href="<@ofbizUrl>editcreditcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
+                    <a href="<@ofbizUrl>editcreditcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                 <#-- </td> -->
               <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
                 <#assign giftCard = paymentMethodValueMap.giftCard>
-                <td  valign="top">
+                <td>
                   ${uiLabelMap.AccountingGiftCard}
                 </td>
                 <td>
                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-                    ${giftCard.cardNumber?default("N/A")} [${giftCard.pinNumber?default("N/A")}]
+                    ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                   <#else>
                     <@maskSensitiveNumber cardNumber=giftCard.cardNumber!/>
-                    <#if !cardNumberDisplay?has_content>N/A</#if>
+                    <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                   </#if>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                   <#if paymentMethod.glAccountId?has_content>(for GL Account ${paymentMethod.glAccountId})</#if>
@@ -106,12 +106,12 @@ under the License.
                 </td>
                 <td class="button-col">
                   <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
-                    <a href="<@ofbizUrl>editgiftcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
+                    <a href="<@ofbizUrl>editgiftcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                 <#-- </td> -->
               <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
                 <#assign eftAccount = paymentMethodValueMap.eftAccount>
-                <td  valign="top">
+                <td>
                     ${uiLabelMap.PartyEftAccount}
                 </td>
                 <td>
@@ -122,11 +122,11 @@ under the License.
                 </td>
                 <td class="button-col">
                   <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
-                    <a href="<@ofbizUrl>editeftaccount?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
+                    <a href="<@ofbizUrl>editeftaccount?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                 <#-- </td> -->
               <#elseif "COMPANY_CHECK" == paymentMethod.paymentMethodTypeId>
-                <td  valign="top">
+                <td>
                   <#-- TODO: Convert hard-coded text to UI label properties -->
                   Company Check
                 </td>
@@ -144,7 +144,7 @@ under the License.
                   &nbsp;
               </#if>
               <#if security.hasEntityPermission("PAY_INFO", "_DELETE", session) || security.hasEntityPermission("ACCOUNTING", "_DELETE", session)>
-                <a href="<@ofbizUrl>deletePaymentMethod/viewprofile?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>">${uiLabelMap.CommonExpire}</a>
+                <a href="<@ofbizUrl>deletePaymentMethod/viewprofile?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonExpire}</a>
               <#else>
                 &nbsp;
               </#if>
@@ -156,7 +156,7 @@ under the License.
         <#if billingAccounts?has_content>
             <#list billingAccounts as billing>
             <tr>
-              <td  valign="top">${uiLabelMap.AccountingBilling}</td>
+              <td>${uiLabelMap.AccountingBilling}</td>
               <td>
                   <#if billing.billingAccountId?has_content>${billing.billingAccountId}</#if>
                   <#if billing.description?has_content>(${billing.description})</#if>
@@ -166,8 +166,8 @@ under the License.
                   <#if billing.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${billing.thruDate.toString()}</b></#if>
               </td>
               <td class="button-col">
-                <a href="<@ofbizUrl>EditBillingAccount?billingAccountId=${billing.billingAccountId}&amp;partyId=${partyId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
-                <a href="<@ofbizUrl>deleteBillingAccount?partyId=${partyId}&amp;billingAccountId=${billing.billingAccountId}</@ofbizUrl>">${uiLabelMap.CommonExpire}</a>
+                <a href="<@ofbizUrl>EditBillingAccount?billingAccountId=${billing.billingAccountId}&amp;partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonUpdate}</a>
+                <a href="<@ofbizUrl>deleteBillingAccount?partyId=${partyId}&amp;billingAccountId=${billing.billingAccountId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonExpire}</a>
               </td>
           </tr>
           </#list>
@@ -176,5 +176,7 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoPaymentMethodInformation}
       </#if>
-    </div>
-  </div>
+      
+      </@cell>
+    </@row>
+  </@section>

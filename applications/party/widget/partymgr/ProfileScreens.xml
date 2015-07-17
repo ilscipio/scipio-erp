@@ -60,7 +60,7 @@
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PartyPersonalInformation}" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
-                                           <include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    <include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/>
                                     <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
                                     <section>
                                         <condition>

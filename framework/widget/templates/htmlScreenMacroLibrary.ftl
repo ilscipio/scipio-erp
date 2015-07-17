@@ -200,7 +200,18 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 >&nbsp;</a></li>
 </#if>
  -->
-${menuString}
+ 
+<#-- Cato: menuString is not wrapped in UL when it's received here... 
+     in stock ofbiz it's not even rendered with macro renderer, but with old HTML renderer, as a special case... 
+     for now, make this super ugly hack as a workaround (no other place to insert central for these type of menus) 
+     TODO?: although it's expected that UL not be rendered, maybe should alter renderer so that insides of menu are rendered
+            with macro renderer (not html renderer), but not sure if breaks anything -->
+<ul class="${style_button_group!} ${style_button_force!}">
+  <#local menuString = menuString?replace('(<a\\s([^>]*\\s)?)class="([^"]*)"', '$1class="$3 button tiny"', 'r')>
+  <#local menuString = menuString?replace('(<a(?![^>]*\\sclass=)[^>]*)>', '$1 class="button tiny">', 'r')>
+  ${menuString}
+</ul>
+
 </#if>
     <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if>>
 </#macro>

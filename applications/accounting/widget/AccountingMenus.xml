@@ -158,7 +158,8 @@ under the License.
         
     </menu>
     
-    <menu name="InvoiceSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+    <menu name="InvoiceSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="button-bar button-style-2" >
         <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewInvoice}" widget-style=" create">
             <link target="newInvoice"/>
         </menu-item>
@@ -738,7 +739,8 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="BudgetSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+    <menu name="BudgetSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="button-bar button-style-2">
         <menu-item name="statusToApproved" title="${uiLabelMap.AccountingBudgetStatusToApproved}">
             <condition>
                 <and>
@@ -822,7 +824,8 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    <menu name="EditGlAcctgTransSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+    <menu name="EditGlAcctgTransSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="button-bar button-style-2" >
         <menu-item name="DuplicateAccountingTransaction">
             <link text="${uiLabelMap.AccountingDuplicateAccountingTransaction}" style="button tiny" target="copyAcctgTransAndEntries">
                 <parameter param-name="revert" value="N"/>

@@ -145,7 +145,8 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="ProfileSubTabBar" menu-container-style="button-bar button-style-2">
+    <menu name="ProfileSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="button-bar button-style-2">
         <menu-item name="createNew" title="${uiLabelMap.AccountingBillingAccount}" >
             <condition>
                 <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
@@ -333,7 +334,8 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="MyCommSubTabBar" menu-container-style="button-bar button-style-2">
+    <menu name="MyCommSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+        menu-container-style="button-bar button-style-2">
         <actions>
             <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
         </actions>

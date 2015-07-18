@@ -263,7 +263,7 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
   
   -->
     <#--<div class="${style_grid_row!}">-->
-    <div style="float:left; <#if width?has_content>width:50%</#if>">
+    <div>
     <#if confMode == "true">
       <div class="portal-column-config-title-bar">
         <ul>

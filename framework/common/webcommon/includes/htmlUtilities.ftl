@@ -97,6 +97,20 @@ Adds parameters from a hash to a URL param string (no full URL logic).
 
 <#-- 
 *************
+* containsStyleClass function
+************
+Returns true if class/style string contains given style.
+                    
+   * Parameters *
+    classes         = classes string
+    className       = name of class to find
+-->
+<#function containsStyleClass classes className>
+  <#return classes?split(" ")?seq_contains(className)>
+</#function> 
+
+<#-- 
+*************
 * addParamsToUrl function
 ************
 Adds parameters from a hash to a URL. appends delimiters as needed.
@@ -143,6 +157,8 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
     collapse        = should the field be collapsing? (default: false)
     norows          = render without the rows-container
     norows          = render without the cells-container
+    required        = required input
+    addClass        = css classes in addition to default
         
     * input *
     autoCompleteUrl = if autocomplete function exists, specification of url will make it available
@@ -172,7 +188,7 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
 <#macro field type="" label="" name="" value="" class="${style_grid_large!}12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="" postfix=false required=false>
+        fieldFormName="" formName="" postfix=false required=false addClass="">
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum=(fieldIdNum!0)+1 />
 
@@ -187,6 +203,13 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
     <#assign classes="${style_grid_small!}${12-columnspostfix}"/>
 </#if>
 
+<#if required && (!containsStyleClass(class, "required"))>
+    <#local class = class + " required">
+</#if>
+
+<#if addClass?has_content>
+    <#local class = class + " " + addClass>
+</#if>
 
 <@row collapse=collapse!false norows=norows>
     <#if label?has_content>

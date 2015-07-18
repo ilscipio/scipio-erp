@@ -22,8 +22,6 @@ under the License.
     
       ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentList")}
       
-      <hr />
-      
     <@section title="${uiLabelMap.PartyAttachContent}">
       <@row>
         <@cell>
@@ -55,9 +53,10 @@ under the License.
    
         <input type="submit" value="${uiLabelMap.CommonUpload}" class="smallSubmit" />
       </form>
-      <div id='progress_bar'><div></div></div>
-    </div>
-  </div>
+      
+      <#-- FIXME: upload submits but doesn't redirect, no progress either -->
+      <div id='progress_bar'></div>
+ 
   <script type="text/javascript">
     jQuery("#uploadPartyContent").validate({
         submitHandler: function(form) {

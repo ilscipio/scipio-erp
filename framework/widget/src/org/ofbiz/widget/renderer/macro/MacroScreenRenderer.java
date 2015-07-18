@@ -824,6 +824,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             addColumnHint = uiLabelMap.get("CommonAddAColumnToThisPortalPage");
         }
 
+        Integer columnCount = (Integer) context.get("portletColumnCount");
+        if (columnCount == null) {
+            columnCount = 1;
+        }
+        
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPageBegin ");
         sr.append("originalPortalPageId=\"");
@@ -836,6 +841,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(addColumnLabel);
         sr.append("\" addColumnHint=\"");
         sr.append(addColumnHint);
+        sr.append("\" columnCount=\"");
+        sr.append(columnCount.toString());
         sr.append("\" />");
         executeMacro(writer, sr.toString());
     }
@@ -874,6 +881,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             setColumnSizeHint = uiLabelMap.get("CommonSetColumnWidth");
         }
 
+        Integer columnCount = (Integer) context.get("portletColumnCount");
+        if (columnCount == null) {
+            columnCount = 1;
+        }
+        
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPageColumnBegin ");
         sr.append("originalPortalPageId=\"");
@@ -906,6 +918,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(colWidthLabel);
         sr.append("\" setColumnSizeHint=\"");
         sr.append(setColumnSizeHint);
+        sr.append("\" columnCount=\"");
+        sr.append(columnCount.toString());
         sr.append("\" />");
         executeMacro(writer, sr.toString());
     }   
@@ -943,6 +957,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             editAttributeHint = uiLabelMap.get("CommonEditPortletAttributes");
         }
 
+        Integer columnCount = (Integer) context.get("portletColumnCount");
+        if (columnCount == null) {
+            columnCount = 1;
+        }
+        
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPagePortletBegin ");
         sr.append("originalPortalPageId=\"");
@@ -973,6 +992,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(editAttributeHint);
         sr.append("\" confMode=\"");
         sr.append(confMode);
+        sr.append("\" columnCount=\"");
+        sr.append(columnCount.toString());
         sr.append("\"");
         if (UtilValidate.isNotEmpty(editFormName) && UtilValidate.isNotEmpty(editFormLocation)) {
             sr.append(" editAttribute=\"true\"");

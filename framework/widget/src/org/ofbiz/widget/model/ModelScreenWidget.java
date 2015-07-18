@@ -2096,6 +2096,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
                                                .cache(true)
                                                .queryList();
                 
+                int columnCount = portalPageColumns.size();
+                context.put("portletColumnCount", columnCount);
+                
                 // Renders the portalPage header
                 screenStringRenderer.renderPortalPageBegin(writer, context, this);
                 

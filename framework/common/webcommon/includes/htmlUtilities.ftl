@@ -337,6 +337,11 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
                 <@renderRadioField items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
             
             <#break>
+          <#case "file">
+            <#-- TODO: better version of this -->
+            <input type="file" name="${name}"<#if class?has_content> class="${class}"</#if><#if size?has_content> size="${size}"</#if> />
+            <#break> 
+           
           <#default>
             <#if value?has_content>
                 <@renderField text=value/>

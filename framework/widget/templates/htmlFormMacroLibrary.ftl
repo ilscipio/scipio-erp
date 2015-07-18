@@ -953,6 +953,9 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#local viewIndex = viewIndex?floor>
   
   <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
+  <#if (viewIndexLast < viewIndexFirst)>
+    <#local viewIndexLast = viewIndexFirst>
+  </#if>
   <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
       ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
       <#if (viewIndex < viewIndexFirst)>
@@ -987,6 +990,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
        FIXME: POST/forcePost currently only supported when js enabled (non-js need extra markup for a form, ugly),
               currently non-js falls back to GET only, won't always work -->
   
+  <#-- note: implies (listSize > 0), some cases this gets called with listSize zero -->
   <#if (listSize > minPageSize)>
     <#local multiPage = (listSize > viewSize)>
   

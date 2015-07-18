@@ -476,6 +476,9 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
     <#local viewIndex = viewIndex?floor>
     
     <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
+    <#if (viewIndexLast < viewIndexFirst)>
+      <#local viewIndexLast = viewIndexFirst>
+    </#if>
     <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
         ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlUtilitiesPaginate")!}<#t>
         <#if (viewIndex < viewIndexFirst)>

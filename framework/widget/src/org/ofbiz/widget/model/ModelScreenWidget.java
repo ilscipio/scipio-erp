@@ -2150,6 +2150,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
                         context.put("nextPortletSeqId", nextPortletSeqId);
                         context.put("prevColumnSeqId", prevColumnSeqId);
                         context.put("nextColumnSeqId", nextColumnSeqId);
+                        
+                        // Cato: make these available to portlets
+                        context.put("columnWidthPercentage", columnValue.getString("columnWidthPercentage"));
+                        context.put("columnWidthPixels", columnValue.getString("columnWidthPixels"));
                        
                         // Get portlet's attributes
                         portletAttributes = EntityQuery.use(delegator)

@@ -947,6 +947,9 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String prevColumnSeqId = (String) context.get("prevColumnSeqId");
         String nextColumnSeqId = (String) context.get("nextColumnSeqId");
 
+        String columnWidthPercentage = (String) context.get("columnWidthPercentage");
+        String columnWidthPixels = (String) context.get("columnWidthPixels");
+        
         Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         String delPortletHint = "";
         String editAttributeHint = "";
@@ -995,6 +998,15 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append("\" columnCount=\"");
         sr.append(columnCount.toString());
         sr.append("\"");
+        if (UtilValidate.isNotEmpty(columnWidthPixels)) {
+            sr.append(" width=\"");
+            sr.append(columnWidthPixels);
+            sr.append("px\"");
+        } else if (UtilValidate.isNotEmpty(columnWidthPercentage)) {
+            sr.append(" width=\"");
+            sr.append(columnWidthPercentage);
+            sr.append("%\"");
+        }
         if (UtilValidate.isNotEmpty(editFormName) && UtilValidate.isNotEmpty(editFormLocation)) {
             sr.append(" editAttribute=\"true\"");
         }

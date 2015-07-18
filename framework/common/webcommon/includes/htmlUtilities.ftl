@@ -224,7 +224,7 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
         <#if type!="radio">
         <@cell class=subclasses nocells=nocells>
                 <#if type=="checkbox" || collapse==false>
-                    <label class="" for="${id}">${label}</label>
+                    <label class=""<#if id?has_content> for="${id}"</#if>>${label}</label>
                 <#else>
                     <span class="prefix">${label}</span>
                 </#if>           

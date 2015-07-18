@@ -17,17 +17,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <div id="partyAttributes" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.PartyAttributes}</li>
+  <@section id="partyAttributes" title="${uiLabelMap.PartyAttributes}">
+      <ul class="${style_button_group!}">
         <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-          <li><a href="<@ofbizUrl>editPartyAttribute?partyId=${party.partyId!}</@ofbizUrl>">${uiLabelMap.CommonCreateNew}</a></li>
+          <li><a href="<@ofbizUrl>editPartyAttribute?partyId=${party.partyId!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
         </#if>
       </ul>
-      <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+   
+    <@row>
+      <@cell>
       <#if attributes?has_content>
         <table class="basic-table hover-bar" cellspacing="0">
           <thead>
@@ -39,7 +37,7 @@ under the License.
           </thead>
           <#assign alt_row = false>
           <#list attributes as attr>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr<#if alt_row> class="alternate-row"</#if>>
               <td>
                 ${attr.attrName!}
               </td>
@@ -47,7 +45,7 @@ under the License.
                 ${attr.attrValue!}
               </td>
               <td class="button-col">
-                <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId!}&attrName=${attr.attrName!}</@ofbizUrl>">${uiLabelMap.CommonEdit}</a>
+                <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId!}&attrName=${attr.attrName!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a>
               </td>
             </tr>
             <#-- toggle the row color -->
@@ -57,5 +55,6 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoPartyAttributesFound}
       </#if>
-    </div>
-  </div>
+      </@cell>
+    </@row>
+  </@section>

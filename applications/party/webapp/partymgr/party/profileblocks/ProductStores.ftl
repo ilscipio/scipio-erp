@@ -17,14 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="partyProductStores" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductStores}</li>
-    </ul>
-    <br class="clear" />
-  </div>
-  <div class="screenlet-body">
+<@section id="partyProductStores" title="${uiLabelMap.ProductStores}">
+  <@row>
+    <@cell>
     <#if productStoreRoles?has_content>
       <table class="basic-table" cellspacing="0">
        <thead>
@@ -38,7 +33,7 @@ under the License.
           <#assign roleType = delegator.findOne("RoleType", {"roleTypeId" : productStoreRole.roleTypeId}, true) />
           <tr>
             <td class="button-col">
-              <a href="/catalog/control/FindProductStoreRoles?partyId=${productStoreRole.partyId}&amp;productStoreId=${productStore.productStoreId}">${productStore.storeName?default("${uiLabelMap.ProductNoDescription}")} (${productStore.productStoreId})</a>
+              <a href="/catalog/control/FindProductStoreRoles?partyId=${productStoreRole.partyId}&amp;productStoreId=${productStore.productStoreId}">${productStore.storeName!("${uiLabelMap.ProductNoDescription}")} (${productStore.productStoreId})</a>
             </td>
             <td>${roleType.description!}</td>
           </tr>
@@ -47,5 +42,6 @@ under the License.
     <#else>
       ${uiLabelMap.PartyNoProductStoreFoundForThisParty}
     </#if>
-  </div>
-</div>
+    </@cell>
+  </@row>
+</@section>

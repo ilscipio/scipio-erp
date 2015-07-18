@@ -19,7 +19,7 @@ under the License.
 
   <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}">
 
-      <ul class="${style_button_group!} ${style_button_force!}">
+      <ul class="${style_button_group!}">
         <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
           <li><a href="<@ofbizUrl>editcontactmech?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
         </#if>

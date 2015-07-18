@@ -17,20 +17,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <div id="partyAVS" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.PartyAvsOver}</li>
-      </ul>
-      <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
-      <span >${uiLabelMap.PartyAvsString}</span>${(avsOverride.avsDeclineString)?default("${uiLabelMap.CommonGlobal}")}
+  <@section id="partyAVS" title="${uiLabelMap.PartyAvsOver}">
+
+    <@row>
+      <@cell>
+      ${uiLabelMap.PartyAvsString} ${(avsOverride.avsDeclineString)?default("${uiLabelMap.CommonGlobal}")}
       <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
-        <a href="<@ofbizUrl>editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonEdit}</a>
+        <a href="<@ofbizUrl>editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a>
         <#if avsOverride??>
-          <a href="<@ofbizUrl>resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonReset}</a>
+          <a href="<@ofbizUrl>resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonReset}</a>
         </#if>
       </#if>
-    </div>
-  </div>
+      </@cell>
+    </@row>
+  </@section>
+  

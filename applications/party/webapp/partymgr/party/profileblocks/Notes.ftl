@@ -17,27 +17,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <div id="partyNotes" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.CommonNotes}</li>
+  <@section id="partyNotes" title="${uiLabelMap.CommonNotes}">
+      <ul class="${style_button_group!}">
         <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
-          <li><a href="<@ofbizUrl>AddPartyNote?partyId=${partyId}</@ofbizUrl>">${uiLabelMap.CommonCreateNew}</a></li>
+          <li><a href="<@ofbizUrl>AddPartyNote?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
         </#if>
       </ul>
-      <br class="clear" />
-    </div>
-    <div class="screenlet-body">
+     
+    <@row>
+      <@cell>
       <#if notes?has_content>
-        <table width="100%" border="0" cellpadding="1">
+        <table>
           <#list notes as noteRef>
             <tr>
               <td>
-                <div><b>${uiLabelMap.FormFieldTitle_noteName}: </b>${noteRef.noteName!}</div>
+                <div><strong>${uiLabelMap.FormFieldTitle_noteName}: </strong>${noteRef.noteName!}</div>
                 <#if noteRef.noteParty?has_content>
-                  <div><b>${uiLabelMap.CommonBy}: </b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, noteRef.noteParty, true)}</div>
+                  <div><strong>${uiLabelMap.CommonBy}: </strong>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, noteRef.noteParty, true)}</div>
                 </#if>
-                <div><b>${uiLabelMap.CommonAt}: </b>${noteRef.noteDateTime.toString()}</div>
+                <div><strong>${uiLabelMap.CommonAt}: </strong>${noteRef.noteDateTime.toString()}</div>
               </td>
               <td>
                 ${noteRef.noteInfo}
@@ -51,5 +49,6 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoNotesForParty}
       </#if>
-    </div>
-  </div>
+      </@cell>
+    </@row>
+  </@section>

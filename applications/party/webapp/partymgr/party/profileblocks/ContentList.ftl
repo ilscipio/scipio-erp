@@ -17,7 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <div id="partyContentList">
+  <@section id="partyContentList">
+    <@row>
+      <@cell>
       <#if partyContent?has_content>
         <table class="basic-table" cellspacing="0">
           <#list partyContent as pContent>
@@ -36,14 +38,14 @@ under the License.
               <td>${pContent.fromDate!}</td>
               <td class="button-col">
                 <#if (content.contentName?has_content)>
-                    <a href="<@ofbizUrl>img/${content.contentName}?imgId=${(content.dataResourceId)!}</@ofbizUrl>">${uiLabelMap.CommonView}</a>
+                    <a href="<@ofbizUrl>img/${content.contentName}?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonView}</a>
                 </#if>
                 <form name="removePartyContent_${pContent_index}" method="post" action="<@ofbizUrl>removePartyContent/viewprofile</@ofbizUrl>">
                   <input type="hidden" name="contentId" value="${pContent.contentId}" />
                   <input type="hidden" name="partyId" value="${pContent.partyId}" />
                   <input type="hidden" name="partyContentTypeId" value="${pContent.partyContentTypeId}" />
                   <input type="hidden" name="fromDate" value="${pContent.fromDate}" />
-                  <a href="javascript:document.removePartyContent_${pContent_index}.submit()">${uiLabelMap.CommonRemove}</a>
+                  <a href="javascript:document.removePartyContent_${pContent_index}.submit()" class="button tiny">${uiLabelMap.CommonRemove}</a>
                 </form>
               </td>
             </tr>
@@ -52,4 +54,6 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoContent}
       </#if>
-  </div>
+      </@cell>
+    </@row>  
+  </@section>

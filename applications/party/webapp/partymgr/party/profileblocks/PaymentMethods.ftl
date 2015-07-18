@@ -36,7 +36,7 @@ under the License.
 
   <@section id="partyPaymentMethod" title="${uiLabelMap.PartyPaymentMethodInformation}">
 
-      <ul class="${style_button_group!} ${style_button_force!}">
+      <ul class="${style_button_group!}">
         <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
           <li><a href="<@ofbizUrl>editeftaccount?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewEftAccount}</a></li>
           <li><a href="<@ofbizUrl>editgiftcard?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewGiftCard}</a></li>

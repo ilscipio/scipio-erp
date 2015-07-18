@@ -16,43 +16,44 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-  <div id="partyContent" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.PartyContent}</li>
-      </ul>
-      <br class="clear" />
-    </div>
-    <div class="screenlet-body">
-          ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentList")}
+  <@section id="partyContent" title="${uiLabelMap.PartyContent}">
+    <@row>
+      <@cell>
+    
+      ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentList")}
+      
       <hr />
-      <div >${uiLabelMap.PartyAttachContent}</div>
+      
+    <@section title="${uiLabelMap.PartyAttachContent}">
+      <@row>
+        <@cell>
       <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
         <input type="hidden" name="partyId" value="${partyId}" id="contentPartyId"/>
-        <input type="file" name="uploadedFile" class="required error" size="25"/>
-        <div>
-        <select name="partyContentTypeId" class="required error">
+
+        <@field type="file" label="${uiLabelMap.PartyAttachFile}" name="uploadedFile" required=true addClass="error" size=25 />
+        
+        <@field type="select" label="${uiLabelMap.PartyContentType}" name="partyContentTypeId" required=true addClass="error">
           <option value="">${uiLabelMap.PartySelectPurpose}</option>
           <#list partyContentTypes as partyContentType>
-            <option value="${partyContentType.partyContentTypeId}">${partyContentType.get("description", locale)?default(partyContentType.partyContentTypeId)}</option>
-          </#list>
-        </select>
-        </div>
-        <div >${uiLabelMap.PartyIsPublic}</div>
-        <select name="isPublic">
-            <option value="N">${uiLabelMap.CommonNo}</option>
-            <option value="Y">${uiLabelMap.CommonYes}</option>
-        </select>
-        <select name="roleTypeId">
-          <option value="">${uiLabelMap.PartySelectRole}</option>
+            <option value="${partyContentType.partyContentTypeId}">${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
+          </#list> 
+        </@field>
+
+        <@field type="select" label="${uiLabelMap.PartyIsPublic}" name="isPublic">
+          <option value="N">${uiLabelMap.CommonNo}</option>
+          <option value="Y">${uiLabelMap.CommonYes}</option>
+        </@field>
+       
+        <@field type="select" label="${uiLabelMap.PartySelectRole}" name="roleTypeId">
           <#list roles as role>
-            <option value="${role.roleTypeId}" <#if role.roleTypeId == "_NA_">selected="selected"</#if>>${role.get("description", locale)?default(role.roleTypeId)}</option>
+            <option value="${role.roleTypeId}" <#if role.roleTypeId == "_NA_">selected="selected"</#if>>${role.get("description", locale)!(role.roleTypeId)}</option>
           </#list>
-        </select>
-        <input type="submit" value="${uiLabelMap.CommonUpload}" />
+        </@field>
+   
+        <input type="submit" value="${uiLabelMap.CommonUpload}" class="smallSubmit" />
       </form>
       <div id='progress_bar'><div></div></div>
     </div>
@@ -67,3 +68,10 @@ under the License.
         }
     });
   </script>
+        </@cell>
+      </@row>
+    </@section>
+    
+      </@cell>
+    </@row>
+  </@section>

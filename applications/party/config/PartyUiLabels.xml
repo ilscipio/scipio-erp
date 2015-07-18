@@ -13011,4 +13011,9 @@
         <value xml:lang="zh">找不到邮政编码</value>
         <value xml:lang="zh_TW">找不到郵遞區號</value>
     </property>
+    <property key="PartyContentType">
+        <value xml:lang="de">Akteur Inhaltstyp</value>
+        <value xml:lang="en">Party Content Type</value>
+        <value xml:lang="fr">Type du contenu de l'acteur</value>
+    </property>
 </resource>

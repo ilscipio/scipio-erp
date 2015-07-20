@@ -125,6 +125,35 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
   <#return addParamsToStr(addParamDelimToUrl(url, paramDelim), paramMap, paramDelim, includeEmpty)>
 </#function> 
 
+<#-- 
+*************
+* requireScriptOfbizUrl macro
+************
+This informs the decorator that the given ofbiz URI must be made available to javascript
+code through the getOfbizUrl(url) JS function.
+
+the screen/ftl has to communicate to the decorator which URIs it needs to use, so
+this is one such mechanism (other option: layoutSettings? TODO? any way is messy).
+                    
+Ideally this shouldn't needed and getOfbizUrl should just work, but URLs are generated
+dynamic using controller request defs and can't predict URL patterns unless rewrite
+@ofbizUrl in JS.                    
+                    
+   * Parameters *
+    url             = controller request uri
+-->
+
+<#macro requireScriptOfbizUrl uri htmlwrap=false>
+  <#if htmlwrap>
+<script language="JavaScript" type="text/javascript">
+<!-- //
+  </#if>
+    commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
+  <#if htmlwrap>
+// -->
+</script>
+  </#if>
+</#macro>
 
 <#-- 
 ******************

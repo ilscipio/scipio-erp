@@ -3,18 +3,18 @@
 <!-- //
 
     if (typeof variable === 'undefined') {
-        var commonOfbizUris = {};
+        var commonOfbizUrls = {};
     }
 
     <#-- Common Ofbiz URIs for use in javascript -->
-    commonOfbizUris["getJSONuiLabelArray"] = "<@ofbizUrl>getJSONuiLabelArray</@ofbizUrl>";
-    commonOfbizUris["getJSONuiLabel"] = "<@ofbizUrl>getJSONuiLabel</@ofbizUrl>";
+    <@requireScriptOfbizUrl uri="getJSONuiLabelArray" />
+    <@requireScriptOfbizUrl uri="getJSONuiLabel" />
     
-    <#-- TODO: Improve and expand this somehow; too hardcoded! but difficult cause 
-         generated URLs depend on controller request defs -->
+    <#-- NOTE: a screen that needs a URL in JS must call @requireScriptOfbizUrl 
+         FTL macro, for now, see htmlUtilities.ftl -->
     function getOfbizUrl(url) {
-        if (url in commonOfbizUris) {
-            return commonOfbizUris[url];
+        if (url in commonOfbizUrls) {
+            return commonOfbizUrls[url];
         }
         else {
             return "";

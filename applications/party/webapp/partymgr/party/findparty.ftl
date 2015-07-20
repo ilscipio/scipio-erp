@@ -370,6 +370,7 @@ under the License.
   <#if lookupErrorMessage??>
     <h3>${lookupErrorMessage}</h3>
   </#if>
-  </div>
 </#if>
+
+</div>
 </div>

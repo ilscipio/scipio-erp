@@ -29,11 +29,13 @@ jQuery(document).ready(function() {
 
     ppcUiLabelJsonObjects = getJSONuiLabels(labelObject);
 
-    jQuery("#upc_progress_bar").progressbar({value: 0});
+    //jQuery("#upc_progress_bar").progressbar({value: 0});
+    jQuery("#upc_progress_bar_meter").css({"width": "0%"});
 });
 
 function ppcUploadPartyContent(event){
-    jQuery("#upc_progress_bar").progressbar("option", "value", 0);
+    //jQuery("#upc_progress_bar").progressbar("option", "value", 0);
+	jQuery("#upc_progress_bar_meter").css({"width": "0%"})
     var targetFrame = jQuery('#target_upload');
     var infodiv = jQuery('#content-messages');
     if(infodiv.length < 1){
@@ -59,7 +61,9 @@ function ppcUploadCompleted(){
 
     jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[2]);
     // reset progressbar
-    jQuery("#upc_progress_bar").progressbar("option", "value", 0);
+    //jQuery("#upc_progress_bar").progressbar("option", "value", 0);
+    // Cato: why reset here?
+    //jQuery("#upc_progress_bar_meter").css({"width": "0%"})
 
     // remove iFrame
     jQuery("#target_upload").remove();
@@ -93,7 +97,7 @@ function ppcGetUploadProgressStatus(event){
         tick: function(counter, timerId) {
             var timerId = timerId;
             jQuery.ajax({
-                url: 'getFileUploadProgressStatus',
+                url: getOfbizUrl('getFileUploadProgressStatus'),
                 dataType: 'json',
                 success: function(data) {
                     if (data._ERROR_MESSAGE_LIST_ != undefined) {
@@ -104,7 +108,8 @@ function ppcGetUploadProgressStatus(event){
                         timerId.stop();
                      } else {
                         var readPercent = data.readPercent;
-                        jQuery("#upc_progress_bar").progressbar("option", "value", readPercent);
+                        //jQuery("#upc_progress_bar").progressbar("option", "value", readPercent);
+                        jQuery("#upc_progress_bar_meter").css({"width": readPercent+"%"})
                         jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[0] + "... (" + readPercent + "%)");
                         if(readPercent > 99){
                             jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[1] + "...");

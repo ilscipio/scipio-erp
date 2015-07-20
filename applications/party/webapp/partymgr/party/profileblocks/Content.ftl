@@ -51,13 +51,20 @@ under the License.
           </#list>
         </@field>
    
-        <input type="submit" value="${uiLabelMap.CommonUpload}" class="smallSubmit" />
+        <@row>
+          <@cell columns=2>
+            <input type="submit" value="${uiLabelMap.CommonUpload}" class="smallSubmit" />
+          </@cell>
+          <@cell columns=10>
+            <@progress id="upc_progress_bar" />
+          </@cell>
+        </@row>
       </form>
-      
-      <#-- FIXME: upload submits but doesn't redirect, no progress either -->
-      <div id="upc_progress_bar"></div>
  
   <script type="text/javascript">
+  
+    <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" />
+    
     jQuery("#uploadPartyContent").validate({
         submitHandler: function(form) {
             <#-- call upload scripts - functions defined in PartyProfileContent.js -->

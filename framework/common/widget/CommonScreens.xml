@@ -307,6 +307,13 @@ under the License.
                 </section>
                 <!-- render content area -->
                 <container style="row fullWidth" id="content-main-section">
+                    <!-- TODO?: could have a layoutSettings.inlineJavaScripts[] containing FTL locations for templates to 
+                         include in <head></head>, but doesn't seem worth it for now -->
+                    <platform-specific>
+                        <html>
+                            <html-template location="component://common/webcommon/includes/commonScripts.ftl" />
+                        </html>
+                    </platform-specific>
                     <!-- Closer to body: <decorator-section-include name="pre-body" /> -->
                     <section>
                         <!-- Not Authenticated Screens -->

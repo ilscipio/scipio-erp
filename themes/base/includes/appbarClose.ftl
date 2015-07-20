@@ -21,7 +21,9 @@ under the License.
         </#if>
       </section>
     </nav>
-        <!-- close the off-canvas menu -->
+    
+    <#-- close the off-canvas menu -->
     <a class="exit-off-canvas"></a>
 
-<section role="main" class="scroll-container">
+    <section role="main" class="scroll-container">
+    

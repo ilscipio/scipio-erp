@@ -30,9 +30,17 @@ under the License.
     </div>
     </div>
 -->
-</section>
-</div></div>
-<!-- FOOTER SECTION -->
+
+    <#-- close the off-canvas menu -->
+    <a class="exit-off-canvas"></a>
+
+    </section><#-- /<section role="main" class="scroll-container"> -->
+
+</div><#-- /<div class="off-canvas-wrap" data-offcanvas id="body-content"> -->
+</div><#-- /<div class="inner-wrap"> -->
+
+
+<#-- FOOTER SECTION -->
 <footer id="footer">
     <#--
     <div class="row"> 
@@ -48,7 +56,7 @@ under the License.
          </small>
         </div>
     </div>
-</footer> <!-- END FOOTER -->
+</footer> <#-- END FOOTER -->
 
     <#-- New in cato; for app scripts that aren't (exclusively) styling but must go at end of page -->
     <#if layoutSettings.javaScriptsFooter?has_content>

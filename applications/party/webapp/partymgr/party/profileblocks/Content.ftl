@@ -55,14 +55,14 @@ under the License.
       </form>
       
       <#-- FIXME: upload submits but doesn't redirect, no progress either -->
-      <div id='progress_bar'></div>
+      <div id="ppc_progress_bar"></div>
  
   <script type="text/javascript">
     jQuery("#uploadPartyContent").validate({
         submitHandler: function(form) {
             <#-- call upload scripts - functions defined in PartyProfileContent.js -->
-            uploadPartyContent();
-            getUploadProgressStatus();
+            ppcUploadPartyContent();
+            ppcGetUploadProgressStatus();
             form.submit();
         }
     });

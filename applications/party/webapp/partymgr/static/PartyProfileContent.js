@@ -20,20 +20,20 @@ under the License.
 /**
  *
  */
-var uiLabelJsonObjects = null;
+var ppcUiLabelJsonObjects = null;
 jQuery(document).ready(function() {
 
     var labelObject = {
             "CommonUiLabels" : ["CommonUpload", "CommonSave", "CommonCompleted"]
           };
 
-    uiLabelJsonObjects = getJSONuiLabels(labelObject);
+    ppcUiLabelJsonObjects = getJSONuiLabels(labelObject);
 
-    jQuery("#progress_bar").progressbar({value: 0});
+    jQuery("#ppc_progress_bar").progressbar({value: 0});
 });
 
-function uploadPartyContent(event){
-    jQuery("#progress_bar").progressbar("option", "value", 0);
+function ppcUploadPartyContent(event){
+    jQuery("#ppc_progress_bar").progressbar("option", "value", 0);
     var targetFrame = jQuery('#target_upload');
     var infodiv = jQuery('#content-messages');
     if(infodiv.length < 1){
@@ -44,29 +44,29 @@ function uploadPartyContent(event){
     }
     jQuery('#uploadPartyContent').attr("target", "target_upload");
 
-    var labelField = jQuery("#progressBarSavingMsg");
+    var labelField = jQuery("#ppcProgressBarSavingMsg");
     if (labelField.length) {
         labelField.remove();
     }
 }
 
-function uploadCompleted(){
+function ppcUploadCompleted(){
     var iframePartyContentList = jQuery("#target_upload").contents().find("#partyContentList").html();
 
     // update partyContentList - copy the Data from the iFrame partyContentList
     // to the page partyContentList
     jQuery("#partyContentList").html(iframePartyContentList);
 
-    jQuery('#progressBarSavingMsg').html(uiLabelJsonObjects.CommonUiLabels[2]);
+    jQuery('#ppcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[2]);
     // reset progressbar
-    jQuery("#progress_bar").progressbar("option", "value", 0);
+    jQuery("#ppc_progress_bar").progressbar("option", "value", 0);
 
     // remove iFrame
     jQuery("#target_upload").remove();
     return;
 }
 
-function checkIframeStatus() {
+function ppcCheckIframeStatus() {
     var iframePartyContentList = null;
     // if the new partyContentList isn't created wait a few ms and call the
     // method again
@@ -77,15 +77,15 @@ function checkIframeStatus() {
             iframePartyContentList = jQuery("#target_upload").contents().find("#partyContentList");
             if (iframePartyContentList != null && iframePartyContentList.length > 0) {
                 timerId.stop();
-                uploadCompleted();
+                ppcUploadCompleted();
             }
         }
     });
     return;
 }
 
-function getUploadProgressStatus(event){
-    jQuery('#uploadPartyContent').append("<span id='progressBarSavingMsg' class='label'>" + uiLabelJsonObjects.CommonUiLabels[0] + "...</span>");
+function ppcGetUploadProgressStatus(event){
+    jQuery('#uploadPartyContent').append("<span id='ppcProgressBarSavingMsg' class='label'>" + ppcUiLabelJsonObjects.CommonUiLabels[0] + "...</span>");
     var i=0;
     jQuery.fjTimer({
         interval: 1000,
@@ -104,14 +104,14 @@ function getUploadProgressStatus(event){
                         timerId.stop();
                      } else {
                         var readPercent = data.readPercent;
-                        jQuery("#progress_bar").progressbar("option", "value", readPercent);
-                        jQuery('#progressBarSavingMsg').html(uiLabelJsonObjects.CommonUiLabels[0] + "... (" + readPercent + "%)");
+                        jQuery("#ppc_progress_bar").progressbar("option", "value", readPercent);
+                        jQuery('#ppcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[0] + "... (" + readPercent + "%)");
                         if(readPercent > 99){
-                            jQuery('#progressBarSavingMsg').html(uiLabelJsonObjects.CommonUiLabels[1] + "...");
+                            jQuery('#ppcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[1] + "...");
                             // stop the fjTimer
                             timerId.stop();
                             // call the upload complete method to do final stuff
-                            checkIframeStatus();
+                            ppcCheckIframeStatus();
                         }
                      }
                 }

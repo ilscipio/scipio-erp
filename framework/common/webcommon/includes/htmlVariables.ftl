@@ -125,13 +125,16 @@ under the License.
 <#global "style_pricing_cta"          = "cta-button" />
 <#global "style_pricing_bullet"       = "bullet-item" />
 
-
 <#-- Modal -->
 <#global "style_modal_wrap"         ="reveal-modal" />
 
 <#-- Chart -->
 <#global "style_chart_legend"       ="chart-legend" />
 
+<#-- Progress Bar -->
+<#global "style_progress_container"   = "progress" />   <#-- Bootstrap: "progress" -->
+<#global "style_progress_wrap"        = "" />           <#-- Bootstrap: "progress-bar" -->
+<#global "style_progress_bar"         = "meter" />       <#-- Bootstrap: "sr-only" -->
 
 <#-- UTLITY VARIABLES END -->
 

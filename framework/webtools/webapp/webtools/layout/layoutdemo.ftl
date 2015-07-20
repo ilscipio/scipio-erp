@@ -124,7 +124,6 @@
     </@row>
 </@section>
 
-<#-- Currently not included-->
 <@section>
     <h2 ${mtarget("charts")} id="charts">Charts</h2>
     <@row>
@@ -158,4 +157,9 @@
             </@chart>
         </@cell>
     </@row>
+</@section>
+
+<@section>
+    <h2 ${mtarget("misc")} id="misc">Misc</h2>
+    <@progress value=60/>
 </@section>

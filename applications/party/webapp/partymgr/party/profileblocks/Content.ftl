@@ -55,7 +55,7 @@ under the License.
       </form>
       
       <#-- FIXME: upload submits but doesn't redirect, no progress either -->
-      <div id="ppc_progress_bar"></div>
+      <div id="upc_progress_bar"></div>
  
   <script type="text/javascript">
     jQuery("#uploadPartyContent").validate({

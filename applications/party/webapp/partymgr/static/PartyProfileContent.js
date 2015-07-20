@@ -29,11 +29,11 @@ jQuery(document).ready(function() {
 
     ppcUiLabelJsonObjects = getJSONuiLabels(labelObject);
 
-    jQuery("#ppc_progress_bar").progressbar({value: 0});
+    jQuery("#upc_progress_bar").progressbar({value: 0});
 });
 
 function ppcUploadPartyContent(event){
-    jQuery("#ppc_progress_bar").progressbar("option", "value", 0);
+    jQuery("#upc_progress_bar").progressbar("option", "value", 0);
     var targetFrame = jQuery('#target_upload');
     var infodiv = jQuery('#content-messages');
     if(infodiv.length < 1){
@@ -44,7 +44,7 @@ function ppcUploadPartyContent(event){
     }
     jQuery('#uploadPartyContent').attr("target", "target_upload");
 
-    var labelField = jQuery("#ppcProgressBarSavingMsg");
+    var labelField = jQuery("#upcProgressBarSavingMsg");
     if (labelField.length) {
         labelField.remove();
     }
@@ -57,9 +57,9 @@ function ppcUploadCompleted(){
     // to the page partyContentList
     jQuery("#partyContentList").html(iframePartyContentList);
 
-    jQuery('#ppcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[2]);
+    jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[2]);
     // reset progressbar
-    jQuery("#ppc_progress_bar").progressbar("option", "value", 0);
+    jQuery("#upc_progress_bar").progressbar("option", "value", 0);
 
     // remove iFrame
     jQuery("#target_upload").remove();
@@ -85,7 +85,7 @@ function ppcCheckIframeStatus() {
 }
 
 function ppcGetUploadProgressStatus(event){
-    jQuery('#uploadPartyContent').append("<span id='ppcProgressBarSavingMsg' class='label'>" + ppcUiLabelJsonObjects.CommonUiLabels[0] + "...</span>");
+    jQuery('#uploadPartyContent').append("<span id='upcProgressBarSavingMsg' class='label'>" + ppcUiLabelJsonObjects.CommonUiLabels[0] + "...</span>");
     var i=0;
     jQuery.fjTimer({
         interval: 1000,
@@ -104,10 +104,10 @@ function ppcGetUploadProgressStatus(event){
                         timerId.stop();
                      } else {
                         var readPercent = data.readPercent;
-                        jQuery("#ppc_progress_bar").progressbar("option", "value", readPercent);
-                        jQuery('#ppcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[0] + "... (" + readPercent + "%)");
+                        jQuery("#upc_progress_bar").progressbar("option", "value", readPercent);
+                        jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[0] + "... (" + readPercent + "%)");
                         if(readPercent > 99){
-                            jQuery('#ppcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[1] + "...");
+                            jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[1] + "...");
                             // stop the fjTimer
                             timerId.stop();
                             // call the upload complete method to do final stuff

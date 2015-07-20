@@ -161,5 +161,9 @@
 
 <@section>
     <h2 ${mtarget("misc")} id="misc">Misc</h2>
-    <@progress value=60/>
+    <@progress value=5 id="test"/>
+    <#-- simple animation test -->
+    <script>
+    $('#test_meter').css({"width": "78%","transition-duration": "3s"});
+    </script>
 </@section>

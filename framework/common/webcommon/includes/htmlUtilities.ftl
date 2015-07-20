@@ -974,14 +974,21 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 
     Usage example:  
     <@progress value=40/>             
+    
+   Can be animated using js, example: 
+   
+   $('#${id}_meter').css("width", "78%");
+    
                     
    * General Attributes *
     value          = Percentage done
+    id             = custom id
     type           = (warning|info|success) default: success
     class          = Adds classes - please use "(small|medium|large)-block-grid-#"
     showValue      = Display value inside bar
+    
 -->
-<#macro progress value=0 type="" class="" showValue=false>
+<#macro progress value=0 id="" type="" class="" showValue=false>
     <#switch type>
       <#case "alert">
         <#assign color=style_color_alert!/>
@@ -995,9 +1002,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
       <#default>
         <#assign color=style_color_success!/>
     </#switch>
-    <div class="${style_progress_container}<#if !style_progress_wrap?has_content && class?has_content> ${class!}</#if><#if color?has_content> ${color!}</#if>">
-      <#if style_progress_wrap?has_content><div class="${style_progress_wrap!}<#if class?has_content> ${class!}</#if>" role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
-            <span class="${style_progress_bar!}"<#if !style_progress_wrap?has_content> style="width: ${value!}%"</#if>><#if showValue?has_content>${value!}</#if></span>
+    <div class="${style_progress_container}<#if !style_progress_wrap?has_content && class?has_content> ${class!}</#if><#if color?has_content> ${color!}</#if>"<#if id?has_content> ${id!}</#if>>
+      <#if style_progress_wrap?has_content><div class="${style_progress_wrap!}<#if class?has_content> ${class!}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
+            <span class="${style_progress_bar!}"<#if !style_progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
       <#if style_progress_wrap?has_content></div></#if>
     </div>
 </#macro>

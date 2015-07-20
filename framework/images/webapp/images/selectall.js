@@ -811,6 +811,7 @@ function waitSpinnerHide() {
 
 /**
  * Reads the requiered uiLabels from the uiLabelXml Files
+ * FIXME: Cato: Method requires sync ajax if it's going to return a value (added); should find a better way to write this
  * @param requiredLabels JSON Object {resource : [label1, label2 ...], resource2 : [label1, label2, ...]}
  * @return JSON Object
  */
@@ -835,6 +836,7 @@ function getJSONuiLabels(requiredLabels) {
 
 /**
  * Read the requiered uiLabel from the uiLabelXml Resource
+ * FIXME: Cato: Method requires sync ajax if it's going to return a value (added); should find a better way to write this
  * @param uiResource String
  * @param errUiLabel String
  * @returns String with Label

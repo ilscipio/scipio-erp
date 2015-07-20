@@ -20,7 +20,7 @@ under the License.
 /**
  *
  */
-var uiLabelJsonObject = null;
+var uiLabelJsonObjects = null;
 jQuery(document).ready(function() {
 
     var labelObject = {

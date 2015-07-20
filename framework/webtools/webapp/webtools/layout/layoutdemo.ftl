@@ -164,6 +164,6 @@
     <@progress value=5 id="test"/>
     <#-- simple animation test -->
     <script>
-    $('#test_meter').css({"width": "78%","transition-duration": "3s"});
+    $('#test_meter').css({"width": "78%"});
     </script>
 </@section>

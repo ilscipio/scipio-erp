@@ -270,6 +270,11 @@ ul {
 /*MISC*/
 $pie-color: $primary-color; // chart-color
 
+.progress{
+    .meter{
+        transition-duration: 3s;    //CSS3 progress bar animation
+    }
+}
 
 
 // Medium devices

@@ -821,7 +821,7 @@ function getJSONuiLabels(requiredLabels) {
 
     if (requiredLabels != null && requiredLabels != "") {
         jQuery.ajax({
-            url: commonOfbizUris.getJSONuiLabelArray,
+            url: getOfbizUrl("getJSONuiLabelArray"),
             type: "POST",
             async: false,
             data: {"requiredLabels" : requiredLabelsStr},
@@ -850,7 +850,7 @@ function getJSONuiLabel(uiResource, errUiLabel) {
 
     if (requiredLabel != null && requiredLabel != "") {
         jQuery.ajax({
-            url: commonOfbizUris.getJSONuiLabel,
+            url: getOfbizUrl("getJSONuiLabel"),
             type: "POST",
             async: false,
             data: {"requiredLabel" : requiredLabelStr},

@@ -23,7 +23,7 @@
 
     <#-- theme style variables -->
   <#if styles?has_content>
-    var styles = {
+    var catoStyles = {
     <#list styles?keys as name>
         "${name}" : "${styles[name]!}",
     </#list>

@@ -21,5 +21,15 @@
         }
     }
 
+    <#-- theme style variables -->
+  <#if styles?has_content>
+    var styles = {
+    <#list styles?keys as name>
+        "${name}" : "${styles[name]!}",
+    </#list>
+    };
+  </#if>  
+  
+
 // -->
 </script>

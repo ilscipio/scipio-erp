@@ -35,6 +35,9 @@ jQuery(document).ready(function() {
 
 function ppcSetUploadProgressValue(percent) {
 	jQuery("#upc_progress_bar_meter").css({"width": percent + "%"});
+	if (typeof jQuery("#upc_progress_bar_meter").attr("aria-valuenow") !== 'undefined') {
+		jQuery("#upc_progress_bar_meter").attr("aria-valuenow", percent.toString());
+	}
 	jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[0] + "... (" + percent + "%)");
 }
 
@@ -56,6 +59,8 @@ function ppcResetUploadProgress() {
 function ppcUploadPartyContent(event){
     //jQuery("#upc_progress_bar").progressbar("option", "value", 0);
 	ppcResetUploadProgress();
+	// TODO: Unhardcode classes
+	jQuery("#upc_progress_bar").removeClass("hide");
     var targetFrame = jQuery('#target_upload');
     var infodiv = jQuery('#content-messages');
     if(infodiv.length < 1){

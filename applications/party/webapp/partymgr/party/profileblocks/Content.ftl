@@ -56,7 +56,7 @@ under the License.
             <input type="submit" value="${uiLabelMap.CommonUpload}" class="smallSubmit" />
           </@cell>
           <@cell class="${style_grid_small!}6 ${style_grid_large!}6">
-            <@progress id="upc_progress_bar" type="info" />
+            <@progress id="upc_progress_bar" type="info" addWrapClass="${style_hidden!}"/>
           </@cell>
           <@cell class="${style_grid_small!}3 ${style_grid_large!}4" id="upcProgressMsgBox">
           </@cell>

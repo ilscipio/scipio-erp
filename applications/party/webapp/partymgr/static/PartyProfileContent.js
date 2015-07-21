@@ -42,9 +42,9 @@ function ppcSetUploadProgressValue(percent) {
 }
 
 function ppcSetUploadProgressState(classStr) {
-	// TODO: Unhardcode classes
-	jQuery("#upc_progress_bar").removeClass("info success alert warning").addClass(classStr);
-	jQuery('#upcProgressBarSavingMsg').removeClass("info success alert warning").addClass(classStr);
+	var stateStyles = [catoStyles.color_info, catoStyles.color_success, catoStyles.color_alert, catoStyles.color_warning].join(" ");
+	jQuery("#upc_progress_bar").removeClass(stateStyles).addClass(classStr);
+	jQuery('#upcProgressBarSavingMsg').removeClass(stateStyles).addClass(classStr);
 }
 
 function ppcSetUploadProgressMsg(msg) {
@@ -53,19 +53,17 @@ function ppcSetUploadProgressMsg(msg) {
 
 function ppcResetUploadProgress() {
 	ppcSetUploadProgressValue(0);
-	ppcSetUploadProgressState("info")
+	ppcSetUploadProgressState(catoStyles.color_info)
 }
 
 function ppcUploadPartyContent(event){
     //jQuery("#upc_progress_bar").progressbar("option", "value", 0);
 	ppcResetUploadProgress();
-	// TODO: Unhardcode classes
-	jQuery("#upc_progress_bar").removeClass("hide");
+	jQuery("#upc_progress_bar").removeClass(catoStyles.hidden);
     var targetFrame = jQuery('#target_upload');
     var infodiv = jQuery('#content-messages');
     if(infodiv.length < 1){
-    	// TODO: Unhardcode
-        jQuery('<div class="row"><div class="large-12 columns" id="content-messages"></div></div>').insertAfter(jQuery("#partyContentList"));
+        jQuery('<div class="' + catoStyles.grid_row + '"><div class="' + catoStyles.grid_large + '12 ' + catoStyles.grid_cell + '" id="content-messages"></div></div>').insertAfter(jQuery("#partyContentList"));
     }
     if (targetFrame.length < 1){
         jQuery('#partyContent').append("<iframe id='target_upload' name='target_upload' style='display: none' src=''> </iframe>");
@@ -90,7 +88,7 @@ function ppcUploadCompleted(){
     // Cato: why reset here?
     //ppcResetUploadProgress();
     ppcSetUploadProgressValue(100);
-    ppcSetUploadProgressState("success");
+    ppcSetUploadProgressState(catoStyles.color_success);
     ppcSetUploadProgressMsg(ppcUiLabelJsonObjects.CommonUiLabels[2]);
     
     // remove iFrame
@@ -117,9 +115,8 @@ function ppcCheckIframeStatus() {
 }
 
 function ppcShowUploadError(errdata) {
-	// TODO: un-hardcode classes
-	jQuery('#content-messages').html('<div data-alert class="alert-box alert">' + errdata + "</div>");
-	ppcSetUploadProgressState("alert");
+	jQuery('#content-messages').html('<div data-alert class="' + catoStyles.alert_wrap + ' ' + catoStyles.alert_prefix_type + 'alert">' + errdata + "</div>");
+	ppcSetUploadProgressState(catoStyles.color_alert);
 	ppcSetUploadProgressMsg(ppcUiLabelJsonObjects.CommonUiLabels[3]);
 }
 

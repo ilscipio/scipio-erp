@@ -886,6 +886,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             columnCount = 1;
         }
         
+        Integer columnIndex = (Integer) context.get("portletColumnIndex");
+        if (columnIndex == null) {
+            columnIndex = 0;
+        }
+        
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPageColumnBegin ");
         sr.append("originalPortalPageId=\"");
@@ -920,6 +925,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(setColumnSizeHint);
         sr.append("\" columnCount=\"");
         sr.append(columnCount.toString());
+        sr.append("\" columnIndex=\"");
+        sr.append(columnIndex.toString());
         sr.append("\" />");
         executeMacro(writer, sr.toString());
     }   
@@ -965,6 +972,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             columnCount = 1;
         }
         
+        Integer columnIndex = (Integer) context.get("portletColumnIndex");
+        if (columnIndex == null) {
+            columnIndex = 0;
+        }
+        
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPagePortletBegin ");
         sr.append("originalPortalPageId=\"");
@@ -997,6 +1009,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(confMode);
         sr.append("\" columnCount=\"");
         sr.append(columnCount.toString());
+        sr.append("\" columnIndex=\"");
+        sr.append(columnIndex.toString());
         sr.append("\"");
         if (UtilValidate.isNotEmpty(columnWidthPixels)) {
             sr.append(" width=\"");

@@ -2107,9 +2107,12 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 
                 // Iterates through the PortalPage columns
                 ListIterator <GenericValue>columnsIterator = portalPageColumns.listIterator();
+                int columnIndex = 0;
                 while(columnsIterator.hasNext()) {
                     GenericValue columnValue = columnsIterator.next();
                     String columnSeqId = columnValue.getString("columnSeqId");
+                    
+                    context.put("portletColumnIndex", columnIndex);
                     
                     // Renders the portalPageColumn header
                     screenStringRenderer.renderPortalPageColumnBegin(writer, context, this, columnValue);
@@ -2187,6 +2190,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
                     // Uses the actual columnSeqId as prevColumnSeqId for next iteration
                     prevColumnSeqId = columnSeqId;
+                    columnIndex++;
                 }
                 // Renders the portalPage footer
                 screenStringRenderer.renderPortalPageEnd(writer, context, this);

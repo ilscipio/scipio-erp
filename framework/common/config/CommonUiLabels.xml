@@ -15184,4 +15184,9 @@
         <value xml:lang="en">Warning</value>
         <value xml:lang="fr">Avertissement</value>
     </property>
+    <property key="CommonServerCommunicationError">
+        <value xml:lang="de">Server-Kommunikationsfehler</value>
+        <value xml:lang="en">Server communication error</value>
+        <value xml:lang="fr">Erreur de communication avec le serveur</value>
+    </property>
 </resource>

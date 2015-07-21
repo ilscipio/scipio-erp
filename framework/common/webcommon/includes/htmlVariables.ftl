@@ -45,6 +45,7 @@ under the License.
 <#global "style_radius"             = "radius" />
 <#global "style_expand"             = "expand" />
 <#global "style_collapse"           = "collapse" />
+<#global "style_hidden"             = "hide" />
 
 <#global "style_icon"               = "fi" />
 <#global "style_icon_button"        = "fi-widget" />

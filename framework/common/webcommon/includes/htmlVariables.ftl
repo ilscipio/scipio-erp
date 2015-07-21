@@ -144,7 +144,7 @@ under the License.
 <#-- UTLITY VARIABLES END -->
 }>
 
-<#-- compatibility mode: define styles hash entries as individual styles_ vars -->
+<#-- compatibility mode: define styles hash entries as individual style_ vars -->
 <#list styles?keys as name>
   <@'<#global "style_${name}" = "${styles[name]}">'?interpret />
 </#list>

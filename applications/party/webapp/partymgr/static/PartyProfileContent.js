@@ -30,28 +30,32 @@ jQuery(document).ready(function() {
     ppcUiLabelJsonObjects = getJSONuiLabels(labelObject);
 
     //jQuery("#upc_progress_bar").progressbar({value: 0});
-    ppcResetUploadProgressBar();
+    ppcResetUploadProgress();
 });
 
-function ppcSetUploadProgressBar(percent, classStr) {
-	var meter = jQuery("#upc_progress_bar_meter").css({"width": percent + "%"});
-	if (typeof classStr !== 'undefined' && (classStr.length > 0)) {
-		ppcSetUploadProgressBarState(classStr);
-	}
+function ppcSetUploadProgressValue(percent) {
+	jQuery("#upc_progress_bar_meter").css({"width": percent + "%"});
+	jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[0] + "... (" + percent + "%)");
 }
 
-function ppcSetUploadProgressBarState(classStr) {
+function ppcSetUploadProgressState(classStr) {
 	// TODO: Unhardcode classes
-	jQuery("#upc_progress_bar_meter").removeClass("info success alert warning").addClass(classStr);
+	jQuery("#upc_progress_bar").removeClass("info success alert warning").addClass(classStr);
+	jQuery('#upcProgressBarSavingMsg').removeClass("info success alert warning").addClass(classStr);
 }
 
-function ppcResetUploadProgressBar() {
-	ppcSetUploadProgressBar(0, "info");
+function ppcSetUploadProgressMsg(msg) {
+	jQuery('#upcProgressBarSavingMsg').html(msg);
+}
+
+function ppcResetUploadProgress() {
+	ppcSetUploadProgressValue(0);
+	ppcSetUploadProgressState("info")
 }
 
 function ppcUploadPartyContent(event){
     //jQuery("#upc_progress_bar").progressbar("option", "value", 0);
-	ppcResetUploadProgressBar();
+	ppcResetUploadProgress();
     var targetFrame = jQuery('#target_upload');
     var infodiv = jQuery('#content-messages');
     if(infodiv.length < 1){
@@ -76,13 +80,14 @@ function ppcUploadCompleted(){
     // to the page partyContentList
     jQuery("#partyContentList").html(iframePartyContentList);
 
-    jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[2]);
     // reset progressbar
     //jQuery("#upc_progress_bar").progressbar("option", "value", 0);
     // Cato: why reset here?
-    //ppcResetUploadProgressBar();
-    ppcSetUploadProgressBar(100, "success");
-
+    //ppcResetUploadProgress();
+    ppcSetUploadProgressValue(100);
+    ppcSetUploadProgressState("success");
+    ppcSetUploadProgressMsg(ppcUiLabelJsonObjects.CommonUiLabels[2]);
+    
     // remove iFrame
     jQuery("#target_upload").remove();
     return;
@@ -109,8 +114,8 @@ function ppcCheckIframeStatus() {
 function ppcShowUploadError(errdata) {
 	// TODO: un-hardcode classes
 	jQuery('#content-messages').html('<div data-alert class="alert-box alert">' + errdata + "</div>");
-	ppcSetUploadProgressBarState("alert");
-	jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[3]);
+	ppcSetUploadProgressState("alert");
+	ppcSetUploadProgressMsg(ppcUiLabelJsonObjects.CommonUiLabels[3]);
 }
 
 function ppcGetUploadProgressStatus(event){
@@ -134,10 +139,9 @@ function ppcGetUploadProgressStatus(event){
                      } else {
                         var readPercent = data.readPercent;
                         //jQuery("#upc_progress_bar").progressbar("option", "value", readPercent);
-                        ppcSetUploadProgressBar(readPercent);
-                        jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[0] + "... (" + readPercent + "%)");
+                        ppcSetUploadProgressValue(readPercent);
                         if(readPercent > 99){
-                            jQuery('#upcProgressBarSavingMsg').html(ppcUiLabelJsonObjects.CommonUiLabels[1] + "...");
+                        	ppcSetUploadProgressMsg(ppcUiLabelJsonObjects.CommonUiLabels[1] + "...");
                             // stop the fjTimer
                             timerId.stop();
                             // call the upload complete method to do final stuff

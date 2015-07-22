@@ -333,9 +333,18 @@ document.lookuporder.orderId.focus();
 
 <br />
 
-<#if orderList?has_content>
-<@section title="${uiLabelMap.OrderOrderFound}">
+<#if orderList?? && (parameters.lookupFlag!)=="Y">
+<@section title="${uiLabelMap.CommonSearchResults}">
 
+  <#if lookupErrorMessage?has_content>
+    <@alert type="alert">
+        ${lookupErrorMessage}
+    </@alert>
+  </#if>    
+
+  <#-- note: added this check here for simplicity but haven't removed old code inside; no harm, maybe reuse-->
+  <#if orderList?has_content>
+  
     <#assign paginated = false>
     <#if (orderList?has_content && (0 < orderList?size))>
         <#assign url><@ofbizUrl>searchorders</@ofbizUrl></#assign>
@@ -514,11 +523,6 @@ document.lookuporder.orderId.focus();
             <td colspan='4'><h3>${uiLabelMap.OrderNoOrderFound}</h3></td>
           </tr>
         </#if>
-        <#if lookupErrorMessage??>
-          <tr>
-            <td colspan='4'><h3>${lookupErrorMessage}</h3></td>
-          </tr>
-        </#if>
       </table>
       <@massOrderChangeButton id="2"/>
       
@@ -528,8 +532,15 @@ document.lookuporder.orderId.focus();
         <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 />
     </#if>
     
+  <#else>
+    <@alert type="info">
+       ${uiLabelMap.OrderNoOrderFound}
+    </@alert>
+  </#if>
+    
 </@section>
 </#if>
+
 <#else>
   <@section title="${uiLabelMap.OrderViewPermissionError!}" />
 </#if>

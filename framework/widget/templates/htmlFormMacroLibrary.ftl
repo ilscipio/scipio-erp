@@ -383,7 +383,7 @@ under the License.
       <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
       <#if (checked?is_boolean && checked) || checked == "Y"> checked="checked"
       <#elseif currentValue?has_content && currentValue=="Y"> checked="checked"</#if> 
-      name="${name?default("")?html}" value="${currentValue!}"<#if action?has_content> onClick="${action}"</#if>/><#rt/>
+      name="${name!""?html}" value="${currentValue!}"<#if action?has_content> onClick="${action}"</#if>/><#rt/>
       <label for="<#if id?has_content>${id}<#else>${name!}</#if>"></label>
     </div>
 </#macro>
@@ -409,7 +409,7 @@ under the License.
       <input type="radio"<#if currentValue?has_content><#if currentValue==item.key> checked="checked"</#if>
         <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
         <#elseif noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> checked="checked"</#if> 
-        name="${name?default("")?html}" value="${item.key?default("")?html}"<#if event?has_content> ${event}="${action}"</#if>/><#rt/>
+        name="${name!""?html}" value="${item.key!""?html}"<#if item.event?has_content> ${item.event}="${item.action!}"<#elseif event?has_content> ${event}="${action!}"</#if>/><#rt/>
       ${item.description}
     </span>
   </#list>

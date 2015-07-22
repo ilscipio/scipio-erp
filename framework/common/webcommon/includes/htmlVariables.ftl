@@ -73,6 +73,7 @@ under the License.
     "grid_row" : "row",
     "grid_cell" : "${style_grid_cell}",
     "grid_display" : "display",      <#-- display grid -->
+    "grid_end" : "end",
     "grid_small" : "${style_grid_small}",   
     "grid_medium" : "${style_grid_medium}",
     "grid_large" : "${style_grid_large}",       <#-- Bootstrap: "col-lg-" -->

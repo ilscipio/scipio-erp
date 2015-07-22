@@ -29,7 +29,7 @@ under the License.
             <#assign status = content.getRelatedOne("StatusItem", true)!>
             <#assign pcType = pContent.getRelatedOne("PartyContentType", false)>
             <tr>
-              <td class="button-col"><a href="<@ofbizUrl>EditPartyContents?contentId=${pContent.contentId}&amp;partyId=${pContent.partyId}&amp;partyContentTypeId=${pContent.partyContentTypeId}&amp;fromDate=${pContent.fromDate}</@ofbizUrl>">${content.contentId}</a></td>
+              <td class="button-col" style="min-width:5em;"><a href="<@ofbizUrl>EditPartyContents?contentId=${pContent.contentId}&amp;partyId=${pContent.partyId}&amp;partyContentTypeId=${pContent.partyContentTypeId}&amp;fromDate=${pContent.fromDate}</@ofbizUrl>">${content.contentId}</a></td>
               <td>${(pcType.get("description", locale))!}</td>
               <td>${content.contentName!}</td>
               <td>${(contentType.get("description",locale))!}</td>

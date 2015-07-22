@@ -204,8 +204,6 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     * select *
     multiple        = allow multiple select true/false
     currentValue    = currently selected value
-    manualItems     = default true, hint that options to be expected in nested content
-    manualItemsOnly = if true, only use nested content for options; never generate options
     
     * lookup *
     formName        = The name of the form that contains the lookup field.
@@ -219,7 +217,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 <#macro field type="" label="" name="" value="" currentValue="" class="${style_grid_large!}12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="" postfix=false required=false addClass="" manualItemsOnly=false manualItems=true>
+        fieldFormName="" formName="" postfix=false required=false addClass="">
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum=(fieldIdNum!0)+1 />
 
@@ -324,6 +322,11 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                                   tooltip=tooltip/>                
             <#break>
           <#case "select">
+            <#-- TODO: Currently, select only supports manual items, not auto-generated items
+                 Must set manualItems to true especially, otherwise extra empty options generated -->
+            <#local manualItems = true>
+            <#local manualItemsOnly = true>
+            
             <@renderDropDownField name=name
                                     className=class 
                                     alert=alert 

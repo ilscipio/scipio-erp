@@ -841,9 +841,9 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(addColumnLabel);
         sr.append("\" addColumnHint=\"");
         sr.append(addColumnHint);
-        sr.append("\" columnCount=\"");
+        sr.append("\" columnCount=");
         sr.append(columnCount.toString());
-        sr.append("\" />");
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -923,11 +923,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(colWidthLabel);
         sr.append("\" setColumnSizeHint=\"");
         sr.append(setColumnSizeHint);
-        sr.append("\" columnCount=\"");
+        sr.append("\" columnCount=");
         sr.append(columnCount.toString());
-        sr.append("\" columnIndex=\"");
+        sr.append(" columnIndex=");
         sr.append(columnIndex.toString());
-        sr.append("\" />");
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }   
 
@@ -1007,11 +1007,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         sr.append(editAttributeHint);
         sr.append("\" confMode=\"");
         sr.append(confMode);
-        sr.append("\" columnCount=\"");
+        sr.append("\" columnCount=");
         sr.append(columnCount.toString());
-        sr.append("\" columnIndex=\"");
+        sr.append(" columnIndex=");
         sr.append(columnIndex.toString());
-        sr.append("\"");
+        sr.append("");
         if (UtilValidate.isNotEmpty(columnWidthPixels)) {
             sr.append(" width=\"");
             sr.append(columnWidthPixels);

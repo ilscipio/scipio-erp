@@ -204,7 +204,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     * select *
     multiple        = allow multiple select true/false
     currentValue    = currently selected value
-    manualItems   = if true, only use nested content for options; never generate options
+    manualItemsOnly = if true, only use nested content for options; never generate options
     
     * lookup *
     formName        = The name of the form that contains the lookup field.
@@ -218,7 +218,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 <#macro field type="" label="" name="" value="" currentValue="" class="${style_grid_large!}12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="" postfix=false required=false addClass="" manualItems=false>
+        fieldFormName="" formName="" postfix=false required=false addClass="" manualItemsOnly=false>
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum=(fieldIdNum!0)+1 />
 
@@ -355,7 +355,8 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                                     ignoreCase=""
                                     fullSearch=""
                                     tooltip=tooltip
-                                    manualItems=manualItems><#nested></@renderDropDownField>
+                                    manualItems=true
+                                    manualItemsOnly=manualItemsOnly><#nested></@renderDropDownField>
             <#break>
           <#case "lookup">
             <@renderLookupField name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />

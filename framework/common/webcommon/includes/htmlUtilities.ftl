@@ -210,16 +210,26 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     fieldForName    = Contains the lookup window form name.
     
     * Checkbox *
-    currentValue    = Y/N
-    checked      = checked (true/false)
+    value           = Y/N
+    checked         = checked (true/false)
     
+    * radio (single mode) *
+    value           = Y/N, only used if single radio item mode (items not specified)
+    checked         = determines if checked (true/false)
+    
+    * radio (multi mode) *
+    items           = if specified, multiple-items radio generated; list of {"key": value, "description": label, "event": html-dom-event-attrib, "action": event-js} hashes
+    currentValue    = current value, determines checked
+    defaultValue    = default value, determines checked
 -->
-<#macro field type="" label="" name="" value="" currentValue="" class="${style_grid_large!}12" size=20 maxlength="" id="" onClick="" 
+<#macro field type="" label="" name="" value="" currentValue="" defaultValue="" class="${style_grid_large!}12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="" postfix=false required=false addClass="">
+        fieldFormName="" formName="" postfix=false required=false addClass="" items=[]>
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum=(fieldIdNum!0)+1 />
+
+<#local radioSingle = (type=="radio" && !items?has_content)>
 
 <#if !id?has_content>
     <#assign id="field_id_${renderSeqNumber!}_${fieldIdNum!0}">
@@ -250,7 +260,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
             <#assign classes="${style_grid_small!}${columns-columnspostfix-1} ${style_grid_large!}${columns-columnspostfix}"/>
         </#if>
         
-        <#if type!="radio">
+        <#if !radioSingle>
         <@cell class=subclasses nocells=nocells>
                 <#if type=="checkbox" || collapse==false>
                     <label class=""<#if id?has_content> for="${id}"</#if>>${label}</label>
@@ -369,9 +379,16 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                 <@renderCheckBox id=id currentValue=value checked=checked name=name action=action />
             <#break>
           <#case "radio">
-            <#assign items=[{"key":value, "description":label!""}]/>
-                <@renderRadioField items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
-            
+                <#if radioSingle>
+                    <#-- single radio button item mode -->
+                    <#assign items=[{"key":value, "description":label!""}]/>
+                    <@renderRadioField items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+                <#else>
+                    <#-- multi radio button item mode -->
+                    <div <@renderClass class alert />>
+                      <@renderRadioField items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
+                    </div>
+                </#if>
             <#break>
           <#case "file">
             <#-- TODO: better version of this -->

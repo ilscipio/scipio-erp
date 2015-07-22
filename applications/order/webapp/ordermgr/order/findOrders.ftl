@@ -333,8 +333,10 @@ document.lookuporder.orderId.focus();
 
 <br />
 
-<#if orderList?? && (parameters.lookupFlag!)=="Y">
+<#if (searchPerformed!false)==true>
 <@section title="${uiLabelMap.CommonSearchResults}">
+  <@row>
+    <@cell>
 
   <#if lookupErrorMessage?has_content>
     <@alert type="alert">
@@ -538,6 +540,8 @@ document.lookuporder.orderId.focus();
     </@alert>
   </#if>
     
+    </@cell>
+  </@row>
 </@section>
 </#if>
 

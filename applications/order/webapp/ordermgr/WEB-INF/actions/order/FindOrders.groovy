@@ -178,6 +178,7 @@ if (paramList) {
 
 orderList = request.getAttribute("orderList");
 context.orderList = orderList;
+context.searchPerformed = (orderList != null); // can't do this from template
 
 orderListSize = request.getAttribute("orderListSize");
 context.orderListSize = orderListSize;

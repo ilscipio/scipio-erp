@@ -215,7 +215,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     checked      = checked (true/false)
     
 -->
-<#macro field type="" label="" name="" value="" class="${style_grid_large!}12" size=20 maxlength="" id="" onClick="" 
+<#macro field type="" label="" name="" value="" currentValue="" class="${style_grid_large!}12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
         fieldFormName="" formName="" postfix=false required=false addClass="" manualOptions=false>
@@ -334,7 +334,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                                     action=onCLick  
                                     size=size
                                     firstInList="" 
-                                    currentValue="" 
+                                    currentValue=currentValue 
                                     explicitDescription="" 
                                     allowEmpty=""
                                     options=[]

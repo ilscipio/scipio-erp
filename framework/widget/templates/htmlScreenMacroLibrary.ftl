@@ -229,6 +229,7 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 </#macro>
 
 <#macro renderPortalPageBegin originalPortalPageId portalPageId confMode="false" addColumnLabel="Add column" addColumnHint="Add a new column to this portal" columnCount=1>
+  <#global portalPageGridUsed = 0>
   <#--
   <#if confMode == "true">
     <a class="button tiny" href="javascript:document.addColumn_${portalPageId}.submit()" title="${addColumnHint}">${addColumnLabel}</a> <b>PortalPageId: ${portalPageId}</b>
@@ -237,19 +238,67 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
     </form>
   </#if>
   -->
-  <div class="${style_grid_row!}"><#rt/>
-<div class="${style_grid_large!}12 ${style_grid_cell!}">
+  <div class="${style_grid_row!}">
+    <div class="${style_grid_large!}12 ${style_grid_cell!}">  
+      <div class="${style_grid_row!}">
+        <#-- for now, make each column a huge cell 
+             (can't use grid any other way without rewriting portal page render order?) -->
 </#macro>
 
 <#macro renderPortalPageEnd>
+      </div>
     </div>
   </div>
 </#macro>
 
+<#function getPortalPageWidthPercent widthHint>
+  <#if widthHint?has_content>
+    <#local res = widthHint?matches(r"^((\d|\d\d|100)(\.\d+)?)%$")>
+    <#if res>
+        <#local widthPercent = res?groups[1]?number>
+        <#return widthPercent>
+    </#if>
+  </#if>
+  <#return "">  
+</#function>
+
+<#-- returns portal column size in grid units (grid column size), closest int value possible 
+     note: is possible not all of gridSize is used depend on fractions and ints.
+     let user worry about it (and caller can use foundation 'end'). -->
+<#function calcPortalPageColumnGridSize columnCount columnIndex gridSize gridUsed widthHint>
+  <#local columnRemain = (columnCount - columnIndex)>
+  <#local gridRemain = (gridSize - gridUsed)>
+  <#-- ofbiz portal column width is specified in pixels or %
+       if %, create a rounding to nearest grid int value
+       ignore pixels since we can't use it, treat it and everything else as auto -->
+  <#local widthPercent = getPortalPageWidthPercent(widthHint)>
+  <#if widthPercent?has_content>
+    <#local columnSize = ((widthPercent * gridSize) / 100)?round>
+    <#if (columnSize <= gridRemain)>
+      <#return columnSize>
+    <#else>
+      <#return gridRemain>
+    </#if>
+  <#else>
+    <#-- here, floor so will never go over grid -->
+    <#local columnSize = (gridRemain / columnRemain)?floor>
+    <#return columnSize>
+  </#if>
+</#function>
+
+
 <#macro renderPortalPageColumnBegin originalPortalPageId portalPageId columnSeqId confMode="false" width="auto" delColumnLabel="Delete column" delColumnHint="Delete this column" addPortletLabel="Add portlet" addPortletHint="Add a new portlet to this column" colWidthLabel="Col. width:" setColumnSizeHint="Set column size" columnCount=1 columnIndex=0>
-  <#assign columnKey = portalPageId+columnSeqId>
+  <#local gridSize = 12>
+  <#local firstColumn = (columnIndex <= 0)>
+  <#local lastColumn = (columnIndex >= (columnCount - 1))>
+  
+  <#-- Cato: calc and adapt width to possible grid widths + record grid used so far in global var -->
+  <#local columnSize = calcPortalPageColumnGridSize(columnCount, columnIndex, gridSize, portalPageGridUsed, width)>
+  <#global portalPageGridUsed = portalPageGridUsed + columnSize>
+  
+  <#local columnKey = portalPageId+columnSeqId>
   <#--
-  <#assign columnKeyFields = '<input name="portalPageId" value="' + portalPageId + '" type="hidden"/><input name="columnSeqId" value="' + columnSeqId + '" type="hidden"/>'>
+  <#local columnKeyFields = '<input name="portalPageId" value="' + portalPageId + '" type="hidden"/><input name="columnSeqId" value="' + columnSeqId + '" type="hidden"/>'>
   <script type="text/javascript">
     if (typeof SORTABLE_COLUMN_LIST != "undefined") {
       if (SORTABLE_COLUMN_LIST == null) {
@@ -260,10 +309,16 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
     }
   </script>
   <td class="portal-column<#if confMode == "true">-config</#if> connectedSortable" style="vertical-align: top; <#if width?has_content> width:${width};</#if>" id="portalColumn_${columnSeqId}">
-  
   -->
-    <#--<div class="${style_grid_row!}">-->
-    <div>
+    
+    <#-- if it's the last column and didn't fill full gridSize, add 'end' class so doesn't float right and look weird -->
+    <#local endClassStr = "">
+    <#if lastColumn && (portalPageGridUsed < gridSize)>
+        <#local endClassStr = " ${style_grid_end!}">
+    </#if>
+    
+    <#-- Column: columnCount: ${columnCount}, columnIndex: ${columnIndex}, portalPageGridUsed: ${portalPageGridUsed}, width: ${width} --> 
+    <div class="${style_grid_large!}${columnSize} ${style_grid_cell!}${endClassStr}">
     <#if confMode == "true">
       <div class="portal-column-config-title-bar">
         <ul>
@@ -292,12 +347,12 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 </#macro>
 
 <#macro renderPortalPageColumnEnd>
-  </div>
+    </div>
 </#macro>
 
 <#macro renderPortalPagePortletBegin originalPortalPageId portalPageId portalPortletId portletSeqId prevPortletId="" prevPortletSeqId="" nextPortletId="" nextPortletSeqId="" columnSeqId="" prevColumnSeqId="" nextColumnSeqId="" confMode="false" delPortletHint="Remove this portlet" editAttribute="false" editAttributeHint="Edit portlet parameters" width="auto" columnCount=1 columnIndex=0>
-  <#assign portletKey = portalPageId+portalPortletId+portletSeqId>
-  <#assign portletKeyFields = '<input name="portalPageId" value="' + portalPageId + '" type="hidden"/><input name="portalPortletId" value="' + portalPortletId + '" type="hidden"/><input name="portletSeqId" value="' + portletSeqId  + '" type="hidden"/>'>
+  <#local portletKey = portalPageId+portalPortletId+portletSeqId>
+  <#local portletKeyFields = '<input name="portalPageId" value="' + portalPageId + '" type="hidden"/><input name="portalPortletId" value="' + portalPortletId + '" type="hidden"/><input name="portletSeqId" value="' + portletSeqId  + '" type="hidden"/>'>
   
   <div id="PP_${portletKey}" name="portalPortlet" class="noClass" portalPageId="${portalPageId}" portalPortletId="${portalPortletId}" columnSeqId="${columnSeqId}" portletSeqId="${portletSeqId}">
     <#if confMode == "true">

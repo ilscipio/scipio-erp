@@ -22,15 +22,31 @@ function CatoUploadProgress(options) {
 		options = {};
 	}
 	
-    this.progBarId = options.progBarId; // required, should exist in doc
-    this.progTextBoxId = options.progTextBoxId; // required, should exist in doc
-    this.iframeParentId = options.iframeParentId; // required ("#partyContent"), should exist in doc
-    this.iframeId = options.iframeId; // required, should NOT exist in doc
-    this.msgContainerId = options.msgContainerId; // required, if no sibling must exist, if sibling must NOT exist
-    this.msgContainerSiblingId = options.msgContainerSiblingId; // optional ("#partyContentList"), if not specified, won't generate
+	CatoUploadProgress.instCount = CatoUploadProgress.instCount + 1;
+	this.instNum = CatoUploadProgress.instCount;
     
-    this.progMeterId = this.progBarId + "_meter";
-    this.progTextElemId = this.progTextBoxId + "_msg";
+	this.formId = options.formId; // required, should exist in doc
+    this.progBarId = options.progBarId; // required, should exist in doc
+    this.progMeterId = options.progMeterId; // optional, has default, should not exist in doc
+    this.progTextBoxId = options.progTextBoxId; // required, should exist in doc
+    this.progTextElemId = options.progTextElemId; // optional, has default, should not exist in doc
+    this.iframeParentId = options.iframeParentId; // required, should exist in doc
+    this.iframeId = options.iframeId; // optional, has default, should not exist in doc
+    this.msgContainerId = options.msgContainerId; // required, if no sibling must exist, if has sibling must not exist
+    this.msgContainerSiblingId = options.msgContainerSiblingId; // optional, if not specified, won't generate
+    
+    this.contentContainerId = options.contentContainerId; // currently required, should be optional?
+    this.targetContentContainerId = options.targetContentContainerId; // currently required, should be optional?
+    
+    if (!this.progMeterId) {
+    	this.progMeterId = this.progBarId + "_meter";
+    }
+    if (!this.progTextElemId) {
+    	this.progTextElemId = this.progTextBoxId + "_msg";
+    }
+    if (!this.iframeId) {
+    	this.iframeId = "cato_target_upload_" + this.instNum;
+    }
     
     this.uiLabelMap = null;
     
@@ -81,15 +97,18 @@ function CatoUploadProgress(options) {
 	this.resetInitContainers = function() {
 		this.resetProgress();
 		jQuery("#"+this.progBarId).removeClass(catoStyles.hidden);
-	    var targetFrame = jQuery("#"+this.iframeId);
+	    
 	    var infodiv = jQuery("#"+this.msgContainerId);
 	    if(infodiv.length < 1){
-	        jQuery('<div class="' + catoStyles.grid_row + '"><div class="' + catoStyles.grid_large + '12 ' + catoStyles.grid_cell + '" id="' + this.msgContainerId + '"></div></div>').insertAfter(jQuery("#partyContentList"));
+	        jQuery('<div class="' + catoStyles.grid_row + '"><div class="' + catoStyles.grid_large + '12 ' + catoStyles.grid_cell + '" id="' + this.msgContainerId + '"></div></div>').insertAfter(jQuery("#"+this.msgContainerSiblingId));
 	    }
-	    if (targetFrame.length < 1){
-	        jQuery('#partyContent').append('<iframe id="' + this.iframeId + '" name="' + this.iframeId + '" style="display: none" src=""> </iframe>');
+	    jQuery("#"+this.msgContainerId).html('');
+	    
+	    var targetFrame = jQuery("#"+this.iframeId);
+	    if (targetFrame.length < 1) {
+	        jQuery("#"+this.iframeParentId).append('<iframe id="' + this.iframeId + '" name="' + this.iframeId + '" style="display: none" src=""> </iframe>');
 	    }
-	    jQuery('#uploadPartyContent').attr("target", this.iframeId);
+	    jQuery("#"+this.formId).attr("target", this.iframeId);
 	
 	    var labelField = jQuery("#"+this.progTextElemId);
 	    if (labelField.length) {
@@ -98,11 +117,11 @@ function CatoUploadProgress(options) {
 	};
 	
 	this.processUploadComplete = function() {
-	    var iframePartyContentList = jQuery("#"+this.iframeId).contents().find("#partyContentList").html();
+	    var iframePartyContentList = jQuery("#"+this.iframeId).contents().find("#"+this.targetContentContainerId).html();
 	
 	    // update partyContentList - copy the Data from the iFrame partyContentList
 	    // to the page partyContentList
-	    jQuery("#partyContentList").html(iframePartyContentList);
+	    jQuery("#"+this.contentContainerId).html(iframePartyContentList);
 	
 	    this.setProgressValue(100);
 	    this.setProgressState(catoStyles.color_success);
@@ -122,7 +141,7 @@ function CatoUploadProgress(options) {
 	        interval: 500,
 	        repeat: true,
 	        tick: function(counter, timerId) {
-	            iframePartyContentList = jQuery("#"+prog.iframeId).contents().find("#partyContentList");
+	            iframePartyContentList = jQuery("#"+prog.iframeId).contents().find("#"+prog.targetContentContainerId);
 	            if (iframePartyContentList != null && iframePartyContentList.length > 0) {
 	                timerId.stop();
 	                prog.processUploadComplete();
@@ -179,6 +198,7 @@ function CatoUploadProgress(options) {
 	};
 }
 
+CatoUploadProgress.instCount = 0;
 CatoUploadProgress.uiLabelMap = null;
 CatoUploadProgress.loadUiLabels = function() {
 	if (CatoUploadProgress.uiLabelMap == null) {

@@ -72,12 +72,14 @@ under the License.
 
     jQuery(document).ready(function() {
         ppcUploadProgress = new CatoUploadProgress({
+            formId : "uploadPartyContent",
             progBarId : "upc_progress_bar",
             progTextBoxId : "upcProgressMsgBox",
             iframeParentId : "partyContent",
-            iframeId : "target_upload",
-            msgContainerId : "content-messages",
-            msgContainerSiblingId : "partyContentList"
+            msgContainerId : "upc_content_messages",
+            msgContainerSiblingId : "partyContentList",
+            contentContainerId : "partyContentList",
+            targetContentContainerId : "partyContentList"
         });
         ppcUploadProgress.reset();
     });

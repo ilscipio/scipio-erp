@@ -17,21 +17,44 @@ specific language governing permissions and limitations
 under the License.
 * */
 
-/**
- *
- */
 var ppcUiLabelJsonObjects = null;
+function ppcLoadUiLabels() {
+	if (ppcUiLabelJsonObjects == null) {
+	    var labelObject = {
+	            "CommonUiLabels" : ["CommonUpload", "CommonSave", "CommonCompleted", "CommonError", "CommonServerCommunicationError"]
+	          };
+	    ppcUiLabelJsonObjects = getJSONuiLabels(labelObject);
+	}
+}
+
 jQuery(document).ready(function() {
-
-    var labelObject = {
-            "CommonUiLabels" : ["CommonUpload", "CommonSave", "CommonCompleted", "CommonError", "CommonServerCommunicationError"]
-          };
-
-    ppcUiLabelJsonObjects = getJSONuiLabels(labelObject);
-
-    //jQuery("#upc_progress_bar").progressbar({value: 0});
-    ppcResetUploadProgress();
+	ppcLoadUiLabels();
 });
+
+function CatoUploadProgress(options) {
+	if (!options) {
+		options = {};
+	}
+	
+    this.progBarId = options.progBarId; // required ("#upc_progress_bar"), should exist in doc
+    this.progMsgBoxId = options.progMsgBoxId; // required ("#upcProgressBarSavingMsg"), should exit in doc
+    this.iframeParentId = options.iframeParentId; // required ("#partyContent"), should exist in doc
+    this.iframeId = options.iframeId; // required ("#target_upload"), should NOT exist in doc
+    this.msgContainerId = options.msgContainerId; // required ("#content-messages"), if no sibling must exist, if sibling must NOT exist
+    this.msgContainerSiblingId = options.msgContainerSiblingId; // optional ("#partyContentList"), if not specified, won't generate
+    
+    this.reset = function() {
+    	ppcLoadUiLabels();
+        ppcResetUploadProgress();
+    };
+    
+    this.initUpload = function() {
+    	ppcLoadUiLabels();
+        ppcUploadPartyContent();
+        ppcGetUploadProgressStatus();
+    };
+}
+
 
 function ppcSetUploadProgressValue(percent) {
 	jQuery("#upc_progress_bar_meter").css({"width": percent + "%"});
@@ -57,7 +80,6 @@ function ppcResetUploadProgress() {
 }
 
 function ppcUploadPartyContent(event){
-    //jQuery("#upc_progress_bar").progressbar("option", "value", 0);
 	ppcResetUploadProgress();
 	jQuery("#upc_progress_bar").removeClass(catoStyles.hidden);
     var targetFrame = jQuery('#target_upload');
@@ -83,10 +105,6 @@ function ppcUploadCompleted(){
     // to the page partyContentList
     jQuery("#partyContentList").html(iframePartyContentList);
 
-    // reset progressbar
-    //jQuery("#upc_progress_bar").progressbar("option", "value", 0);
-    // Cato: why reset here?
-    //ppcResetUploadProgress();
     ppcSetUploadProgressValue(100);
     ppcSetUploadProgressState(catoStyles.color_success);
     ppcSetUploadProgressMsg(ppcUiLabelJsonObjects.CommonUiLabels[2]);
@@ -133,14 +151,13 @@ function ppcGetUploadProgressStatus(event){
                 dataType: 'json',
                 success: function(data) {
                     if (data._ERROR_MESSAGE_LIST_ != undefined) {
-                    	ppcShowUploadError.html(data._ERROR_MESSAGE_LIST_);
+                    	ppcShowUploadError(data._ERROR_MESSAGE_LIST_);
                         timerId.stop();
                      } else if (data._ERROR_MESSAGE_ != undefined) {
                     	 ppcShowUploadError(data._ERROR_MESSAGE_);
                         timerId.stop();
                      } else {
                         var readPercent = data.readPercent;
-                        //jQuery("#upc_progress_bar").progressbar("option", "value", readPercent);
                         ppcSetUploadProgressValue(readPercent);
                         if(readPercent > 99){
                         	ppcSetUploadProgressMsg(ppcUiLabelJsonObjects.CommonUiLabels[1] + "...");
@@ -159,3 +176,4 @@ function ppcGetUploadProgressStatus(event){
         }
     });
 }
+

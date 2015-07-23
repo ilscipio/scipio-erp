@@ -67,11 +67,17 @@ under the License.
   
     <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" />
     
+    <#-- functions defined in PartyProfileContent.js -->
+    var ppcUploadProgress = null;
+    
+    jQuery(document).ready(function() {
+        ppcUploadProgress = new CatoUploadProgress({});
+        ppcUploadProgress.reset();
+    });
+    
     jQuery("#uploadPartyContent").validate({
         submitHandler: function(form) {
-            <#-- call upload scripts - functions defined in PartyProfileContent.js -->
-            ppcUploadPartyContent();
-            ppcGetUploadProgressStatus();
+            ppcUploadProgress.initUpload();
             form.submit();
         }
     });

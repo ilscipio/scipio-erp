@@ -81,39 +81,16 @@ function submitFindForm(val){
   <#else>
     <input type='hidden' name='hideFields' value='Y'/>
   </#if>
+  <input type="hidden" name="showAll" value="${showAll!}"/>
   <input type="hidden" name="viewSize" value="${viewSize}"/>
   <input type="hidden" name="viewIndex" value="${viewIndex}"/>
-  <input type='hidden' name='correspondingPoId' value='${requestParameters.correspondingPoId!}'/>
-  <input type='hidden' name='internalCode' value='${requestParameters.internalCode!}'/>
-  <input type='hidden' name='productId' value='${requestParameters.productId!}'/>
-  <input type='hidden' name='goodIdentificationTypeId' value='${requestParameters.goodIdentificationTypeId!}'/>
-  <input type='hidden' name='goodIdentificationIdValue' value='${requestParameters.goodIdentificationIdValue!}'/>
-  <input type='hidden' name='inventoryItemId' value='${requestParameters.inventoryItemId!}'/>
-  <input type='hidden' name='serialNumber' value='${requestParameters.serialNumber!}'/>
-  <input type='hidden' name='softIdentifier' value='${requestParameters.softIdentifier!}'/>
-  <input type='hidden' name='partyId' value='${requestParameters.partyId!}'/>
-  <input type='hidden' name='userLoginId' value='${requestParameters.userLoginId!}'/>
-  <input type='hidden' name='billingAccountId' value='${requestParameters.billingAccountId!}'/>
-  <input type='hidden' name='createdBy' value='${requestParameters.createdBy!}'/>
-  <input type='hidden' name='minDate' value='${requestParameters.minDate!}'/>
-  <input type='hidden' name='maxDate' value='${requestParameters.maxDate!}'/>
-  <input type='hidden' name='roleTypeId' value="${requestParameters.roleTypeId!}"/>
-  <input type='hidden' name='orderTypeId' value='${requestParameters.orderTypeId!}'/>
-  <input type='hidden' name='salesChannelEnumId' value='${requestParameters.salesChannelEnumId!}'/>
-  <input type='hidden' name='productStoreId' value='${requestParameters.productStoreId!}'/>
-  <input type='hidden' name='orderWebSiteId' value='${requestParameters.orderWebSiteId!}'/>
-  <input type='hidden' name='orderStatusId' value='${requestParameters.orderStatusId!}'/>
-  <input type='hidden' name='hasBackOrders' value='${requestParameters.hasBackOrders!}'/>
-  <input type='hidden' name='filterInventoryProblems' value='${requestParameters.filterInventoryProblems!}'/>
-  <input type='hidden' name='filterPartiallyReceivedPOs' value='${requestParameters.filterPartiallyReceivedPOs!}'/>
-  <input type='hidden' name='filterPOsOpenPastTheirETA' value='${requestParameters.filterPOsOpenPastTheirETA!}'/>
-  <input type='hidden' name='filterPOsWithRejectedItems' value='${requestParameters.filterPOsWithRejectedItems!}'/>
-  <input type='hidden' name='countryGeoId' value='${requestParameters.countryGeoId!}'/>
-  <input type='hidden' name='includeCountry' value='${requestParameters.includeCountry!}'/>
-  <input type='hidden' name='isViewed' value='${requestParameters.isViewed!}'/>
-  <input type='hidden' name='shipmentMethod' value='${requestParameters.shipmentMethod!}'/>
-  <input type='hidden' name='gatewayAvsResult' value='${requestParameters.gatewayAvsResult!}'/>
-  <input type='hidden' name='gatewayScoreResult' value='${requestParameters.gatewayScoreResult!}'/>
+  
+  <#if paramIdList?has_content>
+    <#list paramIdList as paramIds>
+      <#assign paramId = paramIds.split("=")/>
+      <input type="hidden" name="${paramId[0]}" value="${paramId[1]}"/>
+    </#list>
+  </#if>
 </form>
 </#if>
 

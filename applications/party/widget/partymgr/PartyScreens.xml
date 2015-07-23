@@ -30,6 +30,8 @@ under the License.
                 <set field="tabButtonItem" value="findparty"/>
 
                 <service service-name="findParty" auto-field-map="parameters"/>
+                
+                <set field="searchPerformed" type="Boolean" value="${groovy: parameters.lookupFlag == 'Y'}" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

@@ -69,9 +69,16 @@ under the License.
     
     <#-- functions defined in PartyProfileContent.js -->
     var ppcUploadProgress = null;
-    
+
     jQuery(document).ready(function() {
-        ppcUploadProgress = new CatoUploadProgress({});
+        ppcUploadProgress = new CatoUploadProgress({
+            progBarId : "upc_progress_bar",
+            progTextBoxId : "upcProgressMsgBox",
+            iframeParentId : "partyContent",
+            iframeId : "target_upload",
+            msgContainerId : "content-messages",
+            msgContainerSiblingId : "partyContentList"
+        });
         ppcUploadProgress.reset();
     });
     

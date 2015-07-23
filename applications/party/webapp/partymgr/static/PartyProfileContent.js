@@ -17,28 +17,20 @@ specific language governing permissions and limitations
 under the License.
 * */
 
-var catoUploadProgUiLabelMap = null;
-function catoLoadUploadProgressLabels() {
-	if (catoUploadProgUiLabelMap == null) {
-	    var labelObject = {
-	            "CommonUiLabels" : ["CommonUpload", "CommonSave", "CommonCompleted", "CommonError", "CommonServerCommunicationError"]
-	          };
-	    catoUploadProgUiLabelMap = getJSONuiLabelMap(labelObject);
-	}
-}
-
-
 function CatoUploadProgress(options) {
 	if (!options) {
 		options = {};
 	}
 	
-    this.progBarId = options.progBarId; // required ("#upc_progress_bar"), should exist in doc
-    this.progMsgBoxId = options.progMsgBoxId; // required ("#upcProgressBarSavingMsg"), should exit in doc
+    this.progBarId = options.progBarId; // required, should exist in doc
+    this.progTextBoxId = options.progTextBoxId; // required, should exist in doc
     this.iframeParentId = options.iframeParentId; // required ("#partyContent"), should exist in doc
-    this.iframeId = options.iframeId; // required ("#target_upload"), should NOT exist in doc
-    this.msgContainerId = options.msgContainerId; // required ("#content-messages"), if no sibling must exist, if sibling must NOT exist
+    this.iframeId = options.iframeId; // required, should NOT exist in doc
+    this.msgContainerId = options.msgContainerId; // required, if no sibling must exist, if sibling must NOT exist
     this.msgContainerSiblingId = options.msgContainerSiblingId; // optional ("#partyContentList"), if not specified, won't generate
+    
+    this.progMeterId = this.progBarId + "_meter";
+    this.progTextElemId = this.progTextBoxId + "_msg";
     
     this.uiLabelMap = null;
     
@@ -59,30 +51,26 @@ function CatoUploadProgress(options) {
     /* Private functions */
     
     this.delayedInit = function() {
-    	this.loadLabels();
-    };
-    
-    this.loadLabels = function() {
-    	catoLoadUploadProgressLabels();
-    	this.uiLabelMap = catoUploadProgUiLabelMap;
+    	CatoUploadProgress.loadUiLabels();
+    	this.uiLabelMap = CatoUploadProgress.uiLabelMap;
     };
     
 	this.setProgressValue = function(percent) {
-		jQuery("#upc_progress_bar_meter").css({"width": percent + "%"});
-		if (typeof jQuery("#upc_progress_bar_meter").attr("aria-valuenow") !== 'undefined') {
-			jQuery("#upc_progress_bar_meter").attr("aria-valuenow", percent.toString());
+		jQuery("#"+this.progMeterId).css({"width": percent + "%"});
+		if (typeof jQuery("#"+this.progMeterId).attr("aria-valuenow") !== 'undefined') {
+			jQuery("#"+this.progMeterId).attr("aria-valuenow", percent.toString());
 		}
-		jQuery('#upcProgressBarSavingMsg').html(this.uiLabelMap.CommonUpload + "... (" + percent + "%)");
+		jQuery("#"+this.progTextElemId).html(this.uiLabelMap.CommonUpload + "... (" + percent + "%)");
 	};
 	
 	this.setProgressState = function(classStr) {
 		var stateStyles = [catoStyles.color_info, catoStyles.color_success, catoStyles.color_alert, catoStyles.color_warning].join(" ");
-		jQuery("#upc_progress_bar").removeClass(stateStyles).addClass(classStr);
-		jQuery('#upcProgressBarSavingMsg').removeClass(stateStyles).addClass(classStr);
+		jQuery("#"+this.progBarId).removeClass(stateStyles).addClass(classStr);
+		jQuery("#"+this.progTextElemId).removeClass(stateStyles).addClass(classStr);
 	};
 	
-	this.setProgressMsg = function(msg) {
-		jQuery('#upcProgressBarSavingMsg').html(msg);
+	this.setProgressText = function(msg) {
+		jQuery("#"+this.progTextElemId).html(msg);
 	};
 	
 	this.resetProgress = function() {
@@ -92,25 +80,25 @@ function CatoUploadProgress(options) {
 	
 	this.resetInitContainers = function() {
 		this.resetProgress();
-		jQuery("#upc_progress_bar").removeClass(catoStyles.hidden);
-	    var targetFrame = jQuery('#target_upload');
-	    var infodiv = jQuery('#content-messages');
+		jQuery("#"+this.progBarId).removeClass(catoStyles.hidden);
+	    var targetFrame = jQuery("#"+this.iframeId);
+	    var infodiv = jQuery("#"+this.msgContainerId);
 	    if(infodiv.length < 1){
-	        jQuery('<div class="' + catoStyles.grid_row + '"><div class="' + catoStyles.grid_large + '12 ' + catoStyles.grid_cell + '" id="content-messages"></div></div>').insertAfter(jQuery("#partyContentList"));
+	        jQuery('<div class="' + catoStyles.grid_row + '"><div class="' + catoStyles.grid_large + '12 ' + catoStyles.grid_cell + '" id="' + this.msgContainerId + '"></div></div>').insertAfter(jQuery("#partyContentList"));
 	    }
 	    if (targetFrame.length < 1){
-	        jQuery('#partyContent').append("<iframe id='target_upload' name='target_upload' style='display: none' src=''> </iframe>");
+	        jQuery('#partyContent').append('<iframe id="' + this.iframeId + '" name="' + this.iframeId + '" style="display: none" src=""> </iframe>');
 	    }
-	    jQuery('#uploadPartyContent').attr("target", "target_upload");
+	    jQuery('#uploadPartyContent').attr("target", this.iframeId);
 	
-	    var labelField = jQuery("#upcProgressBarSavingMsg");
+	    var labelField = jQuery("#"+this.progTextElemId);
 	    if (labelField.length) {
 	        labelField.remove();
 	    }
 	};
 	
 	this.processUploadComplete = function() {
-	    var iframePartyContentList = jQuery("#target_upload").contents().find("#partyContentList").html();
+	    var iframePartyContentList = jQuery("#"+this.iframeId).contents().find("#partyContentList").html();
 	
 	    // update partyContentList - copy the Data from the iFrame partyContentList
 	    // to the page partyContentList
@@ -118,10 +106,10 @@ function CatoUploadProgress(options) {
 	
 	    this.setProgressValue(100);
 	    this.setProgressState(catoStyles.color_success);
-	    this.setProgressMsg(this.uiLabelMap.CommonCompleted);
+	    this.setProgressText(this.uiLabelMap.CommonCompleted);
 	    
 	    // remove iFrame
-	    jQuery("#target_upload").remove();
+	    jQuery("#"+this.iframeId).remove();
 	    return;
 	};
 	
@@ -134,7 +122,7 @@ function CatoUploadProgress(options) {
 	        interval: 500,
 	        repeat: true,
 	        tick: function(counter, timerId) {
-	            iframePartyContentList = jQuery("#target_upload").contents().find("#partyContentList");
+	            iframePartyContentList = jQuery("#"+prog.iframeId).contents().find("#partyContentList");
 	            if (iframePartyContentList != null && iframePartyContentList.length > 0) {
 	                timerId.stop();
 	                prog.processUploadComplete();
@@ -145,14 +133,14 @@ function CatoUploadProgress(options) {
 	};
 	
 	this.showError = function(errdata) {
-		jQuery('#content-messages').html('<div data-alert class="' + catoStyles.alert_wrap + ' ' + catoStyles.alert_prefix_type + 'alert">' + errdata + "</div>");
+		jQuery("#"+this.msgContainerId).html('<div data-alert class="' + catoStyles.alert_wrap + ' ' + catoStyles.alert_prefix_type + 'alert">' + errdata + "</div>");
 		this.setProgressState(catoStyles.color_alert);
-		this.setProgressMsg(this.uiLabelMap.CommonError);
+		this.setProgressText(this.uiLabelMap.CommonError);
 	};
 	
 	this.beginProgressStatus = function() {
-	    jQuery('#upcProgressMsgBox').append("<span id='upcProgressBarSavingMsg' class='label'>" + this.uiLabelMap.CommonUpload + "...</span>");
-	    var i=0;
+	    jQuery("#"+this.progTextBoxId).append('<span id="' + this.progTextElemId + '" class="label">' + this.uiLabelMap.CommonUpload + '...</span>');
+	    var i = 0;
 	    var prog = this;
 	    jQuery.fjTimer({
 	        interval: 1000,
@@ -173,7 +161,7 @@ function CatoUploadProgress(options) {
 	                        var readPercent = data.readPercent;
 	                        prog.setProgressValue(readPercent);
 	                        if (readPercent > 99) {
-	                        	prog.setProgressMsg(prog.uiLabelMap.CommonSave + "...");
+	                        	prog.setProgressText(prog.uiLabelMap.CommonSave + "...");
 	                            // stop the fjTimer
 	                            timerId.stop();
 	                            // call the upload complete method to do final stuff
@@ -190,3 +178,15 @@ function CatoUploadProgress(options) {
 	    });
 	};
 }
+
+CatoUploadProgress.uiLabelMap = null;
+CatoUploadProgress.loadUiLabels = function() {
+	if (CatoUploadProgress.uiLabelMap == null) {
+	    var labelObject = {
+	            "CommonUiLabels" : ["CommonUpload", "CommonSave", "CommonCompleted", "CommonError", "CommonServerCommunicationError"]
+	          };
+	    CatoUploadProgress.uiLabelMap = getJSONuiLabelMap(labelObject);
+	}	
+};
+
+

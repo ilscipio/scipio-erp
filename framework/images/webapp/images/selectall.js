@@ -817,7 +817,7 @@ function waitSpinnerHide() {
  */
 function getJSONuiLabels(requiredLabels) {
     var returnVal = {};
-    var requiredLabelsStr = JSON.stringify(requiredLabels)
+    var requiredLabelsStr = JSON.stringify(requiredLabels);
 
     if (requiredLabels != null && requiredLabels != "") {
         jQuery.ajax({
@@ -835,6 +835,25 @@ function getJSONuiLabels(requiredLabels) {
 }
 
 /**
+ * Cato: reads the required ui labels and returns as an object similar to screen uiLabelMap, with all labels in root map. 
+ * @param requiredLabels JSON Object {resource : [label1, label2 ...], resource2 : [label1, label2, ...]}
+ * @return JSON Object
+ */
+function getJSONuiLabelMap(requiredLabels) {
+    var returnVal = {};
+    var labelArrays = getJSONuiLabels(requiredLabels);
+    
+    jQuery.each(requiredLabels, function(labelCollection, labelNameArray) {
+    	jQuery.each(labelNameArray, function(index, labelName) {
+    		returnVal[labelName] = labelArrays[labelCollection][index];
+        });
+    });
+    
+    return returnVal;
+}
+
+
+/**
  * Read the requiered uiLabel from the uiLabelXml Resource
  * FIXME: Cato: Method requires sync ajax if it's going to return a value (added); should find a better way to write this
  * @param uiResource String
@@ -846,7 +865,7 @@ function getJSONuiLabel(uiResource, errUiLabel) {
     requiredLabel[uiResource] = errUiLabel;
 
     var returnVal = "";
-    var requiredLabelStr = JSON.stringify(requiredLabel)
+    var requiredLabelStr = JSON.stringify(requiredLabel);
 
     if (requiredLabel != null && requiredLabel != "") {
         jQuery.ajax({

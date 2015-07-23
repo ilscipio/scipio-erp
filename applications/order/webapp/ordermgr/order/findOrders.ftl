@@ -21,7 +21,8 @@ under the License.
 <!-- //
 function lookupOrders(click) {
     orderIdValue = document.lookuporder.orderId.value;
-    if (orderIdValue.length > 1) {
+    <#-- Cato: don't lookup if ID contains search wildcards -->
+    if (orderIdValue.length > 1 && !orderIdValue.match(/[%*]/)) {
         document.lookuporder.action = "<@ofbizUrl>orderview</@ofbizUrl>";
         document.lookuporder.method = "get";
     } else {

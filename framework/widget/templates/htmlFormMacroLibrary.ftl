@@ -1028,8 +1028,14 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
             <#local actionStr>onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else><#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectSizeUrl}')</#if>"</#local>
             <li class=""><label for="pageSize">${paginateViewSizeLabel} <select name="pageSize" size="1" ${actionStr}><#rt/>
             
+          <#local sufficientPs = false>
           <#list availPageSizes as ps>
-            <option <#if viewSize == ps> selected="selected" </#if> value="${ps}">${ps}</option>
+            <#if !sufficientPs>
+              <option <#if viewSize == ps> selected="selected" </#if> value="${ps}">${ps}</option>
+              <#if (ps >= listSize)>
+                <#local sufficientPs = true>
+              </#if>
+            </#if>
           </#list>
               </select></label></li>
         </#if>

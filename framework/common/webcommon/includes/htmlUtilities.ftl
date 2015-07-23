@@ -143,15 +143,19 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     url             = controller request uri
 -->
 
+<#global requiredScriptOfbizUrls = []>
 <#macro requireScriptOfbizUrl uri htmlwrap=false>
-  <#if htmlwrap>
+  <#if !requiredScriptOfbizUrls?seq_contains(uri)>
+    <#if htmlwrap>
 <script language="JavaScript" type="text/javascript">
 <!-- //
-  </#if>
+    </#if>
     commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
-  <#if htmlwrap>
+    <#if htmlwrap>
 // -->
 </script>
+    </#if>
+    <#global requiredScriptOfbizUrls = requiredScriptOfbizUrls + [uri]>
   </#if>
 </#macro>
 

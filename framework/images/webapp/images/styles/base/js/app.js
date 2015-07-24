@@ -67,7 +67,7 @@ function CatoUploadProgress(options) {
     this.msgContainerParentId = options.msgContainerParentId; // optional, only required if no msgContainerId; if not specified, won't generate; used for generating a new error message holder
     this.msgContainerInsertMode = options.msgContainerInsertMode; // optional, default "prepend"; either "prepend" or "append" (to parent)
     
-    this.iframeParentId = options.iframeParentId; // required, should exist in doc; will contain hidden iframe(s) to internally hold file upload html page result 
+    this.iframeParentId = options.iframeParentId; // optional, default is html body, if specified should exist in doc; will contain hidden iframe(s) to internally hold file upload html page result 
     this.expectedResultContainerId = options.expectedResultContainerId; // required; id of an elem to test existence in upload page result; was originally same as resultContentContainerId
     this.errorResultContainerId = options.errorResultContainerId; // required; if this elem in upload page result exists, treat it as error and use its content as error message (required to help against forever-uploading bug)
     this.errorResultAddWrapper = options.errorResultAddWrapper; // optional, default false; if true, errorResultContainerId contents will be wrapped like other errors; else it must supply its own; does not apply to ajax and other errors (always get wrapper, needed)
@@ -228,7 +228,14 @@ function CatoUploadProgress(options) {
 	    // Cato: we always create a new iframe for safety, but leaving guard code in case change
 	    var targetFrame = jQuery("#"+uploadInfo.iframeId);
 	    if (targetFrame.length < 1) {
-	        jQuery("#"+this.iframeParentId).append('<iframe id="' + uploadInfo.iframeId + '" name="' + uploadInfo.iframeId + '" style="display: none" src=""> </iframe>');
+	    	var iframeParent;
+	    	if (this.iframeParentId) {
+	    		iframeParent = jQuery("#"+this.iframeParentId);
+	    	}
+	    	else {
+	    		iframeParent = jQuery("body").first();
+	    	}
+	    	iframeParent.append('<iframe id="' + uploadInfo.iframeId + '" name="' + uploadInfo.iframeId + '" style="display: none" src=""> </iframe>');
 	        uploadInfo.iframeCreated = true;
 	    }
  

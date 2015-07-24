@@ -181,7 +181,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     class           = css classes
     maxlength       = maxLength
     id              = field id
-    onClick           = JS Event
+    onClick         = JS Event
     disabled        = field disabled
     placeholder     = field placeholder
     alert           = adds additional css alert class
@@ -189,9 +189,9 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     size            = size attribute (default: 20)
     collapse        = should the field be collapsing? (default: false)
     norows          = render without the rows-container
-    norows          = render without the cells-container
+    nocells         = render without the cells-container
     required        = required input
-    addClass        = css classes in addition to default
+    addClass        = css classes in addition to default and class param
         
     * input *
     autoCompleteUrl = if autocomplete function exists, specification of url will make it available
@@ -225,11 +225,17 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     items           = if specified, multiple-items radio generated; list of {"key": value, "description": label, "event": html-dom-event-attrib, "action": event-js} hashes
     currentValue    = current value, determines checked
     defaultValue    = default value, determines checked
+    
+    * file *
+    autocomplete    = true/false, default true (false to prevent)
+    
+    * password *
+    autocomplete    = true/false, default true (false to prevent)
 -->
 <#macro field type="" label="" name="" value="" currentValue="" defaultValue="" class="${style_grid_large!}12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="" postfix=false required=false addClass="" items=[]>
+        fieldFormName="" formName="" postfix=false required=false addClass="" items=[] autocomplete=true>
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum=(fieldIdNum!0)+1 />
 
@@ -395,10 +401,11 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                 </#if>
             <#break>
           <#case "file">
-            <#-- TODO: better version of this -->
-            <input type="file" name="${name}"<#if class?has_content> class="${class}"</#if><#if size?has_content> size="${size}"</#if> />
+            <@renderFileField className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") />
             <#break> 
-           
+          <#case "password">
+            <@renderPasswordField className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") />
+            <#break> 
           <#default>
             <#if value?has_content>
                 <@renderField text=value/>

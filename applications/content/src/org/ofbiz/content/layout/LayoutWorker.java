@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.event.FileUploadProgressListener;
 
 /**
  * LayoutWorker Class
@@ -60,6 +61,12 @@ public class LayoutWorker {
         Map<String, String> formInput = FastMap.newInstance();
         results.put("formInput", formInput);
         ServletFileUpload fu = new ServletFileUpload(new DiskFileItemFactory(10240, new File(new File("runtime"), "tmp")));
+        
+        // Cato patch - from ServiceEventHandler: create the progress listener and add it to the session
+        FileUploadProgressListener listener = new FileUploadProgressListener();
+        fu.setProgressListener(listener);
+        request.getSession().setAttribute("uploadProgressListener", listener);
+        
         List<FileItem> lst = null;
         try {
            lst = UtilGenerics.checkList(fu.parseRequest(request));

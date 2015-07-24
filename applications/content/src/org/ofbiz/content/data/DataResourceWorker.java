@@ -76,6 +76,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.event.FileUploadProgressListener;
 import org.ofbiz.widget.model.ModelScreen;
 import org.ofbiz.widget.model.ScreenFactory;
 import org.ofbiz.widget.renderer.ScreenRenderer;
@@ -193,6 +194,12 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
 
         //String idFieldValue = null;
         ServletFileUpload fu = new ServletFileUpload(new DiskFileItemFactory(10240, FileUtil.getFile("runtime/tmp")));
+        
+        // Cato patch - from ServiceEventHandler: create the progress listener and add it to the session
+        FileUploadProgressListener listener = new FileUploadProgressListener();
+        fu.setProgressListener(listener);
+        request.getSession().setAttribute("uploadProgressListener", listener);
+        
         List<FileItem> lst = null;
         Locale locale = UtilHttp.getLocale(request);
 

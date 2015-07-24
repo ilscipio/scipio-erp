@@ -55,6 +55,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceAuthException;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.event.FileUploadProgressListener;
 
 
 /**
@@ -78,6 +79,12 @@ public class UploadContentAndImage {
             GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
 
             ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, FileUtil.getFile("runtime/tmp")));
+            
+            // Cato patch - from ServiceEventHandler: create the progress listener and add it to the session
+            FileUploadProgressListener listener = new FileUploadProgressListener();
+            dfu.setProgressListener(listener);
+            request.getSession().setAttribute("uploadProgressListener", listener);
+            
             List<FileItem> lst = null;
             try {
                 lst = UtilGenerics.checkList(dfu.parseRequest(request));
@@ -345,6 +352,12 @@ public class UploadContentAndImage {
             GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
 
             ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, FileUtil.getFile("runtime/tmp")));
+            
+            // Cato patch - from ServiceEventHandler: create the progress listener and add it to the session
+            FileUploadProgressListener listener = new FileUploadProgressListener();
+            dfu.setProgressListener(listener);
+            request.getSession().setAttribute("uploadProgressListener", listener);
+            
             //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]DiskFileUpload " + dfu, module);
             List<FileItem> lst = null;
             try {

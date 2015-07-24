@@ -56,7 +56,8 @@ function CatoUploadProgress(options) {
 	this.instNum = CatoUploadProgress.instCount;
 	this.uploadCount = 0;
     
-	this.formId = options.formId; // required, should exist in doc
+	this.formId = options.formId; // required, either formId or formName must be specified, should exist in doc
+	this.formName = options.formName; // required, either formId or formName must be specified, should exist in doc
     this.progBarId = options.progBarId; // optional, but if used should exist in doc
     this.progMeterId = options.progMeterId; // optional, has default (based on progBarId and @progress ftl macro)
     this.progTextBoxId = options.progTextBoxId; // optional, but if used should exist in doc
@@ -77,6 +78,7 @@ function CatoUploadProgress(options) {
     
     this.successRedirectUrl = options.successRedirectUrl; // optional; if specified, will redirect to this URL on upload success
     this.successSubmitFormId = options.successSubmitFormId; // optional; same as successRedirectUrl but submits a form instead
+    //this.successReplaceWindow = options.successReplaceWindow; // not implemented/possible; optional, default false; if true, upon success will replace this window with contents of iframe
     
     this.preventDoubleUpload = options.preventDoubleUpload; // optional, default true; not sure why would turn this off
     
@@ -107,6 +109,10 @@ function CatoUploadProgress(options) {
     
     if (typeof this.resultContentReplace !== 'boolean') {
     	this.resultContentReplace = false;
+    }
+    
+    if (typeof this.successReplaceWindow !== 'boolean') {
+    	this.successReplaceWindow = false;
     }
     
     if (typeof this.preventDoubleUpload !== 'boolean') {
@@ -230,7 +236,12 @@ function CatoUploadProgress(options) {
 	    jQuery("#"+uploadInfo.iframeId).empty();
 	    jQuery("#"+uploadInfo.iframeId).load(jQuery.proxy(this.checkIframeAsyncLoad, this, uploadInfo));
 	    
-	    jQuery("#"+this.formId).attr("target", uploadInfo.iframeId);
+	    if (this.formId) {
+	    	jQuery("#"+this.formId).attr("target", uploadInfo.iframeId);
+	    }
+	    else if (this.formName) {
+	    	jQuery('form[name="'+this.formName+'"]').attr("target", uploadInfo.iframeId);
+	    }
 	
 	    if (this.progTextElemId) {
 		    var labelField = jQuery("#"+this.progTextElemId);
@@ -270,6 +281,15 @@ function CatoUploadProgress(options) {
 		    this.setProgressText(this.uiLabelMap.CommonCompleted);
 	    }
 	    
+	    var iframeDocHtml = null;
+	    if (!error) {
+	    	if (this.successReplaceWindow) {
+	    		iframeDocHtml = jQuery("#"+uploadInfo.iframeId).contents().find("html").html();
+	    		//var iframe = jQuery("#"+uploadInfo.iframeId)[0];
+	    		//var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+	    	}
+	    }
+	    
 	    this.cleanup(uploadInfo);
 	    
 	    if (!error) {
@@ -278,6 +298,11 @@ function CatoUploadProgress(options) {
 		    }
 		    else if (this.successSubmitFormId) {
 		    	jQuery("#"+this.successSubmitFormId).submit();
+		    }
+		    else if (this.successReplaceWindow) {
+		    	var newDoc = document.open("text/html");
+		    	newDoc.write(iframeDocHtml);
+		    	newDoc.close();
 		    }
 	    }
 	    return;

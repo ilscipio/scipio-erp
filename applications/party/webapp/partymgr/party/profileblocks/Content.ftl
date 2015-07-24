@@ -24,7 +24,7 @@ under the License.
       
     <@section title="${uiLabelMap.PartyAttachContent}">
       <@row>
-        <@cell>
+        <@cell id="partyAttachContentFormArea">
       <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
@@ -56,41 +56,29 @@ under the License.
             <input type="submit" value="${uiLabelMap.CommonUpload}" class="smallSubmit" />
           </@cell>
           <@cell class="${style_grid_small!}6 ${style_grid_large!}6">
-            <@progress id="upc_progress_bar" type="info" addWrapClass="${style_hidden!}"/>
+            <#assign progressOptions = {
+                "formId" : "uploadPartyContent",
+                "progTextBoxId" : "upcProgressMsgBox",
+                
+                "msgContainerParentId" : "partyAttachContentFormArea",
+                "msgContainerInsertMode" : "prepend",
+                
+                "iframeParentId" : "partyContent",
+                "expectedResultContainerId" : "partyContentList",
+                "errorResultContainerId" : "main-${style_alert_wrap!}",
+                "errorResultAddWrapper" : false,
+    
+                "resultContentReplace" : true,
+                "contentContainerId" : "partyContentList",
+                "resultContentContainerId" : "partyContentList"
+            }>
+            <@progress id="upc_progress_bar" type="info" addWrapClass="${style_hidden!}" progressOptions=progressOptions/>
           </@cell>
           <@cell class="${style_grid_small!}3 ${style_grid_large!}4" id="upcProgressMsgBox">
           </@cell>
         </@row>
       </form>
  
-  <script type="text/javascript">
-  
-    <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" />
-    
-    <#-- functions defined in PartyProfileContent.js -->
-    var ppcUploadProgress = null;
-
-    jQuery(document).ready(function() {
-        ppcUploadProgress = new CatoUploadProgress({
-            formId : "uploadPartyContent",
-            progBarId : "upc_progress_bar",
-            progTextBoxId : "upcProgressMsgBox",
-            iframeParentId : "partyContent",
-            msgContainerId : "upc_content_messages",
-            msgContainerSiblingId : "partyContentList",
-            contentContainerId : "partyContentList",
-            targetContentContainerId : "partyContentList"
-        });
-        ppcUploadProgress.reset();
-    });
-    
-    jQuery("#uploadPartyContent").validate({
-        submitHandler: function(form) {
-            ppcUploadProgress.initUpload();
-            form.submit();
-        }
-    });
-  </script>
         </@cell>
       </@row>
     </@section>

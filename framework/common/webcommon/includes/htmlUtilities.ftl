@@ -1044,8 +1044,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     class          = Adds classes - please use "(small|medium|large)-block-grid-#"
     showValue      = Display value inside bar
     addWrapClass   = extra classes on outer wrapper only
+    progressOptions = if present, attaches progress bar to an upload form with javascript-based progress and 
+                      attaches results to page using elem IDs and options in this map - 
+                      see CatoUploadProgress javascript class for options; mostly same
 -->
-<#macro progress value=0 id="" type="" class="" showValue=false addWrapClass="">
+<#macro progress value=0 id="" type="" class="" showValue=false addWrapClass="" progressOptions={}>
     <#switch type>
       <#case "alert">
         <#assign color=style_color_alert!/>
@@ -1064,7 +1067,67 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
             <span class="${style_progress_bar!}"<#if !style_progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
       <#if style_progress_wrap?has_content></div></#if>
     </div>
+    
+  <#if progressOptions?has_content>
+    <@progressScript options=progressOptions+{"progBarId":"${id}"} htmlwrap=true />
+  </#if>
+    
 </#macro>
+
+<#-- 
+*************
+* Progress Script Macro
+************
+Generates script data and markup needed to make an instance to initialize upload progress 
+javascript anim for a form, with progress bar and/or text.
+TODO: document better if needed
+                    
+   * General Attributes *
+    options = elem IDs and options passed to CatoUploadProgress javascript class
+-->
+<#macro progressScript options={} htmlwrap=false>
+  <#if options?has_content && options.formId?has_content>
+    <#if htmlwrap>
+    <script type="text/javascript">
+    </#if>
+    
+    <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" />
+    
+    (function() {
+        var uploadProgress = null;
+    
+        jQuery(document).ready(function() {
+            uploadProgress = new CatoUploadProgress({
+            <#list options?keys as opt>
+                <#local val = options[opt]!>
+                <#if val?is_number>
+                  "${opt}" : ${val},
+                <#elseif val?is_boolean>
+                  "${opt}" : ${val?string("true", "false")},
+                <#else>
+                  "${opt}" : "${val}",
+                </#if>
+            </#list>
+            });
+            uploadProgress.reset();
+        });
+        
+        jQuery("#${options.formId}").validate({
+            submitHandler: function(form) {
+                if (!uploadProgress.uploading) {
+                    uploadProgress.initUpload();
+                    form.submit();
+                }
+            }
+        });
+    })();
+    
+    <#if htmlwrap>
+    </script>
+    </#if>
+  </#if>
+</#macro>
+
 
 
 

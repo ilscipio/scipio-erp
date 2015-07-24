@@ -22,30 +22,66 @@ function CatoUploadProgress(options) {
 		options = {};
 	}
 	
+	this.uploading = false; // can check this from caller as well
+	
 	CatoUploadProgress.instCount = CatoUploadProgress.instCount + 1;
 	this.instNum = CatoUploadProgress.instCount;
+	this.uploadCount = 0;
     
 	this.formId = options.formId; // required, should exist in doc
-    this.progBarId = options.progBarId; // required, should exist in doc
-    this.progMeterId = options.progMeterId; // optional, has default, should not exist in doc
-    this.progTextBoxId = options.progTextBoxId; // required, should exist in doc
-    this.progTextElemId = options.progTextElemId; // optional, has default, should not exist in doc
-    this.iframeParentId = options.iframeParentId; // required, should exist in doc
-    this.iframeId = options.iframeId; // optional, has default, should not exist in doc
-    this.msgContainerId = options.msgContainerId; // required, if no sibling must exist, if has sibling must not exist
-    this.msgContainerSiblingId = options.msgContainerSiblingId; // optional, if not specified, won't generate
+    this.progBarId = options.progBarId; // optional, but if used should exist in doc
+    this.progMeterId = options.progMeterId; // optional, has default (based on progBarId and @progress ftl macro)
+    this.progTextBoxId = options.progTextBoxId; // optional, but if used should exist in doc
+    this.progTextElemId = options.progTextElemId; // optional, has default (based on progTextBoxId), should NOT already exist in doc
     
-    this.contentContainerId = options.contentContainerId; // currently required, should be optional?
-    this.targetContentContainerId = options.targetContentContainerId; // currently required, should be optional?
+    this.msgContainerId = options.msgContainerId; // optional, only required if no msgContainerParentId; for error messages
+    this.msgContainerParentId = options.msgContainerParentId; // optional, only required if no msgContainerId; if not specified, won't generate; used for generating a new error message holder
+    this.msgContainerInsertMode = options.msgContainerInsertMode; // optional, default "prepend"; either "prepend" or "append" (to parent)
+    
+    this.iframeParentId = options.iframeParentId; // required, should exist in doc; will contain hidden iframe(s) to internally hold file upload html page result 
+    this.expectedResultContainerId = options.expectedResultContainerId; // required; id of an elem to test existence in upload page result; was originally same as resultContentContainerId
+    this.errorResultContainerId = options.errorResultContainerId; // required; if this elem in upload page result exists, treat it as error and use its content as error message (required to help against forever-uploading bug)
+    this.errorResultAddWrapper = options.errorResultAddWrapper; // optional, default false; if true, errorResultContainerId contents will be wrapped like other errors; else it must supply its own; does not apply to ajax and other errors (always get wrapper, needed)
+    
+    this.resultContentReplace = options.resultContentReplace; // boolean, default false; if true replace some content in this page with content from upload page result (iframe)
+    this.contentContainerId = options.contentContainerId; // required if resultContentReplace true, id of content on current page to be replaced
+    this.resultContentContainerId = options.resultContentContainerId; // required if resultContentReplace true, id of content on upload page result
+    
+    this.successRedirectUrl = options.successRedirectUrl; // optional; if specified, will redirect to this URL on upload success
+    
+    this.preventDoubleUpload = options.preventDoubleUpload; // optional, default true; not sure why would turn this off
+    
+    this.initOnce = false;
     
     if (!this.progMeterId) {
-    	this.progMeterId = this.progBarId + "_meter";
+    	if (this.progBarId) {
+    		this.progMeterId = this.progBarId + "_meter";
+    	}
     }
     if (!this.progTextElemId) {
-    	this.progTextElemId = this.progTextBoxId + "_msg";
+    	if (this.progTextBoxId) {
+    		this.progTextElemId = this.progTextBoxId + "_msg";
+    	}
     }
-    if (!this.iframeId) {
-    	this.iframeId = "cato_target_upload_" + this.instNum;
+    
+    if (!this.msgContainerId) {
+    	this.msgContainerId = "cato_progupl_content_messages_" + this.instNum;
+    }
+    if (!this.msgContainerInsertMode) {
+    	this.msgContainerInsertMode = "prepend";
+    }
+    
+    this.iframeBaseId = "cato_progupl_target_upload_" + this.instNum;
+    if (typeof this.errorResultAddWrapper !== 'boolean') {
+    	this.errorResultAddWrapper = false;
+    }
+    
+    if (typeof this.resultContentReplace !== 'boolean') {
+    	this.resultContentReplace = false;
+    }
+    
+    if (typeof this.preventDoubleUpload !== 'boolean') {
+    	this.preventDoubleUpload = true;
     }
     
     this.uiLabelMap = null;
@@ -53,14 +89,27 @@ function CatoUploadProgress(options) {
     /* Public functions */
     
     this.reset = function() {
-    	this.delayedInit();
-        this.resetProgress();
+    	if (!this.preventDoubleUpload || !this.uploading) {
+    		this.delayedInit();
+    		this.resetProgress();
+    	}
     };
     
     this.initUpload = function() {
-    	this.delayedInit();
-        this.resetInitContainers();
-        this.beginProgressStatus();
+    	if (!this.preventDoubleUpload || !this.uploading) {
+    		this.delayedInit();
+    		this.uploading = true;
+	    	// upload status for a specific upload attempt
+	    	var uploadInfo = {
+	    		finished : false,
+	    		iframeCreated : false,
+	    		iframeLoaded : false,
+	    		iframeId : this.iframeBaseId + "_" + (this.uploadCount+1)
+	    	};
+	        this.resetInitContainers(uploadInfo);
+	        this.beginProgressStatus(uploadInfo);
+	        this.uploadCount = this.uploadCount + 1;
+    	}
     };
 
 
@@ -68,25 +117,38 @@ function CatoUploadProgress(options) {
     
     this.delayedInit = function() {
     	CatoUploadProgress.loadUiLabels();
-    	this.uiLabelMap = CatoUploadProgress.uiLabelMap;
+    	if (this.uiLabelMap == null) {
+    		this.uiLabelMap = CatoUploadProgress.uiLabelMap;
+    	}
     };
     
 	this.setProgressValue = function(percent) {
-		jQuery("#"+this.progMeterId).css({"width": percent + "%"});
-		if (typeof jQuery("#"+this.progMeterId).attr("aria-valuenow") !== 'undefined') {
-			jQuery("#"+this.progMeterId).attr("aria-valuenow", percent.toString());
+		if (this.progMeterId) {
+			jQuery("#"+this.progMeterId).css({"width": percent + "%"});
+		
+			if (typeof jQuery("#"+this.progMeterId).attr("aria-valuenow") !== 'undefined') {
+				jQuery("#"+this.progMeterId).attr("aria-valuenow", percent.toString());
+			}
 		}
-		jQuery("#"+this.progTextElemId).html(this.uiLabelMap.CommonUpload + "... (" + percent + "%)");
+		if (this.progTextElemId) {
+			jQuery("#"+this.progTextElemId).html(this.uiLabelMap.CommonUpload + "... (" + percent + "%)");
+		}
 	};
 	
 	this.setProgressState = function(classStr) {
 		var stateStyles = [catoStyles.color_info, catoStyles.color_success, catoStyles.color_alert, catoStyles.color_warning].join(" ");
-		jQuery("#"+this.progBarId).removeClass(stateStyles).addClass(classStr);
-		jQuery("#"+this.progTextElemId).removeClass(stateStyles).addClass(classStr);
+		if (this.progBarId) {
+			jQuery("#"+this.progBarId).removeClass(stateStyles).addClass(classStr);
+		}
+		if (this.progTextElemId) {
+			jQuery("#"+this.progTextElemId).removeClass(stateStyles).addClass(classStr);
+		}
 	};
 	
 	this.setProgressText = function(msg) {
-		jQuery("#"+this.progTextElemId).html(msg);
+		if (this.progTextElemId) {
+			jQuery("#"+this.progTextElemId).html(msg);
+		}
 	};
 	
 	this.resetProgress = function() {
@@ -94,72 +156,166 @@ function CatoUploadProgress(options) {
 		this.setProgressState(catoStyles.color_info)
 	};
 	
-	this.resetInitContainers = function() {
+	this.showError = function(errdata, errorWrapper) {
+		if (typeof errorWrapper !== 'boolean') {
+			errorWrapper = true;
+		}
+		if (this.msgContainerId) {
+			if (errorWrapper) {
+				jQuery("#"+this.msgContainerId).html('<div data-alert class="' + catoStyles.alert_wrap + ' ' + catoStyles.alert_prefix_type + 'alert">' + errdata + "</div>");
+			}
+			else {
+				jQuery("#"+this.msgContainerId).html(errdata);
+			}
+		}
+		this.setProgressState(catoStyles.color_alert);
+		this.setProgressText(this.uiLabelMap.CommonError);
+	};
+	
+	this.resetInitContainers = function(uploadInfo) {
 		this.resetProgress();
-		jQuery("#"+this.progBarId).removeClass(catoStyles.hidden);
+		if (this.progBarId) {
+			jQuery("#"+this.progBarId).removeClass(catoStyles.hidden);
+		}
 	    
 	    var infodiv = jQuery("#"+this.msgContainerId);
 	    if(infodiv.length < 1){
-	        jQuery('<div class="' + catoStyles.grid_row + '"><div class="' + catoStyles.grid_large + '12 ' + catoStyles.grid_cell + '" id="' + this.msgContainerId + '"></div></div>').insertAfter(jQuery("#"+this.msgContainerSiblingId));
+	        var indodivbox = jQuery('<div class="' + catoStyles.grid_row + '"><div class="' + catoStyles.grid_large + '12 ' + catoStyles.grid_cell + '" id="' + this.msgContainerId + '"></div></div>');
+	        if (this.msgContainerInsertMode == "append") {
+	        	indodivbox.appendTo(jQuery("#"+this.msgContainerParentId));
+	        }
+	        else {
+	        	indodivbox.prependTo(jQuery("#"+this.msgContainerParentId));
+	        }
 	    }
-	    jQuery("#"+this.msgContainerId).html('');
+	    jQuery("#"+this.msgContainerId).empty();
 	    
-	    var targetFrame = jQuery("#"+this.iframeId);
+	    // Cato: we always create a new iframe for safety, but leaving guard code in case change
+	    var targetFrame = jQuery("#"+uploadInfo.iframeId);
 	    if (targetFrame.length < 1) {
-	        jQuery("#"+this.iframeParentId).append('<iframe id="' + this.iframeId + '" name="' + this.iframeId + '" style="display: none" src=""> </iframe>');
+	        jQuery("#"+this.iframeParentId).append('<iframe id="' + uploadInfo.iframeId + '" name="' + uploadInfo.iframeId + '" style="display: none" src=""> </iframe>');
+	        uploadInfo.iframeCreated = true;
 	    }
-	    jQuery("#"+this.formId).attr("target", this.iframeId);
+ 
+	    jQuery("#"+uploadInfo.iframeId).off("load");
+	    jQuery("#"+uploadInfo.iframeId).empty();
+	    jQuery("#"+uploadInfo.iframeId).load(jQuery.proxy(this.checkIframeAsyncLoad, this, uploadInfo));
+	    
+	    jQuery("#"+this.formId).attr("target", uploadInfo.iframeId);
 	
-	    var labelField = jQuery("#"+this.progTextElemId);
-	    if (labelField.length) {
-	        labelField.remove();
+	    if (this.progTextElemId) {
+		    var labelField = jQuery("#"+this.progTextElemId);
+		    if (labelField.length) {
+		        labelField.remove();
+		    }
 	    }
+	    this.initOnce = true;
 	};
 	
-	this.processUploadComplete = function() {
-	    var iframePartyContentList = jQuery("#"+this.iframeId).contents().find("#"+this.targetContentContainerId).html();
-	
-	    // update partyContentList - copy the Data from the iFrame partyContentList
-	    // to the page partyContentList
-	    jQuery("#"+this.contentContainerId).html(iframePartyContentList);
-	
-	    this.setProgressValue(100);
-	    this.setProgressState(catoStyles.color_success);
-	    this.setProgressText(this.uiLabelMap.CommonCompleted);
+	this.processUploadComplete = function(uploadInfo) {
+		var error = false;
+	    if (this.resultContentReplace) {
+	    	var iframeContent = jQuery("#"+uploadInfo.iframeId).contents().find("#"+this.resultContentContainerId);
+	    	
+	    	if (iframeContent.length > 0) {
+			    // update content - copy the Data from the iFrame content container
+			    // to the page content container
+	    		var contentContainer = jQuery("#"+this.contentContainerId);
+	    		if (contentContainer.length > 0) {
+	    			jQuery("#"+this.contentContainerId).html(iframeContent.html());
+	    		}
+	    		else {
+	    			// don't show error; no chance it reflects on upload success
+	    		}
+	    	}
+	    	else {
+	    		// something's missing, probably dev error but can't be sure
+	    		error = true;
+	    		this.showError(this.uiLabelMap.CommonUnexpectedError);
+	    	}
+	    }
 	    
-	    // remove iFrame
-	    jQuery("#"+this.iframeId).remove();
+	    if (!error) {
+		    this.setProgressValue(100);
+		    this.setProgressState(catoStyles.color_success);
+		    this.setProgressText(this.uiLabelMap.CommonCompleted);
+	    }
+	    
+	    this.cleanup(uploadInfo);
+	    
+	    if (!error) {
+		    if (this.successRedirectUrl) {
+		    	window.location.href = this.successRedirectUrl;
+		    }
+	    }
 	    return;
 	};
 	
-	this.checkIframeStatus = function() {
-	    var iframePartyContentList = null;
-	    // if the new partyContentList isn't created wait a few ms and call the
+	this.processError = function(uploadInfo, errdata, errorWrapper) {
+		this.showError(errdata, errorWrapper);
+		this.cleanup(uploadInfo);
+	};
+	
+	this.cleanup = function(uploadInfo) {
+		if (uploadInfo.iframeCreated) {
+		    // remove iFrame
+		    jQuery("#"+uploadInfo.iframeId).remove();
+	    }
+		this.uploading = false;
+	};
+	
+	this.checkIframeAsyncLoad = function(uploadInfo) {
+		// this version called by jquery... for now, just flag and let timer code handle
+		// this helps prevent "forever uploading" bug
+		uploadInfo.iframeLoaded = true;
+	};
+	
+	this.checkIframeStatus = function(uploadInfo) {
+	    var iframeContent = null;
+	    var iframeErrorContent = null;
+	    // if the new content isn't created wait a few ms and call the
 	    // method again
 	    var prog = this;
 	    jQuery.fjTimer({
 	        interval: 500,
 	        repeat: true,
 	        tick: function(counter, timerId) {
-	            iframePartyContentList = jQuery("#"+prog.iframeId).contents().find("#"+prog.targetContentContainerId);
-	            if (iframePartyContentList != null && iframePartyContentList.length > 0) {
+	        	// note: errorResultContainerId and expectedResultContainerId must be chosen carefully
+	        	// note: explicitly not checking uploadInfo.iframeLoaded for these two, for now...
+	        	if (prog.errorResultContainerId && !uploadInfo.finished) {
+	        		iframeErrorContent = jQuery("#"+uploadInfo.iframeId).contents().find("#"+prog.errorResultContainerId);
+	        		if (iframeErrorContent.length > 0) {
+	        			uploadInfo.finished = true;
+	        			timerId.stop();
+	        			prog.processError(uploadInfo, iframeErrorContent.html(), prog.errorResultAddWrapper);
+	        		}
+	        	}
+	        	
+	        	if (!uploadInfo.finished) {
+		            iframeContent = jQuery("#"+uploadInfo.iframeId).contents().find("#"+prog.expectedResultContainerId);
+		            if (iframeContent.length > 0) {
+		            	uploadInfo.finished = true;
+		                timerId.stop();
+		                prog.processUploadComplete(uploadInfo);
+		            }
+	        	}
+	        	
+	        	if (!uploadInfo.finished && uploadInfo.iframeLoaded) {
+	        		// problem: iframe loaded but we got nothing... usually a coding error but can't be sure
+	        		uploadInfo.finished = true;
 	                timerId.stop();
-	                prog.processUploadComplete();
-	            }
+	        		prog.processError(uploadInfo, prog.uiLabelMap.CommonUnexpectedError);
+	        	}
 	        }
 	    });
 	    return;
 	};
-	
-	this.showError = function(errdata) {
-		jQuery("#"+this.msgContainerId).html('<div data-alert class="' + catoStyles.alert_wrap + ' ' + catoStyles.alert_prefix_type + 'alert">' + errdata + "</div>");
-		this.setProgressState(catoStyles.color_alert);
-		this.setProgressText(this.uiLabelMap.CommonError);
-	};
-	
-	this.beginProgressStatus = function() {
-	    jQuery("#"+this.progTextBoxId).append('<span id="' + this.progTextElemId + '" class="label">' + this.uiLabelMap.CommonUpload + '...</span>');
-	    var i = 0;
+
+	this.beginProgressStatus = function(uploadInfo) {
+		if (this.progTextBoxId && this.progTextElemId) {
+			jQuery("#"+this.progTextBoxId).append('<span id="' + this.progTextElemId + '" class="label">' + this.uiLabelMap.CommonUpload + '...</span>');
+		}
+		var i = 0;
 	    var prog = this;
 	    jQuery.fjTimer({
 	        interval: 1000,
@@ -171,26 +327,30 @@ function CatoUploadProgress(options) {
 	                dataType: 'json',
 	                success: function(data) {
 	                    if (data._ERROR_MESSAGE_LIST_ != undefined) {
-	                    	prog.showError(data._ERROR_MESSAGE_LIST_);
-	                        timerId.stop();
+	                    	uploadInfo.finished = true;
+	                    	timerId.stop();
+	                    	prog.processError(uploadInfo, data._ERROR_MESSAGE_LIST_);
+	                        
 	                    } else if (data._ERROR_MESSAGE_ != undefined) {
-	                    	prog.showError(data._ERROR_MESSAGE_);
-	                        timerId.stop();
+	                    	uploadInfo.finished = true;
+	                    	timerId.stop();
+	                    	prog.processError(uploadInfo, data._ERROR_MESSAGE_);
 	                    } else {
 	                        var readPercent = data.readPercent;
 	                        prog.setProgressValue(readPercent);
 	                        if (readPercent > 99) {
-	                        	prog.setProgressText(prog.uiLabelMap.CommonSave + "...");
 	                            // stop the fjTimer
 	                            timerId.stop();
+	                            prog.setProgressText(prog.uiLabelMap.CommonSave + "...");
 	                            // call the upload complete method to do final stuff
-	                            prog.checkIframeStatus();
+	                            prog.checkIframeStatus(uploadInfo);
 	                        }
-	                     }
+	                    }
 	                },
 	                error: function(data) {
-	                	prog.showError(prog.uiLabelMap.CommonServerCommunicationError);
-	                    timerId.stop();
+	                	uploadInfo.finished = true;
+	                	timerId.stop();
+	                	prog.processError(uploadInfo, prog.uiLabelMap.CommonServerCommunicationError);
 	                }
 	            });
 	        }
@@ -203,7 +363,7 @@ CatoUploadProgress.uiLabelMap = null;
 CatoUploadProgress.loadUiLabels = function() {
 	if (CatoUploadProgress.uiLabelMap == null) {
 	    var labelObject = {
-	            "CommonUiLabels" : ["CommonUpload", "CommonSave", "CommonCompleted", "CommonError", "CommonServerCommunicationError"]
+	            "CommonUiLabels" : ["CommonUpload", "CommonSave", "CommonCompleted", "CommonError", "CommonServerCommunicationError", "CommonUnexpectedError"]
 	          };
 	    CatoUploadProgress.uiLabelMap = getJSONuiLabelMap(labelObject);
 	}	

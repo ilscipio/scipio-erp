@@ -44,7 +44,9 @@ $(function(){
 	Pizza.init(); //Create charts
 });
 
-
+/**
+ * Cato upload progress handler. Instance represents one upload form.
+ */
 function CatoUploadProgress(options) {
 	if (!options) {
 		options = {};

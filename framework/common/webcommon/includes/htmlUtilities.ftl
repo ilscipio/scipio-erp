@@ -1087,6 +1087,10 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 ************
 Generates script data and markup needed to make an instance to initialize upload progress 
 javascript anim for a form, with progress bar and/or text.
+
+Server-side upload event for the form must register a FileUploadProgressListener in session
+for getFileUploadProgressStatus AJAX calls.
+
 TODO: document better if needed
                     
    * General Attributes *

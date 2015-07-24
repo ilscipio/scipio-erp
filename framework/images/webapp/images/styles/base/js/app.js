@@ -56,28 +56,31 @@ function CatoUploadProgress(options) {
 	this.instNum = CatoUploadProgress.instCount;
 	this.uploadCount = 0;
     
-	this.formId = options.formId; // required, either formId or formName must be specified, should exist in doc
-	this.formName = options.formName; // required, either formId or formName must be specified, should exist in doc
+	// All options that end in -Id specify a unique html/css ID.
+	// All options that end in -Sel specify a full jQuery element selector (e.g., "form[name=myform]")
+	
+	this.formSel = options.formSel; // required, should exist in doc
     this.progBarId = options.progBarId; // optional, but if used should exist in doc
     this.progMeterId = options.progMeterId; // optional, has default (based on progBarId and @progress ftl macro)
     this.progTextBoxId = options.progTextBoxId; // optional, but if used should exist in doc
     this.progTextElemId = options.progTextElemId; // optional, has default (based on progTextBoxId), should NOT already exist in doc
     
-    this.msgContainerId = options.msgContainerId; // optional, only required if no msgContainerParentId; for error messages
-    this.msgContainerParentId = options.msgContainerParentId; // optional, only required if no msgContainerId; if not specified, won't generate; used for generating a new error message holder
-    this.msgContainerInsertMode = options.msgContainerInsertMode; // optional, default "prepend"; either "prepend" or "append" (to parent)
+    this.msgContainerId = options.msgContainerId; // optional, only required if no parent specified; for error messages
+    this.msgContainerParentSel = options.msgContainerParentSel; // optional, default the form's parent element; designates an element as parent for a message container; if msgContainerId elem already exists on page, won't use
+    this.msgContainerInsertMode = options.msgContainerInsertMode; // optional, default "prepend"; for parent; either "prepend" or "append" (to parent)
     
-    this.iframeParentId = options.iframeParentId; // optional, default is html body, if specified should exist in doc; will contain hidden iframe(s) to internally hold file upload html page result 
-    this.expectedResultContainerId = options.expectedResultContainerId; // required; id of an elem to test existence in upload page result; was originally same as resultContentContainerId
-    this.errorResultContainerId = options.errorResultContainerId; // required; if this elem in upload page result exists, treat it as error and use its content as error message (required to help against forever-uploading bug)
-    this.errorResultAddWrapper = options.errorResultAddWrapper; // optional, default false; if true, errorResultContainerId contents will be wrapped like other errors; else it must supply its own; does not apply to ajax and other errors (always get wrapper, needed)
+    this.iframeParentSel = options.iframeParentSel; // optional, default is html body, if specified should exist in doc; will contain hidden iframe(s) to internally hold file upload html page result 
+    this.expectedResultContainerSel = options.expectedResultContainerSel; // required; id of an elem to test existence in upload page result; was originally same as resultContentContainerSel
+    this.errorResultContainerSel = options.errorResultContainerSel; // required; if this elem in upload page result exists, treat it as error and use its content as error message (required to help against forever-uploading bug)
+    this.errorResultAddWrapper = options.errorResultAddWrapper; // optional, default false; if true, errorResultContainerSel contents will be wrapped like other errors; else it must supply its own; does not apply to ajax and other errors (always get wrapper, needed)
     
     this.resultContentReplace = options.resultContentReplace; // boolean, default false; if true replace some content in this page with content from upload page result (iframe)
-    this.contentContainerId = options.contentContainerId; // required if resultContentReplace true, id of content on current page to be replaced
-    this.resultContentContainerId = options.resultContentContainerId; // required if resultContentReplace true, id of content on upload page result
+    this.contentContainerSel = options.contentContainerSel; // required if resultContentReplace true, id of content on current page to be replaced
+    this.resultContentContainerSel = options.resultContentContainerSel; // required if resultContentReplace true, id of content on upload page result
     
     this.successRedirectUrl = options.successRedirectUrl; // optional; if specified, will redirect to this URL on upload success
-    this.successSubmitFormId = options.successSubmitFormId; // optional; same as successRedirectUrl but submits a form instead
+    this.successSubmitFormSel = options.successSubmitFormSel; // optional; same as successRedirectUrl but submits a form instead
+    this.successReloadWindow = options.successReloadWindow; // optional; same as successRedirectUrl but reloads current page instead
     //this.successReplaceWindow = options.successReplaceWindow; // not implemented/possible; optional, default false; if true, upon success will replace this window with contents of iframe
     
     this.preventDoubleUpload = options.preventDoubleUpload; // optional, default true; not sure why would turn this off
@@ -111,6 +114,9 @@ function CatoUploadProgress(options) {
     	this.resultContentReplace = false;
     }
     
+    if (typeof this.successReloadWindow !== 'boolean') {
+    	this.successReloadWindow = false;
+    }
     if (typeof this.successReplaceWindow !== 'boolean') {
     	this.successReplaceWindow = false;
     }
@@ -215,12 +221,21 @@ function CatoUploadProgress(options) {
 	    
 	    var infodiv = jQuery("#"+this.msgContainerId);
 	    if(infodiv.length < 1){
-	        var indodivbox = jQuery('<div class="' + catoStyles.grid_row + '"><div class="' + catoStyles.grid_large + '12 ' + catoStyles.grid_cell + '" id="' + this.msgContainerId + '"></div></div>');
-	        if (this.msgContainerInsertMode == "append") {
-	        	indodivbox.appendTo(jQuery("#"+this.msgContainerParentId));
+	        var infodivbox = jQuery('<div class="' + catoStyles.grid_row + '"><div class="' + catoStyles.grid_large + '12 ' + catoStyles.grid_cell + '" id="' + this.msgContainerId + '"></div></div>');
+	        
+	        var infodivparent = null;
+	        if (this.msgContainerParentSel) {
+	        	infodivparent = jQuery(this.msgContainerParentSel);
 	        }
 	        else {
-	        	indodivbox.prependTo(jQuery("#"+this.msgContainerParentId));
+	        	infodivparent = this.getFormElem().parent();
+	        }
+	        
+	        if (this.msgContainerInsertMode == "append") {
+	        	infodivbox.appendTo(infodivparent);
+	        }
+	        else {
+	        	infodivbox.prependTo(infodivparent);
 	        }
 	    }
 	    jQuery("#"+this.msgContainerId).empty();
@@ -229,8 +244,8 @@ function CatoUploadProgress(options) {
 	    var targetFrame = jQuery("#"+uploadInfo.iframeId);
 	    if (targetFrame.length < 1) {
 	    	var iframeParent;
-	    	if (this.iframeParentId) {
-	    		iframeParent = jQuery("#"+this.iframeParentId);
+	    	if (this.iframeParentSel) {
+	    		iframeParent = jQuery(this.iframeParentSel);
 	    	}
 	    	else {
 	    		iframeParent = jQuery("body").first();
@@ -243,12 +258,7 @@ function CatoUploadProgress(options) {
 	    jQuery("#"+uploadInfo.iframeId).empty();
 	    jQuery("#"+uploadInfo.iframeId).load(jQuery.proxy(this.checkIframeAsyncLoad, this, uploadInfo));
 	    
-	    if (this.formId) {
-	    	jQuery("#"+this.formId).attr("target", uploadInfo.iframeId);
-	    }
-	    else if (this.formName) {
-	    	jQuery('form[name="'+this.formName+'"]').attr("target", uploadInfo.iframeId);
-	    }
+    	this.getFormElem().attr("target", uploadInfo.iframeId);
 	
 	    if (this.progTextElemId) {
 		    var labelField = jQuery("#"+this.progTextElemId);
@@ -259,17 +269,21 @@ function CatoUploadProgress(options) {
 	    this.initOnce = true;
 	};
 	
+	this.getFormElem = function() {
+    	return jQuery(this.formSel);
+	};
+	
 	this.processUploadComplete = function(uploadInfo) {
 		var error = false;
 	    if (this.resultContentReplace) {
-	    	var iframeContent = jQuery("#"+uploadInfo.iframeId).contents().find("#"+this.resultContentContainerId);
+	    	var iframeContent = jQuery("#"+uploadInfo.iframeId).contents().find(this.resultContentContainerSel);
 	    	
 	    	if (iframeContent.length > 0) {
 			    // update content - copy the Data from the iFrame content container
 			    // to the page content container
-	    		var contentContainer = jQuery("#"+this.contentContainerId);
+	    		var contentContainer = jQuery(this.contentContainerSel);
 	    		if (contentContainer.length > 0) {
-	    			jQuery("#"+this.contentContainerId).html(iframeContent.html());
+	    			contentContainer.html(iframeContent.html());
 	    		}
 	    		else {
 	    			// don't show error; no chance it reflects on upload success
@@ -303,13 +317,16 @@ function CatoUploadProgress(options) {
 		    if (this.successRedirectUrl) {
 		    	window.location.href = this.successRedirectUrl;
 		    }
-		    else if (this.successSubmitFormId) {
-		    	jQuery("#"+this.successSubmitFormId).submit();
+		    else if (this.successSubmitFormSel) {
+		    	jQuery(this.successSubmitFormSel).submit();
 		    }
 		    else if (this.successReplaceWindow) {
 		    	var newDoc = document.open("text/html");
 		    	newDoc.write(iframeDocHtml);
 		    	newDoc.close();
+		    }
+		    else if (this.successReloadWindow) {
+		    	window.location.reload(true);
 		    }
 	    }
 	    return;
@@ -344,10 +361,10 @@ function CatoUploadProgress(options) {
 	        interval: 500,
 	        repeat: true,
 	        tick: function(counter, timerId) {
-	        	// note: errorResultContainerId and expectedResultContainerId must be chosen carefully
+	        	// note: errorResultContainerSel and expectedResultContainerSel must be chosen carefully
 	        	// note: explicitly not checking uploadInfo.iframeLoaded for these two, for now...
-	        	if (prog.errorResultContainerId && !uploadInfo.finished) {
-	        		iframeErrorContent = jQuery("#"+uploadInfo.iframeId).contents().find("#"+prog.errorResultContainerId);
+	        	if (prog.errorResultContainerSel && !uploadInfo.finished) {
+	        		iframeErrorContent = jQuery("#"+uploadInfo.iframeId).contents().find(prog.errorResultContainerSel);
 	        		if (iframeErrorContent.length > 0) {
 	        			uploadInfo.finished = true;
 	        			timerId.stop();
@@ -356,7 +373,7 @@ function CatoUploadProgress(options) {
 	        	}
 	        	
 	        	if (!uploadInfo.finished) {
-		            iframeContent = jQuery("#"+uploadInfo.iframeId).contents().find("#"+prog.expectedResultContainerId);
+		            iframeContent = jQuery("#"+uploadInfo.iframeId).contents().find(prog.expectedResultContainerSel);
 		            if (iframeContent.length > 0) {
 		            	uploadInfo.finished = true;
 		                timerId.stop();

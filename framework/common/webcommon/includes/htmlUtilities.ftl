@@ -1093,7 +1093,7 @@ TODO: document better if needed
     options = elem IDs and options passed to CatoUploadProgress javascript class
 -->
 <#macro progressScript options={} htmlwrap=false>
-  <#if options?has_content && (options.formId?has_content || options.formName?has_content)>
+  <#if options?has_content && options.formSel?has_content>
     <#if htmlwrap>
     <script type="text/javascript">
     </#if>
@@ -1121,12 +1121,7 @@ TODO: document better if needed
             uploadProgress.reset();
         });
         
-        <#if options.formId?has_content>
-            <#local formSel>jQuery("#${options.formId}")</#local>
-        <#else>
-            <#local formSel>jQuery('form[name="${options.formName}"]')</#local>
-        </#if>
-        ${formSel}.validate({
+        jQuery("${options.formSel}").validate({
             submitHandler: function(form) {
                 if (!uploadProgress.uploading) {
                     uploadProgress.initUpload();

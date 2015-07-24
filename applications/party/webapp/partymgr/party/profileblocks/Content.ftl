@@ -57,20 +57,20 @@ under the License.
           </@cell>
           <@cell class="${style_grid_small!}6 ${style_grid_large!}6">
             <#assign progressOptions = {
-                "formId" : "uploadPartyContent",
+                "formSel" : "#uploadPartyContent",
                 "progTextBoxId" : "upcProgressMsgBox",
                 
-                "msgContainerParentId" : "partyAttachContentFormArea",
+                "msgContainerParentSel" : "#partyAttachContentFormArea",
                 "msgContainerInsertMode" : "prepend",
                 
-                "iframeParentId" : "partyContent",
-                "expectedResultContainerId" : "partyContentList",
-                "errorResultContainerId" : "main-${style_alert_wrap!}",
+                "iframeParentSel" : "#partyContent",
+                "expectedResultContainerSel" : "#partyContentList",
+                "errorResultContainerSel" : "#main-${style_alert_wrap!}",
                 "errorResultAddWrapper" : false,
     
                 "resultContentReplace" : true,
-                "contentContainerId" : "partyContentList",
-                "resultContentContainerId" : "partyContentList"
+                "contentContainerSel" : "#partyContentList",
+                "resultContentContainerSel" : "#partyContentList"
             }>
             <@progress id="upc_progress_bar" type="info" addWrapClass="${style_hidden!}" progressOptions=progressOptions/>
           </@cell>

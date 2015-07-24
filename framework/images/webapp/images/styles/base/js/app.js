@@ -76,6 +76,7 @@ function CatoUploadProgress(options) {
     this.resultContentContainerId = options.resultContentContainerId; // required if resultContentReplace true, id of content on upload page result
     
     this.successRedirectUrl = options.successRedirectUrl; // optional; if specified, will redirect to this URL on upload success
+    this.successSubmitFormId = options.successSubmitFormId; // optional; same as successRedirectUrl but submits a form instead
     
     this.preventDoubleUpload = options.preventDoubleUpload; // optional, default true; not sure why would turn this off
     
@@ -274,6 +275,9 @@ function CatoUploadProgress(options) {
 	    if (!error) {
 		    if (this.successRedirectUrl) {
 		    	window.location.href = this.successRedirectUrl;
+		    }
+		    else if (this.successSubmitFormId) {
+		    	jQuery("#"+this.successSubmitFormId).submit();
 		    }
 	    }
 	    return;

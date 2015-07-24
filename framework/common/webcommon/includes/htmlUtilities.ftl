@@ -1098,7 +1098,9 @@ TODO: document better if needed
     <script type="text/javascript">
     </#if>
     
+    <#-- This belongs here, but due to Ofbiz bug, moved to commonScripts.ftl
     <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" />
+    -->
     
     (function() {
         var uploadProgress = null;

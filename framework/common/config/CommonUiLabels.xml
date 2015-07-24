@@ -15184,6 +15184,11 @@
         <value xml:lang="en">Warning</value>
         <value xml:lang="fr">Avertissement</value>
     </property>
+    <property key="CommonUnexpectedError">
+        <value xml:lang="de">unerwarteter Fehler</value>
+        <value xml:lang="en">Unexpected error</value>
+        <value xml:lang="fr">Erreur inattendue</value>
+    </property>
     <property key="CommonServerCommunicationError">
         <value xml:lang="de">Server-Kommunikationsfehler</value>
         <value xml:lang="en">Server communication error</value>

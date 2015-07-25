@@ -1324,6 +1324,63 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (!modelForm.getClientAutocompleteFields()) {
             autocomplete = "off";
         }
+        
+        boolean showProgress = modelForm.getShowProgress();
+        String progressSuccessAction = modelForm.getProgressSuccessAction(context);
+        if (progressSuccessAction.startsWith("redirect;")) {
+            String newAction = "none";
+            String[] parts = progressSuccessAction.split(";", 3);
+            if (parts.length == 3) {
+                boolean fullPath = false;
+                boolean secure = false;
+                boolean encode = true;
+                String[] options = parts[1].split("\\s*,\\s*");
+                for(String pair : options) {
+                    if (pair.length() > 0) {
+                        String[] elems = pair.split("\\s*=\\s*", 2);
+                        if (elems.length == 2) {
+                            Boolean val = null;
+                            if ("true".equals(elems[1])) {
+                                val = true;
+                            }
+                            else if ("false".equals(elems[1])) {
+                                val = false;
+                            }
+                            if (val != null) {
+                                if ("fullPath".equalsIgnoreCase(elems[0])) {
+                                    fullPath = val;
+                                }
+                                else if ("secure".equalsIgnoreCase(elems[0])) {
+                                    secure = val;
+                                }
+                                else if ("encode".equalsIgnoreCase(elems[0])) {
+                                    encode = val;
+                                }
+                                else {
+                                    Debug.logError("progress-success-action value has invalid option name: [" + pair + "] in " + progressSuccessAction, module);
+                                }
+                            }
+                            else {
+                                Debug.logError("progress-success-action value has invalid option value: [" + pair + "] in " + progressSuccessAction, module);
+                            }
+                        }
+                        else {
+                            Debug.logError("progress-success-action value has invalid option: [" + pair + "] in " + progressSuccessAction, module);
+                        }
+                    }
+                }
+                String target = parts[2].replaceAll("&", "&amp;");
+                StringBuilder sb = new StringBuilder();
+                sb.append("redirect;");
+                WidgetWorker.buildHyperlinkUrl(sb, target, "intra-app", null, null, fullPath, secure, encode, request, response, context);
+                newAction = sb.toString();
+            }
+            else {
+                Debug.logError("progress-success-action value has invalid format in " + progressSuccessAction, module);
+            }
+            progressSuccessAction = newAction;
+        }
+        
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormOpen ");
         sr.append(" linkUrl=\"");
@@ -1350,6 +1407,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(Integer.toString(viewSize));
         sr.append("\" useRowSubmit=");
         sr.append(Boolean.toString(useRowSubmit));
+        sr.append(" showProgress=");
+        sr.append(Boolean.toString(showProgress));
+        sr.append(" progressSuccessAction=\"");
+        sr.append(progressSuccessAction);
+        sr.append("\"");
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }

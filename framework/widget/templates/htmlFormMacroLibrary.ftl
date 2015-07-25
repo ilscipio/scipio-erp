@@ -416,6 +416,8 @@ under the License.
 </#macro>
 
 <#macro renderSubmitField buttonType className alert formName title name event action imgSrc confirmation containerId ajaxUrl>
+
+  <#local buttonMarkup>
   <#if buttonType=="text-link">
     <a <@renderClass className alert /> href="javascript:document.${formName}.submit()" <#if confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>><#if title?has_content>${title}</#if> </a>
   <#elseif buttonType=="image">
@@ -429,6 +431,40 @@ under the License.
       <#else><#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if>
     </#if>/>
   </#if>
+  </#local>
+  
+  <#if (htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true>
+      <#local baseId = htmlFormRenderFormInfo.name + "_catouplprogform">
+      <@row>
+        <@cell class="${style_grid_small!}3 ${style_grid_large!}2">
+          ${buttonMarkup}
+        </@cell>
+        <@cell class="${style_grid_small!}6 ${style_grid_large!}6">
+          
+          <#local progressOptions = {
+            "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
+            "progTextBoxId" : "${baseId}_textbox",
+            
+            "expectedResultContainerSel" : "#content-main-body",
+            "errorResultContainerSel" : "#main-${style_alert_wrap!}",
+            "errorResultAddWrapper" : false
+          }>
+          <#local action = htmlFormRenderFormInfo.progressSuccessAction!"">
+          <#if action?starts_with("redirect;")>
+            <#local progressOptions = progressOptions + { "successRedirectUrl" : action?substring("redirect;"?length) }>
+          <#elseif action == "reload" || action?starts_with("reload:")>
+            <#local progressOptions = progressOptions + { "successReloadWindow" : true }>
+          </#if>
+          
+          <@progress id="${baseId}_progbar" type="info" addWrapClass="${style_hidden!}" progressOptions=progressOptions/>
+        </@cell>
+        <@cell class="${style_grid_small!}3 ${style_grid_large!}4" id="${baseId}_textbox">
+        </@cell>
+      </@row>
+  <#else>
+      ${buttonMarkup}
+  </#if>
+
 </#macro>
 
 <#macro renderResetField className alert name title>
@@ -449,7 +485,8 @@ under the License.
 
 <#macro renderSingleFormFieldTitle></#macro>
 
-<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit>
+<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit showProgress=false progressSuccessAction="">
+  <#global htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressSuccessAction" : StringUtil.wrapString(progressSuccessAction)}>
   <form method="post" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this)"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>

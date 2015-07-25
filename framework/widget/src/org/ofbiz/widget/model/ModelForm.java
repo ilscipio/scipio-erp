@@ -198,6 +198,9 @@ public abstract class ModelForm extends ModelWidget {
     private final boolean hideTableNoList;
     private final boolean hideTableEmptyList;
     
+    private final boolean showProgress;
+    private final FlexibleStringExpander progressSuccessAction;
+    
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
         super(formElement);
@@ -396,6 +399,18 @@ public abstract class ModelForm extends ModelWidget {
         } else {
             this.hideTableEmptyList = "true".equals(hideTableEmptyList);
         }
+        
+        String showProgress = formElement.getAttribute("show-progress");
+        if (showProgress.isEmpty() && parentModel != null) {
+            this.showProgress = parentModel.showProgress;
+        } else {
+            this.showProgress = "true".equals(showProgress);
+        }
+        FlexibleStringExpander progressSuccessAction = FlexibleStringExpander.getInstance(formElement.getAttribute("progress-success-action"));
+        if (progressSuccessAction.isEmpty() && parentModel != null) {
+            progressSuccessAction = parentModel.progressSuccessAction;
+        }
+        this.progressSuccessAction = progressSuccessAction;
         
         String clientAutocompleteFields = formElement.getAttribute("client-autocomplete-fields");
         if (clientAutocompleteFields.isEmpty() && parentModel != null) {
@@ -1068,6 +1083,18 @@ public abstract class ModelForm extends ModelWidget {
 
     public boolean getHideTableEmptyList() {
         return hideTableEmptyList;
+    }
+    
+    public boolean getShowProgress() {
+        return showProgress;
+    }
+    
+    public String getProgressSuccessAction() {
+        return progressSuccessAction.getOriginal();
+    }
+
+    public String getProgressSuccessAction(Map<String, Object> context) {
+        return this.progressSuccessAction.expandString(context);
     }
 
     public String getItemIndexSeparator() {

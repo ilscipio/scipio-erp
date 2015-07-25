@@ -667,7 +667,7 @@ under the License.
         <field name="dataResourceId" title="${uiLabelMap.FormFieldTitle_dataResourceName}" use-when="dataResourceId!=null">
             <display-entity entity-name="DataResource" description="${dataResourceName}"/>
         </field>
-        <field name="editLink" title=" " widget-style="smallSubmit">
+        <field name="editLink" title=" " widget-style="button tiny">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditPartyContents">
                 <parameter param-name="contentId"/>
                 <parameter param-name="partyId"/>

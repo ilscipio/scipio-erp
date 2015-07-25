@@ -884,7 +884,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListContent}">
                             <container>
-                                <link target="EditPartyContents" text="${uiLabelMap.CommonCreateNew}" style="smallSubmit">
+                                <link target="EditPartyContents" text="${uiLabelMap.CommonCreateNew}" style="button tiny">
                                     <parameter param-name="partyId"/>
                                 </link>
                             </container>

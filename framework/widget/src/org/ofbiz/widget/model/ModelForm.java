@@ -199,6 +199,7 @@ public abstract class ModelForm extends ModelWidget {
     private final boolean hideTableEmptyList;
     
     private final boolean showProgress;
+    private final FlexibleStringExpander progressOptions;
     private final FlexibleStringExpander progressSuccessAction;
     
     /** XML Constructor */
@@ -406,6 +407,11 @@ public abstract class ModelForm extends ModelWidget {
         } else {
             this.showProgress = "true".equals(showProgress);
         }
+        FlexibleStringExpander progressOptions = FlexibleStringExpander.getInstance(formElement.getAttribute("progress-options"));
+        if (progressOptions.isEmpty() && parentModel != null) {
+            progressOptions = parentModel.progressOptions;
+        }
+        this.progressOptions = progressOptions;
         FlexibleStringExpander progressSuccessAction = FlexibleStringExpander.getInstance(formElement.getAttribute("progress-success-action"));
         if (progressSuccessAction.isEmpty() && parentModel != null) {
             progressSuccessAction = parentModel.progressSuccessAction;
@@ -1087,6 +1093,14 @@ public abstract class ModelForm extends ModelWidget {
     
     public boolean getShowProgress() {
         return showProgress;
+    }
+    
+    public String getProgressOptions() {
+        return progressOptions.getOriginal();
+    }
+
+    public String getProgressOptions(Map<String, Object> context) {
+        return this.progressOptions.expandString(context);
     }
     
     public String getProgressSuccessAction() {

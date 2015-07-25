@@ -456,6 +456,14 @@ under the License.
             <#local progressOptions = progressOptions + { "successReloadWindow" : true }>
           </#if>
           
+          <#if htmlFormRenderFormInfo.progressOptions?has_content>
+            <#-- json is valid freemarker map -->
+            <#local addOpts = ("{" + htmlFormRenderFormInfo.progressOptions + "}")?eval>
+            <#if addOpts?has_content>
+              <#local progressOptions = progressOptions + addOpts>  
+            </#if>
+          </#if>
+          
           <@progress id="${baseId}_progbar" type="info" addWrapClass="${style_hidden!}" progressOptions=progressOptions/>
         </@cell>
         <@cell class="${style_grid_small!}3 ${style_grid_large!}4" id="${baseId}_textbox">
@@ -485,8 +493,8 @@ under the License.
 
 <#macro renderSingleFormFieldTitle></#macro>
 
-<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit showProgress=false progressSuccessAction="">
-  <#global htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressSuccessAction" : StringUtil.wrapString(progressSuccessAction)}>
+<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit showProgress=false progressOptions="" progressSuccessAction="">
+  <#global htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : StringUtil.wrapString(progressOptions), "progressSuccessAction" : StringUtil.wrapString(progressSuccessAction)}>
   <form method="post" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this)"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>

@@ -1326,6 +1326,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         
         boolean showProgress = modelForm.getShowProgress();
+        String progressOptions = modelForm.getProgressOptions(context);
         String progressSuccessAction = modelForm.getProgressSuccessAction(context);
         if (progressSuccessAction.startsWith("redirect;")) {
             String newAction = "none";
@@ -1409,7 +1410,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(Boolean.toString(useRowSubmit));
         sr.append(" showProgress=");
         sr.append(Boolean.toString(showProgress));
-        sr.append(" progressSuccessAction=\"");
+        sr.append(" progressOptions=\"");
+        sr.append(progressOptions);
+        sr.append("\" progressSuccessAction=\"");
         sr.append(progressSuccessAction);
         sr.append("\"");
         sr.append(" />");

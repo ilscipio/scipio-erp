@@ -564,7 +564,7 @@ under the License.
 
     <form name="AddPartyContent" target="updatePartyContent" type="upload" default-map-name="content"
         focus-field-name="contentTypeId" header-row-style="header-row" default-table-style="basic-table"
-        show-progress="true" progress-success-action="reload">
+        show-progress="${showProgress}" progress-success-action="${progressSuccessAction}" progress-options="${progressOptions}">
         <actions>
             <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
                 <field-map field-name="statusId" from-field="content.statusId"/>

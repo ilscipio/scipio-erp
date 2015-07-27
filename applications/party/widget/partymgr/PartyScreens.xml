@@ -890,9 +890,18 @@ under the License.
                             </container>
                             <include-form name="ListPartyContents" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleAddPartyContent}">
-                            <include-form name="AddPartyContent" location="component://party/widget/partymgr/PartyForms.xml"/>
-                        </screenlet>
+                        <section>
+                            <actions>          
+                                <set field="showProgress" type="Boolean" value="true" /> 
+                                <set field="progressSuccessAction" value="reload" />
+                                <set field="progressOptions" value="" />
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleAddPartyContent}">
+                                    <include-form name="AddPartyContent" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

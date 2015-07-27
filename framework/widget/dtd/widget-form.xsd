@@ -334,14 +334,8 @@ under the License.
             
             <xs:attribute name="show-progress" default="false">
                 <xs:annotation>
-                    <xs:documentation>Cato: Upload forms only: show upload progress dynamically. With dynamic progress, a special action is usually needed upon success (see progress-success-action).</xs:documentation>
+                    <xs:documentation>Cato: Upload forms only: boolean (true/false) show upload progress dynamically. With dynamic progress, a special action is usually needed upon success (see progress-success-action). Value is context-expanded so can be delegated to a variable (e.g. set by screen).</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute type="xs:string" name="progress-options">
                 <xs:annotation>

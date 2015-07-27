@@ -198,7 +198,7 @@ public abstract class ModelForm extends ModelWidget {
     private final boolean hideTableNoList;
     private final boolean hideTableEmptyList;
     
-    private final boolean showProgress;
+    private final FlexibleStringExpander showProgress;
     private final FlexibleStringExpander progressOptions;
     private final FlexibleStringExpander progressSuccessAction;
     
@@ -401,12 +401,11 @@ public abstract class ModelForm extends ModelWidget {
             this.hideTableEmptyList = "true".equals(hideTableEmptyList);
         }
         
-        String showProgress = formElement.getAttribute("show-progress");
+        FlexibleStringExpander showProgress = FlexibleStringExpander.getInstance(formElement.getAttribute("show-progress"));
         if (showProgress.isEmpty() && parentModel != null) {
-            this.showProgress = parentModel.showProgress;
-        } else {
-            this.showProgress = "true".equals(showProgress);
+            showProgress = parentModel.showProgress;
         }
+        this.showProgress = showProgress;
         FlexibleStringExpander progressOptions = FlexibleStringExpander.getInstance(formElement.getAttribute("progress-options"));
         if (progressOptions.isEmpty() && parentModel != null) {
             progressOptions = parentModel.progressOptions;
@@ -1091,8 +1090,13 @@ public abstract class ModelForm extends ModelWidget {
         return hideTableEmptyList;
     }
     
-    public boolean getShowProgress() {
-        return showProgress;
+    
+    public String getShowProgress() {
+        return showProgress.getOriginal();
+    }
+
+    public String getShowProgress(Map<String, Object> context) {
+        return this.showProgress.expandString(context);
     }
     
     public String getProgressOptions() {

@@ -175,14 +175,14 @@ under the License.
 
 <#macro renderContentFrame fullUrl width height border><iframe src="${fullUrl}" width="${width}" height="${height}" <#if border?has_content>border="${border}"</#if> /></#macro>
 
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true>
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2>
 <div <#if collapsed>class="toggleField"</#if>>
 <#if collapsed><p class="alert legend">[ <i class="${style_icon!} ${style_icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${style_grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
 <div class="<#if classes?has_content>${classes}<#else>${style_grid_large!}12</#if> ${style_grid_cell!}">
 
 <#if showMore>
-<#if title?has_content><h2> ${title}</h2></#if>    
+<#if title?has_content><h${headerLevel}> ${title}</h${headerLevel}></#if>    
     
     <#--
 <#if collapsible>

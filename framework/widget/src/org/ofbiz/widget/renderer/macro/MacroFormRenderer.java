@@ -2338,6 +2338,34 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // add viewIndex/viewSize parameters to request parameter String
         String urlPath = UtilHttp.removeQueryStringFromTarget(targetService);
         String prepLinkText = UtilHttp.getQueryStringFromTarget(targetService);
+        
+        // Cato: Also prevent duplicate params between queryString and targetService
+        if (!UtilValidate.isEmpty(queryString) && !queryString.equals("null") &&
+            !UtilValidate.isEmpty(prepLinkText)) {
+            // get queryString param names
+            String[] qsParamPairs = queryString.split("&(amp;)?");
+            Set<String> qsParamNames = new HashSet<String>(qsParamPairs.length);
+            for(String paramPair : qsParamPairs) {
+                String[] pair = paramPair.split("=",2);
+                if (pair[0] != null && pair[0].length() > 0) {
+                    qsParamNames.add(pair[0]);
+                }
+            }
+            String newText;
+            String rawTsParams;
+            if (prepLinkText.startsWith("?")) {
+                newText = "?";
+                rawTsParams = prepLinkText.substring(1);
+            }
+            else {
+                newText = "";
+                rawTsParams = prepLinkText;
+            }
+            // remove params already in queryString from targetService params
+            newText += UtilHttp.stripNamedParamsFromQueryString(rawTsParams, qsParamNames);
+            prepLinkText = newText;
+        }  
+        
         String prepLinkSizeText;
         if (UtilValidate.isNotEmpty(queryString)) {
             queryString = UtilHttp.encodeAmpersands(queryString);

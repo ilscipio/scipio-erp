@@ -888,7 +888,14 @@ under the License.
                                     <parameter param-name="partyId"/>
                                 </link>
                             </container>
-                            <include-form name="ListPartyContents" location="component://party/widget/partymgr/PartyForms.xml"/>
+                            <section>
+                                <actions>
+                                    <set field="paginateTarget" value="EditPartyContents?partyId=${parameters.partyId}" />
+                                </actions>
+                                <widgets>
+                                    <include-form name="ListPartyContents" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </widgets>
+                            </section>
                         </screenlet>
                         <section>
                             <actions>          

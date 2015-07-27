@@ -641,7 +641,8 @@ under the License.
     </form>
 
     <form name="ListPartyContents" type="list" separate-columns="false"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
+        paginate-target="${paginateTarget}">
         <actions>
             <entity-and entity-name="PartyContentDetail">
                 <field-map field-name="partyId"/>

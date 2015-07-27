@@ -252,7 +252,7 @@ public class ModelFormField {
         return this.getEntry(context, "");
     }
 
-    public String getEntry(Map<String, ? extends Object> context, String defaultValue) {
+    public String getEntry(Map<String, ? extends Object> context, String defaultValue, boolean allowEncode) {
         Boolean isError = (Boolean) context.get("isError");
         Boolean useRequestParameters = (Boolean) context.get("useRequestParameters");
 
@@ -350,7 +350,7 @@ public class ModelFormField {
             }
         }
 
-        if (this.getEncodeOutput() && returnValue != null) {
+        if (allowEncode && this.getEncodeOutput() && returnValue != null) {
             UtilCodec.SimpleEncoder simpleEncoder = (UtilCodec.SimpleEncoder) context.get("simpleEncoder");
             if (simpleEncoder != null)
                 returnValue = simpleEncoder.encode(returnValue);
@@ -358,6 +358,18 @@ public class ModelFormField {
         return returnValue;
     }
 
+    public String getEntry(Map<String, ? extends Object> context, String defaultValue) {
+        return getEntry(context, defaultValue, true);
+    }
+    
+    public String getEntryRaw(Map<String, ? extends Object> context, String defaultValue) {
+        return getEntry(context, defaultValue, false);
+    }
+    
+    public String getEntryRaw(Map<String, ? extends Object> context) {
+        return getEntry(context, "", false);
+    }
+    
     public FlexibleMapAccessor<Object> getEntryAcsr() {
         return entryAcsr;
     }
@@ -1278,7 +1290,9 @@ public class ModelFormField {
                 fieldKey = getModelFormField().fieldName;
 
             Delegator delegator = WidgetWorker.getDelegator(context);
-            String fieldValue = getModelFormField().getEntry(context);
+            // Cato: only encode after the lookup
+            //String fieldValue = getModelFormField().getEntry(context);
+            String fieldValue = getModelFormField().getEntryRaw(context);
             try {
                 value = delegator.findOne(this.entityName, this.cache, fieldKey, fieldValue);
             } catch (GenericEntityException e) {

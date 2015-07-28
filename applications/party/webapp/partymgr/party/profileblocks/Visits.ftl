@@ -17,13 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <@section id="partyVisits" title="${uiLabelMap.PartyVisits}">
-      <ul class="${style_button_group!}">
-        <li><a href="<@ofbizUrl>findVisits?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonListAll}</a></li>
-      </ul>
-     
-    <@row>
-      <@cell>
+  <#assign menuHtml>
+    <li><a href="<@ofbizUrl>findVisits?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonListAll}</a></li>
+  </#assign>
+  <@section id="partyVisits" title="${uiLabelMap.PartyVisits}" menuHtml=menuHtml>
       <#if visits?has_content>
         <table class="basic-table" cellspacing="0">
          <thead>
@@ -55,7 +52,4 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoVisitFound}
       </#if>
-    
-      </@cell>
-    </@row>
   </@section>

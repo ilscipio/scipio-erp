@@ -18,9 +18,6 @@ under the License.
 -->
 
   <@section id="partyAVS" title="${uiLabelMap.PartyAvsOver}">
-
-    <@row>
-      <@cell>
       ${uiLabelMap.PartyAvsString} ${(avsOverride.avsDeclineString)?default("${uiLabelMap.CommonGlobal}")}
       <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
         <a href="<@ofbizUrl>editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a>
@@ -28,7 +25,5 @@ under the License.
           <a href="<@ofbizUrl>resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonReset}</a>
         </#if>
       </#if>
-      </@cell>
-    </@row>
   </@section>
   

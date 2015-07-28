@@ -17,13 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>
     <@section id="totalOrders" title="${uiLabelMap.PartyLoyaltyPoints}">
-      <@row>
-        <@cell>
+        <#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>    
           ${uiLabelMap.PartyYouHave} ${totalSubRemainingAmount} ${uiLabelMap.PartyPointsFrom} ${totalOrders} ${uiLabelMap.PartyOrderInLast} ${monthsToInclude} ${uiLabelMap.CommonMonths}.
-        </@cell>
-      </@row>
+        </#if>
+        <br/><br/>
     </@section>
-  </#if>
+
   

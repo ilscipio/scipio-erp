@@ -18,8 +18,6 @@ under the License.
 -->
 
 <@section id="partyProductStores" title="${uiLabelMap.ProductStores}">
-  <@row>
-    <@cell>
     <#if productStoreRoles?has_content>
       <table class="basic-table" cellspacing="0">
        <thead>
@@ -42,6 +40,4 @@ under the License.
     <#else>
       ${uiLabelMap.PartyNoProductStoreFoundForThisParty}
     </#if>
-    </@cell>
-  </@row>
 </@section>

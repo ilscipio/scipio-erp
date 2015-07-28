@@ -22,11 +22,7 @@ under the License.
       <li><a href="<@ofbizUrl>editPartyAttribute?partyId=${party.partyId!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
     </#if>
   </#assign>
-
   <@section id="partyAttributes" title="${uiLabelMap.PartyAttributes}" menuHtml=menuHtml>
-
-    <@row>
-      <@cell>
       <#if attributes?has_content>
         <table class="basic-table hover-bar" cellspacing="0">
           <thead>
@@ -56,6 +52,4 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoPartyAttributesFound}
       </#if>
-      </@cell>
-    </@row>
   </@section>

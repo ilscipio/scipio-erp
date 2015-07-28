@@ -34,20 +34,15 @@ under the License.
   ${cardNumberDisplay!}
 </#macro>
 
-  <@section id="partyPaymentMethod" title="${uiLabelMap.PartyPaymentMethodInformation}">
-
-      <ul class="${style_button_group!}">
-        <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
-          <li><a href="<@ofbizUrl>editeftaccount?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewEftAccount}</a></li>
-          <li><a href="<@ofbizUrl>editgiftcard?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewGiftCard}</a></li>
-          <li><a href="<@ofbizUrl>editcreditcard?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewCreditCard}</a></li>
-          <li><a href="<@ofbizUrl>EditBillingAccount?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateBillingAccount}</a></li>
-        </#if>
-      </ul>
-
-    <@row>
-      <@cell>
-      
+  <#assign menuHtml>
+    <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
+      <li><a href="<@ofbizUrl>editeftaccount?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewEftAccount}</a></li>
+      <li><a href="<@ofbizUrl>editgiftcard?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewGiftCard}</a></li>
+      <li><a href="<@ofbizUrl>editcreditcard?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateNewCreditCard}</a></li>
+      <li><a href="<@ofbizUrl>EditBillingAccount?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.AccountingCreateBillingAccount}</a></li>
+    </#if>  
+  </#assign>
+  <@section id="partyPaymentMethod" title="${uiLabelMap.PartyPaymentMethodInformation}" menuHtml=menuHtml>
       <#if paymentMethodValueMaps?has_content || billingAccounts?has_content>
         <table class="basic-table" cellspacing="0">
         <#if paymentMethodValueMaps?has_content>
@@ -176,7 +171,4 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoPaymentMethodInformation}
       </#if>
-      
-      </@cell>
-    </@row>
   </@section>

@@ -17,15 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <@section id="partyUserLogins" title="${uiLabelMap.PartyUserName}">
-      <ul class="${style_button_group!}">
-        <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-          <li><a href="<@ofbizUrl>ProfileCreateNewLogin?partyId=${party.partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
-        </#if>
-      </ul>
-
-    <@row>
-      <@cell>
+  <#assign menuHtml>
+    <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
+      <li><a href="<@ofbizUrl>ProfileCreateNewLogin?partyId=${party.partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
+    </#if>
+  </#assign>
+  <@section id="partyUserLogins" title="${uiLabelMap.PartyUserName}" menuHtml=menuHtml>
       <#if userLogins?has_content>
         <table class="basic-table" cellspacing="0">
           <#list userLogins as userUserLogin>
@@ -58,6 +55,4 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoUserLogin}
       </#if>
-      </@cell>
-    </@row>
   </@section>

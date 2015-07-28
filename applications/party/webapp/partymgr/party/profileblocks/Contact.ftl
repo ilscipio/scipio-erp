@@ -17,17 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}">
-
-      <ul class="${style_button_group!}">
-        <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
-          <li><a href="<@ofbizUrl>editcontactmech?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
-        </#if>
-      </ul>
-
-    <@row>
-      <@cell>
-      
+  <#assign menuHtml>
+    <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
+      <li><a href="<@ofbizUrl>editcontactmech?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
+    </#if>
+  </#assign>
+  <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}" menuHtml=menuHtml>
       <#if contactMeches?has_content>
         <table class="basic-table" cellspacing="0">
           <tr>
@@ -141,7 +136,4 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoContactInformation}
       </#if>
-      
-      </@cell>
-    </@row>
   </@section>

@@ -17,15 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <@section id="partyNotes" title="${uiLabelMap.CommonNotes}">
-      <ul class="${style_button_group!}">
-        <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
-          <li><a href="<@ofbizUrl>AddPartyNote?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
-        </#if>
-      </ul>
-     
-    <@row>
-      <@cell>
+  <#assign menuHtml>
+    <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
+      <li><a href="<@ofbizUrl>AddPartyNote?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
+    </#if>
+  </#assign>
+  <@section id="partyNotes" title="${uiLabelMap.CommonNotes}" menuHtml=menuHtml>
       <#if notes?has_content>
         <table>
           <#list notes as noteRef>
@@ -49,6 +46,4 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoNotesForParty}
       </#if>
-      </@cell>
-    </@row>
   </@section>

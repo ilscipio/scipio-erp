@@ -507,9 +507,10 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     autoHeaderLevel     = auto increase header level when title present
     headerLevel         = force this header level for title
     defaultHeaderLevel  = default header level (same as headerLevel if autoHeaderLevel false)
-    menuHtml            = optional HTML menu data, as li elements only (ul auto added)
+    menuHtml            = optional HTML menu data, li elements only (ul auto added); can be string "_INCLUDE_MENU_" to force add empty menu elem (js, etc.)
+    menuClass           = menu class, default buttons class
 -->
-<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="">
+<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="${style_button_group!} ${style_button_force!}">
     <#if autoHeaderLevel>
         <#local prevHeaderLevel = request.getAttribute("catoCurrentHeaderLevel")!"">
         <#if headerLevel?has_content>
@@ -532,11 +533,13 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         </#if>
     </#if>
     <#if id?has_content>
-        <#local innerId = id + "_inner">
+        <#local contentId = id + "_content">
+        <#local menuId = id + "_menu">
     <#else>
-        <#local innerId = "">
+        <#local contentId = "">
+        <#local menuId = "">
     </#if>
-    <@renderScreenletBegin id=id collapsibleAreaId=innerId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level manual=true />
+    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level manual=true menuClass=menuClass menuId=menuId />
         <#nested />
     <@renderScreenletEnd />
     <#if autoHeaderLevel && title?has_content>

@@ -175,9 +175,9 @@ under the License.
 
 <#macro renderContentFrame fullUrl width height border><iframe src="${fullUrl}" width="${width}" height="${height}" <#if border?has_content>border="${border}"</#if> /></#macro>
 
-<#-- Cato: new params: headerLevel, manual
+<#-- Cato: new params: headerLevel, manual, menuClass, menuId
      manual is hint that didn't call from macro renderer automatically -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 manual=false>
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 manual=false menuClass="${style_button_group!} ${style_button_force!}" menuId="">
 <div <#if collapsed>class="toggleField"</#if>>
 <#if collapsed><p class="alert legend">[ <i class="${style_icon!} ${style_icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${style_grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
@@ -200,16 +200,20 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
  
 <#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
      in stock ofbiz it's not even rendered with macro renderer, but with old HTML renderer, as a special case... 
-     TODO?: although it's expected that UL not be rendered, maybe should alter renderer so that insides of menu are rendered
-           with macro renderer (not html renderer), but not sure if breaks anything (and doesn't help hack below) -->
-<#if menuString?has_content>
-  <ul class="${style_button_group!} ${style_button_force!}">
+     TODO?: although it's expected that UL not be rendered (li elements may need added to menu here), 
+            maybe should alter renderer so that insides of menu are rendered
+            with macro renderer (not html renderer), but not sure if breaks anything (and doesn't help hack below) -->
+<#local menuString = menuString?trim>
+<#if menuString?has_content || menuString == "_INCLUDE_MENU_">
+  <ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>>
+  <#if menuString != "_INCLUDE_MENU_">
     <#if !manual>
-      <#-- FIXME?: for now, need this super ugly hack as a workaround for having no other place to insert central style for menus passed here by macro renderer -->
-      <#local menuString = menuString?replace('(<a\\s([^>]*\\s)?)class="([^"]*)"', '$1class="$3 button tiny"', 'r')>
-      <#local menuString = menuString?replace('(<a(?![^>]*\\sclass=)[^>]*)>', '$1 class="button tiny">', 'r')>
+      <#-- FIXME: for now, need this super ugly hack as a workaround for having no other place to insert central style for menus passed here by macro renderer -->
+      <#local menuString = menuString?replace(r'(<a\s([^>]*\s)?)class="([^"]*)"', r'$1class="$3 button tiny"', 'r')>
+      <#local menuString = menuString?replace(r'(<a(?![^>]*\sclass=)[^>]*)>', r'$1 class="button tiny">', 'r')>
     </#if>
     ${menuString}
+  </#if>
   </ul>
 </#if>
 

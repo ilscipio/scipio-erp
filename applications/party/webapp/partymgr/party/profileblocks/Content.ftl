@@ -56,7 +56,7 @@ under the License.
                 "formSel" : "#uploadPartyContent",
                 "progTextBoxId" : "upcProgressMsgBox",
                 
-                "msgContainerParentSel" : "#partyAttachContent_inner",
+                "msgContainerParentSel" : "#partyAttachContent_content",
                 "msgContainerInsertMode" : "prepend",
                 
                 "iframeParentSel" : "#partyContent",

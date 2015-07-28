@@ -17,14 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
   <@section id="partyContent" title="${uiLabelMap.PartyContent}">
-    <@row>
-      <@cell>
     
-      ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentList")}
+    ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentList")}
       
-    <@section title="${uiLabelMap.PartyAttachContent}">
-      <@row>
-        <@cell id="partyAttachContentFormArea">
+    <@section title="${uiLabelMap.PartyAttachContent}" innerId="partyAttachContentFormArea">
       <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
@@ -78,11 +74,6 @@ under the License.
           </@cell>
         </@row>
       </form>
- 
-        </@cell>
-      </@row>
     </@section>
     
-      </@cell>
-    </@row>
   </@section>

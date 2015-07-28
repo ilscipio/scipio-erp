@@ -18,8 +18,6 @@ under the License.
 -->
 
   <@section id="partyContentList">
-    <@row>
-      <@cell>
       <#if partyContent?has_content>
         <table class="basic-table" cellspacing="0">
           <#list partyContent as pContent>
@@ -54,6 +52,4 @@ under the License.
       <#else>
         ${uiLabelMap.PartyNoContent}
       </#if>
-      </@cell>
-    </@row>  
   </@section>

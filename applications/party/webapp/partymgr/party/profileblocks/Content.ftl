@@ -20,7 +20,7 @@ under the License.
     
     ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentList")}
       
-    <@section title="${uiLabelMap.PartyAttachContent}" innerId="partyAttachContentFormArea">
+    <@section title="${uiLabelMap.PartyAttachContent}" id="partyAttachContent">
       <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
@@ -56,7 +56,7 @@ under the License.
                 "formSel" : "#uploadPartyContent",
                 "progTextBoxId" : "upcProgressMsgBox",
                 
-                "msgContainerParentSel" : "#partyAttachContentFormArea",
+                "msgContainerParentSel" : "#partyAttachContent_inner",
                 "msgContainerInsertMode" : "prepend",
                 
                 "iframeParentSel" : "#partyContent",

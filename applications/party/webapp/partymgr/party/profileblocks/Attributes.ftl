@@ -17,13 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <@section id="partyAttributes" title="${uiLabelMap.PartyAttributes}">
-      <ul class="${style_button_group!}">
-        <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-          <li><a href="<@ofbizUrl>editPartyAttribute?partyId=${party.partyId!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
-        </#if>
-      </ul>
-   
+  <#assign menuHtml>
+    <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
+      <li><a href="<@ofbizUrl>editPartyAttribute?partyId=${party.partyId!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
+    </#if>
+  </#assign>
+
+  <@section id="partyAttributes" title="${uiLabelMap.PartyAttributes}" menuHtml=menuHtml>
+
     <@row>
       <@cell>
       <#if attributes?has_content>

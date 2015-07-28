@@ -508,8 +508,9 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     autoHeaderLevel     = auto increase header level when title present
     headerLevel         = force this header level for title
     defaultHeaderLevel  = default header level (same as headerLevel if autoHeaderLevel false)
+    menuHtml            = optional HTML menu data, as li elements only (ul auto added)
 -->
-<#macro section id="" innerId="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2>
+<#macro section id="" innerId="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="">
     <#if autoHeaderLevel>
         <#local prevHeaderLevel = catoCurrentHeaderLevel!"">
         <#if headerLevel?has_content>
@@ -529,7 +530,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
             <#local level = defaultHeaderLevel>
         </#if>
     </#if>
-    <@renderScreenletBegin id=id collapsibleAreaId=innerId title=title classes=classes padded=padded headerLevel=level/>
+    <@renderScreenletBegin id=id collapsibleAreaId=innerId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level manual=true />
         <#nested />
     <@renderScreenletEnd />
     <#if autoHeaderLevel && title?has_content>

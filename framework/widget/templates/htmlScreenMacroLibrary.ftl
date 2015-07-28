@@ -175,7 +175,9 @@ under the License.
 
 <#macro renderContentFrame fullUrl width height border><iframe src="${fullUrl}" width="${width}" height="${height}" <#if border?has_content>border="${border}"</#if> /></#macro>
 
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2>
+<#-- Cato: new params: headerLevel, manual
+     manual is hint that didn't call from macro renderer automatically -->
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 manual=false>
 <div <#if collapsed>class="toggleField"</#if>>
 <#if collapsed><p class="alert legend">[ <i class="${style_icon!} ${style_icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${style_grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
@@ -196,15 +198,17 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 </#if>
  -->
  
-<#-- Cato: menuString is not wrapped in UL when it's received here... 
+<#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
      in stock ofbiz it's not even rendered with macro renderer, but with old HTML renderer, as a special case... 
-     for now, make this super ugly hack as a workaround (no other place to insert central for these type of menus) 
      TODO?: although it's expected that UL not be rendered, maybe should alter renderer so that insides of menu are rendered
-            with macro renderer (not html renderer), but not sure if breaks anything (and doesn't help this hack) -->
+           with macro renderer (not html renderer), but not sure if breaks anything (and doesn't help hack below) -->
 <#if menuString?has_content>
   <ul class="${style_button_group!} ${style_button_force!}">
-    <#local menuString = menuString?replace('(<a\\s([^>]*\\s)?)class="([^"]*)"', '$1class="$3 button tiny"', 'r')>
-    <#local menuString = menuString?replace('(<a(?![^>]*\\sclass=)[^>]*)>', '$1 class="button tiny">', 'r')>
+    <#if !manual>
+      <#-- FIXME?: for now, need this super ugly hack as a workaround for having no other place to insert central style for menus passed here by macro renderer -->
+      <#local menuString = menuString?replace('(<a\\s([^>]*\\s)?)class="([^"]*)"', '$1class="$3 button tiny"', 'r')>
+      <#local menuString = menuString?replace('(<a(?![^>]*\\sclass=)[^>]*)>', '$1 class="button tiny">', 'r')>
+    </#if>
     ${menuString}
   </ul>
 </#if>

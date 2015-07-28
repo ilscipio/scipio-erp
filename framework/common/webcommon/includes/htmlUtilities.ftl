@@ -501,14 +501,39 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     </@section>            
                     
    * General Attributes *
-    class           = css classes
-    id              = set id
-    padded          = 
+    class               = css classes
+    id                  = set id
+    padded              = 
+    autoHeaderLevel     = auto increase header level when title present
+    headerLevel         = force this header level for title
+    defaultHeaderLevel  = default header level (same as headerLevel if autoHeaderLevel false)
 -->
-<#macro section id="" title="" classes="" padded=false>
-    <@renderScreenletBegin id=id title=title classes=classes padded=padded/>
+<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2>
+    <#if autoHeaderLevel>
+        <#local prevHeaderLevel = catoCurrentHeaderLevel!"">
+        <#if headerLevel?has_content>
+            <#local level = headerLevel>
+        <#elseif prevHeaderLevel?has_content>
+            <#local level = prevHeaderLevel>
+        <#else>
+            <#local level = defaultHeaderLevel>
+        </#if>
+        <#if title?has_content>
+            <#global catoCurrentHeaderLevel = (level + 1)>
+        </#if>
+    <#else>
+        <#if headerLevel?has_content>
+            <#local level = headerLevel>
+        <#else>
+            <#local level = defaultHeaderLevel>
+        </#if>
+    </#if>
+    <@renderScreenletBegin id=id title=title classes=classes padded=padded headerLevel=level/>
         <#nested />
     <@renderScreenletEnd />
+    <#if autoHeaderLevel && title?has_content>
+        <#global catoCurrentHeaderLevel = prevHeaderLevel>
+    </#if>
 </#macro>
 
 

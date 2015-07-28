@@ -182,7 +182,7 @@ under the License.
 <div class="<#if classes?has_content>${classes}<#else>${style_grid_large!}12</#if> ${style_grid_cell!}">
 
 <#if showMore>
-<#if title?has_content><h${headerLevel}> ${title}</h${headerLevel}></#if>    
+<#if title?has_content><h${headerLevel}>${title}</h${headerLevel}></#if>    
     
     <#--
 <#if collapsible>

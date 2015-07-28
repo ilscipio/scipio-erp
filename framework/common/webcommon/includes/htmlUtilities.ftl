@@ -511,7 +511,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 -->
 <#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="">
     <#if autoHeaderLevel>
-        <#local prevHeaderLevel = catoCurrentHeaderLevel!"">
+        <#local prevHeaderLevel = request.getAttribute("catoCurrentHeaderLevel")!"">
         <#if headerLevel?has_content>
             <#local level = headerLevel>
         <#elseif prevHeaderLevel?has_content>
@@ -520,6 +520,8 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
             <#local level = defaultHeaderLevel>
         </#if>
         <#if title?has_content>
+            <#local dummy = request.setAttribute("catoCurrentHeaderLevel", (level + 1))!>
+            <#-- might as well set global so read easy, but not enough -->
             <#global catoCurrentHeaderLevel = (level + 1)>
         </#if>
     <#else>
@@ -538,6 +540,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         <#nested />
     <@renderScreenletEnd />
     <#if autoHeaderLevel && title?has_content>
+        <#local dummy = request.setAttribute("catoCurrentHeaderLevel", prevHeaderLevel)!>
         <#global catoCurrentHeaderLevel = prevHeaderLevel>
     </#if>
 </#macro>

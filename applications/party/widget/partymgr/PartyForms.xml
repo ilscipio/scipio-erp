@@ -827,7 +827,7 @@ under the License.
         <field name="thruDate"><date-time/></field>
         <field name="comments"><text/></field>
         <field name="updateButton"><submit button-type="button"/></field>
-        <field name="deleteButton"><hyperlink description="${uiLabelMap.CommonDelete}" target="deletePartyRelationship">
+        <field name="deleteButton" widget-style="button tiny"><hyperlink description="${uiLabelMap.CommonDelete}" target="deletePartyRelationship">
                 <parameter param-name="partyId"/>
                 <parameter param-name="partyIdFrom"/>
                 <parameter param-name="partyIdTo"/>
@@ -1000,12 +1000,11 @@ under the License.
     </form>
     <form name="ViewPartyRoles" type="list" list-name="partyRoles" target="viewroles"
         default-title-style="tableheadtext"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
-       >
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}"><display/></field>
         <field name="description" title="${uiLabelMap.PartyRole}"><display/></field>
         <field name="parentTypeId"><display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/></field>
-        <field name="remove">
+        <field name="remove" title="${uiLabelMap.CommonRemove}" widget-style="button tiny">
             <hyperlink target="deleterole" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
@@ -1114,8 +1113,8 @@ under the License.
         <field name="partyId"><hidden /></field>
         <field name="partyIdentTypeDesc"><display /></field>
         <field name="idValue"><display /></field>
-        <field name="delete" widget-style="button tiny">
-             <hyperlink target="deletePartyIdentification" description="${uiLabelMap.CommonDelete}" style="button tiny">
+        <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
+             <hyperlink target="deletePartyIdentification" description="${uiLabelMap.CommonDelete}">
                  <parameter param-name="partyId"/>
                  <parameter param-name="partyIdentificationTypeId"/>
              </hyperlink>

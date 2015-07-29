@@ -84,6 +84,7 @@ under the License.
   <#if text?has_content>
     <#-- If a label widget has one of the h1-h6 styles, then it is considered block level element.
          Otherwise it is considered an inline element. -->
+    <#-- Cato: also support "p" style to indicate paragraph -->
     <#assign idText = ""/>
     <#if id?has_content><#assign idText = " id=\"${id}\""/></#if>
     <#if style?has_content>
@@ -99,7 +100,9 @@ under the License.
         <h5${idText}>${text}</h5>
       <#elseif style=="h6">
         <h6${idText}>${text}</h6>
-        <#elseif style=="message">
+      <#elseif style=="p">
+        <p${idText}>${text}</p>
+      <#elseif style=="message">
         <@alert type="info">
           ${text}
         </@alert>

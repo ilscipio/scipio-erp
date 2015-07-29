@@ -505,16 +505,19 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     id                  = set id
     padded              = 
     autoHeaderLevel     = auto increase header level when title present
-    headerLevel         = force this header level for title
+    headerLevel         = force this header level for title. if autoHeaderLevel true, also influences nested elems (even if no title here).
     defaultHeaderLevel  = default header level (same as headerLevel if autoHeaderLevel false)
     menuHtml            = optional HTML menu data, li elements only (ul auto added); can be string "_INCLUDE_MENU_" to force add empty menu elem (js, etc.)
     menuClass           = menu class, default buttons class
 -->
 <#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="${style_button_group!} ${style_button_force!}">
+    <#local explicitHeaderLevel = false>
+    <#local updatedHeaderLevel = false> <#-- just so consistent -->
     <#if autoHeaderLevel>
         <#local prevHeaderLevel = request.getAttribute("catoCurrentHeaderLevel")!"">
         <#if headerLevel?has_content>
             <#local level = headerLevel>
+            <#local explicitHeaderLevel = true>
         <#elseif prevHeaderLevel?has_content>
             <#local level = prevHeaderLevel>
         <#else>
@@ -524,10 +527,17 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
             <#local dummy = request.setAttribute("catoCurrentHeaderLevel", (level + 1))!>
             <#-- might as well set global so read easy, but not enough -->
             <#global catoCurrentHeaderLevel = (level + 1)>
+            <#local updatedHeaderLevel = true>
+        <#elseif explicitHeaderLevel>
+            <#-- set here but don't increase if none title -->
+            <#local dummy = request.setAttribute("catoCurrentHeaderLevel", level)!>
+            <#global catoCurrentHeaderLevel = level>
+            <#local updatedHeaderLevel = true>
         </#if>
     <#else>
         <#if headerLevel?has_content>
             <#local level = headerLevel>
+            <#local explicitHeaderLevel = true>
         <#else>
             <#local level = defaultHeaderLevel>
         </#if>
@@ -542,7 +552,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level manual=true menuClass=menuClass menuId=menuId />
         <#nested />
     <@renderScreenletEnd />
-    <#if autoHeaderLevel && title?has_content>
+    <#if autoHeaderLevel && updatedHeaderLevel>
         <#local dummy = request.setAttribute("catoCurrentHeaderLevel", prevHeaderLevel)!>
         <#global catoCurrentHeaderLevel = prevHeaderLevel>
     </#if>

@@ -495,6 +495,61 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="hide-header">
+                <xs:annotation>
+                    <xs:documentation>Cato: For list forms, do not print table header. Overrides same setting on form widget if present.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="hide-header-no-list">
+                <xs:annotation>
+                    <xs:documentation>Cato: For list forms, if list variable is null (in other words, there was no query), do not print table header. Overrides same setting on form widget if present.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="hide-header-empty-list">
+                <xs:annotation>
+                    <xs:documentation>Cato: For list forms, if list variable is empty or null (in other words, there was no query or no results), do not print table header. Overrides same setting on form widget if present.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="hide-table-no-list">
+                <xs:annotation>
+                    <xs:documentation>Cato: For list forms, if list variable is null (in other words, there was no query), do not print table. Overrides same setting on form widget if present.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="hide-table-empty-list">
+                <xs:annotation>
+                    <xs:documentation>Cato: For list forms, if list variable is empty or null (in other words, there was no query or no results), do not print table. Overrides same setting on form widget if present.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="include-grid" substitutionGroup="AllWidgets">

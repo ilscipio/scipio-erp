@@ -1070,24 +1070,33 @@ public abstract class ModelForm extends ModelWidget {
         return this.headerRowStyle;
     }
 
+    private boolean getFormParamsOrVal(Map<String, Object> context, String paramName, boolean defaultVal) {
+        Boolean val = (Boolean) context.get("formParams_" + paramName);
+        return val != null ? val : defaultVal;
+    }
+    
     public boolean getHideHeader() {
         return this.hideHeader;
     }
     
-    public boolean getHideHeaderNoList() {
-        return hideHeaderNoList;
-    }
-
-    public boolean getHideHeaderEmptyList() {
-        return hideHeaderEmptyList;
+    public boolean getHideHeader(Map<String, Object> context) {
+        return getFormParamsOrVal(context, "hideHeader", this.hideHeader);
     }
     
-    public boolean getHideTableNoList() {
-        return hideTableNoList;
+    public boolean getHideHeaderNoList(Map<String, Object> context) {
+        return getFormParamsOrVal(context, "hideHeaderNoList", this.hideHeaderNoList);
     }
 
-    public boolean getHideTableEmptyList() {
-        return hideTableEmptyList;
+    public boolean getHideHeaderEmptyList(Map<String, Object> context) {
+        return getFormParamsOrVal(context, "hideHeaderEmptyList", this.hideHeaderEmptyList);
+    }
+    
+    public boolean getHideTableNoList(Map<String, Object> context) {
+        return getFormParamsOrVal(context, "hideTableNoList", this.hideTableNoList);
+    }
+
+    public boolean getHideTableEmptyList(Map<String, Object> context) {
+        return getFormParamsOrVal(context, "hideTableEmptyList", this.hideTableEmptyList);
     }
     
     

@@ -1103,7 +1103,7 @@ under the License.
     </form>
 
     <form name="listPartyIdentification" type="list" list-name="listIt"
-                 default-table-style="basic-table hover-bar" target="updatePartyIdentification" hide-table-empty-list="true">
+                 default-table-style="basic-table hover-bar" target="updatePartyIdentification" hide-table-no-list="true">
         <actions>
             <entity-and entity-name="PartyIdentificationAndParty" >
                 <field-map field-name="partyId" from-field="partyId"/>

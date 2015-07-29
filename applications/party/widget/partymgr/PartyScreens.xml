@@ -384,7 +384,7 @@ under the License.
                         <screenlet id="AddPartyTaxAuthInfospanel" title="${uiLabelMap.PageTitleAddPartyTaxAuthInfos}" collapsible="true">
                             <include-form name="AddPartyTaxAuthInfo" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
-                        <include-form name="UpdatePartyTaxAuthInfo" location="component://party/widget/partymgr/PartyForms.xml" hide-table-empty-list="true" />
+                        <include-form name="UpdatePartyTaxAuthInfo" location="component://party/widget/partymgr/PartyForms.xml" hide-table-no-list="true" />
                     </decorator-section>
                 </decorator-screen>
             </widgets>

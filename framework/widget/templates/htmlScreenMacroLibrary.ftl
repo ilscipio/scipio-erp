@@ -102,6 +102,8 @@ under the License.
         <h6${idText}>${text}</h6>
       <#elseif style=="p">
         <p${idText}>${text}</p>
+      <#elseif style=="span">
+        <span${idText}>${text}</span>
       <#elseif style=="message">
         <@alert type="info">
           ${text}

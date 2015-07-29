@@ -416,6 +416,12 @@ under the License.
 </#macro>
 
 <#macro renderSubmitField buttonType className alert formName title name event action imgSrc confirmation containerId ajaxUrl>
+  <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
+  <#if buttonType!="image">
+    <#if !className?has_content || className=="smallSubmit" || className=="_BUTTON_">
+      <#local className = "${style_button!} ${style_tiny!}">
+    </#if>
+  </#if>
 
   <#local buttonMarkup>
   <#if buttonType=="text-link">

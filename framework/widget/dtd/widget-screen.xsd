@@ -301,7 +301,11 @@ under the License.
         <xs:complexType mixed="true">
             <xs:attribute type="xs:string" name="text" />
             <xs:attribute type="xs:string" name="id" />
-            <xs:attribute type="xs:string" name="style" />
+            <xs:attribute type="xs:string" name="style" default="p">
+                <xs:annotation>
+                    <xs:documentation>Label style. Cato: default currently p for paragraph because almost always a paragraph in screens rather than an inline text elem (span).</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="link" type="link" substitutionGroup="AllWidgets"/>

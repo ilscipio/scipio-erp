@@ -220,7 +220,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("\" title=\"");
         sr.append(title);
         sr.append("\" class=\"");
-        sr.append(modelFormField.getWidgetStyle());
+        sr.append(modelFormField.getWidgetStyle(context));
         sr.append("\" alert=\"");
         sr.append(modelFormField.shouldBeRed(context) ? "true" : "false");
         if (ajaxEnabled) {
@@ -311,7 +311,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         this.request.setAttribute("alternate", encodedAlternate);
         this.request.setAttribute("imageTitle", encodedImageTitle);
         this.request.setAttribute("descriptionSize", hyperlinkField.getSize());
-        makeHyperlinkByType(writer, hyperlinkField.getLinkType(), modelFormField.getWidgetStyle(), hyperlinkField.getUrlMode(), hyperlinkField.getTarget(context), hyperlinkField.getParameterMap(context), hyperlinkField.getDescription(context), hyperlinkField.getTargetWindow(context),
+        makeHyperlinkByType(writer, hyperlinkField.getLinkType(), modelFormField.getWidgetStyle(context), hyperlinkField.getUrlMode(), hyperlinkField.getTarget(context), hyperlinkField.getParameterMap(context), hyperlinkField.getDescription(context), hyperlinkField.getTargetWindow(context),
                 hyperlinkField.getConfirmation(context), modelFormField, this.request, this.response, context);
         this.appendTooltip(writer, context, modelFormField);
         this.request.removeAttribute("image");
@@ -325,8 +325,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String alert = "false";
         String mask = "";
         String placeholder = textField.getPlaceholder(context);
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -415,8 +415,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String id = modelFormField.getCurrentContainerId(context);
         String className = "";
         String alert = "false";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -490,8 +490,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String formattedMask = "";
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -596,7 +596,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // if we have an input method of time-dropdown, then render two
         // dropdowns
         if (useTimeDropDown) {
-            className = modelFormField.getWidgetStyle();
+            className = modelFormField.getWidgetStyle(context);
             classString = (className != null ? className : "");
             isTwelveHour = "12".equals(dateTimeField.getClock());
             // set the Calendar to the default time of the form or now()
@@ -754,8 +754,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String allowEmpty = "";
         StringBuilder options = new StringBuilder();
         StringBuilder ajaxOptions = new StringBuilder();
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -968,8 +968,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
         StringBuilder items = new StringBuilder();
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -1026,8 +1026,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
         StringBuilder items = new StringBuilder();
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -1084,8 +1084,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String confirmation = submitField.getConfirmation(context);
         String className = "";
         String alert = "false";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -1150,8 +1150,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String name = modelFormField.getParameterName(context);
         String className = "";
         String alert = "false";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -1793,8 +1793,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String size = Integer.toString(textFindField.getSize());
         String maxlength = "";
         String autocomplete = "";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -1876,8 +1876,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         //String opIsEmpty = UtilProperties.getMessage("conditional", "is_empty", locale);
         String className = "";
         String alert = "false";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -1964,8 +1964,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String localizedInputTitle = "", localizedIconTitle = "";
         String className = "";
         String alert = "false";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -2090,8 +2090,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String lookupFieldFormName = lookupField.getFormName(context);
         String className = "";
         String alert = "false";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -2549,8 +2549,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String size = Integer.toString(textField.getSize());
         String maxlength = "";
         String autocomplete = "";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -2595,8 +2595,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String maxlength = "";
         String id = modelFormField.getCurrentContainerId(context);
         String autocomplete = "";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle(context))) {
+            className = modelFormField.getWidgetStyle(context);
             if (modelFormField.shouldBeRed(context)) {
                 alert = "true";
             }
@@ -3246,7 +3246,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     public void renderContainerFindField(Appendable writer, Map<String, Object> context, ContainerField containerField) throws IOException {
         String id = containerField.getModelFormField().getIdName();
-        String className = UtilFormatOut.checkNull(containerField.getModelFormField().getWidgetStyle());
+        String className = UtilFormatOut.checkNull(containerField.getModelFormField().getWidgetStyle(context));
         StringWriter sr = new StringWriter();
         sr.append("<@renderContainerField ");
         sr.append("id=\"");

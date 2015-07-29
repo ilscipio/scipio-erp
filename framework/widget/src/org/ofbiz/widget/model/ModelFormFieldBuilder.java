@@ -96,14 +96,14 @@ public class ModelFormFieldBuilder {
     private String sortFieldDescStyle = "";
     private String sortFieldHelpText = "";
     private String sortFieldStyle = "";
-    private FlexibleStringExpander title = FlexibleStringExpander.getInstance("");;
+    private FlexibleStringExpander title = FlexibleStringExpander.getInstance("");
     private String titleAreaStyle = "";
     private String titleStyle = "";
-    private FlexibleStringExpander tooltip = FlexibleStringExpander.getInstance("");;
+    private FlexibleStringExpander tooltip = FlexibleStringExpander.getInstance("");
     private String tooltipStyle = "";
-    private FlexibleStringExpander useWhen = FlexibleStringExpander.getInstance("");;
+    private FlexibleStringExpander useWhen = FlexibleStringExpander.getInstance("");
     private String widgetAreaStyle = "";
-    private String widgetStyle = "";
+    private FlexibleStringExpander widgetStyle = FlexibleStringExpander.getInstance("");
     private String parentFormName = "";
 
     public ModelFormFieldBuilder() {
@@ -152,7 +152,7 @@ public class ModelFormFieldBuilder {
         this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
         this.useWhen = FlexibleStringExpander.getInstance(fieldElement.getAttribute("use-when"));
         this.widgetAreaStyle = fieldElement.getAttribute("widget-area-style");
-        this.widgetStyle = fieldElement.getAttribute("widget-style");
+        this.widgetStyle = FlexibleStringExpander.getInstance(fieldElement.getAttribute("widget-style"));
         this.parentFormName = fieldElement.getAttribute("form-name");
         Element childElement = null;
         List<? extends Element> subElements = UtilXml.childElementList(fieldElement);
@@ -458,7 +458,7 @@ public class ModelFormFieldBuilder {
         return widgetAreaStyle;
     }
 
-    public String getWidgetStyle() {
+    public FlexibleStringExpander getWidgetStyle() {
         return widgetStyle;
     }
 
@@ -925,7 +925,7 @@ public class ModelFormFieldBuilder {
     }
 
     public ModelFormFieldBuilder setWidgetStyle(String widgetStyle) {
-        this.widgetStyle = widgetStyle;
+        this.widgetStyle = FlexibleStringExpander.getInstance(widgetStyle);
         return this;
     }
     public ModelFormFieldBuilder setParentFormName(String parentFormName) {

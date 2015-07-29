@@ -88,31 +88,31 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
 
     public void renderDisplayField(Appendable writer, Map<String, Object> context, DisplayField displayField) throws IOException {
         ModelFormField modelFormField = displayField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(), displayField.getDescription(context));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), displayField.getDescription(context));
         appendWhitespace(writer);
     }
 
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, HyperlinkField hyperlinkField) throws IOException {
         ModelFormField modelFormField = hyperlinkField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(), hyperlinkField.getDescription(context));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), hyperlinkField.getDescription(context));
         appendWhitespace(writer);
     }
 
     public void renderTextField(Appendable writer, Map<String, Object> context, TextField textField) throws IOException {
         ModelFormField modelFormField = textField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(), modelFormField.getEntry(context, textField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textField.getDefaultValue(context)));
         appendWhitespace(writer);
     }
 
     public void renderTextareaField(Appendable writer, Map<String, Object> context, TextareaField textareaField) throws IOException {
         ModelFormField modelFormField = textareaField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(), modelFormField.getEntry(context, textareaField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textareaField.getDefaultValue(context)));
         appendWhitespace(writer);
     }
 
     public void renderDateTimeField(Appendable writer, Map<String, Object> context, DateTimeField dateTimeField) throws IOException {
         ModelFormField modelFormField = dateTimeField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(), modelFormField.getEntry(context, dateTimeField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, dateTimeField.getDefaultValue(context)));
         appendWhitespace(writer);
     }
 
@@ -124,9 +124,9 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
         if (UtilValidate.isNotEmpty(currentValue) && "first-in-list".equals(dropDownField.getCurrent())) {
             String explicitDescription = dropDownField.getCurrentDescription(context);
             if (UtilValidate.isNotEmpty(explicitDescription)) {
-                this.makeBlockString(writer, modelFormField.getWidgetStyle(), explicitDescription);
+                this.makeBlockString(writer, modelFormField.getWidgetStyle(context), explicitDescription);
             } else {
-                this.makeBlockString(writer, modelFormField.getWidgetStyle(), FieldInfoWithOptions.getDescriptionForOptionKey(currentValue, allOptionValues));
+                this.makeBlockString(writer, modelFormField.getWidgetStyle(context), FieldInfoWithOptions.getDescriptionForOptionKey(currentValue, allOptionValues));
             }
         } else {
             boolean optionSelected = false;
@@ -134,7 +134,7 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
                 String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
                 if ((UtilValidate.isNotEmpty(currentValue) && currentValue.equals(optionValue.getKey()) && "selected".equals(dropDownField.getCurrent())) ||
                         (UtilValidate.isEmpty(currentValue) && noCurrentSelectedKey != null && noCurrentSelectedKey.equals(optionValue.getKey()))) {
-                    this.makeBlockString(writer, modelFormField.getWidgetStyle(), optionValue.getDescription());
+                    this.makeBlockString(writer, modelFormField.getWidgetStyle(context), optionValue.getDescription());
                     optionSelected = true;
                     break;
                 }
@@ -366,25 +366,25 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
 
     public void renderTextFindField(Appendable writer, Map<String, Object> context, TextFindField textFindField) throws IOException {
         ModelFormField modelFormField = textFindField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(), modelFormField.getEntry(context, textFindField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textFindField.getDefaultValue(context)));
         appendWhitespace(writer);
     }
 
     public void renderRangeFindField(Appendable writer, Map<String, Object> context, RangeFindField rangeFindField) throws IOException {
         ModelFormField modelFormField = rangeFindField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(), modelFormField.getEntry(context, rangeFindField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, rangeFindField.getDefaultValue(context)));
         appendWhitespace(writer);
     }
 
     public void renderDateFindField(Appendable writer, Map<String, Object> context, DateFindField dateFindField) throws IOException {
         ModelFormField modelFormField = dateFindField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(), modelFormField.getEntry(context, dateFindField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, dateFindField.getDefaultValue(context)));
         appendWhitespace(writer);
     }
 
     public void renderLookupField(Appendable writer, Map<String, Object> context, LookupField lookupField) throws IOException {
         ModelFormField modelFormField = lookupField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(), modelFormField.getEntry(context, lookupField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, lookupField.getDefaultValue(context)));
         appendWhitespace(writer);
     }
 
@@ -393,7 +393,7 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
 
     public void renderFileField(Appendable writer, Map<String, Object> context, FileField textField) throws IOException {
         ModelFormField modelFormField = textField.getModelFormField();
-        this.makeBlockString(writer, modelFormField.getWidgetStyle(), modelFormField.getEntry(context, textField.getDefaultValue(context)));
+        this.makeBlockString(writer, modelFormField.getWidgetStyle(context), modelFormField.getEntry(context, textField.getDefaultValue(context)));
         appendWhitespace(writer);
     }
 

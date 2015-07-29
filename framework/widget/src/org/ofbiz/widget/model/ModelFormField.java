@@ -136,7 +136,7 @@ public class ModelFormField {
     private final String tooltipStyle;
     private final FlexibleStringExpander useWhen;
     private final String widgetAreaStyle;
-    private final String widgetStyle;
+    private final FlexibleStringExpander widgetStyle;
     private final String parentFormName;
 
     private ModelFormField(ModelFormFieldBuilder builder) {
@@ -656,9 +656,13 @@ public class ModelFormField {
         return this.modelForm.getDefaultWidgetAreaStyle();
     }
 
-    public String getWidgetStyle() {
+    public FlexibleStringExpander getWidgetStyle() {
+        return widgetStyle;
+    }
+    
+    public String getWidgetStyle(Map<String, Object> context) {
         if (UtilValidate.isNotEmpty(this.widgetStyle))
-            return this.widgetStyle;
+            return this.widgetStyle.expandString(context);
         return this.modelForm.getDefaultWidgetStyle();
     }
 

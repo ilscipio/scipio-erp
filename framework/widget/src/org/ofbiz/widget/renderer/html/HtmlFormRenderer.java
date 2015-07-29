@@ -150,7 +150,7 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
     }
 
     public void appendClassNames(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
-        String className = modelFormField.getWidgetStyle();
+        String className = modelFormField.getWidgetStyle(context);
         if (UtilValidate.isNotEmpty(className) || modelFormField.shouldBeRed(context)) {
             writer.append(" class=\"");
             writer.append(className);
@@ -338,7 +338,7 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
         ModelFormField modelFormField = hyperlinkField.getModelFormField();
         String description = encode(hyperlinkField.getDescription(context), modelFormField, context);
         String confirmation = encode(hyperlinkField.getConfirmation(context), modelFormField, context);
-        WidgetWorker.makeHyperlinkByType(writer, hyperlinkField.getLinkType(), modelFormField.getWidgetStyle(), hyperlinkField.getUrlMode(), hyperlinkField.getTarget(context),
+        WidgetWorker.makeHyperlinkByType(writer, hyperlinkField.getLinkType(), modelFormField.getWidgetStyle(context), hyperlinkField.getUrlMode(), hyperlinkField.getTarget(context),
                 hyperlinkField.getParameterMap(context), description, hyperlinkField.getTargetWindow(context), confirmation, modelFormField,
                 this.request, this.response, context);
         this.appendTooltip(writer, context, modelFormField);
@@ -2772,7 +2772,7 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
             writer.append(id);
             writer.append("\" ");
         }
-        String className = containerField.getModelFormField().getWidgetStyle();
+        String className = containerField.getModelFormField().getWidgetStyle(context);
         if (UtilValidate.isNotEmpty(className)) {
             writer.append("class=\"");
             writer.append(className);

@@ -982,8 +982,8 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </#if>
 </#function>
 
-<#-- Cato: new params: forcePost, viewIndexFirst -->
-<#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel forcePost=false viewIndexFirst=0>
+<#-- Cato: new params: forcePost, viewIndexFirst, listItemsOnly -->
+<#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel forcePost=false viewIndexFirst=0 listItemsOnly=false>
   <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
   <#local minPageSize = availPageSizes?first>
   
@@ -1041,10 +1041,12 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#if (listSize > minPageSize)>
     <#local multiPage = (listSize > viewSize)>
   
+   <#if !listItemsOnly>
    <div class="${style_grid_row!}">
    <div class="${style_grid_large!}12 ${style_grid_cell!}">
         <div class="pagination-centered ${paginateStyle}">
           <ul class="pagination">
+   </#if>
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxFirstUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${firstUrl}')"</#if><#else>href="${firstUrl}"</#if></#local>
             <li class="${paginateFirstStyle}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPreviousUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${previousUrl}')"</#if><#else>href="${previousUrl}"</#if></#local>
@@ -1084,12 +1086,13 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
           </#list>
               </select></label></li>
         </#if>
-            
+    <#if !listItemsOnly>          
       </ul>
     </div>
         
       </div>
     </div>
+    </#if>
   </#if>
 </#macro>
 

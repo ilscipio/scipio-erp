@@ -205,16 +205,20 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
             with macro renderer (not html renderer), but not sure if breaks anything (and doesn't help hack below) -->
 <#local menuString = menuString?trim>
 <#if menuString?has_content || menuString == "_INCLUDE_MENU_">
-  <ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>>
+  <#-- note: menuString shouldn't contain <ul because li may be added here, but check anyway -->
+  <#if !menuString?starts_with("<ul")><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
   <#if menuString != "_INCLUDE_MENU_">
     <#if !manual>
-      <#-- FIXME: for now, need this super ugly hack as a workaround for having no other place to insert central style for menus passed here by macro renderer -->
-      <#local menuString = menuString?replace(r'(<a\s([^>]*\s)?)class="([^"]*)"', r'$1class="$3 button tiny"', 'r')>
-      <#local menuString = menuString?replace(r'(<a(?![^>]*\sclass=)[^>]*)>', r'$1 class="button tiny">', 'r')>
+      <#-- FIXME: for now, need this super ugly hack as a workaround for having no other place to insert central style for menus passed here by macro renderer...
+           heuristic: add button style to all if none of the <a elems have known foundation (button) style -->
+      <#if !menuString?matches(r'.*(<a\s([^>]*\s)?)class="([^"]*\s)?(button|tiny)(\s[^"]*)?".*', 's')>
+        <#local menuString = menuString?replace(r'(<a\s([^>]*\s)?)class="([^"]*)"', r'$1class="$3 button tiny"', 'r')>
+        <#local menuString = menuString?replace(r'(<a(?![^>]*\sclass=)[^>]*)>', r'$1 class="button tiny">', 'r')>
+      </#if>
     </#if>
     ${menuString}
   </#if>
-  </ul>
+  <#if !menuString?ends_with("</ul>")></ul></#if>
 </#if>
 
 </#if>
@@ -226,11 +230,12 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 <#macro renderScreenletEnd></div></div></div></div></#macro>
 
 <#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl>
-    <li class="${paginateLastStyle}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${lastLinkUrl}">${paginateLastLabel}</a><#else>${paginateLastLabel}</#if></li>
-    <li class="${paginateNextStyle}<#if !nextLinkUrl?has_content> disabled</#if>"><#if nextLinkUrl?has_content><a href="${nextLinkUrl}">${paginateNextLabel}</a><#else>${paginateNextLabel}</#if></li>
-    <#if (listSize?number > 0) ><li>${lowIndex?number + 1} - ${lowIndex?number + actualPageSize?number} ${ofLabel} ${listSize}</li><#rt/></#if>
-    <li class="${paginatePreviousStyle?default("nav-previous")}<#if !previousLinkUrl?has_content> disabled</#if>"><#if previousLinkUrl?has_content><a href="${previousLinkUrl}">${paginatePreviousLabel}</a><#else>${paginatePreviousLabel}</#if></li>
-    <li class="${paginateFirstStyle?default("nav-first")}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${firstLinkUrl}">${paginateFirstLabel}</a><#else>${paginateFirstLabel}</#if></li>
+    <li class="${paginateFirstStyle?default("nav-first")}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${firstLinkUrl}" class="button tiny">${paginateFirstLabel}</a><#else><a href="javascript:void(0);" class="disabled button tiny">${paginateFirstLabel}</a></#if></li>
+    <li class="${paginatePreviousStyle?default("nav-previous")}<#if !previousLinkUrl?has_content> disabled</#if>"><#if previousLinkUrl?has_content><a href="${previousLinkUrl}" class="button tiny">${paginatePreviousLabel}</a><#else><a href="javascript:void(0);" class="disabled button tiny">${paginatePreviousLabel}</a></#if></li>
+    <#-- FIXME: manual padding -->
+    <#if (listSize?number > 0)><li><span style="padding-left:1em; padding-right:1em;">${lowIndex?number + 1} - ${lowIndex?number + actualPageSize?number} ${ofLabel} ${listSize}</span></li><#rt/></#if>
+    <li class="${paginateNextStyle}<#if !nextLinkUrl?has_content> disabled</#if>"><#if nextLinkUrl?has_content><a href="${nextLinkUrl}" class="button tiny">${paginateNextLabel}</a><#else><a href="javascript:void(0);" class="disabled button tiny">${paginateNextLabel}</a></#if></li>
+    <li class="${paginateLastStyle}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${lastLinkUrl}" class="button tiny">${paginateLastLabel}</a><#else><a href="javascript:void(0);" class="disabled button tiny">${paginateLastLabel}</a></#if></li>
 </#macro>
 
 <#macro renderPortalPageBegin originalPortalPageId portalPageId confMode="false" addColumnLabel="Add column" addColumnHint="Add a new column to this portal" columnCount=1>

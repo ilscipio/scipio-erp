@@ -287,47 +287,28 @@ under the License.
                 not sure this is such a good idea <xs:attribute type="xs:string" name="hidden-values-map-name"> <xs:annotation> <xs:documentation>A map that contains hidden field name/value pairs. The reason for this is to eliminate the need to code custom forms so that auxiliary, passthru data can
                 be sent to the server. By doing it this way, more standard forms can be used. </xs:documentation> </xs:annotation> </xs:attribute>
             -->
-            <xs:attribute name="hide-header-no-list" default="false">
+            <xs:attribute name="hide-header-when">
                 <xs:annotation>
-                    <xs:documentation>Cato: For list forms, if list variable is null (in other words, there was no query), do not print table header.</xs:documentation>
+                    <xs:documentation>Cato: For list forms, if this condition met, do not print table header. 'always' is same as setting hide-header option to true. Context-expanded. Implicit default is 'never', unless hide-header is true, but explicit 'never' overrides hide-header. See widget.properties for renderer-specific defaults.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
+                        <xs:enumeration value="never" />
+                        <xs:enumeration value="list-null" />
+                        <xs:enumeration value="list-empty" />
+                        <xs:enumeration value="always" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="hide-header-empty-list" default="false">
+            <xs:attribute name="hide-table-when">
                 <xs:annotation>
-                    <xs:documentation>Cato: For list forms, if list variable is empty or null (in other words, there was no query or no results), do not print table header.</xs:documentation>
+                    <xs:documentation>Cato: For list forms, if this condition met, do not print table. Context-expanded. Implied default is 'never'. See widget.properties for renderer-specific defaults.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="hide-table-no-list" default="true">
-                <xs:annotation>
-                    <xs:documentation>Cato: For list forms, if list variable is null (in other words, there was no query), do not print table.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="hide-table-empty-list" default="false">
-                <xs:annotation>
-                    <xs:documentation>Cato: For list forms, if list variable is empty or null (in other words, there was no query or no results), do not print table.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
+                        <xs:enumeration value="never" />
+                        <xs:enumeration value="list-null" />
+                        <xs:enumeration value="list-empty" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

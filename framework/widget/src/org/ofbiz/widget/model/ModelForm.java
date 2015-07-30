@@ -193,10 +193,8 @@ public abstract class ModelForm extends ModelWidget {
      */
     private final Set<String> useWhenFields;
     
-    private final boolean hideHeaderNoList;
-    private final boolean hideHeaderEmptyList;
-    private final boolean hideTableNoList;
-    private final boolean hideTableEmptyList;
+    private final FlexibleStringExpander hideHeaderWhen;
+    private final FlexibleStringExpander hideTableWhen;
     
     private final FlexibleStringExpander showProgress;
     private final FlexibleStringExpander progressOptions;
@@ -376,30 +374,16 @@ public abstract class ModelForm extends ModelWidget {
             this.hideHeader = "true".equals(hideHeader);
         }
         
-        String hideHeaderNoList = formElement.getAttribute("hide-header-no-list");
-        if (hideHeaderNoList.isEmpty() && parentModel != null) {
-            this.hideHeaderNoList = parentModel.hideHeaderNoList;
-        } else {
-            this.hideHeaderNoList = "true".equals(hideHeaderNoList);
+        FlexibleStringExpander hideHeaderWhen = FlexibleStringExpander.getInstance(formElement.getAttribute("hide-header-when"));
+        if (hideHeaderWhen.isEmpty() && parentModel != null) {
+            hideHeaderWhen = parentModel.hideHeaderWhen;
         }
-        String hideHeaderEmptyList = formElement.getAttribute("hide-header-empty-list");
-        if (hideHeaderEmptyList.isEmpty() && parentModel != null) {
-            this.hideHeaderEmptyList = parentModel.hideHeaderEmptyList;
-        } else {
-            this.hideHeaderEmptyList = "true".equals(hideHeaderEmptyList);
+        this.hideHeaderWhen = hideHeaderWhen;
+        FlexibleStringExpander hideTableWhen = FlexibleStringExpander.getInstance(formElement.getAttribute("hide-table-when"));
+        if (hideTableWhen.isEmpty() && parentModel != null) {
+            hideTableWhen = parentModel.hideTableWhen;
         }
-        String hideTableNoList = formElement.getAttribute("hide-table-no-list");
-        if (hideTableNoList.isEmpty() && parentModel != null) {
-            this.hideTableNoList = parentModel.hideTableNoList;
-        } else {
-            this.hideTableNoList = "true".equals(hideTableNoList);
-        }
-        String hideTableEmptyList = formElement.getAttribute("hide-table-empty-list");
-        if (hideTableEmptyList.isEmpty() && parentModel != null) {
-            this.hideTableEmptyList = parentModel.hideTableEmptyList;
-        } else {
-            this.hideTableEmptyList = "true".equals(hideTableEmptyList);
-        }
+        this.hideTableWhen = hideTableWhen;
         
         FlexibleStringExpander showProgress = FlexibleStringExpander.getInstance(formElement.getAttribute("show-progress"));
         if (showProgress.isEmpty() && parentModel != null) {
@@ -1069,33 +1053,58 @@ public abstract class ModelForm extends ModelWidget {
     public String getHeaderRowStyle() {
         return this.headerRowStyle;
     }
-
-    private boolean getFormParamsOrVal(Map<String, Object> context, String paramName, boolean defaultVal) {
-        return defaultVal;
-    }
     
     public boolean getHideHeader() {
         return this.hideHeader;
     }
     
     public boolean getHideHeader(Map<String, Object> context) {
-        return getFormParamsOrVal(context, "hideHeader", this.hideHeader);
+        String when = getHideHeaderWhen(context);
+        if ("never".equals(when)) {
+            return false;
+        }
+        else if ("always".equals(when)) {
+            return true;
+        }
+        else {
+            return this.hideHeader;
+        }
+    }
+    
+    public String getHideHeaderWhen() {
+        return this.hideHeaderWhen.getOriginal();
+    }
+    
+    public String getHideHeaderWhen(Map<String, Object> context) {
+        return this.hideHeaderWhen.expandString(context);
     }
     
     public boolean getHideHeaderNoList(Map<String, Object> context) {
-        return getFormParamsOrVal(context, "hideHeaderNoList", this.hideHeaderNoList);
+        String when = getHideHeaderWhen(context);
+        return "list-null".equals(when);
     }
 
     public boolean getHideHeaderEmptyList(Map<String, Object> context) {
-        return getFormParamsOrVal(context, "hideHeaderEmptyList", this.hideHeaderEmptyList);
+        String when = getHideHeaderWhen(context);
+        return "list-empty".equals(when);
+    }
+    
+    public String getHideTableWhen() {
+        return this.hideTableWhen.getOriginal();
+    }
+    
+    public String getHideTableWhen(Map<String, Object> context) {
+        return this.hideTableWhen.expandString(context);
     }
     
     public boolean getHideTableNoList(Map<String, Object> context) {
-        return getFormParamsOrVal(context, "hideTableNoList", this.hideTableNoList);
+        String when = this.hideTableWhen.expandString(context);
+        return "list-null".equals(when);
     }
 
     public boolean getHideTableEmptyList(Map<String, Object> context) {
-        return getFormParamsOrVal(context, "hideTableEmptyList", this.hideTableEmptyList);
+        String when = this.hideTableWhen.expandString(context);
+        return "list-empty".equals(when);
     }
     
     

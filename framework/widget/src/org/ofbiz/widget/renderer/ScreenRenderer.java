@@ -21,11 +21,15 @@ package org.ofbiz.widget.renderer;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -36,11 +40,13 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ScriptUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -53,6 +59,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.LoginWorker;
 import org.ofbiz.webapp.website.WebSiteWorker;
+import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.cache.GenericWidgetOutput;
 import org.ofbiz.widget.cache.ScreenCache;
 import org.ofbiz.widget.cache.WidgetContextCacheKey;
@@ -308,10 +315,49 @@ public class ScreenRenderer {
             context.put("isError", Boolean.TRUE);
         }
 
+        populateContextForRequestScriptsOnly(context, screens, request, response, servletContext);
+        
         // to preserve these values, push the MapStack
         context.push();
     }
 
+    /**
+     * Cato: Calls scripts defined in widgetContextScripts.properties to help populate root context.
+     */
+    public static void populateContextForRequestScriptsOnly(MapStack<String> context, ScreenRenderer screens, HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+        // Cato: runs scripts on initial render context to help populate
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        Enumeration<URL> resources;
+        try {
+            resources = loader.getResources("widgetContextScripts.properties");
+        } catch (IOException e) {
+            Debug.logError(e, "Could not load list of widgetContextScripts.properties", module);
+            throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
+        }
+        while (resources.hasMoreElements()) {
+            URL propertyURL = resources.nextElement();
+            if (Debug.infoOn()) {
+                Debug.logInfo("loading properties: " + propertyURL, module);
+            }
+            Properties props = UtilProperties.getProperties(propertyURL);
+            if (UtilValidate.isEmpty(props)) {
+                Debug.logError("Unable to locate properties file " + propertyURL, module);
+            } else {
+                for (Iterator<Object> i = props.keySet().iterator(); i.hasNext();) {
+                    String key = (String) i.next();
+                    String scriptLocation = props.getProperty(key);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Running widget context script " + scriptLocation, module);
+                    }
+                    
+                    String location = WidgetWorker.getScriptLocation(scriptLocation);
+                    String method = WidgetWorker.getScriptMethodName(scriptLocation);
+                    ScriptUtil.executeScript(location, method, context);
+                }
+            }
+        }
+    }
+    
     public Map<String, Object> getContext() {
         return context;
     }

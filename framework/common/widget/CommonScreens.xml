@@ -170,6 +170,9 @@ under the License.
                     <field-map field-name="themeResources" from-field="layoutSettings" />
                 </service>
                 <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
+                
+                <set field="setContextCatoStylesAsGlobal" type="Boolean" value="true" />
+                <script location="component://common/webcommon/WEB-INF/actions/includes/setContextCatoStyles.groovy" />
             </actions>
             <widgets />
         </section>

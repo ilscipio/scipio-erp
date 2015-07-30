@@ -124,6 +124,10 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
             MenuStringRenderer menuStringRenderer = new MacroMenuRenderer(menuMacroLibraryPath, request, response);
             context.put("menuStringRenderer", menuStringRenderer);
         }
+        
+        // Cato: Also add screenStringRenderer
+        context.put("screenStringRenderer", screenStringRenderer);
+        
         return screenStringRenderer;
     }
 

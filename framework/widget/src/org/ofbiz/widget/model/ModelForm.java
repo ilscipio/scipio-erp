@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -51,6 +52,7 @@ import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.renderer.FormStringRenderer;
+import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.w3c.dom.Element;
 
 import bsh.EvalError;
@@ -1071,12 +1073,43 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
     
+    private String getWidgetDefDefault(Map<String, Object> context, String propName) {
+        Properties props = UtilProperties.getProperties("widget.properties");
+        if (props == null) {
+            return "";
+        }
+        String val = null;
+        // screenStringRenderer available since Cato Ofbiz patch
+        ScreenStringRenderer renderer = (ScreenStringRenderer) context.get("screenStringRenderer");
+        if (renderer != null) {
+            String renderType = renderer.getRendererName();
+            if (UtilValidate.isNotEmpty(renderType)) {
+                if (props != null) {
+                    val = props.getProperty("widget.defs.form." + propName + ".default." + renderType);
+                    if (val != null) {
+                        return val.trim();
+                    }
+                }
+            }
+        }
+        val = props.getProperty("widget.defs.form." + propName + ".default");
+        if (val != null) {
+            return val.trim();
+        }
+        return "";
+    }
+    
     public String getHideHeaderWhen() {
         return this.hideHeaderWhen.getOriginal();
     }
     
     public String getHideHeaderWhen(Map<String, Object> context) {
-        return this.hideHeaderWhen.expandString(context);
+        String when = this.hideHeaderWhen.expandString(context);
+        if (UtilValidate.isEmpty(when)) {
+            when = getWidgetDefDefault(context, "hideHeaderWhen");
+        }
+        //Debug.logError("============================ getHideHeaderWhen: " + when, module);
+        return when;
     }
     
     public boolean getHideHeaderNoList(Map<String, Object> context) {
@@ -1094,16 +1127,21 @@ public abstract class ModelForm extends ModelWidget {
     }
     
     public String getHideTableWhen(Map<String, Object> context) {
-        return this.hideTableWhen.expandString(context);
+        String when = this.hideTableWhen.expandString(context);
+        if (UtilValidate.isEmpty(when)) {
+            when = getWidgetDefDefault(context, "hideTableWhen");
+        }
+        //Debug.logError("============================ getHideTableWhen: " + when, module);
+        return when;
     }
     
     public boolean getHideTableNoList(Map<String, Object> context) {
-        String when = this.hideTableWhen.expandString(context);
+        String when = getHideTableWhen(context);
         return "list-null".equals(when);
     }
 
     public boolean getHideTableEmptyList(Map<String, Object> context) {
-        String when = this.hideTableWhen.expandString(context);
+        String when = getHideTableWhen(context);
         return "list-empty".equals(when);
     }
     

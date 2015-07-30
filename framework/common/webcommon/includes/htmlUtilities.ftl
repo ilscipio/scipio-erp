@@ -16,8 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-
+<#compress>
 <#--
 * 
 * A set of utility macros to be used for page rendering.
@@ -1262,3 +1261,4 @@ Usage example:
   </#if>
 </#macro>
 <#-- DEV MACROS END -->
+</#compress>

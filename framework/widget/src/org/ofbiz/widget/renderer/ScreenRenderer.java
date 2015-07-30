@@ -340,9 +340,7 @@ public class ScreenRenderer {
                 Debug.logInfo("loading properties: " + propertyURL, module);
             }
             Properties props = UtilProperties.getProperties(propertyURL);
-            if (UtilValidate.isEmpty(props)) {
-                Debug.logError("Unable to locate properties file " + propertyURL, module);
-            } else {
+            if (UtilValidate.isNotEmpty(props)) {
                 for (Iterator<Object> i = props.keySet().iterator(); i.hasNext();) {
                     String key = (String) i.next();
                     String scriptLocation = props.getProperty(key);

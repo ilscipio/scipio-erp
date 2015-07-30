@@ -1109,7 +1109,7 @@ public abstract class ModelForm extends ModelWidget {
     
     
     public String getShowProgress() {
-        return showProgress.getOriginal();
+        return this.showProgress.getOriginal();
     }
 
     public String getShowProgress(Map<String, Object> context) {
@@ -1117,7 +1117,7 @@ public abstract class ModelForm extends ModelWidget {
     }
     
     public String getProgressOptions() {
-        return progressOptions.getOriginal();
+        return this.progressOptions.getOriginal();
     }
 
     public String getProgressOptions(Map<String, Object> context) {
@@ -1125,7 +1125,7 @@ public abstract class ModelForm extends ModelWidget {
     }
     
     public String getProgressSuccessAction() {
-        return progressSuccessAction.getOriginal();
+        return this.progressSuccessAction.getOriginal();
     }
 
     public String getProgressSuccessAction(Map<String, Object> context) {

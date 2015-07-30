@@ -700,14 +700,14 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                     
    * General Attributes *
     type           = (info|success|warning|secondary|alert)
-    
+    addClass       = additional classes for nested container
 -->
-<#macro alert type="">
+<#macro alert type="" addClass="">
 <div class="${style_grid_row!}">
         <div class="${style_grid_large!}12 ${style_grid_cell!}">
         <div data-alert class="${style_alert_wrap!} ${style_alert_prefix_type!}${type}">
            <div class="${style_grid_row!}">
-              <div class="${style_grid_large!}12 ${style_grid_cell!}">
+              <div class="${style_grid_large!}12 ${style_grid_cell!}<#if addClass?has_content> ${addClass}</#if>">
                   <#nested>
                   <a href="#" class="close">&times;</a>
                 </div>

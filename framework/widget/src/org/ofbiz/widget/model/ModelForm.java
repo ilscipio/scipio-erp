@@ -1071,8 +1071,7 @@ public abstract class ModelForm extends ModelWidget {
     }
 
     private boolean getFormParamsOrVal(Map<String, Object> context, String paramName, boolean defaultVal) {
-        Boolean val = (Boolean) context.get("formParams_" + paramName);
-        return val != null ? val : defaultVal;
+        return defaultVal;
     }
     
     public boolean getHideHeader() {

@@ -1215,29 +1215,12 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
         private final FlexibleStringExpander shareScopeExdr;
-        
-        private final Boolean hideHeader;
-        private final Boolean hideHeaderNoList;
-        private final Boolean hideHeaderEmptyList;
-        private final Boolean hideTableNoList;
-        private final Boolean hideTableEmptyList;
 
         public Form(ModelScreen modelScreen, Element formElement) {
             super(modelScreen, formElement);
             this.nameExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("name"));
             this.locationExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("location"));
             this.shareScopeExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("share-scope"));
-            
-            String hideHeader = formElement.getAttribute("hide-header");
-            this.hideHeader = "true".equals(hideHeader) ? Boolean.TRUE : ("false".equals(hideHeader) ? Boolean.FALSE : null);
-            String hideHeaderNoList = formElement.getAttribute("hide-header-no-list");
-            this.hideHeaderNoList = "true".equals(hideHeaderNoList) ? Boolean.TRUE : ("false".equals(hideHeaderNoList) ? Boolean.FALSE : null);
-            String hideHeaderEmptyList = formElement.getAttribute("hide-header-empty-list");
-            this.hideHeaderEmptyList = "true".equals(hideHeaderEmptyList) ? Boolean.TRUE : ("false".equals(hideHeaderEmptyList) ? Boolean.FALSE : null);
-            String hideTableNoList = formElement.getAttribute("hide-table-no-list");
-            this.hideTableNoList = "true".equals(hideTableNoList) ? Boolean.TRUE : ("false".equals(hideTableNoList) ? Boolean.FALSE : null);
-            String hideTableEmptyList = formElement.getAttribute("hide-table-empty-list");
-            this.hideTableEmptyList = "true".equals(hideTableEmptyList) ? Boolean.TRUE : ("false".equals(hideTableEmptyList) ? Boolean.FALSE : null);
         }
 
         @Override
@@ -1256,22 +1239,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
             try {
-                // Cato: new options on include-form that override form elem fields
-                context.put("formParams_hideHeader", hideHeader);
-                context.put("formParams_hideHeaderNoList", hideHeaderNoList);
-                context.put("formParams_hideHeaderEmptyList", hideHeaderEmptyList);
-                context.put("formParams_hideTableNoList", hideTableNoList);
-                context.put("formParams_hideTableEmptyList", hideTableEmptyList);
-
                 ModelForm modelForm = getModelForm(context);
                 FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
                 renderer.render(writer, context);
-                
-                context.remove("formParams_hideHeader");
-                context.remove("formParams_hideHeaderNoList");
-                context.remove("formParams_hideHeaderEmptyList");
-                context.remove("formParams_hideTableNoList");
-                context.remove("formParams_hideTableEmptyList");
             } catch (Exception e) {
                 String errMsg = "Error rendering included form named [" + getName() + "] at location [" + this.getLocation(context) + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);

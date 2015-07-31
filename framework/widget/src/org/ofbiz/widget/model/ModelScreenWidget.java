@@ -918,20 +918,25 @@ public abstract class ModelScreenWidget extends ModelWidget {
         @SuppressWarnings("unchecked")
         public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
 
-            // Cato: filter the sections to render by the new use-when condition
+            SectionsRenderer prevSections = (SectionsRenderer) context.get("sections");
+            // Cato: filter the sections to render by the new use-when condition and overrides
             Map<String, ModelScreenWidget> filteredSectionMap = new HashMap<String, ModelScreenWidget>();
             for(Map.Entry<String, ModelScreenWidget> entry : this.sectionMap.entrySet()) {
                 ModelScreenWidget section = entry.getValue();
                 if (section != null && section instanceof DecoratorSection) {
-                    if (((DecoratorSection) section).shouldUse(context)) {
-                        filteredSectionMap.put(entry.getKey(), section);
+                    DecoratorSection decSection = (DecoratorSection) section;
+                    if (decSection.shouldUse(context)) {
+                        // don't include if allowed to be overridden and auto-include is incoming
+                        ModelScreenWidget prevSection = (prevSections != null) ? prevSections.get(decSection.getName()) : null;
+                        if (!(decSection.isOverrideByAutoInclude() && prevSection != null && prevSection instanceof DecoratorSection)) {
+                            filteredSectionMap.put(entry.getKey(), section);
+                        }
                     }
                 }
             }
             filteredSectionMap = Collections.unmodifiableMap(filteredSectionMap);
             
             // Cato: get previous sections renderer and include if auto-decorator-section-include enabled
-            SectionsRenderer prevSections = (SectionsRenderer) context.get("sections");
             // Must not recognize any sections from prev for which this decorator-screen already had a decorator-section in xml
             Map<String, ModelScreenWidget> filteredPrevSectionMap = new HashMap<String, ModelScreenWidget>();
             if (prevSections != null) {
@@ -939,17 +944,21 @@ public abstract class ModelScreenWidget extends ModelWidget {
                     ModelScreenWidget section = entry.getValue();
                     if (section != null && section instanceof DecoratorSection) {
                         String name = entry.getKey();
-                        // use sectionMap here, not filteredSectionMap, so that use-when 
-                        // doesn't permit auto-includes when it evaluates to false...
-                        if (!this.sectionMap.containsKey(name)) {
+                        ModelScreenWidget defSection = this.sectionMap.get(name);
+                        // autoDecoratorSectionIncludes only adds auto-includes for sections not already defined, statically 
+                        // use sectionMap here, not filteredSectionMap, so that use-when doesn't permit auto-includes when it evaluates to false...
+                        if (this.autoDecoratorSectionIncludes && defSection == null) {
                             filteredPrevSectionMap.put(name, section);
                         }
                         else {
-                            // ... unless use fallback is set
-                            ModelScreenWidget defSection = this.sectionMap.get(name);
-                            if (defSection instanceof DecoratorSection && 
-                                ((DecoratorSection) defSection).isFallbackAutoInclude()) {
-                                filteredPrevSectionMap.put(name, section);
+                            // ... unless use fallback or override is set
+                            // fallback and override also work when autoDecoratorSectionIncludes disabled
+                            // difference is override filters filteredSectionMap so will always fallback
+                            if (defSection != null && defSection instanceof DecoratorSection) {
+                                DecoratorSection defDecSection = ((DecoratorSection) defSection);
+                                if (defDecSection.isFallbackAutoInclude() || defDecSection.isOverrideByAutoInclude()) {
+                                    filteredPrevSectionMap.put(name, section);
+                                }
                             }
                         }
                     }
@@ -969,7 +978,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             standAloneStack.put("screens", new ScreenRenderer(writer, standAloneStack, screenStringRenderer));
             
             SectionsRenderer sections;
-            if (this.autoDecoratorSectionIncludes) {
+            if (!filteredPrevSectionMap.isEmpty()) {
                 sections = new SectionsRenderer(filteredSectionMap, standAloneStack, writer, screenStringRenderer, prevSections, filteredPrevSectionMap, true);
             }
             else {
@@ -1022,6 +1031,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         // Cato feature: conditional section definitions
         private final FlexibleStringExpander useWhen;
         private final boolean fallbackAutoInclude;
+        private final boolean overrideByAutoInclude;
 
         public DecoratorSection(ModelScreen modelScreen, Element decoratorSectionElement) {
             super(modelScreen, decoratorSectionElement);
@@ -1030,6 +1040,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
             this.useWhen = FlexibleStringExpander.getInstance(decoratorSectionElement.getAttribute("use-when"));
             this.fallbackAutoInclude = "true".equals(decoratorSectionElement.getAttribute("fallback-auto-include"));
+            this.overrideByAutoInclude = "true".equals(decoratorSectionElement.getAttribute("override-by-auto-include"));
         }
         
         @Override
@@ -1050,8 +1061,12 @@ public abstract class ModelScreenWidget extends ModelWidget {
             return fallbackAutoInclude;  
         }
         
+        public boolean isOverrideByAutoInclude() {
+            return overrideByAutoInclude;
+        }
+        
         /**
-         * Returns true if this section should be used,
+         * Returns true if this section should be used as-is,
          * based on the decorator-section use-when minilang/EL/bsh/groovy-style condition
          * and current screen context.
          * <p>
@@ -1084,9 +1099,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
             if (retVal instanceof Boolean) {
                 Boolean boolVal = (Boolean) retVal;
                 condTrue = boolVal.booleanValue();
+            } 
+            else if ("true".equals(retVal)) {
+                condTrue = true;
+            }
+            else if ("false".equals(retVal)) {
+                condTrue = false;
             } else {
-                throw new IllegalArgumentException("Return value from use-when condition eval was not a Boolean: "
-                        + " [" + this.getUseWhen().toString() + "] on the "
+                throw new IllegalArgumentException("Return value from use-when condition eval was not a boolean: "
+                        + "[" + this.getUseWhen().toString() + "] on the "
                         + "decoration-section " + this.getName() + " of screen " 
                         + this.getModelScreen().getSourceLocation() + "#" + this.getModelScreen().getName());
             }

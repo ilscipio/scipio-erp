@@ -179,7 +179,7 @@ under the License.
     </screen>
 
     <!-- Global decorator for General Screens/Pages -->
-    <!-- Supported sections: body, pre-body, menu-bar, left-column, right-column 
+    <!-- Supported sections: body, pre-body, menu-bar, left-column, right-column, pre-body-pre-title, pre-body-post-title
          Supported section flags (boolean, true default): showLeftColumn, showRightColumn, showPreBody 
          Other options: placePreBodyPostTitle (boolean, false default for now) -->
     <screen name="GlobalDecorator">
@@ -653,6 +653,7 @@ under the License.
                             <html-template location="${messagesTemplateLocation}" />
                         </html>
                     </platform-specific>
+                    <decorator-section-include name="pre-body-pre-title" />
                     <section>
                         <condition>
                             <not><if-compare field="showPreBody" operator="equals" type="Boolean" value="false"/></not>
@@ -676,6 +677,7 @@ under the License.
                             <label style="h1" text="${noTitle} ${headerTitle}"/>
                         </fail-widgets>
                     </section>
+                    <decorator-section-include name="pre-body-post-title" />
                     <decorator-section-include name="body" />
                 </container>
             </widgets>
@@ -686,6 +688,7 @@ under the License.
                             <html-template location="${messagesTemplateLocation}" />
                         </html>
                     </platform-specific>
+                    <decorator-section-include name="pre-body-pre-title" />
                     <section>
                         <condition>
                             <not><if-compare field="showPreBody" operator="equals" type="Boolean" value="false"/></not>
@@ -694,6 +697,7 @@ under the License.
                             <decorator-section-include name="pre-body" />
                         </widgets>
                     </section>
+                    <decorator-section-include name="pre-body-post-title" />
                     <decorator-section-include name="body" />
                 </container>
             </fail-widgets>

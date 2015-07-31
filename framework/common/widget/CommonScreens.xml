@@ -179,14 +179,8 @@ under the License.
     </screen>
 
     <!-- Global decorator for General Screens/Pages
-         Supported sections: body, pre-body, menu-bar, left-column, right-column, pre-title, post-title
-         Supported section flags (boolean, true default): showLeftColumn, showRightColumn, showPreBody 
-         Other options: 
-            placePreBodyPostTitle (boolean, false default) - stock screens more or less 
-                often expected pre-body to be before titles, so default is false for now, but not really defined. 
-                sometimes pre-body is content that should be split between pre-title (or left-column) and post-title,
-                so new code may want to use pre-title and post-title instead.
-    -->
+         Supported sections: body, pre-body, menu-bar, left-column, right-column
+         Supported section flags (boolean, true default): showLeftColumn, showRightColumn, showPreBody -->
     <screen name="GlobalDecorator">
         <section>
             <widgets>
@@ -658,31 +652,8 @@ under the License.
                             <html-template location="${messagesTemplateLocation}" />
                         </html>
                     </platform-specific>
-                    <decorator-section-include name="pre-title" />
-                    <section>
-                        <condition>
-                            <not><if-compare field="showPreBody" operator="equals" type="Boolean" value="false"/></not>
-                        </condition>
-                        <widgets>
-                            <section>
-                                <condition>
-                                    <if-compare field="placePreBodyPostTitle" operator="equals" type="Boolean" value="true"/>
-                                </condition>
-                                <widgets>
-                                    <label style="h1" text="${noTitle} ${headerTitle}"/>
-                                    <decorator-section-include name="pre-body" />
-                                </widgets>
-                                <fail-widgets>
-                                    <decorator-section-include name="pre-body" />
-                                    <label style="h1" text="${noTitle} ${headerTitle}"/>
-                                </fail-widgets>
-                            </section>
-                        </widgets>
-                        <fail-widgets>
-                            <label style="h1" text="${noTitle} ${headerTitle}"/>
-                        </fail-widgets>
-                    </section>
-                    <decorator-section-include name="post-title" />
+                    <decorator-section-include name="pre-body" />
+                    <label style="h1" text="${noTitle} ${headerTitle}"/>
                     <decorator-section-include name="body" />
                 </container>
             </widgets>
@@ -693,16 +664,7 @@ under the License.
                             <html-template location="${messagesTemplateLocation}" />
                         </html>
                     </platform-specific>
-                    <decorator-section-include name="pre-title" />
-                    <section>
-                        <condition>
-                            <not><if-compare field="showPreBody" operator="equals" type="Boolean" value="false"/></not>
-                        </condition>
-                        <widgets>
-                            <decorator-section-include name="pre-body" />
-                        </widgets>
-                    </section>
-                    <decorator-section-include name="post-title" />
+                    <decorator-section-include name="pre-body" />
                     <decorator-section-include name="body" />
                 </container>
             </fail-widgets>

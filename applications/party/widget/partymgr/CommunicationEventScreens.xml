@@ -25,26 +25,27 @@ under the License.
             <actions>
                 <set field="headerItem" value="comm"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
+                
+                <service service-name="partyBasePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>   
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
-                        <section>
-                            <condition>
-                                <if-has-permission action="_VIEW" permission="PARTYMGR"/>
-                            </condition>
-                            <widgets>
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventTabBar"/>
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommSubTabBar"/>
-                            </widgets>
-                        </section>
+                    <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}">
+                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventSideBar"/>
+                    </decorator-section>
+                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}">
+                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventTabBar"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission action="_VIEW" permission="PARTYMGR"/>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
+                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommSubTabBar"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -61,19 +62,27 @@ under the License.
         <section>
             <actions>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
+                
+                <service service-name="partyBasePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventTabBar"/>
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommSubTabBar"/>
+                    <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}">
+                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventSideBar"/>
+                    </decorator-section>
+                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}">
+                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommEventTabBar"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission action="_VIEW" permission="PARTYMGR"/>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
+                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommSubTabBar"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

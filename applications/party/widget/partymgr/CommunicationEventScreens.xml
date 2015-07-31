@@ -392,6 +392,8 @@ under the License.
                 <service service-name="setCommEventRoleToRead"></service>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
                 <set field="partyIdFrom" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+            
+                <set field="widePage" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <section>
@@ -410,7 +412,7 @@ under the License.
         <section>
             <widgets>
                 <container style="${styles.grid_row}">
-                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
                         <section>
                             <widgets>
                                 <label text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
@@ -418,9 +420,7 @@ under the License.
                             </widgets>
                         </section>
                     </container>
-                </container>
-                <container style="${styles.grid_row}">
-                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
                         <label style="h2" text="${uiLabelMap.CommonRelatedInformation}"/>
                         <section>
                             <condition>
@@ -852,6 +852,8 @@ under the License.
                 <set field="internalNotesOnly" from-field="internalNotesOnly" default-value="false"/>
                 <set field="partyId" from-field="communicationPartyId" default-value="${userLogin.partyId}"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
+                
+                <set field="widePage" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.PartyCommunicationsOfParty}: ${partyName.firstName} ${partyName.middleName} ${partyName.lastName} ${partyName.groupName} [${partyId}] "
@@ -1116,17 +1118,19 @@ under the License.
                                 <screenlet title="${uiLabelMap.CommonFrom}: ${communicationEvent.partyIdFrom}, CommunicationEventId: ${communicationEvent.communicationEventId}">
                                     <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="EditEmail"/>
                                 </screenlet>
-                                <container style="large-6">
-                                    <screenlet title="${uiLabelMap.PartyCommEventRoles}">
-                                        <include-form name="ListCommRoles" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                        <include-form name="AddEventRole" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                    </screenlet>
-                                </container>
-                                <container style="large-6">
-                                    <screenlet title="${uiLabelMap.PartyCommContent}">
-                                        <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                        <include-form  name="uploadContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                    </screenlet>
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <screenlet title="${uiLabelMap.PartyCommEventRoles}">
+                                            <include-form name="ListCommRoles" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                            <include-form name="AddEventRole" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                        </screenlet>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <screenlet title="${uiLabelMap.PartyCommContent}">
+                                            <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                            <include-form name="uploadContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                        </screenlet>
+                                    </container>
                                 </container>
                             </fail-widgets>
                         </section>
@@ -1151,20 +1155,22 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <container style="large-6">
-                                    <screenlet id="EditCommunicationEventPanel" title="${uiLabelMap.PartyEditCommunicationEvent} ${parameters.communicationEventId} ${uiLabelMap.CommonFrom} ${communicationEvent.partyIdFrom}">
-                                        <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="EditInternalNote"/>
-                                    </screenlet>
-                                </container>
-                                <container style="large-6">
-                                    <screenlet title="${uiLabelMap.PartyCommEventRoles}">
-                                        <include-form name="ListCommRoles" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                        <include-form name="AddEventRole" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                    </screenlet>
-                                    <screenlet title="${uiLabelMap.PartyCommContent}">
-                                        <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                        <include-form  name="uploadContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                    </screenlet>
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <screenlet id="EditCommunicationEventPanel" title="${uiLabelMap.PartyEditCommunicationEvent} ${parameters.communicationEventId} ${uiLabelMap.CommonFrom} ${communicationEvent.partyIdFrom}">
+                                            <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="EditInternalNote"/>
+                                        </screenlet>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <screenlet title="${uiLabelMap.PartyCommEventRoles}">
+                                            <include-form name="ListCommRoles" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                            <include-form name="AddEventRole" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                        </screenlet>
+                                        <screenlet title="${uiLabelMap.PartyCommContent}">
+                                            <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                            <include-form  name="uploadContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                        </screenlet>
+                                    </container>
                                 </container>
                             </fail-widgets>
                         </section>

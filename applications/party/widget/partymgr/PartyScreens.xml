@@ -286,24 +286,25 @@ under the License.
                         <screenlet title="${uiLabelMap.PartyRelationships}" navigation-form-name="ListPartyRelationships">
                             <include-form name="ListPartyRelationships" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
-                        <container style="large-6">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.PartyNewRelationshipType}">
-                                    <include-form name="AddPartyRelationshipType" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <section>
+                                    <condition>
+                                        <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet title="${uiLabelMap.PartyNewRelationshipType}">
+                                            <include-form name="AddPartyRelationshipType" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.PartyAddOtherRelationship}">
+                                    <include-form name="AddOtherPartyRelationship" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>
-                            </widgets>
-                        </section>
+                            </container>
                         </container>
-                        <container style="large-6">
-                        <screenlet title="${uiLabelMap.PartyAddOtherRelationship}">
-                            <include-form name="AddOtherPartyRelationship" location="component://party/widget/partymgr/PartyForms.xml"/>
-                        </screenlet>
-                        </container>
-                        <container style="clear"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -966,7 +967,6 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="h1" text="${uiLabelMap.PartyFinancialHistory}"/>
                         <section>
                             <actions>
                                 <entity-condition entity-name="InvoiceAndApplAndPayment" list="ListInvoicesApplPayments">
@@ -1334,13 +1334,15 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyParty} ${uiLabelMap.CommonImportExport} ID Name, single role (employee, customer, supplier) and contactmechs">
-                            <container style="large-6">
-                                <label style="h2">${uiLabelMap.CommonImport}</label>
-                                <include-form name="ImportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
-                            </container>
-                            <container style="large-6">
-                                <label style="h2">${uiLabelMap.CommonExport}</label>
-                                <include-form name="ExportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
+                            <container style="${styles.grid_row}">
+                                <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                    <label style="h2">${uiLabelMap.CommonImport}</label>
+                                    <include-form name="ImportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </container>
+                                <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                    <label style="h2">${uiLabelMap.CommonExport}</label>
+                                    <include-form name="ExportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </container>
                             </container>
                          </screenlet>
                     </decorator-section>

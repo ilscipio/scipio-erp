@@ -180,7 +180,8 @@ under the License.
 
     <!-- Global decorator for General Screens/Pages -->
     <!-- Supported sections: body, pre-body, menu-bar, left-column, right-column 
-         Supported section flags (boolean, true default): showLeftColumn, showRightColumn, showPreBody -->
+         Supported section flags (boolean, true default): showLeftColumn, showRightColumn, showPreBody 
+         Other options: placePreBodyPostTitle (boolean, false default for now) -->
     <screen name="GlobalDecorator">
         <section>
             <widgets>
@@ -657,10 +658,24 @@ under the License.
                             <not><if-compare field="showPreBody" operator="equals" type="Boolean" value="false"/></not>
                         </condition>
                         <widgets>
-                            <decorator-section-include name="pre-body" />
+                            <section>
+                                <condition>
+                                    <if-compare field="placePreBodyPostTitle" operator="equals" type="Boolean" value="true"/>
+                                </condition>
+                                <widgets>
+                                    <label style="h1" text="${noTitle} ${headerTitle}"/>
+                                    <decorator-section-include name="pre-body" />
+                                </widgets>
+                                <fail-widgets>
+                                    <decorator-section-include name="pre-body" />
+                                    <label style="h1" text="${noTitle} ${headerTitle}"/>
+                                </fail-widgets>
+                            </section>
                         </widgets>
+                        <fail-widgets>
+                            <label style="h1" text="${noTitle} ${headerTitle}"/>
+                        </fail-widgets>
                     </section>
-                    <label style="h1" text="${noTitle} ${headerTitle}"/>
                     <decorator-section-include name="body" />
                 </container>
             </widgets>

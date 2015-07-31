@@ -675,6 +675,10 @@ public class FormRenderer {
         if (obj == null) {
             if (Debug.verboseOn())
                 Debug.logVerbose("No object for list or iterator name [" + lookupName + "] found, so not rendering rows.", module);
+            
+            renderItemRowNoResultText(writer, context, formStringRenderer, formPerItem, 
+                    numOfColumns, wrapperOpened, headerRendered, true);
+            
             return;
         }
         // if list is empty, do not render rows
@@ -699,7 +703,10 @@ public class FormRenderer {
         }
 
         boolean delayedWrapperOpened = false; // record, to close
+        boolean hasResult = false;
+        boolean listNull = true;
         if (iter != null) {
+            listNull = false;
             
             // Cato: Delay render table til know we had a query (list)
             if (!wrapperOpened && !modelForm.getHideTableEmptyList(context)) {
@@ -724,6 +731,7 @@ public class FormRenderer {
             context.put("wholeFormContext", context);
             Map<String, Object> previousItem = new HashMap<String, Object>();
             while ((item = safeNext(iter)) != null) {
+                hasResult = true;
                 
                 // Cato: Last chance to delay-open wrapper til know query had results (in list)
                 if (!wrapperOpened) {
@@ -946,9 +954,30 @@ public class FormRenderer {
             }
         }
         
+        if (!hasResult) {
+            renderItemRowNoResultText(writer, context, formStringRenderer, formPerItem, 
+                    numOfColumns, wrapperOpened, headerRendered, listNull);
+        }
+        
         if (delayedWrapperOpened) {
             // render formatting wrapper close
             formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
+        }
+    }
+    
+    /**
+     * Cato: render no-result-text, if enabled.
+     */
+    private void renderItemRowNoResultText(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer,
+            boolean formPerItem, int numOfColumns, 
+            boolean wrapperOpened, boolean headerRendered, boolean listNull) throws IOException {
+        String when = modelForm.getUseNoResultTextWhen(context);
+        if ("always".equals(when) || (!listNull && "list-not-null".equals(when))) {
+            context.put("formNoResult_wrapperOpened", wrapperOpened);
+            context.put("formNoResult_headerRendered", headerRendered);
+            // note: numColumns may be zero if no header printed...
+            context.put("formNoResult_numColumns", numOfColumns);
+            formStringRenderer.renderNoResultText(writer, context, modelForm);
         }
     }
 

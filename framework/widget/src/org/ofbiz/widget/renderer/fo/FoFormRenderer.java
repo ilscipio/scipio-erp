@@ -19,6 +19,7 @@
 package org.ofbiz.widget.renderer.fo;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -423,5 +424,39 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
     }
 
     public void renderContainerFindField(Appendable writer, Map<String, Object> context, ContainerField containerField) throws IOException {
+    }
+
+    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        Boolean wrapperOpened = (Boolean) context.get("formNoResult_wrapperOpened");
+        if (wrapperOpened == null) {
+            wrapperOpened = false;
+        }
+        Boolean headerRendered = (Boolean) context.get("formNoResult_headerRendered");
+        if (headerRendered == null) {
+            headerRendered = false;
+        }
+        // note: numColumns may be zero if no header printed...
+        Integer numOfColumns = (Integer) context.get("formNoResult_numColumns");
+        if (numOfColumns == null) {
+            numOfColumns = 0;
+        }
+        
+        if (wrapperOpened) {
+            writer.append("<fo:table-row>");
+            
+            if (numOfColumns > 1) {
+                writer.append("<fo:table-cell number-columns-spanned=\"" + numOfColumns + "\">");
+            }
+            else {
+                writer.append("<fo:table-cell>");
+            }
+        }
+        
+        this.makeBlockString(writer, modelForm.getNoResultTextStyle(context), modelForm.getNoResultText(context));
+        
+        if (wrapperOpened) {
+            writer.append("</fo:table-cell>");
+            writer.append("</fo:table-row>");
+        }
     }
 }

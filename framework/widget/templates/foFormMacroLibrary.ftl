@@ -141,4 +141,16 @@ under the License.
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation><@makeBlock linkStyle description /></#macro>
 <#macro renderTooltip tooltip tooltipStyle></#macro>
 <#macro renderAsterisks requiredField requiredStyle></#macro>
+
+<#macro renderNoResultText className text wrapperOpened headerRendered numOfColumns>
+    <#if wrapperOpened>
+      <fo:table-row>
+        <fo:table-cell <#if (numOfColumns > 1)>number-columns-spanned="${numOfColumns}"</#if>>
+    </#if>
+        <@makeBlock style=className text=text />
+    <#if wrapperOpened>
+        </fo:table-cell>
+      </fo:table-row>
+    </#if>
+</#macro>
 </#escape>

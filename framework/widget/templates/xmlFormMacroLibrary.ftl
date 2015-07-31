@@ -112,3 +112,5 @@ under the License.
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation><@renderField description /></#macro>
 <#macro renderTooltip tooltip tooltipStyle></#macro>
 <#macro renderAsterisks requiredField requiredStyle></#macro>
+
+<#macro renderNoResultText className text wrapperOpened headerRendered numOfColumns></#macro>

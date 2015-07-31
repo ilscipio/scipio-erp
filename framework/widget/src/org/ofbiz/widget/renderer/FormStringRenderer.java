@@ -96,4 +96,9 @@ public interface FormStringRenderer {
     public void renderContainerFindField(Appendable writer, Map<String, Object> context, ModelFormField.ContainerField containerField) throws IOException;
     public void renderFieldGroupOpen(Appendable writer, Map<String, Object> context, ModelForm.FieldGroup fieldGroup) throws IOException;
     public void renderFieldGroupClose(Appendable writer, Map<String, Object> context, ModelForm.FieldGroup fieldGroup) throws IOException;
+    
+    /**
+     * Cato: handles no-result case for list forms, so a text or other may be displayed instead of empty table.
+     */
+    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 }

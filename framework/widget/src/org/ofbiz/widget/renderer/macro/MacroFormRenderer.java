@@ -3256,4 +3256,37 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("\" />");
         executeMacro(writer, sr.toString());
     }
+
+    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        Boolean wrapperOpened = (Boolean) context.get("formNoResult_wrapperOpened");
+        if (wrapperOpened == null) {
+            wrapperOpened = false;
+        }
+        Boolean headerRendered = (Boolean) context.get("formNoResult_headerRendered");
+        if (headerRendered == null) {
+            headerRendered = false;
+        }
+        // note: numColumns may be zero if no header printed...
+        Integer numOfColumns = (Integer) context.get("formNoResult_numColumns");
+        if (numOfColumns == null) {
+            numOfColumns = 0;
+        }
+
+        String className = UtilFormatOut.checkNull(modelForm.getNoResultTextStyle(context));
+        String text = UtilFormatOut.checkNull(modelForm.getNoResultText(context));
+        StringWriter sr = new StringWriter();
+        sr.append("<@renderNoResultText ");
+        sr.append("className=\"");
+        sr.append(className);
+        sr.append("\" text=\"");
+        sr.append(text);
+        sr.append("\" wrapperOpened=");
+        sr.append(wrapperOpened.toString());
+        sr.append(" headerRendered=");
+        sr.append(headerRendered.toString());
+        sr.append(" numOfColumns=");
+        sr.append(numOfColumns.toString());
+        sr.append(" />");
+        executeMacro(writer, sr.toString());
+    }
 }

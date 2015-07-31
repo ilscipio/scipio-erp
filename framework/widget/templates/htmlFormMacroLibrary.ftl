@@ -1195,3 +1195,18 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
       <#if imgSrc?length == 0 && title?has_content> title="${title}"</#if>>
         <#if imgSrc?has_content><img src="${imgSrc}" alt="${alternate}" title="${title}"/></#if>${description}</a>
   </#macro>
+
+<#macro renderNoResultText className text wrapperOpened headerRendered numOfColumns>
+    <#-- note: numOfColumns may be zero when no header -->
+    <#if wrapperOpened>
+        <tr>
+            <td<#if (numOfColumns > 1)> colspan="${numOfColumns}"</#if>>
+                <@renderLabel text=text style=className id="" />
+            </td>
+        </tr>
+    <#else>
+        <@renderLabel text=text style=className id="" />
+    </#if>
+</#macro>
+
+  

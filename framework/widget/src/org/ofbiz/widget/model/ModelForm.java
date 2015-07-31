@@ -197,6 +197,9 @@ public abstract class ModelForm extends ModelWidget {
     
     private final FlexibleStringExpander hideHeaderWhen;
     private final FlexibleStringExpander hideTableWhen;
+    private final FlexibleStringExpander useNoResultTextWhen;
+    private final FlexibleStringExpander noResultText;
+    private final FlexibleStringExpander noResultTextStyle;
     
     private final FlexibleStringExpander showProgress;
     private final FlexibleStringExpander progressOptions;
@@ -386,6 +389,22 @@ public abstract class ModelForm extends ModelWidget {
             hideTableWhen = parentModel.hideTableWhen;
         }
         this.hideTableWhen = hideTableWhen;
+        
+        FlexibleStringExpander useNoResultTextWhen = FlexibleStringExpander.getInstance(formElement.getAttribute("use-no-result-text-when"));
+        if (useNoResultTextWhen.isEmpty() && parentModel != null) {
+            useNoResultTextWhen = parentModel.useNoResultTextWhen;
+        }
+        this.useNoResultTextWhen = useNoResultTextWhen;
+        FlexibleStringExpander noResultText = FlexibleStringExpander.getInstance(formElement.getAttribute("no-result-text"));
+        if (noResultText.isEmpty() && parentModel != null) {
+            noResultText = parentModel.noResultText;
+        }
+        this.noResultText = noResultText;
+        FlexibleStringExpander noResultTextStyle = FlexibleStringExpander.getInstance(formElement.getAttribute("no-result-text-style"));
+        if (noResultTextStyle.isEmpty() && parentModel != null) {
+            noResultTextStyle = parentModel.noResultTextStyle;
+        }
+        this.noResultTextStyle = noResultTextStyle;
         
         FlexibleStringExpander showProgress = FlexibleStringExpander.getInstance(formElement.getAttribute("show-progress"));
         if (showProgress.isEmpty() && parentModel != null) {
@@ -1087,14 +1106,14 @@ public abstract class ModelForm extends ModelWidget {
                 if (props != null) {
                     val = props.getProperty("widget.defs.form." + propName + ".default." + renderType);
                     if (val != null) {
-                        return val.trim();
+                        return FlexibleStringExpander.expandString(val.trim(), context);
                     }
                 }
             }
         }
         val = props.getProperty("widget.defs.form." + propName + ".default");
         if (val != null) {
-            return val.trim();
+            return FlexibleStringExpander.expandString(val.trim(), context);
         }
         return "";
     }
@@ -1145,7 +1164,43 @@ public abstract class ModelForm extends ModelWidget {
         return "list-empty".equals(when);
     }
     
+    public String getUseNoResultTextWhen() {
+        return this.useNoResultTextWhen.getOriginal();
+    }
     
+    public String getUseNoResultTextWhen(Map<String, Object> context) {
+        String when = this.useNoResultTextWhen.expandString(context);
+        if (UtilValidate.isEmpty(when)) {
+            when = getWidgetDefDefault(context, "useNoResultTextWhen");
+        }
+        return when;
+    }
+    
+    public String getNoResultText() {
+        return this.noResultText.getOriginal();
+    }
+    
+    public String getNoResultText(Map<String, Object> context) {
+        String val = this.noResultText.expandString(context);
+        if (UtilValidate.isEmpty(val)) {
+            val = getWidgetDefDefault(context, "noResultText");
+        }
+        return val;
+    }
+    
+    public String getNoResultTextStyle() {
+        return this.noResultTextStyle.getOriginal();
+    }
+    
+    public String getNoResultTextStyle(Map<String, Object> context) {
+        String val = this.noResultTextStyle.expandString(context);
+        if (UtilValidate.isEmpty(val)) {
+            val = getWidgetDefDefault(context, "noResultTextStyle");
+        }
+        return val;
+    }
+    
+
     public String getShowProgress() {
         return this.showProgress.getOriginal();
     }

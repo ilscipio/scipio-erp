@@ -312,6 +312,28 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="use-no-result-text-when">
+                <xs:annotation>
+                    <xs:documentation>Cato: For list forms, condition for when to show no-result-text when no results. Having no results is implied. Implied default is never. See widget.properties for renderer-specific defaults.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="never" />
+                        <xs:enumeration value="list-not-null" />
+                        <xs:enumeration value="always" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="no-result-text">
+                <xs:annotation>
+                    <xs:documentation>Cato: For list forms, text to show when no results. Display markup is influenced by hide-header/table-* options. See widget.properties for renderer-specific defaults.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="no-result-text-style">
+                <xs:annotation>
+                    <xs:documentation>Cato: For list forms, style of text to show when no results. See widget.properties for renderer-specific defaults.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             
             <xs:attribute name="show-progress" default="false">
                 <xs:annotation>

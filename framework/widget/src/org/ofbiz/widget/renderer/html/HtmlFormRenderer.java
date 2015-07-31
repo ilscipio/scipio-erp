@@ -2818,4 +2818,8 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
         }
         return ajaxUrl.toString();
     }
+
+    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // TODO
+    }
 }

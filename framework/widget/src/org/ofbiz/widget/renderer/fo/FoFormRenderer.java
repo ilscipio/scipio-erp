@@ -426,21 +426,7 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
     public void renderContainerFindField(Appendable writer, Map<String, Object> context, ContainerField containerField) throws IOException {
     }
 
-    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-        Boolean wrapperOpened = (Boolean) context.get("formNoResult_wrapperOpened");
-        if (wrapperOpened == null) {
-            wrapperOpened = false;
-        }
-        Boolean headerRendered = (Boolean) context.get("formNoResult_headerRendered");
-        if (headerRendered == null) {
-            headerRendered = false;
-        }
-        // note: numColumns may be zero if no header printed...
-        Integer numOfColumns = (Integer) context.get("formNoResult_numColumns");
-        if (numOfColumns == null) {
-            numOfColumns = 0;
-        }
-        
+    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException {
         if (wrapperOpened) {
             writer.append("<fo:table-row>");
             

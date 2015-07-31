@@ -100,5 +100,5 @@ public interface FormStringRenderer {
     /**
      * Cato: handles no-result case for list forms, so a text or other may be displayed instead of empty table.
      */
-    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
+    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException;
 }

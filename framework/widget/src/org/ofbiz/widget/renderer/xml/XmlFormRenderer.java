@@ -341,7 +341,7 @@ public class XmlFormRenderer implements FormStringRenderer {
     public void renderContainerFindField(Appendable writer, Map<String, Object> context, ContainerField containerField) throws IOException {
     }
 
-    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException {
         // TODO
     }
 }

@@ -973,11 +973,8 @@ public class FormRenderer {
             boolean wrapperOpened, boolean headerRendered, boolean listNull) throws IOException {
         String when = modelForm.getUseNoResultTextWhen(context);
         if ("always".equals(when) || (!listNull && "list-not-null".equals(when))) {
-            context.put("formNoResult_wrapperOpened", wrapperOpened);
-            context.put("formNoResult_headerRendered", headerRendered);
             // note: numColumns may be zero if no header printed...
-            context.put("formNoResult_numColumns", numOfColumns);
-            formStringRenderer.renderNoResultText(writer, context, modelForm);
+            formStringRenderer.renderNoResultText(writer, context, modelForm, wrapperOpened, headerRendered, numOfColumns);
         }
     }
 

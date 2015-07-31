@@ -123,7 +123,7 @@ under the License.
                                     </widgets>
                                 </section>
                                 <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommFindTabBar"/>
-                                <container><label style="h1" text="${uiLabelMap.PartyPendingCommunicationEvents}"/></container>
+                                <container><label style="h2" text="${uiLabelMap.PartyPendingCommunicationEvents}"/></container>
                                 <container>
                                     <link style="smallSubmit" target="ViewCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}">
                                         <parameter param-name="partyId"/>
@@ -176,7 +176,7 @@ under the License.
                                 <if-service-permission service-name="partyCommunicationEventPermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <container style="h1"><label text="${uiLabelMap.PageTitleListCommunications} ${partyId}"/></container>
+                                <container style="h2"><label text="${uiLabelMap.PageTitleListCommunications} ${partyId}"/></container>
                                 <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                 <section>
                                     <condition>
@@ -184,7 +184,7 @@ under the License.
                                     </condition>
                                     <widgets> 
                                         <horizontal-separator/>
-                                        <container style="h1"><label text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/></container>
+                                        <container style="h2"><label text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/></container>
                                         <iterate-section entry="contact" list="contacts">
                                             <section>
                                                 <condition>
@@ -197,7 +197,7 @@ under the License.
                                                     </entity-condition>
                                                 </actions>
                                                 <widgets>
-                                                    <container style="h2"><label text="${contact.partyIdTo}"/></container>
+                                                    <container style="h3"><label text="${contact.partyIdTo}"/></container>
                                                     <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                                 </widgets>
                                             </section>
@@ -240,8 +240,8 @@ under the License.
                                             </condition>
                                             <widgets>
                                                 <horizontal-separator/>
-                                                <container style="h1"><label text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/></container>
-                                                <container style="h2"><label text="${partyIdFrom}"/></container>       
+                                                <container style="h2"><label text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/></container>
+                                                <container style="h3"><label text="${partyIdFrom}"/></container>       
                                                 <iterate-section entry="account" list="accounts">
                                                     <section>
                                                         <widgets>
@@ -266,7 +266,7 @@ under the License.
                                                                     <if-compare field="contact.partyIdTo" operator="not-equals" value="${partyId}"/>
                                                                 </condition>
                                                                 <widgets>
-                                                                    <container style="h2"><label text="${contact.partyIdTo}"/></container>
+                                                                    <container style="h3"><label text="${contact.partyIdTo}"/></container>
                                                                     <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                                                 </widgets>
                                                             </section>
@@ -413,7 +413,7 @@ under the License.
                     <container style="${styles.grid_large}12 ${styles.grid_cell}">
                         <section>
                             <widgets>
-                                <label style="h1" text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
+                                <label text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
                                 <include-screen name="commEvent" location="component://party/widget/partymgr/CommunicationEventScreens.xml"/>
                             </widgets>
                         </section>
@@ -421,7 +421,7 @@ under the License.
                 </container>
                 <container style="${styles.grid_row}">
                     <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                        <label style="h1" text="${uiLabelMap.CommonRelatedInformation}"/>
+                        <label style="h2" text="${uiLabelMap.CommonRelatedInformation}"/>
                         <section>
                             <condition>
                                 <if-empty field="communicationEvent.contactListId"/>
@@ -493,10 +493,10 @@ under the License.
                                 <widgets>
                                     <screenlet>
                                         <container>
-                                            <label style="h1" text="${uiLabelMap.PartyOriginEmailNotKnown}"/>
+                                            <label style="h2" text="${uiLabelMap.PartyOriginEmailNotKnown}"/>
                                         </container>
                                         <container>
-                                            <label style="h2" text="${uiLabelMap.PartyEmailMessage}"/>
+                                            <label style="h3" text="${uiLabelMap.PartyEmailMessage}"/>
                                         </container>
                                         <include-form name="allocateMsgToPartyForm" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                                     </screenlet>
@@ -785,7 +785,7 @@ under the License.
                                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
                                     </widgets>
                                 </section>
-                                <container style="h1"><label text="${uiLabelMap.PageTitleEditCommContent}"/></container>
+                                <container style="h2"><label text="${uiLabelMap.PageTitleEditCommContent}"/></container>
                                 <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="editCommContent"/>
                                 <section>
                                     <condition>
@@ -811,7 +811,7 @@ under the License.
                                     <widgets>
                                         <screenlet title="${uiLabelMap.PartyViewImage}">
                                             <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="uploadCommContent"/>
-                                            <label text="${uiLabelMap.PartyViewImage}" style="h1"/>
+                                            <label text="${uiLabelMap.PartyViewImage}" style="h2"/>
                                             <content dataresource-id="${commEventContentDataResource.drDataResourceId}"/>
                                         </screenlet>
                                     </widgets>

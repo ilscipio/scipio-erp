@@ -409,57 +409,61 @@ under the License.
     <screen name="commOverview">
         <section>
             <widgets>
-                <container style="large-6">
-                    <section>
-                        <widgets>
-                            <label style="h1" text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
-                            <include-screen name="commEvent" location="component://party/widget/partymgr/CommunicationEventScreens.xml"/>
-                        </widgets>
-                    </section>
+                <container style="${styles.grid_row}">
+                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                        <section>
+                            <widgets>
+                                <label style="h1" text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
+                                <include-screen name="commEvent" location="component://party/widget/partymgr/CommunicationEventScreens.xml"/>
+                            </widgets>
+                        </section>
+                    </container>
                 </container>
-                <container style="large-6">
-                    <label style="h1" text="${uiLabelMap.CommonRelatedInformation}"/>
-                    <section>
-                        <condition>
-                            <if-empty field="communicationEvent.contactListId"/>
-                        </condition>
-                        <widgets>
-                            <screenlet title="${uiLabelMap.PartyCommEventRoles}">
-                                <include-form name="ViewCommRoles" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                            </screenlet>
-                        </widgets>
-                        <fail-widgets>
-                            <screenlet title="${uiLabelMap.MarketingContactListCommStatus}">
-                                <include-form name="ListContactListCommStatuses" location="component://marketing/widget/ContactListForms.xml"/>
-                            </screenlet>                        
-                        </fail-widgets>
-                    </section>
-                    <screenlet title="${uiLabelMap.PartyCommContent}">
-                        <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                    </screenlet>
-                    <section>
-                        <actions>
-                            <entity-and list="commEvents" entity-name="CommunicationEvent">
-                                <field-map field-name="parentCommEventId" from-field="parameters.communicationEventId"/>
-                            </entity-and>
-                        </actions>
-                        <widgets>
-                            <screenlet title="${uiLabelMap.PartyChildCommunicationEvents}">
-                                <include-form name="ListCommEvents" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                            </screenlet>
-                        </widgets>
-                    </section>
-                    <section>
-                        <actions>
-                            <set field="entityName" value="CustRequestAndCommEvent"/>
-                            <set field="requestParameters.communicationEventId" from-field="parameters.communicationEventId"/>
-                        </actions>
-                        <widgets>
-                            <screenlet title="${uiLabelMap.OrderRequestList}">
-                                <include-form name="ListRequests" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
-                            </screenlet>
-                        </widgets>
-                    </section>
+                <container style="${styles.grid_row}">
+                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                        <label style="h1" text="${uiLabelMap.CommonRelatedInformation}"/>
+                        <section>
+                            <condition>
+                                <if-empty field="communicationEvent.contactListId"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyCommEventRoles}">
+                                    <include-form name="ViewCommRoles" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.MarketingContactListCommStatus}">
+                                    <include-form name="ListContactListCommStatuses" location="component://marketing/widget/ContactListForms.xml"/>
+                                </screenlet>                        
+                            </fail-widgets>
+                        </section>
+                        <screenlet title="${uiLabelMap.PartyCommContent}">
+                            <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                        </screenlet>
+                        <section>
+                            <actions>
+                                <entity-and list="commEvents" entity-name="CommunicationEvent">
+                                    <field-map field-name="parentCommEventId" from-field="parameters.communicationEventId"/>
+                                </entity-and>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyChildCommunicationEvents}">
+                                    <include-form name="ListCommEvents" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <actions>
+                                <set field="entityName" value="CustRequestAndCommEvent"/>
+                                <set field="requestParameters.communicationEventId" from-field="parameters.communicationEventId"/>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.OrderRequestList}">
+                                    <include-form name="ListRequests" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </container>
                 </container>
             </widgets>
         </section>

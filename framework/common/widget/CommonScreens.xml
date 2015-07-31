@@ -179,7 +179,8 @@ under the License.
     </screen>
 
     <!-- Global decorator for General Screens/Pages -->
-    <!-- Supported sections: body, pre-body, menu-bar, left-column, right-column -->
+    <!-- Supported sections: body, pre-body, menu-bar, left-column, right-column 
+         Supported section flags (boolean, true default): showLeftColumn, showRightColumn, showPreBody -->
     <screen name="GlobalDecorator">
         <section>
             <widgets>
@@ -337,8 +338,14 @@ under the License.
                             <section>
                                 <condition>
                                     <and>
-                                        <if-empty-section section-name="left-column" />
-                                        <if-empty-section section-name="right-column" />
+                                        <or>
+                                            <if-empty-section section-name="left-column" />
+                                            <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                        </or>
+                                        <or>
+                                            <if-empty-section section-name="right-column" />
+                                            <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                        </or>
                                     </and>
                                 </condition>
                                 <actions>
@@ -354,9 +361,15 @@ under the License.
                                 <condition>
                                     <and>
                                         <not>
-                                            <if-empty-section section-name="left-column" />
+                                            <or>
+                                                <if-empty-section section-name="left-column" />
+                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                            </or>
                                         </not>
-                                        <if-empty-section section-name="right-column" />
+                                        <or>
+                                            <if-empty-section section-name="right-column" />
+                                            <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                        </or>
                                     </and>
                                 </condition>
                                 <actions>
@@ -371,9 +384,15 @@ under the License.
                             <section>
                                 <condition>
                                     <and>
-                                        <if-empty-section section-name="left-column" />
+                                        <or>
+                                            <if-empty-section section-name="left-column" />
+                                            <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                        </or>
                                         <not>
-                                            <if-empty-section section-name="right-column" />
+                                            <or>
+                                                <if-empty-section section-name="right-column" />
+                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                            </or>
                                         </not>
                                     </and>
                                 </condition>
@@ -390,10 +409,16 @@ under the License.
                                 <condition>
                                     <and>
                                         <not>
-                                            <if-empty-section section-name="left-column" />
+                                            <or>
+                                                <if-empty-section section-name="left-column" />
+                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                            </or>
                                         </not>
                                         <not>
-                                            <if-empty-section section-name="right-column" />
+                                            <or>
+                                                <if-empty-section section-name="right-column" />
+                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                            </or>
                                         </not>
                                     </and>
                                 </condition>
@@ -627,7 +652,14 @@ under the License.
                             <html-template location="${messagesTemplateLocation}" />
                         </html>
                     </platform-specific>
-                    <decorator-section-include name="pre-body" />
+                    <section>
+                        <condition>
+                            <not><if-compare field="showPreBody" operator="equals" type="Boolean" value="false"/></not>
+                        </condition>
+                        <widgets>
+                            <decorator-section-include name="pre-body" />
+                        </widgets>
+                    </section>
                     <label style="h1" text="${noTitle} ${headerTitle}"/>
                     <decorator-section-include name="body" />
                 </container>
@@ -639,7 +671,14 @@ under the License.
                             <html-template location="${messagesTemplateLocation}" />
                         </html>
                     </platform-specific>
-                    <decorator-section-include name="pre-body" />
+                    <section>
+                        <condition>
+                            <not><if-compare field="showPreBody" operator="equals" type="Boolean" value="false"/></not>
+                        </condition>
+                        <widgets>
+                            <decorator-section-include name="pre-body" />
+                        </widgets>
+                    </section>
                     <decorator-section-include name="body" />
                 </container>
             </fail-widgets>

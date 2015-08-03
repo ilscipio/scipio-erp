@@ -57,19 +57,19 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td class="label" >${uiLabelMap.ProjectMgrQuickAssignPartyId}</td>
+          <td class="label">${uiLabelMap.ProjectMgrQuickAssignPartyId}</td>
           <td>
             <@htmlTemplate.lookupField formName="addTaskAndAssocForm" name="quickAssignPartyId" id="quickAssignPartyId" fieldFormName="LookupPartyName"/>
           </td>
         </tr>
         <tr>
           <#if task??>
-            <td class="label" >${uiLabelMap.ProjectMgrWorkEffortId}</td>
+            <td class="label">${uiLabelMap.ProjectMgrWorkEffortId}</td>
             <td>${task.workEffortId!}</td>
           </#if>
         </tr>
         <tr>
-          <td class="label" >${uiLabelMap.CommonName}*</td>
+          <td class="label">${uiLabelMap.CommonName}*</td>
             <#if task??>
               <td>${task.workEffortName!}<span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
             <#else>
@@ -77,7 +77,7 @@ under the License.
             </#if>
         </tr>
         <tr>
-          <td class="label" >${uiLabelMap.CommonDescription}</td>
+          <td class="label">${uiLabelMap.CommonDescription}</td>
             <#if task??>
               <td><input type="text" name="description" value="${task.description!}"/></td>
             <#else>
@@ -85,7 +85,7 @@ under the License.
           </#if>
         </tr>
         <tr>
-          <td class="label" >${uiLabelMap.CommonStatus}</td>
+          <td class="label">${uiLabelMap.CommonStatus}</td>
           <td>
             <select name="currentStatusId">
               <#if task??>

@@ -150,7 +150,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro moderateSite forumId rootForumId >
-<table width="100%" border="0" >
+<table width="100%" border="0">
  <form name="mostrecent" method="post" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
   <#assign row=0/>
   <#list mostRecentList as content>
@@ -205,7 +205,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro grantSiteRoles forumId rootForumId >
-<table width="100%" border="0" >
+<table width="100%" border="0">
   <tr>
     <td width='100%'>
       <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">

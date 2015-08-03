@@ -71,7 +71,7 @@ function submitForm(form, mode, value) {
               <#list carrierShipmentMethodList as carrierShipmentMethod>
                 <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                 <tr>
-                  <td width="1%" valign="top" >
+                  <td width="1%" valign="top">
                     <input type="radio" name="shipping_method" value="${shippingMethod}" <#if shippingMethod == StringUtil.wrapString(chosenShippingMethod!"N@A")>checked="checked"</#if> />
                   </td>
                   <td valign="top">

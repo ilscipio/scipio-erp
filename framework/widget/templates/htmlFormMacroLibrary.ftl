@@ -557,7 +557,7 @@ under the License.
   </thead>
 </#macro>
 <#macro renderFormatHeaderRowCellOpen style positionSpan>
-  <th <#if positionSpan?has_content && positionSpan gt 1 >colspan="${positionSpan}"</#if><#if style?has_content>class="${style}"</#if>>
+  <th <#if positionSpan?has_content && positionSpan gt 1>colspan="${positionSpan}"</#if><#if style?has_content>class="${style}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowCellClose>
   </th>
@@ -802,7 +802,7 @@ under the License.
 <#macro renderRangeFindField className alert name value size maxlength autocomplete titleStyle defaultOptionFrom opEquals opGreaterThan opGreaterThanEquals opLessThan opLessThanEquals value2 defaultOptionThru>
   <input type="text" <@renderClass className alert /> <#if name?has_content>name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
   <#if titleStyle?has_content>
-    <span class="${titleStyle}" ><#rt/>
+    <span class="${titleStyle}"><#rt/>
   </#if>
   <select <#if name?has_content>name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
     <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
@@ -815,7 +815,7 @@ under the License.
   <br /><#rt/>
   <input type="text" <@renderClass className alert /><#if name?has_content> name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
   <#if titleStyle?has_content>
-    <span class="${titleStyle}" ><#rt/>
+    <span class="${titleStyle}"><#rt/>
   </#if>
   <select name=<#if name?has_content>"${name}_fld1_op"</#if> class="selectBox"><#rt/>
     <option value="lessThan"<#if defaultOptionThru=="lessThan"> selected="selected"</#if>>${opLessThan?html}</option><#rt/>
@@ -1054,9 +1054,9 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
           <ul class="pagination">
    </#if>
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxFirstUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${firstUrl}')"</#if><#else>href="${firstUrl}"</#if></#local>
-            <li class="${paginateFirstStyle}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
+            <li class="${paginateFirstStyle}<#if (viewIndex> viewIndexFirst)>"><a ${actionStr}>${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPreviousUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${previousUrl}')"</#if><#else>href="${previousUrl}"</#if></#local>
-            <li class="${paginatePreviousStyle}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${paginatePreviousLabel}</a><#else> unavailable">${paginatePreviousLabel}</#if></li>
+            <li class="${paginatePreviousStyle}<#if (viewIndex> viewIndexFirst)>"><a ${actionStr}>${paginatePreviousLabel}</a><#else> unavailable">${paginatePreviousLabel}</#if></li>
 
         <#if (listSize > 0)> 
           <#assign x=(listSize/viewSize)?ceiling>

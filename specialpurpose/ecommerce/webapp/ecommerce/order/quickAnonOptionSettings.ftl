@@ -63,10 +63,10 @@ function onClickShippingMethod(e) {
 
 <form id="quickAnonOptSetupForm" method="post" action="<@ofbizUrl>quickAnonProcessShipOptions</@ofbizUrl>" name="quickAnonOptSetupForm">
 <div id="optInfoSection">
-<table  width="100%" >
+<table  width="100%">
     <tr>
     <td><div class="screenlet">
-        <table hight="100%" >
+        <table hight="100%">
               <tr><td><div class="errorMessage" id="noShippingMethodSelectedError"></div></td></tr>
             <tr>
                 <td>
@@ -99,7 +99,7 @@ function onClickShippingMethod(e) {
         </div>
     </td>
     <td><div>
-        <table hight="100%" >
+        <table hight="100%">
             <tr>
               <td colspan="2">
                 <h2>${uiLabelMap.OrderSpecialInstructions}</h2>

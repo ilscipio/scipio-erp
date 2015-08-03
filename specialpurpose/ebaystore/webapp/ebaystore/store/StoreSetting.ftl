@@ -176,7 +176,7 @@ under the License.
              <tr>
               <td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreAdvancedTheme} :</td>
               <td valign="middle">
-                <select id="storeAdvancedTheme" name="storeAdvancedTheme" >
+                <select id="storeAdvancedTheme" name="storeAdvancedTheme">
                    <#if storeAdvanceThemeOptList?has_content>
                        <#list storeAdvanceThemeOptList as storeAdvanceThemeOpt>
                                     <option value="${storeAdvanceThemeOpt.storeThemeId!}"
@@ -251,7 +251,7 @@ under the License.
              <tr>
               <td  align="right" valign="middle"></td>
               <td valign="middle">
-                    <table width="450" >
+                    <table width="450">
                         <tr>
                             <td><b>Font</b></td>
                             <td><b>Font size</b></td>
@@ -274,14 +274,14 @@ under the License.
                             <td>
                                 <select id="storeNameFont" name="storeNameFont">
                                     <#list storeFontTheme.storeFontTypeFontFaceList as storeFontTypeFontFace>
-                                        <option <#if storeFontTypeFontFace.storeFontValue.equals(ebayStore.storeNameFontFace) >selected="selected"</#if> value="${storeFontTypeFontFace.storeFontName!}">${storeFontTypeFontFace.storeFontName!}</option>
+                                        <option <#if storeFontTypeFontFace.storeFontValue.equals(ebayStore.storeNameFontFace)>selected="selected"</#if> value="${storeFontTypeFontFace.storeFontName!}">${storeFontTypeFontFace.storeFontName!}</option>
                                     </#list>
                                 </select>
                             </td>
                             <td>
                                 <select id="storeNameFontSize" name="storeNameFontSize">
                                     <#list storeFontTheme.storeFontTypeSizeFaceList as storeFontTypeSizeFace>
-                                        <option <#if storeFontTypeSizeFace.storeFontSizeValue.equals(ebayStore.storeNameFontFaceSize) >selected="selected"</#if> value="${storeFontTypeSizeFace.storeFontSizeName!}">${storeFontTypeSizeFace.storeFontSizeName!}</option>
+                                        <option <#if storeFontTypeSizeFace.storeFontSizeValue.equals(ebayStore.storeNameFontFaceSize)>selected="selected"</#if> value="${storeFontTypeSizeFace.storeFontSizeName!}">${storeFontTypeSizeFace.storeFontSizeName!}</option>
                                     </#list>
                                 </select>
                             </td>
@@ -307,14 +307,14 @@ under the License.
                             <td>
                                 <select id="storeTitleFont" name="storeTitleFont">
                                     <#list storeFontTheme.storeFontTypeFontTitleList as storeFontTypeFontTitle>
-                                        <option <#if storeFontTypeFontTitle.storeFontValue.equals(ebayStore.storeTitleFontFace) >selected="selected"</#if> value="${storeFontTypeFontTitle.storeFontName!}">${storeFontTypeFontTitle.storeFontName!}</option>
+                                        <option <#if storeFontTypeFontTitle.storeFontValue.equals(ebayStore.storeTitleFontFace)>selected="selected"</#if> value="${storeFontTypeFontTitle.storeFontName!}">${storeFontTypeFontTitle.storeFontName!}</option>
                                     </#list>
                                 </select>
                             </td>
                             <td>
                                 <select id="storeTitleFontSize" name="storeTitleFontSize">
                                     <#list storeFontTheme.storeFontSizeTitleList as storeFontSizeTitle>
-                                        <option <#if storeFontSizeTitle.storeFontSizeValue.equals(ebayStore.storeTitleFontFaceSize) >selected="selected"</#if> value="${storeFontSizeTitle.storeFontSizeName!}">${storeFontSizeTitle.storeFontSizeName!}</option>
+                                        <option <#if storeFontSizeTitle.storeFontSizeValue.equals(ebayStore.storeTitleFontFaceSize)>selected="selected"</#if> value="${storeFontSizeTitle.storeFontSizeName!}">${storeFontSizeTitle.storeFontSizeName!}</option>
                                     </#list>
                                 </select>
                             </td>
@@ -340,14 +340,14 @@ under the License.
                             <td>
                                 <select id="storeDescFont" name="storeDescFont">
                                     <#list storeFontTheme.storeFontTypeFontDescList as storeFontTypeFontDesc>
-                                        <option <#if storeFontTypeFontDesc.storeFontValue.equals(ebayStore.storeDescFontFace!) >selected="selected"</#if> value="${storeFontTypeFontDesc.storeFontName!}">${storeFontTypeFontDesc.storeFontName!}</option>
+                                        <option <#if storeFontTypeFontDesc.storeFontValue.equals(ebayStore.storeDescFontFace!)>selected="selected"</#if> value="${storeFontTypeFontDesc.storeFontName!}">${storeFontTypeFontDesc.storeFontName!}</option>
                                     </#list>
                                 </select>
                             </td>
                             <td>
                                 <select id="storeDescFontSize" name="storeDescFontSize">
                                     <#list storeFontTheme.storeDescSizeList as storeDescSize>
-                                        <option <#if storeDescSize.storeFontSizeValue.equals(ebayStore.storeDescSizeCode) >selected="selected"</#if> value="${storeDescSize.storeFontSizeName!}">${storeDescSize.storeFontSizeName!}</option>
+                                        <option <#if storeDescSize.storeFontSizeValue.equals(ebayStore.storeDescSizeCode)>selected="selected"</#if> value="${storeDescSize.storeFontSizeName!}">${storeDescSize.storeFontSizeName!}</option>
                                     </#list>
                                 </select>
                             </td>
@@ -364,7 +364,7 @@ under the License.
               <td valign="middle">
                     <select id="storeCustomHeaderLayout" name="storeCustomHeaderLayout">
                         <#list ebayStore.storeCustomHeaderLayoutList as storeCustomHeaderLayout>
-                               <option <#if storeCustomHeaderLayout.storeCustomHeaderLayoutValue.equals(ebayStore.storeCustomHeaderLayout) >selected="selected"</#if> value="${storeCustomHeaderLayout.storeCustomHeaderLayoutName!}">${storeCustomHeaderLayout.storeCustomHeaderLayoutValue!}</option>
+                               <option <#if storeCustomHeaderLayout.storeCustomHeaderLayoutValue.equals(ebayStore.storeCustomHeaderLayout)>selected="selected"</#if> value="${storeCustomHeaderLayout.storeCustomHeaderLayoutName!}">${storeCustomHeaderLayout.storeCustomHeaderLayoutValue!}</option>
                         </#list>
                     </select>
               </td>
@@ -381,7 +381,7 @@ under the License.
               <td valign="middle">
                     <select id="storeHeaderStyle" name="storeHeaderStyle">
                         <#list ebayStore.storeHeaderStyleList as storeHeaderStyle>
-                               <option <#if storeHeaderStyle.storeHeaderStyleValue.equals(ebayStore.storeHeaderStyle) >selected="selected"</#if> value="${storeHeaderStyle.storeHeaderStyleName!}">${storeHeaderStyle.storeHeaderStyleValue!}</option>
+                               <option <#if storeHeaderStyle.storeHeaderStyleValue.equals(ebayStore.storeHeaderStyle)>selected="selected"</#if> value="${storeHeaderStyle.storeHeaderStyleName!}">${storeHeaderStyle.storeHeaderStyleValue!}</option>
                         </#list>
                     </select>
               </td>
@@ -397,7 +397,7 @@ under the License.
               <td valign="middle">
                     <select id="storeItemLayout" name="storeItemLayout">
                         <#list ebayStore.storeItemLayoutList as storeItemLayout>
-                               <option <#if storeItemLayout.storeItemLayoutValue.equals(ebayStore.storeItemLayoutSelected) >selected="selected"</#if> value="${storeItemLayout.storeItemLayoutName!}">${storeItemLayout.storeItemLayoutValue!}</option>
+                               <option <#if storeItemLayout.storeItemLayoutValue.equals(ebayStore.storeItemLayoutSelected)>selected="selected"</#if> value="${storeItemLayout.storeItemLayoutName!}">${storeItemLayout.storeItemLayoutValue!}</option>
                         </#list>
                     </select>
               </td>
@@ -407,7 +407,7 @@ under the License.
               <td valign="middle">
                     <select id="storeItemSortOrder" name="storeItemSortOrder">
                         <#list ebayStore.storeItemSortOrderList as storeItemSortOrder>
-                               <option <#if storeItemSortOrder.storeItemSortLayoutValue.equals(ebayStore.storeItemSortOrderSelected) >selected="selected"</#if> value="${storeItemSortOrder.storeItemSortLayoutName!}">${storeItemSortOrder.storeItemSortLayoutValue!}</option>
+                               <option <#if storeItemSortOrder.storeItemSortLayoutValue.equals(ebayStore.storeItemSortOrderSelected)>selected="selected"</#if> value="${storeItemSortOrder.storeItemSortLayoutName!}">${storeItemSortOrder.storeItemSortLayoutValue!}</option>
                         </#list>
                     </select>
               </td>
@@ -417,7 +417,7 @@ under the License.
               <td valign="middle">
                     <select id="storeCustomListingHeaderDisplay" name="storeCustomListingHeaderDisplay">
                         <#list ebayStore.storeCustomListingHeaderDisplayList as storeCustomListingHeaderDisplay>
-                               <option <#if storeCustomListingHeaderDisplay.storeCustomHeaderLayoutValue.equals(ebayStore.storeCustomListingHeaderDisplayValue) >selected="selected"</#if> value="${storeCustomListingHeaderDisplay.storeCustomHeaderLayoutValue!}">${storeCustomListingHeaderDisplay.storeCustomHeaderLayoutValue!}</option>
+                               <option <#if storeCustomListingHeaderDisplay.storeCustomHeaderLayoutValue.equals(ebayStore.storeCustomListingHeaderDisplayValue)>selected="selected"</#if> value="${storeCustomListingHeaderDisplay.storeCustomHeaderLayoutValue!}">${storeCustomListingHeaderDisplay.storeCustomHeaderLayoutValue!}</option>
                         </#list>
                     </select>
               </td>
@@ -427,7 +427,7 @@ under the License.
               <td valign="middle">
                     <select id="storeMerchDisplay" name="storeMerchDisplay">
                         <#list ebayStore.storeMerchDisplayList as storeMerchDisplay>
-                               <option <#if storeMerchDisplay.merchDisplayCodeValue.equals(ebayStore.storeMerchDisplay) >selected="selected"</#if> value="${storeMerchDisplay.merchDisplayCodeName!}">${storeMerchDisplay.merchDisplayCodeValue!}</option>
+                               <option <#if storeMerchDisplay.merchDisplayCodeValue.equals(ebayStore.storeMerchDisplay)>selected="selected"</#if> value="${storeMerchDisplay.merchDisplayCodeName!}">${storeMerchDisplay.merchDisplayCodeValue!}</option>
                         </#list>
                     </select>
               </td>
@@ -437,7 +437,7 @@ under the License.
               <td valign="middle">
                     <select id="storeMerchDisplay" name="storeSubscriptionDisplay">
                         <#list ebayStore.storeSubscriptionLevelList as storeSubscriptionLevel>
-                               <option <#if storeSubscriptionLevel.storeSubscriptionLevelCodeValue.equals(ebayStore.storeSubscriptionLevel) >selected="selected"</#if> value="${storeSubscriptionLevel.storeSubscriptionLevelCodeName!}">${storeSubscriptionLevel.storeSubscriptionLevelCodeValue!}</option>
+                               <option <#if storeSubscriptionLevel.storeSubscriptionLevelCodeValue.equals(ebayStore.storeSubscriptionLevel)>selected="selected"</#if> value="${storeSubscriptionLevel.storeSubscriptionLevelCodeName!}">${storeSubscriptionLevel.storeSubscriptionLevelCodeValue!}</option>
                         </#list>
                     </select>
               </td>

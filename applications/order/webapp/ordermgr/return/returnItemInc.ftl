@@ -254,7 +254,7 @@ under the License.
     </tr>
     <#else>
     <tr>
-      <td colspan="9" >${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</td>
+      <td colspan="9">${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</td>
     </tr>
     </#if>
     <tr>

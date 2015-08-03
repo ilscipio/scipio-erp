@@ -124,7 +124,7 @@ under the License.
             </#list>
             <tr><td colspan="10"><hr /></td></tr>
             <tr>
-                <td align="right" colspan="7" >${uiLabelMap.CommonSubtotal}</td>
+                <td align="right" colspan="7">${uiLabelMap.CommonSubtotal}</td>
                 <td align="right"><@ofbizCurrency amount=totalQuoteAmount isoCode=quote.currencyUomId/></td>
             </tr>
             <tr><td colspan="5"></td><td colspan="6"><hr /></td></tr>
@@ -146,7 +146,7 @@ under the License.
             <tr><td colspan="5"></td><td colspan="6"><hr /></td></tr>
             </#if>
             <tr>
-                <td align="right" colspan="7" >${uiLabelMap.OrderGrandTotal}</td>
+                <td align="right" colspan="7">${uiLabelMap.OrderGrandTotal}</td>
                 <td align="right">
                     <@ofbizCurrency amount=grandTotalQuoteAmount isoCode=quote.currencyUomId/>
                 </td>

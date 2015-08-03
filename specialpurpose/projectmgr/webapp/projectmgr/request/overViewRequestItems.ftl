@@ -23,7 +23,7 @@ under the License.
         </ul>
         <br class="clear"/>
     </div>
-    <table class="basic-table hover-bar" cellspacing="0" >
+    <table class="basic-table hover-bar" cellspacing="0">
     <thead>
     <tr class="header-row">
            <th>

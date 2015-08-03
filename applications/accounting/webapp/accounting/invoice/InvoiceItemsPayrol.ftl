@@ -23,7 +23,7 @@ under the License.
 <#if PayrolGroup?has_content>
 <#list PayrolGroup as payrolGroup>
 <thead>
-<tr class="header-row" >
+<tr class="header-row">
     <th>
     [${payrolGroup.description}]
     </th>
@@ -67,7 +67,7 @@ under the License.
 </tr>
 <tr>
     <td align="right"><b>Add all values : </b></td>
-    <td align="center" ><input type="submit" value="Add" /></td>
+    <td align="center"><input type="submit" value="Add" /></td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>

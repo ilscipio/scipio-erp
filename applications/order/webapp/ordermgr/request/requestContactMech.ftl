@@ -33,7 +33,7 @@ under the License.
 <@section title="${uiLabelMap.PartyContactInformation}">
         <table cellspacing="0" class="basic-table">
             <tr>
-                <td align="right" valign="top" width="25%" >
+                <td align="right" valign="top" width="25%">
                     &nbsp;${label?default(uiLabelMap.PartyUnknown)}
                 </td>
                 <td width="5%">&nbsp;</td>

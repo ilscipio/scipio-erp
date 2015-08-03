@@ -90,7 +90,7 @@ under the License.
               <input type="hidden" name="orderItemSeqId" value="${firstOrderItem.orderItemSeqId}"/>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductPurchaseOrder}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductPurchaseOrder}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <b>${purchaseOrder.orderId}</b>&nbsp;/&nbsp;<b>${firstOrderItem.orderItemSeqId}</b>
@@ -104,7 +104,7 @@ under the License.
               </#if>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductProductId}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductProductId}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <b>${requestParameters.productId!}</b>
@@ -112,7 +112,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductProductName}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductProductName}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="button tiny">${product.internalName!}</a>
@@ -120,7 +120,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductProductDescription}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductProductDescription}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   ${product.description!}
@@ -128,7 +128,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductItemDescription}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductItemDescription}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <input type="text" name="itemDescription" size="30" maxlength="60"/>
@@ -136,7 +136,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductInventoryItemType}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductInventoryItemType}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <select name="inventoryItemTypeId" size="1">
@@ -155,7 +155,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductFacilityOwner}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductFacilityOwner}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <@htmlTemplate.lookupField formName="selectAllForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
@@ -163,7 +163,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductSupplier}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductSupplier}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <select name="partyId">
@@ -180,7 +180,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductDateReceived}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductDateReceived}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <input type="text" name="datetimeReceived" size="24" value="${nowTimestamp}" />
@@ -191,7 +191,7 @@ under the License.
               
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.lotId}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.lotId}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <input type="text" name="lotId" size="10"/>
@@ -202,7 +202,7 @@ under the License.
               <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!/>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductFacilityLocation}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductFacilityLocation}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <#if facilityLocations?has_content>
@@ -227,7 +227,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductRejectedReason}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductRejectedReason}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <select name="rejectionId" size="1">
@@ -240,7 +240,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductQuantityRejected}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductQuantityRejected}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <input type="text" name="quantityRejected" size="5" value="0" />
@@ -248,7 +248,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductQuantityAccepted}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductQuantityAccepted}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <input type="text" name="quantityAccepted" size="5" value="${defaultQuantity?default(1)?string.number}"/>
@@ -256,7 +256,7 @@ under the License.
               </tr>
               <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductPerUnitPrice}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductPerUnitPrice}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                   <#-- get the default unit cost -->

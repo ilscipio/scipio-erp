@@ -104,7 +104,7 @@ function call_fieldlookup3(view_name) {
         </#list>
           <tr>
             <td>
-              <div class="smallSubmit" ><a href="javascript:submitRows('${rowCount!}')">${uiLabelMap.CommonUpdate}</a></div>
+              <div class="smallSubmit"><a href="javascript:submitRows('${rowCount!}')">${uiLabelMap.CommonUpdate}</a></div>
             </td>
           </tr>
       </table>

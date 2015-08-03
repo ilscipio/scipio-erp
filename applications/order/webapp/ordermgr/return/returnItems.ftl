@@ -292,7 +292,7 @@ under the License.
             <tr><td colspan="5"></td><td><hr /></td></tr>
             <tr>
               <td colspan="2">&nbsp;</td>
-              <td colspan="3" >${uiLabelMap.OrderReturnTotal}</td>
+              <td colspan="3">${uiLabelMap.OrderReturnTotal}</td>
               <td align="right"><@ofbizCurrency amount=returnTotal isoCode=returnHeader.currencyUomId/></td>
             </tr>
             <#if (!readOnly) && (rowCount > 0)>
@@ -345,7 +345,7 @@ under the License.
             <tr><td colspan="4"><h3>${uiLabelMap.OrderReturnItems}</h3></td></tr>
             <#if partyOrders?has_content>
               <tr>
-                <td width='25%' align='right' nowrap="nowrap" >${uiLabelMap.OrderOrderId}</td>
+                <td width='25%' align='right' nowrap="nowrap">${uiLabelMap.OrderOrderId}</td>
                 <td>&nbsp;</td>
                 <td width='25%'>
                   <select name="orderId">

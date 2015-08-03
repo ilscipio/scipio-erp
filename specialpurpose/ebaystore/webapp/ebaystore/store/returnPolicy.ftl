@@ -25,7 +25,7 @@ under the License.
 <#if !returnPolicyEnabled??><#assign not = "not"></#if>
 <#assign  title = "Return policy is "+(not!)+" enabled for this category.">
 
-<form name="APIForm" id="APIForm" method="post" action="ReturnPolicyServlet" >
+<form name="APIForm" id="APIForm" method="post" action="ReturnPolicyServlet">
   <table align="center"  border="0">
     <tr><td><img src="ebay.gif" alt="" /></td></tr>
     <tr><td>${title!}</td></tr>

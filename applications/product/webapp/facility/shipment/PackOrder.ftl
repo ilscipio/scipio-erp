@@ -290,7 +290,7 @@ under the License.
                         -->
                         <#assign inputQty = orderItemQuantity - packingSession.getPackedQuantity(orderId, orderItem.orderItemSeqId, shipGroupSeqId, itemInfo.productId)>
                         <tr>
-                          <td><input type="checkbox" name="sel_${rowKey}" value="Y" <#if (inputQty >0)>checked=""</#if>/></td>
+                          <td><input type="checkbox" name="sel_${rowKey}" value="Y" <#if (inputQty>0)>checked=""</#if>/></td>
                           <td>${orderItem.orderItemSeqId}</td>
                           <td>
                               ${orderProduct.productId?default("N/A")}

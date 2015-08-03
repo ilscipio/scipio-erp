@@ -40,7 +40,7 @@ under the License.
             <select name="agreementId">
             <option value="">${uiLabelMap.CommonNone}</option>
             <#list agreements as agreement>
-            <option value='${agreement.agreementId}' >${agreement.agreementId} - ${agreement.description!}</option>
+            <option value='${agreement.agreementId}'>${agreement.agreementId} - ${agreement.description!}</option>
             </#list>
             </select>
           </div>
@@ -63,7 +63,7 @@ under the License.
               <select name="agreementId">
               <option value="">${uiLabelMap.CommonNone}</option>
               <#list agreementRoles as agreementRole>
-                  <option value='${agreementRole.agreementId!}' >${agreementRole.agreementId!} - ${agreementRole.roleTypeId!}</option>
+                  <option value='${agreementRole.agreementId!}'>${agreementRole.agreementId!} - ${agreementRole.roleTypeId!}</option>
               </#list>
               </select>
             </div>

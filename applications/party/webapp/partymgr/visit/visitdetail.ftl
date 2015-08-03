@@ -57,11 +57,11 @@ under the License.
         </tr>
         <tr>
           <td>${uiLabelMap.PartyInitialRequest}</td>
-          <td><a href="${visit.initialRequest!}" >${visit.initialRequest!}</a></td>
+          <td><a href="${visit.initialRequest!}">${visit.initialRequest!}</a></td>
         </tr>
         <tr>
           <td>${uiLabelMap.PartyInitialReferer}</td>
-          <td><a href="${visit.initialReferrer!}" >${visit.initialReferrer!}</a></td>
+          <td><a href="${visit.initialReferrer!}">${visit.initialReferrer!}</a></td>
         </tr>
         <tr>
           <td>${uiLabelMap.PartyInitialUserAgent}</td>

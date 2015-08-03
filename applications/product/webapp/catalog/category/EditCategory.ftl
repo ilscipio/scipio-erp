@@ -51,7 +51,7 @@ function insertImageName(type,nameValue) {
             <form action="<@ofbizUrl>createProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
                 <table cellspacing="0" class="basic-table">
                     <tr>
-                        <td align="right" >${uiLabelMap.ProductProductCategoryId}</td>
+                        <td align="right">${uiLabelMap.ProductProductCategoryId}</td>
                         <td>&nbsp;</td>
                         <td>
                             <input type="text" name="productCategoryId" size="20" maxlength="40" value="${productCategoryId}"/>
@@ -68,7 +68,7 @@ function insertImageName(type,nameValue) {
             <form action="<@ofbizUrl>createProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
                 <table cellspacing="0" class="basic-table">
                     <tr>
-                        <td align="right" >${uiLabelMap.ProductProductCategoryId}</td>
+                        <td align="right">${uiLabelMap.ProductProductCategoryId}</td>
                         <td>&nbsp;</td>
                         <td>
                             <input type="text" name="productCategoryId" size="20" maxlength="40" value=""/>
@@ -84,7 +84,7 @@ function insertImageName(type,nameValue) {
             <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
             <table cellspacing="0" class="basic-table">
                 <tr>
-                    <td align="right" >${uiLabelMap.ProductProductCategoryId}</td>
+                    <td align="right">${uiLabelMap.ProductProductCategoryId}</td>
                     <td>&nbsp;</td>
                     <td>
                       <b>${productCategoryId}</b> (${uiLabelMap.ProductNotModificationRecreationCategory}.)
@@ -92,7 +92,7 @@ function insertImageName(type,nameValue) {
                 </tr>
 </#if>
                 <tr>
-                    <td width="26%" align="right" >${uiLabelMap.ProductProductCategoryType}</td>
+                    <td width="26%" align="right">${uiLabelMap.ProductProductCategoryType}</td>
                     <td>&nbsp;</td>
                     <td width="74%">
                         <select name="productCategoryTypeId" size="1">
@@ -109,17 +109,17 @@ function insertImageName(type,nameValue) {
                     </td>
                 </tr>
                 <tr>
-                    <td width="26%" align="right" >${uiLabelMap.ProductProductCategoryName}</td>
+                    <td width="26%" align="right">${uiLabelMap.ProductProductCategoryName}</td>
                     <td>&nbsp;</td>
                     <td width="74%"><input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/></td>
                 </tr>
                 <tr>
-                    <td width="26%" align="right" >${uiLabelMap.ProductProductCategoryDescription}</td>
+                    <td width="26%" align="right">${uiLabelMap.ProductProductCategoryDescription}</td>
                     <td>&nbsp;</td>
                     <td width="74%"><textarea name="description" cols="60" rows="2"><#if productCategory?has_content>${(productCategory.description)!}</#if></textarea></td>
                 </tr>
                 <tr>
-                    <td width="20%" align="right" valign="top" >
+                    <td width="20%" align="right" valign="top">
                         ${uiLabelMap.ProductCategoryImageUrl}
                         <#if (productCategory.categoryImageUrl)??>
                             <a href="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Category Image" src="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
@@ -139,7 +139,7 @@ function insertImageName(type,nameValue) {
                     </td>
                 </tr>
                 <tr>
-                    <td width="20%" align="right" valign="top" >
+                    <td width="20%" align="right" valign="top">
                         ${uiLabelMap.ProductLinkOneImageUrl}
                         <#if (productCategory.linkOneImageUrl)??>
                             <a href="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
@@ -159,7 +159,7 @@ function insertImageName(type,nameValue) {
                     </td>
                 </tr>
                 <tr>
-                    <td width="20%" align="right" valign="top" >
+                    <td width="20%" align="right" valign="top">
                         ${uiLabelMap.ProductLinkTwoImageUrl}
                         <#if (productCategory.linkTwoImageUrl)??>
                             <a href="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
@@ -179,7 +179,7 @@ function insertImageName(type,nameValue) {
                     </td>
                 </tr>
                 <tr>
-                    <td width="26%" align="right" >${uiLabelMap.ProductDetailScreen}</td>
+                    <td width="26%" align="right">${uiLabelMap.ProductDetailScreen}</td>
                     <td>&nbsp;</td>
                     <td width="74%">
                         <input type="text" <#if productCategory?has_content>value="${productCategory.detailScreen!}"</#if> name="detailScreen" size="60" maxlength="250"/>
@@ -187,7 +187,7 @@ function insertImageName(type,nameValue) {
                     </td>
                 </tr>
                 <tr>
-                    <td width="26%" align="right" >${uiLabelMap.ProductPrimaryParentCategory}</td>
+                    <td width="26%" align="right">${uiLabelMap.ProductPrimaryParentCategory}</td>
                     <td>&nbsp;</td>
                     <td width="74%">
                         <@htmlTemplate.lookupField value="${(productCategory.primaryParentCategoryId)?default('')}" formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>

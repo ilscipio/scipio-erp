@@ -89,7 +89,7 @@
              <#assign caFromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(contentData.caFromDate, "dd/MM/yyyy")/>
             </#if> 
               <td>${caFromDate!}</td>
-              <td><a href="javascript:document.listDocumentForm_${listcount}.submit()" >${uiLabelMap.CommonDelete}</a></td>
+              <td><a href="javascript:document.listDocumentForm_${listcount}.submit()">${uiLabelMap.CommonDelete}</a></td>
           </tr>
           <form action="<@ofbizUrl>removeDocumentFromTree</@ofbizUrl>" name="listDocumentForm_${listcount}" method="post">
             <input type="hidden" name="contentId" value="${contentData.contentIdStart!}"/>

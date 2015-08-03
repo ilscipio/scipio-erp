@@ -28,7 +28,7 @@ ${StringUtil.wrapString(topLine.textBegin!)}
   </#if>
   <select name="${topLine.selectionName!}" onchange="javascript:document.${topLine.action}.submit();">
     <#list topLine.dropDownList as option>
-      <option <#if option.key == topLine.selectedKey >selected="selected"</#if> value="${option.key!}">${option.value!}</option>
+      <option <#if option.key == topLine.selectedKey>selected="selected"</#if> value="${option.key!}">${option.value!}</option>
     </#list>
   </select>
 </form>

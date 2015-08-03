@@ -97,7 +97,7 @@ under the License.
           </table>
         </div>
       </div>
-      <div id="centerTopBarRight" >
+      <div id="centerTopBarRight">
         ${screens.render("component://webpos/widget/SearchScreens.xml#Parties")}
         <div id="billingPanel">
           <div>&nbsp;<br /></div>

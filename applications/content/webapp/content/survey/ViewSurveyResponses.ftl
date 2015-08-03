@@ -28,13 +28,13 @@ under the License.
         <tr>
           <#-- seperator options -->
           <#if question.surveyQuestionTypeId == "SEPERATOR_TEXT">
-            <td colspan="5" >${question.question!}</td>
+            <td colspan="5">${question.question!}</td>
           <#elseif question.surveyQuestionTypeId == "SEPERATOR_LINE">
             <td colspan="5"><hr/></td>
           <#else>
 
             <#-- standard questions -->
-            <td align='right' nowrap="nowrap" >
+            <td align='right' nowrap="nowrap">
               <#assign answerString = "${uiLabelMap.ContentAnswers}">
               <#if (results._total?default(0) == 1)>
                 <#assign answerString = "${uiLabelMap.ContentAnswer}">

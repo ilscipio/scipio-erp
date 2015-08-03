@@ -20,7 +20,7 @@ under the License.
         <table cellspacing="0" class="basic-table">
             <#-- quote header information -->
             <tr>
-                <td align="right" valign="top" width="15%" >
+                <td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonType}
                 </td>
                 <td width="5%">&nbsp;</td>
@@ -32,7 +32,7 @@ under the License.
 
             <#-- quote Channel information -->
             <tr>
-                <td align="right" valign="top" width="15%" >
+                <td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.OrderSalesChannel}
                 </td>
                 <td width="5%">&nbsp;</td>
@@ -44,7 +44,7 @@ under the License.
 
             <#-- quote status information -->
             <tr>
-                <td align="right" valign="top" width="15%" >
+                <td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonStatus}
                 </td>
                 <td width="5%">&nbsp;</td>
@@ -55,7 +55,7 @@ under the License.
             <#-- party -->
             <tr><td colspan="3"><hr /></td></tr>
             <tr>
-                <td align="right" valign="top" width="15%" >
+                <td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.PartyPartyId}
                 </td>
                 <td width="5%">&nbsp;</td>
@@ -66,7 +66,7 @@ under the License.
             <#-- quote name -->
             <tr><td colspan="3"><hr /></td></tr>
             <tr>
-                <td align="right" valign="top" width="15%" >
+                <td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.OrderOrderQuoteName}
                 </td>
                 <td width="5%">&nbsp;</td>
@@ -77,7 +77,7 @@ under the License.
             <#-- quote description -->
             <tr><td colspan="3"><hr /></td></tr>
             <tr>
-                <td align="right" valign="top" width="15%" >
+                <td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonDescription}
                 </td>
                 <td width="5%">&nbsp;</td>
@@ -88,7 +88,7 @@ under the License.
             <#-- quote currency -->
             <tr><td colspan="3"><hr /></td></tr>
             <tr>
-                <td align="right" valign="top" width="15%" >
+                <td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonCurrency}
                 </td>
                 <td width="5%">&nbsp;</td>
@@ -99,7 +99,7 @@ under the License.
             <#-- quote currency -->
             <tr><td colspan="3"><hr /></td></tr>
             <tr>
-                <td align="right" valign="top" width="15%" >
+                <td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.ProductProductStore}
                 </td>
                 <td width="5%">&nbsp;</td>

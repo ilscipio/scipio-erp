@@ -94,7 +94,7 @@ under the License.
               <tr>
         <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderProductStore}</td>
         <td colspan="3">
-            ${productStore.storeName!}&nbsp;<a href="/catalog/control/EditProductStore?productStoreId=${productStore.productStoreId}${StringUtil.wrapString(externalKeyParam)}" target="catalogmgr" >(${productStore.productStoreId})</a>
+            ${productStore.storeName!}&nbsp;<a href="/catalog/control/EditProductStore?productStoreId=${productStore.productStoreId}${StringUtil.wrapString(externalKeyParam)}" target="catalogmgr">(${productStore.productStoreId})</a>
                 </td>
               </tr>
             </#if>

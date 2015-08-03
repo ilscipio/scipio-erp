@@ -46,12 +46,12 @@ function lookupShipments() {
             <input type="hidden" name="lookupFlag" value="Y" />
             <table cellspacing="0" cellpadding="2" class="basic-table">
               <tr>
-                <td width="25%" align="right" >${uiLabelMap.ProductShipmentId}</td>
+                <td width="25%" align="right">${uiLabelMap.ProductShipmentId}</td>
                 <td width="5%">&nbsp;</td>
                 <td><input type="text" name="shipmentId" value="${shipmentId!}" /></td>
               </tr>
               <tr>
-                <td width="25%" align="right" >${uiLabelMap.ProductShipmentType}</td>
+                <td width="25%" align="right">${uiLabelMap.ProductShipmentType}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="shipmentTypeId">
@@ -67,7 +67,7 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" >${uiLabelMap.ProductOriginFacility}</td>
+                <td width="25%" align="right">${uiLabelMap.ProductOriginFacility}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="originFacilityId">
@@ -83,7 +83,7 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" >${uiLabelMap.ProductDestinationFacility}</td>
+                <td width="25%" align="right">${uiLabelMap.ProductDestinationFacility}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="destinationFacilityId">
@@ -99,7 +99,7 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" >${uiLabelMap.CommonStatus}</td>
+                <td width="25%" align="right">${uiLabelMap.CommonStatus}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="statusId">
@@ -127,7 +127,7 @@ function lookupShipments() {
                 </td>
               </tr>
               <tr>
-                <td width="25%" align="right" >${uiLabelMap.ProductDateFilter}</td>
+                <td width="25%" align="right">${uiLabelMap.ProductDateFilter}</td>
                 <td width="5%">&nbsp;</td>
                 <td>
                   <table cellspacing="0" class="basic-table">

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <form  method="post" action="<@ofbizUrl>mergeContacts</@ofbizUrl>" class="basic-form">
-  <table border="0" width="100%" >
+  <table border="0" width="100%">
     <tr>
       <td>
         <#if contactInfoList?has_content >
@@ -36,7 +36,7 @@ under the License.
 
           <table>
             <tr>
-              <td width="20%" ></td>
+              <td width="20%"></td>
               <td width="30%"><h2>${uiLabelMap.SfaFirstContact}</h2><br /></td>
               <td width="30%"><h2>${uiLabelMap.SfaSecondContact}</h2><br /></td>
               <td width="20%"><h2>${uiLabelMap.CommonSelect}</h2><br /></td>
@@ -58,21 +58,21 @@ under the License.
               <td width="30"></td>
             </tr>
             <tr>
-              <td width="20%" >${uiLabelMap.PartyAddressLine1}</td>
+              <td width="20%">${uiLabelMap.PartyAddressLine1}</td>
               <td width="30%">${contactInfo1.address1!}</td>
               <td width="30%">${contactInfo2.address1!}</td>
               <td width="20%"><input type="checkbox" name="useAddress2" value="Y"/></td>
             </tr>
 
             <tr>
-              <td width="20%" >${uiLabelMap.PartyAddressLine2}</td>
+              <td width="20%">${uiLabelMap.PartyAddressLine2}</td>
               <td width="30%">${contactInfo1.address2!}</td>
               <td width="30%">${contactInfo2.address2!}</td>
               <td width="20%"></td>
             </tr>
 
             <tr>
-              <td width="20%" >${uiLabelMap.PartyCity}</td>
+              <td width="20%">${uiLabelMap.PartyCity}</td>
               <td width="30%">${contactInfo1.city!}</td>
               <td width="30%">${contactInfo2.city!}</td>
               <td width="20%"></td>
@@ -90,7 +90,7 @@ under the License.
               <td width="20%"></td>
             </tr>
             <tr>
-              <td width="20%" >${uiLabelMap.CommonCountry}</td>
+              <td width="20%">${uiLabelMap.CommonCountry}</td>
               <td width="30%">${contactInfo1.country!}</td>
               <td width="30%">${contactInfo2.country!}</td>
               <td width="20%"></td>
@@ -103,19 +103,19 @@ under the License.
               <td width="10%"><input type="checkbox" name="useContactNum2" value="Y"/></td>
             </tr>
             <tr>
-              <td width="20%" >${uiLabelMap.PartyAreaCode}</td>
+              <td width="20%">${uiLabelMap.PartyAreaCode}</td>
               <td width="30%">${contactInfo1.areaCode!}</td>
               <td width="30%">${contactInfo2.areaCode!}</td>
               <td width="20%"></td>
             </tr>
             <tr>
-              <td width="20%" >${uiLabelMap.PartyPhoneNumber}</td>
+              <td width="20%">${uiLabelMap.PartyPhoneNumber}</td>
               <td width="30%">${contactInfo1.contactNumber!}</td>
               <td width="30%">${contactInfo2.contactNumber!}</td>
               <td width="20%"></td>
             </tr>
             <tr>
-              <td width="20%" >${uiLabelMap.PartyEmailAddress}</td>
+              <td width="20%">${uiLabelMap.PartyEmailAddress}</td>
               <td width="30%">${contactInfo1.primaryEmail!}</td>
               <td width="30%">${contactInfo2.primaryEmail!}</td>
               <td width="10%"><input type="checkbox" name="useEmail2" value="Y"/></td>

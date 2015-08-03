@@ -79,7 +79,7 @@ under the License.
                                 </td>
                             </#if>
                             <#if productId?? && productId == "shoppingcart.CommentLine">
-                                <td colspan="7" > &gt;&gt; ${orderItem.itemDescription}</td>
+                                <td colspan="7"> &gt;&gt; ${orderItem.itemDescription}</td>
                             <#else>
                                 <#-- now show status details per line item -->
                                 <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)>
@@ -403,7 +403,7 @@ under the License.
                                         </#if>
                                         <#if orderItemAdjustment.productPromoId?has_content>
                                             <a href="/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}${StringUtil.wrapString(externalKeyParam)}"
-                                                >${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>
+                                               >${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>
                                         </#if>
                                         <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                                             <#if orderItemAdjustment.primaryGeoId?has_content>

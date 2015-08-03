@@ -100,21 +100,21 @@ function insertImageName(size,nameValue) {
                 <input type="hidden" name="configItemId" value="${configItemId!}" />
                 <table cellspacing="0" class="basic-table">
                 <tr>
-                    <td width="20%" align="right" valign="top" >${uiLabelMap.CommonDescription}</td>
+                    <td width="20%" align="right" valign="top">${uiLabelMap.CommonDescription}</td>
                     <td>&nbsp;</td>
                     <td width="80%" colspan="4" valign="top">
                         <textarea name="description" cols="60" rows="2">${(configItem.description)!}</textarea>
                     </td>
                 </tr>
                 <tr>
-                    <td width="20%" align="right" valign="top" >${uiLabelMap.ProductLongDescription}</td>
+                    <td width="20%" align="right" valign="top">${uiLabelMap.ProductLongDescription}</td>
                     <td>&nbsp;</td>
                     <td width="80%" colspan="4" valign="top">
                         <textarea name="longDescription" cols="60" rows="7">${(configItem.longDescription)!}</textarea>
                     </td>
                 </tr>
                 <tr>
-                    <td width="20%" align="right" valign="top" >
+                    <td width="20%" align="right" valign="top">
                         ${uiLabelMap.ProductSmallImage}
                         <#if (configItem.imageUrl)??>
                             <a href="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Image" src="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" class="cssImgSmall" /></a>

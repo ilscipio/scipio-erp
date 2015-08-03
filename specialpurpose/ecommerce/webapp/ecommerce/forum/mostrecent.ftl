@@ -28,7 +28,7 @@ under the License.
     }
 </script>
 
-<table width="100%" border="0" >
+<table width="100%" border="0">
 
  <form name="mostrecent" mode="post" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
   <#assign row=0/>
@@ -65,7 +65,7 @@ under the License.
     <#if 0 < entityList?size >
         <tr>
           <td colspan="5">
-<div class="smallSubmit" ><a href="javascript:submitRows('${row?default(0)}')">${uiLabelMap.CommonUpdate}</a></div>
+<div class="smallSubmit"><a href="javascript:submitRows('${row?default(0)}')">${uiLabelMap.CommonUpdate}</a></div>
           </td>
         </tr>
     </#if>

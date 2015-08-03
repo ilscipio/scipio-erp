@@ -68,7 +68,7 @@ under the License.
             <table cellspacing="0" class="basic-table">
               <#if !returnItems?? || returnItems?size == 0>
                 <tr>
-                  <td colspan="2" >${uiLabelMap.ProductNoItemsToReceive}</td>
+                  <td colspan="2">${uiLabelMap.ProductNoItemsToReceive}</td>
                 </tr>
               <#else>
                 <tr>
@@ -162,7 +162,7 @@ under the License.
                             </#if>
                           </td>
 
-                          <td align="right" nowrap="nowrap" >${uiLabelMap.ProductQtyReceived}</td>
+                          <td align="right" nowrap="nowrap">${uiLabelMap.ProductQtyReceived}</td>
                           <td align="right">
                             <input type="text" name="quantityAccepted_o_${rowCount}" size="6" value="${defaultQuantity?string.number}" />
                           </td>
@@ -188,7 +188,7 @@ under the License.
                             </select>
                           </td>
                           <#if serializedInv?has_content>
-                            <td align="right" >${uiLabelMap.ProductExistingInventoryItem}</td>
+                            <td align="right">${uiLabelMap.ProductExistingInventoryItem}</td>
                             <td align="right">
                               <select name="inventoryItemId_o_${rowCount}">
                                 <#list serializedInv as inventoryItem>
@@ -199,7 +199,7 @@ under the License.
                           <#else>
                             <td colspan="2">&nbsp;</td>
                           </#if>
-                          <td align="right" nowrap="nowrap" >${uiLabelMap.ProductPerUnitPrice}</td>
+                          <td align="right" nowrap="nowrap">${uiLabelMap.ProductPerUnitPrice}</td>
                           <td align="right">
                             <input type='text' name='unitCost_o_${rowCount}' size='6' value='${unitCost?default(0)?string("##0.00")}' />
                           </td>
@@ -220,7 +220,7 @@ under the License.
                 </tr>
                 <#if rowCount == 0>
                   <tr>
-                    <td colspan="2" >${uiLabelMap.ProductNoItemsReturn} #${returnHeader.returnId} ${uiLabelMap.ProductToReceive}.</td>
+                    <td colspan="2">${uiLabelMap.ProductNoItemsReturn} #${returnHeader.returnId} ${uiLabelMap.ProductToReceive}.</td>
                   </tr>
                   <tr>
                     <td colspan="2" align="right">
@@ -248,7 +248,7 @@ under the License.
             <table cellspacing="0" class="basic-table">
               <tr><td colspan="4"><h3>${uiLabelMap.ProductReceiveReturn}</h3></td></tr>
               <tr>
-                <td width="15%" align='right' >${uiLabelMap.ProductReturnNumber}</td>
+                <td width="15%" align='right'>${uiLabelMap.ProductReturnNumber}</td>
                 <td>&nbsp;</td>
                 <td width="90%">
                   <input type="text" name="returnId" size="20" maxlength="20" value="${requestParameters.returnId!}" />

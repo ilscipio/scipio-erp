@@ -63,7 +63,7 @@ under the License.
             </td>
           </tr>
           <tr valign="top">
-            <td align="right" >${uiLabelMap.ProductConditions}</td>
+            <td align="right">${uiLabelMap.ProductConditions}</td>
             <td colspan="2">
                 <table cellspacing="0" class="basic-table">
                 <thead>
@@ -152,7 +152,7 @@ under the License.
             </td>
           </tr>
           <tr valign="top">
-            <td align="right" >${uiLabelMap.ProductActions}</td>
+            <td align="right">${uiLabelMap.ProductActions}</td>
             <td colspan="2">
                 <table cellspacing="0" class="basic-table">
                   <tr class="header-row">

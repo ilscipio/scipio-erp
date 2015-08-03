@@ -30,17 +30,17 @@ under the License.
                 <input type="hidden" name="UPDATE_MODE" value="CREATE" />
                 <table cellspacing="0" class="basic-table">
                 <tr>
-                <td align="right" >${uiLabelMap.ProductProductId}</td>
+                <td align="right">${uiLabelMap.ProductProductId}</td>
                 <td>&nbsp;</td>
                 <td><input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="${productId!}" /></td>
                 </tr>
                 <tr>
-                <td align="right" >${uiLabelMap.ProductProductIdTo}</td>
+                <td align="right">${uiLabelMap.ProductProductIdTo}</td>
                 <td>&nbsp;</td>
                 <td><input type="text" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo!}" /></td>
                 </tr>
                 <tr>
-                <td align="right" >${uiLabelMap.ProductAssociationTypeId}</td>
+                <td align="right">${uiLabelMap.ProductAssociationTypeId}</td>
                 <td>&nbsp;</td>
                 <td>
                     <select name="PRODUCT_ASSOC_TYPE_ID" size="1">
@@ -58,7 +58,7 @@ under the License.
                 </td>
                 </tr>
                 <tr>
-                <td align="right" >${uiLabelMap.CommonFromDate}</td>
+                <td align="right">${uiLabelMap.CommonFromDate}</td>
                 <td>&nbsp;</td>
                 <td>
                     <div>
@@ -71,19 +71,19 @@ under the License.
                 <input type="hidden" name="UPDATE_MODE" value="CREATE" />
                 <table cellspacing="0" class="basic-table">
                 <tr>
-                <td align="right" >${uiLabelMap.ProductProductId}</td>
+                <td align="right">${uiLabelMap.ProductProductId}</td>
                 <td>&nbsp;</td>
                 <td><input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="${productId!}" /></td>
                 </tr>
                 <tr>
-                <td align="right" >${uiLabelMap.ProductProductIdTo}</td>
+                <td align="right">${uiLabelMap.ProductProductIdTo}</td>
                 <td>&nbsp;</td>
                 <td>
                   <@htmlTemplate.lookupField formName="editProductAssocForm" name="PRODUCT_ID_TO" id="PRODUCT_ID_TO" fieldFormName="LookupProduct"/>
                 </td>
                 </tr>
                 <tr>
-                <td align="right" >${uiLabelMap.ProductAssociationTypeId}</td>
+                <td align="right">${uiLabelMap.ProductAssociationTypeId}</td>
                 <td>&nbsp;</td>
                 <td>
                     <select name="PRODUCT_ASSOC_TYPE_ID" size="1">
@@ -95,7 +95,7 @@ under the License.
                 </td>
                 </tr>
                 <tr>
-                <td align="right" >${uiLabelMap.CommonFromDate}</td>
+                <td align="right">${uiLabelMap.CommonFromDate}</td>
                 <td>&nbsp;</td>
                 <td>
                     <div>
@@ -116,28 +116,28 @@ under the License.
             <input type="hidden" name="FROM_DATE" value="${fromDate!}" />
             <table cellspacing="0" class="basic-table">
             <tr>
-                <td align="right" >${uiLabelMap.ProductProductId}</td>
+                <td align="right">${uiLabelMap.ProductProductId}</td>
                 <td>&nbsp;</td>
                 <td><b>${productId!}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
             </tr>
             <tr>
-                <td align="right" >${uiLabelMap.ProductProductIdTo}</td>
+                <td align="right">${uiLabelMap.ProductProductIdTo}</td>
                 <td>&nbsp;</td>
                 <td><b>${productIdTo!}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
             </tr>
             <tr>
-                <td align="right" >${uiLabelMap.ProductAssociationType}</td>
+                <td align="right">${uiLabelMap.ProductAssociationType}</td>
                 <td>&nbsp;</td>
                 <td><b><#if curProductAssocType??>${(curProductAssocType.get("description",locale))!}<#else> ${productAssocTypeId!}</#if></b> ${uiLabelMap.ProductRecreateAssociation}</td>
             </tr>
             <tr>
-                <td align="right" >${uiLabelMap.CommonFromDate}</td>
+                <td align="right">${uiLabelMap.CommonFromDate}</td>
                 <td>&nbsp;</td>
                 <td><b>${fromDate!}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
             </tr>
         </#if>
         <tr>
-            <td width="26%" align="right" >${uiLabelMap.CommonThruDate}</td>
+            <td width="26%" align="right">${uiLabelMap.CommonThruDate}</td>
             <td>&nbsp;</td>
             <td width="74%">
             <div>
@@ -152,23 +152,23 @@ under the License.
             </td>
         </tr>
         <tr>
-            <td width="26%" align="right" >${uiLabelMap.ProductSequenceNum}</td>
+            <td width="26%" align="right">${uiLabelMap.ProductSequenceNum}</td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" name="SEQUENCE_NUM" <#if useValues>value="${(productAssoc.sequenceNum)!}"<#else>value="${(request.getParameter("SEQUENCE_NUM"))!}"</#if> size="5" maxlength="10" /></td>
         </tr>
         <tr>
-            <td width="26%" align="right" >${uiLabelMap.ProductReason}</td>
+            <td width="26%" align="right">${uiLabelMap.ProductReason}</td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" name="REASON" <#if useValues>value="${(productAssoc.reason)!}"<#else>value="${(request.getParameter("REASON"))!}"</#if> size="60" maxlength="255" /></td>
         </tr>
         <tr>
-            <td width="26%" align="right" >${uiLabelMap.ProductInstruction}</td>
+            <td width="26%" align="right">${uiLabelMap.ProductInstruction}</td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" name="INSTRUCTION" <#if useValues>value="${(productAssoc.instruction)!}"<#else>value="${(request.getParameter("INSTRUCTION"))!}"</#if> size="60" maxlength="255" /></td>
         </tr>
 
         <tr>
-            <td width="26%" align="right" >${uiLabelMap.ProductQuantity}</td>
+            <td width="26%" align="right">${uiLabelMap.ProductQuantity}</td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" name="QUANTITY" <#if useValues>value="${(productAssoc.quantity)!}"<#else>value="${(request.getParameter("QUANTITY"))!}"</#if> size="10" maxlength="15" /></td>
         </tr>

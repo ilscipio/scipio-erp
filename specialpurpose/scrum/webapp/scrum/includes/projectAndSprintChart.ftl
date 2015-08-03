@@ -40,5 +40,5 @@ under the License.
     formObj.submit( );
     }
 </script>
-<iframe name="projectSprintReport" frameborder="no"  scrolling = "auto"  style='height:350px;width:100%;' ></iframe>
+<iframe name="projectSprintReport" frameborder="no"  scrolling = "auto"  style='height:350px;width:100%;'></iframe>
 <script type="text/javascript">loadViewerProjectSprintReport();</script>

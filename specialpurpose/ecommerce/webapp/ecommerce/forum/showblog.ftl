@@ -19,7 +19,7 @@ under the License.
 
 <#import "/includes/bloglib.ftl" as blog/>
 
-<div class="screenlet" >
+<div class="screenlet">
 <h1>${uiLabelMap.EcommerceFromSite}:</h1><br />
 <div>
 <@renderSiteAncestryPath trail=siteAncestorList?default([])/>

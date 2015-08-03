@@ -216,7 +216,7 @@ under the License.
                                  <#if !isProductId?has_content>
                                     <li <#if id == 1>class="selected" <#assign isProductId = content.product.productId!><#else>id="tabHeader${id}"</#if>><a href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>exportProductListing</@ofbizUrl>?isProductId=${content.product.productId!}';document.getElementById('ProductsExportToEbay').submit();">${content.product.productName!}[${content.product.productId}]</a></li>
                                  <#else>
-                                    <li <#if isProductId?? && isProductId! == content.product.productId! >class="selected" <#assign isProductId = content.product.productId!><#else>id="tabHeader${id}"</#if>><a href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>exportProductListing</@ofbizUrl>?isProductId=${content.product.productId!}';document.getElementById('ProductsExportToEbay').submit();">${content.product.productName!}[${content.product.productId}]</a></li>
+                                    <li <#if isProductId?? && isProductId! == content.product.productId!>class="selected" <#assign isProductId = content.product.productId!><#else>id="tabHeader${id}"</#if>><a href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>exportProductListing</@ofbizUrl>?isProductId=${content.product.productId!}';document.getElementById('ProductsExportToEbay').submit();">${content.product.productName!}[${content.product.productId}]</a></li>
                                  </#if>
                                  <#assign id = id+1>
                            </#list>
@@ -295,7 +295,7 @@ under the License.
                                                                     <#assign  leafCate  = "true">
                                                                 </#if>
                                                                 <#assign  primaryCateId  = primaryCate.getCategoryID()!>
-                                                                 <option selected="selected" value="${primaryCate.getCategoryID()!}:${leafCate!}" >${primaryCate.getCategoryName()!}</option>
+                                                                 <option selected="selected" value="${primaryCate.getCategoryID()!}:${leafCate!}">${primaryCate.getCategoryName()!}</option>
                                                             <#else>
                                                                 <#list categories as csCate>
                                                                     <#if !csCate.isLeafCategory()?has_content> 
@@ -304,7 +304,7 @@ under the License.
                                                                         CH_${primaryCate.getCategoryID()!}<#assign  leafCate  = "true">
                                                                     </#if>
                                                                     <#assign  primaryCateId  = csCate.getCategoryID()!>
-                                                                    <option value="${csCate.getCategoryID()!}:${leafCate!}" >${csCate.getCategoryName()!}</option>
+                                                                    <option value="${csCate.getCategoryID()!}:${leafCate!}">${csCate.getCategoryName()!}</option>
                                                                 </#list>
                                                             </#if>
                                                         </#if>
@@ -332,7 +332,7 @@ under the License.
                                                                     <#assign  leafCate  = "true">
                                                                 </#if-->
                                                                 <#assign storeCate1Id  = storeFront.getStoreCategoryID()!>
-                                                                 <option selected="selected" value="${storeFront.getStoreCategoryID()!}" >${storeFront.getStoreCategoryID()!}</option>
+                                                                 <option selected="selected" value="${storeFront.getStoreCategoryID()!}">${storeFront.getStoreCategoryID()!}</option>
                                                             <#else>
                                                                 <#list storeCategories as csCate>
                                                                     <#--if !csCate.IsLeafCategory?has_content> 
@@ -341,7 +341,7 @@ under the License.
                                                                         CH_${storeFront.getStoreCategoryID()!}<#assign  leafCate  = "true">
                                                                     </#if-->
                                                                     <#assign categoryId = csCate.getCategoryID()!>
-                                                                    <option value="${csCate.getCategoryID()!}" >${csCate.getName()!}</option>
+                                                                    <option value="${csCate.getCategoryID()!}">${csCate.getName()!}</option>
                                                                 </#list>
                                                             </#if>
                                                         </#if>
@@ -365,7 +365,7 @@ under the License.
                                                                     <#assign  leafCate  = "true">
                                                                 </#if-->
                                                                 <#assign storeCate2Id  = storeFront.getStoreCategory2ID()!>
-                                                                 <option selected="selected" value="${storeFront.getStoreCategory2ID()!}" >${storeFront.getStoreCategory2ID()!}</option>
+                                                                 <option selected="selected" value="${storeFront.getStoreCategory2ID()!}">${storeFront.getStoreCategory2ID()!}</option>
                                                             <#else>
                                                                 <#list storeCategories as csCate>
                                                                     <#--if !csCate.IsLeafCategory?has_content> 
@@ -374,7 +374,7 @@ under the License.
                                                                         CH_${storeFront.getStoreCategoryID()!}<#assign  leafCate  = "true">
                                                                     </#if-->
                                                                     <#assign categoryId = csCate.getCategoryID()!>
-                                                                    <option value="${csCate.getCategoryID()!}" >${csCate.getName()!}</option>
+                                                                    <option value="${csCate.getCategoryID()!}">${csCate.getName()!}</option>
                                                                 </#list>
                                                             </#if>
                                                         </#if>
@@ -469,9 +469,9 @@ under the License.
                                                         <input type="hidden" name="nameValueListType_o_${i}" value="${nameSpecific!}"/>
                                                         <td>
                                                             <select id="categorySpecifics" name="categorySpecifics_o_${i}">
-                                                               <option  value="" ></option>
+                                                               <option  value=""></option>
                                                                <#list itemSpecifics as itemSpecific>
-                                                                   <option  value="${itemSpecific!}" >${itemSpecific!}</option>
+                                                                   <option  value="${itemSpecific!}">${itemSpecific!}</option>
                                                                </#list>
                                                             </select>
                                                         </td>
@@ -582,7 +582,7 @@ under the License.
                                                <#if listingType.type.equals("Chinese") || listingType.type == "FixedPriceItem">
                                                     <#if listingType.type.equals("Chinese") > <#assign tabName = "Auction"></#if>
                                                     <#if listingType.type.equals("FixedPriceItem") > <#assign tabName = "Fixed Price"></#if>
-                                                    <li  <#if id==1 > style="margin-left: 1px" id="tabHeaderActive_"<#else> id="tabHeader_${id}" </#if>><a href="javascript:void(0)" onclick="toggleTab(${id},2)"><span>${tabName!}</span></a></li>
+                                                    <li  <#if id==1> style="margin-left: 1px" id="tabHeaderActive_"<#else> id="tabHeader_${id}" </#if>><a href="javascript:void(0)" onclick="toggleTab(${id},2)"><span>${tabName!}</span></a></li>
                                                     <#assign id = id + 1>
                                                </#if>
                                             </#list>
@@ -658,13 +658,13 @@ under the License.
                                                             <td class="label">Start Price</td>
                                                             <td><input type="text" size="6" name="startPrice_${id}" value="${min!}" />${currencyUomId!}</td>
                                                             <td class="label">BIN Price</td>
-                                                            <td><input type="text"  size="6" name="buyItNowPrice_${id}" value="${max!}" <#if listingType.type.equals("FixedPriceItem") >disabled="disabled"</#if> />${currencyUomId!}</td>
+                                                            <td><input type="text"  size="6" name="buyItNowPrice_${id}" value="${max!}" <#if listingType.type.equals("FixedPriceItem")>disabled="disabled"</#if> />${currencyUomId!}</td>
                                                         </#if>
                                                     </tr>
                                                     <#if !listingType.type.equals("FixedPriceItem") >
                                                     <tr>
                                                         <td class="label">Reserve Price</td>
-                                                        <td><input type="text" size="6" name="reservePrice_${id}" <#if listingType.type.equals("FixedPriceItem") >disabled="disabled"</#if> />${currencyUomId!}</td>
+                                                        <td><input type="text" size="6" name="reservePrice_${id}" <#if listingType.type.equals("FixedPriceItem")>disabled="disabled"</#if> />${currencyUomId!}</td>
                                                         <td class="label"></td>
                                                         <td></td>
                                                     </tr>

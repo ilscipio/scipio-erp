@@ -26,7 +26,7 @@ under the License.
     <tbody>
       <tr>
         <td>
-            <select name="imageResize" >
+            <select name="imageResize">
                 <#list productFeatures as productFeature>
                     <option value="${productFeature.abbrev!}">${productFeature.description!}</option>
                 </#list>

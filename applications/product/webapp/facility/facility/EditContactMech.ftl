@@ -35,7 +35,7 @@ under the License.
         <tr>
           <td>${uiLabelMap.PartySelectContactType}</td>
           <td>
-            <select name="preContactMechTypeId" >
+            <select name="preContactMechTypeId">
               <#list mechMap.contactMechTypes as contactMechType>
                 <option value='${contactMechType.contactMechTypeId}'>${contactMechType.get("description",locale)}</option>
               </#list>
@@ -86,7 +86,7 @@ under the License.
       <table class="basic-table" cellspacing="0">
         <#if mechMap.purposeTypes?has_content>
         <tr>
-          <td valign="top" >${uiLabelMap.PartyContactPurposes}</td>
+          <td valign="top">${uiLabelMap.PartyContactPurposes}</td>
           <td>
             <table class="basic-table" cellspacing="0">
             <#if mechMap.facilityContactMechPurposes?has_content>

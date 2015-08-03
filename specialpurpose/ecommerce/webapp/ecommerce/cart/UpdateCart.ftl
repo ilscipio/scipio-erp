@@ -176,7 +176,7 @@ under the License.
         </div>
       </fieldset>
       <fieldset>
-        <a href="javascript:void(0);" class="button" id="updateShoppingCart" >${uiLabelMap.EcommerceContinueToStep} 2</a>
+        <a href="javascript:void(0);" class="button" id="updateShoppingCart">${uiLabelMap.EcommerceContinueToStep} 2</a>
         <a style="display: none" class="button" href="javascript:void(0);" id="processingShipping">${uiLabelMap.EcommercePleaseWait}....</a>
       </fieldset>
     </form>

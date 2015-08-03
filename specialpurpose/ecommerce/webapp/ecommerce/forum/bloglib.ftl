@@ -51,7 +51,7 @@ under the License.
 
   <tr>
     <td width="40px">&nbsp;</td>
-    <td class="blogtext" >
+    <td class="blogtext">
       <div>
         by:<#if authorName?has_content>${authorName!}
         <#else>
@@ -173,7 +173,7 @@ ${uiLabelMap.EcommerceLoggedToPost}
 <#if highIdx < lowIdxShow >
   <#assign lowIdxShow = highIdx/>
 </#if>
-<table border="0" >
+<table border="0">
 <tr><td>
              <#if 0 < listSz?number>
                 <#if 0 < viewIdx?number>

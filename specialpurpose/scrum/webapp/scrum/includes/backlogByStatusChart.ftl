@@ -40,5 +40,5 @@ under the License.
     formObj.submit( );
     }
 </script>
-<iframe name="birtReport" frameborder="no"  scrolling = "auto"  style='height:350px;width:100%;' ></iframe>
+<iframe name="birtReport" frameborder="no"  scrolling = "auto"  style='height:350px;width:100%;'></iframe>
 <script type="text/javascript">loadViewerbirtReport();</script>

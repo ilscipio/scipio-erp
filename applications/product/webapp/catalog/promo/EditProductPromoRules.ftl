@@ -60,7 +60,7 @@ under the License.
       </tr>
       <tr><td><hr /></td><td colspan="2"></td></tr>
       <tr valign="top" class="row-level-one<#if ruleClass == "1"> alternate-row</#if>">
-        <td align="right" >${uiLabelMap.ProductConditionsForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
+        <td align="right">${uiLabelMap.ProductConditionsForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
         <td colspan="2">
           <table cellspacing="0" class="basic-table">
     <#assign maxCondSeqId = 1>
@@ -266,7 +266,7 @@ under the License.
       </tr>
       <tr><td><hr /></td><td colspan="2"></td></tr>
       <tr valign="top" class="row-level-one<#if ruleClass == "1"> alternate-row</#if>">
-        <td align="right" >${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
+        <td align="right">${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
         <td colspan="2">
           <table cellspacing="0" class="basic-table">
     <#assign actionClass = "2">

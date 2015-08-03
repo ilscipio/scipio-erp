@@ -32,14 +32,14 @@ under the License.
           <#if returnHeader??>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap" >${uiLabelMap.OrderReturnId}</td>
+            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnId}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%' align='left'>${returnHeader.returnId}</td>
           </tr>
           </#if>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap" >${uiLabelMap.CommonCurrency}</td>
+            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.CommonCurrency}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>
           <#if returnHeader??>
@@ -64,7 +64,7 @@ under the License.
           </tr>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap" >${uiLabelMap.OrderEntryDate}</td>
+            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderEntryDate}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>
               <#if returnInfo.entryDate??>
@@ -75,7 +75,7 @@ under the License.
           </tr>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap" >${uiLabelMap.OrderReturnFromParty}</td>
+            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnFromParty}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>
               <@htmlTemplate.lookupField value='${returnInfo.fromPartyId!}' formName="returnhead" name="fromPartyId" id="fromPartyId" fieldFormName="LookupPartyName"/>
@@ -83,7 +83,7 @@ under the License.
           </tr>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap" >${uiLabelMap.OrderReturnToFacility}</td>
+            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnToFacility}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>
               <select name='destinationFacilityId'>
@@ -99,7 +99,7 @@ under the License.
           </tr>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap" >${uiLabelMap.AccountingBillingAccount}</td>
+            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.AccountingBillingAccount}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>
               <#if billingAccountList?has_content>
@@ -120,7 +120,7 @@ under the License.
           </tr>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap" >${uiLabelMap.FormFieldTitle_paymentMethodId}</td>
+            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.FormFieldTitle_paymentMethodId}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>
               <#if creditCardList?? || eftAccountList??>
@@ -154,7 +154,7 @@ under the License.
           </tr>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap" >${uiLabelMap.OrderReturnNeedsAutoReceive}</td>
+            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnNeedsAutoReceive}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>
               <select name='needsInventoryReceive'>
@@ -174,7 +174,7 @@ under the License.
         <#if returnHeader?has_content>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap" >${uiLabelMap.CommonReturnStatus}</td>
+            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.CommonReturnStatus}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>
               <select name="statusId">
@@ -190,13 +190,13 @@ under the License.
           </tr>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap" >${uiLabelMap.FormFieldTitle_createdBy}</td>
+            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.FormFieldTitle_createdBy}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>${returnHeader.createdBy?default("Unknown")}</td>
           </tr>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' valign='top' nowrap="nowrap" >${uiLabelMap.OrderReturnFromAddress}</td>
+            <td width='6%' align='right' valign='top' nowrap="nowrap">${uiLabelMap.OrderReturnFromAddress}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>
               <div>
@@ -217,7 +217,7 @@ under the License.
           </tr>
           <tr>
             <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' valign='top' nowrap="nowrap" >${uiLabelMap.OrderReturnToAddress}</td>
+            <td width='6%' align='right' valign='top' nowrap="nowrap">${uiLabelMap.OrderReturnToAddress}</td>
             <td width='6%'>&nbsp;</td>
             <td width='74%'>
               <#if (postalAddressTo?has_content)>

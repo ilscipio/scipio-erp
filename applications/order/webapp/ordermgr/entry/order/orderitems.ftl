@@ -61,7 +61,7 @@ under the License.
                 <td class="text-right" valign="top">
                   <div><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></div>
                 </td>
-                <td class="text-right" valign="top" >
+                <td class="text-right" valign="top">
                   <div><@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/></div>
                 </td>
                 <#if maySelectItems?default(false)>
@@ -126,29 +126,29 @@ under the License.
 
           <tr>
             <td colspan="4"><div><b>${uiLabelMap.OrderSubTotal}</b></div></td>
-            <td class="text-right" ><div>&nbsp;<#if orderSubTotal??><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></#if></div></td>
+            <td class="text-right"><div>&nbsp;<#if orderSubTotal??><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></#if></div></td>
           </tr>
           <#list headerAdjustmentsToShow! as orderHeaderAdjustment>
             <tr>
               <td colspan="4"><div><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></div></td>
-              <td class="text-right" ><div><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></div></td>
+              <td class="text-right"><div><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></div></td>
             </tr>
           </#list>
           <tr><td colspan=2></td><td colspan="8"><hr /></td></tr>
           
           <tr>
             <td colspan="4"><div><b>${uiLabelMap.FacilityShippingAndHandling}</b></div></td>
-            <td class="text-right" ><div><#if orderShippingTotal??><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></#if></div></td>
+            <td class="text-right"><div><#if orderShippingTotal??><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></#if></div></td>
           </tr>
           <tr>
             <td colspan="4"><div><b>${uiLabelMap.OrderSalesTax}</b></div></td>
-            <td class="text-right" ><div><#if orderTaxTotal??><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></#if></div></td>
+            <td class="text-right"><div><#if orderTaxTotal??><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></#if></div></td>
           </tr>
 
           <tr><td colspan=2></td><td colspan="8"><hr /></td></tr>
           <tr>
             <td colspan="4"><div><b>${uiLabelMap.OrderGrandTotal}</b></div></td>
-            <td class="text-right" >
+            <td class="text-right">
               <div><#if orderGrandTotal??><@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/></#if></div>
             </td>
           </tr>

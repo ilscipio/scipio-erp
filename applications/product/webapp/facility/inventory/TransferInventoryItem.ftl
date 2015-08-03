@@ -61,7 +61,7 @@ under the License.
             </tr>
             <tr>
                 <td width="14%">&nbsp;</td>
-                <td width="6%" align="right" nowrap="nowrap" >${uiLabelMap.ProductInventoryItemTypeId}</td>
+                <td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductInventoryItemTypeId}</td>
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                 <#if inventoryItemType??>

@@ -290,7 +290,7 @@ under the License.
         </tr>
         <#if searchConstraintStrings?has_content>
           <tr>
-            <td align="right" valign="top" >
+            <td align="right" valign="top">
               ${uiLabelMap.ProductLastSearch}
             </td>
             <td valign="top">

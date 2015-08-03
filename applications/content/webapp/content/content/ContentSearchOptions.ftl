@@ -25,7 +25,7 @@ under the License.
       <input type="hidden" name="VIEW_SIZE" value="25"/>
       <table class="basic-table" cellspacing="0">
         <tr>
-          <td align="right" valign="middle" >${uiLabelMap.ContentKeywords}</td>
+          <td align="right" valign="middle">${uiLabelMap.ContentKeywords}</td>
           <td valign="middle">
             <div>
               <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
@@ -35,7 +35,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" >${uiLabelMap.FormFieldTitle_contentId}</td>
+          <td align="right" valign="middle">${uiLabelMap.FormFieldTitle_contentId}</td>
           <td valign="middle">
             <div>
               <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CONTENT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_CONTENT_ID" id="SEARCH_CONTENT_ID" fieldFormName="LookupContent"/>
@@ -43,7 +43,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" nowrap="nowrap" >${uiLabelMap.FormFieldTitle_contentAssocTypeId}</td>
+          <td align="right" valign="middle" nowrap="nowrap">${uiLabelMap.FormFieldTitle_contentAssocTypeId}</td>
           <td valign="middle" nowrap="nowrap">
             <div>
               <select name="contentAssocTypeId">
@@ -59,7 +59,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" >${uiLabelMap.PartyPartyId}</td>
+          <td align="right" valign="middle">${uiLabelMap.PartyPartyId}</td>
           <td valign="middle">
             <div>
               <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
@@ -67,7 +67,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td align="right" valign="middle" >${uiLabelMap.PartyRoleTypeId}</td>
+          <td align="right" valign="middle">${uiLabelMap.PartyRoleTypeId}</td>
           <td valign="middle">
             <div>
               <select name="partyRoleTypeId">
@@ -99,7 +99,7 @@ under the License.
           </td>
           </tr>
         <tr>
-          <td align="right" valign="middle" >${uiLabelMap.CommonSortedBy}</td>
+          <td align="right" valign="middle">${uiLabelMap.CommonSortedBy}</td>
           <td valign="middle">
             <div>
               <select name="sortOrder">
@@ -113,7 +113,7 @@ under the License.
         </tr>
         <#if searchConstraintStrings?has_content>
           <tr>
-            <td align="right" valign="top" >${uiLabelMap.ProductLastSearch}</td>
+            <td align="right" valign="top">${uiLabelMap.ProductLastSearch}</td>
             <td valign="top">
                 <#list searchConstraintStrings as searchConstraintString>
                     <div>&nbsp;-&nbsp;${searchConstraintString}</div>

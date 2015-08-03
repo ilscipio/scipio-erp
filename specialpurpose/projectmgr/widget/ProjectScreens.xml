@@ -263,7 +263,7 @@ under the License.
                                     <!-- Edit an existing SubTask -->
                                     <fail-widgets>
                                         <container>
-                                            <link  text="${uiLabelMap.CommonGoBack}" target="FindTask" style="button tiny">
+                                            <link  text="${uiLabelMap.CommonGoBack}" target="FindTask" style="${styles.button_default}">
                                                 <parameter param-name="workEffortId" from-field="task.workEffortParentId"/>
                                                 <parameter param-name="workEffortTypeId" value="TASK"/>
                                             </link>
@@ -341,7 +341,7 @@ under the License.
                 <decorator-screen name="CommonProjectDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                             <link target="EditPartySkill" text="${uiLabelMap.HumanResNewPartySkill}" style="button tiny"/>
+                             <link target="EditPartySkill" text="${uiLabelMap.HumanResNewPartySkill}" style="${styles.button_default}"/>
                         </container>
                         <screenlet title="${uiLabelMap.HumanResEditPartySkill}">
                             <include-form name="ListPartySkills" location="component://humanres/widget/forms/PartySkillForms.xml"/>

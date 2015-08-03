@@ -85,7 +85,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleFindCalendar}">
                             <container style="button-bar">
-                                <link style="button tiny" target="EditCalendar" text="${uiLabelMap.ManufacturingNewCalendar}"/>
+                                <link style="${styles.button_default}" target="EditCalendar" text="${uiLabelMap.ManufacturingNewCalendar}"/>
                             </container>
                             <include-form name="ListTechDataCalendars" location="component://manufacturing/widget/manufacturing/CalendarForms.xml"/>
                         </screenlet>
@@ -111,7 +111,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListCalendarWeek}">
                             <container style="button-bar">
-                                <link style="button tiny" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
+                                <link style="${styles.button_default}" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
                             </container>
                             <include-form name="ListCalendarWeek" location="component://manufacturing/widget/manufacturing/CalendarForms.xml"/>
                         </screenlet>
@@ -134,7 +134,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditCalendarWeek}">
                             <container style="button-bar">
-                                <link style="button tiny" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
+                                <link style="${styles.button_default}" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
                             </container>
                             <include-form name="UpdateCalendarWeek" location="component://manufacturing/widget/manufacturing/CalendarForms.xml"/>
                         </screenlet>

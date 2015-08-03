@@ -52,7 +52,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet>
                             <container>
-                                <link style="button tiny" target="returnMain" text="${uiLabelMap.OrderCreateNewReturn}"/>
+                                <link style="${styles.button_default}" target="returnMain" text="${uiLabelMap.OrderCreateNewReturn}"/>
                             </container>
                             <include-form name="FindReturns" location="component://order/widget/ordermgr/ReturnForms.xml"/>
                             <include-form name="ListReturns" location="component://order/widget/ordermgr/ReturnForms.xml"/>

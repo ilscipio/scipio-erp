@@ -241,11 +241,11 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.AccountingTrialBalance}">
-                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="button tiny" target="TrialBalanceSearchResultsCsv.csv">
+                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="TrialBalanceSearchResultsCsv.csv">
                                         <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link>
-                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="button tiny" target="TrialBalanceSearchResultsPdf.pdf" target-window="_BLANK">
+                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="TrialBalanceSearchResultsPdf.pdf" target-window="_BLANK">
                                         <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link>

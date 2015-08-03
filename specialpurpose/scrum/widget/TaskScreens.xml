@@ -51,7 +51,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditTask" text="${uiLabelMap.ScrumNewTask}" style="button tiny create"/>
+                                            <link target="EditTask" text="${uiLabelMap.ScrumNewTask}" style="${styles.button_default} create"/>
                                         </container>
                                     </widgets>
                                 </section>

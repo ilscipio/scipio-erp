@@ -261,7 +261,7 @@ under the License.
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar">
-                                                   <link  text="Create A Default Task" target="editDefaultTask" style="button tiny create">
+                                                   <link  text="Create A Default Task" target="editDefaultTask" style="${styles.button_default} create">
                                                         <parameter param-name="productId" from-field="product.productId"/>
                                                    </link>
                                                 </container>
@@ -331,7 +331,7 @@ under the License.
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar">
-                                                   <link  text="Create A Default Task" target="editDefaultTask" style="button tiny create">
+                                                   <link  text="Create A Default Task" target="editDefaultTask" style="${styles.button_default} create">
                                                         <parameter param-name="productId" from-field="product.productId"/>
                                                    </link>
                                                 </container>

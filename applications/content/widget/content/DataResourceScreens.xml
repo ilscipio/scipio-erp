@@ -34,7 +34,7 @@ under the License.
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <container style="button-bar"><link target="EditDataResource" text="${uiLabelMap.CommonCreateNew}" style="button tiny create"/></container>
+                                <container style="button-bar"><link target="EditDataResource" text="${uiLabelMap.CommonCreateNew}" style="${styles.button_default} create"/></container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
@@ -489,7 +489,7 @@ under the License.
             </condition>
             <widgets>
                 <container>
-                    <link target="ViewBinaryDataResource" text="${uiLabelMap.ContentDownload}" style="button tiny">
+                    <link target="ViewBinaryDataResource" text="${uiLabelMap.ContentDownload}" style="${styles.button_default}">
                         <parameter param-name="dataResourceId"/>
                    </link>
                 </container>

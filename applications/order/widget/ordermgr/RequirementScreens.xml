@@ -64,7 +64,7 @@ under the License.
                             <widgets>
                                 <include-menu name="RequirementsTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                                 <container>
-                                    <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="button tiny"/>
+                                    <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="${styles.button_default}"/>
                                 </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
@@ -153,7 +153,7 @@ under the License.
                                 <set field="genericLinkName" value="print"/>
                                 <set field="genericLinkText" value="${uiLabelMap.CommonPrint}"/>
                                 <set field="genericLinkTarget" value="ApprovedProductRequirementsReport"/>
-                                <set field="genericLinkStyle" value="button tiny"/>
+                                <set field="genericLinkStyle" value="${styles.button_default}"/>
                                 <set field="genericLinkWindow" value="reportWindow"/>
                             </actions>
                             <widgets>
@@ -339,10 +339,10 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListRequirementRoles}">
                             <container>
-                                <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="button tiny">
+                                <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="${styles.button_default}">
                                     <parameter param-name="requirementId"/>
                                 </link>
-                                <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="button tiny">
+                                <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="${styles.button_default}">
                                     <parameter param-name="requirementId"/>
                                 </link>
                             </container>

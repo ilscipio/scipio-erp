@@ -39,7 +39,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditBudget" text="${uiLabelMap.AccountingNewBudget}" style="button tiny create"/>
+                                            <link target="EditBudget" text="${uiLabelMap.AccountingNewBudget}" style="${styles.button_default} create"/>
                                         </container>
                                     </widgets>
                                 </section>

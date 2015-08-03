@@ -34,7 +34,7 @@
                                 <section>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditEmplPosition" text="${uiLabelMap.HumanResNewEmplPosition}" style="button tiny create"/>
+                                            <link target="EditEmplPosition" text="${uiLabelMap.HumanResNewEmplPosition}" style="${styles.button_default} create"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -162,7 +162,7 @@
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResListValidResponsibility}">
                             <container>
-                                <link target="EditValidResponsibility" text="${uiLabelMap.HumanResAddValidResponsibility}" style="button tiny"/>
+                                <link target="EditValidResponsibility" text="${uiLabelMap.HumanResAddValidResponsibility}" style="${styles.button_default}"/>
                             </container>
                             <include-form name="ListValidResponsibilities" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
                         </screenlet>
@@ -181,7 +181,7 @@
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResAddValidResponsibility}">
                             <container>
-                                <link target="EditValidResponsibility" text="${uiLabelMap.HumanResAddValidResponsibility}" style="button tiny"/>
+                                <link target="EditValidResponsibility" text="${uiLabelMap.HumanResAddValidResponsibility}" style="${styles.button_default}"/>
                             </container>
                             <include-form name="AddValidResponsibility" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
                         </screenlet>

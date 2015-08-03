@@ -75,9 +75,9 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="newPayment" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingPayment}" style="button tiny create"/>
-                                            <link target="FindSalesInvoicesByDueDate" text="${uiLabelMap.AccountingFindSalesInvoicesByDueDate}" style="button tiny search"/>
-                                            <link target="FindPurchaseInvoicesByDueDate" text="${uiLabelMap.AccountingFindPurchaseInvoicesByDueDate}" style="button tiny search"/>
+                                            <link target="newPayment" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingPayment}" style="${styles.button_default} create"/>
+                                            <link target="FindSalesInvoicesByDueDate" text="${uiLabelMap.AccountingFindSalesInvoicesByDueDate}" style="${styles.button_default} search"/>
+                                            <link target="FindPurchaseInvoicesByDueDate" text="${uiLabelMap.AccountingFindPurchaseInvoicesByDueDate}" style="${styles.button_default} search"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -369,7 +369,7 @@ under the License.
                             <widgets>
                                 <container style="large-6">
                                     <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
-                                        <link target="editPayment" text="${uiLabelMap.CommonUpdate}" style="button tiny">
+                                        <link target="editPayment" text="${uiLabelMap.CommonUpdate}" style="${styles.button_default}">
                                             <parameter param-name="paymentId"/>
                                         </link>
                                         <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
@@ -377,7 +377,7 @@ under the License.
                                 </container>
                                 <container style="large-6">
                                     <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
-                                        <link target="editPaymentApplications" text="${uiLabelMap.CommonUpdate}" style="button tiny">
+                                        <link target="editPaymentApplications" text="${uiLabelMap.CommonUpdate}" style="${styles.button_default}">
                                             <parameter param-name="paymentId"/>
                                         </link>
                                         <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>

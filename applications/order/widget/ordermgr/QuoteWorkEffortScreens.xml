@@ -124,7 +124,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderOrderQuoteWorkEfforts}">
                             <container>
-                                <link target="AddQuoteWorkEffort" text="${uiLabelMap.OrderCreateQuoteWorkEffort}" style="button tiny">
+                                <link target="AddQuoteWorkEffort" text="${uiLabelMap.OrderCreateQuoteWorkEffort}" style="${styles.button_default}">
                                     <parameter param-name="quoteId"/>
                                 </link>
                             </container>

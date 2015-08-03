@@ -195,11 +195,11 @@ under the License.
                             <decorator-section name="menu-bar">
                                 <container style="row">
                                 <container style="large-12 columns">
-                                    <link target="entitymaint" text="${uiLabelMap.WebtoolsBackToEntityList}" style="button tiny"/>
-                                    <link target="ViewRelations" text="${uiLabelMap.WebtoolsViewRelations}" style="button tiny">
+                                    <link target="entitymaint" text="${uiLabelMap.WebtoolsBackToEntityList}" style="${styles.button_default}"/>
+                                    <link target="ViewRelations" text="${uiLabelMap.WebtoolsViewRelations}" style="${styles.button_default}">
                                         <parameter param-name="entityName" from-field="entityName"/>
                                     </link>
-                                    <link target="ViewGeneric" text="${uiLabelMap.CommonCreateNew}" style="button tiny success">
+                                    <link target="ViewGeneric" text="${uiLabelMap.CommonCreateNew}" style="${styles.button_default} success">
                                         <parameter param-name="entityName" from-field="entityName"/>
                                         <parameter param-name="enableEdit" value="true"/>
                                     </link>

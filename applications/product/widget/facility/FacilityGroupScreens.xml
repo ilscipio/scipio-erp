@@ -32,7 +32,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleFindFacilityGroup}">
                             <container style="button-bar">
-                                <link target="EditFacilityGroup" text="${uiLabelMap.ProductNewGroup}" style="button tiny create"/>
+                                <link target="EditFacilityGroup" text="${uiLabelMap.ProductNewGroup}" style="${styles.button_default} create"/>
                             </container>
                             <include-form name="FindFacilityGroup" location="component://product/widget/facility/FacilityGroupForms.xml"/>
                         </screenlet>
@@ -90,7 +90,7 @@ under the License.
                     <decorator-section name="body">
                         <container style="page-title"><label text="${uiLabelMap.PageTitleEditFacilityGroup}"/></container>
                         <container style="button-bar">
-                            <link target="EditFacilityGroup" text="${uiLabelMap.CommonNew}" style="button tiny create"/>
+                            <link target="EditFacilityGroup" text="${uiLabelMap.CommonNew}" style="${styles.button_default} create"/>
                         </container>
                         <include-form name="EditFacilityGroup" location="component://product/widget/facility/FacilityGroupForms.xml"/>
                     </decorator-section>
@@ -115,7 +115,7 @@ under the License.
                             <label>${uiLabelMap.PageTitleEditFacilityGroupMembers} ${uiLabelMap.CommonFor} ${facilityGroup.facilityGroupName} [${facilityGroup.facilityGroupId}]</label>
                         </container>
                         <container style="button-bar">
-                            <link target="EditFacilityGroup" text="${uiLabelMap.ProductNewGroup}" style="button tiny create"/>
+                            <link target="EditFacilityGroup" text="${uiLabelMap.ProductNewGroup}" style="${styles.button_default} create"/>
                         </container>
                         <screenlet id="AddFacilityGroupMemberPanel" title="${uiLabelMap.ProductAddFacilityGroupMember}" collapsible="true">
                             <include-form name="AddFacilityGroupMember" location="component://product/widget/facility/FacilityGroupForms.xml"/>
@@ -142,7 +142,7 @@ under the License.
                             <label>${uiLabelMap.PageTitleEditFacilityGroupRoles} ${uiLabelMap.CommonFor} ${facilityGroup.facilityGroupName} [${facilityGroup.facilityGroupId}]</label>
                         </container>
                         <container style="button-bar">
-                            <link target="EditFacilityGroup" text="${uiLabelMap.ProductNewGroup}" style="button tiny create"/>
+                            <link target="EditFacilityGroup" text="${uiLabelMap.ProductNewGroup}" style="${styles.button_default} create"/>
                         </container>
                         <screenlet id="AddFacilityGroupRolePanel" title="${uiLabelMap.ProductAddFacilityGroupPartyRole}" collapsible="true">
                             <include-form name="AddFacilityGroupRole" location="component://product/widget/facility/FacilityGroupForms.xml"/>
@@ -170,7 +170,7 @@ under the License.
                     <decorator-section name="body">
                         <container style="page-title"><label>${uiLabelMap.PageTitleEditFacilityGroupRollup} ${uiLabelMap.CommonFor} ${facilityGroup.facilityGroupName} [${facilityGroup.facilityGroupId}]</label></container>
                             <container style="button-bar">
-                                <link target="EditFacilityGroup" text="${uiLabelMap.ProductNewGroup}" style="button tiny create"/>
+                                <link target="EditFacilityGroup" text="${uiLabelMap.ProductNewGroup}" style="${styles.button_default} create"/>
                             </container>
                         <screenlet id="AddFacilityGroupRollupFromPanel" title="${uiLabelMap.PageTitleAddFacilityGroupRollup}" collapsible="true">
                             <include-form name="AddFacilityGroupRollupFrom" location="component://product/widget/facility/FacilityGroupForms.xml"/>

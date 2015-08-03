@@ -117,14 +117,14 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="button tiny">
+                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="${styles.button_default}">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                             </link>
                                         </container>
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="button tiny">
+                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="${styles.button_default}">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                                 <parameter param-name="SHOW_OLD" value="true"/>
                                             </link>
@@ -886,7 +886,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListContent}">
                             <container>
-                                <link target="EditPartyContents" text="${uiLabelMap.CommonCreateNew}" style="button tiny">
+                                <link target="EditPartyContents" text="${uiLabelMap.CommonCreateNew}" style="${styles.button_default}">
                                     <parameter param-name="partyId"/>
                                 </link>
                             </container>
@@ -1178,7 +1178,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="addGeoLocation" text="${uiLabelMap.CommonUpdate}" style="button tiny">
+                                    <link target="addGeoLocation" text="${uiLabelMap.CommonUpdate}" style="${styles.button_default}">
                                         <parameter param-name="partyId" from-field="parameters.partyId"/>
                                     </link>
                                 </container>
@@ -1189,7 +1189,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container style="button-bar">
-                                    <link target="addGeoLocation" text="${uiLabelMap.CommonCreateNew}" style="button tiny create">
+                                    <link target="addGeoLocation" text="${uiLabelMap.CommonCreateNew}" style="${styles.button_default} create">
                                         <parameter param-name="partyId" from-field="parameters.partyId"/>
                                     </link>
                                 </container>

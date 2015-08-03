@@ -33,7 +33,7 @@ under the License.
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
                                 <container style="button-bar">
-                                    <link target="request" text="${uiLabelMap.OrderNewRequest}" style="button tiny create"/>
+                                    <link target="request" text="${uiLabelMap.OrderNewRequest}" style="${styles.button_default} create"/>
                                 </container>
                             </decorator-section>
                             <decorator-section name="search-options">
@@ -244,7 +244,7 @@ under the License.
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleRequestItems}">
-                            <link target="requestitem" text="${uiLabelMap.OrderNewRequestItem}" style="button tiny">
+                            <link target="requestitem" text="${uiLabelMap.OrderNewRequestItem}" style="${styles.button_default}">
                                 <parameter param-name="custRequestId"/>
                             </link>
                             <include-form name="ListRequestItems" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
@@ -273,7 +273,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
                             <container>
-                                <link target="requestitem" text="${uiLabelMap.OrderNewRequestItem}" style="button tiny">
+                                <link target="requestitem" text="${uiLabelMap.OrderNewRequestItem}" style="${styles.button_default}">
                                     <parameter param-name="custRequestId"/>
                                 </link>
                             </container>
@@ -335,7 +335,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
                             <container>
-                                <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="button tiny">
+                                <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="${styles.button_default}">
                                     <parameter param-name="custRequestId" from-field="custRequestItem.custRequestId"/>
                                     <parameter param-name="custRequestItemSeqId" from-field="custRequestItem.custRequestItemSeqId"/>
                                 </link>
@@ -457,7 +457,7 @@ under the License.
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddCustRequestItemWorkEffortPanel" title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}" collapsible="true">
-                            <link  target="EditRequestItem" text="${uiLabelMap.OrderNewRequestItem}" style="button tiny">
+                            <link  target="EditRequestItem" text="${uiLabelMap.OrderNewRequestItem}" style="${styles.button_default}">
                                 <parameter param-name="custRequestId"/>
                             </link>
                             <include-form name="AddCustRequestItemWorkEffort" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
@@ -636,7 +636,7 @@ under the License.
                                     <if-compare field="statusGroup" operator="equals" value="OPEN"/>
                                 </condition>
                                 <widgets>
-                                    <link target="EditRequestCustomer" text="${uiLabelMap.OrderNewRequest}" style="button tiny"/>
+                                    <link target="EditRequestCustomer" text="${uiLabelMap.OrderNewRequest}" style="${styles.button_default}"/>
                                 </widgets>
                             </section>
                             <include-form name="ListMyCustRequests" location="component://order/widget/ordermgr/CustRequestForms.xml"/>

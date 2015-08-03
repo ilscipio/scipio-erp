@@ -129,7 +129,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="editVendor" text="${uiLabelMap.CommonNew} ${uiLabelMap.PartyVendor}" style="button tiny create"/>
+                                            <link target="editVendor" text="${uiLabelMap.CommonNew} ${uiLabelMap.PartyVendor}" style="${styles.button_default} create"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">

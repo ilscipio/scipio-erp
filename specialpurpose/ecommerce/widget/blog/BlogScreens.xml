@@ -51,7 +51,7 @@
                                 <if-service-permission service-name="genericContentPermission" main-action="CREATE" context-map="crPerm"/>
                             </condition>
                             <widgets>
-                                <link text="${uiLabelMap.CommonAddNew}" target="NewBlogArticle" style="button tiny">
+                                <link text="${uiLabelMap.CommonAddNew}" target="NewBlogArticle" style="${styles.button_default}">
                                     <parameter param-name="blogContentId"/>
                                 </link>
                             </widgets>
@@ -255,7 +255,7 @@
                                 </condition>
                                 <widgets>
                                     <container style="rightjustify">
-                                        <link text="${uiLabelMap.CommonEdit}" target="EditBlogArticle" style="button tiny">
+                                        <link text="${uiLabelMap.CommonEdit}" target="EditBlogArticle" style="${styles.button_default}">
                                         <parameter param-name="contentId" from-field="articleContentId"/>
                                         <parameter param-name="blogContentId"/>
                                     </link>
@@ -328,7 +328,7 @@
                                                 <if-compare field="parameters.edit" operator="not-equals" value="Y"/>
                                             </condition>
                                             <widgets>
-                                                <link text="${uiLabelMap.CommonEdit}" target="ViewResponse" style="button tiny">
+                                                <link text="${uiLabelMap.CommonEdit}" target="ViewResponse" style="${styles.button_default}">
                                                     <parameter param-name="contentId" from-field="content.contentId"/>
                                                     <parameter param-name="ownerContentId" from-field="content.ownerContentId"/>
                                                     <parameter param-name="articleContentId"/>
@@ -337,7 +337,7 @@
                                                 </link>
                                             </widgets>
                                             <fail-widgets>
-                                                <link text="${uiLabelMap.CommonView}" target="ViewResponse" style="button tiny">
+                                                <link text="${uiLabelMap.CommonView}" target="ViewResponse" style="${styles.button_default}">
                                                     <parameter param-name="contentId" from-field="content.contentId"/>
                                                     <parameter param-name="ownerContentId" from-field="content.ownerContentId"/>
                                                     <parameter param-name="articleContentId"/>
@@ -488,7 +488,7 @@
                                 <parameter param-name="articleContentId"/>
                                 <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
                             </link>
-                                            <link text="${uiLabelMap.CommonView}" target="ViewResponse" style="button tiny">
+                                            <link text="${uiLabelMap.CommonView}" target="ViewResponse" style="${styles.button_default}">
                                 <parameter param-name="contentId" from-field="rsp.contentId"/>
                                 <parameter param-name="ownerContentId" from-field="rsp.ownerContentId"/>
                                 <parameter param-name="articleContentId"/>
@@ -513,7 +513,7 @@
                                 <parameter param-name="articleContentId"/>
                                 <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
                             </link>
-                                            <link text="${uiLabelMap.CommonView}" target="ViewResponse" style="button tiny">
+                                            <link text="${uiLabelMap.CommonView}" target="ViewResponse" style="${styles.button_default}">
                                 <parameter param-name="contentId" from-field="rsp.contentId"/>
                                 <parameter param-name="ownerContentId" from-field="rsp.ownerContentId"/>
                                 <parameter param-name="articleContentId"/>
@@ -539,7 +539,7 @@
                         <parameter param-name="ownerContentId" from-field="rsp.ownerContentId"/>
                         <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
                     </link>
-                    <link text="${uiLabelMap.EcommerceBlogViewArticle}" target="ViewBlogArticle" style="button tiny">
+                    <link text="${uiLabelMap.EcommerceBlogViewArticle}" target="ViewBlogArticle" style="${styles.button_default}">
                         <parameter param-name="articleContentId"/>
                         <parameter param-name="ownerContentId" from-field="rsp.ownerContentId"/>
                         <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>

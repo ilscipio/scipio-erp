@@ -190,8 +190,8 @@ function setAlternateGwp(field) {
                             <td>- ${uiLabelMap.EcommerceNbrOfDays} -</td>
                         </tr>
                         <tr>
-                            <td >- ${uiLabelMap.EcommerceNbrOfPersons} -</td>
-                            <td >- ${uiLabelMap.CommonQuantity} -</td>
+                            <td>- ${uiLabelMap.EcommerceNbrOfPersons} -</td>
+                            <td>- ${uiLabelMap.CommonQuantity} -</td>
                         </tr>
                     </table>
                 </td>
@@ -306,7 +306,7 @@ function setAlternateGwp(field) {
 
             <#-- gift wrap option -->
             <#assign showNoGiftWrapOptions = false />
-            <td >
+            <td>
               <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP! />
               <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")! />
               <#if giftWrapOption?has_content>
@@ -330,7 +330,7 @@ function setAlternateGwp(field) {
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
                        <#if fixedAssetExist == true>
                         <#if cartLine.getReservStart()??>
-                            <table >
+                            <table>
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td>${cartLine.getReservStart()?string("yyyy-mm-dd")}</td>
@@ -340,9 +340,9 @@ function setAlternateGwp(field) {
                                     <td>${cartLine.getReservPersons()?string.number}</td>
                                     <td>
                         <#else>
-                            <table >
+                            <table>
                                 <tr>
-                                    <td >--</td>
+                                    <td>--</td>
                                     <td>--</td>
                                 </tr>
                                 <tr>

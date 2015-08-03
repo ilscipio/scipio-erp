@@ -92,10 +92,10 @@ under the License.
                                 <td>
                                    ${custRequestItemNoteViewList.noteId}
                                 </td>
-                                <td >
+                                <td>
                                    ${custRequestItemNoteViewList.noteInfo}
                                 </td>
-                                <td >
+                                <td>
                                    ${partyNameView.groupName!} ${partyNameView.firstName!} ${partyNameView.lastName!}
                                 </td>
                                 <td>

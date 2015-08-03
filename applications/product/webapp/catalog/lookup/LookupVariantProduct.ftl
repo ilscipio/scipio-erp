@@ -18,7 +18,7 @@ under the License.
 -->
 <#if (requestAttributes.uiLabelMap)??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <br />
-<div >[${product.productId}] ${product.internalName}</div>
+<div>[${product.productId}] ${product.internalName}</div>
 <br />
 <#if searchFeatures?has_content>
   <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
@@ -26,7 +26,7 @@ under the License.
         <input type="hidden" name="productId" value="${product.productId}" />
         <#list searchFeatures as searchFeature>
             <tr>
-                <td ><b>${searchFeature.featureType}</b></td>
+                <td><b>${searchFeature.featureType}</b></td>
                 <td><select name="${searchFeature.featureType}">
                     <#assign features = searchFeature.features>
                     <option value=""></option>

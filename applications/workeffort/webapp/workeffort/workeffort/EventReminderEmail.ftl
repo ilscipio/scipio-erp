@@ -41,12 +41,12 @@ under the License.
     </style>
     <table cellspacing=0>
       <#-- Work Effort Info -->
-      <tr><td >${uiLabelMap.CommonDate}</td><td>${parameters.eventDateTime?default("&nbsp;")}</td></tr>
-      <tr><td >${uiLabelMap.CommonName}</td><td>${workEffort.workEffortName?default("&nbsp;")}</td></tr>
-      <tr><td >${uiLabelMap.CommonDescription}</td><td>${workEffort.description?default("&nbsp;")}</td></tr>
-      <tr><td >${uiLabelMap.CommonType}</td><td>${(workEffortType.description)?default("&nbsp;")}</td></tr>
-      <tr><td >${uiLabelMap.CommonPurpose}</td><td>${(workEffortPurposeType.description)?default("&nbsp;")}</td></tr>
-      <tr><td >${uiLabelMap.CommonStatus}</td><td>${(currentStatusItem.description)?default("&nbsp;")}</td></tr>
+      <tr><td>${uiLabelMap.CommonDate}</td><td>${parameters.eventDateTime?default("&nbsp;")}</td></tr>
+      <tr><td>${uiLabelMap.CommonName}</td><td>${workEffort.workEffortName?default("&nbsp;")}</td></tr>
+      <tr><td>${uiLabelMap.CommonDescription}</td><td>${workEffort.description?default("&nbsp;")}</td></tr>
+      <tr><td>${uiLabelMap.CommonType}</td><td>${(workEffortType.description)?default("&nbsp;")}</td></tr>
+      <tr><td>${uiLabelMap.CommonPurpose}</td><td>${(workEffortPurposeType.description)?default("&nbsp;")}</td></tr>
+      <tr><td>${uiLabelMap.CommonStatus}</td><td>${(currentStatusItem.description)?default("&nbsp;")}</td></tr>
       <tr><td colspan="2"><hr /></td>
     </table>
     <#if partyAssignments?has_content>

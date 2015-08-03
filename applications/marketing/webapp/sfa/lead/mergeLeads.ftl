@@ -38,7 +38,7 @@ under the License.
           <input type="hidden" name="phoneContactMechId" value="${contactInfo2.phoneContactMechId!}" />
           <input type="hidden" name="emailContactMechId" value="${contactInfo2.emailContactMechId!}" />
 
-          <table  >
+          <table>
             <tr>
               <td width="20%" ></td>
               <td width="30%"><h2>${uiLabelMap.SfaFirstContact}</h2><br /></td>

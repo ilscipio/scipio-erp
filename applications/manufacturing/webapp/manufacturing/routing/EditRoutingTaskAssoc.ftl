@@ -69,7 +69,7 @@ function addRoutingTask() {
         </tr>
 
         <tr>
-            <td >&nbsp;</td>
+            <td>&nbsp;</td>
             <td colspan="3">
                 <a href="javascript:addRoutingTask();" class="button tiny">${uiLabelMap.ManufacturingAddExistingRoutingTask}</a>
                 &nbsp;-&nbsp;

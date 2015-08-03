@@ -31,11 +31,11 @@ under the License.
     </#if>
     <#if shipmentId?has_content>
       <div>
-        <span >${uiLabelMap.ProductShipmentId}</span><a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="button tiny">${shipmentId}</a>
+        <span>${uiLabelMap.ProductShipmentId}</span><a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="button tiny">${shipmentId}</a>
       </div>
       <#if invoiceIds?? && invoiceIds?has_content>
         <div>
-          <span >${uiLabelMap.AccountingInvoices}:</span>
+          <span>${uiLabelMap.AccountingInvoices}:</span>
           <ul>
             <#list invoiceIds as invoiceId>
               <li>
@@ -53,7 +53,7 @@ under the License.
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
         <table cellspacing="0" class="basic-table">
           <tr>
-            <td width="25%" align="right"><span >${uiLabelMap.ProductOrderId}</span></td>
+            <td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></td>
             <td width="1">&nbsp;</td>
             <td width="25%">
               <#if shipmentId?has_content>
@@ -80,7 +80,7 @@ under the License.
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
         <table cellspacing="0" class="basic-table">
           <tr>
-            <td width="25%" align='right'><span >${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
+            <td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
             <td width="1">&nbsp;</td>
             <td width="25%">
               <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
@@ -117,7 +117,7 @@ under the License.
           <table cellpadding="4" cellspacing="4" class="basic-table">
             <tr>
               <td valign="top">
-                <span >${uiLabelMap.ProductShipToAddress}</span>
+                <span>${uiLabelMap.ProductShipToAddress}</span>
                 <br />
                 ${uiLabelMap.CommonTo}: ${postalAddress.toName?default("")}
                 <br />
@@ -138,7 +138,7 @@ under the License.
               </td>
               <td>&nbsp;</td>
               <td valign="top">
-                <span >${uiLabelMap.ProductCarrierShipmentMethod}</span>
+                <span>${uiLabelMap.ProductCarrierShipmentMethod}</span>
                 <br />
                 <#if carrier == "USPS">
                   <#assign color = "red">
@@ -155,7 +155,7 @@ under the License.
               </td>
               <td>&nbsp;</td>
               <td valign="top">
-                <span >${uiLabelMap.OrderInstructions}</span>
+                <span>${uiLabelMap.OrderInstructions}</span>
                 <br />
                 ${orderItemShipGroup.shippingInstructions?default("(${uiLabelMap.CommonNone})")}
               </td>
@@ -171,7 +171,7 @@ under the License.
             <tr>
               <td>
                 <div>
-                  <span >${uiLabelMap.ProductProductNumber}</span>
+                  <span>${uiLabelMap.ProductProductNumber}</span>
                   <input type="text" name="productId" size="20" maxlength="20" value=""/>
                   @
                   <input type="text" name="quantity" size="6" maxlength="6" value="1"/>

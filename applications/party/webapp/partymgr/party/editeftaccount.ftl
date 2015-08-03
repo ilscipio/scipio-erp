@@ -40,34 +40,34 @@ under the License.
         <input type="hidden" name="partyId" value="${partyId}"/>
         <table class="basic-table" cellspacing="0">
         <tr>
-          <td >${uiLabelMap.AccountingNameAccount}</td>
+          <td>${uiLabelMap.AccountingNameAccount}</td>
           <td>
             <input type="text" class='required' size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.AccountingCompanyNameAccount}</td>
+          <td>${uiLabelMap.AccountingCompanyNameAccount}</td>
           <td>
             <input type="text" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccountData.companyNameOnAccount!}" />
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.AccountingBankName}</td>
+          <td>${uiLabelMap.AccountingBankName}</td>
           <td>
             <input type="text" class='required' size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.AccountingRoutingNumber}</td>
+          <td>${uiLabelMap.AccountingRoutingNumber}</td>
           <td>
             <input type="text" class='required' size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.AccountingAccountType}</td>
+          <td>${uiLabelMap.AccountingAccountType}</td>
           <td>
             <select name="accountType" class='required'>
               <option>${eftAccountData.accountType!}</option>
@@ -79,21 +79,21 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.AccountingAccountNumber}</td>
+          <td>${uiLabelMap.AccountingAccountNumber}</td>
           <td>
             <input type="text" class='required' size="20" maxlength="40" name="accountNumber" value="${eftAccountData.accountNumber!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.CommonDescription}</td>
+          <td>${uiLabelMap.CommonDescription}</td>
           <td>
             <input type="text" class='required' size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyBillingAddress}</td>
+          <td>${uiLabelMap.PartyBillingAddress}</td>
           <td>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
             <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="smallSubmit">

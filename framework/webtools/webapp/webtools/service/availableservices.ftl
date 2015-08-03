@@ -65,41 +65,41 @@ under the License.
           <tr>
             <td>${uiLabelMap.WebtoolsServiceName}</td>
             <td>${selectedServiceMap.serviceName}</td>
-            <td >${uiLabelMap.WebtoolsEngineName}</td>
+            <td>${uiLabelMap.WebtoolsEngineName}</td>
             <td><a href='<@ofbizUrl>${url}?constraint=engine_name@${selectedServiceMap.engineName}</@ofbizUrl>'>${selectedServiceMap.engineName}</a></td>
           </tr>
           <tr>
-            <td >${uiLabelMap.CommonDescription}</td>
+            <td>${uiLabelMap.CommonDescription}</td>
             <td>${selectedServiceMap.description}</td>
-            <td >${uiLabelMap.WebtoolsInvoke}</td>
+            <td>${uiLabelMap.WebtoolsInvoke}</td>
             <td>${selectedServiceMap.invoke}</td>
           </tr>
           <tr>
-            <td >${uiLabelMap.WebtoolsExportable}</td>
+            <td>${uiLabelMap.WebtoolsExportable}</td>
             <td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool = "true">&nbsp;(<a href='<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>'>${uiLabelMap.WebtoolsShowShowWSDL}</a>)</#if></td>
-            <td >${uiLabelMap.WebtoolsLocation}</td>
+            <td>${uiLabelMap.WebtoolsLocation}</td>
             <td><a href='<@ofbizUrl>${url}?constraint=location@${selectedServiceMap.location}</@ofbizUrl>'>${selectedServiceMap.location}</a></td>
           </tr>
           <tr>
-            <td >${uiLabelMap.WebtoolsDefinitionLocation}</td>
+            <td>${uiLabelMap.WebtoolsDefinitionLocation}</td>
             <td><a href='<@ofbizUrl>${url}?constraint=definitionLocation@${selectedServiceMap.definitionLocation}</@ofbizUrl>'>${selectedServiceMap.definitionLocation}</a></td>
-            <td >${uiLabelMap.WebtoolsDefaultEntityName}</td>
+            <td>${uiLabelMap.WebtoolsDefaultEntityName}</td>
             <td><a href='<@ofbizUrl>${url}?constraint=default_entity_name@${selectedServiceMap.defaultEntityName}</@ofbizUrl>'>${selectedServiceMap.defaultEntityName}</a></td>
           </tr>
           <tr>
-            <td >${uiLabelMap.WebtoolsArtifactInfo}</td>
+            <td>${uiLabelMap.WebtoolsArtifactInfo}</td>
             <td><a href='<@ofbizUrl>ArtifactInfo?name=${selectedServiceMap.serviceName}&amp;type=service</@ofbizUrl>'>${uiLabelMap.WebtoolsArtifactInfo}</a></td>
-            <td >${uiLabelMap.WebtoolsRequireNewTransaction}</td>
+            <td>${uiLabelMap.WebtoolsRequireNewTransaction}</td>
             <td>${selectedServiceMap.requireNewTransaction}</td>
           </tr>
           <tr>
             <td colspan="2">&nbsp;</td>
-            <td >${uiLabelMap.WebtoolsUseTransaction}</td>
+            <td>${uiLabelMap.WebtoolsUseTransaction}</td>
             <td>${selectedServiceMap.useTrans}</td>
           </tr>
           <tr>
             <td colspan="2">&nbsp;</td>
-            <td >${uiLabelMap.WebtoolsMaxRetries}</td>
+            <td>${uiLabelMap.WebtoolsMaxRetries}</td>
             <td>${selectedServiceMap.maxRetry}</td>
           </tr>
         </table>
@@ -258,7 +258,7 @@ under the License.
                       <tr>
                         <#if set.envName?has_content>
                           <td>${uiLabelMap.WebtoolsEnvName}</b> ${set.envName}</td>
-                          <td >&nbsp;</td>
+                          <td>&nbsp;</td>
                         </#if>
                       </tr>
                       <tr>
@@ -270,7 +270,7 @@ under the License.
                       <tr>
                         <#if set.format?has_content>
                           <td>${uiLabelMap.WebtoolsFormat}</b> ${set.format}</td>
-                          <td >&nbsp;</td>
+                          <td>&nbsp;</td>
                         </#if>
                       </tr>
                     </table><br />

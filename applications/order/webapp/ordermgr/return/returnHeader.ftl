@@ -252,8 +252,8 @@ under the License.
                         <input type='radio' name="originContactMechId" value="${postalAddress.contactMechId!}"
                           <#if ( postalAddressFrom?has_content && postalAddressFrom.contactMechId?default("") == postalAddress.contactMechId)>checked="checked"</#if> />
                       </#if>
-                      <#if postalAddress.toName?has_content><span >${uiLabelMap.CommonTo}</span>&nbsp;${postalAddress.toName}<br /></#if>
-                      <#if postalAddress.attnName?has_content><span >${uiLabelMap.CommonAttn}</span>&nbsp;${postalAddress.attnName}<br /></#if>
+                      <#if postalAddress.toName?has_content><span>${uiLabelMap.CommonTo}</span>&nbsp;${postalAddress.toName}<br /></#if>
+                      <#if postalAddress.attnName?has_content><span>${uiLabelMap.CommonAttn}</span>&nbsp;${postalAddress.attnName}<br /></#if>
                       <#if postalAddress.address1?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address1}<br /></#if>
                       <#if postalAddress.address2?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address2}<br /></#if>
                       <#if postalAddress.city?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.city}</#if>

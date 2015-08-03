@@ -39,11 +39,11 @@ under the License.
     <input type="hidden" name="locationSeqId" value="${locationSeqId}" />
     <table class="basic-table" cellspacing="0">
     <tr>
-        <td >${uiLabelMap.ProductFacilityId}</td>
+        <td>${uiLabelMap.ProductFacilityId}</td>
         <td>${facilityId!}</td>
     </tr>
     <tr>
-        <td >${uiLabelMap.ProductLocationSeqId}</td>
+        <td>${uiLabelMap.ProductLocationSeqId}</td>
         <td>${locationSeqId}</td>
     </tr>
 <#else>
@@ -52,7 +52,7 @@ under the License.
 
 <#if facilityId??>
     <tr>
-        <td >${uiLabelMap.ProductType}</td>
+        <td>${uiLabelMap.ProductType}</td>
         <td>
             <select name="locationTypeEnumId">
                 <#if (facilityLocation.locationTypeEnumId)?has_content>
@@ -67,23 +67,23 @@ under the License.
         </td>
     </tr>
     <tr>
-        <td >${uiLabelMap.CommonArea}</td>
+        <td>${uiLabelMap.CommonArea}</td>
         <td><input type="text" name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" /></td>
     </tr>
     <tr>
-        <td >${uiLabelMap.ProductAisle}</td>
+        <td>${uiLabelMap.ProductAisle}</td>
         <td><input type="text" name="aisleId" value="${(facilityLocation.aisleId)!}" size="19" maxlength="20" /></td>
     </tr>
     <tr>
-        <td >${uiLabelMap.ProductSection}</td>
+        <td>${uiLabelMap.ProductSection}</td>
         <td><input type="text" name="sectionId" value="${(facilityLocation.sectionId)!}" size="19" maxlength="20" /></td>
     </tr>
     <tr>
-        <td >${uiLabelMap.ProductLevel}</td>
+        <td>${uiLabelMap.ProductLevel}</td>
         <td><input type="text" name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" /></td>
     </tr>
     <tr>
-        <td >${uiLabelMap.ProductPosition}</td>
+        <td>${uiLabelMap.ProductPosition}</td>
         <td><input type="text" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" /></td>
     </tr>
     <tr>
@@ -140,9 +140,9 @@ under the License.
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <input type="hidden" name="locationSeqId" value="${locationSeqId!}" />
             <input type="hidden" name="useValues" value="true" />
-            <span >${uiLabelMap.ProductProductId}</span><input type="text" size="10" name="productId" />
-            <span >${uiLabelMap.ProductMinimumStock}</span><input type="text" size="10" name="minimumStock" />
-            <span >${uiLabelMap.ProductMoveQuantity}</span><input type="text" size="10" name="moveQuantity" />
+            <span>${uiLabelMap.ProductProductId}</span><input type="text" size="10" name="productId" />
+            <span>${uiLabelMap.ProductMinimumStock}</span><input type="text" size="10" name="minimumStock" />
+            <span>${uiLabelMap.ProductMoveQuantity}</span><input type="text" size="10" name="moveQuantity" />
             <input type="submit" value="${uiLabelMap.CommonAdd}" />
         </form>
     </div>

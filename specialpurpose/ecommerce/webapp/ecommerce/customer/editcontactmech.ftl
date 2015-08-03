@@ -168,7 +168,7 @@ under the License.
       </tr>      
       <tr>
         <td align="right" valign="top">${uiLabelMap.PartyZipCode}</td>
-        <td >&nbsp;</td>
+        <td>&nbsp;</td>
         <td>
           <input type="text" class='inputBox' size="12" maxlength="10" name="postalCode" value="${postalAddressData.postalCode!}" />
         *</td>

@@ -36,7 +36,7 @@ under the License.
                 <form method="post" action="<@ofbizUrl>createProductPromoCodeEmail</@ofbizUrl>" style="margin: 0;">
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
-                    <span >${uiLabelMap.ProductAddEmail}:</span><input type="text" size="40" name="emailAddress" />
+                    <span>${uiLabelMap.ProductAddEmail}:</span><input type="text" size="40" name="emailAddress" />
                     <input type="submit" value="${uiLabelMap.CommonAdd}" />
                 </form>
                 <#if productPromoCode.requireEmailOrParty! == "N">
@@ -63,7 +63,7 @@ under the License.
                 <form method="post" action="<@ofbizUrl>createProductPromoCodeParty</@ofbizUrl>">
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
-                    <span >${uiLabelMap.ProductAddPartyId}:</span><input type="text" size="10" name="partyId" />
+                    <span>${uiLabelMap.ProductAddPartyId}:</span><input type="text" size="10" name="partyId" />
                     <input type="submit" value="${uiLabelMap.CommonAdd}" />
                 </form>
             </div>

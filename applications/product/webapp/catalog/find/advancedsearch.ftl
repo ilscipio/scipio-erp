@@ -266,7 +266,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td >
+          <td>
             ${uiLabelMap.ProductGoodIdentificationType}:
           </td>
           <td>
@@ -279,7 +279,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td >
+          <td>
             ${uiLabelMap.ProductGoodIdentificationValue}:
           </td>
           <td>
@@ -297,7 +297,7 @@ under the License.
                 <#list searchConstraintStrings as searchConstraintString>
                     <div>&nbsp;-&nbsp;${searchConstraintString}</div>
                 </#list>
-                <span >${uiLabelMap.CommonSortedBy}:</span>${searchSortOrderString}
+                <span>${uiLabelMap.CommonSortedBy}:</span>${searchSortOrderString}
                 <div>
                   ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked="checked"/>
                   ${uiLabelMap.CommonRefineSearch}<input type="radio" name="clearSearch" value="N"/>

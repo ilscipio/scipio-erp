@@ -45,7 +45,7 @@ under the License.
       <#if returnHeader.fromPartyId??>
             <a href="${customerDetailLink}${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" class='button tiny'>${returnHeader.fromPartyId}</a>
       <#else>
-            <span >${uiLabelMap.CommonNA}</span>
+            <span>${uiLabelMap.CommonNA}</span>
       </#if>
     </td>
     <td><#if facility??>${facility.facilityName?default(facility.facilityId)}<#else>${uiLabelMap.CommonNone}</#if></td>

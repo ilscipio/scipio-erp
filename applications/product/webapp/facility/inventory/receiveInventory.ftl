@@ -549,14 +549,14 @@ under the License.
             <input type="hidden" name="initialSelected" value="Y"/>
             <table class="basic-table" cellspacing="0">
               <tr>
-                <td >${uiLabelMap.ProductPurchaseOrderNumber}</td>
+                <td>${uiLabelMap.ProductPurchaseOrderNumber}</td>
                 <td>
                     <@htmlTemplate.lookupField value="${requestParameters.purchaseOrderId!}" formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
                     <span class="tooltip">${uiLabelMap.ProductLeaveSingleProductReceiving}</span>
                 </td>
               </tr>
               <tr>
-                <td >${uiLabelMap.ProductProductId}</td>
+                <td>${uiLabelMap.ProductProductId}</td>
                 <td>
                   <@htmlTemplate.lookupField value="${requestParameters.productId!}" formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
                   <span class="tooltip">${uiLabelMap.ProductLeaveEntirePoReceiving}</span>

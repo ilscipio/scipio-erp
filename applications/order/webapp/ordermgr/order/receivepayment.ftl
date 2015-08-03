@@ -56,18 +56,18 @@ under the License.
          <thead>
           <tr class="header-row">
             <th width="30%" align="right">${uiLabelMap.OrderPaymentType}</th>
-            <th >&nbsp;&nbsp;&nbsp;</th>
-            <th >${uiLabelMap.OrderAmount}</th>
-            <th >&nbsp;&nbsp;&nbsp;</th>
+            <th>&nbsp;&nbsp;&nbsp;</th>
+            <th>${uiLabelMap.OrderAmount}</th>
+            <th>&nbsp;&nbsp;&nbsp;</th>
             <th width="60%">${uiLabelMap.OrderReference}</th>
           </tr>
           <#list paymentMethodTypes as payType>
           <tr>
             <td align="right">${payType.get("description",locale)?default(payType.paymentMethodTypeId)}</td>
-            <td >&nbsp;&nbsp;&nbsp;</td>
-            <td ><input type="text" size="7" name="${payType.paymentMethodTypeId}_amount" /></td>
-            <td >&nbsp;&nbsp;&nbsp;</td>
-            <td ><input type="text" size="15" name="${payType.paymentMethodTypeId}_reference" /></td>
+            <td>&nbsp;&nbsp;&nbsp;</td>
+            <td><input type="text" size="7" name="${payType.paymentMethodTypeId}_amount" /></td>
+            <td>&nbsp;&nbsp;&nbsp;</td>
+            <td><input type="text" size="15" name="${payType.paymentMethodTypeId}_reference" /></td>
           </tr>
           </#list>
         </table>

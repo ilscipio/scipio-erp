@@ -29,7 +29,7 @@ under the License.
   </tr>
   </thead>
   <#if (inventoryItemsForPo?? && inventoryItemsForPo?has_content)>
-    <tr class="header-row-2"><td colspan="6"><span >&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductPurchaseOrder} - ${orderId}</span></td></tr>
+    <tr class="header-row-2"><td colspan="6"><span>&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductPurchaseOrder} - ${orderId}</span></td></tr>
     <#list inventoryItemsForPo as inventoryItem>
       <tr>
         <td><a class="button tiny" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
@@ -55,7 +55,7 @@ under the License.
     </#list>
   </#if>
   <#if (inventoryItemsForProduct?? && inventoryItemsForProduct?has_content)>
-    <tr class="header-row-2"><td colspan="6"><span >&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductProduct} - ${internalName!} [${productId}]</span></td></tr>
+    <tr class="header-row-2"><td colspan="6"><span>&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductProduct} - ${internalName!} [${productId}]</span></td></tr>
     <#list inventoryItemsForProduct as inventoryItem>
       <tr>
         <td><a class="button tiny" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
@@ -69,6 +69,6 @@ under the License.
     <tr>
   </#if>
   <#if !(inventoryItemsForPo?? && inventoryItemsForPo?has_content) && !(inventoryItemsForSupplier?? && inventoryItemsForSupplier?has_content) && !(inventoryItemsForProduct?? && inventoryItemsForProduct?has_content)>
-    <tr><td><span >${uiLabelMap.CommonNo} ${uiLabelMap.ProductInventoryItems} ${uiLabelMap.ProductAvailable}.</span></td></tr>
+    <tr><td><span>${uiLabelMap.CommonNo} ${uiLabelMap.ProductInventoryItems} ${uiLabelMap.ProductAvailable}.</span></td></tr>
   </#if>
 </table>

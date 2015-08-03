@@ -46,7 +46,7 @@ under the License.
     <tr>
       <td width='26%' align='right' valign='top' >${uiLabelMap.ManufacturingCalendarId}</td>
       <td width="5">&nbsp;</td>
-      <td width="74%" valign="top"><span >${techDataCalendar.calendarId!}</span> <span class="tooltip">(${uiLabelMap.CommonNotModifRecreat})</span></td>
+      <td width="74%" valign="top"><span>${techDataCalendar.calendarId!}</span> <span class="tooltip">(${uiLabelMap.CommonNotModifRecreat})</span></td>
     </tr>
     <#else>
     <tr>

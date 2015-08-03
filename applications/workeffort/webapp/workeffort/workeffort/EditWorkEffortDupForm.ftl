@@ -19,18 +19,18 @@ under the License.
         <form action="<@ofbizUrl>DuplicateWorkEffort</@ofbizUrl>" method="post">
             <input type="hidden" name="oldWorkEffortId" value="${workEffortId!}"/>
             <div>
-                <span >${uiLabelMap.ProductDuplicateRemoveSelectedWithNewId}</span>
+                <span>${uiLabelMap.ProductDuplicateRemoveSelectedWithNewId}</span>
                 <input type="text" size="20" maxlength="20" name="workEffortId"/>&nbsp;<input type="submit" class="smallSubmit" value="${uiLabelMap.CommonDuplicate}!"/>
             </div>
             <div>
-                <span >${uiLabelMap.CommonDuplicate}</span>
+                <span>${uiLabelMap.CommonDuplicate}</span>
                 ${uiLabelMap.FormFieldTitle_rate}&nbsp;<input type="checkbox" name="duplicateWorkEffortAssignmentRates" value="Y" checked="checked"/>
                 ${uiLabelMap.WorkEffortAssoc}&nbsp;<input type="checkbox" name="duplicateWorkEffortAssocs" value="Y" checked="checked"/>
                 ${uiLabelMap.ProductContent}&nbsp;<input type="checkbox" name="duplicateWorkEffortContents" value="Y" checked="checked"/>
                 ${uiLabelMap.WorkEffortNotes}&nbsp;<input type="checkbox" name="duplicateWorkEffortNotes" value="Y" checked="checked"/>
             </div>
             <div>
-                <span >${uiLabelMap.CommonRemove}</span>
+                <span>${uiLabelMap.CommonRemove}</span>
                 ${uiLabelMap.FormFieldTitle_rate}&nbsp;<input type="checkbox" name="removeWorkEffortAssignmentRates" value="Y"/>
                 ${uiLabelMap.WorkEffortAssoc}&nbsp;<input type="checkbox" name="removeWorkEffortAssocs" value="Y"/>
                 ${uiLabelMap.ProductContent}&nbsp;<input type="checkbox" name="removeWorkEffortContents" value="Y"/>

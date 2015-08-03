@@ -439,7 +439,7 @@ function getConfigDetails() {
         <input type='hidden' name='quantity' value='1' />
 
         <input type='hidden' name='product_id' value='${product.productId}' />
-        <table >
+        <table>
           <tr>
             <td>
                 <div>
@@ -510,7 +510,7 @@ function getConfigDetails() {
                   </#if>
                     <#-- Render virtual compoennts -->
                     <#if option.hasVirtualComponent()>
-                      <div >
+                      <div>
                         <input type='radio' name='${counter}' id="${counter}_${optionCounter}" value='${optionCounter}' onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
                         ${option.description} <#if !option.isAvailable()> (*)</#if>
                         <#assign components = option.getComponents()>
@@ -574,7 +574,7 @@ function getConfigDetails() {
                     <#assign componentCounter = 0>
                     <#-- Render virtual compoennts -->
                     <#if option.hasVirtualComponent()>
-                      <div >
+                      <div>
                         <input type='CHECKBOX' name='${counter}' id="${counter}_${optionCounter}" value='${optionCounter}' onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
                         ${option.description} <#if !option.isAvailable()> (*)</#if>
                         <#assign components = option.getComponents()>
@@ -654,7 +654,7 @@ function getConfigDetails() {
 <#assign listIndex = 1>
 ${setRequestAttribute("productValue", productValue)}
 
-<table >
+<table>
   <#-- obsolete -->
   <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
   <#-- cross sell -->

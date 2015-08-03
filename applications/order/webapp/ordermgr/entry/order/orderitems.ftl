@@ -53,13 +53,13 @@ under the License.
 
                 </td>
                 <td class="text-right" valign="top">
-                  <div >${orderItem.quantity?string.number}</div>
+                  <div>${orderItem.quantity?string.number}</div>
                 </td>
                 <td class="text-right" valign="top">
-                  <div ><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></div>
+                  <div><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></div>
                 </td>
                 <td class="text-right" valign="top">
-                  <div ><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></div>
+                  <div><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></div>
                 </td>
                 <td class="text-right" valign="top" >
                   <div><@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/></div>

@@ -28,11 +28,11 @@ under the License.
         <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <div>
-                <span >${uiLabelMap.ProductOrderId}</span>
+                <span>${uiLabelMap.ProductOrderId}</span>
                 <span>
                   <@htmlTemplate.lookupField value="${orderId!}" formName="additemsfromorder" name="orderId" id="orderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
                 </span>
-                <span >${uiLabelMap.ProductOrderShipGroupId}</span>
+                <span>${uiLabelMap.ProductOrderShipGroupId}</span>
                 <input type="text" size="20" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
                 <input type="submit" value="${uiLabelMap.CommonSelect}" class="smallSubmit"/>
             </div>

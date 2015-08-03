@@ -64,7 +64,7 @@ function makeExpDate() {
                         </#list>
                     </select>
                   </td>
-                  <td >
+                  <td>
                     <span>${uiLabelMap.FormFieldTitle_billingAccountId}</span>
                   </td>
                   <td></td>
@@ -73,7 +73,7 @@ function makeExpDate() {
                   <td class="${style_grid_large!}3" class="text-right">
                     <input type="text" size="5" name="billingAccountAmount" value=""/>
                   </td>
-                  <td >
+                  <td>
                     ${uiLabelMap.OrderBillUpTo}
                   </td>
                   <td></td>
@@ -94,7 +94,7 @@ function makeExpDate() {
                 <td class="${style_grid_large!}3">
                   <input type="radio" id="checkOutPaymentId_EXT_COD" name="checkOutPaymentId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if>/>
                 </td>
-                <td >
+                <td>
                   <label for="checkOutPaymentId_EXT_COD">${uiLabelMap.OrderCOD}</label>
                 </td>
                 <td></td>
@@ -108,7 +108,7 @@ function makeExpDate() {
                       <td class="${style_grid_large!}3">
                         <input type="radio" id="checkOutPaymentId_CREDIT_CARD_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
                       </td>
-                      <td >
+                      <td>
                         <label for="checkOutPaymentId_CREDIT_CARD_${paymentMethod.paymentMethodId}">
                           CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                           <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>

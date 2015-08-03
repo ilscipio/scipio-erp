@@ -125,7 +125,7 @@ function setServiceName(selection) {
             <#if paymentList?has_content>
                 <div class="clearfix">
                 <div class="float-left">
-                    <span >${uiLabelMap.AccountingRunningTotal} :</span>
+                    <span>${uiLabelMap.AccountingRunningTotal} :</span>
                     <span  id="showPaymentRunningTotal"></span>
                 </div>
                 <div class="align-float">

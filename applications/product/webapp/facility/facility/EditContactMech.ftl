@@ -33,7 +33,7 @@ under the License.
       <input type='hidden' name='DONE_PAGE' value='${donePage!}' />
       <table width="50%" class="basic-table" cellspacing="0">
         <tr>
-          <td >${uiLabelMap.PartySelectContactType}</td>
+          <td>${uiLabelMap.PartySelectContactType}</td>
           <td>
             <select name="preContactMechTypeId" >
               <#list mechMap.contactMechTypes as contactMechType>
@@ -54,7 +54,7 @@ under the License.
         <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='button tiny'>${uiLabelMap.CommonGoBack}</a>
       </div>
       <#if contactMechPurposeType??>
-        <div><span >(${uiLabelMap.PartyMsgContactHavePurpose}</span>"${contactMechPurposeType.get("description",locale)!}")</div>
+        <div><span>(${uiLabelMap.PartyMsgContactHavePurpose}</span>"${contactMechPurposeType.get("description",locale)!}")</div>
       </#if>
       <table width="90%" class="basic-table" cellspacing="0">
         <form method="post" action='<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
@@ -67,7 +67,7 @@ under the License.
         <#if paymentMethodId??><input type='hidden' name='paymentMethodId' value='${paymentMethodId}' /></#if>
 
         <tr>
-          <td >${uiLabelMap.PartyContactPurposes}</td>
+          <td>${uiLabelMap.PartyContactPurposes}</td>
           <td>
             <select name='contactMechPurposeTypeId' class="required">
               <option></option>
@@ -144,50 +144,50 @@ under the License.
 
   <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId!>
     <tr>
-      <td >${uiLabelMap.PartyToName}</td>
+      <td>${uiLabelMap.PartyToName}</td>
       <td>
         <input type="text" size="30" maxlength="60" name="toName" value="${(mechMap.postalAddress.toName)?default(request.getParameter('toName')!)}" />
       </td>
     </tr>
     <tr>
-      <td >${uiLabelMap.PartyAttentionName}</td>
+      <td>${uiLabelMap.PartyAttentionName}</td>
       <td>
         <input type="text" size="30" maxlength="60" name="attnName" value="${(mechMap.postalAddress.attnName)?default(request.getParameter('attnName')!)}" />
       </td>
     </tr>
     <tr>
-      <td >${uiLabelMap.PartyAddressLine1}</td>
+      <td>${uiLabelMap.PartyAddressLine1}</td>
       <td>
         <input type="text" class="required" size="30" maxlength="30" name="address1" value="${(mechMap.postalAddress.address1)?default(request.getParameter('address1')!)}" />
       *</td>
     </tr>
     <tr>
-      <td >${uiLabelMap.PartyAddressLine2}</td>
+      <td>${uiLabelMap.PartyAddressLine2}</td>
       <td>
           <input type="text" size="30" maxlength="30" name="address2" value="${(mechMap.postalAddress.address2)?default(request.getParameter('address2')!)}" />
       </td>
     </tr>
     <tr>
-      <td >${uiLabelMap.PartyCity}</td>
+      <td>${uiLabelMap.PartyCity}</td>
       <td>
           <input type="text" class="required" size="30" maxlength="30" name="city" value="${(mechMap.postalAddress.city)?default(request.getParameter('city')!)}" />
       *</td>
     </tr>
     <tr>
-      <td >${uiLabelMap.PartyState}</td>
+      <td>${uiLabelMap.PartyState}</td>
       <td>
         <select name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
         </select>
       </td>
     </tr>
     <tr>
-      <td >${uiLabelMap.PartyZipCode}</td>
+      <td>${uiLabelMap.PartyZipCode}</td>
       <td>
         <input type="text" class="required" size="12" maxlength="10" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')!)}" />
       *</td>
     </tr>
     <tr>   
-      <td >${uiLabelMap.CommonCountry}</td>      
+      <td>${uiLabelMap.CommonCountry}</td>      
       <td>     
         <select name="countryGeoId" id="editcontactmechform_countryGeoId">
           ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
@@ -205,7 +205,7 @@ under the License.
     </tr>
   <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId!>
     <tr>
-      <td >${uiLabelMap.PartyPhoneNumber}</td>
+      <td>${uiLabelMap.PartyPhoneNumber}</td>
       <td>
         <input type="text" size="4" maxlength="10" name="countryCode" value="${(mechMap.telecomNumber.countryCode)?default(request.getParameter('countryCode')!)}" />
         -&nbsp;<input type="text" size="4" maxlength="10" name="areaCode" value="${(mechMap.telecomNumber.areaCode)?default(request.getParameter('areaCode')!)}" />
@@ -219,14 +219,14 @@ under the License.
     </tr>
   <#elseif "EMAIL_ADDRESS" = mechMap.contactMechTypeId!>
     <tr>
-      <td >${uiLabelMap.PartyEmailAddress}</td>
+      <td>${uiLabelMap.PartyEmailAddress}</td>
       <td>
           <input type="text" class="required" size="60" maxlength="255" name="emailAddress" value="${(mechMap.contactMech.infoString)?default(request.getParameter('emailAddress')!)}" />
       *</td>
     </tr>
   <#else>
     <tr>
-      <td >${mechMap.contactMechType.get("description",locale)}</td>
+      <td>${mechMap.contactMechType.get("description",locale)}</td>
       <td>
           <input type="text" class="required" size="60" maxlength="255" name="infoString" value="${(mechMap.contactMech.infoString)!}" />
       *</td>

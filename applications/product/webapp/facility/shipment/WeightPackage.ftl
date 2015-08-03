@@ -53,7 +53,7 @@ under the License.
               <input type="hidden" name ="shipmentPackageSeqId" value = "${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}"/>
               <input type="hidden" name="shipmentRouteSegmentId" value ="${(shipmentPackageRouteSeg.shipmentRouteSegmentId)!}"/>
               <div>
-                <span >${uiLabelMap.ProductPackage}</span> ${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}
+                <span>${uiLabelMap.ProductPackage}</span> ${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}
                 <#if shipmentPackageRouteSeg.labelImage??>
                   <a href="javascript:document.viewShipmentPackageRouteSegLabelImageForm_${shipmentPackageRouteSeg_index}.submit();" class="button tiny">${uiLabelMap.ProductViewLabelImage}</a>
                 </#if>
@@ -67,7 +67,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
             <table cellspacing="0" class="basic-table">
               <tr>
-                <td width="25%" align="right"><span >${uiLabelMap.ProductOrderId}</span></td>
+                <td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></td>
                 <td width="1">&nbsp;</td>
                 <td width="25%">
                   <input type="text" name="orderId" size="20" maxlength="20" value="${primaryOrderId!}"/>
@@ -91,7 +91,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
             <table cellspacing="0" class="basic-table">
               <tr>
-                <td width="25%" align='right'><span >${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
+                <td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
                 <td width="1">&nbsp;</td>
                 <td width="25%">
                   <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
@@ -130,15 +130,15 @@ under the License.
                     <input type="hidden" name="weightPackageSeqId" value ="${packedLine.getWeightPackageSeqId()}"/>
                     <tr>
                       <td>
-                        <span >
+                        <span>
                           ${uiLabelMap.ProductPackage} ${packedLine.getWeightPackageSeqId()}
                           <input type="text" size="7" name="packageWeight" value="${(packedLine.getPackageWeight())!}" />
                         </span>
                       </td>
                       <td>
-                        <span >${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="${(packedLine.getPackageLength())!}" size="5"/></span>
-                        <span >${uiLabelMap.ProductWidth}<input type="text" name="packageWidth" value="${(packedLine.getPackageWidth())!}" size="5"/></span>
-                        <span >${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="${(packedLine.getPackageHeight())!}" size="5"/></span>
+                        <span>${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="${(packedLine.getPackageLength())!}" size="5"/></span>
+                        <span>${uiLabelMap.ProductWidth}<input type="text" name="packageWidth" value="${(packedLine.getPackageWidth())!}" size="5"/></span>
+                        <span>${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="${(packedLine.getPackageHeight())!}" size="5"/></span>
                       </td>
                       <td>
                         <select name="shipmentBoxTypeId">
@@ -189,21 +189,21 @@ under the License.
                 </#if>
                 <tr>
                   <td>
-                    <span >${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
+                    <span>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
                       <br />
                       ${uiLabelMap.ProductPackage}
                       <input type="text" size="7" name="packageWeight" value=""/>
                     </span>
                   </td>
                   <td>
-                    <span >${uiLabelMap.CommonDimension} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultDimensionUomId)?eval}):</span>
+                    <span>${uiLabelMap.CommonDimension} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultDimensionUomId)?eval}):</span>
                     <br />
-                    <span >${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="" size="5"/></span>
-                    <span >${uiLabelMap.ProductWidth}<input type="text" name="packageWidth" value="" size="5"/></span>
-                    <span >${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="" size="5"/></span>
+                    <span>${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="" size="5"/></span>
+                    <span>${uiLabelMap.ProductWidth}<input type="text" name="packageWidth" value="" size="5"/></span>
+                    <span>${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="" size="5"/></span>
                   </td>
                   <td>
-                    <span >${uiLabelMap.ProductPackageInputBox}:</span>
+                    <span>${uiLabelMap.ProductPackageInputBox}:</span>
                     <br />
                     <select name="shipmentBoxTypeId">
                       <#if shipmentBoxTypes?has_content>
@@ -241,15 +241,15 @@ under the License.
                 <#list shipmentPackages?sort_by("shipmentPackageSeqId") as shipmentPackage>
                   <tr>
                     <td>
-                      <span >
+                      <span>
                         ${uiLabelMap.ProductPackage} ${(shipmentPackage_index + 1)}
                         <input type="text" size="7" readonly="readonly" name="packageWeight" value="${(shipmentPackage.weight)!}" />
                       </span>
                     </td>
                     <td>
-                      <span >${uiLabelMap.CommonLength}<input type="text" readonly="readonly" name="packageLength" value="${(shipmentPackage.boxLength)!}" size="5"/></span>
-                      <span >${uiLabelMap.ProductWidth}<input type="text" readonly="readonly" name="packageWidth" value="${(shipmentPackage.boxWidth)!}" size="5"/></span>
-                      <span >${uiLabelMap.PartyHeight}<input type="text" readonly="readonly" name="packageHeight" value="${(shipmentPackage.boxHeight)!}" size="5"/></span>
+                      <span>${uiLabelMap.CommonLength}<input type="text" readonly="readonly" name="packageLength" value="${(shipmentPackage.boxLength)!}" size="5"/></span>
+                      <span>${uiLabelMap.ProductWidth}<input type="text" readonly="readonly" name="packageWidth" value="${(shipmentPackage.boxWidth)!}" size="5"/></span>
+                      <span>${uiLabelMap.PartyHeight}<input type="text" readonly="readonly" name="packageHeight" value="${(shipmentPackage.boxHeight)!}" size="5"/></span>
                     </td>
                     <td>
                       <#if (shipmentPackage.shipmentBoxTypeId)?has_content>

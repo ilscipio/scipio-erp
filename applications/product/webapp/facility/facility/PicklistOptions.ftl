@@ -38,7 +38,7 @@ under the License.
       <tr><td>&nbsp;</td></tr>
     </table>
     <div align ='right'>
-      <span >${uiLabelMap.FacilityGroupFirst}</span>
+      <span>${uiLabelMap.FacilityGroupFirst}</span>
       <input type="text" size="4" name="maxNumberOfOrders" value="50"/>
       <input type="submit" value="Submit" class="button tiny" align='right'/>
     </div>
@@ -165,7 +165,7 @@ under the License.
                     <input type="hidden" name="orderIdList" value="${orderIdForPickList.orderHeader.orderId}"/>
                   </#list>
                   <#if ((requestParameters.groupByShippingMethod?? && requestParameters.groupByShippingMethod == "Y") || (requestParameters.groupByWarehouseArea?? && requestParameters.groupByWarehouseArea == "Y") || (requestParameters.groupByNoOfOrderItems?? && requestParameters.groupByNoOfOrderItems == "Y"))>
-                    <span >${uiLabelMap.ProductPickFirst}</span>
+                    <span>${uiLabelMap.ProductPickFirst}</span>
                     <input type="text" size="4" name="maxNumberOfOrders" value="20"/>
                   </#if>
                   <input type="submit" value="${uiLabelMap.ProductCreatePicklist}"/>
@@ -186,7 +186,7 @@ under the License.
                     <input type="hidden" name="maxNumberOfOrdersToPrint" value="1"/>
                     <input type="hidden" name="orderId" value="${groupName!}"/>
                   <#else>
-                    <span >${uiLabelMap.FormFieldTitle_printPickSheetFirst}</span>
+                    <span>${uiLabelMap.FormFieldTitle_printPickSheetFirst}</span>
                     <input type="text" size="4" name="maxNumberOfOrdersToPrint" value="20"/>
                   </#if>
                   <input type="submit" value="${uiLabelMap.FormFieldTitle_printPickSheet}"/>
@@ -210,7 +210,7 @@ under the License.
               <#if (orderReadyToPickInfoListSizeTotal > 0)>
                 <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
-                  <span >${uiLabelMap.ProductPickFirst}</span>
+                  <span>${uiLabelMap.ProductPickFirst}</span>
                   <input type="text" size="4" name="maxNumberOfOrders" value="20"/>
                   <input type="submit" value="${uiLabelMap.ProductCreatePicklist}"/>
                 </form>
@@ -222,7 +222,7 @@ under the License.
               <#if (orderReadyToPickInfoListSizeTotal > 0)>
                 <form method="post" action="<@ofbizUrl>printPickSheets</@ofbizUrl>" target="_blank">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
-                  <span >${uiLabelMap.FormFieldTitle_printPickSheetFirst}</span>
+                  <span>${uiLabelMap.FormFieldTitle_printPickSheetFirst}</span>
                   <input type="text" size="4" name="maxNumberOfOrdersToPrint" value="20"/>
                   <input type="submit" value="${uiLabelMap.FormFieldTitle_printPickSheet}"/>
                 </form>

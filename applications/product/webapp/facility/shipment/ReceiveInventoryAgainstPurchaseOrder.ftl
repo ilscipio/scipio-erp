@@ -75,12 +75,12 @@ under the License.
 <form name="ReceiveInventoryAgainstPurchaseOrder" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
     <input type="hidden" name="clearAll" value="Y"/>
     <div>
-        <span >${uiLabelMap.ProductShipmentId}</span>&nbsp;<input type="text" size="20" name="shipmentId" value="${shipmentId!}"/>
-        <span >${uiLabelMap.ProductOrderId}</span>&nbsp;
+        <span>${uiLabelMap.ProductShipmentId}</span>&nbsp;<input type="text" size="20" name="shipmentId" value="${shipmentId!}"/>
+        <span>${uiLabelMap.ProductOrderId}</span>&nbsp;
         <span>
             <@htmlTemplate.lookupField value="${orderId!}" formName="ReceiveInventoryAgainstPurchaseOrder" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
         </span>
-        <span >${uiLabelMap.ProductOrderShipGroupId}</span>&nbsp;<input type="text" size="20" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
+        <span>${uiLabelMap.ProductOrderShipGroupId}</span>&nbsp;<input type="text" size="20" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
         <input type="submit" value="${uiLabelMap.CommonSelect}" class="smallSubmit"/>
     </div>
 </form>
@@ -229,7 +229,7 @@ under the License.
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
                 <div>
-                    <span >${uiLabelMap.ProductProductId}/${uiLabelMap.ProductGoodIdentification}</span>
+                    <span>${uiLabelMap.ProductProductId}/${uiLabelMap.ProductGoodIdentification}</span>
                     <input type="text" size="20" id="productId" name="productId" value=""/>
                         @
                     <input type="text"  name="quantity" size="6" maxlength="6" value="1" tabindex="0"/>

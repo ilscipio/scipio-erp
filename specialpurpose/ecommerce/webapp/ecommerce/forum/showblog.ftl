@@ -148,7 +148,7 @@ ${uiLabelMap.CommonDescription}[${currentValue.contentId!}]:${description}
     <#list trail as webSitePublishPoint>
         <#if counter < len && startIndex <= counter >
        <tr>
-         <td >
+         <td>
             ${indent}
             <a class="tabButton" href="<@ofbizUrl>main?pubPt=${webSitePublishPoint.contentId!}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${webSitePublishPoint.templateTitle!}
                 <#assign indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">

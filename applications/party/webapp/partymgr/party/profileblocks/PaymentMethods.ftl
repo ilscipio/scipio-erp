@@ -51,7 +51,7 @@ under the License.
             <tr>
               <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && paymentMethodValueMap.creditCard?has_content>
                 <#assign creditCard = paymentMethodValueMap.creditCard/>
-                <td >
+                <td>
                   ${uiLabelMap.AccountingCreditCard}
                 </td>
                 <td>

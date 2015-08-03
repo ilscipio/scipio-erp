@@ -29,27 +29,27 @@ under the License.
     <table class="basic-table" cellspacing="0">
       <form name="matchform" method="post" action="<@ofbizUrl>findAddressMatch?match=true</@ofbizUrl>">
         <tr>
-          <td >${uiLabelMap.PartyLastName}</td>
+          <td>${uiLabelMap.PartyLastName}</td>
           <td><input type="text" name="lastName" class="required" value="${parameters.lastName!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyFirstName}</td>
+          <td>${uiLabelMap.PartyFirstName}</td>
           <td><input type="text" name="firstName" class="required" value="${parameters.firstName!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
         </tr>
         <tr>
-          <td >${uiLabelMap.CommonAddress1}</td>
+          <td>${uiLabelMap.CommonAddress1}</td>
           <td><input type="text" name="address1" class="required" value="${parameters.address1!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
         </tr>
         <tr>
-          <td >${uiLabelMap.CommonAddress2}</td>
+          <td>${uiLabelMap.CommonAddress2}</td>
           <td><input type="text" name="address2" value="${parameters.address2!}"/></td>
         </tr>
         <tr>
-          <td >${uiLabelMap.CommonCity}</td>
+          <td>${uiLabelMap.CommonCity}</td>
           <td><input type="text" name="city" class="required" value="${parameters.city!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
         </tr>
         <tr>
-          <td >${uiLabelMap.CommonStateProvince}</td>
+          <td>${uiLabelMap.CommonStateProvince}</td>
           <td>
             <select name="stateProvinceGeoId">
               <#if currentStateGeo?has_content>
@@ -62,7 +62,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyZipCode}</td>
+          <td>${uiLabelMap.PartyZipCode}</td>
           <td><input type="text" name="postalCode" class="required" value="${parameters.postalCode!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
         </tr>
         <tr>

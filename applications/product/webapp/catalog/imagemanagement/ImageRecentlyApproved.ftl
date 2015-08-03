@@ -21,7 +21,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_0?has_content>
-                <div >${date0}</div>
+                <div>${date0}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_0 as show>
@@ -37,7 +37,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_1?has_content>
-                <div >${date1}</div>
+                <div>${date1}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_1 as show>
@@ -53,7 +53,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_2?has_content>
-                <div >${date2}</div>
+                <div>${date2}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_2 as show>
@@ -69,7 +69,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_3?has_content>
-                <div >${date3}</div>
+                <div>${date3}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_3 as show>
@@ -85,7 +85,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_4?has_content>
-                <div >${date4}</div>
+                <div>${date4}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_4 as show>
@@ -101,7 +101,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_5?has_content>
-                <div >${date5}</div>
+                <div>${date5}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_5 as show>
@@ -117,7 +117,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_6?has_content>
-                <div >${date6}</div>
+                <div>${date6}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_6 as show>
@@ -133,7 +133,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_7?has_content>
-                <div >${date7}</div>
+                <div>${date7}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_7 as show>
@@ -149,7 +149,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_8?has_content>
-                <div >${date8}</div>
+                <div>${date8}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_8 as show>
@@ -165,7 +165,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_9?has_content>
-                <div >${date9}</div>
+                <div>${date9}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_9 as show>
@@ -181,7 +181,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_10?has_content>
-                <div >${date10}</div>
+                <div>${date10}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_10 as show>
@@ -197,7 +197,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_11?has_content>
-                <div >${date11}</div>
+                <div>${date11}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_11 as show>
@@ -213,7 +213,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_12?has_content>
-                <div >${date12}</div>
+                <div>${date12}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_12 as show>
@@ -229,7 +229,7 @@ under the License.
     <td style="vertical-align:top;">
         <table>
             <#if approved_13?has_content>
-                <div >${date13}</div>
+                <div>${date13}</div>
                 <br/>
                 <#assign alt_row = false>
                 <#list approved_13 as show>

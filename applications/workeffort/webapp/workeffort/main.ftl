@@ -29,6 +29,6 @@ under the License.
           <div>${uiLabelMap.WorkEffortInterestingSure}.</div>
           <br />
       </#if>
-      <div >${uiLabelMap.WorkEffortApplicationEventsTasksWorkflowActivities}.</div>
+      <div>${uiLabelMap.WorkEffortApplicationEventsTasksWorkflowActivities}.</div>
   </div>
 </div>

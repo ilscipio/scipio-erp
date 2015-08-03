@@ -136,7 +136,7 @@ under the License.
 
                           <#-- location(s) -->
                           <td align="right">
-                            <div >${uiLabelMap.ProductLocation}</div>
+                            <div>${uiLabelMap.ProductLocation}</div>
                           </td>
                           <td align="right">
                             <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!>
@@ -180,7 +180,7 @@ under the License.
                               </select>
                           </td>
                           <td width="35%">
-                            <span >${uiLabelMap.ProductInitialInventoryItemStatus}:</span>&nbsp;&nbsp;
+                            <span>${uiLabelMap.ProductInitialInventoryItemStatus}:</span>&nbsp;&nbsp;
                             <select name="statusId_o_${rowCount}" size='1' id = "statusId_o_${rowCount}">
                               <option value="INV_RETURNED">${uiLabelMap.ProductReturned}</option>
                               <option value="INV_AVAILABLE">${uiLabelMap.ProductAvailable}</option>

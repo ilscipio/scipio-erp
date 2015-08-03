@@ -499,7 +499,7 @@ function callMetaInfo(contentId) {
 </script>
 
 
-<div >
+<div>
     ${uiLabelMap.ContentWebSiteContent}
 </div>
 <div>
@@ -511,7 +511,7 @@ function callMetaInfo(contentId) {
 <#if (!subsites?has_content)>
     <a href="javascript:void(0);" class="button tiny">${uiLabelMap.ContentWebSiteAddTree}</a>
 </#if>
-<div >
+<div>
     ${uiLabelMap.ContentWebSiteMenus}
 </div>
 <div>
@@ -527,7 +527,7 @@ function callMetaInfo(contentId) {
 <div>&nbsp;</div>
 <div>&nbsp;</div>
 
-<div >
+<div>
     ${uiLabelMap.ContentWebSiteErrors}
 </div>
 <div>

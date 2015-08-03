@@ -47,8 +47,8 @@ under the License.
     <td align="right">
             ${payrolList.description} :
     </td>
-    <td ><input type="text" size=10 name="${payrolList.invoiceItemTypeId}_Quantity"/></td>
-    <td ><input type="text" size=10 name="${payrolList.invoiceItemTypeId}_Amount"/></td>
+    <td><input type="text" size=10 name="${payrolList.invoiceItemTypeId}_Quantity"/></td>
+    <td><input type="text" size=10 name="${payrolList.invoiceItemTypeId}_Amount"/></td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
 </tr>
@@ -65,7 +65,7 @@ under the License.
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-<tr >
+<tr>
     <td align="right"><b>Add all values : </b></td>
     <td align="center" ><input type="submit" value="Add" /></td>
     <td>&nbsp;</td>

@@ -34,7 +34,7 @@ under the License.
           <#assign productPriceConds = productPriceRule.getRelated("ProductPriceCond", null, null, false)>
           <#assign productPriceActions = productPriceRule.getRelated("ProductPriceAction", null, null, false)>
           <tr valign="middle">
-            <td ><b>${productPriceRule.productPriceRuleId}</b></td>
+            <td><b>${productPriceRule.productPriceRuleId}</b></td>
             <td>
                 <form method="post" action="<@ofbizUrl>updateProductPriceRule</@ofbizUrl>" name="updateProductPriceRule">
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
@@ -45,7 +45,7 @@ under the License.
                     &nbsp;&nbsp;
                     <#assign saleRule = productPriceRule.isSale?? && productPriceRule.isSale == "Y">
                     <div>
-                    <span ><b>${uiLabelMap.ProductNotifySale}</b></span>&nbsp;
+                    <span><b>${uiLabelMap.ProductNotifySale}</b></span>&nbsp;
                     <input type="radio" name="isSale" value="Y" <#if saleRule>checked="checked"</#if> />${uiLabelMap.CommonYes}&nbsp;
                     <input type="radio" name="isSale" value="N" <#if !saleRule>checked="checked"</#if> />${uiLabelMap.CommonNo}
                     &nbsp;&nbsp;
@@ -132,7 +132,7 @@ under the License.
                     <td colspan="3">
                         <form method="post" action="<@ofbizUrl>createProductPriceCond</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
-                            <span ><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
+                            <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
                             <select name="inputParamEnumId" size="1">
                                 <#list inputParamEnums as inputParamEnum>
                                   <option value="${inputParamEnum.enumId}">${inputParamEnum.get("description",locale)}<#--[${inputParamEnum.enumId}]--></option>
@@ -163,7 +163,7 @@ under the License.
                   <#assign rowClass = "2">
                   <#list productPriceActions as productPriceAction>
                       <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                        <td ><b>${productPriceAction.productPriceActionSeqId}</b></td>
+                        <td><b>${productPriceAction.productPriceActionSeqId}</b></td>
                         <td>
                             <form method="post" action="<@ofbizUrl>updateProductPriceAction</@ofbizUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
@@ -203,7 +203,7 @@ under the License.
                     <td colspan="3">
                         <form method="post" action="<@ofbizUrl>createProductPriceAction</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
-                            <span ><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
+                            <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
                             <select name="productPriceActionTypeId" size="1">
                                 <#list productPriceActionTypes as productPriceActionType>
                                   <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.get("description",locale)}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>

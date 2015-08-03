@@ -58,8 +58,8 @@ under the License.
 
         <#-- Picklist -->
         <div>
-          <span >${uiLabelMap.ProductPickList}</span> ${picklist.picklistId}
-          <span >${uiLabelMap.CommonDate}</span> ${picklist.picklistDate}
+          <span>${uiLabelMap.ProductPickList}</span> ${picklist.picklistId}
+          <span>${uiLabelMap.CommonDate}</span> ${picklist.picklistDate}
           <form method="post" action="<@ofbizUrl>updatePicklist</@ofbizUrl>" style="display: inline;">
             <input type="hidden" name="facilityId" value="${facilityId}"/>
             <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
@@ -72,27 +72,27 @@ under the License.
             </select>
             <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
           </form>
-          <span >${uiLabelMap.ProductCreatedModifiedBy}</span> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
+          <span>${uiLabelMap.ProductCreatedModifiedBy}</span> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
           <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="button tiny">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
           <hr />
         </div>
         <#if picklistInfo.shipmentMethodType?has_content>
           <div style="margin-left: 15px;">
-            <span >${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentMethodType}</span> ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}
+            <span>${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentMethodType}</span> ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}
           </div>
         </#if>
 
         <#-- PicklistRole -->
         <#list picklistInfo.picklistRoleInfoList! as picklistRoleInfo>
           <div style="margin-left: 15px;">
-            <span >${uiLabelMap.PartyParty}</span> ${picklistRoleInfo.partyNameView.firstName!} ${picklistRoleInfo.partyNameView.middleName!} ${picklistRoleInfo.partyNameView.lastName!} ${picklistRoleInfo.partyNameView.groupName!}
-            <span >${uiLabelMap.PartyRole}</span> ${picklistRoleInfo.roleType.description}
-            <span >${uiLabelMap.CommonFrom}</span> ${picklistRoleInfo.picklistRole.fromDate}
-            <#if picklistRoleInfo.picklistRole.thruDate??><span >${uiLabelMap.CommonThru}</span> ${picklistRoleInfo.picklistRole.thruDate}</#if>
+            <span>${uiLabelMap.PartyParty}</span> ${picklistRoleInfo.partyNameView.firstName!} ${picklistRoleInfo.partyNameView.middleName!} ${picklistRoleInfo.partyNameView.lastName!} ${picklistRoleInfo.partyNameView.groupName!}
+            <span>${uiLabelMap.PartyRole}</span> ${picklistRoleInfo.roleType.description}
+            <span>${uiLabelMap.CommonFrom}</span> ${picklistRoleInfo.picklistRole.fromDate}
+            <#if picklistRoleInfo.picklistRole.thruDate??><span>${uiLabelMap.CommonThru}</span> ${picklistRoleInfo.picklistRole.thruDate}</#if>
           </div>
         </#list>
         <div style="margin-left: 15px;">
-          <span >${uiLabelMap.ProductAssignPicker}</span>
+          <span>${uiLabelMap.ProductAssignPicker}</span>
           <form method="post" action="<@ofbizUrl>createPicklistRole</@ofbizUrl>" style="display: inline;">
             <input type="hidden" name="facilityId" value="${facilityId}"/>
             <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
@@ -109,7 +109,7 @@ under the License.
         <#-- PicklistStatusHistory -->
         <#list picklistInfo.picklistStatusHistoryInfoList! as picklistStatusHistoryInfo>
           <div style="margin-left: 15px;">
-            <span >${uiLabelMap.CommonStatus}</span> ${uiLabelMap.CommonChange} ${uiLabelMap.CommonFrom} ${picklistStatusHistoryInfo.statusItem.get("description",locale)}
+            <span>${uiLabelMap.CommonStatus}</span> ${uiLabelMap.CommonChange} ${uiLabelMap.CommonFrom} ${picklistStatusHistoryInfo.statusItem.get("description",locale)}
             ${uiLabelMap.CommonTo} ${picklistStatusHistoryInfo.statusItemTo.description}
             ${uiLabelMap.CommonOn} ${picklistStatusHistoryInfo.picklistStatusHistory.changeDate}
             ${uiLabelMap.CommonBy} ${picklistStatusHistoryInfo.picklistStatusHistory.changeUserLoginId}
@@ -121,9 +121,9 @@ under the License.
           <#assign isBinComplete = Static["org.ofbiz.shipment.picklist.PickListServices"].isBinComplete(delegator, picklistBinInfo.picklistBin.picklistBinId)/>
           <#if (!isBinComplete)>
             <div style="margin-left: 15px;">
-              <span >${uiLabelMap.ProductBinNum}</span> ${picklistBinInfo.picklistBin.binLocationNumber}&nbsp;(${picklistBinInfo.picklistBin.picklistBinId})
-              <#if picklistBinInfo.primaryOrderHeader??><span >${uiLabelMap.ProductPrimaryOrderId}</span> ${picklistBinInfo.primaryOrderHeader.orderId}</#if>
-              <#if picklistBinInfo.primaryOrderItemShipGroup??><span >${uiLabelMap.ProductPrimaryShipGroupSeqId}</span> ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</#if>
+              <span>${uiLabelMap.ProductBinNum}</span> ${picklistBinInfo.picklistBin.binLocationNumber}&nbsp;(${picklistBinInfo.picklistBin.picklistBinId})
+              <#if picklistBinInfo.primaryOrderHeader??><span>${uiLabelMap.ProductPrimaryOrderId}</span> ${picklistBinInfo.primaryOrderHeader.orderId}</#if>
+              <#if picklistBinInfo.primaryOrderItemShipGroup??><span>${uiLabelMap.ProductPrimaryShipGroupSeqId}</span> ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</#if>
               <#if !picklistBinInfo.picklistItemInfoList?has_content><a href="javascript:document.DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a></#if>
               <form name="DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}" method="post" action="<@ofbizUrl>deletePicklistBin</@ofbizUrl>">
                 <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
@@ -131,13 +131,13 @@ under the License.
               </form>
             </div>
             <div style="margin-left: 30px;">
-              <span >${uiLabelMap.CommonUpdate} ${uiLabelMap.ProductBinNum}</span>
+              <span>${uiLabelMap.CommonUpdate} ${uiLabelMap.ProductBinNum}</span>
               <form method="post" action="<@ofbizUrl>updatePicklistBin</@ofbizUrl>" style="display: inline;">
                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                 <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
-                <span >${uiLabelMap.ProductLocation} ${uiLabelMap.CommonNbr}</span>
+                <span>${uiLabelMap.ProductLocation} ${uiLabelMap.CommonNbr}</span>
                 <input type"text" size="2" name="binLocationNumber" value="${picklistBinInfo.picklistBin.binLocationNumber}"/>
-                <span >${uiLabelMap.PageTitlePickList}</span>
+                <span>${uiLabelMap.PageTitlePickList}</span>
                 <select name="picklistId">
                   <#list picklistActiveList as picklistActive>
                     <#assign picklistActiveStatusItem = picklistActive.getRelatedOne("StatusItem", true)>

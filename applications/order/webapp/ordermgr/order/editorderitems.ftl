@@ -442,9 +442,9 @@ under the License.
                                 </#list>
                             </select>
                         </td>
-                        <td ><input type="text" name="description" value="" size="30" maxlength="60" class="text-right"/></td>
-                        <td ><input type="text" name="amount" size="6" value="<@ofbizAmount amount=0.00/>" class="text-right"/></td>
-                        <td >
+                        <td><input type="text" name="description" value="" size="30" maxlength="60" class="text-right"/></td>
+                        <td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=0.00/>" class="text-right"/></td>
+                        <td>
                             
                             <input class="smallSubmit" type="submit" value="${uiLabelMap.CommonAdd}"/>
                         </td>

@@ -29,12 +29,12 @@ under the License.
         <table class="basic-table" cellspacing="0">
         <#if !(facilityId??)>
             <tr>
-                <td >${uiLabelMap.ProductFacility}</td>
+                <td>${uiLabelMap.ProductFacility}</td>
                 <td><input type="text" value="" size="19" maxlength="20" /></td>
             </tr>
         </#if>
         <tr>
-            <td >${uiLabelMap.ProductLocationSeqId}</td>
+            <td>${uiLabelMap.ProductLocationSeqId}</td>
             <td>
                 <#if parameters.facilityId??>
                     <#assign LookupFacilityLocationView="LookupFacilityLocation?facilityId=${facilityId}">
@@ -45,23 +45,23 @@ under the License.
             </td>
         </tr>
         <tr>
-            <td >${uiLabelMap.CommonArea}</td>
+            <td>${uiLabelMap.CommonArea}</td>
             <td><input type="text" name="areaId" value="" size="19" maxlength="20" /></td>
         </tr>
         <tr>
-            <td >${uiLabelMap.ProductAisle}</td>
+            <td>${uiLabelMap.ProductAisle}</td>
             <td><input type="text" name="aisleId" value="" size="19" maxlength="20" /></td>
         </tr>
         <tr>
-            <td >${uiLabelMap.ProductSection}</td>
+            <td>${uiLabelMap.ProductSection}</td>
             <td><input type="text" name="sectionId" value="" size="19" maxlength="20" /></td>
         </tr>
         <tr>
-            <td >${uiLabelMap.ProductLevel}</td>
+            <td>${uiLabelMap.ProductLevel}</td>
             <td><input type="text" name="levelId" value="" size="19" maxlength="20" /></td>
         </tr>
         <tr>
-            <td >${uiLabelMap.ProductPosition}</td>
+            <td>${uiLabelMap.ProductPosition}</td>
             <td><input type="text" name="positionId" value="" size="19" maxlength="20" /></td>
         </tr>
         <tr>

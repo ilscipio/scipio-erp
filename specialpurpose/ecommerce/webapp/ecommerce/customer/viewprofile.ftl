@@ -286,7 +286,7 @@ under the License.
                       <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
                     </div>
                   </td>
-                  <td >&nbsp;</td>
+                  <td>&nbsp;</td>
                   <td align="right" valign="top">
                     <a href="<@ofbizUrl>editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button">
                             ${uiLabelMap.CommonUpdate}</a>
@@ -466,7 +466,7 @@ under the License.
     <table width="100%" border="0" cellpadding="1" cellspacing="0">
       <tr>
         <th>${uiLabelMap.EcommerceListName}</th>
-        <#-- <th >${uiLabelMap.OrderListType}</th> -->
+        <#-- <th>${uiLabelMap.OrderListType}</th> -->
         <th>${uiLabelMap.CommonFromDate}</th>
         <th>${uiLabelMap.CommonThruDate}</th>
         <th>${uiLabelMap.CommonStatus}</th>

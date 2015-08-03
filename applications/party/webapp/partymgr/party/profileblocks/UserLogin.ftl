@@ -27,7 +27,7 @@ under the License.
         <table class="basic-table" cellspacing="0">
           <#list userLogins as userUserLogin>
             <tr>
-              <td >${uiLabelMap.PartyUserLogin}</td>
+              <td>${uiLabelMap.PartyUserLogin}</td>
               <td>${userUserLogin.userLoginId}</td>
               <td>
                 <#assign enabled = uiLabelMap.PartyEnabled>

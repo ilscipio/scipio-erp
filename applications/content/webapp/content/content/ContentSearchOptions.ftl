@@ -118,7 +118,7 @@ under the License.
                 <#list searchConstraintStrings as searchConstraintString>
                     <div>&nbsp;-&nbsp;${searchConstraintString}</div>
                 </#list>
-                <div >${uiLabelMap.CommonSortedBy} ${searchSortOrderString}</div>
+                <div>${uiLabelMap.CommonSortedBy} ${searchSortOrderString}</div>
                 <div>
                   ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked="checked"/>
                   ${uiLabelMap.CommonRefineSearch}<input type="radio" name="clearSearch" value="N"/>

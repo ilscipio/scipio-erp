@@ -24,7 +24,7 @@ under the License.
     <#list searchConstraintStrings as searchConstraintString>
         <div>&nbsp;<a href="<@ofbizUrl>WorkEffortSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="button tiny">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
-    <div><span >${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
+    <div><span>${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
     <div><a href="<@ofbizUrl>WorkEffortSearchOptions</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !workEffortIds?has_content>

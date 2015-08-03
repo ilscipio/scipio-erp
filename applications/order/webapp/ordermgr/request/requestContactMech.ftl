@@ -42,8 +42,8 @@ under the License.
                       <#if emailAddress?has_content>${emailAddress}</#if>
 
                       <#if postalAddress?has_content>
-                        <#if postalAddress.toName?has_content><span >${uiLabelMap.PartyAddrToName}</span>&nbsp;${postalAddress.toName}<br /></#if>
-                        <#if postalAddress.attnName?has_content><span >${uiLabelMap.PartyAddrAttnName}</span>&nbsp;${postalAddress.attnName}<br /></#if>
+                        <#if postalAddress.toName?has_content><span>${uiLabelMap.PartyAddrToName}</span>&nbsp;${postalAddress.toName}<br /></#if>
+                        <#if postalAddress.attnName?has_content><span>${uiLabelMap.PartyAddrAttnName}</span>&nbsp;${postalAddress.attnName}<br /></#if>
                         ${postalAddress.address1!}<br />
                         <#if postalAddress.address2?has_content>${postalAddress.address2}<br /></#if>
                         ${postalAddress.city!},

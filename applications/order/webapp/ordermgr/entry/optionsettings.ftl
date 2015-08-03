@@ -28,13 +28,13 @@ under the License.
                 <th>
                   ${uiLabelMap.OrderInternalNote}
                 </th>
-                <th >
+                <th>
                   ${uiLabelMap.OrderShippingNotes}
                 </th>
               </tr>
               </thead>
               <tr>
-                <td >
+                <td>
                   <textarea cols="30" rows="3" name="internal_order_notes"><#if (cart.getInternalOrderNotes().size()>0)>${(cart.getInternalOrderNotes()[0])!}</#if></textarea>
                 </td>
                 <td>
@@ -112,7 +112,7 @@ under the License.
                   <td class="${style_grid_large!}3">
                     ${uiLabelMap.FacilityShipOnceOrAvailable}
                   </td>
-                  <td >
+                  <td>
                     <@field type="radio" name="${shipGroupIndex?default(0)}_may_split" value="false" checked=cart.getMaySplit(shipGroupIndex)?default("N") label="${uiLabelMap.FacilityWaitEntireOrderReady}"/>
                     <@field type="radio" name="${shipGroupIndex?default(0)}_may_split" value="true" checked=cart.getMaySplit(shipGroupIndex)?default("N") label="${uiLabelMap.FacilityShipAvailable}"/>
                   </td>
@@ -121,7 +121,7 @@ under the License.
                   <td class="${style_grid_large!}3">
                     ${uiLabelMap.OrderShipBeforeDate}
                   </td>
-                    <td >
+                    <td>
                     <div>
                       <@htmlTemplate.renderDateTimeField name="sgi${shipGroupIndex?default('0')}_shipBeforeDate" event="" action="" value="${(cart.getShipBeforeDate(shipGroupIndex))!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="sgi${shipGroupIndex?default('0')}_shipBeforeDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     </div>
@@ -131,7 +131,7 @@ under the License.
                   <td class="${style_grid_large!}3">
                     ${uiLabelMap.OrderShipAfterDate}
                   </td>
-                    <td >
+                    <td>
                     <div>
                       <@htmlTemplate.renderDateTimeField name="sgi${shipGroupIndex?default('0')}_shipAfterDate" event="" action="" value="${(cart.getShipAfterDate(shipGroupIndex))!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="sgi${shipGroupIndex?default('0')}_shipAfterDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     </div>
@@ -141,7 +141,7 @@ under the License.
                   <td class="${style_grid_large!}3">
                     ${uiLabelMap.FacilitySpecialInstructions}
                   </td>
-                  <td >
+                  <td>
                     <textarea cols="30" rows="3" name="${shipGroupIndex?default("0")}_shipping_instructions">${cart.getShippingInstructions(shipGroupIndex)!}</textarea>
                   </td>
                 </tr>

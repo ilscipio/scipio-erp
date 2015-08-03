@@ -72,7 +72,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
           </td>
         </tr>
         <tr>
-         <td >
+         <td>
             <a class="button tiny" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${rootForumId}</@ofbizUrl>" >Add Top Level Forum</a>
          </td >
         </tr>
@@ -121,24 +121,24 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 <@loopSubContent contentId=forumId viewIndex=0 viewSize=9999 contentAssocTypeId="SUBSITE" returnAfterPickWhen="1==1";>
        <tr>
-         <td >
+         <td>
             ${indent}
             <#local plusMinus="-"/>
             ${plusMinus} ${content.contentName!}
          </td >
-         <td >
+         <td>
             <a class="button tiny" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
          </td >
-         <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
-         <td >
+         <td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
+         <td>
             <a class="button tiny" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
          </td >
-         <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
-         <td >
+         <td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
+         <td>
             <a class="button tiny" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${content.contentId}</@ofbizUrl>" >Add Child Forum</a>
          </td >
-         <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
-         <td >
+         <td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
+         <td>
             <a class="button tiny" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@ofbizUrl>">RemoveSite</a>
          </td >
        </tr>

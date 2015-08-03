@@ -56,7 +56,7 @@ function setWeight(weight) {
               <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRoute.shipmentRouteSegmentId}"/>
               <table border="0" cellpadding="2" cellspacing="0">
                 <tr>
-                  <td width="20%" align="right"><span >${uiLabelMap.ProductCarrier}</span></td>
+                  <td width="20%" align="right"><span>${uiLabelMap.ProductCarrier}</span></td>
                   <td>&nbsp;</td>
                   <td width="1%" nowrap="nowrap">
                     <select name="carrierPartyId">
@@ -77,7 +77,7 @@ function setWeight(weight) {
                   </td>
                 </tr>
                 <tr>
-                  <td width="20%" align="right"><span >${uiLabelMap.ProductShipMethod}</span></td>
+                  <td width="20%" align="right"><span>${uiLabelMap.ProductShipMethod}</span></td>
                   <td>&nbsp;</td>
                   <td width="1%" nowrap="nowrap">
                     <select name="shipmentMethodTypeId">
@@ -129,7 +129,7 @@ function setWeight(weight) {
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
             <table cellspacing="0" class="basic-table">
               <tr>
-                <td width="20%" align="right"><span >${uiLabelMap.ProductPackage}</span> ${shipmentPackage.shipmentPackageSeqId} ${uiLabelMap.ProductWeight}</td>
+                <td width="20%" align="right"><span>${uiLabelMap.ProductPackage}</span> ${shipmentPackage.shipmentPackageSeqId} ${uiLabelMap.ProductWeight}</td>
                 <td>&nbsp;</td>
                 <td width="80%">
                   <input type="text" name="weight" />&nbsp;
@@ -181,7 +181,7 @@ function setWeight(weight) {
       <input type="hidden" name="setPackedOnly" value="Y" />
       <table border='0' cellpadding='2' cellspacing='0'>
         <tr>
-          <td width="25%" align='right'><span >${uiLabelMap.ProductOrderNumber}</span></td>
+          <td width="25%" align='right'><span>${uiLabelMap.ProductOrderNumber}</span></td>
           <td width="1">&nbsp;</td>
           <td width="25%">
             <input type="text" name="orderId" size="20" maxlength="20" value="${requestParameters.orderId!}" />

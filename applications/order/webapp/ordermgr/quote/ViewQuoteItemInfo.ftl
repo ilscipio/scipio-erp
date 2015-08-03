@@ -61,7 +61,7 @@ under the License.
                 <#assign totalQuoteAmount = totalQuoteAmount + totalQuoteItemAmount>
                 
                 <tr <#if alt_row>class="alternate-row" </#if>>
-                    <td >
+                    <td>
                         <div>
                         <#if showQuoteManagementLinks?? && quoteItem.isPromo?default("N") == "N" && quote.statusId=="QUO_CREATED">
                             <a href="<@ofbizUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@ofbizUrl>" class="button tiny">${quoteItem.quoteItemSeqId}</a>
@@ -114,7 +114,7 @@ under the License.
                 <#list quoteItemAdjustments as quoteItemAdjustment>
                     <#assign adjustmentType = quoteItemAdjustment.getRelatedOne("OrderAdjustmentType", false)>
                     <tr class="alternate-row">
-                        <td align="right" colspan="4"><span >${adjustmentType.get("description",locale)!}</span></td>
+                        <td align="right" colspan="4"><span>${adjustmentType.get("description",locale)!}</span></td>
                         <td align="right"><@ofbizCurrency amount=quoteItemAdjustment.amount isoCode=quote.currencyUomId/></td>
                         <td>&nbsp;</td>
                     </tr>
@@ -135,7 +135,7 @@ under the License.
                 <#if !quoteAdjustment.quoteItemSeqId??>
                     <#assign totalQuoteHeaderAdjustmentAmount = quoteAdjustment.amount?default(0) + totalQuoteHeaderAdjustmentAmount>
                     <tr>
-                      <td align="right" colspan="6"><span >${adjustmentType.get("description",locale)!}</span></td>
+                      <td align="right" colspan="6"><span>${adjustmentType.get("description",locale)!}</span></td>
                       <td align="right"><@ofbizCurrency amount=quoteAdjustment.amount isoCode=quote.currencyUomId/></td>
                     </tr>
                 </#if>

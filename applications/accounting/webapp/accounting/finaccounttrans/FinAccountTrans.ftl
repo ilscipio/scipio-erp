@@ -83,7 +83,7 @@ function getFinAccountTransRunningTotalAndBalances() {
   <#if finAccountTransList?has_content && parameters.noConditionFind?? && parameters.noConditionFind == 'Y'>
     <#if !grandTotal??>
       <div>
-        <span >${uiLabelMap.AccountingRunningTotal} :</span>
+        <span>${uiLabelMap.AccountingRunningTotal} :</span>
         <span  id="showFinAccountTransRunningTotal"></span>
       </div>
     </#if>

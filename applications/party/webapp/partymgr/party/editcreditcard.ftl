@@ -42,7 +42,7 @@ under the License.
 
         ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
         <tr>
-          <td >${uiLabelMap.AccountingBillingAddress}</td>
+          <td>${uiLabelMap.AccountingBillingAddress}</td>
           <td width="5">&nbsp;</td>
           <td>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...

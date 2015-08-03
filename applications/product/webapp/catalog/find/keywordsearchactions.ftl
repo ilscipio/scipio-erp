@@ -19,7 +19,7 @@ under the License.
 
 <#if productIds?has_content>
     <hr />
-    <span ><b>${uiLabelMap.ProductNote}:</b></span> ${uiLabelMap.ProductNoteKeywordSearch}
+    <span><b>${uiLabelMap.ProductNote}:</b></span> ${uiLabelMap.ProductNoteKeywordSearch}
     <hr />
 
     ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVirtualWithVariantsFormInclude")}
@@ -28,7 +28,7 @@ under the License.
 
     <div>
         <form method="post" action="<@ofbizUrl>searchRemoveFromCategory</@ofbizUrl>" name="searchRemoveFromCategory">
-          <span >${uiLabelMap.ProductRemoveResultsFrom} ${uiLabelMap.ProductCategory}:</span>
+          <span>${uiLabelMap.ProductRemoveResultsFrom} ${uiLabelMap.ProductCategory}:</span>
           <@htmlTemplate.lookupField formName="searchRemoveFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
           <input type="hidden" name="clearSearch" value="N" />
           <input type="submit" value="${uiLabelMap.CommonRemove}" class="smallSubmit" />
@@ -40,9 +40,9 @@ under the License.
 
     <div>
         <form method="post" action="<@ofbizUrl>searchExpireFromCategory</@ofbizUrl>" name="searchExpireFromCategory">
-          <span >${uiLabelMap.ProductExpireResultsFrom} ${uiLabelMap.ProductCategory}:</span>
+          <span>${uiLabelMap.ProductExpireResultsFrom} ${uiLabelMap.ProductCategory}:</span>
           <@htmlTemplate.lookupField formName="searchExpireFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
-          <span >${uiLabelMap.CommonThru}</span>
+          <span>${uiLabelMap.CommonThru}</span>
           <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           <input type="hidden" name="clearSearch" value="N" />
           <input type="submit" value="${uiLabelMap.CommonExpire}" class="smallSubmit" />
@@ -54,9 +54,9 @@ under the License.
 
     <div>
         <form method="post" action="<@ofbizUrl>searchAddToCategory</@ofbizUrl>" name="searchAddToCategory">
-          <span >${uiLabelMap.ProductAddResultsTo} ${uiLabelMap.ProductCategory}:</span>
+          <span>${uiLabelMap.ProductAddResultsTo} ${uiLabelMap.ProductCategory}:</span>
           <@htmlTemplate.lookupField formName="searchAddToCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
-          <span >${uiLabelMap.CommonFrom}</span>
+          <span>${uiLabelMap.CommonFrom}</span>
           <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           <input type="hidden" name="clearSearch" value="N" />
           <input type="submit" value="${uiLabelMap.ProductAddToCategory}" class="smallSubmit" />
@@ -68,17 +68,17 @@ under the License.
 
     <div>
         <form method="post" action="<@ofbizUrl>searchAddFeature</@ofbizUrl>" name="searchAddFeature">
-          <span >${uiLabelMap.ProductAddFeatureToResults}:</span><br />
-          <span >${uiLabelMap.ProductFeatureId}</span><input type="text" size="10" name="productFeatureId" value="" />
-          <span >${uiLabelMap.CommonFrom}</span>
+          <span>${uiLabelMap.ProductAddFeatureToResults}:</span><br />
+          <span>${uiLabelMap.ProductFeatureId}</span><input type="text" size="10" name="productFeatureId" value="" />
+          <span>${uiLabelMap.CommonFrom}</span>
           <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-          <span >${uiLabelMap.CommonThru}</span>
+          <span>${uiLabelMap.CommonThru}</span>
           <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           <br />
-          <span >${uiLabelMap.CommonAmount}</span><input type="text" size="5" name="amount" value="" />
-          <span >${uiLabelMap.CommonSequence}</span><input type="text" size="5" name="sequenceNum" value="" />
-          <span >${uiLabelMap.ProductFeatureApplicationType}</span>
-          <span >${uiLabelMap.ProductCategoryId}:</span>
+          <span>${uiLabelMap.CommonAmount}</span><input type="text" size="5" name="amount" value="" />
+          <span>${uiLabelMap.CommonSequence}</span><input type="text" size="5" name="sequenceNum" value="" />
+          <span>${uiLabelMap.ProductFeatureApplicationType}</span>
+          <span>${uiLabelMap.ProductCategoryId}:</span>
           <select name='productFeatureApplTypeId' size='1'>
                <#list applicationTypes as applicationType>
                    <#assign displayDesc = applicationType.get("description", locale)?default("No Description")>
@@ -98,8 +98,8 @@ under the License.
 
     <div>
         <form method="post" action="<@ofbizUrl>searchRemoveFeature</@ofbizUrl>" name="searchRemoveFeature">
-          <span >${uiLabelMap.ProductRemoveFeatureFromResults}:</span><br />
-          <span >${uiLabelMap.ProductFeatureId}</span><input type="text" size="10" name="productFeatureId" value="" />
+          <span>${uiLabelMap.ProductRemoveFeatureFromResults}:</span><br />
+          <span>${uiLabelMap.ProductFeatureId}</span><input type="text" size="10" name="productFeatureId" value="" />
           <input type="hidden" name="clearSearch" value="N" />
           <input type="submit" value="${uiLabelMap.ProductRemoveFeature}" class="smallSubmit" />
           <br />
@@ -111,9 +111,9 @@ under the License.
     <div>
         <form method="post" action="" name="searchShowParams">
           <#assign searchParams = Static["org.ofbiz.product.product.ProductSearchSession"].makeSearchParametersString(session)>
-          <span >${uiLabelMap.ProductPlainSearchParameters}:</span><input type="text" size="60" name="searchParameters" value="${StringUtil.wrapString(searchParams)}" />
+          <span>${uiLabelMap.ProductPlainSearchParameters}:</span><input type="text" size="60" name="searchParameters" value="${StringUtil.wrapString(searchParams)}" />
           <br />
-          <span >${uiLabelMap.ProductHtmlSearchParameters}:</span><input type="text" size="60" name="searchParameters" value="${StringUtil.wrapString(searchParams)?html}" />
+          <span>${uiLabelMap.ProductHtmlSearchParameters}:</span><input type="text" size="60" name="searchParameters" value="${StringUtil.wrapString(searchParams)?html}" />
           <input type="hidden" name="clearSearch" value="N" />
         </form>
     </div>
@@ -121,6 +121,6 @@ under the License.
     <hr />
 
     <div>
-      <span >${uiLabelMap.ProductSearchExportProductList}:</span><a href="<@ofbizUrl>searchExportProductList?clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductSearchExport}</a>
+      <span>${uiLabelMap.ProductSearchExportProductList}:</span><a href="<@ofbizUrl>searchExportProductList?clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductSearchExport}</a>
     </div>
 </#if>

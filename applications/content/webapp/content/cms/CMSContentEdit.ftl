@@ -319,12 +319,12 @@ ${menuWrapper.renderMenuString()}
         <#local isPublished = "checked='checked'" />
     </#if>
        <tr>
-         <td >
+         <td>
             ${indent}
             <#local plusMinus="-"/>
             ${plusMinus} ${content.contentName!}
          </td >
-         <td  >
+         <td>
             <input type="checkbox" name="publish_o_${rowCount}" value="Y" ${isPublished}/>
          </td >
             <input type="hidden" name="contentIdTo_o_${rowCount}" value="${subContentId}" />

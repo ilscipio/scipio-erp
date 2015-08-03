@@ -159,14 +159,14 @@ under the License.
                     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
                     <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
                     <div>
-                        <span >${uiLabelMap.ProductProductId}</span>
+                        <span>${uiLabelMap.ProductProductId}</span>
                         <@htmlTemplate.lookupField formName="addProductCategoryMemberForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
                         <br/>
-                        <span >${uiLabelMap.CommonFromDate}</span>
+                        <span>${uiLabelMap.CommonFromDate}</span>
                         <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         <span class="tooltip">${uiLabelMap.CommonRequired}</span>
                           <br />
-                          <span >${uiLabelMap.CommonComments}</span> <textarea name="comments" rows="2" cols="40"></textarea>
+                          <span>${uiLabelMap.CommonComments}</span> <textarea name="comments" rows="2" cols="40"></textarea>
                           <input type="submit" value="${uiLabelMap.CommonAdd}" />
                     </div>
                 </form>
@@ -185,13 +185,13 @@ under the License.
                     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
                     <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
                     <div>
-                        <span >${uiLabelMap.ProductTargetProductCategory}</span>
+                        <span>${uiLabelMap.ProductTargetProductCategory}</span>
                         <@htmlTemplate.lookupField formName="copyCategoryProductMembersForm" name="productCategoryIdTo" id="productCategoryIdTo" fieldFormName="LookupProductCategory"/>
                         <br />
-                        <span >${uiLabelMap.ProductOptionalFilterWithDate}</span>
+                        <span>${uiLabelMap.ProductOptionalFilterWithDate}</span>
                         <@htmlTemplate.renderDateTimeField name="validDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="validDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         <br />
-                        <span >${uiLabelMap.ProductIncludeSubCategories}</span>
+                        <span>${uiLabelMap.ProductIncludeSubCategories}</span>
                         <select name="recurse">
                             <option value="N">${uiLabelMap.CommonN}</option>
                             <option value="Y">${uiLabelMap.CommonY}</option>
@@ -214,7 +214,7 @@ under the License.
                     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
                     <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
                     <div>
-                        <span >${uiLabelMap.ProductOptionalExpirationDate}</span>
+                        <span>${uiLabelMap.ProductOptionalExpirationDate}</span>
                         <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         &nbsp;&nbsp;<input type="submit" value="${uiLabelMap.CommonExpireAll}" />
                     </div>
@@ -234,7 +234,7 @@ under the License.
                     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
                     <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
                     <div>
-                        <span >${uiLabelMap.ProductOptionalExpiredBeforeDate}</span>
+                        <span>${uiLabelMap.ProductOptionalExpiredBeforeDate}</span>
                         <@htmlTemplate.renderDateTimeField name="validDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="validDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         &nbsp;&nbsp;<input type="submit" value="${uiLabelMap.CommonRemoveExpired}" />
                     </div>

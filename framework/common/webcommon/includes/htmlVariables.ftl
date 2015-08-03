@@ -44,6 +44,7 @@ under the License.
     "button" : "button",
     "button_group" : "button-group",
     "button_force" : "force-button",
+    "button_default" : "button tiny",
     "tiny" : "tiny",
     "small" : "small",
     "medium" : "medium",

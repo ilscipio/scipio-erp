@@ -40,19 +40,19 @@ under the License.
         </div>
         <table class="basic-table" cellspacing="0">
         <tr>
-          <td >${uiLabelMap.AccountingCardNumber}</td>
+          <td>${uiLabelMap.AccountingCardNumber}</td>
           <td>
             <input type="text" size="20" maxlength="60" name="cardNumber" value="${giftCardData.cardNumber!}" />
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.AccountingPinNumber}</td>
+          <td>${uiLabelMap.AccountingPinNumber}</td>
           <td>
             <input type="text" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber!}" />
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.CommonExpireDate}</td>
+          <td>${uiLabelMap.CommonExpireDate}</td>
           <td>
             <#assign expMonth = "">
             <#assign expYear = "">
@@ -88,7 +88,7 @@ under the License.
           </td>
         </tr>
         <tr>
-          <td >${uiLabelMap.CommonDescription}</td>
+          <td>${uiLabelMap.CommonDescription}</td>
           <td>
             <input type="text" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
           </td>

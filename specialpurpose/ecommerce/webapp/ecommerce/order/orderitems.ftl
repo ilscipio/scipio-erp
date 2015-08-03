@@ -44,9 +44,9 @@ under the License.
         <th></th>
         <th>${uiLabelMap.OrderQtyOrdered}</th>
       </#if>
-      <th >${uiLabelMap.EcommerceUnitPrice}</th>
-      <th >${uiLabelMap.OrderAdjustments}</th>
-      <th >${uiLabelMap.CommonSubtotal}</th>
+      <th>${uiLabelMap.EcommerceUnitPrice}</th>
+      <th>${uiLabelMap.OrderAdjustments}</th>
+      <th>${uiLabelMap.CommonSubtotal}</th>
       <#if maySelectItems?default("N") == "Y" && roleTypeId! == "PLACING_CUSTOMER">
         <th colspan="3"></th>
       </#if>
@@ -116,12 +116,12 @@ under the License.
       <tr><td colspan="${numColumns}"></td></tr>
       <tr>
         <#if !orderItem.productId?? || orderItem.productId == "_?_">
-          <td >
+          <td>
             ${orderItem.itemDescription?default("")}
           </td>
         <#else>
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
-          <td >
+          <td>
             <a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="linktext">${orderItem.productId} - ${orderItem.itemDescription?default("")}</a>
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
             <#if orderItemAttributes?has_content>

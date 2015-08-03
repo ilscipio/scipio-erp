@@ -26,7 +26,7 @@ under the License.
     </#if>
     <tr>
         <td colspan="2">&nbsp;</td>
-        <td colspan="3" align="right"><span >${returnAdjustment.get("description",locale)?default("N/A")}</span>
+        <td colspan="3" align="right"><span>${returnAdjustment.get("description",locale)?default("N/A")}</span>
             <#if returnAdjustment.comments?has_content>: ${returnAdjustment.comments}</#if>
         </div></td>
         <#if (adjEditable)>

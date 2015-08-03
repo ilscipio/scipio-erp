@@ -138,7 +138,7 @@ var issuerId = "";
               </div>
               
               <div id="issuers">
-              <div><label >${uiLabelMap.AccountingBank}</label></div>
+              <div><label>${uiLabelMap.AccountingBank}</label></div>
                 <select name="issuer" id="issuer">
                 <#if issuerList?has_content>
                     <#list issuerList as issuer>

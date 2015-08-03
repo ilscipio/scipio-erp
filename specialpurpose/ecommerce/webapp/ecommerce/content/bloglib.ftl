@@ -31,7 +31,7 @@ under the License.
         <#local csv = csv + content.contentId/>
         <#if counter < len && startIndex <= counter >
        <tr>
-         <td >
+         <td>
             ${indent}
             <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
               <a class="tabButton" href="<@ofbizUrl>showcontenttree?contentId=${content.contentId!}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName!}

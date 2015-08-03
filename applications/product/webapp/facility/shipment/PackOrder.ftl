@@ -73,14 +73,14 @@ under the License.
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <table cellspacing="0" class="basic-table">
                 <tr>
-                  <td width="25%" align="right"><span >${uiLabelMap.ProductOrderId}</span></td>
+                  <td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></td>
                   <td width="1">&nbsp;</td>
                   <td width="25%">
                     <input type="text" name="orderId" size="20" maxlength="20" value="${orderId!}"/>
                     /
                     <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
                   </td>
-                  <td><span >${uiLabelMap.ProductHideGrid}</span>&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if> /></td>
+                  <td><span>${uiLabelMap.ProductHideGrid}</span>&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if> /></td>
                   <td>&nbsp;</td>
                 </tr>
                 <tr>
@@ -100,12 +100,12 @@ under the License.
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <table cellspacing="0" class="basic-table">
                 <tr>
-                  <td width="25%" align='right'><span >${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
+                  <td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
                   <td width="1">&nbsp;</td>
                   <td width="25%">
                     <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
                   </td>
-                  <td><span >${uiLabelMap.ProductHideGrid}</span>&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if> /></td>
+                  <td><span>${uiLabelMap.ProductHideGrid}</span>&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if> /></td>
                   <td>&nbsp;</td>
                 </tr>
                 <tr>
@@ -158,7 +158,7 @@ under the License.
                   <tr>
                     <td valign="top">
                       <#if postalAddress?exists >
-                        <span >${uiLabelMap.ProductShipToAddress}</span>
+                        <span>${uiLabelMap.ProductShipToAddress}</span>
                         <br />
                         ${uiLabelMap.CommonTo}: ${postalAddress.toName?default("")}
                         <br />
@@ -180,7 +180,7 @@ under the License.
                     </td>
                     <td>&nbsp;</td>
                     <td valign="top">
-                      <span >${uiLabelMap.ProductCarrierShipmentMethod}</span>
+                      <span>${uiLabelMap.ProductCarrierShipmentMethod}</span>
                       <br />
                       <#if carrier == "USPS">
                         <#assign color = "red">
@@ -196,7 +196,7 @@ under the License.
                       <#assign description = (delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":orderItemShipGroup.shipmentMethodTypeId}, false)).description>
                       ${description!"??"}
                       <br />
-                      <span >${uiLabelMap.ProductEstimatedShipCostForShipGroup}</span>
+                      <span>${uiLabelMap.ProductEstimatedShipCostForShipGroup}</span>
                       <br />
                       <#if shipmentCostEstimateForShipGroup?exists>
                           <@ofbizCurrency amount=shipmentCostEstimateForShipGroup isoCode=orderReadHelper.getCurrency()!/>
@@ -205,7 +205,7 @@ under the License.
                     </td>
                     <td>&nbsp;</td>
                     <td valign="top">
-                      <span >${uiLabelMap.OrderInstructions}</span>
+                      <span>${uiLabelMap.OrderInstructions}</span>
                       <br />
                       ${orderItemShipGroup.shippingInstructions?default("(${uiLabelMap.CommonNone})")}
                     </td>
@@ -226,7 +226,7 @@ under the License.
                     <tr>
                       <td>
                         <div>
-                            <span >${uiLabelMap.ProductProductNumber}</span>
+                            <span>${uiLabelMap.ProductProductNumber}</span>
                             <input type="text" name="productId" size="20" maxlength="20" value=""/>
                             @
                             <input type="text" name="quantity" size="6" maxlength="6" value="1"/>
@@ -234,7 +234,7 @@ under the License.
                         </div>
                       </td>
                       <td>
-                          <span >${uiLabelMap.ProductCurrentPackageSequence}</span>
+                          <span>${uiLabelMap.ProductCurrentPackageSequence}</span>
                           ${packingSession.getCurrentPackageSeq()}
                           <input type="button" value="${uiLabelMap.ProductNextPackage}" onclick="javascript:document.incPkgSeq.submit();" />
                       </td>
@@ -368,7 +368,7 @@ under the License.
                         <#assign packageSeqIds = packingSession.getPackageSeqIds()/>
                         <#if packageSeqIds?has_content>
                             <td>
-                                <span >${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):</span>
+                                <span>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):</span>
                                 <br />
                                 <#list packageSeqIds as packageSeqId>
                                     ${uiLabelMap.ProductPackage} ${packageSeqId}
@@ -385,7 +385,7 @@ under the License.
                             </td>
                             <#if carrierShipmentBoxTypes?has_content>
                               <td>
-                                <span >${uiLabelMap.ProductShipmentBoxType}</span>
+                                <span>${uiLabelMap.ProductShipmentBoxType}</span>
                                 <br/>
                                 <#list packageSeqIds as packageSeqId>
                                   <select name="boxType_${packageSeqId}">
@@ -401,7 +401,7 @@ under the License.
                             </#if>
                         </#if>
                         <td nowrap="nowrap">
-                            <span >${uiLabelMap.ProductAdditionalShippingCharge}:</span>
+                            <span>${uiLabelMap.ProductAdditionalShippingCharge}:</span>
                             <br />
                             <input type="text" name="additionalShippingCharge" value="${packingSession.getAdditionalShippingCharge()!}" size="20"/>
                             <#if packageSeqIds?has_content>
@@ -410,7 +410,7 @@ under the License.
                             </#if>
                         </td>
                       <td>
-                        <span >${uiLabelMap.ProductHandlingInstructions}:</span>
+                        <span>${uiLabelMap.ProductHandlingInstructions}:</span>
                         <br />
                         <textarea name="handlingInstructions" rows="2" cols="30">${packingSession.getHandlingInstructions()!}</textarea>
                       </td>

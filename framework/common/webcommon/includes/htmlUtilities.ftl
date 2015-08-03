@@ -34,7 +34,7 @@ Returns empty string if no label is found
 -->
 <#function label value="">
   <#if value?has_content>
-      <#assign var="${uiLabelMap[value]}" />
+      <#local var="${uiLabelMap[value]}" />
       <#if var!=value>
         <#return var>
         <#else>
@@ -241,14 +241,14 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 <#local radioSingle = (type=="radio" && !items?has_content)>
 
 <#if !id?has_content>
-    <#assign id="field_id_${renderSeqNumber!}_${fieldIdNum!0}">
+    <#local id="field_id_${renderSeqNumber!}_${fieldIdNum!0}">
 </#if>
-<#assign classes = class/>
-<#assign columnspostfix=0/>
+<#local classes = class/>
+<#local columnspostfix=0/>
 <#if postfix>
-    <#assign columnspostfix=1/>
+    <#local columnspostfix=1/>
     <#local collapse=true/>
-    <#assign classes="${style_grid_small!}${12-columnspostfix}"/>
+    <#local classes="${style_grid_small!}${12-columnspostfix}"/>
 </#if>
 
 <#if required && (!containsStyleClass(class, "required"))>
@@ -261,12 +261,12 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 
 <@row collapse=collapse!false norows=norows>
     <#if label?has_content>
-        <#assign subclasses="${style_grid_small!}3 ${style_grid_large!}2"/>
-        <#assign classes="${style_grid_small!}${9-columnspostfix} ${style_grid_large!}${10-columnspostfix}"/>
+        <#local subclasses="${style_grid_small!}3 ${style_grid_large!}2"/>
+        <#local classes="${style_grid_small!}${9-columnspostfix} ${style_grid_large!}${10-columnspostfix}"/>
         
         <#if columns?has_content>
-            <#assign subclasses="${style_grid_small!}${12-columns+1} ${style_grid_large!}${12-columns}"/>
-            <#assign classes="${style_grid_small!}${columns-columnspostfix-1} ${style_grid_large!}${columns-columnspostfix}"/>
+            <#local subclasses="${style_grid_small!}${12-columns+1} ${style_grid_large!}${12-columns}"/>
+            <#local classes="${style_grid_small!}${columns-columnspostfix-1} ${style_grid_large!}${columns-columnspostfix}"/>
         </#if>
         
         <#if !radioSingle>
@@ -311,7 +311,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                                   tooltip=tooltip/>
             <#break>
           <#case "datetime">
-            <#if dateType == "date"><#assign shortDateInput=true/><#else><#assign shortDateInput=false/></#if>
+            <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
             <@renderDateTimeField name=name 
                                   className=class 
                                   alert=alert 
@@ -390,7 +390,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
           <#case "radio">
                 <#if radioSingle>
                     <#-- single radio button item mode -->
-                    <#assign items=[{"key":value, "description":label!""}]/>
+                    <#local items=[{"key":value, "description":label!""}]/>
                     <@renderRadioField items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
@@ -801,7 +801,7 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro grid type="" class="" columns=4>
     <#if type=="tiles" || type="freetiles">
         <#global freewallNum="${(freewallNum!0)+1}" />
-        <#assign id="freewall_id_${freewallNum!0}">
+        <#local id="freewall_id_${freewallNum!0}">
         <div class="${style_tile_container!}" id="${id!}">
             <#nested>
         </div>
@@ -821,7 +821,7 @@ Since this is very foundation specific, this function may be dropped in future i
          });
         </script>
     <#else>
-        <#assign defaultClass="${style_grid_small!}${style_grid_block!}2 ${style_grid_medium!}${style_grid_block!}4 ${style_grid_large!}${style_grid_block!}5">
+        <#local defaultClass="${style_grid_small!}${style_grid_block!}2 ${style_grid_medium!}${style_grid_block!}4 ${style_grid_large!}${style_grid_block!}5">
             <#if columns-2 &gt; 0>
                 <#local class="${style_grid_small!}${style_grid_block!}${columns-2} ${style_grid_medium!}${style_grid_block!}${columns-1} ${style_grid_large!}${style_grid_block!}${columns}"/>
             <#else>
@@ -883,7 +883,7 @@ Since this is very foundation specific, this function may be dropped in future i
 </#macro>
 
 <#function mtarget id>
-  <#assign returnValue="data-magellan-destination=\"${id}\""/>
+  <#local returnValue="data-magellan-destination=\"${id}\""/>
   <#return returnValue>
 </#function>
 
@@ -932,7 +932,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     image           = Set a background image-url (icon won't be shown if not empty)
 -->
 <#macro tile type="normal" title="" class="" id="" link="" color=0 icon="" image="">
-    <#assign nested><#nested></#assign>
+    <#local nested><#nested></#local>
     <div class="${style_tile_wrap!} ${style_tile_wrap!}-${type!}<#if class?has_content> ${class!}</#if> ${style_tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if> data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
         <#if image?has_content><div class="${style_tile_image!}" style="background-image: url(${image!})"></div></#if>
         <div class="${style_tile_content!}">
@@ -946,8 +946,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
 </#macro>
 
 <#function calcTileSize type="x" value="normal">
-    <#assign tileSizeX={"small":0,"normal":1,"wide":2,"large":2,"big":3,"super":4}/>
-    <#assign tileSizeY={"small":0,"normal":1,"wide":1,"large":2,"big":3,"super":4}/>
+    <#local tileSizeX={"small":0,"normal":1,"wide":2,"large":2,"big":3,"super":4}/>
+    <#local tileSizeY={"small":0,"normal":1,"wide":1,"large":2,"big":3,"super":4}/>
     <#if type="x">
         <#return tileSizeX[value]/>
     <#else>
@@ -1104,16 +1104,16 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 <#macro progress value=0 id="" type="" class="" showValue=false addWrapClass="" progressOptions={}>
     <#switch type>
       <#case "alert">
-        <#assign color=style_color_alert!/>
+        <#local color=style_color_alert!/>
       <#break>
       <#case "info">
-        <#assign color=style_color_info!/>
+        <#local color=style_color_info!/>
       <#break>
       <#case "warning">
-        <#assign color=style_color_warning!/>
+        <#local color=style_color_warning!/>
       <#break>
       <#default>
-        <#assign color=style_color_success!/>
+        <#local color=style_color_success!/>
     </#switch>
     <div class="${style_progress_container}<#if !style_progress_wrap?has_content && class?has_content> ${class!}</#if><#if color?has_content> ${color!}</#if><#if addWrapClass?has_content> ${addWrapClass}</#if>"<#if id?has_content> id="${id}"</#if>>
       <#if style_progress_wrap?has_content><div class="${style_progress_wrap!}<#if class?has_content> ${class!}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
@@ -1216,7 +1216,7 @@ Usage example:
 <#macro printVar key value="">
   <tr><td style="width:200px;">${key}</td>
   <td>
-  <#assign var = value/>
+  <#local var = value/>
   <#if var?has_content>
       <#attempt><#compress>
          <#if var?is_string>

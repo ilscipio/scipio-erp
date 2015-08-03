@@ -15194,4 +15194,9 @@
         <value xml:lang="en">Server communication error</value>
         <value xml:lang="fr">Erreur de communication avec le serveur</value>
     </property>
+    <property key="CommonDocument">
+        <value xml:lang="de">Dokument</value>
+        <value xml:lang="en">Document</value>
+        <value xml:lang="fr">Document</value>
+    </property>
 </resource>

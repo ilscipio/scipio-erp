@@ -173,10 +173,10 @@ under the License.
         <field name="subject"><text size="74" default-value="${parameters.subject}"/></field>
         <field name="contentMimeTypeId"><hidden value="text/plain"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}" encode-output="false"><textarea cols="72" rows="15" default-value="${parameters.content}"/></field>
-        <field name="send" title=" " position="1" use-when="communicationEvent!=null">
+        <field name="send" title=" " position="1" use-when="communicationEvent!=null" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSend}" target="javascript:(document.EditEmail.form.value='list'),(document.EditEmail.submit())"/>
         </field>
-        <field name="save" title=" " position="2" use-when="communicationEvent!=null">
+        <field name="save" title=" " position="2" use-when="communicationEvent!=null" widget-style="button tiny">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditEmail.form.value='list'),(document.EditEmail.statusId.value='COM_PENDING'),(document.EditEmail.submit())"/>
         </field>
         <field name="createButton" use-when="communicationEvent==null"><submit/></field>
@@ -205,12 +205,12 @@ under the License.
         <field name="subject"><text size="60"/></field>
         <field name="contentMimeTypeId"><hidden value="text/plain"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}" encode-output="false"><textarea cols="72" rows="15" default-value="${parameters.content}"/></field>
-        <field name="send" title=" " position="1" use-when="communicationEvent!=null">
+        <field name="send" title=" " position="1" use-when="communicationEvent!=null" widget-style="button tiny">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonSend}"
                 target="javascript:(document.EditInternalNote.form.value='list'),(document.EditInternalNote.statusId.value='COM_ENTERED'),(document.EditInternalNote.datetimeStarted.value='${nowDate}'),(document.EditInternalNote.submit())"/>
         </field>
-        <field name="save" title=" " position="2" use-when="communicationEvent!=null">
+        <field name="save" title=" " position="2" use-when="communicationEvent!=null" widget-style="button tiny">
             <hyperlink also-hidden="true" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditInternalNote.form.value='list'),(document.EditInternalNote.submit())"/>
         </field>
         <field name="createButton" use-when="communicationEvent==null"><submit/></field>
@@ -722,7 +722,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title=" ">
+        <field name="submitButton" title=" " widget-style="button tiny">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.PartyAddRole}"
                 target="javascript:(document.AddEventRole.communicationEventId.value=document.EditEmail.communicationEventId.value),(document.AddEventRole.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.AddEventRole.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.AddEventRole.subject.value=document.EditEmail.subject.value),(document.AddEventRole.content.value=document.EditEmail.content.value),(document.AddEventRole.submit())"/>
@@ -887,7 +887,7 @@ under the License.
         <field name="contentId" title="${uiLabelMap.FormFieldTitle_existContentId}"><lookup target-form-name="LookupTreeContent"/></field>
         <field name="uploadedFile"><file/></field>
         <field name="contentIdFrom" title="${uiLabelMap.ContentCompDocParentContentId}"><lookup target-form-name="LookupDetailContentTree"/></field>        
-        <field name="send" title=" ">
+        <field name="send" title=" " widget-style="button tiny">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonUpload}"
                 target="javascript:(document.uploadContent.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.uploadContent.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.uploadContent.subject.value=document.EditEmail.subject.value),(document.uploadContent.content.value=document.EditEmail.content.value),(document.uploadContent.submit())"/>

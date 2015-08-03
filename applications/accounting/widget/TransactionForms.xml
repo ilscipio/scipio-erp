@@ -77,7 +77,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="PaymentGatewayResponse" default-field-type="display"/>
         <!-- note that this overrides auto-fields-entity -->
-        <field name="paymentGatewayResponseId" widget-style="button tiny">
+        <field name="paymentGatewayResponseId" widget-style="${styles.button_default}">
           <hyperlink description="${paymentGatewayResponseId}" target="ViewGatewayResponse">
                 <parameter param-name="paymentGatewayResponseId"/>
             </hyperlink>
@@ -96,7 +96,7 @@ under the License.
     <!-- presents the orderId and orderPaymentPreferenceId for a gateway response with links to the order -->
     <form name="ViewGatewayResponseRelations" type="single" target="" title=""
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="orderId" widget-style="button tiny">
+        <field name="orderId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="inter-app" description="${orderId}" target="/ordermgr/control/orderview">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -104,7 +104,7 @@ under the License.
         <field name="orderPaymentPreferenceId"><display/></field>
     </form>
     <form name="ViewGatewayResponsePayments" type="list" list-name="payments" title="">
-        <field name="paymentId" widget-style="button tiny">
+        <field name="paymentId" widget-style="${styles.button_default}">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>

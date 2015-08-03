@@ -27,7 +27,7 @@ under the License.
         <field name="my"><hidden value="${my}"/></field>
         <field name="parentCommEventId" position="2">
             <lookup target-form-name="LookupCommEvent">
-                <sub-hyperlink link-style="button tiny" target="EditCommunicationEvent" description="${uiLabelMap.PartyGoToParent}" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;parentCommEventId&quot;)!=null">
+                <sub-hyperlink link-style="${styles.button_default}" target="EditCommunicationEvent" description="${uiLabelMap.PartyGoToParent}" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;parentCommEventId&quot;)!=null">
                 <parameter param-name="communicationEventId" from-field="parentCommEventId"/>
             </sub-hyperlink>
             </lookup>
@@ -173,10 +173,10 @@ under the License.
         <field name="subject"><text size="74" default-value="${parameters.subject}"/></field>
         <field name="contentMimeTypeId"><hidden value="text/plain"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}" encode-output="false"><textarea cols="72" rows="15" default-value="${parameters.content}"/></field>
-        <field name="send" title=" " position="1" use-when="communicationEvent!=null" widget-style="button tiny">
+        <field name="send" title=" " position="1" use-when="communicationEvent!=null" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSend}" target="javascript:(document.EditEmail.form.value='list'),(document.EditEmail.submit())"/>
         </field>
-        <field name="save" title=" " position="2" use-when="communicationEvent!=null" widget-style="button tiny">
+        <field name="save" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditEmail.form.value='list'),(document.EditEmail.statusId.value='COM_PENDING'),(document.EditEmail.submit())"/>
         </field>
         <field name="createButton" use-when="communicationEvent==null"><submit/></field>
@@ -205,12 +205,12 @@ under the License.
         <field name="subject"><text size="60"/></field>
         <field name="contentMimeTypeId"><hidden value="text/plain"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}" encode-output="false"><textarea cols="72" rows="15" default-value="${parameters.content}"/></field>
-        <field name="send" title=" " position="1" use-when="communicationEvent!=null" widget-style="button tiny">
+        <field name="send" title=" " position="1" use-when="communicationEvent!=null" widget-style="${styles.button_default}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonSend}"
                 target="javascript:(document.EditInternalNote.form.value='list'),(document.EditInternalNote.statusId.value='COM_ENTERED'),(document.EditInternalNote.datetimeStarted.value='${nowDate}'),(document.EditInternalNote.submit())"/>
         </field>
-        <field name="save" title=" " position="2" use-when="communicationEvent!=null" widget-style="button tiny">
+        <field name="save" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.button_default}">
             <hyperlink also-hidden="true" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditInternalNote.form.value='list'),(document.EditInternalNote.submit())"/>
         </field>
         <field name="createButton" use-when="communicationEvent==null"><submit/></field>
@@ -511,7 +511,7 @@ under the License.
         <field name="delContentDataResource"><hidden value="Y"/></field>
         <field name="partyId"><hidden/></field>
         <field name="communicationEventId"><hidden/></field>
-        <field name="subject" widget-style="button tiny" widget-area-style="fieldWidth300" sort-field="true">
+        <field name="subject" widget-style="${styles.button_default}" widget-area-style="fieldWidth300" sort-field="true">
             <hyperlink description="${subject}[${communicationEventId}] " target="${parameters._LAST_VIEW_NAME_}">
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="partyId"/>
@@ -538,7 +538,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="statusId" entry-name="roleStatusId" widget-style="button tiny" widget-area-style="fieldWidth300">
+        <field name="statusId" entry-name="roleStatusId" widget-style="${styles.button_default}" widget-area-style="fieldWidth300">
             <display-entity entity-name="StatusItem" description="${description}">
                 <sub-hyperlink target="setCommunicationEventRoleStatus"
                     description="${uiLabelMap.${toComplete}}">
@@ -722,7 +722,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title=" " widget-style="button tiny">
+        <field name="submitButton" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.PartyAddRole}"
                 target="javascript:(document.AddEventRole.communicationEventId.value=document.EditEmail.communicationEventId.value),(document.AddEventRole.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.AddEventRole.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.AddEventRole.subject.value=document.EditEmail.subject.value),(document.AddEventRole.content.value=document.EditEmail.content.value),(document.AddEventRole.submit())"/>
@@ -887,7 +887,7 @@ under the License.
         <field name="contentId" title="${uiLabelMap.FormFieldTitle_existContentId}"><lookup target-form-name="LookupTreeContent"/></field>
         <field name="uploadedFile"><file/></field>
         <field name="contentIdFrom" title="${uiLabelMap.ContentCompDocParentContentId}"><lookup target-form-name="LookupDetailContentTree"/></field>        
-        <field name="send" title=" " widget-style="button tiny">
+        <field name="send" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonUpload}"
                 target="javascript:(document.uploadContent.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.uploadContent.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.uploadContent.subject.value=document.EditEmail.subject.value),(document.uploadContent.content.value=document.EditEmail.content.value),(document.uploadContent.submit())"/>
@@ -919,7 +919,7 @@ under the License.
         </row-actions>
         <field name="delContentDataResource"><hidden value="Y"/></field>
         <field name="communicationEventId"><hidden/></field>
-        <field name="subject" widget-style="button tiny" widget-area-style="fieldWidth300">
+        <field name="subject" widget-style="${styles.button_default}" widget-area-style="fieldWidth300">
             <hyperlink description="${subject}" target="${parameters._LAST_VIEW_NAME_}" also-hidden="true">
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="partyId"/>
@@ -1023,7 +1023,7 @@ under the License.
             <entity-one entity-name="OrderHeader" value-field="orderHeader" auto-field-map="true"/>
             <set field="orderTypeId" from-field="orderHeader.orderTypeId"/>
         </row-actions>
-        <field name="orderId" title="${uiLabelMap.FormFieldTitle_orderId}" widget-style="button tiny">
+        <field name="orderId" title="${uiLabelMap.FormFieldTitle_orderId}" widget-style="${styles.button_default}">
             <hyperlink target="/ordermgr/control/orderview?orderId=${orderId}" description="${orderId}" target-type="inter-app"/>
         </field>
         <field name="communicationEventId"><hidden/></field>

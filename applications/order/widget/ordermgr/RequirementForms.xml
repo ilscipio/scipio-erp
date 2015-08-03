@@ -76,7 +76,7 @@ under the License.
             <set field="facilityQuantityOnHandTotal" from-field="resultQoh.quantityOnHandTotal"/>
             <set field="quantityOnHandTotal" from-field="resultQohTotal.quantityOnHandTotal"/>
         </row-actions>
-        <field name="requirementId" widget-style="button tiny">
+        <field name="requirementId" widget-style="${styles.button_default}">
             <hyperlink target-type="inter-app" description="${requirementId}" target="/ordermgr/control/EditRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
@@ -94,17 +94,17 @@ under the License.
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="facilityQuantityOnHandTotal"><display/></field>
         <field name="quantityOnHandTotal"><display/></field>
-        <field name="requestsLink" widget-style="button tiny">
+        <field name="requestsLink" widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.OrderRequests}" target="ListRequirementCustRequests">
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
-        <field name="ordersLink" widget-style="button tiny">
+        <field name="ordersLink" widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonOrders}" target="ListRequirementOrders">
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" widget-style="button tiny" title=" ">
+        <field name="deleteLink" widget-style="${styles.button_default}" title=" ">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
@@ -145,13 +145,13 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="RequirementCustRequest" default-field-type="display"/>
         <field name="requirementId"><hidden/></field>
-        <field name="custRequestId" widget-style="button tiny">
+        <field name="custRequestId" widget-style="${styles.button_default}">
             <hyperlink description="${custRequestId}" target="request">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
             </hyperlink>
         </field>
-        <field name="custRequestItemSeqId" widget-style="button tiny">
+        <field name="custRequestItemSeqId" widget-style="${styles.button_default}">
             <hyperlink description="${custRequestItemSeqId}" target="requestitem">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
@@ -163,7 +163,7 @@ under the License.
     <form name="ListRequirementOrders" type="list" title="" list-name="orderRequirements" paginate-target="ListRequirementOrders"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="OrderRequirementCommitment" default-field-type="display"/>
-        <field name="orderId" widget-style="button tiny">
+        <field name="orderId" widget-style="${styles.button_default}">
             <hyperlink description="${orderId}" target-type="inter-app" target="/ordermgr/control/orderview">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -174,7 +174,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="RequirementRole" default-field-type="display"/>
         <field name="requirementId"><hidden/></field>
-        <field name="editLink" widget-style="button tiny" title="${uiLabelMap.CommonEdit}">
+        <field name="editLink" widget-style="${styles.button_default}" title="${uiLabelMap.CommonEdit}">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="EditRequirementRole">
                 <parameter param-name="requirementId"/>
                 <parameter param-name="partyId"/>
@@ -182,7 +182,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="removeLink" widget-style="button tiny" title="${uiLabelMap.CommonRemove}">
+        <field name="removeLink" widget-style="${styles.button_default}" title="${uiLabelMap.CommonRemove}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeRequirementRole">
                 <parameter param-name="requirementId"/>
                 <parameter param-name="partyId"/>
@@ -235,7 +235,7 @@ under the License.
     </form>
     <form name="ApproveRequirements" type="multi" use-row-submit="true" target="approveRequirements" title="" list-name="requirements"
         paginate-target="ApproveRequirements" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="requirementId" widget-style="button tiny">
+        <field name="requirementId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
@@ -299,12 +299,12 @@ under the License.
                 <field-map field-name="unassignedRequirements" from-field="parameters.unassignedRequirements"/>
             </service>
         </actions>
-        <field name="requirementId" widget-style="button tiny">
+        <field name="requirementId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
-        <field name="productId" widget-style="button tiny">
+        <field name="productId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="true" target-type="inter-app" description="${productId}" target="/catalog/control/EditProductInventoryItems" target-window="top">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -333,12 +333,12 @@ under the License.
         <field name="orderId" id-name="orderId"><hidden/></field>
         <field name="billToCustomerPartyId"><hidden value="${parameters.billToCustomerPartyId}"/></field>
         <field name="supplierPartyId"><hidden value="${parameters.partyId}"/></field>
-        <field name="requirementId" widget-style="button tiny">
+        <field name="requirementId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
-        <field name="productId" widget-style="button tiny">
+        <field name="productId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="true" target-type="inter-app" description="${productId}" target="/catalog/control/EditProductInventoryItems" target-window="top">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -366,7 +366,7 @@ under the License.
     <form name="ApprovedProductRequirementsSubmit" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="orderId" id-name="orderId_o_0"><text/></field>
-        <field name="submitButton" title=" " widget-style="button tiny">
+        <field name="submitButton" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.OrderInputQuickPurchaseOrder}" target="javascript:document.ApprovedProductRequirements.orderId_o_0.value=document.ApprovedProductRequirementsSubmit.orderId_o_0.value;document.ApprovedProductRequirements.submit()"/>
         </field>
     </form>
@@ -407,7 +407,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="prepare" title="${uiLabelMap.OrderPrepareOrder}" widget-style="button tiny">
+        <field name="prepare" title="${uiLabelMap.OrderPrepareOrder}" widget-style="${styles.button_default}">
             <submit button-type="button"/>
         </field>
     </form>

@@ -28,7 +28,7 @@ under the License.
             </entity-and>
         </actions>
         <auto-fields-entity entity-name="Timesheet"/>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="button tiny">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.button_default}">
             <hyperlink description="${timesheetId}" target="EditTimesheet" also-hidden="false">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -85,7 +85,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="Timesheet"/>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="button tiny">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.button_default}">
             <hyperlink description="${timesheetId}" target="EditTimesheet" also-hidden="false">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -133,12 +133,12 @@ under the License.
         <field name="rateTypeId" title="${uiLabelMap.WorkEffortTimesheetRateType}"><display-entity entity-name="RateType"/></field>
         <field name="workEffortId">
             <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink target="WorkEffortSummary" description="${workEffortId}" link-style="button tiny">
+                <sub-hyperlink target="WorkEffortSummary" description="${workEffortId}" link-style="${styles.button_default}">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="invoiceId" widget-style="button tiny">
+        <field name="invoiceId" widget-style="${styles.button_default}">
             <hyperlink target="/accounting/control/invoiceOverview" target-type="inter-app" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -172,7 +172,7 @@ under the License.
         <field name="roleTypeId" title="${uiLabelMap.PartyRole}"><display-entity entity-name="RoleType"/></field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]"/></field>
 
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteTimesheetRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="partyId"/>
@@ -223,7 +223,7 @@ under the License.
 
         <field name="workEffortId">
             <lookup size="10" target-form-name="LookupWorkEffort">
-                <sub-hyperlink target="EditWorkEffort" link-style="button tiny" description="${uiLabelMap.WorkEffortWorkEffort}:${workEffortId}">
+                <sub-hyperlink target="EditWorkEffort" link-style="${styles.button_default}" description="${uiLabelMap.WorkEffortWorkEffort}:${workEffortId}">
                 <parameter param-name="workEffortId"/>
             </sub-hyperlink>
             </lookup>
@@ -236,7 +236,7 @@ under the License.
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteTimesheetEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="timeEntryId"/>

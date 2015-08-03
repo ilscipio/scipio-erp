@@ -81,13 +81,13 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="button tiny">
+        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="${styles.button_default}">
             <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app">
                 <parameter param-name="workEffortId" from-field="shipment.estimatedShipWorkEffId"/>
             </hyperlink>
         </field>
         <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><date-time/></field>
-        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="button tiny">
+        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="${styles.button_default}">
             <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app">
                 <parameter param-name="workEffortId" from-field="shipment.estimatedArrivalWorkEffId"/>
             </hyperlink>
@@ -158,7 +158,7 @@ under the License.
         <!-- planned volume -->
         <field name="volume" title="${uiLabelMap.CommonVolume}"><display/></field>
         <field name="volumeUom" title="${uiLabelMap.CommonUom}"><display/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeOrderShipmentFromShipment" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="shipmentId"/>
                 <parameter param-name="shipmentItemSeqId"/>
@@ -219,12 +219,12 @@ under the License.
         <auto-fields-entity entity-name="ShipmentReceipt" map-name="shipmentReceipt" default-field-type="display"/>
         <field name="shipmentId"><hidden/></field>
         <field name="orderItemSeqId"><hidden/></field>
-        <field name="orderId" widget-style="button tiny">
+        <field name="orderId" widget-style="${styles.button_default}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId} - ${orderItemSeqId}" >
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
-        <field name="inventoryItemId" widget-style="button tiny">
+        <field name="inventoryItemId" widget-style="${styles.button_default}">
             <hyperlink target="EditInventoryItem" description="${inventoryItemId}">
                 <parameter param-name="inventoryItemId"/>
             </hyperlink>

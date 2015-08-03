@@ -32,7 +32,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="billingAccountId" widget-style="button tiny">
+        <field name="billingAccountId" widget-style="${styles.button_default}">
             <hyperlink description="${billingAccountId}" target="EditBillingAccount">
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
@@ -47,7 +47,7 @@ under the License.
 
     <form name="ListBillingAccountsByParty" type="list" list-name="billingAccounts" paginate-target="FindBillingAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="billingAccountId" widget-style="button tiny">
+        <field name="billingAccountId" widget-style="${styles.button_default}">
             <hyperlink description="${billingAccountId}" target="EditBillingAccount">
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
@@ -93,7 +93,7 @@ under the License.
                 return(NumberFormat.getNumberInstance(context.get(&quot;locale&quot;)).format(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)));}"/>
         </row-actions>
         <field name="billingAccountId"><hidden/></field>
-        <field name="invoiceId" widget-style="button tiny">
+        <field name="invoiceId" widget-style="${styles.button_default}">
             <hyperlink description="${invoiceId}" target="invoiceOverview">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -107,7 +107,7 @@ under the License.
         <field name="invoiceDate"><display description="${groovy:invoiceDate.toString().substring(0,10)}"/></field>
         <field name="total" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="capture" use-when="${groovy:!paidInvoice}" widget-style="button tiny">
+        <field name="capture" use-when="${groovy:!paidInvoice}" widget-style="${styles.button_default}">
             <hyperlink target="capturePaymentsByInvoice" description="${uiLabelMap.AccountingCapture}">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="billingAccountId"/>
@@ -176,7 +176,7 @@ under the License.
         <field name="billingAccountId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="button tiny">
+                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.button_default}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -187,7 +187,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteBillingAccountRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="billingAccountId"/>
                 <parameter param-name="roleTypeId"/>
@@ -226,13 +226,13 @@ under the License.
         <field name="uomId" title="${uiLabelMap.CommonUom}">
             <display-entity entity-name="Uom" description="${description}"/>
         </field>
-        <field name="billingAccountTermId" title=" " widget-style="button tiny">
+        <field name="billingAccountTermId" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="EditBillingAccountTerms">
                 <parameter param-name="billingAccountId"/>
                 <parameter param-name="billingAccountTermId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="removeBillingAccountTerm">
                 <parameter param-name="billingAccountId"/>
                 <parameter param-name="billingAccountTermId"/>
@@ -269,7 +269,7 @@ under the License.
                 <condition-expr field-name="billingAccountId" from-field="billingAccountId"/>
             </entity-condition>
         </actions>
-        <field name="paymentId" widget-style="button tiny">
+        <field name="paymentId" widget-style="${styles.button_default}">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -326,7 +326,7 @@ under the License.
     <form name="ListBillingAccountOrders" type="list" list-name="orderPaymentPreferencesList" paginate-target="BillingAccountOrders"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="billingAccountId"><hidden/></field>
-        <field name="orderId" widget-style="button tiny">
+        <field name="orderId" widget-style="${styles.button_default}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}" also-hidden="false">
                 <parameter param-name="orderId"/>
             </hyperlink>

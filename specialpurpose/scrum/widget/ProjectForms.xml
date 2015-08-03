@@ -77,7 +77,7 @@
         <field name="workEffortId" parameter-name="projectId"><hidden/></field>
         <field name="partyId"><hidden value="${parameters.partyId}"/></field>
         <field name="fromDate"><hidden/></field>
-        <field entry-name="workEffortName" name="projectName" parameter-name="workEffortName" title="${uiLabelMap.CommonName}" widget-style="button tiny">
+        <field entry-name="workEffortName" name="projectName" parameter-name="workEffortName" title="${uiLabelMap.CommonName}" widget-style="${styles.button_default}">
             <hyperlink target="viewScrumProject" description="${workEffortName}[${workEffortId}]">
                 <parameter param-name="projectId" from-field="workEffortId"/>
             </hyperlink>

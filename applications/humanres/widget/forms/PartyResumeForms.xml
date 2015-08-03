@@ -52,7 +52,7 @@ under the License.
             </sub-hyperlink>
            </display-entity>
        </field>
-       <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
+       <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
            <hyperlink target="deletePartyResume" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="resumeId"/>
             </hyperlink>

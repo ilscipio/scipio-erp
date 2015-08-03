@@ -646,7 +646,7 @@ under the License.
         <field name="userEmail" title="Email"><hidden value="${inMap.email}"/></field>
         <field name="offerStatus" title="Offer Status"><display description="${inMap.offerStatus}"/></field>
         <field name="contactStatus" title="Contact Status"><display description="${contactStatus}"/></field>
-        <field name="viewCustomerDataButton" widget-style="button tiny" title="View Customer Offer Data">
+        <field name="viewCustomerDataButton" widget-style="${styles.button_default}" title="View Customer Offer Data">
             <hyperlink target="customerOfferData" description="View Data" also-hidden="false">
                 <parameter param-name="productStoreId" from-field="productStoreId"/>
                 <parameter param-name="itemId" from-field="itemId"/>
@@ -660,7 +660,7 @@ under the License.
                 <parameter param-name="contactStatus" from-field="contactStatus"/>
             </hyperlink>
         </field>
-        <field name="deleteOfferButton" title="Delete Offer Alert Data" widget-style="button tiny">
+        <field name="deleteOfferButton" title="Delete Offer Alert Data" widget-style="${styles.button_default}">
             <hyperlink target="deleteContactAlert" description="Delete Data" also-hidden="false">
                 <parameter param-name="itemId" from-field="itemId"/>
                 <parameter param-name="userId" from-field="userId"/>

@@ -88,7 +88,7 @@ under the License.
         <field name="noteId"><ignored/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="button tiny"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="${styles.button_default}"><submit button-type="button"/></field>
     </form>
     <form name="lookupWorkEffortShort" target="LookupWorkEffortShort" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
@@ -130,7 +130,7 @@ under the License.
         <field name="facilityId"><lookup  target-form-name="LookupFacility"/></field>
         <field name="fixedAssetId"><lookup  target-form-name="LookupFixedAsset"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="button tiny"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="listLookupWorkEffort" list-name="listIt" target="" title="" type="list" paginate-target="LookupWorkEffort"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -143,7 +143,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="button tiny">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${workEffortId}" target="javascript:set_value('${workEffortId}')"/>
         </field>
         <field name="workEffortName"><display/></field>
@@ -161,7 +161,7 @@ under the License.
         <field name="clientPartyId"><lookup  target-form-name="LookupPartyName"/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="button tiny"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="listLookupTimesheet" list-name="listIt" target="" title="" type="list" paginate-target="LookupPerson"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -174,7 +174,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="button tiny">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${timesheetId}" target="javascript:set_value('${timesheetId}')"/>
         </field>
         <field name="partyId"><display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]"/></field>

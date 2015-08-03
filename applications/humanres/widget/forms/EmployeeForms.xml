@@ -95,7 +95,7 @@
         <field name="yearsExperience"><text/></field>
         <field name="rating"><text/></field>
         <field name="skillLevel"><text/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteEmployeeSkill" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="skillTypeId"/>
                 <parameter param-name="partyId"/>
@@ -162,7 +162,7 @@
             </drop-down>
         </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteEmployeeQualification" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="partyQualTypeId"/>
@@ -238,7 +238,7 @@
         </field>
     </form>
     <form name="PayrollHistoryList" type="list" list-name="payroll" extends="ListInvoices" extends-resource="component://accounting/widget/InvoiceForms.xml" paginate-target="PayrollHistory">
-        <field name="invoiceId" widget-style="button tiny" sort-field="true">
+        <field name="invoiceId" widget-style="${styles.button_default}" sort-field="true">
             <hyperlink description="${invoiceId}" target="/accounting/control/invoiceOverview" target-type="inter-app">
                 <parameter param-name="invoiceId"/>
             </hyperlink>

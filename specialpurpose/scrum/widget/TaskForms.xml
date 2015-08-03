@@ -542,7 +542,7 @@
         <field name="noteInfo"><display/></field>
         <field name="noteDateTime"><display/></field>
         <field name="noteParty"><display/></field>
-        <field name="removeNote" title=" " widget-style="button tiny">
+        <field name="removeNote" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteTaskNote">
                 <parameter param-name="noteId" from-field="noteId"/>
                 <parameter param-name="taskId" from-field="workEffortId"/>
@@ -629,7 +629,7 @@
             <set field="fromDate" from-field="listWorkAssignment[0].fromDate"/>
         </row-actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="taskName" title="${uiLabelMap.ScrumTaskName}" widget-style="button tiny">
+        <field name="taskName" title="${uiLabelMap.ScrumTaskName}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${taskName} - [${taskId}] " target="taskView">
                 <parameter param-name="taskId" from-field="workEffortId"/>
             </hyperlink>
@@ -649,7 +649,7 @@
             <text default-value="${taskInfo.planHours}" size="2"/>
         </field>
         <field name="UpdateButton" title="${uiLabelMap.CommonUpdate}"><submit/></field>
-        <field name="RemoveButton" title="${uiLabelMap.CommonRemove}" widget-style="button tiny">
+        <field name="RemoveButton" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
             <hyperlink target="unassignPartyFromWorkEffort" description="${uiLabelMap.CommonRemove}" confirmation-message="Are you sure to remove this task ?" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="taskId"/>
                 <parameter param-name="partyId" from-field="partyId"/>
@@ -738,13 +738,13 @@
         <field name="taskEstimatedMilliSeconds" title="${uiLabelMap.ScrumPlannedHours}" parameter-name="planHours"><display></display></field>
         <field name="taskActualMilliSeconds" title="${uiLabelMap.ScrumActualHours}" parameter-name="actualHours"><display description="${result.actualHours}"/></field>
         <field name="taskEstimatedStartDate" title="${uiLabelMap.CommonStartDate}" parameter-name="estimatedStartDate"><display type="date"/></field>
-        <field name="editButton" title=" " widget-style="button tiny">
+        <field name="editButton" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditTask" description="${uiLabelMap.CommonEdit}" link-type="hidden-form">
                 <parameter param-name="taskId"/>
                 <parameter param-name="sprintId"></parameter>
             </hyperlink>
         </field>
-        <field name="deleteButton" title=" " widget-style="button tiny">
+        <field name="deleteButton" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteTask" description="${uiLabelMap.CommonDelete}" link-type="hidden-form" confirmation-message="Are you sure to delete this task?">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="workEffortId" from-field="taskId"/>
@@ -834,7 +834,7 @@
             <set field="partyId" value="${contentRole[0].partyId}"/>
             <property-to-field resource="revision" property="revision.url" field="url"/>
         </row-actions>
-        <field name="contentName" title="${uiLabelMap.ScrumRevision}" widget-style="button tiny">
+        <field name="contentName" title="${uiLabelMap.ScrumRevision}" widget-style="${styles.button_default}">
                 <hyperlink target="RevisionInfo?repository=${url}${drObjectInfo}" description="${contentName}" link-type="anchor" target-window="_BLANK" target-type="plain"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonMessage}"><display description="${groovy:description.toString().substring(0,Math.min(description.toString().length(),100))}"/></field>

@@ -480,7 +480,7 @@ under the License.
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
 
-        <field name="viewHistoryLink" title=" " widget-style="button tiny">
+        <field name="viewHistoryLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="ProductPriceHistory" description="${uiLabelMap.ProductHistory}" also-hidden="false">
                 <parameter param-name="productId"/>
                 <parameter param-name="productPriceTypeId"/>
@@ -488,7 +488,7 @@ under the License.
             </hyperlink>
         </field>
 
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductPrice" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="productPriceTypeId"/><parameter param-name="productPricePurposeId"/>
                 <parameter param-name="currencyUomId"/><parameter param-name="productStoreGroupId"/><parameter param-name="fromDate"/>
@@ -526,7 +526,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductPaymentMethodType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="productPricePurposeId"/><parameter param-name="paymentMethodTypeId"/><parameter param-name="fromDate"/>
             </hyperlink>
@@ -552,7 +552,7 @@ under the License.
         <field name="productId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductCategory_Id}">
             <display-entity entity-name="ProductCategory" also-hidden="true" description="${categoryName}">
-                <sub-hyperlink target="EditCategory" description="${productCategoryId}" link-style="button tiny"><parameter param-name="productCategoryId"/></sub-hyperlink>
+                <sub-hyperlink target="EditCategory" description="${productCategoryId}" link-style="${styles.button_default}"><parameter param-name="productCategoryId"/></sub-hyperlink>
             </display-entity>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
@@ -561,7 +561,7 @@ under the License.
         <field name="quantity" title="${uiLabelMap.ProductQuantity}" ></field>
         <field name="comments" title="${uiLabelMap.ProductComments}" ><textarea/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeProductFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="productCategoryId"/><parameter param-name="fromDate"/>
             </hyperlink>
@@ -571,7 +571,7 @@ under the License.
     <!-- ProductContent -->
     <form name="ListProductContentInfos" type="list" title="" list-name="productContent"
         odd-row-style="alternate-row" default-table-style="basic-table">
-        <field name="editProductContentInfo" title="${uiLabelMap.ProductContent}" widget-style="button tiny">
+        <field name="editProductContentInfo" title="${uiLabelMap.ProductContent}" widget-style="${styles.button_default}">
             <hyperlink target="EditProductContentContent" description="${description} [${contentId}]" also-hidden="false">
                 <parameter param-name="productId"/>
                 <parameter param-name="contentId"/>
@@ -591,12 +591,12 @@ under the License.
         <field name="useTimeUomId"><display/></field>
         <field name="useRoleTypeId"><display/></field>
         <field name="sequenceNum"><display/></field>
-        <field name="editContent" title="${uiLabelMap.ProductEditContent}" widget-style="button tiny">
+        <field name="editContent" title="${uiLabelMap.ProductEditContent}" widget-style="${styles.button_default}">
             <hyperlink target="/content/control/EditContent" target-type="inter-app" description="${contentId}" also-hidden="false">
                 <parameter param-name="contentId"/>
             </hyperlink>
         </field>
-        <field name="removeContent" title=" " widget-style="button tiny">
+        <field name="removeContent" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeContentFromProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="contentId"/><parameter param-name="productContentTypeId"/><parameter param-name="fromDate"/>
             </hyperlink>
@@ -656,7 +656,7 @@ under the License.
         <!-- each entry in the list will be a Map with the entries: productContent and content -->
         <auto-fields-service service-name="updateProductContent" map-name="productContent"/>
         <field name="productId"><hidden/></field>
-        <field name="contentId" title="${uiLabelMap.ProductContent_Id}" widget-style="button tiny">
+        <field name="contentId" title="${uiLabelMap.ProductContent_Id}" widget-style="${styles.button_default}">
             <hyperlink target="EditProductContentContent" description="${content.description} [${productContent.contentId}]">
                 <parameter param-name="productId" from-field="productContent.productId"/>
                 <parameter param-name="contentId" from-field="productContent.contentId"/>
@@ -670,7 +670,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeContentFromProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" from-field="productContent.productId"/>
                 <parameter param-name="contentId" from-field="productContent.contentId"/>
@@ -696,12 +696,12 @@ under the License.
         <field name="drDataResourceTypeId" title="${uiLabelMap.FormFieldTitle_dataResourceTypeId}">
             <display-entity entity-name="DataResourceType" key-field-name="dataResourceTypeId" also-hidden="false" description="${description}"/>
         </field>
-        <field name="editDataResource" widget-style="button tiny">
+        <field name="editDataResource" widget-style="${styles.button_default}">
             <hyperlink target="/content/control/EditDataResource" target-type="inter-app" description="${dataResourceId}" also-hidden="false">
                 <parameter param-name="dataResourceId"/>
             </hyperlink>
         </field>
-        <field name="editContent" widget-style="button tiny">
+        <field name="editContent" widget-style="${styles.button_default}">
             <hyperlink target="/content/control/EditContent" target-type="inter-app" description="${contentId}" also-hidden="false">
                 <parameter param-name="contentId"/>
             </hyperlink>
@@ -929,7 +929,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table">
         <field name="partyId" title="${uiLabelMap.ProductSupplier}">
             <display-entity entity-name="PartyNameView" also-hidden="true" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="button tiny">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.button_default}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -954,7 +954,7 @@ under the License.
         <field name="shippingPrice">
             <display type="currency" currency="${currencyUomId}"/>
         </field>
-        <field name="editLink" title=" " widget-style="button tiny">
+        <field name="editLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditProductSuppliers" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="productId"/>
                 <parameter param-name="partyId"/>
@@ -963,7 +963,7 @@ under the License.
                 <parameter param-name="availableFromDate"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeSupplierProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/>
                 <parameter param-name="partyId"/>
@@ -1016,7 +1016,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductConfig" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="configItemId"/><parameter param-name="sequenceNum"/><parameter param-name="fromDate"/>
             </hyperlink>
@@ -1041,7 +1041,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table" paginate-target="ViewProductManufacturing">
         <!-- <display-entity entity-name="FixedAsset" description="${fixedAssetName}[${fixedAssetId}]"/> -->
 
-        <field name="edit" title=" " widget-style="button tiny">
+        <field name="edit" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="showFixedAssetProduct">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="productId"/>
@@ -1049,7 +1049,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="del" title=" " widget-style="button tiny" separate-column="false">
+        <field name="del" title=" " widget-style="${styles.button_default}" separate-column="false">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="removeFixedAssetProduct">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="productId"/>
@@ -1057,7 +1057,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAsset} [${uiLabelMap.AccountingFixedAssetId}]" widget-style="button tiny" >
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAsset} [${uiLabelMap.AccountingFixedAssetId}]" widget-style="${styles.button_default}" >
             <display-entity entity-name="FixedAsset" description="${fixedAssetName} [${fixedAssetId}]"/>
         </field>
         <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}"><display-entity entity-name="FixedAssetProductType"/></field>
@@ -1142,7 +1142,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table" paginate-target="EditProductAssoc">
         <auto-fields-entity entity-name="ProductAssoc" default-field-type="display"/>
         <field name="productId"><hidden/></field>
-        <field name="productIdTo" title="${uiLabelMap.CommonEdit}" widget-style="button tiny">
+        <field name="productIdTo" title="${uiLabelMap.CommonEdit}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${productIdTo}" target="EditProduct">
                 <parameter param-name="productId" from-field="productIdTo"/>
             </hyperlink>
@@ -1153,7 +1153,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table" paginate-target="EditProductAssoc">
         <auto-fields-entity entity-name="ProductAssoc" default-field-type="display"/>
         <field name="productIdTo"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="button tiny">
+        <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -1169,7 +1169,7 @@ under the License.
         <field name="reason"><hidden/></field>
         <field name="instruction"><hidden/></field>
         <field name="routingWorkEffortId"><hidden/></field>
-        <field name="productIdTo" title="${uiLabelMap.CommonEdit}" widget-style="button tiny">
+        <field name="productIdTo" title="${uiLabelMap.CommonEdit}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${productIdTo}" target="ViewProductManufacturing">
                 <parameter param-name="productId" from-field="productIdTo"/>
             </hyperlink>
@@ -1189,7 +1189,7 @@ under the License.
         <field name="routingWorkEffortId"><hidden/></field>
         <field name="productAssocTypeId"><hidden/></field>
         <field name="scrapFactor"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="button tiny">
+        <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${productId}" target="ViewProductManufacturing">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -1207,7 +1207,7 @@ under the License.
         <field name="workEffortName" title="${uiLabelMap.ProductWorkEffortName}" entry-name="workEffortId">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}"/>
         </field>
-        <field name="workEffortId" title="${uiLabelMap.CommonEdit}" widget-style="button tiny">
+        <field name="workEffortId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${workEffortId}" target="/manufacturing/control/EditRoutingProductLink" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
@@ -1248,7 +1248,7 @@ under the License.
         <field name="cost">
             <display/>
         </field>
-        <field name="costComponentId" widget-style="button tiny">
+        <field name="costComponentId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${costComponentId}" target="EditProductCosts">
                 <parameter param-name="productId"/>
                 <parameter param-name="productCostComponentId" from-field="costComponentId"/>
@@ -1258,7 +1258,7 @@ under the License.
         <field name="costComponentTypeId">
             <display-entity entity-name="CostComponentType"/>
         </field>
-        <field name="deleteCostComponent" entry-name="costComponentId" widget-style="button tiny">
+        <field name="deleteCostComponent" entry-name="costComponentId" widget-style="${styles.button_default}">
             <hyperlink target="deleteCostComponent" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productId"/><parameter param-name="costComponentId"/>
             </hyperlink>
@@ -1270,7 +1270,7 @@ under the License.
         <field name="costComponentTypeId">
             <display-entity entity-name="CostComponentType"/>
         </field>
-        <field name="costComponentCalcId" widget-style="button tiny">
+        <field name="costComponentCalcId" widget-style="${styles.button_default}">
             <hyperlink target="/manufacturing/control/EditCostCalcs" also-hidden="false" target-type="inter-app" description="${costComponentCalcId}">
                 <parameter param-name="costComponentCalcId"/>
             </hyperlink>
@@ -1280,7 +1280,7 @@ under the License.
         </field>
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
-        <field name="deleteProductCostComponentCalc" entry-name="productId" widget-style="button tiny">
+        <field name="deleteProductCostComponentCalc" entry-name="productId" widget-style="${styles.button_default}">
             <hyperlink target="deleteProductCostComponentCalc" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productId"/>
                 <parameter param-name="costComponentTypeId"/>
@@ -1440,7 +1440,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductMaint" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="productMaintSeqId"/>
             </hyperlink>
@@ -1490,7 +1490,7 @@ under the License.
             </drop-down>
         </field>
         <field name="meterName"><text size="20"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductMeter" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="productMeterTypeId"/>
             </hyperlink>
@@ -1541,7 +1541,7 @@ under the License.
             </drop-down>
         </field>
         <field name="description"><text size="20"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductGeo" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="geoId"/>
             </hyperlink>
@@ -1567,7 +1567,7 @@ under the License.
         </field>
         <field name="productFeatureIactnTypeId"><display-entity entity-name="ProductFeatureIactnType"/></field>
 
-        <field name="removeFeatureInterAction" title="${uiLabelMap.CommonDelete}" widget-style="button tiny">
+        <field name="removeFeatureInterAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="removeFeatureIactn" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productFeatureId"/><parameter param-name="productFeatureIdTo"/><parameter param-name="productId"/>
             </hyperlink>
@@ -1631,7 +1631,7 @@ under the License.
         <field name="productFeatureId">
             <display-entity entity-name="ProductFeature" description="${description} [${productFeatureId}]"/>
         </field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductFeatureApplAttr" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="productFeatureId"/><parameter param-name="attrName"/><parameter param-name="fromDate"/>
             </hyperlink>
@@ -1652,7 +1652,7 @@ under the License.
         <field name="productId"><hidden/></field>
         <field name="subscriptionResourceId">
             <display-entity entity-name="SubscriptionResource" description="${description}">
-                <sub-hyperlink target="EditSubscriptionResource" description="${subscriptionResourceId}" link-style="button tiny">
+                <sub-hyperlink target="EditSubscriptionResource" description="${subscriptionResourceId}" link-style="${styles.button_default}">
                     <parameter param-name="subscriptionResourceId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -1684,7 +1684,7 @@ under the License.
         </field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" widget-style="button tiny">
+        <field name="deleteLink" widget-style="${styles.button_default}">
             <hyperlink target="deleteProductSubscriptionResource" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="subscriptionResourceId"/><parameter param-name="fromDate"/>
             </hyperlink>
@@ -1735,7 +1735,7 @@ under the License.
         <row-actions>
             <entity-one entity-name="Agreement" value-field="agreement"/>
         </row-actions>
-        <field name="agreementId" widget-style="button tiny">
+        <field name="agreementId" widget-style="${styles.button_default}">
             <hyperlink target="/accounting/control/EditAgreement" target-type="inter-app" description="${agreementId}" also-hidden="false">
                 <parameter param-name="agreementId"/>
             </hyperlink>
@@ -1750,7 +1750,7 @@ under the License.
     </form>
     <form name="ListSalesAgreements" type="list" list-name="salesAgreements"
         odd-row-style="alternate-row" default-table-style="basic-table">
-        <field name="agreementId" widget-style="button tiny">
+        <field name="agreementId" widget-style="${styles.button_default}">
             <hyperlink target="/accounting/control/EditAgreementItemProduct" target-type="inter-app" description="${agreementId}/${agreementItemSeqId}" also-hidden="false">
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
@@ -1767,7 +1767,7 @@ under the License.
     </form>
     <form name="ListProductAgreements" type="list" list-name="productAgreements"
         odd-row-style="alternate-row" default-table-style="basic-table">
-        <field name="agreementId" widget-style="button tiny">
+        <field name="agreementId" widget-style="${styles.button_default}">
             <hyperlink target="/accounting/control/EditAgreementItemProduct" target-type="inter-app" description="${agreementId}/${agreementItemSeqId}" also-hidden="false">
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
@@ -1818,7 +1818,7 @@ under the License.
         <auto-fields-service service-name="updateWorkEffortGoodStandard" default-field-type="edit"/>
         <field name="workEffortId">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}" also-hidden="true">
-                <sub-hyperlink target="/workeffort/control/EditWorkEffort" description="${workEffortId}" link-style="button tiny" target-type="inter-app">
+                <sub-hyperlink target="/workeffort/control/EditWorkEffort" description="${workEffortId}" link-style="${styles.button_default}" target-type="inter-app">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -1835,7 +1835,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeWorkEffortGoodStandard">
                 <parameter param-name="productId"/><parameter param-name="workEffortId"/><parameter param-name="workEffortGoodStdTypeId"/><parameter param-name="fromDate"/>
             </hyperlink>
@@ -1851,7 +1851,7 @@ under the License.
         </field>
         <field name="lastInventoryCount"><display/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductFacility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="facilityId"/>
             </hyperlink>
@@ -1894,7 +1894,7 @@ under the License.
             <display description="${facilityLocation.areaId} ${facilityLocation.aisleId} ${facilityLocation.sectionId} ${facilityLocation.levelId} ${facilityLocation.positionId} [${locationSeqId}] (${locationType.description})"/>
         </field>
         <field name="submitButton" position="2" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" position="2" title=" " widget-style="button tiny">
+        <field name="deleteLink" position="2" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductFacilityLocation" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="facilityId"/><parameter param-name="locationSeqId"/>
             </hyperlink>
@@ -1937,7 +1937,7 @@ under the License.
         <field name="productId"><hidden/></field>
         <field name="idValue"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteGoodIdentification" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="goodIdentificationTypeId"/>
             </hyperlink>
@@ -1995,7 +1995,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductKeyword" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/>
                 <parameter param-name="keyword"/>
@@ -2019,7 +2019,7 @@ under the License.
         <field name="attrType"><text/></field>
         <field name="attrValue"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductAttribute" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="attrName"/>
             </hyperlink>
@@ -2047,7 +2047,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title="" widget-style="button tiny">
+        <field name="deleteLink" title="" widget-style="${styles.button_default}">
             <hyperlink target="deleteProductGlAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="organizationPartyId"/><parameter param-name="glAccountTypeId"/>
             </hyperlink>
@@ -2107,7 +2107,7 @@ under the License.
     </form>
 
     <form name="ListCommEvents" list-name="communicationEvents" type="list" header-row-style="header-row" default-table-style="basic-table">
-        <field name="communicationEventId" widget-style="button tiny">
+        <field name="communicationEventId" widget-style="${styles.button_default}">
             <hyperlink description="${communicationEventId}" target="/partymgr/control/EditCommunicationEvent?communicationEventId=${communicationEventId}" target-type="inter-app"/>
         </field>
         <field name="subject"><display/></field>
@@ -2138,7 +2138,7 @@ under the License.
         <!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
         <field name="partyId" title="${uiLabelMap.PartyParty}">
             <display-entity entity-name="PartyNameView" description="${personalTitle} ${firstName} ${middleName} ${lastName} ${suffix} ${groupName}" also-hidden="true" cache="false">
-                <sub-hyperlink target-type="inter-app" link-style="button tiny" target="/partymgr/control/viewprofile" description="${partyId}">
+                <sub-hyperlink target-type="inter-app" link-style="${styles.button_default}" target="/partymgr/control/viewprofile" description="${partyId}">
                     <parameter param-name="party_id" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -2147,7 +2147,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" red-when="after-now"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}" red-when="before-now"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removePartyFromProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
               <parameter param-name="productId"/>
               <parameter param-name="partyId"/>
@@ -2194,13 +2194,13 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.ProductDealStartDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.ProductDealEndDate}"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
-        <field name="editLink" use-when="${groovy: return reqOrderQty.compareTo(soldOrderQty)!= 0;}&amp;&amp;${groovy: return thruDate.compareTo(org.ofbiz.base.util.UtilDateTime.nowTimestamp()) == 1}" title=" " widget-style="button tiny">
+        <field name="editLink" use-when="${groovy: return reqOrderQty.compareTo(soldOrderQty)!= 0;}&amp;&amp;${groovy: return thruDate.compareTo(org.ofbiz.base.util.UtilDateTime.nowTimestamp()) == 1}" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditProductGroupOrder" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="productId"/>
                 <parameter param-name="groupOrderId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductGroupOrder" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/>
                 <parameter param-name="groupOrderId"/>

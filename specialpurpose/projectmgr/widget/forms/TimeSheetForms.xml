@@ -73,7 +73,7 @@
         <actions>
             <set field="complete" value="${uiLabelMap.ProjectMgrToComplete}"/>
         </actions>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="button tiny">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${timesheetId}" target="${my}Timesheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -84,7 +84,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date"/></field>
         <field name="hours"><display/></field>
         <field name="comments" title="${uiLabelMap.CommonComments}"><display/></field>
-        <field name="completeLink" title="${uiLabelMap.CommonStatustoComplete}" widget-style="button tiny">
+        <field name="completeLink" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
             <hyperlink target="TimeSheetStatusToComplete" description="${groovy:statusId.equals(&quot;TIMESHEET_IN_PROCESS&quot;)?complete:&quot;&quot;}" also-hidden="false">
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="statusId" value="TIMESHEET_COMPLETED"/>
@@ -133,7 +133,7 @@
             <set field="actualHours" value="${bsh:org.ofbiz.project.Various.calculateActualHours(delegator, timesheetId)}"/>
             <set field="completeLink" value="${bsh:&quot;TIMESHEET_IN_PROCESS&quot;.equals(statusId)?complete:&quot;&quot;}"/>
         </row-actions>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="button tiny">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${timesheetId}" target="Timesheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -144,7 +144,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date"/></field>
         <!--field name="comments" title="${uiLabelMap.CommonComments}"><display/></field-->
-        <field name="completeLink" title="${uiLabelMap.CommonStatustoComplete}" widget-style="button tiny">
+        <field name="completeLink" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
             <hyperlink target="TimeSheetStatusToComplete" description="${groovy:statusId.equals(&quot;TIMESHEET_IN_PROCESS&quot;)?complete:&quot;&quot;}">
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="statusId" value="TIMESHEET_COMPLETED"/>
@@ -273,7 +273,7 @@
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
-        <field name="deleteLink" title=" " widget-style="button tiny">
+        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteTimesheetEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="timeEntryId"/>

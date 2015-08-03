@@ -48,10 +48,10 @@
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="createBlog" title=" " widget-style="button tiny">
+        <field name="createBlog" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonNew} ${uiLabelMap.ContentForum}" target="EditBlogArticle"/>
         </field>
-        <field name="createForum" title=" " widget-style="button tiny">
+        <field name="createForum" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonNew} ${uiLabelMap.ContentForum}" target="EditForumArticle"/>
         </field>
     </form>

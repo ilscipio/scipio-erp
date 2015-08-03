@@ -34,7 +34,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="GlAccountOrganization" default-field-type="display"/>
-        <field name="glAccountId" title="${uiLabelMap.CommonEdit}" widget-style="button tiny">
+        <field name="glAccountId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${glAccountId}" target="GlAccountNavigate">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
@@ -78,7 +78,7 @@ under the License.
             </service>
             <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
         </actions>
-        <field name="accountCode" title="${uiLabelMap.CommonCode}" widget-style="button tiny">
+        <field name="accountCode" title="${uiLabelMap.CommonCode}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${accountCode}" target="GlAccountNavigate">
                 <parameter param-name="glAccountId"/>
             </hyperlink>

@@ -40,7 +40,7 @@ under the License.
                 import java.text.NumberFormat;
                 return(NumberFormat.getNumberInstance(context.get(&quot;locale&quot;)).format(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)));}"/>
         </row-actions>
-        <field name="invoiceId" widget-style="button tiny">
+        <field name="invoiceId" widget-style="${styles.button_default}">
             <hyperlink description="${invoiceId}" target="invoiceOverview">
                 <parameter param-name="invoiceId"/>
             </hyperlink>

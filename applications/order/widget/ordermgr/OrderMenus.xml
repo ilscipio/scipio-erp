@@ -482,7 +482,7 @@ under the License.
                         <not><if-empty field="quote.quoteId"/></not>
                     </and>
             </condition>
-            <link target="EditQuoteTerm" text="" style="button tiny">
+            <link target="EditQuoteTerm" text="" style="${styles.button_default}">
                 <parameter param-name="quoteId" from-field="parameters.quoteId"/>
             </link>
         </menu-item>
@@ -493,7 +493,7 @@ under the License.
                         <not><if-empty field="quote.quoteId"/></not>
                     </and>
             </condition>
-            <link target="EditQuoteTermItem" text="" style="button tiny">
+            <link target="EditQuoteTermItem" text="" style="${styles.button_default}">
                 <parameter param-name="quoteId" from-field="parameters.quoteId"/>
                 <parameter param-name="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
             </link>
@@ -502,7 +502,7 @@ under the License.
     <menu name="quoteItemSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
         <menu-item name="EditQuoteTerm" title="${uiLabelMap.OrderCreateOrderQuoteTerm}" >
-            <link target="EditQuoteItem" text="${uiLabelMap.OrderCreateOrderQuoteItem}" style="button tiny">
+            <link target="EditQuoteItem" text="${uiLabelMap.OrderCreateOrderQuoteItem}" style="${styles.button_default}">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>

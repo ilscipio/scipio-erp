@@ -294,12 +294,12 @@ under the License.
     <!-- Web Analytics -->
     <menu name="WebAnalyticsConfigButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="EditWebAnalyticsConfig" title="${uiLabelMap.CommonCreate}">
-            <link target="EditWebAnalyticsConfig" style="button tiny create">
+            <link target="EditWebAnalyticsConfig" style="${styles.button_default} create">
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>
         <!--<menu-item name="WebAnalyticsTypes" title="Create ${uiLabelMap.CatalogWebAnalyticsTypes}">
-            <link target="EditWebAnalyticsType" style="button tiny create">
+            <link target="EditWebAnalyticsType" style="${styles.button_default} create">
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>-->

@@ -216,9 +216,9 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
     <#if !manual>
       <#-- FIXME: for now, need this super ugly hack as a workaround for having no other place to insert central style for menus passed here by macro renderer...
            heuristic: add button style to all if none of the <a elems have known foundation (button) style -->
-      <#if !menuString?matches(r'.*(<a\s([^>]*\s)?)class="([^"]*\s)?(button|tiny)(\s[^"]*)?".*', 's')>
-        <#local menuString = menuString?replace(r'(<a\s([^>]*\s)?)class="([^"]*)"', r'$1class="$3 ${styles.button_default!}"', 'r')>
-        <#local menuString = menuString?replace(r'(<a(?![^>]*\sclass=)[^>]*)>', r'$1 class="${styles.button_default!}">', 'r')>
+      <#if !menuString?matches(r'.*(<a\s([^>]*\s)?)class="([^"]*\s)?(' + ((styles.button)!) + r')(\s[^"]*)?".*', 's')>
+        <#local menuString = menuString?replace(r'(<a\s([^>]*\s)?)class="([^"]*)"', r'$1class="$3 ' + ((styles.button_default)!) + r'"', 'r')>
+        <#local menuString = menuString?replace(r'(<a(?![^>]*\sclass=)[^>]*)>', r'$1 class="' + ((styles.button_default)!) + r'">', 'r')>
       </#if>
     </#if>
     ${menuString}

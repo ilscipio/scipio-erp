@@ -19,7 +19,7 @@ under the License.
 
 <#if canNotView>
   <p><h3>${uiLabelMap.AccountingEFTNotBelongToYou}.</h3></p>
-&nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonGoBack}</a>
+&nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
 <#else>
     <#if !eftAccount??>
       <h1>${uiLabelMap.AccountingAddNewEftAccount}</h1>
@@ -93,7 +93,7 @@ under the License.
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-        <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="button tiny">
+        <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.button_default!}">
           [Create New Address]</a>&nbsp;&nbsp;
         -->
         <table width="100%" border="0" cellpadding="1">

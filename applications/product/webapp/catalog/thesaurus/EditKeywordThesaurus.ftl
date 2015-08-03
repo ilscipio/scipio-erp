@@ -36,7 +36,7 @@ under the License.
         <div>
             <#list letterList as letter>
               <#if letter == firstLetter><#assign highlight=true><#else><#assign highlight=false></#if>
-              <a href="<@ofbizUrl>editKeywordThesaurus?firstLetter=${letter}</@ofbizUrl>" class="button tiny"><#if highlight>[</#if>${letter}<#if highlight>]</#if></a>
+              <a href="<@ofbizUrl>editKeywordThesaurus?firstLetter=${letter}</@ofbizUrl>" class="${styles.button_default!}"><#if highlight>[</#if>${letter}<#if highlight>]</#if></a>
             </#list>
         </div>
         <br />

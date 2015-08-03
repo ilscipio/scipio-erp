@@ -21,10 +21,10 @@ under the License.
         <h3>${uiLabelMap.ProductReceiveReturn} ${uiLabelMap.CommonInto} <#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId}:${facility.facilityId!}]</h3>
     </div>
     <div class="screenlet-body">
-        <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductNewFacility}</a>
+        <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacility}</a>
         <#-- Receiving Results -->
         <#if receivedItems?has_content>
-          <h3>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="button tiny">${returnHeader.returnId}</a></h3>
+          <h3>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.button_default!}">${returnHeader.returnId}</a></h3>
           <#if "RETURN_RECEIVED" == returnHeader.getString("statusId")>
             <h3>${uiLabelMap.ProductReturnCompletelyReceived}</h3>
           </#if>
@@ -74,8 +74,8 @@ under the License.
                 <tr>
                   <td>
                     <h3>
-                      ${uiLabelMap.ProductReceiveReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="button tiny">#${returnHeader.returnId}</a>
-                      <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>ViewShipment?shipmentId=${parameters.shipmentId}</@ofbizUrl>" class="button tiny">${parameters.shipmentId}</a></#if>
+                      ${uiLabelMap.ProductReceiveReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.button_default!}">#${returnHeader.returnId}</a>
+                      <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>ViewShipment?shipmentId=${parameters.shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${parameters.shipmentId}</a></#if>
                     </h3>
                   </td>
                   <td align="right">
@@ -113,7 +113,7 @@ under the License.
                             <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}" />
                             <td width="45%">
                               <div>
-                                ${returnItem.returnItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="button tiny">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
+                                ${returnItem.returnItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.button_default!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
                                 <#if serializedInv?has_content><font color='red'>**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
                               </div>
                             </td>
@@ -122,7 +122,7 @@ under the License.
                               <div>
                                 ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
                                 <input type="text" size="12" name="productId_o_${rowCount}" />
-                                <a href="/catalog/control/EditProduct?${StringUtil.wrapString(externalKeyParam)}" target="catalog" class="button tiny">${uiLabelMap.ProductCreateProduct}</a>
+                                <a href="/catalog/control/EditProduct?${StringUtil.wrapString(externalKeyParam)}" target="catalog" class="${styles.button_default!}">${uiLabelMap.ProductCreateProduct}</a>
                               </div>
                             </td>
                           <#else>
@@ -224,13 +224,13 @@ under the License.
                   </tr>
                   <tr>
                     <td colspan="2" align="right">
-                      <a href="<@ofbizUrl>ReceiveReturn?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductReturnToReceiving}</a>
+                      <a href="<@ofbizUrl>ReceiveReturn?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductReturnToReceiving}</a>
                     </td>
                   </tr>
                 <#else>
                   <tr>
                     <td colspan="2" align="right">
-                      <a href="javascript:document.selectAllForm.submit();" class="button tiny">${uiLabelMap.ProductReceiveSelectedProduct}</a>
+                      <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveSelectedProduct}</a>
                     </td>
                   </tr>
                 </#if>
@@ -258,7 +258,7 @@ under the License.
               <tr>
                 <td colspan="2">&nbsp;</td>
                 <td colspan="2">
-                  <a href="javascript:document.selectAllForm.submit();" class="button tiny">${uiLabelMap.ProductReceiveProduct}</a>
+                  <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveProduct}</a>
                 </td>
               </tr>
             </table>

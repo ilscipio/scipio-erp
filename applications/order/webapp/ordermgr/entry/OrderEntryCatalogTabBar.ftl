@@ -30,7 +30,7 @@ under the License.
     </#assign>
     <@section title=title!>
         <ul class="button-group">
-            <li><a href="<@ofbizUrl>orderentry</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderOrderItems}</a></li>
+            <li><a href="<@ofbizUrl>orderentry</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderOrderItems}</a></li>
     </ul>
     </@section>
 </#if>

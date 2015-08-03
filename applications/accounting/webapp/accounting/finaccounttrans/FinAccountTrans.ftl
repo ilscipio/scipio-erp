@@ -234,7 +234,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                    jQuery("#togglePayment_${finAccountTrans.finAccountTransId}").click(function(){jQuery("#displayPayments_${finAccountTrans.finAccountTransId}").dialog("open")});
                    });
                 </script>
-                <a href="<@ofbizUrl>DepositSlip.pdf?finAccountTransId=${finAccountTrans.finAccountTransId}</@ofbizUrl>" target="_BLANK" class="button tiny">${uiLabelMap.AccountingDepositSlip}</a>
+                <a href="<@ofbizUrl>DepositSlip.pdf?finAccountTransId=${finAccountTrans.finAccountTransId}</@ofbizUrl>" target="_BLANK" class="${styles.button_default!}">${uiLabelMap.AccountingDepositSlip}</a>
               <#else>
                 ${finAccountTrans.finAccountTransId}
               </#if>
@@ -257,7 +257,7 @@ function getFinAccountTransRunningTotalAndBalances() {
             <#if grandTotal??>
               <td>
                 <#if finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED'>
-                  <a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="button tiny">${uiLabelMap.CommonCancel}</a>
+                  <a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonCancel}</a>
                 </#if>
               </td>
             </#if>
@@ -269,7 +269,7 @@ function getFinAccountTransRunningTotalAndBalances() {
             <#if !(grandTotal??)>
               <#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
                 <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-                  <td><a href="javascript:document.removeFinAccountTransFromReconciliation_${finAccountTrans.finAccountTransId}.submit();" class="button tiny">${uiLabelMap.CommonRemove}</a></td>
+                  <td><a href="javascript:document.removeFinAccountTransFromReconciliation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a></td>
                 </#if>
               </#if>
             </#if>

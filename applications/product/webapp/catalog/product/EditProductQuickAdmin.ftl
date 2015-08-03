@@ -126,8 +126,8 @@ function doPublish() {
             <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
                 <td nowrap="nowrap">
                 <input type="hidden" name="productId${idx}" value="${assocProduct.productId!}"/>
-                <a class="button tiny" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.productId!}</a></td>
-                <td width="100%"><a class="button tiny" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName!}</a></td>
+                <a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.productId!}</a></td>
+                <td width="100%"><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName!}</a></td>
                 <td colspan="2">
                     <input type="text" name="description${idx}" size="70" maxlength="100" value="${selFeatureDesc[assocProduct.productId]!}"/>
                 </td>
@@ -138,7 +138,7 @@ function doPublish() {
                 </#if>
                 <td><input type="radio" ${checked} name="useImages" value="${assocProduct.productId}"/></td>
                 <#assign fromDate = Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productAssoc.getTimestamp("fromDate").toString())/>
-                <td><a class="button tiny" href="javascript:removeAssoc('${productAssoc.productIdTo}','${fromDate}');">x</a></td>
+                <td><a class="${styles.button_default!}" href="javascript:removeAssoc('${productAssoc.productIdTo}','${fromDate}');">x</a></td>
             </tr>
             <#assign idx = idx + 1/>
             <#-- toggle the row color -->
@@ -153,8 +153,8 @@ function doPublish() {
                 <td>
                     <table cellspacing="0" class="basic-table">
                         <#list selectableFeatureTypes as selectableFeatureType>
-                        <tr><td><a class="button tiny" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
-                            <a class="button tiny" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)!}&amp;productId=${product.productId!}</@ofbizUrl>">${(selectableFeatureType.get("description",locale))!}</a></td></tr>
+                        <tr><td><a class="${styles.button_default!}" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
+                            <a class="${styles.button_default!}" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)!}&amp;productId=${product.productId!}</@ofbizUrl>">${(selectableFeatureType.get("description",locale))!}</a></td></tr>
                         </#list>
                     </table>
                 </td>
@@ -187,7 +187,7 @@ function doPublish() {
                 <#assign rowClass = "2">
                 <#list distinguishingFeatures as distinguishingFeature>
                 <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                    <td><a href="<@ofbizUrl>quickAdminRemoveProductFeature?productId=${productId}&amp;productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>" class="button tiny">x</a>&nbsp;
+                    <td><a href="<@ofbizUrl>quickAdminRemoveProductFeature?productId=${productId}&amp;productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">x</a>&nbsp;
                     ${distinguishingFeature.productFeatureId} ${productFeatureTypeLookup.get(distinguishingFeature.productFeatureId).get("description",locale)}: ${distinguishingFeature.get("description",locale)}
                     &nbsp;
                     </td>
@@ -246,9 +246,9 @@ function doPublish() {
                     <td><input type="text" name="~ml${idx}" size="6" maxlength="20" value="${featureMl.get(assocProduct.productId)!}"/></td>
                     <td><input type="text" name="~ntwt${idx}" size="6" maxlength="20" value="${featureNtwt.get(assocProduct.productId)!}"/></td>
                     <td><input type="text" name="~grams${idx}" size="6" maxlength="20" value="${featureGrams.get(assocProduct.productId)!}"/></td>
-                    <td><a class="button tiny" href="<@ofbizUrl>EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureHazmat.get(assocProduct.productId)!)}</a></td>
-                    <td><a class="button tiny" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureSalesThru.get(assocProduct.productId)!)}</a></td>
-                    <td><a class="button tiny" href="<@ofbizUrl>EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureThruDate.get(assocProduct.productId)!)}</a></td>
+                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureHazmat.get(assocProduct.productId)!)}</a></td>
+                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureSalesThru.get(assocProduct.productId)!)}</a></td>
+                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureThruDate.get(assocProduct.productId)!)}</a></td>
                 </tr>
                 <#assign idx = idx + 1/>
                 <#-- toggle the row color -->
@@ -272,9 +272,9 @@ function doPublish() {
                     <td><input type="text" name="~ml" size="6" maxlength="20" value="${ml!}" /></td>
                     <td><input type="text" name="~ntwt" size="6" maxlength="20" value="${ntwt!}" /></td>
                     <td><input type="text" name="~grams" size="6" maxlength="20" value="${grams!}" /></td>
-                    <td><a class="button tiny" href="<@ofbizUrl>EditProductFeatures?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(hazmat!)}</a></td>
-                    <td><a class="button tiny" href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(salesthru!)}</a></td>
-                    <td><a class="button tiny" href="<@ofbizUrl>EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(thrudate!)}</a></td>
+                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductFeatures?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(hazmat!)}</a></td>
+                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(salesthru!)}</a></td>
+                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(thrudate!)}</a></td>
                 </tr>
                 <tr>
                     <td colspan="10" align="right"><input type="submit" value="${uiLabelMap.ProductUpdateShipping}" /></td>
@@ -335,7 +335,7 @@ function doPublish() {
                 <#list standardFeatureAppls as standardFeatureAppl>
                     <#assign featureId = standardFeatureAppl.productFeatureId/>
                     <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                        <td colspan="2"><a href='<@ofbizUrl>quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId!}&amp;productFeatureId=${featureId!}&amp;fromDate=${(standardFeatureAppl.fromDate)!}</@ofbizUrl>' class="button tiny">x</a>
+                        <td colspan="2"><a href='<@ofbizUrl>quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId!}&amp;productFeatureId=${featureId!}&amp;fromDate=${(standardFeatureAppl.fromDate)!}</@ofbizUrl>' class="${styles.button_default!}">x</a>
                         ${productFeatureTypeLookup.get(featureId).description}: ${standardFeatureLookup.get(featureId).description}
                         </td>
                     </tr>
@@ -416,7 +416,7 @@ function doPublish() {
                                 <input type="hidden" name="productId" value="${prodCatMemb.productId!}" />
                                 <input type="hidden" name="productCategoryId" value="${prodCatMemb.productCategoryId}" />
                                 <input type="hidden" name="fromDate" value="${(prodCatMemb.fromDate)!}" />
-                                <a href="javascript:document.quickAdminRemoveProductFromCategory_${prodCatMemb_index}.submit();" class="button tiny">x</a>
+                                <a href="javascript:document.quickAdminRemoveProductFromCategory_${prodCatMemb_index}.submit();" class="${styles.button_default!}">x</a>
                                 ${prodCat.description!} ${prodCat.productCategoryId}
                               </form>
                             </td>

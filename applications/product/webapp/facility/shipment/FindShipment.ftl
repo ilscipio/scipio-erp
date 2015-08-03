@@ -192,14 +192,14 @@ function lookupShipments() {
             <#assign statusItem = delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", shipment.statusId), true)!/>
             <#assign shipmentType = delegator.findOne("ShipmentType", Static["org.ofbiz.base.util.UtilMisc"].toMap("shipmentTypeId", shipment.shipmentTypeId), true)!/>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="button tiny">${shipment.shipmentId}</a></td>
+              <td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${shipment.shipmentId}</a></td>
               <td>${(shipmentType.get("description",locale))?default(shipmentType.shipmentTypeId?default(""))}</td>
               <td>${(statusItem.get("description",locale))?default(statusItem.statusId?default("N/A"))}</td>
               <td>${(originFacility.facilityName)!} [${shipment.originFacilityId!}]</td>
               <td>${(destinationFacility.facilityName)!} [${shipment.destinationFacilityId!}]</td>
               <td><span style="white-space: nowrap;">${(shipment.estimatedShipDate.toString())!}</span></td>
               <td align="right">
-                <a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonView}</a>
+                <a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonView}</a>
               </td>
             </tr>
             <#-- toggle the row color -->

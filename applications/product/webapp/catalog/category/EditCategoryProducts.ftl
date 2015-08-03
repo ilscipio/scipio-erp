@@ -17,9 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if activeOnly>
-    <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductActiveAndInactive}</a>
+    <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductActiveAndInactive}</a>
 <#else>
-    <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=true</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductActiveOnly}</a>
+    <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductActiveOnly}</a>
 </#if>
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -30,7 +30,7 @@ under the License.
                 </#if>
                 <span class="submenutextinfo">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
                 <#if (listSize > highIndex)>
-                    | <a class="button tiny" href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
+                    | <a class="${styles.button_default!}" href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                 </#if>
                 &nbsp;
             </div>
@@ -81,7 +81,7 @@ under the License.
                       <#if (product.smallImageUrl)??>
                          <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>"><img alt="Small Image" src="<@ofbizContentUrl>${product.smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" align="middle" /></a>
                       </#if>
-                      <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>" class="button tiny"><#if product??>${(product.internalName)!}</#if> [${(productCategoryMember.productId)!}]</a>
+                      <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if product??>${(product.internalName)!}</#if> [${(productCategoryMember.productId)!}]</a>
                     </td>
                     <td <#if hasntStarted> style="color: red;"</#if>>${(productCategoryMember.fromDate)!}</td>
                     <td align="center">
@@ -96,7 +96,7 @@ under the License.
                         <textarea name="comments${suffix}" rows="2" cols="40">${(productCategoryMember.comments)!}</textarea>
                     </td>
                     <td align="center">
-                      <a href="javascript:document.deleteProductFromCategory_o_${rowCount}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                      <a href="javascript:document.deleteProductFromCategory_o_${rowCount}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                     </td>
                   </tr>
                   <#-- toggle the row color -->
@@ -137,7 +137,7 @@ under the License.
                 </#if>
                 <span class="submenutextinfo">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
                 <#if (listSize > highIndex)>
-                    | <a class="button tiny" href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
+                    | <a class="${styles.button_default!}" href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                 </#if>
                 &nbsp;
             </div>

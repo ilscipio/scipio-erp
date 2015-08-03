@@ -39,7 +39,7 @@ under the License.
             <#assign line = line + 1>
             <#assign curRoleType = productCategoryRole.getRelatedOne("RoleType", true)>
             <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-            <td><a href="/partymgr/control/viewprofile?party_id=${(productCategoryRole.partyId)!}" target="_blank" class="button tiny">${(productCategoryRole.partyId)!}</a></td>
+            <td><a href="/partymgr/control/viewprofile?party_id=${(productCategoryRole.partyId)!}" target="_blank" class="${styles.button_default!}">${(productCategoryRole.partyId)!}</a></td>
             <td>${(curRoleType.get("description",locale))!}</td>
             <#assign hasntStarted = false>
             <#if (productCategoryRole.getTimestamp("fromDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productCategoryRole.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
@@ -64,7 +64,7 @@ under the License.
                     <input type="hidden" name="partyId" value="${(productCategoryRole.partyId)!}" />
                     <input type="hidden" name="roleTypeId" value="${(productCategoryRole.roleTypeId)!}" />
                     <input type="hidden" name="fromDate" value="${(productCategoryRole.getTimestamp("fromDate"))!}" />
-                    <a href="javascript:document.lineForm_delete${line}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.lineForm_delete${line}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                 </form>
             </td>
             </tr>

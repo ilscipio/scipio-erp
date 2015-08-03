@@ -16,9 +16,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<a href="<@ofbizUrl>EditProductConfigItemContent?configItemId=${configItemId}</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductProduct} ${uiLabelMap.ProductConfigItem} ${uiLabelMap.ProductContent} ${uiLabelMap.CommonList}</a>
+<a href="<@ofbizUrl>EditProductConfigItemContent?configItemId=${configItemId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductProduct} ${uiLabelMap.ProductConfigItem} ${uiLabelMap.ProductContent} ${uiLabelMap.CommonList}</a>
 <#if contentId?has_content>
-    <a href="/content/control/gotoContent?contentId=${contentId}" class='button tiny' target='_blank'>${uiLabelMap.ProductContent} ${uiLabelMap.CommonPage}</a>
+    <a href="/content/control/gotoContent?contentId=${contentId}" class='${styles.button_default!}' target='_blank'>${uiLabelMap.ProductContent} ${uiLabelMap.CommonPage}</a>
 </#if>
 <br />
 <#if configItemId?has_content && productContent?has_content>

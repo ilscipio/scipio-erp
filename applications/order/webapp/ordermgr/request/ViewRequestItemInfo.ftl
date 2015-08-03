@@ -38,7 +38,7 @@ under the License.
                     <td valign="top">
                         <div>
                             <#if showRequestManagementLinks??>
-                                <a href="<@ofbizUrl>EditRequestItem?custRequestId=${requestItem.custRequestId}&amp;custRequestItemSeqId=${requestItem.custRequestItemSeqId}</@ofbizUrl>" class="button tiny">${requestItem.custRequestItemSeqId}</a>
+                                <a href="<@ofbizUrl>EditRequestItem?custRequestId=${requestItem.custRequestId}&amp;custRequestItemSeqId=${requestItem.custRequestItemSeqId}</@ofbizUrl>" class="${styles.button_default!}">${requestItem.custRequestItemSeqId}</a>
                             <#else>
                                 ${requestItem.custRequestItemSeqId}
                             </#if>
@@ -48,9 +48,9 @@ under the License.
                         <div>
                             ${(product.internalName)!}&nbsp;
                             <#if showRequestManagementLinks??>
-                                <a href="/catalog/control/EditProduct?productId=${requestItem.productId!}" class="button tiny">${requestItem.productId!}</a>
+                                <a href="/catalog/control/EditProduct?productId=${requestItem.productId!}" class="${styles.button_default!}">${requestItem.productId!}</a>
                             <#else>
-                                <a href="<@ofbizUrl>product?product_id=${requestItem.productId!}</@ofbizUrl>" class="button tiny">${requestItem.productId!}</a>
+                                <a href="<@ofbizUrl>product?product_id=${requestItem.productId!}</@ofbizUrl>" class="${styles.button_default!}">${requestItem.productId!}</a>
                             </#if>
                         </div>
                     </td>

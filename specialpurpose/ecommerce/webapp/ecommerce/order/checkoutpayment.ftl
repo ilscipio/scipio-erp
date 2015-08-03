@@ -263,6 +263,6 @@ var issuerId = "";
 </form>
 
 <div>
-  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="button tiny">${uiLabelMap.OrderBacktoShoppingCart}</a>
-  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="button tiny">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
+  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="${styles.button_default!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
+  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="${styles.button_default!}">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
 </div>

@@ -29,7 +29,7 @@ under the License.
             </#if>
           
         <ul class="button-group">
-          <li><a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateShipGroup}</a></li>
+          <li><a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateShipGroup}</a></li>
       </ul>         
 
 
@@ -76,7 +76,7 @@ under the License.
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                     </td>
                     <td>
-                      <div><a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></div>
+                      <div><a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></div>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
@@ -91,7 +91,7 @@ under the License.
                     </td>
                     <td></td>
                     <td>
-                        <a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS" target="_blank" class="button tiny">${uiLabelMap.CommonNew}</a>
+                        <a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonNew}</a>
                     </td>
                   </tr>
                 </#if>
@@ -130,7 +130,7 @@ under the License.
                 </div>
               </td>
               <td>
-                <div><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></div>
+                <div><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></div>
               </td>
             </tr>
             <#if shippingContactMech_has_next>
@@ -158,8 +158,8 @@ under the License.
             <input type="hidden" name="finalizeReqShipGroups" value="true"/>
             </#if>
     <ul class="button-group">
-        <li><a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}</a></li>
-        <li><a href="<@ofbizUrl>EditShipAddress</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateShippingAddress}</a></li>
+        <li><a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}</a></li>
+        <li><a href="<@ofbizUrl>EditShipAddress</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateShippingAddress}</a></li>
     </ul> 
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
@@ -228,7 +228,7 @@ under the License.
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                     </td>
                     <td>
-                      <a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a>
+                      <a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
@@ -259,7 +259,7 @@ under the License.
                       </div>
                     </td>
                     <td>
-                      <div><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></div>
+                      <div><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></div>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>

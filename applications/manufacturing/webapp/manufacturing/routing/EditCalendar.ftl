@@ -26,7 +26,7 @@ under the License.
     <br class="clear"/>
   </div>
   <div class="screenlet-body">
-  <div class="button-bar"><a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="button tiny">${uiLabelMap.ManufacturingNewCalendar}</a></div>
+  <div class="button-bar"><a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ManufacturingNewCalendar}</a></div>
   <form name="calendarform" method="post" action="<@ofbizUrl>UpdateCalendar</@ofbizUrl>">
     <input type="hidden" name="calendarId" value="${techDataCalendar.calendarId}" />
 <#else>
@@ -38,7 +38,7 @@ under the License.
     <br class="clear"/>
   </div>
   <div class="screenlet-body">
-  <a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="button tiny">${uiLabelMap.ManufacturingNewCalendar}</a>
+  <a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ManufacturingNewCalendar}</a>
   <form name="calendarform" method="post" action="<@ofbizUrl>CreateCalendar</@ofbizUrl>">
 </#if>
   <table class="basic-table" cellspacing="0">

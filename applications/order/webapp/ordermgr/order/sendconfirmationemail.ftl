@@ -22,8 +22,8 @@ under the License.
     <@row>
     <@cell class="${style_grid_large!}6 columns">
 
-      <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonGoBack}</a>
-      <a href="javascript:document.sendConfirmationForm.submit()" class="button tiny">${uiLabelMap.CommonSend}</a>      
+      <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
+      <a href="javascript:document.sendConfirmationForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSend}</a>      
       <br />
       <form method="post" action="<@ofbizUrl>sendconfirmationmail/${donePage}</@ofbizUrl>" name="sendConfirmationForm">
         <input type="hidden" name="orderId" value="${orderId!}" />
@@ -81,8 +81,8 @@ under the License.
         </table>
       </form>
       <br />
-      <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonGoBack}</a>
-      <a href="javascript:document.sendConfirmationForm.submit()" class="button tiny">${uiLabelMap.CommonSend}</a>
+      <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
+      <a href="javascript:document.sendConfirmationForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSend}</a>
       </@cell>
       </@row>
     </@section>

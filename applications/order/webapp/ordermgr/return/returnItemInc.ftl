@@ -18,7 +18,7 @@ under the License.
 -->
 <table cellspacing="0" class="basic-table">
     <tr>
-      <td colspan="7"><h3>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="button tiny">${orderId}</a></h3></td>
+      <td colspan="7"><h3>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></h3></td>
       <td colspan="2" align="right">
         <span>${uiLabelMap.CommonSelectAll}</span>&nbsp;
         <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${selectAllFormName}');highlightAllRows(this, 'returnItemId_tableRow_', 'selectAllForm');"/>
@@ -165,7 +165,7 @@ under the License.
       </#list>
     <tr><td colspan="9"><hr/></td></tr>
     <tr>
-      <td colspan="9"><h3>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="button tiny">${orderId}</a></h3></td>
+      <td colspan="9"><h3>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></h3></td>
     </tr>
     <tr><td colspan="9"><br /></td></tr>
     <#if orderHeaderAdjustments?has_content>
@@ -222,7 +222,7 @@ under the License.
     </tr>
     <tr>
       <td colspan="9">
-        <h3>${uiLabelMap.OrderReturnManualAdjustment} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="button tiny">${orderId}</a></h3>
+        <h3>${uiLabelMap.OrderReturnManualAdjustment} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></h3>
       </td>
     </tr>
     <tr>
@@ -249,7 +249,7 @@ under the License.
     <tr>
       <td colspan="9" align="right">
     <input type="hidden" name="_rowCount" value="${rowCount}"/>
-        <a href="javascript:document.${selectAllFormName}.submit()" class="button tiny">${uiLabelMap.OrderReturnSelectedItems}</a>
+        <a href="javascript:document.${selectAllFormName}.submit()" class="${styles.button_default!}">${uiLabelMap.OrderReturnSelectedItems}</a>
       </td>
     </tr>
     <#else>

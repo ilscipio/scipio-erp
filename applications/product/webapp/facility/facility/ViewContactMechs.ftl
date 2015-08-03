@@ -56,14 +56,14 @@ under the License.
                       <#if (addr1.indexOf(" ") > 0)>
                         <#assign addressNum = addr1.substring(0, addr1.indexOf(" "))>
                         <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1)>
-                        <br /><a target='_blank' href='${uiLabelMap.CommonLookupWhitepagesAddressLink}' class='button tiny'>${uiLabelMap.CommonLookupWhitepages}</a>
+                        <br /><a target='_blank' href='${uiLabelMap.CommonLookupWhitepagesAddressLink}' class='${styles.button_default!}'>${uiLabelMap.CommonLookupWhitepages}</a>
                       </#if>
                   </#if>
                   <#if postalAddress.geoPointId?has_content>
                     <#if contactMechPurposeType?has_content>
                       <#assign popUptitle = contactMechPurposeType.get("description",locale) + uiLabelMap.CommonGeoLocation>
                     </#if>
-                    <br /><a href="javascript:popUp('<@ofbizUrl>geoLocation?geoPointId=${postalAddress.geoPointId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="button tiny">${uiLabelMap.CommonGeoLocation}</a>
+                    <br /><a href="javascript:popUp('<@ofbizUrl>geoLocation?geoPointId=${postalAddress.geoPointId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="${styles.button_default!}">${uiLabelMap.CommonGeoLocation}</a>
                   </#if>
               <#elseif "TELECOM_NUMBER" = contactMech.contactMechTypeId>
                   <#assign telecomNumber = contactMechMap.telecomNumber!>
@@ -71,17 +71,17 @@ under the License.
                     <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber!}
                     <#if facilityContactMech.extension?has_content>${uiLabelMap.CommonExt} ${facilityContactMech.extension}</#if>
                     <#if (telecomNumber?has_content && !telecomNumber.countryCode?has_content) || telecomNumber.countryCode! = "011">
-                      <br /><a target='_blank' href='${uiLabelMap.CommonLookupAnywhoLink}' class='button tiny'>${uiLabelMap.CommonLookupAnywho}</a>
-                      <a target='_blank' href='${uiLabelMap.CommonLookupWhitepagesTelNumberLink}' class='button tiny'>${uiLabelMap.CommonLookupWhitepages}</a>
+                      <br /><a target='_blank' href='${uiLabelMap.CommonLookupAnywhoLink}' class='${styles.button_default!}'>${uiLabelMap.CommonLookupAnywho}</a>
+                      <a target='_blank' href='${uiLabelMap.CommonLookupWhitepagesTelNumberLink}' class='${styles.button_default!}'>${uiLabelMap.CommonLookupWhitepages}</a>
                     </#if>
               <#elseif "EMAIL_ADDRESS" = contactMech.contactMechTypeId>
                     ${contactMech.infoString!}
-                    <a href='mailto:${contactMech.infoString!}' class='button tiny'>${uiLabelMap.CommonSendEmail}</a>
+                    <a href='mailto:${contactMech.infoString!}' class='${styles.button_default!}'>${uiLabelMap.CommonSendEmail}</a>
               <#elseif "WEB_ADDRESS" = contactMech.contactMechTypeId>
                     ${contactMech.infoString!}
                     <#assign openAddress = contactMech.infoString?default("")>
                     <#if !openAddress?starts_with("http") && !openAddress?starts_with("HTTP")><#assign openAddress = "http://" + openAddress></#if>
-                    <a target='_blank' href='${openAddress}' class='button tiny'>((${uiLabelMap.CommonOpenPageNewWindow})</a>
+                    <a target='_blank' href='${openAddress}' class='${styles.button_default!}'>((${uiLabelMap.CommonOpenPageNewWindow})</a>
               <#else>
                     ${contactMech.infoString!}
               </#if>

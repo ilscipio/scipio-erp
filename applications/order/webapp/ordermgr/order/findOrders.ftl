@@ -358,7 +358,7 @@ document.lookuporder.orderId.focus();
            <option value="${printer}">${printer}</option>
            </#list>
         </select>
-        <a href="javascript:runAction();" class="button tiny">${uiLabelMap.OrderRunAction}</a>
+        <a href="javascript:runAction();" class="${styles.button_default!}">${uiLabelMap.OrderRunAction}</a>
         -->
       <#macro massOrderChangeButton id="1">  
           <@row>
@@ -492,7 +492,7 @@ document.lookuporder.orderId.focus();
                 </#if>
               </td>
               <td align='right'>
-                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonView}</a>
+                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonView}</a>
               </td>
             </tr>
             <#-- toggle the row color -->

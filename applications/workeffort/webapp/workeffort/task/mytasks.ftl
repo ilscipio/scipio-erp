@@ -18,7 +18,7 @@ under the License.
 -->
 <h2>${uiLabelMap.PageTitleViewActivityAndTaskList}</h2>
 <div class="button-bar">
-  <a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION</@ofbizUrl>" class="button tiny create">${uiLabelMap.WorkEffortNewTask}</a>
+  <a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.WorkEffortNewTask}</a>
 </div>
   <h2>${uiLabelMap.WorkEffortAssignedTasks}</h2>
   <br />

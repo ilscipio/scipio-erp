@@ -19,7 +19,7 @@ under the License.
 
   <#assign menuHtml>
     <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-      <li><a href="<@ofbizUrl>ProfileCreateNewLogin?partyId=${party.partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
+      <li><a href="<@ofbizUrl>ProfileCreateNewLogin?partyId=${party.partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a></li>
     </#if>
   </#assign>
   <@section id="partyUserLogins" title="${uiLabelMap.PartyUserName}" menuHtml=menuHtml>
@@ -43,10 +43,10 @@ under the License.
               </td>
               <td class="button-col">
                 <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-                  <a href="<@ofbizUrl>ProfileEditUserLogin?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a>
+                  <a href="<@ofbizUrl>ProfileEditUserLogin?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
                 </#if>
                 <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
-                  <a href="<@ofbizUrl>ProfileEditUserLoginSecurityGroups?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="button tiny">${uiLabelMap.SecurityGroups}</a>
+                  <a href="<@ofbizUrl>ProfileEditUserLoginSecurityGroups?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.SecurityGroups}</a>
                 </#if>
               </td>
             </tr>

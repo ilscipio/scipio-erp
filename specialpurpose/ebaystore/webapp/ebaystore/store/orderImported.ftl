@@ -75,7 +75,7 @@ function uploadTrackingCode(orderId, productStoreId) {
             <#assign partyId = displayParty.partyId?default("_NA_")>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
               <td>${orderType.get("description",locale)?default(orderType.orderTypeId?default(""))}</td>
-              <td><a href="#" onclick="javascript:uploadTrackingCode('${orderHeader.orderId}','${productStoreId}')" class='button tiny'>${orderHeader.orderId}</a></td>
+              <td><a href="#" onclick="javascript:uploadTrackingCode('${orderHeader.orderId}','${productStoreId}')" class='${styles.button_default!}'>${orderHeader.orderId}</a></td>
               <td>
                 <div>
                   <#if displayParty?has_content>

@@ -85,7 +85,7 @@ under the License.
               </td>
               <td>${node.product.internalName?default("&nbsp;")}</td>
               <td align="right">${node.quantity}</td>
-              <td align="right"><a href="<@ofbizUrl>EditProductBom?productId=${(node.product.productId)!}&amp;productAssocTypeId=${(node.bomTypeId)!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a></td>
+              <td align="right"><a href="<@ofbizUrl>EditProductBom?productId=${(node.product.productId)!}&amp;productAssocTypeId=${(node.bomTypeId)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a></td>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>
@@ -114,7 +114,7 @@ under the License.
           <#list productsData as productData>
             <#assign node = productData.node>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a href="/catalog/control/EditProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${node.product.productId}</a></td>
+              <td><a href="/catalog/control/EditProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${node.product.productId}</a></td>
               <td>${node.product.internalName?default("&nbsp;")}</td>
               <td align="right">${node.quantity}</td>
               <td align="right">${productData.qoh!}</td>
@@ -122,7 +122,7 @@ under the License.
               <#if productData.unitCost?? && (productData.unitCost > 0)>
               <td align="right">${productData.unitCost!}</td>
               <#else>
-              <td align="right"><a href="/catalog/control/EditProductCosts?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">NA</a></td>
+              <td align="right"><a href="/catalog/control/EditProductCosts?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">NA</a></td>
               </#if>
               <td align="right">${productData.totalCost!}</td>
             </tr>

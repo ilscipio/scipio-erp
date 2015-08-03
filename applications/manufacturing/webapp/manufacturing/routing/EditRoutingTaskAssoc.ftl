@@ -71,9 +71,9 @@ function addRoutingTask() {
         <tr>
             <td>&nbsp;</td>
             <td colspan="3">
-                <a href="javascript:addRoutingTask();" class="button tiny">${uiLabelMap.ManufacturingAddExistingRoutingTask}</a>
+                <a href="javascript:addRoutingTask();" class="${styles.button_default!}">${uiLabelMap.ManufacturingAddExistingRoutingTask}</a>
                 &nbsp;-&nbsp;
-                <a href="javascript:copyAndAddRoutingTask();" class="button tiny">${uiLabelMap.ManufacturingCopyAndAddRoutingTask}</a>
+                <a href="javascript:copyAndAddRoutingTask();" class="${styles.button_default!}">${uiLabelMap.ManufacturingCopyAndAddRoutingTask}</a>
             </td>
             <td>&nbsp;</td>
         </tr>

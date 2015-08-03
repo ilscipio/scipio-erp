@@ -37,7 +37,7 @@ under the License.
                 <#assign line = line + 1>
                 <#assign productStore = productStorePromoAppl.getRelatedOne("ProductStore", false)>
                 <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                    <td><a href="<@ofbizUrl>EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="button tiny"><#if productStore??>${(productStore.storeName)!}</#if>[${productStorePromoAppl.productStoreId}]</a></td>
+                    <td><a href="<@ofbizUrl>EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="${styles.button_default!}"><#if productStore??>${(productStore.storeName)!}</#if>[${productStorePromoAppl.productStoreId}]</a></td>
                     <#assign hasntStarted = false>
                     <#if (productStorePromoAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                     <td <#if hasntStarted>style="color: red;"</#if>>${productStorePromoAppl.fromDate!}</td>

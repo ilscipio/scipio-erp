@@ -252,13 +252,13 @@ under the License.
                                     <div>
                                         <input type="text" readonly="readonly" name="itemFee" value="${request.getAttribute("itemFee")!}"/>
                                         <!-- itemlisting buttons bar -->
-                                        <a href="#" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>updateProductExportDetail</@ofbizUrl>';document.ProductsExportToEbay.submit();" class="button tiny">${uiLabelMap.CommonSave}</a>
+                                        <a href="#" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>updateProductExportDetail</@ofbizUrl>';document.ProductsExportToEbay.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
                                     <#-- request.setAttribute("isSaved")-->
                                     <#if isSaved?? && isSaved=="Y">
-                                        <a href="#" class="button tiny" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>verifyItemBeforeAddAndExportToEbay</@ofbizUrl>';document.ProductsExportToEbay.submit();">Verifly Item</a>
+                                        <a href="#" class="${styles.button_default!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>verifyItemBeforeAddAndExportToEbay</@ofbizUrl>';document.ProductsExportToEbay.submit();">Verifly Item</a>
                                     </#if>
-                                        <a href="#" class="button tiny" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>removeProductFromListing</@ofbizUrl>';document.ProductsExportToEbay.submit();">Remove</a>
-                                        <#--a href="#" class="button tiny">Save and ${uiLabelMap.EbayExportToEbay}</a-->
+                                        <a href="#" class="${styles.button_default!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>removeProductFromListing</@ofbizUrl>';document.ProductsExportToEbay.submit();">Remove</a>
+                                        <#--a href="#" class="${styles.button_default!}">Save and ${uiLabelMap.EbayExportToEbay}</a-->
                                         <!-- end buttons bar --> 
                                     </div>
                                 </td>
@@ -309,7 +309,7 @@ under the License.
                                                             </#if>
                                                         </#if>
                                                   </select>
-                                                  <a class="button tiny" href="javascript:retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayCategoryByParent</@ofbizUrl>','CH_<#if primaryCate?has_content>${primaryCate.getCategoryID()!}</#if>','${productStoreId}','ebayCategory')">${uiLabelMap.EbayChangeCategory}</a> <a class="button tiny" href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>setSelectedCategory</@ofbizUrl>?isProductId=${isProductId!}';document.getElementById('ProductsExportToEbay').submit();">${uiLabelMap.EbaySet}</a>
+                                                  <a class="${styles.button_default!}" href="javascript:retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayCategoryByParent</@ofbizUrl>','CH_<#if primaryCate?has_content>${primaryCate.getCategoryID()!}</#if>','${productStoreId}','ebayCategory')">${uiLabelMap.EbayChangeCategory}</a> <a class="${styles.button_default!}" href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>setSelectedCategory</@ofbizUrl>?isProductId=${isProductId!}';document.getElementById('ProductsExportToEbay').submit();">${uiLabelMap.EbaySet}</a>
                                               </div>
                                               <input type="hidden" name="primaryCateId" value="${primaryCateId!}"/>
                                               <div id="ebayCategory_Name">${priCateName!}</div>
@@ -818,8 +818,8 @@ under the License.
         <table cellspacing="0" class="basic-table">
             <tr>
                 <td align="center" colspan="2">
-                    <a href="#" class="button tiny">${uiLabelMap.EbayExportToEbay}</a>
-                    <a href="#" class="button tiny">VeriflyItem</a>
+                    <a href="#" class="${styles.button_default!}">${uiLabelMap.EbayExportToEbay}</a>
+                    <a href="#" class="${styles.button_default!}">VeriflyItem</a>
                 
     </#if-->
 </form>

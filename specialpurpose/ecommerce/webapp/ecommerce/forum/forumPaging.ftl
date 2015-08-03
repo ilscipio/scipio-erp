@@ -35,13 +35,13 @@ under the License.
       </select>
       <b>
         <#if (viewIndex?int >0)>
-          <a href="<@ofbizUrl>showforum?forumId=${parameters.forumId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int-1}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a> |
+          <a href="<@ofbizUrl>showforum?forumId=${parameters.forumId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int-1}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
           <span>${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>showforum?forumId=${parameters.forumId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int+1}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNext}</a>
+          | <a href="<@ofbizUrl>showforum?forumId=${parameters.forumId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int+1}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
         </#if>
       </b>
    </div>

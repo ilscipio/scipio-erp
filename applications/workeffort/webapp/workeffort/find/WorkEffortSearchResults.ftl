@@ -22,10 +22,10 @@ under the License.
   </div>
   <div class="screenlet-body">
     <#list searchConstraintStrings as searchConstraintString>
-        <div>&nbsp;<a href="<@ofbizUrl>WorkEffortSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="button tiny">X</a>&nbsp;${searchConstraintString}</div>
+        <div>&nbsp;<a href="<@ofbizUrl>WorkEffortSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
     <div><span>${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
-    <div><a href="<@ofbizUrl>WorkEffortSearchOptions</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRefineSearch}</a></div>
+    <div><a href="<@ofbizUrl>WorkEffortSearchOptions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !workEffortIds?has_content>
       <br /><h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>
@@ -36,13 +36,13 @@ under the License.
         <tr>
           <td align="right">
             <#if 0 < viewIndex?int>
-              <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a>
+              <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a>
             </#if>
             <#if 0 < listSize?int>
               ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
             </#if>
             <#if highIndex?int < listSize?int>
-              | <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNext}</a>
+              | <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
             </#if>
           </td>
         </tr>
@@ -58,7 +58,7 @@ under the License.
           <#assign workEffort = delegator.findOne("WorkEffort", Static["org.ofbiz.base.util.UtilMisc"].toMap("workEffortId", workEffortId), false)>
           <tr>
             <td>
-              <a href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffortId}</@ofbizUrl>" class="button tiny">${workEffortId} ${(workEffort.workEffortName)!}</a>
+              <a href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffortId}</@ofbizUrl>" class="${styles.button_default!}">${workEffortId} ${(workEffort.workEffortName)!}</a>
             </td>
           </tr>
         </#list>
@@ -71,13 +71,13 @@ under the License.
         <tr>
           <td align="right">
             <#if 0 < viewIndex?int>
-              <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a> |
+              <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
             </#if>
             <#if 0 < listSize?int>
               ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
             </#if>
             <#if highIndex?int < listSize?int>
-              | <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNext}</a>
+              | <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
             </#if>
           </td>
         </tr>

@@ -31,7 +31,7 @@ under the License.
           </#list>
         </table>
         
-        <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderViewAllPromotions}</a>
+        <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewAllPromotions}</a>
         
     </@section>
 </#if>

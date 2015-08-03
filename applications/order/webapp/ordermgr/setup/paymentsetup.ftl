@@ -74,10 +74,10 @@ under the License.
                     <td nowrap="nowrap">
                       <div>&nbsp;
                         <#if security.hasEntityPermission("PAYPROC", "_UPDATE", session)>
-                        <a href="<@ofbizUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="button tiny">Edit</a>&nbsp;
+                        <a href="<@ofbizUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.button_default!}">Edit</a>&nbsp;
                         </#if>
                         <#if security.hasEntityPermission("PAYPROC", "_DELETE", session)>
-                        <a href="<@ofbizUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="button tiny">Remove</a>&nbsp;
+                        <a href="<@ofbizUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.button_default!}">Remove</a>&nbsp;
                         </#if>
                       </div>
                     </td>
@@ -111,7 +111,7 @@ under the License.
             </#if>
           </td>
           <#if webSitePayment?has_content>
-            <td align='right' width='10%'><a href="<@ofbizUrl>paysetup</@ofbizUrl>" class="button tiny">Add New</a></td>
+            <td align='right' width='10%'><a href="<@ofbizUrl>paysetup</@ofbizUrl>" class="${styles.button_default!}">Add New</a></td>
           <#else>
             <td align='right' width='10%'></td>
           </#if>

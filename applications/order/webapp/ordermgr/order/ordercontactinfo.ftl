@@ -83,8 +83,8 @@ under the License.
                 <br/>
                 <#if (orderHeader.salesChannelEnumId)?? && orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL">
                 <div>
-                   <a href="<@ofbizUrl>/orderentry?partyId=${partyId}&amp;orderTypeId=${orderHeader.orderTypeId}</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderNewOrder}</a>
-                   <a href="javascript:document.searchOtherOrders.submit()" class="button tiny">${uiLabelMap.OrderOtherOrders}</a>
+                   <a href="<@ofbizUrl>/orderentry?partyId=${partyId}&amp;orderTypeId=${orderHeader.orderTypeId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderNewOrder}</a>
+                   <a href="javascript:document.searchOtherOrders.submit()" class="${styles.button_default!}">${uiLabelMap.OrderOtherOrders}</a>
                 </div>
                   <form name="searchOtherOrders" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
                     <input type="hidden" name="lookupFlag" value="Y"/>
@@ -123,8 +123,8 @@ under the License.
                   <#if telecomNumber.areaCode??>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber}
                   <#--<#if partyContactMech.extension??>ext&nbsp;${partyContactMech.extension}</#if>-->
                   <#if !telecomNumber.countryCode?? || telecomNumber.countryCode == "011" || telecomNumber.countryCode == "1">
-                    <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="button tiny">${uiLabelMap.CommonLookupAnywho}</a>
-                   <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="button tiny">${uiLabelMap.CommonLookupWhitepages}</a>
+                    <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.button_default!}">${uiLabelMap.CommonLookupAnywho}</a>
+                   <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.button_default!}">${uiLabelMap.CommonLookupWhitepages}</a>
                   </#if>
                 </div>
                 <@updateOrderContactMech orderHeader=orderHeader! contactMechTypeId=contactMech.contactMechTypeId contactMechList=telecomContactMechList! contactMechPurposeTypeId=contactMechPurpose.contactMechPurposeTypeId! contactMechAddress=telecomNumber! />
@@ -134,7 +134,7 @@ under the License.
                   <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
                      (<a href="<@ofbizUrl>confirmationmailedit?orderId=${orderId}&amp;partyId=${partyId}&amp;sendTo=${contactMech.infoString}</@ofbizUrl>" class="">${uiLabelMap.OrderSendConfirmationEmail}</a>)
                   <#else>
-                     <a href="mailto:${contactMech.infoString}" class="button tiny">(${uiLabelMap.OrderSendEmail})</a>
+                     <a href="mailto:${contactMech.infoString}" class="${styles.button_default!}">(${uiLabelMap.OrderSendEmail})</a>
                   </#if>
                 </div>
                 <@updateOrderContactMech orderHeader=orderHeader! contactMechTypeId=contactMech.contactMechTypeId contactMechList=emailContactMechList! contactMechPurposeTypeId=contactMechPurpose.contactMechPurposeTypeId! contactMechAddress=contactMech! />
@@ -145,7 +145,7 @@ under the License.
                   <#if !openString?starts_with("http") && !openString?starts_with("HTTP")>
                     <#assign openString = "http://" + openString>
                   </#if>
-                  <a target="_blank" href="${openString}" class="button tiny">(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
+                  <a target="_blank" href="${openString}" class="${styles.button_default!}">(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
                 </div>
               <#else>
                 <div>

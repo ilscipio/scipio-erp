@@ -23,7 +23,7 @@ under the License.
     <@cell>
     ${uiLabelMap.ProductYouSearchedFor}
 <#list searchConstraintStrings as searchConstraintString>
-    <a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="button tiny">X</a>&nbsp;${searchConstraintString}</li>
+    <a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${searchConstraintString}</li>
 </#list>
     </@cell>
 </@row>
@@ -31,7 +31,7 @@ under the License.
 
 <@row>
     <@cell>
-        ${uiLabelMap.CommonSortedBy}: ${searchSortOrderString} <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRefineSearch}</a>
+        ${uiLabelMap.CommonSortedBy}: ${searchSortOrderString} <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRefineSearch}</a>
     </@cell>
 </@row>
 
@@ -53,13 +53,13 @@ under the License.
         <#-- End Page Select Drop-Down -->
         <b>
         <#if (viewIndex?int > 0)>
-          <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a> |
+          <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
           <span>${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex+1}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNext}</a>
+          | <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex+1}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
         </#if>
         </b>
     </div>
@@ -88,13 +88,13 @@ under the License.
         <#-- End Page Select Drop-Down -->
         <b>
         <#if (viewIndex?int > 0)>
-          <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a> |
+          <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
           <span>${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex+1}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNext}</a>
+          | <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex+1}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
         </#if>
         </b>
     </div>

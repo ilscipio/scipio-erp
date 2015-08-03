@@ -21,7 +21,7 @@ under the License.
         <h3>${uiLabelMap.PageTitleEditProductStoreWebSites}</h3>
     </div>
     <div class="screenlet-body">
-      <a href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="button tiny">${uiLabelMap.ProductCreateNewProductStoreWebSite}</a>
+      <a href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewProductStoreWebSite}</a>
         <table cellspacing="0" class="basic-table">
           <thead>
             <tr class="header-row">
@@ -35,11 +35,11 @@ under the License.
               <#assign rowClass = "2">
               <#list storeWebSites as webSite>
                 <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                  <td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="button tiny">${webSite.siteName!} [${webSite.webSiteId}]</a></td>
+                  <td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${webSite.siteName!} [${webSite.webSiteId}]</a></td>
                   <td>${webSite.httpHost?default('&nbsp;')}</td>
                   <td>${webSite.httpPort?default('&nbsp;')}</td>
                   <td align="center">
-                    <a href="javascript:document.storeUpdateWebSite_${webSite_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.storeUpdateWebSite_${webSite_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                     <form name="storeUpdateWebSite_${webSite_index}" method="post" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>">
                         <input type="hidden" name="viewProductStoreId" value="${productStoreId}"/>
                         <input type="hidden" name="productStoreId" value=""/>

@@ -217,8 +217,8 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
       <#-- FIXME: for now, need this super ugly hack as a workaround for having no other place to insert central style for menus passed here by macro renderer...
            heuristic: add button style to all if none of the <a elems have known foundation (button) style -->
       <#if !menuString?matches(r'.*(<a\s([^>]*\s)?)class="([^"]*\s)?(button|tiny)(\s[^"]*)?".*', 's')>
-        <#local menuString = menuString?replace(r'(<a\s([^>]*\s)?)class="([^"]*)"', r'$1class="$3 button tiny"', 'r')>
-        <#local menuString = menuString?replace(r'(<a(?![^>]*\sclass=)[^>]*)>', r'$1 class="button tiny">', 'r')>
+        <#local menuString = menuString?replace(r'(<a\s([^>]*\s)?)class="([^"]*)"', r'$1class="$3 ${styles.button_default!}"', 'r')>
+        <#local menuString = menuString?replace(r'(<a(?![^>]*\sclass=)[^>]*)>', r'$1 class="${styles.button_default!}">', 'r')>
       </#if>
     </#if>
     ${menuString}
@@ -235,19 +235,19 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 <#macro renderScreenletEnd></div></div></div></div></#macro>
 
 <#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl>
-    <li class="${paginateFirstStyle?default("nav-first")}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${firstLinkUrl}" class="button tiny">${paginateFirstLabel}</a><#else><a href="javascript:void(0);" class="disabled button tiny">${paginateFirstLabel}</a></#if></li>
-    <li class="${paginatePreviousStyle?default("nav-previous")}<#if !previousLinkUrl?has_content> disabled</#if>"><#if previousLinkUrl?has_content><a href="${previousLinkUrl}" class="button tiny">${paginatePreviousLabel}</a><#else><a href="javascript:void(0);" class="disabled button tiny">${paginatePreviousLabel}</a></#if></li>
+    <li class="${paginateFirstStyle?default("nav-first")}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${firstLinkUrl}" class="${styles.button_default!}">${paginateFirstLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.button_default!}">${paginateFirstLabel}</a></#if></li>
+    <li class="${paginatePreviousStyle?default("nav-previous")}<#if !previousLinkUrl?has_content> disabled</#if>"><#if previousLinkUrl?has_content><a href="${previousLinkUrl}" class="${styles.button_default!}">${paginatePreviousLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.button_default!}">${paginatePreviousLabel}</a></#if></li>
     <#-- FIXME: manual padding -->
     <#if (listSize?number > 0)><li><span style="padding-left:1em; padding-right:1em;">${lowIndex?number + 1} - ${lowIndex?number + actualPageSize?number} ${ofLabel} ${listSize}</span></li><#rt/></#if>
-    <li class="${paginateNextStyle}<#if !nextLinkUrl?has_content> disabled</#if>"><#if nextLinkUrl?has_content><a href="${nextLinkUrl}" class="button tiny">${paginateNextLabel}</a><#else><a href="javascript:void(0);" class="disabled button tiny">${paginateNextLabel}</a></#if></li>
-    <li class="${paginateLastStyle}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${lastLinkUrl}" class="button tiny">${paginateLastLabel}</a><#else><a href="javascript:void(0);" class="disabled button tiny">${paginateLastLabel}</a></#if></li>
+    <li class="${paginateNextStyle}<#if !nextLinkUrl?has_content> disabled</#if>"><#if nextLinkUrl?has_content><a href="${nextLinkUrl}" class="${styles.button_default!}">${paginateNextLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.button_default!}">${paginateNextLabel}</a></#if></li>
+    <li class="${paginateLastStyle}<#if !lastLinkUrl?has_content> disabled</#if>"><#if lastLinkUrl?has_content><a href="${lastLinkUrl}" class="${styles.button_default!}">${paginateLastLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.button_default!}">${paginateLastLabel}</a></#if></li>
 </#macro>
 
 <#macro renderPortalPageBegin originalPortalPageId portalPageId confMode="false" addColumnLabel="Add column" addColumnHint="Add a new column to this portal" columnCount=1>
   <#global portalPageGridUsed = 0>
   <#--
   <#if confMode == "true">
-    <a class="button tiny" href="javascript:document.addColumn_${portalPageId}.submit()" title="${addColumnHint}">${addColumnLabel}</a> <b>PortalPageId: ${portalPageId}</b>
+    <a class="${styles.button_default!}" href="javascript:document.addColumn_${portalPageId}.submit()" title="${addColumnHint}">${addColumnLabel}</a> <b>PortalPageId: ${portalPageId}</b>
     <form method="post" action="addPortalPageColumn" name="addColumn_${portalPageId}">
       <input name="portalPageId" value="${portalPageId}" type="hidden"/>
     </form>
@@ -341,19 +341,19 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
             <form method="post" action="deletePortalPageColumn" name="delColumn_${columnKey}">
               ${columnKeyFields}
             </form>
-            <a class="button tiny" href="javascript:document.delColumn_${columnKey}.submit()" title="${delColumnHint}">${delColumnLabel}</a>
+            <a class="${styles.button_default!}" href="javascript:document.delColumn_${columnKey}.submit()" title="${delColumnHint}">${delColumnLabel}</a>
           </li>
           <li>
             <form method="post" action="addPortlet" name="addPortlet_${columnKey}">
               ${columnKeyFields}
             </form>
-            <a class="button tiny" href="javascript:document.addPortlet_${columnKey}.submit()" title="${addPortletHint}">${addPortletLabel}</a>
+            <a class="${styles.button_default!}" href="javascript:document.addPortlet_${columnKey}.submit()" title="${addPortletHint}">${addPortletLabel}</a>
           </li>
           <li>
             <form method="post" action="editPortalPageColumnWidth" name="setColumnSize_${columnKey}">
               ${columnKeyFields}
             </form>
-            <a class="button tiny" href="javascript:document.setColumnSize_${columnKey}.submit()" title="${setColumnSizeHint}">${colWidthLabel}: ${width}</a>
+            <a class="${styles.button_default!}" href="javascript:document.setColumnSize_${columnKey}.submit()" title="${setColumnSizeHint}">${colWidthLabel}: ${width}</a>
           </li>
         </ul>
       </div>

@@ -38,12 +38,12 @@ under the License.
 <@section>
 
     <ul class="${style_button_group!}">
-      <li><a href="<@ofbizUrl>${createUrl}</@ofbizUrl>" class="button tiny create">${uiLabelMap.CommonCreateNew}</a></li>
+      <li><a href="<@ofbizUrl>${createUrl}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.CommonCreateNew}</a></li>
 <#if partyList?has_content>    
   <#if hideFields == "Y">
-      <li class="collapsed"><a href="<@ofbizUrl>findparty?hideFields=N&amp;sortField=${sortField!}${paramList}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonShowLookupFields}</a></li>
+      <li class="collapsed"><a href="<@ofbizUrl>findparty?hideFields=N&amp;sortField=${sortField!}${paramList}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonShowLookupFields}</a></li>
   <#else>
-      <li class="expanded"><a href="<@ofbizUrl>findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonHideFields}</a></li>
+      <li class="expanded"><a href="<@ofbizUrl>findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonHideFields}</a></li>
   </#if>
 </#if>  
     </ul>
@@ -286,7 +286,7 @@ under the License.
         <td>${partyDate.lastModifiedDate!}</td>
         <td class="button-col">
           <ul class="button-group">
-          <li><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonDetails}</a></li>
+          <li><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDetails}</a></li>
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
           <li><form name="searchorders_o_${rowCount}" method="post" action="/ordermgr/control/searchorders">
             <input type="hidden" name="lookupFlag" value="Y" />
@@ -294,13 +294,13 @@ under the License.
             <input type="hidden" name="partyId" value="${partyRow.partyId}" />
             <input type="hidden" name="viewIndex" value="1" />
             <input type="hidden" name="viewSize" value="20" />
-            <a href="javascript:document.searchorders_o_${rowCount}.submit()" class="button tiny">${uiLabelMap.OrderOrders}</a>
+            <a href="javascript:document.searchorders_o_${rowCount}.submit()" class="${styles.button_default!}">${uiLabelMap.OrderOrders}</a>
           </form></li>
-          <li><a href="/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}" class="button tiny">${uiLabelMap.OrderOrderQuotes}</a></li>
+          <li><a href="/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}" class="${styles.button_default!}">${uiLabelMap.OrderOrderQuotes}</a></li>
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-          <li><a href="/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}" class="button tiny">${uiLabelMap.OrderNewOrder}</a></li>
-          <li><a href="/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}" class="button tiny">${uiLabelMap.OrderNewQuote}</a></li>
+          <li><a href="/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}" class="${styles.button_default!}">${uiLabelMap.OrderNewOrder}</a></li>
+          <li><a href="/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}" class="${styles.button_default!}">${uiLabelMap.OrderNewQuote}</a></li>
       </#if>
           </ul>
         </td>

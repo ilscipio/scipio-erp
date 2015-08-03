@@ -21,8 +21,8 @@ under the License.
             <div class="errorMessage">${illegalInventoryItem}</div>
       </#if>
         <div class="button-bar">
-          <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductNewFacility}</a>
-          <a href="<@ofbizUrl>PickMoveStockSimple?facilityId=${facilityId!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrint}</a>
+          <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacility}</a>
+          <a href="<@ofbizUrl>PickMoveStockSimple?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrint}</a>
         </div>
        <#if !(inventoryItem??)>
             <form method="post" action="<@ofbizUrl>TransferInventoryItem</@ofbizUrl>">
@@ -75,7 +75,7 @@ under the License.
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                     <#if inventoryItem?? && (inventoryItem.productId)??>
-                        <a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)!}" class="button tiny">${(inventoryItem.productId)!}</a>
+                        <a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)!}" class="${styles.button_default!}">${(inventoryItem.productId)!}</a>
                     </#if>
                 </td>
             </tr>
@@ -134,7 +134,7 @@ under the License.
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <input type="text" name="sendDate" value="${(inventoryTransfer.sendDate)!}" size="22" />
-            <a href="#" onclick="setNow('sendDate')" class="button tiny">${uiLabelMap.CommonNow}</a>
+            <a href="#" onclick="setNow('sendDate')" class="${styles.button_default!}">${uiLabelMap.CommonNow}</a>
             </td>
         </tr>
         <#if !(inventoryTransfer??)>
@@ -194,7 +194,7 @@ under the License.
                 <td width="6%">&nbsp;</td>
                 <td width="74%">
                 <input type="text" name="receiveDate" value="${(inventoryTransfer.receiveDate)!}" size="22" />
-                <a href="#" onclick="setNow('receiveDate')" class="button tiny">${uiLabelMap.CommonNow}</a>
+                <a href="#" onclick="setNow('receiveDate')" class="${styles.button_default!}">${uiLabelMap.CommonNow}</a>
                 </td>
             </tr>
             <tr>

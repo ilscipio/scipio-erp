@@ -40,15 +40,15 @@ function ShowTab(lname) {
 <@section title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}">
 
     <ul class="button-group">
-      <li><a href='<@ofbizUrl>FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>' class="button tiny">${uiLabelMap.WebtoolsBackToFindScreen}</a></li>
+      <li><a href='<@ofbizUrl>FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.WebtoolsBackToFindScreen}</a></li>
       <#if enableEdit = "false">
         <#if hasCreatePermission>
-          <li><a href='<@ofbizUrl>ViewGeneric?entityName=${entityName}&amp;enableEdit=true</@ofbizUrl>' class="button tiny create">${uiLabelMap.CommonCreateNew}</a></li>
-          <li><a href="<@ofbizUrl>ViewGeneric?${curFindString}&amp;enableEdit=true</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a></li>
+          <li><a href='<@ofbizUrl>ViewGeneric?entityName=${entityName}&amp;enableEdit=true</@ofbizUrl>' class="${styles.button_default!} create">${uiLabelMap.CommonCreateNew}</a></li>
+          <li><a href="<@ofbizUrl>ViewGeneric?${curFindString}&amp;enableEdit=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a></li>
         </#if>
         <#if value?has_content>
           <#if hasDeletePermission>
-            <li><a href='<@ofbizUrl>UpdateGeneric?UPDATE_MODE=DELETE&amp;${curFindString}</@ofbizUrl>' class="button tiny delete">${uiLabelMap.WebtoolsDeleteThisValue}</a></li>
+            <li><a href='<@ofbizUrl>UpdateGeneric?UPDATE_MODE=DELETE&amp;${curFindString}</@ofbizUrl>' class="${styles.button_default!} delete">${uiLabelMap.WebtoolsDeleteThisValue}</a></li>
           </#if>
         </#if>
       </#if>

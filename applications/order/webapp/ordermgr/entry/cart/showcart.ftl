@@ -34,10 +34,10 @@ under the License.
 
 
 <ul class="button-group">
-    <li><a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="button tiny">${uiLabelMap.OrderQuickLookup}</a></li>
-    <li><a href="javascript:quicklookupGiftCertificate()" class="button tiny">${uiLabelMap.OrderAddGiftCertificate}</a></li>
+    <li><a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="${styles.button_default!}">${uiLabelMap.OrderQuickLookup}</a></li>
+    <li><a href="javascript:quicklookupGiftCertificate()" class="${styles.button_default!}">${uiLabelMap.OrderAddGiftCertificate}</a></li>
   <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>
-        <li><a href="javascript:showQohAtp()" class="button tiny">${uiLabelMap.ProductAtpQoh}</a></li>
+        <li><a href="javascript:showQohAtp()" class="${styles.button_default!}">${uiLabelMap.ProductAtpQoh}</a></li>
   </#if>
 </ul>
 

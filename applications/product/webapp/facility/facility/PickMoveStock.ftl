@@ -134,7 +134,7 @@ under the License.
                     </#list>
                     <tr>
                         <td colspan="13" align="right">
-                            <a href="javascript:document.selectAllForm.submit();" class="button tiny">${uiLabelMap.ProductConfirmSelectedMoves}</a>
+                            <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductConfirmSelectedMoves}</a>
                         </td>
                     </tr>
                 <#else>
@@ -183,7 +183,7 @@ under the License.
                 </tr>
                 <tr>
                   <td colspan="13" align="right">
-                    <a href="javascript:document.quickStockMove.submit();" class="button tiny">${uiLabelMap.ProductQuickStockMove}</a>
+                    <a href="javascript:document.quickStockMove.submit();" class="${styles.button_default!}">${uiLabelMap.ProductQuickStockMove}</a>
                   </td>
                 </tr>
             </table>

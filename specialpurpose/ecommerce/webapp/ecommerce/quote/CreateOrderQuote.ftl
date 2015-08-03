@@ -20,9 +20,9 @@ under the License.
 <div>
     <#if quote??>
         <#if quote.statusId == "QUO_APPROVED">
-            <a href="<@ofbizUrl>loadCartFromQuote?quoteId=${quote.quoteId}&amp;finalizeMode=init</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateOrder}</a>
+            <a href="<@ofbizUrl>loadCartFromQuote?quoteId=${quote.quoteId}&amp;finalizeMode=init</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateOrder}</a>
         <#else/>
-            <span class="button tinydisabled">${uiLabelMap.OrderCreateOrder}</span>
+            <span class="${styles.button_default!}disabled">${uiLabelMap.OrderCreateOrder}</span>
         </#if>
     </#if>
 </div>

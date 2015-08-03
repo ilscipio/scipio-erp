@@ -85,7 +85,7 @@ under the License.
             <@htmlTemplate.lookupField value="${additionalPartyId!}" formName="quickAddPartyForm" name="additionalPartyId" id="additionalPartyId" fieldFormName="${lookupPartyView}"/>
           </td>
           <td>
-            &nbsp;<a href="javascript:document.quickAddPartyForm.submit()" class="button tiny">${uiLabelMap.CommonApply}</a>
+            &nbsp;<a href="javascript:document.quickAddPartyForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonApply}</a>
           </td>
         </tr>
       </table>

@@ -40,7 +40,7 @@ under the License.
         <input type="hidden" name="minimumOrderQuantity" value="${parameters.minimumOrderQuantity}" />
         <input type="hidden" name="availableFromDate" value="${parameters.availableFromDate}" />
     </#if>
-    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonBackToList}</a>
+    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBackToList}</a>
 
     <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
@@ -61,7 +61,7 @@ under the License.
     <tr>
       <td width="26%" align="right" valign="top"><div>&nbsp;</div></td>
       <td width="5">&nbsp;</td>
-      <td width="74%"><a href="javascript:document.editdigitaluploadform.submit()" class="button tiny">${uiLabelMap.CommonSave}</a></td>
+      <td width="74%"><a href="javascript:document.editdigitaluploadform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a></td>
     </tr>
   </table>
   </form>
@@ -78,7 +78,7 @@ under the License.
         <#list productContentAndInfoList as productContentAndInfo>
             <div>
               ${productContentAndInfo.contentName} (${uiLabelMap.CommonSince}: ${productContentAndInfo.fromDate})
-              <a href="<@ofbizUrl>removeCustomerDigitalDownloadProductFile?contentId=${productContentAndInfo.contentId}&amp;productContentTypeId=${productContentAndInfo.productContentTypeId}&amp;fromDate=${productContentAndInfo.fromDate}&amp;productId=${parameters.productId}&amp;currencyUomId=${parameters.currencyUomId}&amp;minimumOrderQuantity=${parameters.minimumOrderQuantity}&amp;availableFromDate=${parameters.availableFromDate}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRemove}</a>
+              <a href="<@ofbizUrl>removeCustomerDigitalDownloadProductFile?contentId=${productContentAndInfo.contentId}&amp;productContentTypeId=${productContentAndInfo.productContentTypeId}&amp;fromDate=${productContentAndInfo.fromDate}&amp;productId=${parameters.productId}&amp;currencyUomId=${parameters.currencyUomId}&amp;minimumOrderQuantity=${parameters.minimumOrderQuantity}&amp;availableFromDate=${parameters.availableFromDate}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
             </div>
         </#list>
 
@@ -95,10 +95,10 @@ under the License.
               <option value="${ownerContentAndRole.contentId}">${ownerContentAndRole.contentName}</option>
             </#list>
           </select>
-          <a href="javascript:document.adddigitaluploadfile.submit()" class="button tiny">${uiLabelMap.CommonAdd}</a>
+          <a href="javascript:document.adddigitaluploadfile.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a>
         </form>
         </div>
-    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonBackToList}</a>
+    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBackToList}</a>
     </div>
 </div>
 </#if>

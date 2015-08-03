@@ -52,12 +52,12 @@ under the License.
           <input type="hidden" name="productId_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.productId)!}" />
           <input type="hidden" name="productFeatureId_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.productFeatureId)!}" />
           <input type="hidden" name="fromDate_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.fromDate)!}" />
-          <a href="<@ofbizUrl>EditFeature?productFeatureId=${(productFeatureAndAppl.productFeatureId)!}</@ofbizUrl>" class="button tiny">
+          <a href="<@ofbizUrl>EditFeature?productFeatureId=${(productFeatureAndAppl.productFeatureId)!}</@ofbizUrl>" class="${styles.button_default!}">
               ${(productFeatureAndAppl.productFeatureId)!}</a></td>
           <td>${(productFeatureAndAppl.get("description",locale))!}</td>
           <td><#if productFeatureAndAppl.uomId??>${curProductFeatureUom.abbreviation!}</#if></td>
           <td>${(curProductFeatureType.get("description",locale))?default((productFeatureAndAppl.productFeatureTypeId)!)}</td>
-          <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)!}&amp;productId=${(productFeatureAndAppl.productId)!}</@ofbizUrl>" class="button tiny">
+          <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)!}&amp;productId=${(productFeatureAndAppl.productId)!}</@ofbizUrl>" class="${styles.button_default!}">
               ${(curProductFeatureCategory.description)!}
               [${(productFeatureAndAppl.productFeatureCategoryId)!}]</a></td>
     <#assign hasntStarted = false>
@@ -84,7 +84,7 @@ under the License.
             <input type="checkbox" name="_rowSubmit_o_${productFeatureAndAppl_index}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureId_tableRow_${productFeatureAndAppl_index}');" />
           </td>
           <td>
-            <a href="javascript:document.RemoveFeatureFromProduct_o_${productFeatureAndAppl_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
+            <a href="javascript:document.RemoveFeatureFromProduct_o_${productFeatureAndAppl_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
           </td>
         </tr>
     <#-- toggle the row color -->

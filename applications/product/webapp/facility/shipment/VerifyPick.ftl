@@ -31,7 +31,7 @@ under the License.
     </#if>
     <#if shipmentId?has_content>
       <div>
-        <span>${uiLabelMap.ProductShipmentId}</span><a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="button tiny">${shipmentId}</a>
+        <span>${uiLabelMap.ProductShipmentId}</span><a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${shipmentId}</a>
       </div>
       <#if invoiceIds?? && invoiceIds?has_content>
         <div>
@@ -39,8 +39,8 @@ under the License.
           <ul>
             <#list invoiceIds as invoiceId>
               <li>
-                ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="button tiny">${invoiceId}</a>
-                (<a href="/accounting/control/invoice.pdf?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="button tiny">PDF</a>)
+                ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="${styles.button_default!}">${invoiceId}</a>
+                (<a href="/accounting/control/invoice.pdf?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="${styles.button_default!}">PDF</a>)
               </li>
             </#list>
           </ul>
@@ -236,7 +236,7 @@ under the License.
                   <td>${orderItemSeqId!}</td>
                   <td>${product.productId?default("N/A")}</td>
                   <td>
-                    <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" target="_blank">${(product.internalName)!}</a>
+                    <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(product.internalName)!}</a>
                   </td>
                   <td>
                     <select name="geo_${rowKey}">
@@ -356,7 +356,7 @@ under the License.
               </#list>
             </table>
             <div align="right">
-              <a href="javascript:document.completePickForm.submit()" class="button tiny">${uiLabelMap.ProductComplete}</a>
+              <a href="javascript:document.completePickForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
             </div>
           </div>
         </div>

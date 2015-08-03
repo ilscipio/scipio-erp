@@ -39,7 +39,7 @@ under the License.
         <tr>
             <td align="center" colspan="2">
                 <hr />
-                <a href="javascript:exportToGoogle();" class="button tiny">${uiLabelMap.GoogleBaseExportToGoogle}</a>
+                <a href="javascript:exportToGoogle();" class="${styles.button_default!}">${uiLabelMap.GoogleBaseExportToGoogle}</a>
             </td>
         </tr>
     </table>

@@ -37,7 +37,7 @@ under the License.
             <#assign prodCatalog = prodCatalogCategory.getRelatedOne("ProdCatalog", false)>
             <#assign curProdCatalogCategoryType = prodCatalogCategory.getRelatedOne("ProdCatalogCategoryType", true)>
             <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                <td><a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)!}</@ofbizUrl>" class="button tiny"><#if prodCatalog??>${(prodCatalog.catalogName)!}</#if> [${(prodCatalogCategory.prodCatalogId)!}]</a></td>
+                <td><a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if prodCatalog??>${(prodCatalog.catalogName)!}</#if> [${(prodCatalogCategory.prodCatalogId)!}]</a></td>
                 <td>
                     ${(curProdCatalogCategoryType.get("description",locale))?default(prodCatalogCategory.prodCatalogCategoryTypeId)}
                 </td>
@@ -76,7 +76,7 @@ under the License.
                     <input type="hidden" name="productCategoryId" value="${(prodCatalogCategory.productCategoryId)!}"/>
                     <input type="hidden" name="prodCatalogCategoryTypeId" value="${prodCatalogCategory.prodCatalogCategoryTypeId}"/>
                     <input type="hidden" name="fromDate" value="${(prodCatalogCategory.fromDate)!}"/>
-                    <a href="javascript:document.lineForm_delete${line}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.lineForm_delete${line}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </td>
             </tr>

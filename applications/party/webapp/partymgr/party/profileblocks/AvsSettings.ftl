@@ -20,9 +20,9 @@ under the License.
   <@section id="partyAVS" title="${uiLabelMap.PartyAvsOver}">
       ${uiLabelMap.PartyAvsString} ${(avsOverride.avsDeclineString)?default("${uiLabelMap.CommonGlobal}")}
       <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
-        <a href="<@ofbizUrl>editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a>
+        <a href="<@ofbizUrl>editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
         <#if avsOverride??>
-          <a href="<@ofbizUrl>resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonReset}</a>
+          <a href="<@ofbizUrl>resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonReset}</a>
         </#if>
       </#if>
   </@section>

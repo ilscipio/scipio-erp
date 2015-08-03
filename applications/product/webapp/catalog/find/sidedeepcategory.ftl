@@ -56,7 +56,7 @@ under the License.
   </#if>
 </#macro>
 
-<div><a href='<@ofbizUrl>ChooseTopCategory</@ofbizUrl>' class='button tiny'>${uiLabelMap.ProductChooseTopCategory}</a></div>
+<div><a href='<@ofbizUrl>ChooseTopCategory</@ofbizUrl>' class='${styles.button_default!}'>${uiLabelMap.ProductChooseTopCategory}</a></div>
 <div class="browsecategorylist">
 <#if currentTopCategory??>
   <#if curCategoryId?? && curCategoryId == currentTopCategory.productCategoryId>

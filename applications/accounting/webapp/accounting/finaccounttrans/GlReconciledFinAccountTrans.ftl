@@ -29,10 +29,10 @@ under the License.
       <br class="clear"/>
     </div>
     <div class="screenlet-body">
-      <a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${finAccountId}&amp;glReconciliationId=${glReconciliationId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a>
+      <a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${finAccountId}&amp;glReconciliationId=${glReconciliationId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
       <#assign finAcctTransCondList = delegator.findByAnd("FinAccountTrans", {"glReconciliationId" : glReconciliationId, "statusId" : "FINACT_TRNS_CREATED"}, null, false)>
       <#if finAcctTransCondList?has_content>
-        <a href="javascript:document.CancelBankReconciliationForm.submit();" class="button tiny">${uiLabelMap.AccountingCancelBankReconciliation}</a>
+        <a href="javascript:document.CancelBankReconciliationForm.submit();" class="${styles.button_default!}">${uiLabelMap.AccountingCancelBankReconciliation}</a>
       </#if>
       <#if currentGlReconciliation?has_content>
         <table>
@@ -190,13 +190,13 @@ under the License.
               <td><#if status?has_content>${status.description!}</#if></td>
               <td>${finAccountTrans.comments!}</td>
               <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-                <td align="center"><a href="javascript:document.reomveFinAccountTransAssociation_${finAccountTrans.finAccountTransId}.submit();" class="button tiny">${uiLabelMap.CommonRemove}</a></td>
+                <td align="center"><a href="javascript:document.reomveFinAccountTransAssociation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a></td>
               <#else>
                 <td/>
               </#if>
               <#if finAccountTrans.paymentId?has_content>
                 <td align="center">
-                  <a id="toggleGlTransactions_${finAccountTrans.finAccountTransId}" href="javascript:void(0)" class="button tiny">${uiLabelMap.FormFieldTitle_glTransactions}</a>
+                  <a id="toggleGlTransactions_${finAccountTrans.finAccountTransId}" href="javascript:void(0)" class="${styles.button_default!}">${uiLabelMap.FormFieldTitle_glTransactions}</a>
                   <#include "ShowGlTransactions.ftl"/>
                   <script type="text/javascript">
                        jQuery(document).ready( function() {

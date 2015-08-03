@@ -83,9 +83,9 @@ under the License.
     <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="button tiny">.jpg</a>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="button tiny">.gif</a>
-                        <a href="javascript:insertImageName('small','');" class="button tiny">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="${styles.button_default!}">.jpg</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="${styles.button_default!}">.gif</a>
+                        <a href="javascript:insertImageName('small','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
                     </div>
     </#if>
                 </td>
@@ -103,9 +103,9 @@ under the License.
     <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('medium','${imageNameMedium}.jpg');" class="button tiny">.jpg</a>
-                        <a href="javascript:insertImageName('medium','${imageNameMedium}.gif');" class="button tiny">.gif</a>
-                        <a href="javascript:insertImageName('medium','');" class="button tiny">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('medium','${imageNameMedium}.jpg');" class="${styles.button_default!}">.jpg</a>
+                        <a href="javascript:insertImageName('medium','${imageNameMedium}.gif');" class="${styles.button_default!}">.gif</a>
+                        <a href="javascript:insertImageName('medium','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
                     </div>
     </#if>
                 </td>
@@ -123,9 +123,9 @@ under the License.
     <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('large','${imageNameLarge}.jpg');" class="button tiny">.jpg</a>
-                        <a href="javascript:insertImageName('large','${imageNameLarge}.gif');" class="button tiny">.gif</a>
-                        <a href="javascript:insertImageName('large','');" class="button tiny">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('large','${imageNameLarge}.jpg');" class="${styles.button_default!}">.jpg</a>
+                        <a href="javascript:insertImageName('large','${imageNameLarge}.gif');" class="${styles.button_default!}">.gif</a>
+                        <a href="javascript:insertImageName('large','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
                     </div>
     </#if>
                 </td>
@@ -143,9 +143,9 @@ under the License.
     <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('detail','${imageNameDetail}.jpg');" class="button tiny">.jpg</a>
-                        <a href="javascript:insertImageName('detail','${imageNameDetail}.gif');" class="button tiny">.gif</a>
-                        <a href="javascript:insertImageName('detail','');" class="button tiny">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('detail','${imageNameDetail}.jpg');" class="${styles.button_default!}">.jpg</a>
+                        <a href="javascript:insertImageName('detail','${imageNameDetail}.gif');" class="${styles.button_default!}">.gif</a>
+                        <a href="javascript:insertImageName('detail','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
                     </div>
     </#if>
                 </td>
@@ -163,9 +163,9 @@ under the License.
     <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('original','${imageNameOriginal}.jpg');" class="button tiny">.jpg</a>
-                        <a href="javascript:insertImageName('original','${imageNameOriginal}.gif');" class="button tiny">.gif</a>
-                        <a href="javascript:insertImageName('original','');" class="button tiny">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('original','${imageNameOriginal}.jpg');" class="${styles.button_default!}">.jpg</a>
+                        <a href="javascript:insertImageName('original','${imageNameOriginal}.gif');" class="${styles.button_default!}">.gif</a>
+                        <a href="javascript:insertImageName('original','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
                     </div>
     </#if>
                 </td>

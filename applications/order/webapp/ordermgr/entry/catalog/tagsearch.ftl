@@ -36,13 +36,13 @@ under the License.
         <#-- End Page Select Drop-Down -->
         <b>
         <#if (viewIndex?int > 0)>
-          <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a> |
+          <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
           <span>${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex+1}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNext}</a>
+          | <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex+1}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
         </#if>
         </b>
     </div>
@@ -71,13 +71,13 @@ under the License.
         <#-- End Page Select Drop-Down -->
         <b>
         <#if (viewIndex?int > 0)>
-          <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonPrevious}</a> |
+          <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
           <span>${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex+1}/~clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonNext}</a>
+          | <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex+1}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
         </#if>
         </b>
     </div>

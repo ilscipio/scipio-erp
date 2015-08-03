@@ -80,7 +80,7 @@ under the License.
                             <input type="text" size="5" name="sequenceNum${suffix}" value="${productCategoryRollup.sequenceNum!}" />
                         </td>
                         <td>
-                            <a href="javascript:document.removeProductCategoryFromCategory_${productCategoryRollup_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                            <a href="javascript:document.removeProductCategoryFromCategory_${productCategoryRollup_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                         </td>
                     </tr>
                     <#-- toggle the row color -->
@@ -192,7 +192,7 @@ under the License.
                                 <input type="text" size="5" name="sequenceNum${suffix}" value="${productCategoryRollup.sequenceNum!}" />
                             </td>
                             <td>
-                                <a href="javascript:document.removeProductCategoryFromCategory_1_${productCategoryRollup_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                                <a href="javascript:document.removeProductCategoryFromCategory_1_${productCategoryRollup_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                             </td>
                         </tr>
                         <#-- toggle the row color -->

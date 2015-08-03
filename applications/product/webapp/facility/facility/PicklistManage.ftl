@@ -73,7 +73,7 @@ under the License.
             <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
           </form>
           <span>${uiLabelMap.ProductCreatedModifiedBy}</span> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
-          <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="button tiny">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
+          <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
           <hr />
         </div>
         <#if picklistInfo.shipmentMethodType?has_content>
@@ -124,7 +124,7 @@ under the License.
               <span>${uiLabelMap.ProductBinNum}</span> ${picklistBinInfo.picklistBin.binLocationNumber}&nbsp;(${picklistBinInfo.picklistBin.picklistBinId})
               <#if picklistBinInfo.primaryOrderHeader??><span>${uiLabelMap.ProductPrimaryOrderId}</span> ${picklistBinInfo.primaryOrderHeader.orderId}</#if>
               <#if picklistBinInfo.primaryOrderItemShipGroup??><span>${uiLabelMap.ProductPrimaryShipGroupSeqId}</span> ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</#if>
-              <#if !picklistBinInfo.picklistItemInfoList?has_content><a href="javascript:document.DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a></#if>
+              <#if !picklistBinInfo.picklistItemInfoList?has_content><a href="javascript:document.DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></#if>
               <form name="DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}" method="post" action="<@ofbizUrl>deletePicklistBin</@ofbizUrl>">
                 <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
                 <input type="hidden" name="facilityId" value="${facilityId!}"/>
@@ -183,7 +183,7 @@ under the License.
                             <input type="hidden" name="shipGroupSeqId" value="${picklistItemInfo.picklistItem.shipGroupSeqId}"/>
                             <input type="hidden" name="inventoryItemId" value="${picklistItemInfo.picklistItem.inventoryItemId}"/>
                             <input type="hidden" name="facilityId" value="${facilityId!}"/>
-                            <a href='javascript:document.deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()' class='button tiny'>&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a>
+                            <a href='javascript:document.deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()' class='${styles.button_default!}'>&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a>
                           </form>
                         </td>
                       </#if>
@@ -242,7 +242,7 @@ under the License.
                                 <#if inventoryItemAndLocation.lotId?has_content>
                                   <input type="hidden" name="oldLotId" value="${inventoryItemAndLocation.lotId}" />
                                 </#if>
-                                <a href='javascript:document.editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()' class='button tiny'>&nbsp;${uiLabelMap.CommonEdit}&nbsp;</a>
+                                <a href='javascript:document.editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()' class='${styles.button_default!}'>&nbsp;${uiLabelMap.CommonEdit}&nbsp;</a>
                               </td>
                             </tr>
                           </form>

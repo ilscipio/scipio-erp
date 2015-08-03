@@ -62,8 +62,8 @@ under the License.
                         ${telecomNumber.countryCode!}
                         <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode?default("000")}-</#if>${telecomNumber.contactNumber?default("000-0000")}
                         <#if (telecomNumber?has_content && !telecomNumber.countryCode?has_content) || telecomNumber.countryCode = "011">
-                          <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="button tiny">${uiLabelMap.CommonLookupAnywho}</a>
-                          <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="button tiny">${uiLabelMap.CommonLookupWhitepages}</a>
+                          <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.button_default!}">${uiLabelMap.CommonLookupAnywho}</a>
+                          <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.button_default!}">${uiLabelMap.CommonLookupWhitepages}</a>
                         </#if>
                       </#if>
                     </div>

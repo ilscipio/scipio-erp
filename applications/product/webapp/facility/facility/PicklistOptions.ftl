@@ -40,7 +40,7 @@ under the License.
     <div align ='right'>
       <span>${uiLabelMap.FacilityGroupFirst}</span>
       <input type="text" size="4" name="maxNumberOfOrders" value="50"/>
-      <input type="submit" value="Submit" class="button tiny" align='right'/>
+      <input type="submit" value="Submit" class="${styles.button_default!}" align='right'/>
     </div>
   </form>
   <div class="screenlet-title-bar">
@@ -51,7 +51,7 @@ under the License.
   </div>
   <div class="screenlet-body">
     <div align ='right'>
-      <a class="button tiny" href="<@ofbizUrl>ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}</@ofbizUrl>">${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}</a>
+      <a class="${styles.button_default!}" href="<@ofbizUrl>ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}</@ofbizUrl>">${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}</a>
     </div>
     <table cellspacing="0" class="basic-table">
       <#if pickMoveInfoList?has_content || rushOrderInfo?has_content>
@@ -122,20 +122,20 @@ under the License.
                     </form>
               <#if ((requestParameters.groupByShippingMethod?? && requestParameters.groupByShippingMethod == "Y") || (requestParameters.groupByWarehouseArea?? && requestParameters.groupByWarehouseArea == "Y") || (requestParameters.groupByNoOfOrderItems?? && requestParameters.groupByNoOfOrderItems == "Y"))>
                   <#if groupName1?has_content>
-                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="button tiny">${groupName1}</a>
+                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName1}</a>
                   </#if>
                 </td>
                 <td>
                   <#if groupName2?has_content>
-                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="button tiny">${groupName2}</a>
+                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName2}</a>
                   </#if>
                 </td>
                 <td>
                   <#if groupName3?has_content>
-                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="button tiny">${groupName3}</a></td>
+                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName3}</a></td>
                   </#if>
               <#else>
-                  <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="button tiny">${groupName!}</a>
+                  <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName!}</a>
               </#if>
                 </td>
             <td>
@@ -279,14 +279,14 @@ under the License.
             <#assign orderProduct = oiasga.getRelatedOne("OrderItem", false).getRelatedOne("Product", false)!>
             <#assign product = oiasga.getRelatedOne("InventoryItem", false).getRelatedOne("Product", false)!>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a href="/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" target="_blank">${oiasga.orderId}</a></td>
+              <td><a href="/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${oiasga.orderId}</a></td>
               <td>${header.orderDate?string}</td>
               <td>${(channel.description)!}</td>
               <td>${oiasga.orderItemSeqId}</td>
               <td>
-                <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" target="_blank">${(orderProduct.internalName)!}</a>
+                <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(orderProduct.internalName)!}</a>
                 <#if orderProduct.productId != product.productId>
-                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" target="_blank">${(product.internalName)!}</a>]
+                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(product.internalName)!}</a>]
                 </#if>
               </td>
               <td>${oiasga.shipGroupSeqId}</td>

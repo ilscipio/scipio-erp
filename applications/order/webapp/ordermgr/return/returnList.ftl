@@ -18,7 +18,7 @@ under the License.
 -->
 
 <h1>${uiLabelMap.OrderReturnsCurrent}</h1>
-<div><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderCreateReturn}</a></div>
+<div><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateReturn}</a></div>
 
 
 <#if returnList?has_content>
@@ -39,11 +39,11 @@ under the License.
     <#assign facility = returnHeader.getRelatedOne("Facility", false)>
   </#if>
   <tr>
-        <td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="button tiny">${returnHeader.returnId}</a></td>
+        <td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="${styles.button_default!}">${returnHeader.returnId}</a></td>
     <td><div>${returnHeader.entryDate.toString()}</div></td>
     <td>
       <#if returnHeader.fromPartyId??>
-            <a href="${customerDetailLink}${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" class='button tiny'>${returnHeader.fromPartyId}</a>
+            <a href="${customerDetailLink}${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" class='${styles.button_default!}'>${returnHeader.fromPartyId}</a>
       <#else>
             <span>${uiLabelMap.CommonNA}</span>
       </#if>

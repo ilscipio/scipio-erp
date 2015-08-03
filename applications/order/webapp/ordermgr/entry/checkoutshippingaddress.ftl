@@ -61,8 +61,8 @@ function toggleBillingAccount(box) {
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
                 <td colspan="2">
-                  <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderSplitShipment}</a>
-                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="button tiny">${uiLabelMap.PartyAddNewAddress}</a>
+                  <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderSplitShipment}</a>
+                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="${styles.button_default!}">${uiLabelMap.PartyAddNewAddress}</a>
                   <#if (cart.getShipGroupSize() > 1)>
                     <div style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</div>
                   </#if>
@@ -87,7 +87,7 @@ function toggleBillingAccount(box) {
                          <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                          <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                          <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                         <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="button tiny">${uiLabelMap.CommonUpdate}</a>
+                         <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
                        </div>
                      </td>
                    </tr>
@@ -133,6 +133,6 @@ function toggleBillingAccount(box) {
 </form>
 
 <@section>
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="button tiny">${uiLabelMap.OrderBacktoShoppingCart}</a>
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="button tiny">${uiLabelMap.CommonNext}</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="${styles.button_default!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
 </@section>

@@ -35,7 +35,7 @@ function lookupBom() {
   </div>
   <div class="screenlet-body">
     <#if product?has_content>
-        <a href="<@ofbizUrl>BomSimulation</@ofbizUrl>?productId=${productId}&amp;bomType=${productAssocTypeId}" class="button tiny">${uiLabelMap.ManufacturingBomSimulation}</a>
+        <a href="<@ofbizUrl>BomSimulation</@ofbizUrl>?productId=${productId}&amp;bomType=${productAssocTypeId}" class="${styles.button_default!}">${uiLabelMap.ManufacturingBomSimulation}</a>
     </#if>
     <br />
     <br />
@@ -64,7 +64,7 @@ function lookupBom() {
             <td>&nbsp;</td>
             <td>
                 <@htmlTemplate.lookupField value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                <span><a href="javascript:document.searchform.submit();" class="button tiny">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
+                <span><a href="javascript:document.searchform.submit();" class="${styles.button_default!}">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
             </td>
         </tr>
         <tr>
@@ -75,7 +75,7 @@ function lookupBom() {
             <td>&nbsp;</td>
             <td>
                 <@htmlTemplate.lookupField formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
-                <span><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="button tiny">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
+                <span><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="${styles.button_default!}">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
             </td>
         </tr>
     </table>
@@ -264,8 +264,8 @@ function lookupBom() {
     <#assign listToProduct = assocFromProduct.getRelatedOne("AssocProduct", true)>
     <#assign curProductAssocType = assocFromProduct.getRelatedOne("ProductAssocType", true)>
       <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-        <td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="button tiny">${(assocFromProduct.productIdTo)!}</a></td>
-        <td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="button tiny">${(listToProduct.internalName)!}</a></#if>&nbsp;</td>
+        <td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.button_default!}">${(assocFromProduct.productIdTo)!}</a></td>
+        <td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.button_default!}">${(listToProduct.internalName)!}</a></#if>&nbsp;</td>
         <td<#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))> class="alert"</#if>>
         ${(assocFromProduct.fromDate)!}&nbsp;</td>
         <td<#if (assocFromProduct.getTimestamp("thruDate"))?? && nowDate.after(assocFromProduct.getTimestamp("thruDate"))> class="alert"</#if>>
@@ -276,10 +276,10 @@ function lookupBom() {
         <td>&nbsp;${(assocFromProduct.estimateCalcMethod)!}</td>
         <td>&nbsp;${(assocFromProduct.routingWorkEffortId)!}</td>
         <td>
-        <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonDelete}</a>
+        <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
         </td>
         <td>
-        <a href="<@ofbizUrl>EditProductBom?productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a>
+        <a href="<@ofbizUrl>EditProductBom?productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
         </td>
       </tr>
       <#-- toggle the row color -->
@@ -312,14 +312,14 @@ function lookupBom() {
         <#assign listToProduct = assocToProduct.getRelatedOne("MainProduct", true)>
         <#assign curProductAssocType = assocToProduct.getRelatedOne("ProductAssocType", true)>
         <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-            <td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="button tiny">${(assocToProduct.productId)!}</a></td>
-<!--                <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="button tiny">${(listToProduct.internalName)!}</a></#if></td> -->
-            <td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="button tiny">${(listToProduct.internalName)!}</a></#if></td>
+            <td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.button_default!}">${(assocToProduct.productId)!}</a></td>
+<!--                <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.button_default!}">${(listToProduct.internalName)!}</a></#if></td> -->
+            <td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.button_default!}">${(listToProduct.internalName)!}</a></#if></td>
             <td>${(assocToProduct.getTimestamp("fromDate"))!}&nbsp;</td>
             <td>${(assocToProduct.getTimestamp("thruDate"))!}&nbsp;</td>
             <td>${(assocToProduct.quantity)!}&nbsp;</td>
             <td>
-                <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@ofbizUrl>" class="button tiny">
+                <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@ofbizUrl>" class="${styles.button_default!}">
                 ${uiLabelMap.CommonDelete}</a>
             </td>
         </tr>

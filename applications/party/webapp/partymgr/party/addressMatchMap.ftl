@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#assign menuHtml>
-  <li><a href="<@ofbizUrl>findAddressMatch</@ofbizUrl>" class="button tiny">${uiLabelMap.PageTitleFindMatches}</a></li>
+  <li><a href="<@ofbizUrl>findAddressMatch</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PageTitleFindMatches}</a></li>
 </#assign>
 <@section id="addressmatchmap" title="${uiLabelMap.PageTitleAddressMatchMap}" menuHtml=menuHtml>
   <@section id="addressmatchmap_create">
@@ -26,7 +26,7 @@ under the License.
     <@field type="input" name="mapKey" label="${uiLabelMap.PartyAddressMatchKey}" />
     <@field type="input" name="mapValue" label="${uiLabelMap.PartyAddressMatchValue}" />
     <@field type="input" name="sequenceNum" label="${uiLabelMap.CommonSequence}" value="0" size=5/>
-    <a href="javascript:document.addaddrmap.submit()" class="button tiny">${uiLabelMap.CommonCreate}</a></td>
+    <a href="javascript:document.addaddrmap.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></td>
     </form>
     <div id="importaddrmap_section">
   </@section>
@@ -81,7 +81,7 @@ under the License.
               <td>=></td>
               <td>${map.mapValue}</td>
               <td>${map.sequenceNum!}</td>
-              <td class="button-col"><a href="<@ofbizUrl>removeAddressMatchMap?mapKey=${map.mapKey}&amp;mapValue=${map.mapValue}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonDelete}</a></td>
+              <td class="button-col"><a href="<@ofbizUrl>removeAddressMatchMap?mapKey=${map.mapKey}&amp;mapValue=${map.mapValue}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></td>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>

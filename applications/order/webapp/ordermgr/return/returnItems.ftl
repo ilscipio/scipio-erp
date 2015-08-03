@@ -56,7 +56,7 @@ under the License.
           </div>
        </td>
        <#if (adjEditable)>
-         <td align='right'><a href='javascript:document.removeReturnAdjustment_${rowCountForAdjRemove}.submit()' class='button tiny'>${uiLabelMap.CommonRemove}</a></td>
+         <td align='right'><a href='javascript:document.removeReturnAdjustment_${rowCountForAdjRemove}.submit()' class='${styles.button_default!}'>${uiLabelMap.CommonRemove}</a></td>
        <#else>
        <td>&nbsp;</td>
        </#if>
@@ -71,16 +71,16 @@ under the License.
     <#if returnHeader?has_content>
       <#if returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId?starts_with("CUSTOMER_")>
         <#list returnShipmentIds as returnShipmentId>
-          <a href="/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}</a>
-          <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&amp;returnId=${returnHeader.returnId!}&amp;shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${uiLabelMap.OrderReceiveReturn}</a>
+          <a href="/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}</a>
+          <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&amp;returnId=${returnHeader.returnId!}&amp;shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.OrderReceiveReturn}</a>
         </#list>
       <#elseif returnHeader.statusId == "SUP_RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId == "VENDOR_RETURN">
          <#if returnShipmentIds?has_content>
            <#list returnShipmentIds as returnShipmentId>
-             <a href="/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}</a>
+             <a href="/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}</a>
            </#list>
          <#else>
-           <a href="/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&amp;partyIdTo=${toPartyId}&amp;statusId=SHIPMENT_INPUT&amp;shipmentTypeId=PURCHASE_RETURN" class="button tiny">${uiLabelMap.OrderCreateReturnShipment}</a>
+           <a href="/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&amp;partyIdTo=${toPartyId}&amp;statusId=SHIPMENT_INPUT&amp;shipmentTypeId=PURCHASE_RETURN" class="${styles.button_default!}">${uiLabelMap.OrderCreateReturnShipment}</a>
          </#if>
       </#if>
     </#if>
@@ -148,7 +148,7 @@ under the License.
                  <#assign returnItemSubTotal = item.get("returnQuantity") * item.get("returnPrice") >
               </#if>
               <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-                <td><a href="<@ofbizUrl>orderview?orderId=${item.orderId}</@ofbizUrl>" class="button tiny">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}
+                <td><a href="<@ofbizUrl>orderview?orderId=${item.orderId}</@ofbizUrl>" class="${styles.button_default!}">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}
                   <input name="orderId_o_${rowCount}" value="${item.orderId}" type="hidden" />
                   <input name="returnId_o_${rowCount}" value="${item.returnId}" type="hidden" />
                   <input name="returnItemTypeId_o_${rowCount}" value="${item.returnItemTypeId}" type="hidden" />
@@ -157,7 +157,7 @@ under the License.
                 </td>
                 <td><div>
                     <#if item.get("productId")??>
-                        <a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="button tiny">${item.productId}</a>
+                        <a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="${styles.button_default!}">${item.productId}</a>
                     <#else>
                         N/A
                     </#if></div></td>
@@ -177,7 +177,7 @@ under the License.
                     <#if item.receivedQuantity??>
                     <br />${uiLabelMap.OrderTotalQuantityReceive}: ${item.receivedQuantity}
                         <#list shipmentReceipts! as shipmentReceipt>
-                            <br />${uiLabelMap.OrderQty}: ${shipmentReceipt.quantityAccepted}, ${shipmentReceipt.datetimeReceived}, <a href="/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}" class="button tiny">${shipmentReceipt.inventoryItemId}</a>
+                            <br />${uiLabelMap.OrderQty}: ${shipmentReceipt.quantityAccepted}, ${shipmentReceipt.datetimeReceived}, <a href="/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}" class="${styles.button_default!}">${shipmentReceipt.inventoryItemId}</a>
                         </#list>
                     </#if>
                     </div></td>
@@ -245,11 +245,11 @@ under the License.
                     <#assign itemResp = item.getRelatedOne("ReturnItemResponse", false)!>
                     <#if itemResp?has_content>
                       <#if itemResp.paymentId?has_content>
-                        <div>${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonNbr}<a href="/accounting/control/paymentOverview?paymentId=${itemResp.paymentId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${itemResp.paymentId}</a></div>
+                        <div>${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonNbr}<a href="/accounting/control/paymentOverview?paymentId=${itemResp.paymentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${itemResp.paymentId}</a></div>
                       <#elseif itemResp.replacementOrderId?has_content>
-                        <div>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${itemResp.replacementOrderId}</@ofbizUrl>" class="button tiny">${itemResp.replacementOrderId}</a></div>
+                        <div>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${itemResp.replacementOrderId}</@ofbizUrl>" class="${styles.button_default!}">${itemResp.replacementOrderId}</a></div>
                       <#elseif itemResp.billingAccountId?has_content>
-                        <div>${uiLabelMap.AccountingAccountId} ${uiLabelMap.CommonNbr}<a href="/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny">${itemResp.billingAccountId}</a></div>
+                        <div>${uiLabelMap.AccountingAccountId} ${uiLabelMap.CommonNbr}<a href="/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${itemResp.billingAccountId}</a></div>
                       </#if>
                     <#else>
                       <div>${uiLabelMap.CommonNone}</div>
@@ -260,7 +260,7 @@ under the License.
                 </td>
                 </#if>
                 <#if returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "SUP_RETURN_REQUESTED">
-                  <td align='right'><a href='javascript:document.removeReturnItem_${item_index}.submit()' class='button tiny'>${uiLabelMap.CommonRemove}</a></td>
+                  <td align='right'><a href='javascript:document.removeReturnItem_${item_index}.submit()' class='${styles.button_default!}'>${uiLabelMap.CommonRemove}</a></td>
                 <#else>
                   <td>&nbsp;</td>
                 </#if>
@@ -358,7 +358,7 @@ under the License.
               </tr>
             <#else>
               <tr>
-                <td colspan="4" nowrap="nowrap"><div>${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId?default('_NA_')}" class="button tiny">${partyId?default('[null]')}</a></div></td>
+                <td colspan="4" nowrap="nowrap"><div>${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId?default('_NA_')}" class="${styles.button_default!}">${partyId?default('[null]')}</a></div></td>
               </tr>
               <tr>
                 <td width='25%' align='right' nowrap="nowrap"><div>${uiLabelMap.OrderOrderId}</div></td>
@@ -372,7 +372,7 @@ under the License.
             <tr>
               <td colspan="2">&nbsp;</td>
               <td colspan="2">
-                <a href="javascript:document.returnItems.submit();" class="button tiny">${uiLabelMap.OrderReturnLoadItems}</a>
+                <a href="javascript:document.returnItems.submit();" class="${styles.button_default!}">${uiLabelMap.OrderReturnLoadItems}</a>
               </td>
             </tr>
           </table>

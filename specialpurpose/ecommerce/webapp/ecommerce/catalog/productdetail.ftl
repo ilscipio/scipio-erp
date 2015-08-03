@@ -344,11 +344,11 @@ $(function(){
       <#if category??>
           <div id="paginationBox">
             <#if previousProductId??>
-              <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=previousProductId!/>" class="button tiny">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
+              <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=previousProductId!/>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
             </#if>
             <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId!/>" class="linktext">${(category.categoryName)?default(category.description)!}</a>
             <#if nextProductId??>
-              &nbsp;|&nbsp;<a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=nextProductId!/>" class="button tiny">${uiLabelMap.CommonNext}</a>
+              &nbsp;|&nbsp;<a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=nextProductId!/>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
             </#if>
           </div>
       </#if>
@@ -532,7 +532,7 @@ $(function(){
           <#-- show tell a friend details only in ecommerce application -->
           <div>&nbsp;</div>
           <div>
-              <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}<#if categoryId??>&categoryId=${categoryId}/</#if></@ofbizUrl>','tellafriend');" class="button tiny">${uiLabelMap.CommonTellAFriend}</a>
+              <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}<#if categoryId??>&categoryId=${categoryId}/</#if></@ofbizUrl>','tellafriend');" class="${styles.button_default!}">${uiLabelMap.CommonTellAFriend}</a>
           </div>
     
           <#if disFeatureList?? && 0 &lt; disFeatureList.size()>
@@ -575,13 +575,13 @@ $(function(){
                 <div id="addCart1" style="display:none;">
                   <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
                   <input type="text" size="5" name="quantity" value="1" />
-                  <a href="javascript:javascript:addItem();" class="button tiny"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:javascript:addItem();" class="${styles.button_default!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                   &nbsp;
                 </div>
                 <div id="addCart2" style="display:block;">
                   <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
                   <input type="text" size="5" value="1" disabled="disabled" />
-                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="button tiny"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="${styles.button_default!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                   &nbsp;
                 </div>
               </#if>
@@ -654,18 +654,18 @@ $(function(){
                     Number of persons<input type="text" size="4" name="reservPersons" value="2"/>
                     Number of rooms<input type="text" size="5" name="quantity" value="1"/>
                   </div>
-                  <a href="javascript:addItem()" class="button tiny"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:addItem()" class="${styles.button_default!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                 <#else>
-                  <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="button tiny">${uiLabelMap.OrderAddToCart}</a>
+                  <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.button_default!}">${uiLabelMap.OrderAddToCart}</a>
                   <@showUnavailableVarients/>
                 </#if>
                 <#else>
                   <#if productStore??>
                     <#if productStore.requireInventory?? && productStore.requireInventory == "N">
-                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="button tiny">${uiLabelMap.OrderAddToCart}</a>
+                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.button_default!}">${uiLabelMap.OrderAddToCart}</a>
                       <@showUnavailableVarients/>
                     <#else>
-                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" disabled="disabled" /></span><a href="javascript:void(0);" disabled="disabled" class="button tiny">${uiLabelMap.OrderAddToCart}</a><br />
+                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" disabled="disabled" /></span><a href="javascript:void(0);" disabled="disabled" class="${styles.button_default!}">${uiLabelMap.OrderAddToCart}</a><br />
                       <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage??>&mdash; ${product.inventoryMessage}</#if></span>
                     </#if>
                   </#if>
@@ -715,11 +715,11 @@ $(function(){
                   <input type="text" size="5" name="quantity" value="1" />
                   <input type="hidden" name="reservStartStr" value= "" />
               </#if>
-              <a href="javascript:addShoplistSubmit();" class="button tiny">${uiLabelMap.OrderAddToShoppingList}</a>
+              <a href="javascript:addShoplistSubmit();" class="${styles.button_default!}">${uiLabelMap.OrderAddToShoppingList}</a>
               </fieldset>
             </form>
           <#else> <br />
-            ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonBeLogged}</a>
+            ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBeLogged}</a>
             ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
           </#if>
           </div>
@@ -820,7 +820,7 @@ $(function(){
                 <#assign assocProductId = productAssoc.productId />
             </#if>
             <div>
-              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>" class="button tiny">
+              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>" class="${styles.button_default!}">
                 ${assocProductId}
               </a>
             <#if productAssoc.reason?has_content>

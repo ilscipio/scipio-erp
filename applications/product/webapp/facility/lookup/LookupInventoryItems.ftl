@@ -32,7 +32,7 @@ under the License.
     <tr class="header-row-2"><td colspan="6"><span>&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductPurchaseOrder} - ${orderId}</span></td></tr>
     <#list inventoryItemsForPo as inventoryItem>
       <tr>
-        <td><a class="button tiny" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
+        <td><a class="${styles.button_default!}" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
         <td>${inventoryItem.facilityId!}</td>
         <td>${inventoryItem.locationSeqId!}</td>
         <td>${inventoryItem.quantityOnHandTotal!}</td>
@@ -45,7 +45,7 @@ under the License.
     <tr class="header-row-2"><td colspan="6"><span class="label centered">&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductSupplier} - ${partyId}</span></td></tr>
     <#list inventoryItemsForSupplier as inventoryItem>
       <tr>
-        <td><a class="button tiny" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
+        <td><a class="${styles.button_default!}" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
         <td>${inventoryItem.facilityId!}</td>
         <td>${inventoryItem.locationSeqId!}</td>
         <td>${inventoryItem.quantityOnHandTotal!}</td>
@@ -58,7 +58,7 @@ under the License.
     <tr class="header-row-2"><td colspan="6"><span>&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductProduct} - ${internalName!} [${productId}]</span></td></tr>
     <#list inventoryItemsForProduct as inventoryItem>
       <tr>
-        <td><a class="button tiny" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
+        <td><a class="${styles.button_default!}" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
         <td>${inventoryItem.facilityId!}</td>
         <td>${inventoryItem.locationSeqId!}</td>
         <td>${inventoryItem.quantityOnHandTotal!}</td>

@@ -41,7 +41,7 @@ under the License.
               <tr valign="middle"<#if alt_row>class="alternate-row"</#if>>
                 <td>${surveyType.get("description",locale)}</td>
                 <td>${storeSurvey.groupName!}</td>
-                <td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="button tiny">${survey.description?default("[" + survey.surveyId + "]")}</a></td>
+                <td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="${styles.button_default!}">${survey.description?default("[" + survey.surveyId + "]")}</a></td>
                 <td>${storeSurvey.productId?default("${uiLabelMap.CommonNA}")}</td>
                 <td>${storeSurvey.productCategoryId?default("${uiLabelMap.CommonNA}")}</td>
                 <td>${storeSurvey.fromDate!?string}</td>
@@ -50,7 +50,7 @@ under the License.
                   <form name="deleteProductStoreSurveyAppl_${storeSurvey_index}" method="post" action="<@ofbizUrl>deleteProductStoreSurveyAppl</@ofbizUrl>">
                     <input type="hidden" name="productStoreId" value="${productStoreId}" />
                     <input type="hidden" name="productStoreSurveyId" value="${storeSurvey.productStoreSurveyId}" />
-                    <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </td>
               </tr>

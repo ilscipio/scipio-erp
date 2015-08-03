@@ -22,7 +22,7 @@ under the License.
 <p>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</p>
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
-    <a href="<@ofbizUrl>xmldsrawdump</@ofbizUrl>" class="button tiny" target="_blank">Click Here to Get Data (or save to file)</a>
+    <a href="<@ofbizUrl>xmldsrawdump</@ofbizUrl>" class="${styles.button_default!}" target="_blank">Click Here to Get Data (or save to file)</a>
 <#else>
     <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
 </#if>
@@ -30,8 +30,8 @@ under the License.
 <#macro displayButtonBar>
   <ul class="button-group">
     <li><input type="submit" value="${uiLabelMap.WebtoolsExport}"/></li>
-    <li><a href="<@ofbizUrl>xmldsdump?checkAll=true</@ofbizUrl>" class="button tiny">${uiLabelMap.WebtoolsCheckAll}</a></li>
-    <li><a href="<@ofbizUrl>xmldsdump</@ofbizUrl>" class="button tiny">${uiLabelMap.WebtoolsUnCheckAll}</a></li>
+    <li><a href="<@ofbizUrl>xmldsdump?checkAll=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.WebtoolsCheckAll}</a></li>
+    <li><a href="<@ofbizUrl>xmldsdump</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.WebtoolsUnCheckAll}</a></li>
   </ul>
 </#macro>
 

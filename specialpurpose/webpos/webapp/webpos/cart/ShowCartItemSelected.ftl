@@ -64,8 +64,8 @@ under the License.
         <br/>
       </#if>
       <input type="hidden" id="lineIndex" name="lineIndex" value="${cartLineIndex}"/>
-      <a id="updateCartItem" name="updateCartItem" href="javascript:updateCartItem();" class="button tiny">${uiLabelMap.CommonUpdate}</a>
-      <a id="deleteCartItem" name="deleteCartItem" href="javascript:deleteCartItem('${cartLineIndex}');" class="button tiny">${uiLabelMap.CommonDelete}</a>
+      <a id="updateCartItem" name="updateCartItem" href="javascript:updateCartItem();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
+      <a id="deleteCartItem" name="deleteCartItem" href="javascript:deleteCartItem('${cartLineIndex}');" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
     </div>
     <script language="JavaScript" type="text/javascript">
       cartItemSelectedEvents('${focusOnQuantity}');

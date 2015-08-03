@@ -121,6 +121,6 @@ under the License.
     <hr />
 
     <div>
-      <span>${uiLabelMap.ProductSearchExportProductList}:</span><a href="<@ofbizUrl>searchExportProductList?clearSearch=N</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductSearchExport}</a>
+      <span>${uiLabelMap.ProductSearchExportProductList}:</span><a href="<@ofbizUrl>searchExportProductList?clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductSearchExport}</a>
     </div>
 </#if>

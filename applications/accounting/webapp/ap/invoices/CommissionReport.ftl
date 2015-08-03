@@ -19,7 +19,7 @@ under the License.
 
 <#if commissionReportList?has_content>
   <div>
-    <a href="<@ofbizUrl>CommissionReport.pdf?isSearch=Y&amp;productId=${parameters.productId!}&amp;partyId=${parameters.partyId!}&amp;fromDate=${parameters.fromDate!}&amp;thruDate=${parameters.thruDate!}</@ofbizUrl>" target="_BLANK" class="button tiny">${uiLabelMap.AccountingInvoicePDF}</a>
+    <a href="<@ofbizUrl>CommissionReport.pdf?isSearch=Y&amp;productId=${parameters.productId!}&amp;partyId=${parameters.partyId!}&amp;fromDate=${parameters.fromDate!}&amp;thruDate=${parameters.thruDate!}</@ofbizUrl>" target="_BLANK" class="${styles.button_default!}">${uiLabelMap.AccountingInvoicePDF}</a>
   </div>
   <table class="basic-table hover-bar" cellspacing="0">
     <#-- Header Begins -->

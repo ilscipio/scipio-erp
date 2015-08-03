@@ -76,8 +76,8 @@ under the License.
                     <span>${uiLabelMap.ProductShipmentInsuredValuePackage}</span>
                     <input type="text" size="5" name="insuredValue" value="${shipmentPackage.insuredValue!}"/>
                 </td>
-                <td><a href="javascript:document.updateShipmentPackageForm${shipmentPackageData_index}.submit();" class="button tiny">${uiLabelMap.CommonUpdate}</a></td>
-                <td><a href="javascript:document.deleteShipmentPackage_${shipmentPackageData_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a></td>
+                <td><a href="javascript:document.updateShipmentPackageForm${shipmentPackageData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></td>
+                <td><a href="javascript:document.deleteShipmentPackage_${shipmentPackageData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></td>
             </tr>
             </form>
             <form name="deleteShipmentPackage_${shipmentPackageData_index}" method="post" action="<@ofbizUrl>deleteShipmentPackage</@ofbizUrl>">
@@ -92,7 +92,7 @@ under the License.
                     <div>
                         <span>${uiLabelMap.ProductQuantity}</span>
                         ${shipmentPackageContent.quantity!}
-                        <a href="javascript:document.deleteShipmentPackageContent${shipmentPackageData_index}${shipmentPackageContent_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                        <a href="javascript:document.deleteShipmentPackageContent${shipmentPackageData_index}${shipmentPackageContent_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                     </div>
                 </td>
                 <td>&nbsp;</td>
@@ -123,7 +123,7 @@ under the License.
                     <div>
                         <span>${uiLabelMap.ProductQuantity}</span>
                         <input type="text" name="quantity" size="5" value="0"/>
-                        <a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="button tiny">${uiLabelMap.CommonAdd}</a>
+                        <a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a>
                     </div>
                 </td>
                 <td>&nbsp;</td>
@@ -143,8 +143,8 @@ under the License.
                     <div>
                         <span>${uiLabelMap.ProductBox}</span>
                         <input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber!}"/>
-                        <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="button tiny">${uiLabelMap.CommonUpdate}</a>
-                        <a href="javascript:document.deleteShipmentPackageRouteSeg${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                        <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
+                        <a href="javascript:document.deleteShipmentPackageRouteSeg${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                     </div>
                 </td>
                 <td>&nbsp;</td>
@@ -173,7 +173,7 @@ under the License.
                 </td>
                 <td><span>Track ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode"/></td>
                 <td><span>Box ${uiLabelMap.CommonNbr}</span><input type="text" size="5" name="boxNumber"/></td>
-                <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentPackageData_index}.submit()" class="button tiny">${uiLabelMap.CommonAdd}</a></td>
+                <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentPackageData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a></td>
                 <td>&nbsp;</td>
                 </form>
             </tr>
@@ -195,7 +195,7 @@ under the License.
                         </#list>
                     </select>
                 </td>
-                <td><a href="javascript:document.createShipmentPackageForm.submit();" class="button tiny">${uiLabelMap.CommonCreate}</a></td>
+                <td><a href="javascript:document.createShipmentPackageForm.submit();" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></td>
                 <td>&nbsp;</td>
             </tr>
         </form>

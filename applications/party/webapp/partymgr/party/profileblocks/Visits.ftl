@@ -18,7 +18,7 @@ under the License.
 -->
 
   <#assign menuHtml>
-    <li><a href="<@ofbizUrl>findVisits?partyId=${partyId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonListAll}</a></li>
+    <li><a href="<@ofbizUrl>findVisits?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonListAll}</a></li>
   </#assign>
   <@section id="partyVisits" title="${uiLabelMap.PartyVisits}" menuHtml=menuHtml>
       <#if visits?has_content>

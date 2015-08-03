@@ -39,7 +39,7 @@ function makeExpDate() {
         <@cell class="${style_grid_large!}6">
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
          <ul class="button-group">
-           <li><a href="<@ofbizUrl>setBilling?createNew=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
+           <li><a href="<@ofbizUrl>setBilling?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a></li>
          </ul>
         
           <#-- initial screen when we have a associated party -->
@@ -116,7 +116,7 @@ function makeExpDate() {
                           
                           <@field type="input" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value="" label="CSC" collapse=true tooltip="${uiLabelMap.OrderCardSecurityCode}"/>                          
                       </td>
-                      <td class="text-right"><a href="/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></td>
+                      <td class="text-right"><a href="/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></td>
                     </tr>
                   <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                     <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
@@ -130,7 +130,7 @@ function makeExpDate() {
                           <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                         </label>
                       </td>
-                      <td class="text-right"><a href="/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="button tiny">${uiLabelMap.CommonUpdate}</a></td>
+                      <td class="text-right"><a href="/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></td>
                     </tr>
                     
                   </#if>

@@ -19,7 +19,7 @@ under the License.
 
   <#assign menuHtml>
     <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-      <li><a href="<@ofbizUrl>editPartyAttribute?partyId=${party.partyId!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a></li>
+      <li><a href="<@ofbizUrl>editPartyAttribute?partyId=${party.partyId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a></li>
     </#if>
   </#assign>
   <@section id="partyAttributes" title="${uiLabelMap.PartyAttributes}" menuHtml=menuHtml>
@@ -42,7 +42,7 @@ under the License.
                 ${attr.attrValue!}
               </td>
               <td class="button-col">
-                <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId!}&attrName=${attr.attrName!}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonEdit}</a>
+                <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId!}&attrName=${attr.attrName!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
               </td>
             </tr>
             <#-- toggle the row color -->

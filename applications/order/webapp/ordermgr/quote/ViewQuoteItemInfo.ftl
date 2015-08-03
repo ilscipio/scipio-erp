@@ -18,7 +18,7 @@ under the License.
 -->
 <@section title="${uiLabelMap.OrderOrderQuoteItems}">
             <#if maySelectItems?default("N") == "Y">
-        <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="button tiny">${uiLabelMap.OrderAddAllToCart}</a>
+        <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="${styles.button_default!}">${uiLabelMap.OrderAddAllToCart}</a>
             </#if>
 
         <table cellspacing="0" class="basic-table">
@@ -64,7 +64,7 @@ under the License.
                     <td>
                         <div>
                         <#if showQuoteManagementLinks?? && quoteItem.isPromo?default("N") == "N" && quote.statusId=="QUO_CREATED">
-                            <a href="<@ofbizUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@ofbizUrl>" class="button tiny">${quoteItem.quoteItemSeqId}</a>
+                            <a href="<@ofbizUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@ofbizUrl>" class="${styles.button_default!}">${quoteItem.quoteItemSeqId}</a>
                         <#else>
                             ${quoteItem.quoteItemSeqId}
                         </#if>
@@ -78,7 +78,7 @@ under the License.
                               ${(product.internalName)!}&nbsp;
                             </#if>
                             <#if showQuoteManagementLinks??>
-                                <a href="/catalog/control/EditProduct?productId=${quoteItem.productId!}" class="button tiny">
+                                <a href="/catalog/control/EditProduct?productId=${quoteItem.productId!}" class="${styles.button_default!}">
                                   <#if quoteItem.productId??>
                                     ${quoteItem.productId}
                                   <#else>
@@ -86,7 +86,7 @@ under the License.
                                   </#if>
                                 </a>
                             <#else>
-                                <a href="<@ofbizUrl>product?product_id=${quoteItem.productId!}</@ofbizUrl>" class="button tiny">${quoteItem.productId!}</a>
+                                <a href="<@ofbizUrl>product?product_id=${quoteItem.productId!}</@ofbizUrl>" class="${styles.button_default!}">${quoteItem.productId!}</a>
                             </#if>
                         </div>
                     </td>

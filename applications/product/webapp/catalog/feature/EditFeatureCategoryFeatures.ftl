@@ -22,7 +22,7 @@ under the License.
     </div>
     <div class="screenlet-body">
         <div class="button-bar">
-          <a href="<@ofbizUrl>CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}</@ofbizUrl>" class="button tiny create">${uiLabelMap.ProductCreateNewFeature}</a>
+          <a href="<@ofbizUrl>CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductCreateNewFeature}</a>
         </div>
         <br/>
         <form action="<@ofbizUrl>QuickAddProductFeatures</@ofbizUrl>" method="post">
@@ -52,11 +52,11 @@ under the License.
                     <span>
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="button tiny">[${uiLabelMap.CommonPrevious}]</a> |
+                    <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
                     <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}</@ofbizUrl>" class="button tiny">[${uiLabelMap.CommonNext}]</a>
+                    | <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                     </span>
@@ -92,7 +92,7 @@ under the License.
             <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
             <tr id="productFeatureId_tableRow_${rowCount}" valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
               <td><input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
-              <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="button tiny">${productFeature.productFeatureId}</a></td>
+              <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">${productFeature.productFeatureId}</a></td>
               <td><input type="text" size='15' name="description_o_${rowCount}" value="${productFeature.description}" /></td>
               <td><select name='productFeatureTypeId_o_${rowCount}' size="1">
                 <#if productFeature.productFeatureTypeId?has_content>

@@ -17,9 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if parameters.showAllFacilities??>
-<a href="EditProductInventoryItems?productId=${productId}" class="button tiny">${uiLabelMap.ProductShowProductFacilities}</a>
+<a href="EditProductInventoryItems?productId=${productId}" class="${styles.button_default!}">${uiLabelMap.ProductShowProductFacilities}</a>
 <#else>
-<a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="button tiny">${uiLabelMap.ProductShowAllFacilities}</a>
+<a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="${styles.button_default!}">${uiLabelMap.ProductShowAllFacilities}</a>
 </#if>
 <div class="screenlet">
   <#if product??>
@@ -60,7 +60,7 @@ under the License.
                     <#assign outgoingQuantityTotal = manufacturingOutQuantitySummary.estimatedQuantityTotal!>
                     <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
                         <td>${(facility.facilityName)!} [${facilityId?default("[No Facility]")}]
-                        <a href="/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externLoginKey=${externalLoginKey}" class="button tiny">${uiLabelMap.ProductInventoryReceive}</a></td>
+                        <a href="/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externLoginKey=${externalLoginKey}" class="${styles.button_default!}">${uiLabelMap.ProductInventoryReceive}</a></td>
                         <td><#if totalAvailableToPromise??>${totalAvailableToPromise}<#else>&nbsp;</#if></td>
                         <td><#if totalQuantityOnHand??>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
                         <#if isMarketingPackage == "true">

@@ -54,7 +54,7 @@ under the License.
             <tr>
                 <td class="${style_grid_large!}3">${uiLabelMap.Party}</td>
                 <td>
-                  <a href="${customerDetailLink}${partyId}${externalKeyParam!}" target="partymgr" class="button tiny">${partyId}</a>
+                  <a href="${customerDetailLink}${partyId}${externalKeyParam!}" target="partymgr" class="${styles.button_default!}">${partyId}</a>
                   <#if partyMap.person??>
                     ${partyMap.person.firstName!}&nbsp;${partyMap.person.lastName!}
                   </#if>

@@ -30,9 +30,9 @@ under the License.
         <ul class="button-group">
           <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
               <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-                  <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelSelectedOrderItems</@ofbizUrl>';document.updateItemInfo.submit()" class="button tiny">${uiLabelMap.OrderCancelSelectedItems}</a></li>
-                  <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.submit()" class="button tiny">${uiLabelMap.OrderCancelAllItems}</a></li>
-                  <li><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderViewOrder}</a></li>
+                  <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelSelectedOrderItems</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelSelectedItems}</a></li>
+                  <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelAllItems}</a></li>
+                  <li><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewOrder}</a></li>
               </#if>
           </#if>
         </ul>
@@ -106,7 +106,7 @@ under the License.
                                    
                                             <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                                                 
-                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="button tiny">${uiLabelMap.OrderApproveOrder}</a>
+                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.button_default!}">${uiLabelMap.OrderApproveOrder}</a>
                                                     <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
                                                         <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -226,14 +226,14 @@ under the License.
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
                                             <#list downloadContents as downloadContent>
-                                                <li><a href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" class="button tiny" target="_blank">${uiLabelMap.ContentDownload}</a></li>
+                                                <li><a href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ContentDownload}</a></li>
                               </#list>
                             </#if>
-                                        <li><a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" target="_blank">${uiLabelMap.ProductCatalog}</a></li>
-                                        <li><a href="/ecommerce/control/product?product_id=${productId}" class="button tiny" target="_blank">${uiLabelMap.OrderEcommerce}</a></li>
+                                        <li><a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ProductCatalog}</a></li>
+                                        <li><a href="/ecommerce/control/product?product_id=${productId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.OrderEcommerce}</a></li>
                                         <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
                                             <li><a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>"
-                                               target="_orderImage" class="button tiny">${uiLabelMap.OrderViewImage}</a></li>
+                                               target="_orderImage" class="${styles.button_default!}">${uiLabelMap.OrderViewImage}</a></li>
                                         </#if>
                                       </ul>
                             </td>
@@ -302,7 +302,7 @@ under the License.
                                       <ul class="button-group">
                                         <#if itemSelectable>
                                               <li>
-                                                  <a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" class="button tiny alert">${uiLabelMap.CommonCancel} ${uiLabelMap.CommonItem}</a>
+                                                  <a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" class="${styles.button_default!} alert">${uiLabelMap.CommonCancel} ${uiLabelMap.CommonItem}</a>
                                               </li>
                                         </#if>
                                       </ul>
@@ -353,7 +353,7 @@ under the License.
                         <td colspan="6">&nbsp;</td>
                     <td>
                             <ul class="button-group">
-                                <li><input type="submit" value="${uiLabelMap.OrderUpdateItems}" class="button tiny"/></li>
+                                <li><input type="submit" value="${uiLabelMap.OrderUpdateItems}" class="${styles.button_default!}"/></li>
                             </ul>
                     </td>
                 </tr>
@@ -403,7 +403,7 @@ under the License.
                             <td nowrap="nowrap">
                                 <#if (allowPriceChange)>
                                     <input class="smallSubmit" type="submit" value="${uiLabelMap.CommonUpdate}"/>
-                                    <a href="javascript:document.deleteOrderAdjustment${orderAdjustmentId}.submit();" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                                    <a href="javascript:document.deleteOrderAdjustment${orderAdjustmentId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                                 <#else>
                                     <@ofbizAmount amount=adjustmentAmount/>
                                 </#if>

@@ -35,7 +35,7 @@ under the License.
             <#if orders?has_content>
                 <#list orders?sort_by("pickSheetPrintedDate") as order>
                     <tr>
-                        <td><a href="/ordermgr/control/orderview?orderId=${order.orderId!}" class="button tiny" target="_blank">${order.orderId!}</a></td>
+                        <td><a href="/ordermgr/control/orderview?orderId=${order.orderId!}" class="${styles.button_default!}" target="_blank">${order.orderId!}</a></td>
                         <td>${order.pickSheetPrintedDate!}</td>
                         <td><#if "Y" == order.isVerified>${uiLabelMap.CommonY}</#if></td>
                     </tr>

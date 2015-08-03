@@ -31,29 +31,29 @@ under the License.
       <ul class="button-group">
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <#if shoppingCart.getOrderPartyId() == "_NA_" || (shoppingCart.size() = 0)>
-          <li><a href="" class="button tiny disabled">${uiLabelMap.OrderFinalizeOrder}</a></li>
+          <li><a href="" class="${styles.button_default!} disabled">${uiLabelMap.OrderFinalizeOrder}</a></li>
         <#else>
-          <li><a href="<@ofbizUrl>finalizeOrder?finalizeMode=purchase&amp;finalizeReqCustInfo=false&amp;finalizeReqShipInfo=false&amp;finalizeReqOptions=false&amp;finalizeReqPayInfo=false</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderFinalizeOrder}</a></li>
+          <li><a href="<@ofbizUrl>finalizeOrder?finalizeMode=purchase&amp;finalizeReqCustInfo=false&amp;finalizeReqShipInfo=false&amp;finalizeReqOptions=false&amp;finalizeReqPayInfo=false</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderFinalizeOrder}</a></li>
         </#if>
       <#else>
         <#if shoppingCart.size() = 0>
-          <li><a href="" class="button tiny disabled">${uiLabelMap.OrderQuickFinalizeOrder}</a></li>
-          <li><a href="" class="button tiny disabled">${uiLabelMap.OrderFinalizeOrderDefault}</a></li>
-          <li><a href="" class="button tiny disabled">${uiLabelMap.OrderFinalizeOrder}</a></li>
+          <li><a href="" class="${styles.button_default!} disabled">${uiLabelMap.OrderQuickFinalizeOrder}</a></li>
+          <li><a href="" class="${styles.button_default!} disabled">${uiLabelMap.OrderFinalizeOrderDefault}</a></li>
+          <li><a href="" class="${styles.button_default!} disabled">${uiLabelMap.OrderFinalizeOrder}</a></li>
         <#else>
-          <li><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderQuickFinalizeOrder}</a></li>
-          <li><a href="<@ofbizUrl>finalizeOrder?finalizeMode=default</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderFinalizeOrderDefault}</a></li>
-          <li><a href="<@ofbizUrl>finalizeOrder?finalizeMode=init</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderFinalizeOrder}</a></li>
+          <li><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderQuickFinalizeOrder}</a></li>
+          <li><a href="<@ofbizUrl>finalizeOrder?finalizeMode=default</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderFinalizeOrderDefault}</a></li>
+          <li><a href="<@ofbizUrl>finalizeOrder?finalizeMode=init</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderFinalizeOrder}</a></li>
         </#if>
       </#if>
 
       <#if (shoppingCart.size() > 0)>
-        <li><a href="javascript:document.cartform.submit()" class="button tiny">${uiLabelMap.OrderRecalculateOrder}</a></li>
-        <li><a href="javascript:removeSelected();" class="button tiny">${uiLabelMap.OrderRemoveSelected}</a></li>
+        <li><a href="javascript:document.cartform.submit()" class="${styles.button_default!}">${uiLabelMap.OrderRecalculateOrder}</a></li>
+        <li><a href="javascript:removeSelected();" class="${styles.button_default!}">${uiLabelMap.OrderRemoveSelected}</a></li>
       <#else>
-        <li><a href="" class="button tiny disabled">${uiLabelMap.OrderRecalculateOrder}</a></li>
-        <li><a href="" class="button tiny disabled">${uiLabelMap.OrderRemoveSelected}</a></li>
+        <li><a href="" class="${styles.button_default!} disabled">${uiLabelMap.OrderRecalculateOrder}</a></li>
+        <li><a href="" class="${styles.button_default!} disabled">${uiLabelMap.OrderRemoveSelected}</a></li>
       </#if>
-      <li><a href="<@ofbizUrl>emptycart</@ofbizUrl>" class="button tiny">${uiLabelMap.OrderClearOrder}</a></li>
+      <li><a href="<@ofbizUrl>emptycart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderClearOrder}</a></li>
     </ul>
 </@section>

@@ -19,8 +19,8 @@ under the License.
 
 <#if custRequestItem??>
   <#if quoteId?has_content>
-  <div><a href="<@ofbizUrl>EditQuoteItemForRequest?quoteId=${quoteId}&custRequestId=${custRequestItem.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}</@ofbizUrl>" class="button tiny">${uiLabelMap.PageTitleEditQuoteItemForCustRequest}</a> [${quoteId}]</div>
+  <div><a href="<@ofbizUrl>EditQuoteItemForRequest?quoteId=${quoteId}&custRequestId=${custRequestItem.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PageTitleEditQuoteItemForCustRequest}</a> [${quoteId}]</div>
   <#else>
-  <div><a href="<@ofbizUrl>CreateQuoteAndQuoteItemForRequest?custRequestId=${custRequestItem.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}</@ofbizUrl>" class="button tiny">${uiLabelMap.PageTitleCreateQuoteForCustRequest}</a></div>
+  <div><a href="<@ofbizUrl>CreateQuoteAndQuoteItemForRequest?custRequestId=${custRequestItem.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PageTitleCreateQuoteForCustRequest}</a></div>
   </#if>
 </#if>

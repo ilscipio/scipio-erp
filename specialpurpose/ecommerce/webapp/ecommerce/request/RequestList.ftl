@@ -82,7 +82,7 @@ under the License.
                     </td>
                     <td width="10">&nbsp;</td>
                     <td align="right">
-                        <a href="<@ofbizUrl>/ViewRequest?custRequestId=${custRequest.custRequestId}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonView}</a>
+                        <a href="<@ofbizUrl>/ViewRequest?custRequestId=${custRequest.custRequestId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonView}</a>
                     </td>
                     <td width="10">&nbsp;</td>
                 </tr>

@@ -292,7 +292,7 @@ under the License.
       </#if>
           showOn: 'button',
           buttonImage: '',
-          button tiny: '',
+          ${styles.button_default!}: '',
           buttonImageOnly: false,
           dateFormat: 'yy-mm-dd'
         })
@@ -740,7 +740,7 @@ under the License.
         </#if>
             showOn: 'button',
             buttonImage: '',
-            button tiny: '',
+            ${styles.button_default!}: '',
             buttonImageOnly: false,
             dateFormat: 'yy-mm-dd'
           });
@@ -775,7 +775,7 @@ under the License.
         </#if>
             showOn: 'button',
             buttonImage: '',
-            button tiny: '',
+            ${styles.button_default!}: '',
             buttonImageOnly: false,
             dateFormat: 'yy-mm-dd'
           });

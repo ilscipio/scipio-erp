@@ -49,8 +49,8 @@ under the License.
         <div class="screenlet-body">
             <#if invoiceIds?has_content>
                 <div>
-                ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="button tiny">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
-                ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="button tiny">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="button tiny">${shipmentId}</a>
+                ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
+                ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${shipmentId}</a>
                 </div>
                 <#if invoiceIds?exists && invoiceIds?has_content>
                 <div>
@@ -58,8 +58,8 @@ under the License.
                     <ul>
                     <#list invoiceIds as invoiceId>
                       <li>
-                        ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="button tiny">${invoiceId}</a>
-                        (<a href="/accounting/control/invoice.pdf?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="button tiny">PDF</a>)
+                        ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="${styles.button_default!}">${invoiceId}</a>
+                        (<a href="/accounting/control/invoice.pdf?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="${styles.button_default!}">PDF</a>)
                       </li>
                     </#list>
                     </ul>
@@ -87,8 +87,8 @@ under the License.
                   <td colspan="2">&nbsp;</td>
                   <td colspan="2">
                     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectOrderForm.submit();" />
-                    <a href="javascript:document.selectOrderForm.submit();" class="button tiny">${uiLabelMap.ProductPackOrder}</a>
-                    <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectOrderForm.submit();" class="button tiny">${uiLabelMap.ProductWeighPackageOnly}</a>
+                    <a href="javascript:document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackOrder}</a>
+                    <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductWeighPackageOnly}</a>
                   </td>
                 </tr>
               </table>
@@ -112,8 +112,8 @@ under the License.
                   <td colspan="2">&nbsp;</td>
                   <td colspan="1">
                     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectPicklistBinForm.submit();" />
-                    <a href="javascript:document.selectPicklistBinForm.submit();" class="button tiny">${uiLabelMap.ProductPackOrder}</a>
-                    <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="button tiny">${uiLabelMap.ProductWeighPackageOnly}</a>
+                    <a href="javascript:document.selectPicklistBinForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackOrder}</a>
+                    <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductWeighPackageOnly}</a>
                   </td>
                 </tr>
               </table>
@@ -230,7 +230,7 @@ under the License.
                             <input type="text" name="productId" size="20" maxlength="20" value=""/>
                             @
                             <input type="text" name="quantity" size="6" maxlength="6" value="1"/>
-                            <a href="javascript:document.singlePackForm.submit();" class="button tiny">${uiLabelMap.ProductPackItem}</a>
+                            <a href="javascript:document.singlePackForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackItem}</a>
                         </div>
                       </td>
                       <td>
@@ -299,9 +299,9 @@ under the License.
                               </#if>
                           </td>
                           <td>
-                              <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" target="_blank">${(orderProduct.internalName)!}</a>
+                              <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(orderProduct.internalName)!}</a>
                               <#if orderProduct.productId != product.productId>
-                                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" target="_blank">${(product.internalName)!}</a>]
+                                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(product.internalName)!}</a>]
                               </#if>
                           </td>
                           <td align="right">${orderItemQuantity}</td>
@@ -405,7 +405,7 @@ under the License.
                             <br />
                             <input type="text" name="additionalShippingCharge" value="${packingSession.getAdditionalShippingCharge()!}" size="20"/>
                             <#if packageSeqIds?has_content>
-                                <a href="javascript:document.completePackForm.action='<@ofbizUrl>calcPackSessionAdditionalShippingCharge</@ofbizUrl>';document.completePackForm.submit();" class="button tiny">${uiLabelMap.ProductEstimateShipCost}</a>
+                                <a href="javascript:document.completePackForm.action='<@ofbizUrl>calcPackSessionAdditionalShippingCharge</@ofbizUrl>';document.completePackForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductEstimateShipCost}</a>
                                 <br />
                             </#if>
                         </td>
@@ -468,13 +468,13 @@ under the License.
                       <td>${line.getOrderItemSeqId()}</td>
                       <td>${line.getProductId()?default("N/A")}</td>
                       <td>
-                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" target="_blank">${product.internalName!?default("[N/A]")}</a>
+                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${product.internalName!?default("[N/A]")}</a>
                       </td>
                       <td>${line.getInventoryItemId()}</td>
                       <td align="right">${line.getQuantity()}</td>
                       <td align="right">${line.getWeight()} (${packingSession.getPackageWeight(line.getPackageSeq()?int)!})</td>
                       <td align="right">${line.getPackageSeq()}</td>
-                      <td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()?default("")}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="button tiny">${uiLabelMap.CommonClear}</a></td>
+                      <td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()?default("")}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a></td>
                     </tr>
                   </#list>
                 </table>
@@ -512,13 +512,13 @@ under the License.
                       <td>${line.getOrderItemSeqId()}</td>
                       <td>${line.getProductId()?default("N/A")}</td>
                       <td>
-                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="button tiny" target="_blank">${product.internalName!?default("[N/A]")}</a>
+                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${product.internalName!?default("[N/A]")}</a>
                       </td>
                       <td>${line.getInventoryItemId()}</td>
                       <td align="right">${line.getQuantity()}</td>
                       <td align="right">${line.getWeight()} (${packingSession.getPackageWeight(line.getPackageSeq()?int)!})</td>
                       <td align="right">${line.getPackageSeq()}</td>
-                      <td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()?default("")}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="button tiny">${uiLabelMap.CommonClear}</a></td>
+                      <td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()?default("")}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a></td>
                   </tr>
               </#list>
             </table>

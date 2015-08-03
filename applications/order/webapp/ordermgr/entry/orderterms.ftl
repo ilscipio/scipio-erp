@@ -44,14 +44,14 @@ under the License.
                                         <td nowrap="nowrap">${orderTerm.textValue!}</td>
                                         <td nowrap="nowrap">${orderTerm.description?if_exists}</td>
                                         <td align="right">
-                                <a href="<@ofbizUrl>setOrderTerm?termIndex=${orderTerm_index}&amp;createNew=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonUpdate}</a>
-                                <a href="<@ofbizUrl>removeCartOrderTerm?termIndex=${orderTerm_index}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonRemove}</a>
+                                <a href="<@ofbizUrl>setOrderTerm?termIndex=${orderTerm_index}&amp;createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
+                                <a href="<@ofbizUrl>removeCartOrderTerm?termIndex=${orderTerm_index}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
                                         </td>
                                     </tr>
                                 </#list>
                                 <tr>
                                     <td colspan="5">
-                            <a href="<@ofbizUrl>setOrderTerm?createNew=Y</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonCreateNew}</a>
+                            <a href="<@ofbizUrl>setOrderTerm?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a>
                                     </td>
                                 </tr>
                             </table>

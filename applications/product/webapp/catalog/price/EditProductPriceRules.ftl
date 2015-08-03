@@ -21,7 +21,7 @@ under the License.
         <h3>${uiLabelMap.ProductGlobalPriceRule}</h3>
     </div>
     <div class="screenlet-body">
-        <a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="button tiny">${uiLabelMap.ProductFindRule}</a>
+        <a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductFindRule}</a>
         <table cellspacing="0" class="basic-table">
          <thead>
           <tr class="header-row">
@@ -117,7 +117,7 @@ under the License.
                          <form name="deleteProductPriceCond_${productPriceCond_index}" method= "post" action= "<@ofbizUrl>deleteProductPriceCond</@ofbizUrl>">
                            <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}" />
                            <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}" />
-                           <a href="javascript:document.deleteProductPriceCond_${productPriceCond_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                           <a href="javascript:document.deleteProductPriceCond_${productPriceCond_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                          </form>
                         </td>
                       </tr>
@@ -188,7 +188,7 @@ under the License.
                           <form name="deleteProductPriceAction_${productPriceAction_index}" method="post" action="<@ofbizUrl>deleteProductPriceAction</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                             <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
-                            <a href="javascript:document.deleteProductPriceAction_${productPriceAction_index}.submit()" class="button tiny">${uiLabelMap.CommonDelete}</a>
+                            <a href="javascript:document.deleteProductPriceAction_${productPriceAction_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                           </form>
                         </td>
                       </tr>

@@ -23,9 +23,9 @@ under the License.
     <#if (searchOptionsHistoryList?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(searchOptionsHistoryList?size-1)/></#if>
     <div id="minilastproductsearches" class="screenlet">
       <div class="boxlink">
-        <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="button tinysmall">[${uiLabelMap.CommonClear}]</a>
+        <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="${styles.button_default!}small">[${uiLabelMap.CommonClear}]</a>
         <#if (searchOptionsHistoryList?size > maxToShow)>
-          <a href="<@ofbizUrl>advancedsearch</@ofbizUrl>" class="button tinysmall">[${uiLabelMap.CommonMore}]</a>
+          <a href="<@ofbizUrl>advancedsearch</@ofbizUrl>" class="${styles.button_default!}small">[${uiLabelMap.CommonMore}]</a>
         </#if>
       </div>
       <h3>${uiLabelMap.OrderLastSearches}...</h3>

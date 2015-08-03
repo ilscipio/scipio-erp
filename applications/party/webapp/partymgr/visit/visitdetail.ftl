@@ -17,98 +17,80 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<!-- begin visitdetail.ftl -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PartyVisitDetail}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.PartyVisitDetail}">
       <table class="basic-table" cellspacing="0">
         <tr>
-          <td >${uiLabelMap.PartyVisitIDSessionID}</td>
+          <td>${uiLabelMap.PartyVisitIDSessionID}</td>
           <td>${visit.visitId!} / ${visit.sessionId!}</td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyVisitorId}</td>
+          <td>${uiLabelMap.PartyVisitorId}</td>
           <td>${visit.visitorId?default("${uiLabelMap.CommonNot} ${uiLabelMap.CommonFound}")}</td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyPartyIDUserLoginID}</td>
+          <td>${uiLabelMap.PartyPartyIDUserLoginID}</td>
           <td><a href="<@ofbizUrl>viewprofile?partyId=${visit.partyId!}</@ofbizUrl>">${visit.partyId!}</a> / <a href="<@ofbizUrl>viewprofile?partyId=${visit.partyId!}</@ofbizUrl>">${visit.userLoginId!}</a></td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyUserCreated}</td>
+          <td>${uiLabelMap.PartyUserCreated}</td>
           <td>${visit.userCreated!}</td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyWebApp}</td>
+          <td>${uiLabelMap.PartyWebApp}</td>
           <td>${visit.webappName!}</td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyServer}</td>
-          <td><a href="http://uptime.netcraft.com/up/graph/?site=${visit.serverIpAddress!}" target="_blank">${visit.serverIpAddress!}</a> / <a href="http://uptime.netcraft.com/up/graph/?site=${visit.serverIpAddress!}" target="_blank">${visit.serverHostName!}</a></td>
+          <td>${uiLabelMap.PartyServer}</td>
+          <td><a href="http://uptime.netcraft.com/up/graph/?site=${visit.serverIpAddress!}" target="_blank" class="button tiny">${visit.serverIpAddress!}</a> / <a href="http://uptime.netcraft.com/up/graph/?site=${visit.serverIpAddress!}" target="_blank" class="button tiny">${visit.serverHostName!}</a></td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyClient}</td>
-          <td><a href="http://ws.arin.net/cgi-bin/whois.pl?queryinput=${visit.clientIpAddress!}" target="_blank">${visit.clientIpAddress!}</a> / <a href="http://www.networksolutions.com/cgi-bin/whois/whois?STRING=${visit.clientHostName!}&amp;SearchType=do" target="_blank">${visit.clientHostName!}</a></td>
+          <td>${uiLabelMap.PartyClient}</td>
+          <td><a href="http://ws.arin.net/cgi-bin/whois.pl?queryinput=${visit.clientIpAddress!}" target="_blank" class="button tiny">${visit.clientIpAddress!}</a> / <a href="http://www.networksolutions.com/cgi-bin/whois/whois?STRING=${visit.clientHostName!}&amp;SearchType=do" target="_blank" class="button tiny">${visit.clientHostName!}</a></td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyClientUser}</td>
+          <td>${uiLabelMap.PartyClientUser}</td>
           <td>${visit.clientUser!}</td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyInitialLocale}</td>
+          <td>${uiLabelMap.PartyInitialLocale}</td>
           <td>${visit.initialLocale!}</td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyInitialRequest}</td>
+          <td>${uiLabelMap.PartyInitialRequest}</td>
           <td><a href="${visit.initialRequest!}" >${visit.initialRequest!}</a></td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyInitialReferer}</td>
+          <td>${uiLabelMap.PartyInitialReferer}</td>
           <td><a href="${visit.initialReferrer!}" >${visit.initialReferrer!}</a></td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyInitialUserAgent}</td>
+          <td>${uiLabelMap.PartyInitialUserAgent}</td>
           <td>${visit.initialUserAgent!}</td>
         </tr>
         <tr>
-          <td >${uiLabelMap.PartyCookie}</td>
+          <td>${uiLabelMap.PartyCookie}</td>
           <td>${visit.cookie!}</td>
         </tr>
         <tr>
-          <td >${uiLabelMap.CommonFromDateThruDate}</td>
+          <td>${uiLabelMap.CommonFromDateThruDate}</td>
           <td>${(visit.fromDate?string)!} / ${(visit.thruDate?string)?default(uiLabelMap.PartyStillActive)}</td>
         </tr>
       </table>
-  </div>
-</div>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PartyHitTracker}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+</@section>
+<@section title="${uiLabelMap.PartyHitTracker}">
+
+  <#macro paginateVisit>
+    <#assign url><@ofbizUrl>visitdetail</@ofbizUrl></#assign>
+    <#assign paramStr = addParamsToStr("", {"visitId": visitId!})>
+    <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=listSize paramStr=paramStr/>   
+  </#macro> 
+   
+      <#assign paginated = false>
       <#if serverHits?has_content>
-        <div class="align-float">
-          <span >
-            <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonPrevious}</a> |
-            </#if>
-            <#if 0 < listSize>
-              ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
-            </#if>
-            <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonNext}</a>
-            </#if>
-          </span>
-        </div>
-        <br class="clear"/>
+        <#if (0 < listSize)>
+          <@paginateVisit />
+          <#assign paginated = true>
+        </#if>
       </#if>
       <table class="basic-table hover-bar" cellspacing="0">
        <thead>
@@ -126,7 +108,7 @@ under the License.
         <#if serverHits?has_content>
         <#list serverHits[lowIndex..highIndex-1] as hit>
           <#assign serverHitType = hit.getRelatedOne("ServerHitType", false)!>
-          <tr<#if alt_row> class="alternate-row"</#if>>
+          <tr class="<#if alt_row>odd<#else>even</#if>">
             <td>${hit.contentId!}</td>
             <td>${serverHitType.get("description",locale)!}</td>
             <td>&nbsp;&nbsp;${hit.numOfBytes?default("?")}</td>
@@ -136,7 +118,7 @@ under the License.
               <#assign url = (hit.requestUrl)!>
               <#if url??>
                 <#assign len = url?length>
-                <#if 45 < len>
+                <#if (45 < len)>
                   <#assign url = url[0..45] + "...">
                 </#if>
               </#if>
@@ -152,26 +134,12 @@ under the License.
           </tr>
         </#if>
       </table>
-      <#if serverHits?has_content>
-        <div class="align-float">
-          <span >
-            <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonPrevious}</a> |
-            </#if>
-            <#if 0 < listSize>
-              ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
-            </#if>
-            <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonNext}</a>
-            </#if>
-          </span>
-        </div>
-        <br class="clear"/>
+      <#if paginated>
+        <@paginateVisit />
       </#if>
-  </div>
-</div>
+</@section>
 
-<!--
+<#--
 *******************************************************************************
 JIRA OFBIZ-4488: BEGIN
 https://issues.apache.org/jira/browse/OFBIZ-4488

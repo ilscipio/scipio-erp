@@ -451,7 +451,7 @@ under the License.
             "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
             "progTextBoxId" : "${baseId}_textbox",
             
-            "expectedResultContainerSel" : "#content-main-body",
+            "expectedResultContainerSel" : "#main-content",
             "errorResultContainerSel" : "#main-${style_alert_wrap!}",
             "errorResultAddWrapper" : false
           }>

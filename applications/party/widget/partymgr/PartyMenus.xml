@@ -925,4 +925,18 @@
         </menu-item>
     </menu>
     
+    <menu name="PartyClassificationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="active">
+        <menu-item name="EditPartyClassificationGroup" title="${uiLabelMap.PartyClassificationGroups}">
+            <link target="EditPartyClassificationGroup">
+                <parameter param-name="partyClassificationGroupId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditPartyClassificationGroupParties" title="${uiLabelMap.PartyParties}">
+            <link target="EditPartyClassificationGroupParties">
+                <parameter param-name="partyClassificationGroupId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
 </menus>

@@ -127,23 +127,24 @@ under the License.
                 <set field="partyClassificationGroupId" from-field="parameters.partyClassificationGroupId"/>
                 <set field="partyId" value=""/>
                 <entity-one entity-name="PartyClassificationGroup" value-field="partyClassificationGroup"/>
+                
+                <service service-name="partyBasePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="PartyClassificationTabBar"/>
-                            </widgets>
-                        </section>
+                    <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}">
+                        <include-menu name="PartyClassificationSideBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                    </decorator-section>
+                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}">
+                        <include-menu name="PartyClassificationTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PartyClassificationGroup}">

@@ -289,8 +289,8 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                                   textSize=size 
                                   maxlength=maxlength 
                                   id=id 
-                                  event="onCLick" 
-                                  action=onCLick 
+                                  event="onClick" 
+                                  action=onClick 
                                   disabled=disabled 
                                   clientAutocomplete="" 
                                   ajaxUrl=autoCompleteUrl 
@@ -354,7 +354,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                                     formName=""
                                     otherFieldName="" 
                                     event="onClick" 
-                                    action=onCLick  
+                                    action=onClick  
                                     size=size
                                     firstInList="" 
                                     currentValue=currentValue 

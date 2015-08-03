@@ -17,58 +17,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="address-match-map" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PageTitleAddressMatchMap}</li>
-      <li><a href="<@ofbizUrl>findAddressMatch</@ofbizUrl>">${uiLabelMap.PageTitleFindMatches}</a></li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
-    <form name="addaddrmap" method="post" action="<@ofbizUrl>createAddressMatchMap</@ofbizUrl>">
-    <table class="basic-table" cellspacing="0">
-        <tr>
-          <td>${uiLabelMap.PartyAddressMatchKey}</td>
-          <td><input type="text" name="mapKey"/></td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.PartyAddressMatchValue}</td>
-          <td><input type="text" name="mapValue"/></td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.CommonSequence}</td>
-          <td><input type="text" size="5" name="sequenceNum" value="0"/></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td><a href="javascript:document.addaddrmap.submit()" class="smallSubmit">${uiLabelMap.CommonCreate}</a></td>
-        </tr>
-    </table>
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>findAddressMatch</@ofbizUrl>" class="button tiny">${uiLabelMap.PageTitleFindMatches}</a></li>
+</#assign>
+<@section id="addressmatchmap" title="${uiLabelMap.PageTitleAddressMatchMap}" menuHtml=menuHtml>
+  <@section id="addressmatchmap_create">
+  <form name="addaddrmap" method="post" action="<@ofbizUrl>createAddressMatchMap</@ofbizUrl>">
+    <@field type="input" name="mapKey" label="${uiLabelMap.PartyAddressMatchKey}" />
+    <@field type="input" name="mapValue" label="${uiLabelMap.PartyAddressMatchValue}" />
+    <@field type="input" name="sequenceNum" label="${uiLabelMap.CommonSequence}" value="0" size=5/>
+    <a href="javascript:document.addaddrmap.submit()" class="button tiny">${uiLabelMap.CommonCreate}</a></td>
     </form>
-    <table class="basic-table" cellspacing="0">
-      <tr><td colspan="2">&nbsp;</td></tr>
-        <tr>
-          <td></td>
-          <td>
-            <form name="importaddrmap" method="post" enctype="multipart/form-data" action="<@ofbizUrl>importAddressMatchMapCsv</@ofbizUrl>">
-            <input type="file" name="uploadedFile" size="14"/>
-            <input type="submit" value="${uiLabelMap.CommonUpload} CSV"/>
-            <p>${uiLabelMap.PartyAddressMatchMessage1}</p>
-            </form>
-          </td>
-        </tr>
-    </table>
-  </div>
-</div>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PageTitleAddressMatchMap}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+    <div id="importaddrmap_section">
+  </@section>
+  
+  <@section id="addressmatchmap_import">
+  <form name="importaddrmap" method="post" enctype="multipart/form-data" action="<@ofbizUrl>importAddressMatchMapCsv</@ofbizUrl>">
+    <@field type="file" name="uploadedFile" label="CSV ${uiLabelMap.CommonDocument}" size=14 />
+    
+    <@row>
+      <@cell class="${style_grid_small!}3 ${style_grid_large!}2">
+        <input type="submit" value="${uiLabelMap.CommonUpload} CSV"/>
+      </@cell>
+      <@cell class="${style_grid_small!}6 ${style_grid_large!}6">
+        <#assign successUrl><@ofbizUrl>addressMatchMap</@ofbizUrl></#assign>
+        <#assign progressOptions = {
+            "formSel" : "form[name=importaddrmap]",
+            "progTextBoxId" : "importaddrmap_prog_textbox",
+            
+            "msgContainerParentSel" : "#addressmatchmap_import_content",
+            "msgContainerInsertMode" : "prepend",
+            
+            "expectedResultContainerSel" : "#main-content",
+            "errorResultContainerSel" : "#main-${style_alert_wrap!}",
+            "errorResultAddWrapper" : false,
+    
+            "successRedirectUrl" : "${successUrl}"
+        }>
+        <@progress id="importaddrmap_progress_bar" type="info" addWrapClass="${style_hidden!}" progressOptions=progressOptions/>
+      </@cell>
+      <@cell class="${style_grid_small!}3 ${style_grid_large!}4" id="importaddrmap_prog_textbox">
+      </@cell>
+    </@row>
+  </form>
+  </@section>
+</@section>
+<@section title="${uiLabelMap.PageTitleAddressMatches}">
       <#if addressMatchMaps?has_content>
         <table class="basic-table hover-bar" cellspacing="0">
           <thead>
@@ -82,19 +76,16 @@ under the License.
           </thead>
           <#assign alt_row = false>
           <#list addressMatchMaps as map>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr class="<#if alt_row>odd<#else>even</#if>">
               <td>${map.mapKey}</td>
               <td>=></td>
               <td>${map.mapValue}</td>
               <td>${map.sequenceNum!}</td>
-              <td class="button-col"><a href="<@ofbizUrl>removeAddressMatchMap?mapKey=${map.mapKey}&amp;mapValue=${map.mapValue}</@ofbizUrl>">${uiLabelMap.CommonDelete}</a></td>
+              <td class="button-col"><a href="<@ofbizUrl>removeAddressMatchMap?mapKey=${map.mapKey}&amp;mapValue=${map.mapValue}</@ofbizUrl>" class="button tiny">${uiLabelMap.CommonDelete}</a></td>
             </tr>
             <#-- toggle the row color -->
-
             <#assign alt_row = !alt_row>
           </#list>
         </table>
       </#if>
-  </div>
-</div>
-<!-- end addressMatchMap.ftl -->
+</@section>

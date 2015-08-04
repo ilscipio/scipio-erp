@@ -28,6 +28,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
+  <#if !inlineEntries>
       <#--
           <nav>
               <h2>${navigation!}</h2>
@@ -60,11 +61,14 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
             <div>
         </#if>
                 <ul>
-    </#if>   
-       
+    </#if> 
+      
+  </#if>
 </#macro>
 
 <#macro renderMenuEnd boundaryComment="" style="" inlineEntries=false contextType="">
+  <#if !inlineEntries>
+  
             <#--</li>
             </ul>
             </nav>
@@ -97,6 +101,8 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
         </div>
     </#if> 
     
+  </#if>
+  
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>

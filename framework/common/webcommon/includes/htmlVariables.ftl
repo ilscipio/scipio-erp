@@ -31,12 +31,6 @@ under the License.
 ******************
 -->
 
-<#-- Duplicates, only for reuse in styles hash itself -->
-<#assign "style_grid_cell"          = "columns" />
-<#assign "style_grid_small"         = "small-" />       <#-- Bootstrap: "col-sm-" -->
-<#assign "style_grid_medium"        = "medium-" />      <#-- Bootstrap: "col-md-" -->
-<#assign "style_grid_large"         = "large-" />       <#-- Bootstrap: "col-lg-" -->
-
 <#global styles = {
 <#-- Misc -->
     "disabled" : "disabled",
@@ -72,26 +66,26 @@ under the License.
 
 <#-- Grid -->
     "grid_row" : "row",
-    "grid_cell" : "${style_grid_cell}",
+    "grid_cell" : "columns",
     "grid_display" : "display",      <#-- display grid -->
     "grid_end" : "end",
-    "grid_small" : "${style_grid_small}",   
-    "grid_medium" : "${style_grid_medium}",
-    "grid_large" : "${style_grid_large}",       <#-- Bootstrap: "col-lg-" -->
+    "grid_small" : "small-",   
+    "grid_medium" : "medium-",
+    "grid_large" : "large-",       <#-- Bootstrap: "col-lg-" -->
     "grid_offset" : "offset-",      <#-- Bootstrap: "col-md-offset-" -->
     "grid_block" : "block-grid-",
-    "grid_columns_1" : "${style_grid_large}1 ${style_grid_cell}",
-    "grid_columns_2" : "${style_grid_large}2 ${style_grid_medium}3 ${style_grid_cell}",
-    "grid_columns_3" : "${style_grid_large}3 ${style_grid_medium}4 ${style_grid_cell}",
-    "grid_columns_4" : "${style_grid_large}4 ${style_grid_medium}5 ${style_grid_cell}",
-    "grid_columns_5" : "${style_grid_large}5 ${style_grid_medium}6 ${style_grid_cell}",
-    "grid_columns_6" : "${style_grid_large}6 ${style_grid_cell}",
-    "grid_columns_7" : "${style_grid_large}7 ${style_grid_medium}6 ${style_grid_cell}",
-    "grid_columns_8" : "${style_grid_large}8 ${style_grid_medium}7 ${style_grid_cell}",
-    "grid_columns_9" : "${style_grid_large}9 ${style_grid_medium}8 ${style_grid_cell}",
-    "grid_columns_10" : "${style_grid_large}10 ${style_grid_medium}9 ${style_grid_cell}",
-    "grid_columns_11" : "${style_grid_large}11 ${style_grid_medium}10 ${style_grid_cell}",
-    "grid_columns_12" : "${style_grid_large}12 ${style_grid_cell}",
+    "grid_columns_1" : "large-1 columns",
+    "grid_columns_2" : "large-2 medium-3 columns",
+    "grid_columns_3" : "large-3 medium-4 columns",
+    "grid_columns_4" : "large-4 medium-5 columns",
+    "grid_columns_5" : "large-5 medium-6 columns",
+    "grid_columns_6" : "large-6 columns",
+    "grid_columns_7" : "large-7 medium-6 columns",
+    "grid_columns_8" : "large-8 medium-7 columns",
+    "grid_columns_9" : "large-9 medium-8 columns",
+    "grid_columns_10" : "large-10 medium-9 columns",
+    "grid_columns_11" : "large-11 medium-10 columns",
+    "grid_columns_12" : "large-12 columns",
 
 <#-- Navigation -->
     "nav_subnav" : "sub-nav",

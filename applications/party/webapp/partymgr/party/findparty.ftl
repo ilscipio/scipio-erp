@@ -35,9 +35,7 @@ under the License.
   <#assign createUrl = "createnew"/>
 </#if>
 
-<@section>
-
-    <ul class="${styles.button_group!}">
+<#assign menuHtml>
       <li><a href="<@ofbizUrl>${createUrl}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.CommonCreateNew}</a></li>
 <#if partyList?has_content>    
   <#if hideFields == "Y">
@@ -46,7 +44,8 @@ under the License.
       <li class="expanded"><a href="<@ofbizUrl>findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonHideFields}</a></li>
   </#if>
 </#if>  
-    </ul>
+</#assign>
+<@section menuHtml=menuHtml>
   
     <div id="findPartyParameters" <#if hideFields != "N"> style="display:none" </#if> >
 

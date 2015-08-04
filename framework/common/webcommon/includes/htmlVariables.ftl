@@ -32,10 +32,10 @@ under the License.
 -->
 
 <#-- Duplicates, only for reuse in styles hash itself -->
-<#global "style_grid_cell"          = "columns" />
-<#global "style_grid_small"         = "small-" />       <#-- Bootstrap: "col-sm-" -->
-<#global "style_grid_medium"        = "medium-" />      <#-- Bootstrap: "col-md-" -->
-<#global "style_grid_large"         = "large-" />       <#-- Bootstrap: "col-lg-" -->
+<#assign "style_grid_cell"          = "columns" />
+<#assign "style_grid_small"         = "small-" />       <#-- Bootstrap: "col-sm-" -->
+<#assign "style_grid_medium"        = "medium-" />      <#-- Bootstrap: "col-md-" -->
+<#assign "style_grid_large"         = "large-" />       <#-- Bootstrap: "col-lg-" -->
 
 <#global styles = {
 <#-- Misc -->
@@ -146,10 +146,10 @@ under the License.
 <#-- UTLITY VARIABLES END -->
 }>
 
-<#-- compatibility mode: define styles hash entries as individual style_ vars -->
+<#-- compatibility mode: define styles hash entries as individual style_ vars
 <#list styles?keys as name>
   <@'<#global "style_${name}" = "${styles[name]}">'?interpret />
 </#list>
-
+ -->
 
 </#compress>

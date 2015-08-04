@@ -182,7 +182,7 @@ under the License.
 
 <#-- Cato: new params: headerLevel, manual, menuClass, menuId
      manual is hint that didn't call from macro renderer automatically -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 manual=false menuClass="" menuId="">
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 manual=false menuClass="" menuId="" menuType="">
 <div <#if collapsed>class="toggleField"</#if>>
 <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>

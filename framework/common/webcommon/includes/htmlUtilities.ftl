@@ -230,6 +230,11 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     
     * password *
     autocomplete    = true/false, default true (false to prevent)
+    
+    * submit-row *
+    <#nested>       = button(s) (<input, <a, <button) to include
+    progressOptions = if this is an upload form, specify progress upload options, enables progress next to buttons. 
+                      see @progress[Script] macro[s]. should specify formSel, (progBarId and/or progTextBoxId), and others.
 -->
 <#macro field type="" label="" name="" value="" currentValue="" defaultValue="" class="${styles.grid_large!}12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
@@ -260,7 +265,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 </#if>
 
 <@row collapse=collapse!false norows=norows>
-    <#if label?has_content>
+    <#if label?has_content && type != "submit-row">
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         
@@ -270,13 +275,13 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         </#if>
         
         <#if !radioSingle>
-        <@cell class=subclasses nocells=nocells>
+            <@cell class=subclasses nocells=nocells>
                 <#if type=="checkbox" || collapse==false>
                     <label class=""<#if id?has_content> for="${id}"</#if>>${label}</label>
                 <#else>
                     <span class="prefix">${label}</span>
                 </#if>           
-        </@cell>
+            </@cell>
         </#if>
     </#if>
     <@cell class="${classes!}" nocells=nocells>
@@ -404,6 +409,39 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
             <#break> 
           <#case "password">
             <@renderPasswordField className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") />
+            <#break> 
+          <#case "submit-row">
+            <@row>
+              <#local hasProgress = (progressOptions.formSel)?has_content>
+              <#if hasProgress>
+                <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
+              <#else>
+                <#local subclasses="${styles.grid_small!}12 ${styles.grid_large!}12"/>
+              </#if>
+              <@cell class=subclasses>
+                <#nested>
+              </@cell>
+              <#if hasProgress>
+                <#if progressOptions.progBarId?has_content>
+                  <#-- with progress bar, optional text -->
+                  <#local subclasses = progressOptions.progTextBoxId?has_content?string("${styles.grid_small!}6 ${styles.grid_large!}6", "${styles.grid_small!}9 ${styles.grid_large!}10")>
+                  <@cell class=subclasses>
+                    <@progress id=progressOptions.progBarId type="info" addWrapClass="${styles.hidden!}" progressOptions=progressOptions/>
+                  </@cell>
+                  <#if progressOptions.progTextBoxId?has_content>
+                    <#local subclasses = "${styles.grid_small!}3 ${styles.grid_large!}4">
+                    <@cell class=subclasses id=progressOptions.progTextBoxId>
+                    </@cell>
+                  </#if>
+                <#elseif progressOptions.progTextBoxId?has_content>
+                   <#-- text progress only -->
+                   <#local subclasses = "${styles.grid_small!}9 ${styles.grid_large!}10">
+                   <@cell class=subclasses id=progressOptions.progTextBoxId>
+                   </@cell>
+                   <@progressScript options=progressOptions htmlwrap=true />
+                </#if>
+              </#if>
+            </@row>
             <#break> 
           <#default>
             <#if value?has_content>

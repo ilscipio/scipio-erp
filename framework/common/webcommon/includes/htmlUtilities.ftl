@@ -239,7 +239,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 <#macro field type="" label="" name="" value="" currentValue="" defaultValue="" class="${styles.grid_large!}12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="" postfix=false required=false addClass="" items=[] autocomplete=true>
+        fieldFormName="" formName="" postfix=false required=false addClass="" items=[] autocomplete=true progressOptions={}>
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum=(fieldIdNum!0)+1 />
 
@@ -1127,10 +1127,13 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
    
    $('#${id}_meter').css("width", "78%");
     
+   Can also be animated automatically using progressOptions which activates use of CatoUploadProgress
+   script for this progress bar by linking it to a form submit.
                     
    * General Attributes *
     value          = Percentage done
-    id             = custom id
+    id             = custom id; can also be specified as progressOptions.progBarId instead
+                     if omitted will not make a progress bar, but script still generated for progressOptions.progTextBoxId
     type           = (warning|info|success) default: success
     class          = Adds classes - please use "(small|medium|large)-block-grid-#"
     showValue      = Display value inside bar
@@ -1140,6 +1143,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                       see CatoUploadProgress javascript class for options; mostly same
 -->
 <#macro progress value=0 id="" type="" class="" showValue=false addWrapClass="" progressOptions={}>
+  <#local explicitId = id?has_content>
+  <#if !id?has_content>
+    <#local id = (progressOptions.progBarId)!"">
+  </#if>
+
     <#switch type>
       <#case "alert">
         <#local color=styles.color_alert!/>
@@ -1160,7 +1168,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </div>
     
   <#if progressOptions?has_content>
-    <@progressScript options=progressOptions+{"progBarId":"${id}"} htmlwrap=true />
+    <#local opts = progressOptions>
+    <#if explicitId>
+      <#local opts = opts+{"progBarId":"${id}"}>
+    </#if>
+    <@progressScript options=opts htmlwrap=true />
   </#if>
     
 </#macro>

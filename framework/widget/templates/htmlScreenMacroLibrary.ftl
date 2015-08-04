@@ -182,7 +182,7 @@ under the License.
 
 <#-- Cato: new params: headerLevel, manual, menuClass, menuId
      manual is hint that didn't call from macro renderer automatically -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 manual=false menuClass="" menuId="" menuType="">
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 manual=false menuClass="" menuId="" menuType="" requireMenu=false forceEmptyMenu=false>
 <div <#if collapsed>class="toggleField"</#if>>
 <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
@@ -204,53 +204,35 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
  -->
  
 <#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
-     in stock ofbiz it's not even rendered with macro renderer, but with old HTML renderer, as a special case... 
-     TODO?: although it's expected that UL not be rendered (li elements may need added to menu here), 
-            maybe should alter renderer so that insides of menu are rendered
-            with macro renderer (not html renderer), but not sure if breaks anything (and doesn't help hack below) -->
+     note: with recent patch, menuString passed by renderer is rendered by macro renderer. -->
 <#local menuString = menuString?trim>
-<#if menuString?has_content>
+<#if menuString?has_content || requireMenu || forceEmptyMenu>
 
-  <#-- hacks to identify menu types, passed via html comments, stripped -->
-  <#local miniNavMenu = false>
-  <#local includeMenu = false>
-  <#local forceEmptyMenu = false>
-  <#if menuString?starts_with("<!--")>
-    <#if menuString?starts_with("<!--mini_nav_menu-->")>
-      <#local menuString = menuString?substring("<!--mini_nav_menu-->"?length)>
-      <#local miniNavMenu = true>
-    <#elseif menuString?starts_with("<!--include_menu-->")>
-      <#local menuString = menuString?substring("<!--include_menu-->"?length)>
-      <#local includeMenu = true>
-    <#elseif menuString?starts_with("<!--force_empty_menu-->")>
-      <#local menuString = menuString?substring("<!--force_empty_menu-->"?length)>
-      <#local forceEmptyMenu = true>
+  <#local screenletPaginateMenu = (menuType == "screenlet-paginate-menu")>
+  <#local screenletNavMenu = (menuType == "screenlet-nav-menu")>
+
+  <#if !menuClass?has_content>
+    <#local menuClass = "${styles.button_group!}"> <#-- ${styles.button_force!} -->
+  <#elseif menuClass == "none">
+    <#local menuClass = "">
+  </#if>
+
+  <#-- note: menuString shouldn't contain <ul because li may be added here, but check anyway -->
+  <#if !menuString?starts_with("<ul")><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
+  <#-- note: include_menu and force_empty_menu are currently same, but force would also prevent this code from adding any new items (as stock ofbiz did) -->
+  <#if !forceEmptyMenu>
+    <#if screenletNavMenu>
+      <#-- FIXME: for now, need this super ugly hack as a workaround for having no other place to insert central style for menus passed here by macro renderer...
+           heuristic: add button style to all if none of the <a elems have known foundation (button) style -->
+      <#if !menuString?matches(r'.*(<a\s([^>]*\s)?)class="([^"]*\s)?(' + ((styles.button)!) + r')(\s[^"]*)?".*', 's')>
+        <#local menuString = menuString?replace(r'(<a\s([^>]*\s)?)class="([^"]*)"', r'$1class="$3 ' + ((styles.button_default)!) + r'"', 'r')>
+        <#local menuString = menuString?replace(r'(<a(?![^>]*\sclass=)[^>]*)>', r'$1 class="' + ((styles.button_default)!) + r'">', 'r')>
+      </#if>
     </#if>
+    ${menuString}
   </#if>
+  <#if !menuString?ends_with("</ul>")></ul></#if>
 
-  <#if menuString?has_content || includeMenu || forceEmptyMenu>
-      <#if !menuClass?has_content>
-        <#local menuClass = "${styles.button_group!}"> <#-- ${styles.button_force!} -->
-      <#elseif menuClass == "none">
-        <#local menuClass = "">
-      </#if>
-    
-      <#-- note: menuString shouldn't contain <ul because li may be added here, but check anyway -->
-      <#if !menuString?starts_with("<ul")><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
-      <#-- note: include_menu and force_empty_menu are currently same, but force would also prevent this code from adding any new items (as stock ofbiz did) -->
-      <#if !forceEmptyMenu>
-        <#if !manual>
-          <#-- FIXME: for now, need this super ugly hack as a workaround for having no other place to insert central style for menus passed here by macro renderer...
-               heuristic: add button style to all if none of the <a elems have known foundation (button) style -->
-          <#if !menuString?matches(r'.*(<a\s([^>]*\s)?)class="([^"]*\s)?(' + ((styles.button)!) + r')(\s[^"]*)?".*', 's')>
-            <#local menuString = menuString?replace(r'(<a\s([^>]*\s)?)class="([^"]*)"', r'$1class="$3 ' + ((styles.button_default)!) + r'"', 'r')>
-            <#local menuString = menuString?replace(r'(<a(?![^>]*\sclass=)[^>]*)>', r'$1 class="' + ((styles.button_default)!) + r'">', 'r')>
-          </#if>
-        </#if>
-        ${menuString}
-      </#if>
-      <#if !menuString?ends_with("</ul>")></ul></#if>
-  </#if>
 </#if>
 
 </#if>
@@ -262,7 +244,6 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 <#macro renderScreenletEnd></div></div></div></div></#macro>
 
 <#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl>
-    <!--mini_nav_menu--> <#-- DO NOT REMOVE: this is a flag used to identify this menu in renderScreenletBegin; gets stripped -->
     <li class="${paginateFirstStyle?default("nav-first")}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${firstLinkUrl}" class="${styles.button_default!}">${paginateFirstLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.button_default!}">${paginateFirstLabel}</a></#if></li>
     <li class="${paginatePreviousStyle?default("nav-previous")}<#if !previousLinkUrl?has_content> disabled</#if>"><#if previousLinkUrl?has_content><a href="${previousLinkUrl}" class="${styles.button_default!}">${paginatePreviousLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.button_default!}">${paginatePreviousLabel}</a></#if></li>
     <#-- FIXME: manual padding -->

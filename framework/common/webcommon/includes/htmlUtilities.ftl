@@ -544,12 +544,13 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     autoHeaderLevel     = auto increase header level when title present
     headerLevel         = force this header level for title. if autoHeaderLevel true, also influences nested elems (even if no title here).
     defaultHeaderLevel  = default header level (same as headerLevel if autoHeaderLevel false)
-    menuHtml            = optional HTML menu data, li elements only (ul auto added); can be special string "<!-include_menu->" to always include a menu even if empty (js, etc.)
-                          or "<!-force_empty_menu->" to force include an empty menu guaranteed never to have extra elems (possible some may be auto-added by code)
-                          NOTE: in both strings the dashes are doubled (can't express in freemarker comments here); they are html comments.
+    menuHtml            = optional HTML menu data, li elements only (ul auto added)
     menuClass           = menu class, default is buttons class. "none" prevents class.
+    menuType            = "" (default, generic nav menu)
+    requireMenu         = if true, add menu elem even if empty
+    forceEmptyMenu      = if true, always add menu and must be empty
 -->
-<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="">
+<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="" menuType="nav-menu" requireMenu=false forceEmptyMenu=false>
     <#local explicitHeaderLevel = false>
     <#local updatedHeaderLevel = false> <#-- just so consistent -->
     <#if autoHeaderLevel>
@@ -588,7 +589,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         <#local contentId = "">
         <#local menuId = "">
     </#if>
-    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level manual=true menuClass=menuClass menuId=menuId />
+    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level manual=true menuClass=menuClass menuId=menuId menuType=menuType requireMenu=requireMenu forceEmptyMenu=forceEmptyMenu />
         <#nested />
     <@renderScreenletEnd />
     <#if autoHeaderLevel && updatedHeaderLevel>

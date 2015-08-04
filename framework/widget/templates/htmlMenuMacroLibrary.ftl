@@ -113,6 +113,18 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 </#macro>
 
 <#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" contextType="">
+<#-- Cato: hack: for screenlet nav menus, always impose buttons if no style specified, 
+     because can't centralize these menus easily anywhere else. -->
+<#if contextType=="screenlet-nav-menu">
+  <#if !style?has_content>
+    <#local style = "${styles.button_default!}">
+  </#if>
+</#if>
+<#-- Cato: treat "none" keyword as requesting empty style, as workaround -->
+<#if style == "none">
+  <#local style = "">
+</#if>
+
   <#if linkType?has_content && "hidden-form" == linkType>
 <form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}"><#rt/>
     <#list parameterList as parameter>

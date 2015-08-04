@@ -208,9 +208,12 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 <#local menuString = menuString?trim>
 <#if menuString?has_content || requireMenu || forceEmptyMenu>
 
+  <#-- temporarily (?) unnecessary; all use styles.button_group and hacks moved
   <#local screenletPaginateMenu = (menuType == "screenlet-paginate-menu")>
   <#local screenletNavMenu = (menuType == "screenlet-nav-menu")>
-
+  <#local ftlNavMenu = (menuType == "nav-menu")>
+  -->
+  
   <#if !menuClass?has_content>
     <#local menuClass = "${styles.button_group!}"> <#-- ${styles.button_force!} -->
   <#elseif menuClass == "none">
@@ -219,16 +222,7 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 
   <#-- note: menuString shouldn't contain <ul because li may be added here, but check anyway -->
   <#if !menuString?starts_with("<ul")><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
-  <#-- note: include_menu and force_empty_menu are currently same, but force would also prevent this code from adding any new items (as stock ofbiz did) -->
   <#if !forceEmptyMenu>
-    <#if screenletNavMenu>
-      <#-- FIXME: for now, need this super ugly hack as a workaround for having no other place to insert central style for menus passed here by macro renderer...
-           heuristic: add button style to all if none of the <a elems have known foundation (button) style -->
-      <#if !menuString?matches(r'.*(<a\s([^>]*\s)?)class="([^"]*\s)?(' + ((styles.button)!) + r')(\s[^"]*)?".*', 's')>
-        <#local menuString = menuString?replace(r'(<a\s([^>]*\s)?)class="([^"]*)"', r'$1class="$3 ' + ((styles.button_default)!) + r'"', 'r')>
-        <#local menuString = menuString?replace(r'(<a(?![^>]*\sclass=)[^>]*)>', r'$1 class="' + ((styles.button_default)!) + r'">', 'r')>
-      </#if>
-    </#if>
     ${menuString}
   </#if>
   <#if !menuString?ends_with("</ul>")></ul></#if>

@@ -29,8 +29,7 @@ under the License.
     <@field type="submitrow">
       <a href="javascript:document.addaddrmap.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></td>
     </@field>
-    </form>
-    <div id="importaddrmap_section">
+  </form>
   </@section>
   
   <@section id="addressmatchmap_import">
@@ -55,7 +54,6 @@ under the License.
     <@field type="submitrow" progressOptions=progressOptions>
       <input type="submit" value="${uiLabelMap.CommonUpload} CSV"/>    
     </@field>
-
   </form>
   </@section>
 </@section>

@@ -27,7 +27,7 @@ under the License.
   <#assign focusName = true>
 </#if>
 
-<div class="${style_grid_large!}3 ${style_grid_large!}centered columns login-box" id="login">
+<div class="${styles.grid_large!}3 ${styles.grid_large!}centered columns login-box" id="login">
 <div id="login-box-title">
     <h1>${logo} ${uiLabelMap.CommonLogin!}</h1>
     </div>
@@ -87,12 +87,12 @@ under the License.
           </#if>
          
          <@row>
-             <@cell class="${style_grid_large!}12 text-left">
+             <@cell class="${styles.grid_large!}12 text-left">
                 <small><a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a></small>
              </@cell>
         </@row>
         <@row>
-            <@cell class="${style_grid_large!}12 text-right">
+            <@cell class="${styles.grid_large!}12 text-right">
                 <input type="hidden" name="JavaScriptEnabled" value="N"/>
                 <input type="submit" value="${uiLabelMap.CommonLogin}" class="button"/>
             </@cell>

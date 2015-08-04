@@ -145,7 +145,7 @@ under the License.
   <#local useTsFormat = (((shortDateInput!false) == false) && dateType!="time")>
 
   <div class="row collapse date" data-date="" data-date-format="${dateFormat}">
-        <div class="${style_grid_small!}11 columns">
+        <div class="${styles.grid_small!}11 columns">
           <#if dateType == "time">
             <input type="text" name="${name}" <@renderClass className alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -153,7 +153,7 @@ under the License.
             <#if value?has_content> value="${value}"</#if>
             <#if size?has_content> size="${size}"</#if><#rt/>
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
-            <#if id?has_content> id="${id}"</#if> class="${style_grid_small!}3 columns"/><#rt/>
+            <#if id?has_content> id="${id}"</#if> class="${styles.grid_small!}3 columns"/><#rt/>
           <#else>
             <input type="text" name="${name}_i18n" <@renderClass className alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -161,13 +161,13 @@ under the License.
             <#if value?has_content> value="${value}"</#if>
             <#if size?has_content> size="${size}"</#if><#rt/>
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
-            <#if id?has_content> id="${id}_i18n"</#if> class="${style_grid_small!}3 columns"/><#rt/>
+            <#if id?has_content> id="${id}_i18n"</#if> class="${styles.grid_small!}3 columns"/><#rt/>
 
             <input type="hidden" name="${name}" <#if id?has_content> id="${id}"</#if> <#if value?has_content> value="${value}"</#if> />            
           </#if>
         </div>
-        <div class="${style_grid_small!}1 columns">
-        <span class="postfix"><i class="${style_icon!} ${style_icon_calendar!}"></i></span>
+        <div class="${styles.grid_small!}1 columns">
+        <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
         </div>
       <#if dateType != "time">
         <script type="text/javascript">
@@ -419,7 +419,7 @@ under the License.
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
   <#if buttonType!="image">
     <#if !className?has_content || className=="smallSubmit" || className=="_BUTTON_">
-      <#local className = "${style_button!} ${style_tiny!}">
+      <#local className = "${styles.button!} ${styles.tiny!}">
     </#if>
   </#if>
 
@@ -442,17 +442,17 @@ under the License.
   <#if (htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true>
       <#local baseId = htmlFormRenderFormInfo.name + "_catouplprogform">
       <@row>
-        <@cell class="${style_grid_small!}3 ${style_grid_large!}2">
+        <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
           ${buttonMarkup}
         </@cell>
-        <@cell class="${style_grid_small!}6 ${style_grid_large!}6">
+        <@cell class="${styles.grid_small!}6 ${styles.grid_large!}6">
           
           <#local progressOptions = {
             "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
             "progTextBoxId" : "${baseId}_textbox",
             
             "expectedResultContainerSel" : "#main-content",
-            "errorResultContainerSel" : "#main-${style_alert_wrap!}",
+            "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
             "errorResultAddWrapper" : false
           }>
           <#local action = htmlFormRenderFormInfo.progressSuccessAction!"">
@@ -470,9 +470,9 @@ under the License.
             </#if>
           </#if>
           
-          <@progress id="${baseId}_progbar" type="info" addWrapClass="${style_hidden!}" progressOptions=progressOptions/>
+          <@progress id="${baseId}_progbar" type="info" addWrapClass="${styles.hidden!}" progressOptions=progressOptions/>
         </@cell>
-        <@cell class="${style_grid_small!}3 ${style_grid_large!}4" id="${baseId}_textbox">
+        <@cell class="${styles.grid_small!}3 ${styles.grid_large!}4" id="${baseId}_textbox">
         </@cell>
       </@row>
   <#else>
@@ -600,9 +600,9 @@ under the License.
 </#macro>
 
 <#macro renderFormatFieldRowOpen collapse=false style="">
-   <div class="${style_grid_row!}">
-    <div class="<#if style?has_content>${style}<#else>${style_grid_large!}9</#if> ${style_grid_cell!}">
-      <div class="${style_grid_row!} <#if collapse>${style_collapse!}</#if>">
+   <div class="${styles.grid_row!}">
+    <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}9</#if> ${styles.grid_cell!}">
+      <div class="${styles.grid_row!} <#if collapse>${styles.collapse!}</#if>">
 </#macro>
 <#macro renderFormatFieldRowClose>
         </div>
@@ -610,7 +610,7 @@ under the License.
   </div>
 </#macro>
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
-  <div class="<#if style?has_content>${style}<#else>${style_grid_small!}3 ${style_grid_large!}2</#if> ${style_grid_cell!} ">
+  <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!} ">
       <#if collapse><span class="prefix"><#else><label></#if>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false>
@@ -619,7 +619,7 @@ under the License.
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="">
-  <div class="<#if style?has_content>${style}<#else>${style_grid_small!}9 ${style_grid_large!}10</#if> ${style_grid_cell!}">
+  <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}9 ${styles.grid_large!}10</#if> ${styles.grid_cell!}">
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>
   </div>
@@ -631,14 +631,14 @@ under the License.
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase>
   <@row collapse=collapse!false>
   <#if opEquals?has_content>
-            <#assign class1="${style_grid_small!}3 ${style_grid_large!}3"/>
-            <#assign class2="${style_grid_small!}6 ${style_grid_large!}6"/>
-            <#assign class3="${style_grid_small!}3 ${style_grid_large!}3"/>
+            <#assign class1="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+            <#assign class2="${styles.grid_small!}6 ${styles.grid_large!}6"/>
+            <#assign class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
             
         <#else>
             <#assign class1=""/>
-            <#assign class2="${style_grid_small!}9 ${style_grid_large!}9"/>
-            <#assign class3="${style_grid_small!}3 ${style_grid_large!}3"/>
+            <#assign class2="${styles.grid_small!}9 ${styles.grid_large!}9"/>
+            <#assign class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
       </#if>      
       <#if opEquals?has_content>
         <#assign newName = "${name}"/>
@@ -679,13 +679,13 @@ under the License.
   <#local useTsFormat = (dateType != "date" && dateType != "time")>
   
   <div class="row collapse date" data-date="" data-date-format="${dateFormat}">
-        <div class="${style_grid_small!}5 columns">
-        <input class="${style_grid_small!}3 columns" id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
+        <div class="${styles.grid_small!}5 columns">
+        <input class="${styles.grid_small!}3 columns" id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
         </div>
-        <div class="${style_grid_small!}1 columns">
-        <span class="postfix"><i class="${style_icon} ${style_icon_calendar!}"></i></span>
+        <div class="${styles.grid_small!}1 columns">
+        <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
         </div>
-        <div class="${style_grid_small!}5 columns ${style_grid_small!}offset-1">
+        <div class="${styles.grid_small!}5 columns ${styles.grid_small!}offset-1">
         <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
           <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
           <option value="sameDay"<#if defaultOptionFrom=="sameDay"> selected="selected"</#if>>${opSameDay}</option><#rt/>
@@ -1048,8 +1048,8 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     <#local multiPage = (listSize > viewSize)>
   
    <#if !listItemsOnly>
-   <div class="${style_grid_row!}">
-   <div class="${style_grid_large!}12 ${style_grid_cell!}">
+   <div class="${styles.grid_row!}">
+   <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
         <div class="pagination-centered ${paginateStyle}">
           <ul class="pagination">
    </#if>
@@ -1124,7 +1124,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible>
 <div class="row">
-  <div class="fieldgroup ${style_grid_large!}12 columns <#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> collapsed</#if></#if>"<#if id?has_content> id="${id}"</#if>>
+  <div class="fieldgroup ${styles.grid_large!}12 columns <#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> collapsed</#if></#if>"<#if id?has_content> id="${id}"</#if>>
     <fieldset<#if style?has_content || collapsed> class="${style!}"</#if>>
       <#--<#if collapsible>
         <ul>
@@ -1142,7 +1142,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </div>
     <div id="${collapsibleAreaId}" class="fieldgroup-body" <#if collapsed && collapsible> style="display: none;"</#if>>
     -->
-    <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${style_icon!} ${style_icon_arrow!}"></i> ] </#if>${title}</legend></#if>
+    <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${title}</legend></#if>
 </#macro>
 
 <#macro renderFieldGroupClose style id title>

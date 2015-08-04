@@ -36,10 +36,10 @@ under the License.
     <@field type="file" name="uploadedFile" label="CSV ${uiLabelMap.CommonDocument}" size=14 />
     
     <@row>
-      <@cell class="${style_grid_small!}3 ${style_grid_large!}2">
+      <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
         <input type="submit" value="${uiLabelMap.CommonUpload} CSV"/>
       </@cell>
-      <@cell class="${style_grid_small!}6 ${style_grid_large!}6">
+      <@cell class="${styles.grid_small!}6 ${styles.grid_large!}6">
         <#assign successUrl><@ofbizUrl>addressMatchMap</@ofbizUrl></#assign>
         <#assign progressOptions = {
             "formSel" : "form[name=importaddrmap]",
@@ -49,14 +49,14 @@ under the License.
             "msgContainerInsertMode" : "prepend",
             
             "expectedResultContainerSel" : "#main-content",
-            "errorResultContainerSel" : "#main-${style_alert_wrap!}",
+            "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
             "errorResultAddWrapper" : false,
     
             "successRedirectUrl" : "${successUrl}"
         }>
-        <@progress id="importaddrmap_progress_bar" type="info" addWrapClass="${style_hidden!}" progressOptions=progressOptions/>
+        <@progress id="importaddrmap_progress_bar" type="info" addWrapClass="${styles.hidden!}" progressOptions=progressOptions/>
       </@cell>
-      <@cell class="${style_grid_small!}3 ${style_grid_large!}4" id="importaddrmap_prog_textbox">
+      <@cell class="${styles.grid_small!}3 ${styles.grid_large!}4" id="importaddrmap_prog_textbox">
       </@cell>
     </@row>
   </form>

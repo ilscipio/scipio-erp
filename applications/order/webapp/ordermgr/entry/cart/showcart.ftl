@@ -113,8 +113,8 @@ under the License.
 
                          <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderDesiredDeliveryDate}" name="itemDesiredDeliveryDate" value="${value!}" size="25" maxlength="30" id="item1" />
                          <@row>
-                         <@cell class="${style_grid_small!}3 ${style_grid_large!}2"></@cell>
-                         <@cell class="${style_grid_small!}9 ${style_grid_large!}10">
+                         <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2"></@cell>
+                         <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
                             <input type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true"/>&nbsp;${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
                          </@cell>
                          </@row>
@@ -137,8 +137,8 @@ under the License.
                     
                     
                     <@row>
-                         <@cell class="${style_grid_small!}3 ${style_grid_large!}2"></@cell>
-                         <@cell class="${style_grid_small!}9 ${style_grid_large!}10">
+                         <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2"></@cell>
+                         <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
                           <input type="checkbox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment??>checked="checked"</#if> />&nbsp;${uiLabelMap.OrderUseDefaultComment}
                          </@cell>
                     </@row>

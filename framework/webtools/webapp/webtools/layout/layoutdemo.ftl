@@ -10,36 +10,36 @@
 <@nav type="breadcrumbs">
     <li><a href="#">Home</a></li>
     <li><a href="#">Features</a></li>
-    <li class="${style_nav_breadcrumbs_disabled!}"><a href="#">Gene Splicing</a></li>
-    <li class="${style_nav_breadcrumbs_active!}"><a href="#">Cloning</a></li>
+    <li class="${styles.nav_breadcrumbs_disabled!}"><a href="#">Gene Splicing</a></li>
+    <li class="${styles.nav_breadcrumbs_active!}"><a href="#">Cloning</a></li>
 </@nav>
 
 <@section>
     <h2 ${mtarget("grid")} id="grid">Grid</h2>
-    <@row class="${style_grid_display!}">
+    <@row class="${styles.grid_display!}">
         <@cell columns=2>2</@cell>
         <@cell columns=4>4</@cell>
         <@cell columns=6>6</@cell>
     </@row>
-    <@row class="${style_grid_display!}">
+    <@row class="${styles.grid_display!}">
         <@cell columns=3>3</@cell>
         <@cell columns=6>6</@cell>
         <@cell columns=3>3</@cell>
     </@row>
-    <@row class="${style_grid_display!}">
+    <@row class="${styles.grid_display!}">
         <@cell columns=2>2</@cell>
         <@cell columns=8>8</@cell>
         <@cell columns=2>2</@cell>
     </@row>   
-    <@row class="${style_grid_display!}">
+    <@row class="${styles.grid_display!}">
         <@cell columns=3>3</@cell>
         <@cell columns=9>9</@cell>
     </@row>   
-    <@row class="${style_grid_display!}">
+    <@row class="${styles.grid_display!}">
         <@cell columns=4>4</@cell>
         <@cell columns=8>8</@cell>
     </@row>       
-    <@row class="${style_grid_display!}">
+    <@row class="${styles.grid_display!}">
         <@cell columns=6>6</@cell>
         <@cell columns=6>6</@cell>
     </@row>
@@ -77,34 +77,34 @@
 <h6>h6.<h6>
 
 <h3>Shapes</h3>
-<a href="#" class="${style_button!} ${style_tiny!}">Tiny Button</a>
-<a href="#" class="${style_button!} ${style_small!}">Small Button</a>
-<a href="#" class="${style_button!}">Default Button</a>
-<a href="#" class="${style_button!} ${style_disabled!}">Disabled Button</a>
-<a href="#" class="${style_button!} ${style_large!}">Large Button</a>
-<a href="#" class="${style_button!} ${style_expand!}">Expanded Button</a>
+<a href="#" class="${styles.button!} ${styles.tiny!}">Tiny Button</a>
+<a href="#" class="${styles.button!} ${styles.small!}">Small Button</a>
+<a href="#" class="${styles.button!}">Default Button</a>
+<a href="#" class="${styles.button!} ${styles.disabled!}">Disabled Button</a>
+<a href="#" class="${styles.button!} ${styles.large!}">Large Button</a>
+<a href="#" class="${styles.button!} ${styles.expand!}">Expanded Button</a>
 <a href="#" class="button round">Round Button</a>
 <a href="#" class="button radius">Radius Button</a>
 
 <h3>Colors</h3>
-<a href="#" class="${style_button!}">Default Button</a>
-<a href="#" class="${style_button!} ${style_color_green!}">Success Button</a>
-<a href="#" class="${style_button!} ${style_color_grey!}">Secondary Button</a>
-<a href="#" class="${style_button!} ${style_color_red!}">Alert Button</a>
-<a href="#" class="${style_button!} ${style_color_info!}">Info Button</a>
-<a href="#" class="${style_button!} ${style_disabled}">Disabled Button</a>
+<a href="#" class="${styles.button!}">Default Button</a>
+<a href="#" class="${styles.button!} ${styles.color_green!}">Success Button</a>
+<a href="#" class="${styles.button!} ${styles.color_grey!}">Secondary Button</a>
+<a href="#" class="${styles.button!} ${styles.color_red!}">Alert Button</a>
+<a href="#" class="${styles.button!} ${styles.color_info!}">Info Button</a>
+<a href="#" class="${styles.button!} ${styles.disabled}">Disabled Button</a>
 
 <h3>Button Groups</h3>
-<ul class="${style_button_group} ${style_button_force!}">
-    <li><a href="#" class="${style_button!} ${style_small!}">Button 1</a></li>
-    <li><a href="#" class="${style_button!} ${style_small!} ${style_disabled}">Button 2</a></li>
-    <li><a href="#" class="${style_button!} ${style_small!} ${style_color_green}">Button 3</a></li>
+<ul class="${styles.button_group} ${styles.button_force!}">
+    <li><a href="#" class="${styles.button!} ${styles.small!}">Button 1</a></li>
+    <li><a href="#" class="${styles.button!} ${styles.small!} ${styles.disabled}">Button 2</a></li>
+    <li><a href="#" class="${styles.button!} ${styles.small!} ${styles.color_green}">Button 3</a></li>
 </ul>
 
-<ul class="${style_button_group} ${style_button_force!}">
-    <li><a href="#" class="${style_button!}">Button 1</a></li>
-    <li><a href="#" class="${style_button!}">Button 2</a></li>
-    <li><a href="#" class="${style_button!}">Button 3</a></li>
+<ul class="${styles.button_group} ${styles.button_force!}">
+    <li><a href="#" class="${styles.button!}">Button 1</a></li>
+    <li><a href="#" class="${styles.button!}">Button 2</a></li>
+    <li><a href="#" class="${styles.button!}">Button 3</a></li>
 </ul>
 </@section>                                     
 

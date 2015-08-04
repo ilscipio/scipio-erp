@@ -23,7 +23,7 @@ under the License.
                             <input type="hidden" name="finalizeMode" value="term" />
                         </form>
         <@row>
-            <@cell class="${style_grid_large!}6">
+            <@cell class="${styles.grid_large!}6">
                         <#if orderTerms?has_content && parameters.createNew?default('') != 'Y'>
                             <table class="basic-table hover-bar">
                   <thead>
@@ -60,7 +60,7 @@ under the License.
                                 <input type="hidden" name="termIndex" value="${termIndex!}" />
                                 <table class="basic-table">
                                     <tr>
-                            <td class="${style_grid_large!}3">
+                            <td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTermType}
                                         </td>
                                         <td width="5">&nbsp;</td>
@@ -76,7 +76,7 @@ under the License.
                                         </td>
                                     </tr>
                                     <tr>
-                        <td class="${style_grid_large!}3">
+                        <td class="${styles.grid_large!}3">
                                         ${uiLabelMap.OrderOrderTermValue}
                                     </td>
                                     <td width="5">&nbsp;</td>
@@ -85,7 +85,7 @@ under the License.
                                     </td>
                                     </tr>
                                     <tr>
-                            <td class="${style_grid_large!}3">
+                            <td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTermDays}
                                         </td>
                                         <td width="5">&nbsp;</td>
@@ -94,7 +94,7 @@ under the License.
                                         </td>
                                     </tr>
                                     <tr>
-                            <td class="${style_grid_large!}3">
+                            <td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTextValue}
                                         </td>
                                         <td width="5">&nbsp;</td>
@@ -103,7 +103,7 @@ under the License.
                                         </td>
                                     </tr>
                                     <tr>
-                            <td class="${style_grid_large!}3">
+                            <td class="${styles.grid_large!}3">
                                             ${uiLabelMap.CommonDescription}
                                         </td>
                                         <td width="5">&nbsp;</td>

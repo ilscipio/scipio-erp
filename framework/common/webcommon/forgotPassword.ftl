@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign logo><img src="<@ofbizContentUrl>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
 
-<div class="${style_grid_large!}3 ${style_grid_large!}centered columns login-box" id="login">
+<div class="${styles.grid_large!}3 ${styles.grid_large!}centered columns login-box" id="login">
     <div id="login-box-title">
         <h1>${logo} ${uiLabelMap.CommonRegistered!}</h1>
     </div>

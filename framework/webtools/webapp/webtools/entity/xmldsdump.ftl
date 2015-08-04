@@ -59,7 +59,7 @@ under the License.
   <h2>${uiLabelMap.WebtoolsExport}:</h2>
   <form method="post" action="<@ofbizUrl>xmldsdump</@ofbizUrl>" name="entityExport">
    <@row>
-    <@cell class="${style_grid_large!}6 columns">
+    <@cell class="${styles.grid_large!}6 columns">
   
     <@field type="input" label="${uiLabelMap.WebtoolsOutputDirectory}" size="60" name="outpath" value="${parameters.outpath!}"/>
     <@field type="input" label="${uiLabelMap.WebtoolsMaxRecordsPerFile}" size="10" name="maxrecords"/></td>
@@ -72,7 +72,7 @@ under the License.
     <hr>
     <h3>${uiLabelMap.WebtoolsEntityNames}:</h3>
      <@row>
-        <@cell class="${style_grid_large!}6 columns">
+        <@cell class="${styles.grid_large!}6 columns">
     <@displayButtonBar/>
           <@field type="input" name="entitySyncId" size="30" value="${entitySyncId!}" label="${uiLabelMap.WebtoolsEntitySyncDump}"/>
           <@field type="select" label="${uiLabelMap.WebtoolsPreConfiguredSet}" name="preConfiguredSetName">

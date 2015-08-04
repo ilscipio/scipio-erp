@@ -37,7 +37,7 @@ under the License.
         </@cell>
     </@row>
     </#if>
-  <table class="responsive ${style_grid_large!}12">
+  <table class="responsive ${styles.grid_large!}12">
    <thead>
     <tr class="header-row">
       <#--<th>${uiLabelMap.WebtoolsLabelManagerRow}</th>-->

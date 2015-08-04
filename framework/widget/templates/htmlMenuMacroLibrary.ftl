@@ -44,14 +44,14 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
               <ul class="side-nav">
                   <li>
     <#elseif style?contains("menu-button")>
-        <ul class="${style_button_group!} ${style_button_force!}">
+        <ul class="${styles.button_group!} ${styles.button_force!}">
     <#elseif style?contains("menu-tab")>    
-        <ul class="${style_button_group!} ${style_button_force!}">
+        <ul class="${styles.button_group!} ${styles.button_force!}">
     <#elseif style?contains("button-bar")>
         <#-- right now translating button-bar menu-container-style here to avoid modifying all menu 
              styles, but this limits possible styles
              note: button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear -->
-        <ul class="${style_button_group!} ${style_button_force!}">
+        <ul class="${styles.button_group!} ${styles.button_force!}">
     <#else>
         <#-- This is a fallback so unhandled cases don't produce invalid HTML and classes can pass through -->
         <#if style?has_content>

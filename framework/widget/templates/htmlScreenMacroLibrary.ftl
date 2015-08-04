@@ -182,11 +182,11 @@ under the License.
 
 <#-- Cato: new params: headerLevel, manual, menuClass, menuId
      manual is hint that didn't call from macro renderer automatically -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 manual=false menuClass="${style_button_group!} ${style_button_force!}" menuId="">
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 manual=false menuClass="${styles.button_group!} ${styles.button_force!}" menuId="">
 <div <#if collapsed>class="toggleField"</#if>>
-<#if collapsed><p class="alert legend">[ <i class="${style_icon!} ${style_icon_arrow!}"></i> ] ${title!}</p></#if>
-<div class="${style_grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
-<div class="<#if classes?has_content>${classes}<#else>${style_grid_large!}12</#if> ${style_grid_cell!}">
+<#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
+<div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
+<div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}">
 
 <#if showMore>
 <#if title?has_content><h${headerLevel}>${title}</h${headerLevel}></#if>    
@@ -253,9 +253,9 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
     </form>
   </#if>
   -->
-  <div class="${style_grid_row!}">
-    <div class="${style_grid_large!}12 ${style_grid_cell!}">  
-      <div class="${style_grid_row!}">
+  <div class="${styles.grid_row!}">
+    <div class="${styles.grid_large!}12 ${styles.grid_cell!}">  
+      <div class="${styles.grid_row!}">
         <#-- for now, make each column a huge cell 
              (can't use grid any other way without rewriting portal page render order?) -->
 </#macro>
@@ -329,11 +329,11 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
     <#-- if it's the last column and didn't fill full gridSize, add 'end' class so doesn't float right and look weird -->
     <#local endClassStr = "">
     <#if lastColumn && (portalPageGridUsed < gridSize)>
-        <#local endClassStr = " ${style_grid_end!}">
+        <#local endClassStr = " ${styles.grid_end!}">
     </#if>
     
     <#-- Column: columnCount: ${columnCount}, columnIndex: ${columnIndex}, portalPageGridUsed: ${portalPageGridUsed}, width: ${width} --> 
-    <div class="${style_grid_large!}${columnSize} ${style_grid_cell!}${endClassStr}">
+    <div class="${styles.grid_large!}${columnSize} ${styles.grid_cell!}${endClassStr}">
     <#if confMode == "true">
       <div class="portal-column-config-title-bar">
         <ul>

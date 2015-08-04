@@ -52,7 +52,7 @@ under the License.
             
         <table class="basic-table">
             <tr>
-                <td class="${style_grid_large!}3">${uiLabelMap.Party}</td>
+                <td class="${styles.grid_large!}3">${uiLabelMap.Party}</td>
                 <td>
                   <a href="${customerDetailLink}${partyId}${externalKeyParam!}" target="partymgr" class="${styles.button_default!}">${partyId}</a>
                   <#if partyMap.person??>
@@ -63,25 +63,25 @@ under the License.
                   </#if>
               </td>
             <tr>
-                <td class="${style_grid_large!}3">${uiLabelMap.CommonCurrency}</td>
+                <td class="${styles.grid_large!}3">${uiLabelMap.CommonCurrency}</td>
                 <td>
               ${currencyUomId}
                 </td>
             </tr>
             <#if agreementId?has_content>
             <tr>
-                <td class="${style_grid_large!}3">${uiLabelMap.AccountingAgreement}</td>
+                <td class="${styles.grid_large!}3">${uiLabelMap.AccountingAgreement}</td>
                 <td>${agreementId}</td>
             </tr>
             </#if>
             <#if quoteId?has_content>
             <tr>
-                <td class="${style_grid_large!}3">${uiLabelMap.OrderOrderQuote}</td>
+                <td class="${styles.grid_large!}3">${uiLabelMap.OrderOrderQuote}</td>
                 <td>${quoteId}</td>
             </tr>
             </#if>
             <tr>
-                <td class="${style_grid_large!}3">${uiLabelMap.CommonTotal}</td>
+                <td class="${styles.grid_large!}3">${uiLabelMap.CommonTotal}</td>
                 <td><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></td>
             </tr>
     </table>

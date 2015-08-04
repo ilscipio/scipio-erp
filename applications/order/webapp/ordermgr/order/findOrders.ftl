@@ -114,13 +114,13 @@ function submitFindForm(val){
 
   <#if (parameters.hideFields!"N") != "Y">
     <@row>
-    <@cell class="${style_grid_large!}9 columns">
+    <@cell class="${styles.grid_large!}9 columns">
 
       <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
       
       <@row collapse=true>
-                <@cell class="${style_grid_large!}2 ${style_grid_small!}3"> <label>${uiLabelMap.CommonDateFilter}</label></@cell>
-                <@cell class="${style_grid_large!}10 ${style_grid_small!}9">
+                <@cell class="${styles.grid_large!}2 ${styles.grid_small!}3"> <label>${uiLabelMap.CommonDateFilter}</label></@cell>
+                <@cell class="${styles.grid_large!}10 ${styles.grid_small!}9">
                     <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" collapse=true/>
                     <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate" collapse=true/>
                 </@cell>
@@ -157,10 +157,10 @@ function submitFindForm(val){
                     </#list>
           </@field>     
           <@row collapse=true>
-                <@cell class="${style_grid_small!}3 ${style_grid_large!}2">
+                <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
                     <label class="inline">${uiLabelMap.PartyPartyId}</label>
                 </@cell>
-                <@cell class="${style_grid_small!}9 ${style_grid_large!}10">
+                <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
                   <@htmlTemplate.lookupField value='${requestParameters.partyId!}' formName="lookuporder" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
                 </@cell>
            </@row>
@@ -254,14 +254,14 @@ function submitFindForm(val){
             
             
             <@row collapse=false>
-                <@cell class="${style_grid_large!}4">
+                <@cell class="${styles.grid_large!}4">
                     <@renderCheckBox name="filterInventoryProblems" currentValue="Y" checked=requestParameters.filterInventoryProblems!"N"/> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterInventoryProblems}
                 </@cell>
-                <@cell class="${style_grid_large!}4">
+                <@cell class="${styles.grid_large!}4">
                     <@renderCheckBox name="filterPOsOpenPastTheirETA" currentValue="Y" checked=requestParameters.filterPOsOpenPastTheirETA!"N" /> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsOpenPastTheirETA}
                 </@cell>
     
-                <@cell class="${style_grid_large!}4">
+                <@cell class="${styles.grid_large!}4">
                     <@renderCheckBox name="filterPOsWithRejectedItems" currentValue="Y" checked=requestParameters.filterPOsWithRejectedItems!"N"/> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsWithRejectedItems}      
                 </@cell>
             </@row>

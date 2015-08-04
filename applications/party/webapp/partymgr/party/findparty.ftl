@@ -37,7 +37,7 @@ under the License.
 
 <@section>
 
-    <ul class="${style_button_group!}">
+    <ul class="${styles.button_group!}">
       <li><a href="<@ofbizUrl>${createUrl}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.CommonCreateNew}</a></li>
 <#if partyList?has_content>    
   <#if hideFields == "Y">

@@ -21,7 +21,7 @@ under the License.
 <@section>
 <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
       <@row>
-        <@cell class="${style_grid_large!}6">      
+        <@cell class="${styles.grid_large!}6">      
             <table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
               <thead>
               <tr>
@@ -57,12 +57,12 @@ under the License.
   <#assign sectionTitle>${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}<#if supplier?has_content> - ${supplier.groupName?default(supplier.partyId)}</#if></#assign>
   <@section title=sectionTitle>   
     <@row>
-        <@cell class="${style_grid_large!}6">
+        <@cell class="${styles.grid_large!}6">
             <table class="basic-table">  
                <#if cart.getOrderType() != "PURCHASE_ORDER">
 
               <tr>
-                     <td class="${style_grid_large!}3 top">
+                     <td class="${styles.grid_large!}3 top">
                        ${uiLabelMap.ProductShipmentMethod}
                 </td>
                      <td>
@@ -99,7 +99,7 @@ under the License.
                     
                <#else>
                    <tr>
-                     <td class="${style_grid_large!}3">
+                     <td class="${styles.grid_large!}3">
                        ${uiLabelMap.OrderOrderShipEstimate}
                      </td>
                      <td>
@@ -109,7 +109,7 @@ under the License.
                    </tr>
                </#if>
                 <tr>
-                  <td class="${style_grid_large!}3">
+                  <td class="${styles.grid_large!}3">
                     ${uiLabelMap.FacilityShipOnceOrAvailable}
                   </td>
                   <td>
@@ -118,7 +118,7 @@ under the License.
                   </td>
                 </tr>
                 <tr>
-                  <td class="${style_grid_large!}3">
+                  <td class="${styles.grid_large!}3">
                     ${uiLabelMap.OrderShipBeforeDate}
                   </td>
                     <td>
@@ -128,7 +128,7 @@ under the License.
                     </td>
                 </tr>
                 <tr>
-                  <td class="${style_grid_large!}3">
+                  <td class="${styles.grid_large!}3">
                     ${uiLabelMap.OrderShipAfterDate}
                   </td>
                     <td>
@@ -138,7 +138,7 @@ under the License.
                     </td>
                 </tr>
                 <tr>
-                  <td class="${style_grid_large!}3">
+                  <td class="${styles.grid_large!}3">
                     ${uiLabelMap.FacilitySpecialInstructions}
                   </td>
                   <td>
@@ -151,7 +151,7 @@ under the License.
                 <#else>
                     <#if (productStore.showCheckoutGiftOptions)?default('Y') != 'N'>
                         <tr>
-                            <td class="${style_grid_large!}3">${uiLabelMap.OrderIsThisGift}</td>
+                            <td class="${styles.grid_large!}3">${uiLabelMap.OrderIsThisGift}</td>
                             <td>
                                 <@field type="radio" name="${shipGroupIndex?default('0')}_is_gift" value="true" checked=cart.getIsGift(shipGroupIndex)?default('N') label="${uiLabelMap.CommonYes}"/>
                                 <@field type="radio" name="${shipGroupIndex?default('0')}_is_gift" value="false" checked=cart.getIsGift(shipGroupIndex)?default('Y') label="${uiLabelMap.CommonNo}"/>

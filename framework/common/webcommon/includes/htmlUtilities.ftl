@@ -231,7 +231,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     * password *
     autocomplete    = true/false, default true (false to prevent)
 -->
-<#macro field type="" label="" name="" value="" currentValue="" defaultValue="" class="${style_grid_large!}12" size=20 maxlength="" id="" onClick="" 
+<#macro field type="" label="" name="" value="" currentValue="" defaultValue="" class="${styles.grid_large!}12" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
         fieldFormName="" formName="" postfix=false required=false addClass="" items=[] autocomplete=true>
@@ -248,7 +248,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 <#if postfix>
     <#local columnspostfix=1/>
     <#local collapse=true/>
-    <#local classes="${style_grid_small!}${12-columnspostfix}"/>
+    <#local classes="${styles.grid_small!}${12-columnspostfix}"/>
 </#if>
 
 <#if required && (!containsStyleClass(class, "required"))>
@@ -261,12 +261,12 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 
 <@row collapse=collapse!false norows=norows>
     <#if label?has_content>
-        <#local subclasses="${style_grid_small!}3 ${style_grid_large!}2"/>
-        <#local classes="${style_grid_small!}${9-columnspostfix} ${style_grid_large!}${10-columnspostfix}"/>
+        <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
+        <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         
         <#if columns?has_content>
-            <#local subclasses="${style_grid_small!}${12-columns+1} ${style_grid_large!}${12-columns}"/>
-            <#local classes="${style_grid_small!}${columns-columnspostfix-1} ${style_grid_large!}${columns-columnspostfix}"/>
+            <#local subclasses="${styles.grid_small!}${12-columns+1} ${styles.grid_large!}${12-columns}"/>
+            <#local classes="${styles.grid_small!}${columns-columnspostfix-1} ${styles.grid_large!}${columns-columnspostfix}"/>
         </#if>
         
         <#if !radioSingle>
@@ -414,8 +414,8 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         </#switch>
      </@cell>
      <#if postfix && !nocells>
-         <@cell class="${style_grid_small!}1">
-                <span class="postfix"><input type="submit" class="${style_icon!} ${style_icon_button!}" value="${style_icon_button_value!}"/></span>
+         <@cell class="${styles.grid_small!}1">
+                <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
          </@cell>
      </#if>
 </@row>
@@ -457,7 +457,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 -->
 <#macro row class="" id="" collapse=false norows=false>
     <#if !norows>
-    <div class="${style_grid_row!} <#if class?has_content> ${class!}</#if><#if collapse> collapse</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
+    <div class="${styles.grid_row!} <#if class?has_content> ${class!}</#if><#if collapse> collapse</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
     </#if>
         <#nested />
     <#if !norows>    
@@ -483,7 +483,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     offset          = offset in number of columns
 -->
 <#macro cell columns=12 offset=0 class="" id="" collapse=false nocells=false>
-    <#if !nocells><div class="<#if class?has_content>${class!}<#else>${style_grid_large!}${columns!12}</#if><#if offset&gt;0>${style_grid_offset!}${offset!}</#if> ${style_grid_cell!}" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
+    <#if !nocells><div class="<#if class?has_content>${class!}<#else>${styles.grid_large!}${columns!12}</#if><#if offset&gt;0>${styles.grid_offset!}${offset!}</#if> ${styles.grid_cell!}" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
         <#nested />
     <#if !nocells></div></#if>
 </#macro>
@@ -509,7 +509,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     menuHtml            = optional HTML menu data, li elements only (ul auto added); can be string "_INCLUDE_MENU_" to force add empty menu elem (js, etc.)
     menuClass           = menu class, default buttons class
 -->
-<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="${style_button_group!} ${style_button_force!}">
+<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="${styles.button_group!} ${styles.button_force!}">
     <#local explicitHeaderLevel = false>
     <#local updatedHeaderLevel = false> <#-- just so consistent -->
     <#if autoHeaderLevel>
@@ -572,7 +572,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 -->
 <#macro modal id label href="">
     <a href="#" data-reveal-id="${id}_modal" <#if href?has_content>data-reveal-ajax="${href!}"</#if>>${label}</a>
-    <div id="${id}_modal" class="${style_modal_wrap!}" data-reveal>
+    <div id="${id}_modal" class="${styles.modal_wrap!}" data-reveal>
         <#nested>
         <a class="close-reveal-modal">&#215;</a>
     </div>
@@ -703,11 +703,11 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     addClass       = additional classes for nested container
 -->
 <#macro alert type="" addClass="">
-<div class="${style_grid_row!}">
-        <div class="${style_grid_large!}12 ${style_grid_cell!}">
-        <div data-alert class="${style_alert_wrap!} ${style_alert_prefix_type!}${type}">
-           <div class="${style_grid_row!}">
-              <div class="${style_grid_large!}12 ${style_grid_cell!}<#if addClass?has_content> ${addClass}</#if>">
+<div class="${styles.grid_row!}">
+        <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
+        <div data-alert class="${styles.alert_wrap!} ${styles.alert_prefix_type!}${type}">
+           <div class="${styles.grid_row!}">
+              <div class="${styles.grid_large!}12 ${styles.grid_cell!}<#if addClass?has_content> ${addClass}</#if>">
                   <#nested>
                   <a href="#" class="close">&times;</a>
                 </div>
@@ -731,9 +731,9 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     title          = Title
 -->
 <#macro panel type="" title="">
-<div class="${style_panel_wrap!} ${type}">
-  <div class="${style_panel_head!}"><#if title?has_content><h5 class="${style_panel_title!}">${title!}</h5></#if></div>
-  <div class="${style_panel_body!}"><p><#nested></p></div>
+<div class="${styles.panel_wrap!} ${type}">
+  <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
+  <div class="${styles.panel_body!}"><p><#nested></p></div>
 </div>
 </#macro>
 
@@ -755,7 +755,7 @@ Since this is very foundation specific, this function may be dropped in future i
 -->
 
 <#macro pul title="">
-          <ul class="${style_pricing_wrap!}">
+          <ul class="${styles.pricing_wrap!}">
               <@pli type="title">${title!}</@pli>
               <#nested>
           </ul>
@@ -764,19 +764,19 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro pli type="">
     <#switch type>
           <#case "price">
-              <li class="${style_pricing_price!}"><#nested></li>
+              <li class="${styles.pricing_price!}"><#nested></li>
           <#break>
           <#case "description">
-              <li class="${style_pricing_description!}"><#nested></li>
+              <li class="${styles.pricing_description!}"><#nested></li>
           <#break>
           <#case "title">
-              <li class="${style_pricing_title!}"><#nested></li>
+              <li class="${styles.pricing_title!}"><#nested></li>
           <#break>
           <#case "button">
-              <li class="${style_pricing_cta!}"><#nested></li>
+              <li class="${styles.pricing_cta!}"><#nested></li>
           <#break>        
           <#default>
-              <li class="${style_pricing_bullet!}"><#nested></li>
+              <li class="${styles.pricing_bullet!}"><#nested></li>
           <#break>
     </#switch>
 </#macro>
@@ -793,7 +793,7 @@ Since this is very foundation specific, this function may be dropped in future i
     </@grid>            
                     
    * General Attributes *
-    class           = Adds classes - please use "(small|medium|large)-${style_grid_block!}#"
+    class           = Adds classes - please use "(small|medium|large)-${styles.grid_block!}#"
     columns         = Number of columns (default 5)
     type            = (tiles|) default:empty
     
@@ -802,18 +802,18 @@ Since this is very foundation specific, this function may be dropped in future i
     <#if type=="tiles" || type="freetiles">
         <#global freewallNum="${(freewallNum!0)+1}" />
         <#local id="freewall_id_${freewallNum!0}">
-        <div class="${style_tile_container!}" id="${id!}">
+        <div class="${styles.tile_container!}" id="${id!}">
             <#nested>
         </div>
         <script>
          $(function() {
             $('#${id}').freetile({
-                selector: '.${style_tile_wrap!}'
+                selector: '.${styles.tile_wrap!}'
             });
             <#--
             Alternative implementation of gridster.js
             $('#${id}').gridster({
-                widget_selector: '.${style_tile_wrap!}',
+                widget_selector: '.${styles.tile_wrap!}',
                 min_cols:${columns},
                 autogenerate_stylesheet:false
             }).disable();
@@ -821,11 +821,11 @@ Since this is very foundation specific, this function may be dropped in future i
          });
         </script>
     <#else>
-        <#local defaultClass="${style_grid_small!}${style_grid_block!}2 ${style_grid_medium!}${style_grid_block!}4 ${style_grid_large!}${style_grid_block!}5">
+        <#local defaultClass="${styles.grid_small!}${styles.grid_block!}2 ${styles.grid_medium!}${styles.grid_block!}4 ${styles.grid_large!}${styles.grid_block!}5">
             <#if columns-2 &gt; 0>
-                <#local class="${style_grid_small!}${style_grid_block!}${columns-2} ${style_grid_medium!}${style_grid_block!}${columns-1} ${style_grid_large!}${style_grid_block!}${columns}"/>
+                <#local class="${styles.grid_small!}${styles.grid_block!}${columns-2} ${styles.grid_medium!}${styles.grid_block!}${columns-1} ${styles.grid_large!}${styles.grid_block!}${columns}"/>
             <#else>
-                <#local class="${style_grid_large!}${style_grid_block!}${columns}"/>
+                <#local class="${styles.grid_large!}${styles.grid_block!}${columns}"/>
             </#if>
           <ul class="${class!defaultClass!}">
               <#nested>
@@ -866,12 +866,12 @@ Since this is very foundation specific, this function may be dropped in future i
             </div>
         <#break>
         <#case "breadcrumbs">
-            <ul class="${style_nav_breadcrumbs!}">
+            <ul class="${styles.nav_breadcrumbs!}">
                 <#nested>
             </ul>
         <#break>
         <#default>
-            <ul class="${style_list_inline!} ${style_nav_subnav!}">
+            <ul class="${styles.list_inline!} ${styles.nav_subnav!}">
               <#nested>
             </ul>
         <#break>
@@ -933,13 +933,13 @@ It is loosely based on http://metroui.org.ua/tiles.html
 -->
 <#macro tile type="normal" title="" class="" id="" link="" color=0 icon="" image="">
     <#local nested><#nested></#local>
-    <div class="${style_tile_wrap!} ${style_tile_wrap!}-${type!}<#if class?has_content> ${class!}</#if> ${style_tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if> data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
-        <#if image?has_content><div class="${style_tile_image!}" style="background-image: url(${image!})"></div></#if>
-        <div class="${style_tile_content!}">
+    <div class="${styles.tile_wrap!} ${styles.tile_wrap!}-${type!}<#if class?has_content> ${class!}</#if> ${styles.tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if> data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
+        <#if image?has_content><div class="${styles.tile_image!}" style="background-image: url(${image!})"></div></#if>
+        <div class="${styles.tile_content!}">
             <#if link?has_content><a href="${link!}"></#if>
-            <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${style_tile_icon!}"><i class="${icon!}"></i></span></#if>
-            <#if nested?has_content><span class="${style_tile_overlay!}"><#nested></span></#if>
-            <#if title?has_content><span class="${style_tile_title!}">${title!}</span></#if>
+            <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
+            <#if nested?has_content><span class="${styles.tile_overlay!}"><#nested></span></#if>
+            <#if title?has_content><span class="${styles.tile_title!}">${title!}</span></#if>
             <#if link?has_content></a></#if>
         </div>
     </div>  
@@ -979,7 +979,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <#if chartLibrary=="foundation">
         <@row>
         <@cell columns=3>    
-        <ul data-${type!}-id="chart_${renderSeqNumber!}_${fieldIdNum!}" class="${style_chart_legend!}">
+        <ul data-${type!}-id="chart_${renderSeqNumber!}_${fieldIdNum!}" class="${styles.chart_legend!}">
             <#nested/>
         </ul>
         </@cell>
@@ -988,7 +988,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <#else>
         <#global chartId = "chart_${renderSeqNumber!}_${fieldIdNum!}"/>
         <#global chartType = type/>
-        <canvas id="${chartId!}" class="${style_grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
+        <canvas id="${chartId!}" class="${styles.grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
         <script>
             $(function(){
                 var chartDataEl = $('.chart-data:first-of-type');
@@ -1104,21 +1104,21 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 <#macro progress value=0 id="" type="" class="" showValue=false addWrapClass="" progressOptions={}>
     <#switch type>
       <#case "alert">
-        <#local color=style_color_alert!/>
+        <#local color=styles.color_alert!/>
       <#break>
       <#case "info">
-        <#local color=style_color_info!/>
+        <#local color=styles.color_info!/>
       <#break>
       <#case "warning">
-        <#local color=style_color_warning!/>
+        <#local color=styles.color_warning!/>
       <#break>
       <#default>
-        <#local color=style_color_success!/>
+        <#local color=styles.color_success!/>
     </#switch>
-    <div class="${style_progress_container}<#if !style_progress_wrap?has_content && class?has_content> ${class!}</#if><#if color?has_content> ${color!}</#if><#if addWrapClass?has_content> ${addWrapClass}</#if>"<#if id?has_content> id="${id}"</#if>>
-      <#if style_progress_wrap?has_content><div class="${style_progress_wrap!}<#if class?has_content> ${class!}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
-            <span class="${style_progress_bar!}"<#if !style_progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
-      <#if style_progress_wrap?has_content></div></#if>
+    <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && class?has_content> ${class!}</#if><#if color?has_content> ${color!}</#if><#if addWrapClass?has_content> ${addWrapClass}</#if>"<#if id?has_content> id="${id}"</#if>>
+      <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if class?has_content> ${class!}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
+            <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
+      <#if styles.progress_wrap?has_content></div></#if>
     </div>
     
   <#if progressOptions?has_content>

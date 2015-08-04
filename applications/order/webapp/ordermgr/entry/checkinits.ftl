@@ -38,7 +38,7 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
 </#assign>
 
 <h2>${title!}</h2>
-<@section classes="${style_grid_large!}9">
+<@section classes="${styles.grid_large!}9">
     <ul class="button-group">
       <li><a href="javascript:document.salesentryform.submit();" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a></li>
       <li><a href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.PartyFindParty}</a></li>
@@ -49,7 +49,7 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
       <input type="hidden" name="finalizeMode" value="type"/>
       <input type="hidden" name="orderMode" value="SALES_ORDER"/>
        <@row>
-        <@cell class="${style_grid_large!}12 columns">
+        <@cell class="${styles.grid_large!}12 columns">
         <@field type="select" label="${uiLabelMap.ProductProductStore}" name="productStoreId" >
                 <#assign currentStore = shoppingCartProductStore>
                 <#if defaultProductStore?has_content>
@@ -78,14 +78,14 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
           <#assign thisPartyId = requestParameters.partyId!>
         </#if>
         <@row collapse=false>
-                <@cell class="${style_grid_small!}3 ${style_grid_large!}2">${uiLabelMap.CommonUserLoginId}</@cell>
-                <@cell class="${style_grid_small!}9 ${style_grid_large!}10">
+                <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">${uiLabelMap.CommonUserLoginId}</@cell>
+                <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
               <@htmlTemplate.lookupField value="${parameters.userLogin.userLoginId}" formName="salesentryform" name="userLoginId" id="userLoginId_sales" fieldFormName="LookupUserLoginAndPartyDetails"/>
           </@cell>
         </@row>
         <@row collapse=false>
-                <@cell class="${style_grid_small!}3 ${style_grid_large!}2">${uiLabelMap.OrderCustomer}</@cell>
-                <@cell class="${style_grid_small!}9 ${style_grid_large!}10">
+                <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">${uiLabelMap.OrderCustomer}</@cell>
+                <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
               <@htmlTemplate.lookupField value='${thisPartyId!}' formName="salesentryform" name="partyId" id="partyId" fieldFormName="LookupCustomerName"/>
           </@cell>
         </@row>
@@ -102,7 +102,7 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
     <#assign title>
         ${uiLabelMap.OrderPurchaseOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgress}</#if>
     </#assign>
-    <@section title=title classes="${style_grid_large!}9">
+    <@section title=title classes="${styles.grid_large!}9">
       <ul class="button-group">
         <li><a href="javascript:document.poentryform.submit();" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a></li>
         <li><a href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.PartyFindParty}</a></li>
@@ -111,7 +111,7 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
       <input type='hidden' name='finalizeMode' value='type'/>
       <input type='hidden' name='orderMode' value='PURCHASE_ORDER'/>
        <@row>
-        <@cell class="${style_grid_large!}12 columns">
+        <@cell class="${styles.grid_large!}12 columns">
 
       
         <#if partyId??>
@@ -128,8 +128,8 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
                 </#list>
         </@field>
         <@row collapse=false>
-                <@cell class="${style_grid_small!}3 ${style_grid_large!}2">${uiLabelMap.CommonUserLoginId}</@cell>
-                <@cell class="${style_grid_small!}9 ${style_grid_large!}10">
+                <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">${uiLabelMap.CommonUserLoginId}</@cell>
+                <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
               <@htmlTemplate.lookupField value='${parameters.userLogin.userLoginId}'formName="poentryform" name="userLoginId" id="userLoginId_purchase" fieldFormName="LookupUserLoginAndPartyDetails"/>
                 </@cell>
         </@row>

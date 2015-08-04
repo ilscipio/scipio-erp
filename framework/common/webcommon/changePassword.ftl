@@ -20,7 +20,7 @@ under the License.
 <#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
 <#assign tenantId = requestParameters.userTenantId!>
 
-<div class="${style_grid_large!}3 ${style_grid_large!}centered columns login-box" id="login">
+<div class="${styles.grid_large!}3 ${styles.grid_large!}centered columns login-box" id="login">
 <div id="login-box-title">
     <h1>${uiLabelMap.CommonPasswordChange}</h1>
   </div>

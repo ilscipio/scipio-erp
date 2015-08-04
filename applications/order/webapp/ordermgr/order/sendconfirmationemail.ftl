@@ -20,7 +20,7 @@ under the License.
 <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
 <@section title="${uiLabelMap.OrderSendConfirmationEmail}">
     <@row>
-    <@cell class="${style_grid_large!}6 columns">
+    <@cell class="${styles.grid_large!}6 columns">
 
       <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
       <a href="javascript:document.sendConfirmationForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSend}</a>      
@@ -34,32 +34,32 @@ under the License.
         <input type="hidden" name="contentType" value="${productStoreEmailSetting.contentType?default("")}" />
         <table class="basic-table" cellspacing='0'>
             <tr>
-                <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailSubject}&nbsp;</td>
+                <td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailSubject}&nbsp;</td>
                 <td>
                     <input type="text" size="40" name="subject" value="${productStoreEmailSetting.subject?default(uiLabelMap.OrderOrderConfirmation + " " + uiLabelMap.OrderNbr + orderId)?replace("\\$\\{orderId\\}",orderId,"r")}" />
                 </td>
             </tr>
             </tr>
-                <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailSendTo}&nbsp;</td>
+                <td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailSendTo}&nbsp;</td>
                 <td>
                     <input type="text" size="40" name="sendTo" value="${sendTo}"/>
                 </td>
             <tr>
             </tr>
             <tr>
-                <td  scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailCCTo}&nbsp;</td>
+                <td  scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailCCTo}&nbsp;</td>
                 <td>
                     <input type="text" size="40" name="sendCc" value="${productStoreEmailSetting.ccAddress?default("")}" />
                 </td>
             </tr>
             <tr>
-                <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailBCCTo}&nbsp;</td>
+                <td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailBCCTo}&nbsp;</td>
                 <td>
                     <input type="text" size="40" name="sendBcc" value="${productStoreEmailSetting.bccAddress?default("")}" />
                 </td>
             </tr>
             <tr>
-                <td scope="row" class="${style_grid_large!}3">${uiLabelMap.CommonFrom}&nbsp;</td>
+                <td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonFrom}&nbsp;</td>
                 <td>
                     <#if productStoreEmailSetting.fromAddress??>
                         <input type="hidden" name="sendFrom" value="${productStoreEmailSetting.fromAddress}" />
@@ -69,11 +69,11 @@ under the License.
                 </td>
             <tr>
             <tr>
-                <td  scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailContentType}&nbsp;</td>
+                <td  scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailContentType}&nbsp;</td>
                 <td>${productStoreEmailSetting.contentType?default("text/html")}</td>
             </tr>
             <tr>
-                <td scope="row" class="${style_grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailBody}&nbsp;</td>
+                <td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailBody}&nbsp;</td>
                 <td>
                     <textarea name="body" rows="30" cols="80">${screens.render(productStoreEmailSetting.bodyScreenLocation?default(""))}</textarea>
                 </td>

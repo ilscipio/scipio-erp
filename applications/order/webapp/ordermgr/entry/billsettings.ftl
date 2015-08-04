@@ -36,7 +36,7 @@ function makeExpDate() {
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 <@section>
     <@row>
-        <@cell class="${style_grid_large!}6">
+        <@cell class="${styles.grid_large!}6">
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
          <ul class="button-group">
            <li><a href="<@ofbizUrl>setBilling?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a></li>
@@ -50,7 +50,7 @@ function makeExpDate() {
               
               <#if billingAccountList?has_content>
                 <tr>
-                  <td class="${style_grid_large!}3">
+                  <td class="${styles.grid_large!}3">
                     <select name="billingAccountId">
                       <option value=""></option>
                         <#list billingAccountList as billingAccount>
@@ -70,7 +70,7 @@ function makeExpDate() {
                   <td></td>
                 </tr>
                 <tr>
-                  <td class="${style_grid_large!}3" class="text-right">
+                  <td class="${styles.grid_large!}3" class="text-right">
                     <input type="text" size="5" name="billingAccountAmount" value=""/>
                   </td>
                   <td>
@@ -81,7 +81,7 @@ function makeExpDate() {
                 
               </#if>
               <tr>
-                <td class="${style_grid_large!}3">
+                <td class="${styles.grid_large!}3">
                   <input type="radio" id="checkOutPaymentId_EXT_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if>/>
                 </td>
                 <td>
@@ -91,7 +91,7 @@ function makeExpDate() {
               </tr>
              
               <tr>
-                <td class="${style_grid_large!}3">
+                <td class="${styles.grid_large!}3">
                   <input type="radio" id="checkOutPaymentId_EXT_COD" name="checkOutPaymentId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if>/>
                 </td>
                 <td>
@@ -105,7 +105,7 @@ function makeExpDate() {
                   <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                     <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
                     <tr>
-                      <td class="${style_grid_large!}3">
+                      <td class="${styles.grid_large!}3">
                         <input type="radio" id="checkOutPaymentId_CREDIT_CARD_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
                       </td>
                       <td>
@@ -121,7 +121,7 @@ function makeExpDate() {
                   <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                     <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
                     <tr>
-                      <td class="${style_grid_large!}3">
+                      <td class="${styles.grid_large!}3">
                         <input type="radio" id="checkOutPaymentId_EFT_ACCOUNT_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
                       </td>
                       <td>
@@ -489,23 +489,23 @@ function makeExpDate() {
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <#if "Y" != requestParameters.createNew?default("")>
               <tr>
-                <td class="${style_grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/></td>
+                <td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/></td>
                 <td nowrap="nowrap"><div>${uiLabelMap.OrderPaymentOfflineCheckMoney}</div></td>
               </tr>
               
               <tr>
-                <td class="${style_grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/></td>
+                <td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/></td>
                 <td nowrap="nowrap"><div>${uiLabelMap.OrderCOD}</div></td>
               </tr>
               
               </#if>
               <tr>
-                <td class="${style_grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="CC" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
+                <td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="CC" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
                 <td nowrap="nowrap"><div>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</div></td>
               </tr>
               
               <tr>
-                <td class="${style_grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EFT" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
+                <td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EFT" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
                 <td width='50%' nowrap="nowrap"><div>${uiLabelMap.AccountingAHCElectronicCheck}</div></td>
               </tr>
             </table>

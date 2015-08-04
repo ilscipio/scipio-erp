@@ -620,11 +620,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             }
             StringWriter sb = new StringWriter();
             if (navMenu != null) {
-                MenuStringRenderer savedRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
-                MenuStringRenderer renderer = new ScreenletMenuRenderer(request, response);
-                context.put("menuStringRenderer", renderer);
+                //MenuStringRenderer savedRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
+                //MenuStringRenderer renderer = new ScreenletMenuRenderer(request, response);
+                //context.put("menuStringRenderer", renderer);
                 navMenu.renderWidgetString(sb, context, this);
-                context.put("menuStringRenderer", savedRenderer);
+                //context.put("menuStringRenderer", savedRenderer);
             } else if (navForm != null) {
                 renderScreenletPaginateMenu(sb, context, navForm);
             }

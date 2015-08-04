@@ -631,10 +631,10 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 context.remove("menuStringRender_inlineEntries");
                 context.remove("menuStringRender_contextType");
                 //context.put("menuStringRenderer", savedRenderer);
-                menuType = "screenlet-nav-menu";
+                menuType = "nav-menu";
             } else if (navForm != null) {
                 renderScreenletPaginateMenu(sb, context, navForm);
-                menuType = "screenlet-paginate-menu";
+                menuType = "paginate-menu";
             }
             menuString = sb.toString();
         }

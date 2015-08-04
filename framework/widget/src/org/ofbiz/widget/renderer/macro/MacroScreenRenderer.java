@@ -620,6 +620,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             }
             StringWriter sb = new StringWriter();
             if (navMenu != null) {
+                // Cato: use the FTL renderer for this
                 //MenuStringRenderer savedRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
                 //MenuStringRenderer renderer = new ScreenletMenuRenderer(request, response);
                 //context.put("menuStringRenderer", renderer);

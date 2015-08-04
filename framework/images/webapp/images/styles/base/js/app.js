@@ -135,7 +135,9 @@ function CatoUploadProgress(options) {
     	if (!this.preventDoubleUpload || !this.uploading) {
     		this.delayedInit();
     		this.resetProgress();
+    		return true;
     	}
+    	return false;
     };
     
     this.initUpload = function() {
@@ -152,7 +154,9 @@ function CatoUploadProgress(options) {
 	        this.resetInitContainers(uploadInfo);
 	        this.beginProgressStatus(uploadInfo);
 	        this.uploadCount = this.uploadCount + 1;
+	        return true;
     	}
+    	return false;
     };
 
 

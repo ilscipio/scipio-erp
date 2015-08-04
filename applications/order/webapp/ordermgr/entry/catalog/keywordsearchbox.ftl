@@ -39,7 +39,9 @@ under the License.
         </#if>
           <@field type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_OR" value="OR" checked=(searchOperator == "OR") label="${uiLabelMap.CommonAny}"/>
           <@field type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_AND" value="AND" checked=(searchOperator == "AND") label="${uiLabelMap.CommonAll}"/>
-          <input type="submit" value="${uiLabelMap.CommonFind}" class="button" />
+          <@field type="submitrow">
+            <input type="submit" value="${uiLabelMap.CommonFind}" class="button" />
+          </@field>
     </form>
     <form name="advancedsearchform" id="keywordsearchbox_advancedsearchform" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>">
       <@fieldset title="${uiLabelMap.CommonAdvancedSearch}" collapsed=true>
@@ -56,7 +58,9 @@ under the License.
         <#else>
           <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}" />
         </#if>
-          <input type="submit" value="${uiLabelMap.ProductAdvancedSearch}" class="button" />
+          <@field type="submitrow">
+            <input type="submit" value="${uiLabelMap.ProductAdvancedSearch}" class="button" />
+          </@field>
       </@fieldset>
     </form>
 </@section>

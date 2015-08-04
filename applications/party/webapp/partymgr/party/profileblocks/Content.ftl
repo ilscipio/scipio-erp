@@ -47,32 +47,26 @@ under the License.
           </#list>
         </@field>
    
-        <@row>
-          <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
-            <input type="submit" value="${uiLabelMap.CommonUpload}" class="smallSubmit" />
-          </@cell>
-          <@cell class="${styles.grid_small!}6 ${styles.grid_large!}6">
-            <#assign progressOptions = {
-                "formSel" : "#uploadPartyContent",
-                "progTextBoxId" : "upcProgressMsgBox",
-                
-                "msgContainerParentSel" : "#partyAttachContent_content",
-                "msgContainerInsertMode" : "prepend",
-                
-                "iframeParentSel" : "#partyContent",
-                "expectedResultContainerSel" : "#partyContentList",
-                "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
-                "errorResultAddWrapper" : false,
-    
-                "resultContentReplace" : true,
-                "contentContainerSel" : "#partyContentList",
-                "resultContentContainerSel" : "#partyContentList"
-            }>
-            <@progress id="upc_progress_bar" type="info" addWrapClass="${styles.hidden!}" progressOptions=progressOptions/>
-          </@cell>
-          <@cell class="${styles.grid_small!}3 ${styles.grid_large!}4" id="upcProgressMsgBox">
-          </@cell>
-        </@row>
+        <#assign progressOptions = {
+            "formSel" : "#uploadPartyContent",
+            "progBarId" : "upc_progress_bar",
+            "progTextBoxId" : "upcProgressMsgBox",
+            
+            "msgContainerParentSel" : "#partyAttachContent_content",
+            "msgContainerInsertMode" : "prepend",
+            
+            "iframeParentSel" : "#partyContent",
+            "expectedResultContainerSel" : "#partyContentList",
+            "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
+            "errorResultAddWrapper" : false,
+
+            "resultContentReplace" : true,
+            "contentContainerSel" : "#partyContentList",
+            "resultContentContainerSel" : "#partyContentList"
+        }>
+        <@field type="submitrow" progressOptions=progressOptions>
+          <input type="submit" value="${uiLabelMap.CommonUpload}" class="smallSubmit" />
+        </@field>
       </form>
     </@section>
     

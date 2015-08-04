@@ -41,7 +41,9 @@ under the License.
           
         </@fieldset>
         <input type="hidden" name="showAll" value="Y"/>
-        <input type="submit" value='${uiLabelMap.CommonFind}'/>
+        <@field type="submitrow">
+            <input type="submit" value='${uiLabelMap.CommonFind}'/>
+        </@field>
       </@cell>
   </@row>    
 </@section>

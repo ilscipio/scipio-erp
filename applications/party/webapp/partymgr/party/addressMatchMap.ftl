@@ -26,7 +26,9 @@ under the License.
     <@field type="input" name="mapKey" label="${uiLabelMap.PartyAddressMatchKey}" />
     <@field type="input" name="mapValue" label="${uiLabelMap.PartyAddressMatchValue}" />
     <@field type="input" name="sequenceNum" label="${uiLabelMap.CommonSequence}" value="0" size=5/>
-    <a href="javascript:document.addaddrmap.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></td>
+    <@field type="submitrow">
+      <a href="javascript:document.addaddrmap.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></td>
+    </@field>
     </form>
     <div id="importaddrmap_section">
   </@section>
@@ -35,30 +37,25 @@ under the License.
   <form name="importaddrmap" method="post" enctype="multipart/form-data" action="<@ofbizUrl>importAddressMatchMapCsv</@ofbizUrl>">
     <@field type="file" name="uploadedFile" label="CSV ${uiLabelMap.CommonDocument}" size=14 />
     
-    <@row>
-      <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
-        <input type="submit" value="${uiLabelMap.CommonUpload} CSV"/>
-      </@cell>
-      <@cell class="${styles.grid_small!}6 ${styles.grid_large!}6">
-        <#assign successUrl><@ofbizUrl>addressMatchMap</@ofbizUrl></#assign>
-        <#assign progressOptions = {
-            "formSel" : "form[name=importaddrmap]",
-            "progTextBoxId" : "importaddrmap_prog_textbox",
-            
-            "msgContainerParentSel" : "#addressmatchmap_import_content",
-            "msgContainerInsertMode" : "prepend",
-            
-            "expectedResultContainerSel" : "#main-content",
-            "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
-            "errorResultAddWrapper" : false,
-    
-            "successRedirectUrl" : "${successUrl}"
-        }>
-        <@progress id="importaddrmap_progress_bar" type="info" addWrapClass="${styles.hidden!}" progressOptions=progressOptions/>
-      </@cell>
-      <@cell class="${styles.grid_small!}3 ${styles.grid_large!}4" id="importaddrmap_prog_textbox">
-      </@cell>
-    </@row>
+    <#assign successUrl><@ofbizUrl>addressMatchMap</@ofbizUrl></#assign>
+    <#assign progressOptions = {
+        "formSel" : "form[name=importaddrmap]",
+        "progBarId" : "importaddrmap_progress_bar",
+        "progTextBoxId" : "importaddrmap_prog_textbox",
+        
+        "msgContainerParentSel" : "#addressmatchmap_import_content",
+        "msgContainerInsertMode" : "prepend",
+        
+        "expectedResultContainerSel" : "#main-content",
+        "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
+        "errorResultAddWrapper" : false,
+
+        "successRedirectUrl" : "${successUrl}"
+    }>
+    <@field type="submitrow" progressOptions=progressOptions>
+      <input type="submit" value="${uiLabelMap.CommonUpload} CSV"/>    
+    </@field>
+
   </form>
   </@section>
 </@section>

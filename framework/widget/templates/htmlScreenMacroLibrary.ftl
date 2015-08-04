@@ -180,9 +180,9 @@ under the License.
 
 <#macro renderContentFrame fullUrl width height border><iframe src="${fullUrl}" width="${width}" height="${height}" <#if border?has_content>border="${border}"</#if> /></#macro>
 
-<#-- Cato: new params: headerLevel, manual, menuClass, menuId
-     manual is hint that didn't call from macro renderer automatically -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 manual=false menuClass="" menuId="" menuType="" requireMenu=false forceEmptyMenu=false>
+<#-- Cato: new params: headerLevel, fromWidgets, menuClass, menuId, menuType, requireMenu, forceEmptyMenu
+     fromWidgets is hint of whether called by renderer or ftl macros -->
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 fromWidgets=true menuClass="" menuId="" menuType="" requireMenu=false forceEmptyMenu=false>
 <div <#if collapsed>class="toggleField"</#if>>
 <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
@@ -209,9 +209,9 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 <#if menuString?has_content || requireMenu || forceEmptyMenu>
 
   <#-- temporarily (?) unnecessary; all use styles.button_group and hacks moved
-  <#local screenletPaginateMenu = (menuType == "screenlet-paginate-menu")>
-  <#local screenletNavMenu = (menuType == "screenlet-nav-menu")>
-  <#local ftlNavMenu = (menuType == "nav-menu")>
+  <#local screenletPaginateMenu = (menuType == "paginate-menu") && widgetRender>
+  <#local screenletNavMenu = (menuType == "nav-menu") && widgetRender>
+  <#local ftlNavMenu = (menuType == "nav-menu") && !widgetRender>
   -->
   
   <#if !menuClass?has_content>

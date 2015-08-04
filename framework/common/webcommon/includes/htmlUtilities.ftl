@@ -589,7 +589,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         <#local contentId = "">
         <#local menuId = "">
     </#if>
-    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level manual=true menuClass=menuClass menuId=menuId menuType=menuType requireMenu=requireMenu forceEmptyMenu=forceEmptyMenu />
+    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level fromWidgets=false menuClass=menuClass menuId=menuId menuType=menuType requireMenu=requireMenu forceEmptyMenu=forceEmptyMenu />
         <#nested />
     <@renderScreenletEnd />
     <#if autoHeaderLevel && updatedHeaderLevel>

@@ -185,6 +185,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     @Override
     public void renderImage(Appendable writer, Map<String, Object> context, Image image) throws IOException {
         Map<String, Object> parameters = createImageParameters(context, image);
+        
+        String contextType = (String) context.get("menuStringRender_contextType");
+        if (contextType == null) {
+            contextType = "";
+        }
+        parameters.put("contextType", contextType);
+        
         try {
             executeMacro(writer, "renderImage", parameters);
         } catch (TemplateException e) {
@@ -258,6 +265,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             imgStr = sw.toString();
         }
         parameters.put("imgStr", imgStr);
+        
+        String contextType = (String) context.get("menuStringRender_contextType");
+        if (contextType == null) {
+            contextType = "";
+        }
+        parameters.put("contextType", contextType);
+        
         try {
             executeMacro(writer, "renderLink", parameters);
         } catch (TemplateException e) {
@@ -272,6 +286,12 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             parameters = new HashMap<String, Object>();
             
             parameters.put("style", menu.getMenuContainerStyle(context));
+            parameters.put("inlineEntries", Boolean.TRUE.equals(context.get("menuStringRender_inlineEntries")));
+            String contextType = (String) context.get("menuStringRender_contextType");
+            if (contextType == null) {
+                contextType = "";
+            }
+            parameters.put("contextType", contextType);
             
             StringBuilder sb = new StringBuilder("End Menu Widget ");
             sb.append(menu.getBoundaryCommentName());
@@ -324,6 +344,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("linkStr", linkStr);
         boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
         parameters.put("containsNestedMenus", containsNestedMenus);
+        
+        String contextType = (String) context.get("menuStringRender_contextType");
+        if (contextType == null) {
+            contextType = "";
+        }
+        parameters.put("contextType", contextType);
+        
         try {
             executeMacro(writer, "renderMenuItemBegin", parameters);
         } catch (TemplateException e) {
@@ -336,6 +363,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         parameters.clear();
         parameters.put("containsNestedMenus", containsNestedMenus);
+        
+        parameters.put("contextType", contextType);
+        
         try {
             executeMacro(writer, "renderMenuItemEnd", parameters);
         } catch (TemplateException e) {
@@ -354,6 +384,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("id", menu.getId());
         parameters.put("style", menu.getMenuContainerStyle(context));
         parameters.put("title", menu.getTitle(context));
+        parameters.put("inlineEntries", Boolean.TRUE.equals(context.get("menuStringRender_inlineEntries")));
+        String contextType = (String) context.get("menuStringRender_contextType");
+        if (contextType == null) {
+            contextType = "";
+        }
+        parameters.put("contextType", contextType);
+        
         try {
             executeMacro(writer, "renderMenuBegin", parameters);
         } catch (TemplateException e) {

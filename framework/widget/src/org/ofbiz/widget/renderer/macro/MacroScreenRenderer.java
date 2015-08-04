@@ -620,11 +620,15 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             }
             StringWriter sb = new StringWriter();
             if (navMenu != null) {
-                // Cato: use the FTL renderer for this
+                // Cato: use the macro renderer for this
                 //MenuStringRenderer savedRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
                 //MenuStringRenderer renderer = new ScreenletMenuRenderer(request, response);
                 //context.put("menuStringRenderer", renderer);
+                context.put("menuStringRender_inlineEntries", Boolean.TRUE);
+                context.put("menuStringRender_contextType", "screenlet-nav-menu");
                 navMenu.renderWidgetString(sb, context, this);
+                context.remove("menuStringRender_inlineEntries");
+                context.remove("menuStringRender_contextType");
                 //context.put("menuStringRenderer", savedRenderer);
             } else if (navForm != null) {
                 renderScreenletPaginateMenu(sb, context, navForm);

@@ -24,7 +24,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     * menu-tab // ToDo
 
 -->
-<#macro renderMenuBegin boundaryComment="" id="" style="" title="">
+<#macro renderMenuBegin boundaryComment="" id="" style="" title="" inlineEntries=false contextType="">
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
@@ -64,7 +64,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
        
 </#macro>
 
-<#macro renderMenuEnd boundaryComment="" style="">
+<#macro renderMenuEnd boundaryComment="" style="" inlineEntries=false contextType="">
             <#--</li>
             </ul>
             </nav>
@@ -102,11 +102,11 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 </#if>
 </#macro>
 
-<#macro renderImage src id style width height border>
+<#macro renderImage src id style width height border contextType="">
 <img src="${src}"<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${border}"</#if> />
 </#macro>
 
-<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="">
+<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" contextType="">
   <#if linkType?has_content && "hidden-form" == linkType>
 <form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}"><#rt/>
     <#list parameterList as parameter>
@@ -121,10 +121,10 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 <#if (linkType?has_content && "hidden-form" == linkType) || linkUrl?has_content></a><#rt/></#if>
 </#macro>
 
-<#macro renderMenuItemBegin style toolTip linkStr containsNestedMenus>
+<#macro renderMenuItemBegin style toolTip linkStr containsNestedMenus contextType="">
         <li<#if style?has_content> class="${style}"</#if><#if toolTip?has_content> title="${toolTip}"</#if>><#if linkStr?has_content>${linkStr}</#if><#if containsNestedMenus><ul></#if><#rt/>
 </#macro>
 
-<#macro renderMenuItemEnd containsNestedMenus>
+<#macro renderMenuItemEnd containsNestedMenus contextType="">
 <#if containsNestedMenus></ul></#if></li>
 </#macro>

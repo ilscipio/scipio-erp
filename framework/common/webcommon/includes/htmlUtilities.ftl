@@ -544,10 +544,12 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     autoHeaderLevel     = auto increase header level when title present
     headerLevel         = force this header level for title. if autoHeaderLevel true, also influences nested elems (even if no title here).
     defaultHeaderLevel  = default header level (same as headerLevel if autoHeaderLevel false)
-    menuHtml            = optional HTML menu data, li elements only (ul auto added); can be string "_INCLUDE_MENU_" to force add empty menu elem (js, etc.)
-    menuClass           = menu class, default buttons class
+    menuHtml            = optional HTML menu data, li elements only (ul auto added); can be special string "<!-include_menu->" to always include a menu even if empty (js, etc.)
+                          or "<!-force_empty_menu->" to force include an empty menu guaranteed never to have extra elems (possible some may be auto-added by code)
+                          NOTE: in both strings the dashes are doubled (can't express in freemarker comments here); they are html comments.
+    menuClass           = menu class, default is buttons class. "none" prevents class.
 -->
-<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="${styles.button_group!} ${styles.button_force!}">
+<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="">
     <#local explicitHeaderLevel = false>
     <#local updatedHeaderLevel = false> <#-- just so consistent -->
     <#if autoHeaderLevel>

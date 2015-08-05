@@ -1123,8 +1123,8 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#macro renderContainerField id className><div id="${id}" class="${className}"/></#macro>
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible>
-<div class="row">
-  <div class="fieldgroup ${styles.grid_large!}12 columns <#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> collapsed</#if></#if>"<#if id?has_content> id="${id}"</#if>>
+<div class="${styles.grid_row!}">
+  <div class="fieldgroup ${styles.grid_large!}12 ${styles.grid_cell!} <#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> collapsed</#if></#if>"<#if id?has_content> id="${id}"</#if>>
     <fieldset<#if style?has_content || collapsed> class="${style!}"</#if>>
       <#--<#if collapsible>
         <ul>

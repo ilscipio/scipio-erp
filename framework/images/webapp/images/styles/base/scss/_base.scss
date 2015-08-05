@@ -132,7 +132,8 @@ table.basic-table {
 }
 
 td {word-break:break-all;}
-
+// don't break button labels; always ugly
+td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext {word-break:normal;}
 
 // collapsible fieldset
 .toggleField fieldset{

@@ -601,7 +601,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String fullUrlString = "";
         String menuString = "";
         boolean showMore = false;
-        String menuType = "";
+        String menuRole = "";
         if (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null || collapsible) {
             showMore = true;
             if (collapsible) {
@@ -631,10 +631,10 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 context.remove("menuStringRender_inlineEntries");
                 context.remove("menuStringRender_menuCtxRole");
                 //context.put("menuStringRenderer", savedRenderer);
-                menuType = "nav-menu";
+                menuRole = "nav-menu";
             } else if (navForm != null) {
                 renderScreenletPaginateMenu(sb, context, navForm);
-                menuType = "paginate-menu";
+                menuRole = "paginate-menu";
             }
             menuString = sb.toString();
         }
@@ -659,7 +659,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         parameters.put("showMore", showMore);
         parameters.put("collapsed", collapsed);
         parameters.put("javaScriptEnabled", javaScriptEnabled);
-        parameters.put("menuType", menuType);
+        parameters.put("menuRole", menuRole);
         executeMacro(writer, "renderScreenletBegin", parameters);
     }
 

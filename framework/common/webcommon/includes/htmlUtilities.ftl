@@ -264,7 +264,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     <#local class = class + " " + addClass>
 </#if>
 
-<@row collapse=collapse!false norows=norows>
+<@row collapse=collapse!false norows=norows class="form-field-entry">
     <#if label?has_content && type != "submitrow">
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>

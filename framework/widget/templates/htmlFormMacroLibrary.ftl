@@ -600,9 +600,9 @@ under the License.
 </#macro>
 
 <#macro renderFormatFieldRowOpen collapse=false style="">
-   <div class="${styles.grid_row!}">
+   <div class="${styles.grid_row!} form-field-row">
     <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}9</#if> ${styles.grid_cell!}">
-      <div class="${styles.grid_row!} <#if collapse>${styles.collapse!}</#if>">
+      <div class="${styles.grid_row!} form-field-entry <#if collapse>${styles.collapse!}</#if>">
 </#macro>
 <#macro renderFormatFieldRowClose>
         </div>

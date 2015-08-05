@@ -43,7 +43,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
         <nav>
               <h2>${navigation!}</h2>
               <ul class="side-nav">
-                  <li>
+                  <#--<li>-->
     <#elseif style?contains("menu-button")>
         <ul class="${styles.button_group!} ${styles.button_force!}">
     <#elseif style?contains("menu-tab")>    
@@ -87,7 +87,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
             </ul>
         </li>
     <#elseif style?contains("menu-sidebar")>
-                </li>
+                <#--</li>-->
             </ul>
         </nav>
     <#elseif style?contains("menu-button")>

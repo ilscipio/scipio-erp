@@ -626,10 +626,10 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 //MenuStringRenderer renderer = new ScreenletMenuRenderer(request, response);
                 //context.put("menuStringRenderer", renderer);
                 context.put("menuStringRender_inlineEntries", Boolean.TRUE);
-                context.put("menuStringRender_contextType", "screenlet-nav-menu");
+                context.put("menuStringRender_menuCtxRole", "screenlet-nav-menu");
                 navMenu.renderWidgetString(sb, context, this);
                 context.remove("menuStringRender_inlineEntries");
-                context.remove("menuStringRender_contextType");
+                context.remove("menuStringRender_menuCtxRole");
                 //context.put("menuStringRenderer", savedRenderer);
                 menuType = "nav-menu";
             } else if (navForm != null) {

@@ -24,7 +24,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     * menu-tab // ToDo
 
 -->
-<#macro renderMenuBegin boundaryComment="" id="" style="" title="" inlineEntries=false contextType="">
+<#macro renderMenuBegin boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="">
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
@@ -66,7 +66,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
   </#if>
 </#macro>
 
-<#macro renderMenuEnd boundaryComment="" style="" inlineEntries=false contextType="">
+<#macro renderMenuEnd boundaryComment="" style="" inlineEntries=false menuCtxRole="">
   <#if !inlineEntries>
   
             <#--</li>
@@ -108,14 +108,14 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 </#if>
 </#macro>
 
-<#macro renderImage src id style width height border contextType="">
+<#macro renderImage src id style width height border menuCtxRole="">
 <img src="${src}"<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${border}"</#if> />
 </#macro>
 
-<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" contextType="">
+<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="">
 <#-- Cato: hack: for screenlet nav menus, always impose buttons if no style specified, 
      because can't centralize these menus easily anywhere else. -->
-<#if contextType=="screenlet-nav-menu">
+<#if menuCtxRole=="screenlet-nav-menu">
   <#if !style?has_content>
     <#local style = "${styles.button_default!}">
   </#if>
@@ -139,10 +139,10 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 <#if (linkType?has_content && "hidden-form" == linkType) || linkUrl?has_content></a><#rt/></#if>
 </#macro>
 
-<#macro renderMenuItemBegin style toolTip linkStr containsNestedMenus contextType="">
+<#macro renderMenuItemBegin style toolTip linkStr containsNestedMenus menuCtxRole="">
         <li<#if style?has_content> class="${style}"</#if><#if toolTip?has_content> title="${toolTip}"</#if>><#if linkStr?has_content>${linkStr}</#if><#if containsNestedMenus><ul></#if><#rt/>
 </#macro>
 
-<#macro renderMenuItemEnd containsNestedMenus contextType="">
+<#macro renderMenuItemEnd containsNestedMenus menuCtxRole="">
 <#if containsNestedMenus></ul></#if></li>
 </#macro>

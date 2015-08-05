@@ -186,11 +186,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     public void renderImage(Appendable writer, Map<String, Object> context, Image image) throws IOException {
         Map<String, Object> parameters = createImageParameters(context, image);
         
-        String contextType = (String) context.get("menuStringRender_contextType");
-        if (contextType == null) {
-            contextType = "";
+        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
+        if (menuCtxRole == null) {
+            menuCtxRole = "";
         }
-        parameters.put("contextType", contextType);
+        parameters.put("menuCtxRole", menuCtxRole);
         
         try {
             executeMacro(writer, "renderImage", parameters);
@@ -266,11 +266,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         parameters.put("imgStr", imgStr);
         
-        String contextType = (String) context.get("menuStringRender_contextType");
-        if (contextType == null) {
-            contextType = "";
+        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
+        if (menuCtxRole == null) {
+            menuCtxRole = "";
         }
-        parameters.put("contextType", contextType);
+        parameters.put("menuCtxRole", menuCtxRole);
         
         try {
             executeMacro(writer, "renderLink", parameters);
@@ -287,11 +287,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             
             parameters.put("style", menu.getMenuContainerStyle(context));
             parameters.put("inlineEntries", Boolean.TRUE.equals(context.get("menuStringRender_inlineEntries")));
-            String contextType = (String) context.get("menuStringRender_contextType");
-            if (contextType == null) {
-                contextType = "";
+            String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
+            if (menuCtxRole == null) {
+                menuCtxRole = "";
             }
-            parameters.put("contextType", contextType);
+            parameters.put("menuCtxRole", menuCtxRole);
             
             StringBuilder sb = new StringBuilder("End Menu Widget ");
             sb.append(menu.getBoundaryCommentName());
@@ -345,11 +345,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
         parameters.put("containsNestedMenus", containsNestedMenus);
         
-        String contextType = (String) context.get("menuStringRender_contextType");
-        if (contextType == null) {
-            contextType = "";
+        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
+        if (menuCtxRole == null) {
+            menuCtxRole = "";
         }
-        parameters.put("contextType", contextType);
+        parameters.put("menuCtxRole", menuCtxRole);
         
         try {
             executeMacro(writer, "renderMenuItemBegin", parameters);
@@ -364,7 +364,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.clear();
         parameters.put("containsNestedMenus", containsNestedMenus);
         
-        parameters.put("contextType", contextType);
+        parameters.put("menuCtxRole", menuCtxRole);
         
         try {
             executeMacro(writer, "renderMenuItemEnd", parameters);
@@ -385,11 +385,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("style", menu.getMenuContainerStyle(context));
         parameters.put("title", menu.getTitle(context));
         parameters.put("inlineEntries", Boolean.TRUE.equals(context.get("menuStringRender_inlineEntries")));
-        String contextType = (String) context.get("menuStringRender_contextType");
-        if (contextType == null) {
-            contextType = "";
+        String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
+        if (menuCtxRole == null) {
+            menuCtxRole = "";
         }
-        parameters.put("contextType", contextType);
+        parameters.put("menuCtxRole", menuCtxRole);
         
         try {
             executeMacro(writer, "renderMenuBegin", parameters);

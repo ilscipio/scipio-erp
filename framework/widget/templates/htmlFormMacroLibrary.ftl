@@ -1171,7 +1171,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#macro renderAsterisks requiredField requiredStyle>
-  <#if requiredField=="true"><#if !requiredStyle?has_content>*</#if></#if>
+  <#if requiredField=="true"><#if !requiredStyle?has_content><span class="form-field-input-asterisk">*</span></#if></#if>
 </#macro>
 
 <#macro makeHiddenFormLinkForm actionUrl name parameters targetWindow>

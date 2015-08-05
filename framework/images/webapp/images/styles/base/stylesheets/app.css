@@ -9857,19 +9857,24 @@ ul.chart-legend {
   padding-right: 1em;
 }
 
+/* line 286, ../scss/_base.scss */
+.form-field-input-asterisk {
+  display: none;
+}
+
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 288, ../scss/_base.scss */
+  /* line 293, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 293, ../scss/_base.scss */
+  /* line 298, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 295, ../scss/_base.scss */
+  /* line 300, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }

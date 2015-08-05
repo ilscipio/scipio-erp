@@ -44,6 +44,14 @@ $(function(){
 	Pizza.init(); //Create charts
 });
 
+jQuery(document).ready(function() {
+	var asteriks = jQuery('.form-field-input-asterisk');
+	asteriks.each(function() {
+		var label = jQuery(this).parents('.form-field-entry').first().find('.form-field-label').first();
+		label.append(' <span class="form-field-label-asterisk">*</span>');
+	});
+});
+
 /**
  * Cato upload progress handler. Instance represents one upload form.
  */

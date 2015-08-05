@@ -62,7 +62,9 @@ under the License.
 
             "resultContentReplace" : true,
             "contentContainerSel" : "#partyContentList",
-            "resultContentContainerSel" : "#partyContentList"
+            "resultContentContainerSel" : "#partyContentList",
+            
+            "submitHook" : "validate"
         }>
         <@field type="submitrow" progressOptions=progressOptions>
           <input type="submit" value="${uiLabelMap.CommonUpload}" class="smallSubmit" />

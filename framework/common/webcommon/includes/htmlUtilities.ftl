@@ -1194,6 +1194,9 @@ TODO: document better if needed
                     
    * General Attributes *
     options = elem IDs and options passed to CatoUploadProgress javascript class
+              in addition, supports: 
+                submitHook - one of: "formSubmit" (default), "validate" (jquery validate), "none" (caller does manually) 
+                validateObjScript - if submitHook is "validate", add this script text to jquery validate({...}) object body.
 -->
 <#macro progressScript options={} htmlwrap=false>
   <#if options?has_content && options.formSel?has_content>
@@ -1224,14 +1227,24 @@ TODO: document better if needed
             uploadProgress.reset();
         });
         
+      <#if (options.submitHook!) == "validate">
         jQuery("${options.formSel}").validate({
             submitHandler: function(form) {
-                if (!uploadProgress.uploading) {
-                    uploadProgress.initUpload();
+                var goodToGo = uploadProgress.initUpload();
+                if (goodToGo) {
                     form.submit();
                 }
+            },
+            ${options.validateObjScript!""}
+        });
+      <#elseif (options.submitHook!) != "none" >
+        jQuery("${options.formSel}").submit(function(event) {
+            var goodToGo = uploadProgress.initUpload();
+            if (!goodToGo) {
+                event.preventDefault();
             }
         });
+      </#if>
     })();
     
     <#if htmlwrap>

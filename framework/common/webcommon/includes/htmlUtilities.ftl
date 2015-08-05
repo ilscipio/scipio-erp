@@ -277,9 +277,9 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         <#if !radioSingle>
             <@cell class=subclasses nocells=nocells>
                 <#if type=="checkbox" || collapse==false>
-                    <label class=""<#if id?has_content> for="${id}"</#if>>${label}</label>
+                    <label class="form-field-label"<#if id?has_content> for="${id}"</#if>>${label}</label>
                 <#else>
-                    <span class="prefix">${label}</span>
+                    <span class="prefix form-field-label">${label}</span>
                 </#if>           
             </@cell>
         </#if>

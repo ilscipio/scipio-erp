@@ -611,7 +611,7 @@ under the License.
 </#macro>
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
   <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!} ">
-      <#if collapse><span class="prefix"><#else><label></#if>
+      <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false>
       <#if collapse></span><#else></label></#if>

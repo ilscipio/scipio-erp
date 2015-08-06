@@ -9826,7 +9826,7 @@ div.section-screenlet-content {
 }
 
 /* line 258, ../scss/_base.scss */
-div.section-screenlet-content:empty {
+div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 

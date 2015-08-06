@@ -254,8 +254,8 @@ div.section-screenlet-content {
     margin-bottom: 1rem;
 }
 // note: browsers don't support :blank, so if content may be empty, 
-// template must make sure to not output extra whitespace
-div.section-screenlet-content:empty {
+// template must make sure to not output extra whitespace, or use no-content class
+div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
     margin-bottom: 0;
 }
 

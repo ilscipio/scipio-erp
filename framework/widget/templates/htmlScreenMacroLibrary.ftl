@@ -180,9 +180,10 @@ under the License.
 
 <#macro renderContentFrame fullUrl width height border><iframe src="${fullUrl}" width="${width}" height="${height}" <#if border?has_content>border="${border}"</#if> /></#macro>
 
-<#-- Cato: new params: headerLevel, fromWidgets, menuClass, menuId, menuRole, requireMenu, forceEmptyMenu
-     fromWidgets is hint of whether called by renderer or ftl macros -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false>
+<#-- Cato: new params: headerLevel, fromWidgets, menuClass, menuId, menuRole, requireMenu, forceEmptyMenu,noContent
+     fromWidgets: hint of whether called by renderer or ftl macros
+     hasContent: hint to say there will be content, workaround for styling -->
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true>
 <div class="section-screenlet<#if collapsed> toggleField</#if>">
 <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
@@ -231,7 +232,7 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 
 </#if>
     <#-- note: may need to keep this div free of foundation grid classes -->
-    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content"><#rt>
+    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content<#if !hasContent> no-content</#if>"><#rt>
 </#macro>
 
 <#macro renderScreenletSubWidget></#macro>

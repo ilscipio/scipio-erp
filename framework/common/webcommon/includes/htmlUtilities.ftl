@@ -581,8 +581,9 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     menuRole            = "nav-menu" (default), "paginate-menu"
     requireMenu         = if true, add menu elem even if empty
     forceEmptyMenu      = if true, always add menu and must be empty
+    hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false>
+<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true>
     <#local explicitHeaderLevel = false>
     <#local updatedHeaderLevel = false> <#-- just so consistent -->
     <#if autoHeaderLevel>
@@ -621,7 +622,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         <#local contentId = "">
         <#local menuId = "">
     </#if>
-    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu forceEmptyMenu=forceEmptyMenu />
+    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu forceEmptyMenu=forceEmptyMenu hasContent=hasContent/>
         <#nested />
     <@renderScreenletEnd />
     <#if autoHeaderLevel && updatedHeaderLevel>

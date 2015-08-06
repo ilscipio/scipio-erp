@@ -144,7 +144,7 @@ under the License.
                     </@row>
                     <@field type="input" size="25" name="itemComment" value="${defaultComment!}" label="${uiLabelMap.CommonComment}"/>
 
-                    <@field type="submit">
+                    <@field type="submitarea">
                         <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToOrder}"/></td>
                     </@field>
             </form>
@@ -164,7 +164,7 @@ under the License.
                         <@field type="input" size="3" name="quantity" value="${requestParameters.quantity?default('1')}" label="${uiLabelMap.OrderQuantity}"/>
                         <@field type="input" size="6" name="price" value="${requestParameters.price!}" label="${uiLabelMap.OrderPrice}"/>
                     
-                <@field type="submit">
+                <@field type="submitarea">
                     <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToOrder}"/>
                 </@field>
             </form>

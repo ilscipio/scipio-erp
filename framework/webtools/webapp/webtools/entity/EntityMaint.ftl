@@ -29,7 +29,7 @@ under the License.
              </#list>
         </@field>
         <@field type="input" name= "filterByEntityName" value="${parameters.filterByEntityName!}" label="${uiLabelMap.WebtoolsEntityName}"/>
-        <@field type="submit">  
+        <@field type="submitarea">  
           <input type="submit" value="${uiLabelMap.CommonApply}"/>
         </@field>
        </form>

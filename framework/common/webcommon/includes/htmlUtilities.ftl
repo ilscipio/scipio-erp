@@ -508,24 +508,54 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 *************
 * Cell Macro
 ************
-    Usage example:  
+    Usage examples:  
     <@row attr="" >
         <@cell attr="">
             cell content goes in here!
         </@cell>
-    </@row>              
+    </@row>  
+    
+    <@row>
+        <@cell>
+            cell content goes in here!
+        </@cell>
+    </@row>   
+    
+    <@row>
+        <@cell columns=3>
+            cell content goes in here!
+        </@cell>
+    </@row> 
+    
+    <@row>
+        <@cell columns=3 small=2 class="mycell">
+            cell content goes in here!
+        </@cell>
+    </@row>            
                     
    * General Attributes *
-    class           = css classes
-    columns         = expected number of columns to be rendered (default 12)
+    class           = css classes (if column sizes specified, adds classes; if no column sizes specified, expected to contain manual column sizes and overrides columns size default)
+    columns         = expected number of columns to be rendered (specify as number, default 12, default only used if class empty and no column sizes specified)
+    small           = specific number of small columns (specify as number), overrides small part general columns value above
+    large           = specific number of large columns (specify as number), overrides large part of general columns value above
+    medium          = specific number of medium columns (specify as number), overrides medium part of general columns value above
     offset          = offset in number of columns
+    TODO: smallOffset, mediumOffset, largeOffset
 -->
-<#macro cell columns=12 offset=0 class="" id="" collapse=false nocells=false>
-    <#if !nocells><div class="<#if class?has_content>${class!}<#else>${styles.grid_large!}${columns!12}</#if><#if offset&gt;0>${styles.grid_offset!}${offset!}</#if> ${styles.grid_cell!}" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
+<#macro cell columns="" small="" medium="" large="" offset=0 class="" id="" collapse=false nocells=false>
+    <#local specColsClasses><#if small?has_content> ${styles.grid_small!}${small}</#if><#if medium?has_content> ${styles.grid_medium!}${medium}</#if><#if large?has_content> ${styles.grid_large!}${large}<#elseif columns?has_content> ${styles.grid_large!}${columns}</#if></#local>
+    <#if class?has_content>
+        <#local colSizeClasses = (class + specColsClasses)?trim>
+    <#else>
+        <#local colSizeClasses = specColsClasses?trim>
+    </#if>
+    <#if !colSizeClasses?has_content>
+        <#local colSizeClasses = "${styles.grid_large!}12">
+    </#if>
+    <#if !nocells><div class="${colSizeClasses}<#if (offset > 0)> ${styles.grid_offset!}${offset!}</#if> ${styles.grid_cell!}" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
         <#nested />
     <#if !nocells></div></#if>
 </#macro>
-
 
 
 <#-- 

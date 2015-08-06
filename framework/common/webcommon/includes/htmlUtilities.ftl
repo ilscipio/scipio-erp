@@ -541,8 +541,9 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     medium          = specific number of medium columns (specify as number), overrides medium part of general columns value above
     offset          = offset in number of columns
     TODO: smallOffset, mediumOffset, largeOffset
+    last            = boolean, usually optional, if true indicate last cell in row 
 -->
-<#macro cell columns=0 small=0 medium=0 large=0 offset=0 class="" id="" collapse=false nocells=false>
+<#macro cell columns=0 small=0 medium=0 large=0 offset=0 class="" id="" collapse=false nocells=false last=false>
     <#if !nocells>
         <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
         <#if class?has_content>
@@ -553,7 +554,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         <#if !colSizeClasses?has_content>
             <#local colSizeClasses = "${styles.grid_large!}12">
         </#if>
-        <div class="${colSizeClasses}<#if (offset > 0)> ${styles.grid_offset!}${offset!}</#if> ${styles.grid_cell!}" <#if id?has_content> id="${id}"</#if>><#rt/>
+        <div class="${colSizeClasses}<#if (offset > 0)> ${styles.grid_offset!}${offset!}</#if> ${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if>" <#if id?has_content> id="${id}"</#if>><#rt/>
     </#if>
         <#nested />
     <#if !nocells></div></#if>

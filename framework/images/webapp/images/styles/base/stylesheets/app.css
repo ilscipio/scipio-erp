@@ -9578,7 +9578,12 @@ input, select, text-area {
   position: relative;
 }
 
-/* line 76, ../scss/_base.scss */
+/* line 75, ../scss/_base.scss */
+h1 {
+  margin-bottom: 1rem;
+}
+
+/* line 80, ../scss/_base.scss */
 input[type="button"], input[type="submit"], .buttontext {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -9612,42 +9617,42 @@ input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hov
   color: white;
 }
 
-/* line 79, ../scss/_base.scss */
+/* line 83, ../scss/_base.scss */
 table.basic-table {
   width: 100%;
 }
-/* line 81, ../scss/_base.scss */
+/* line 85, ../scss/_base.scss */
 table.basic-table tr {
   background: none;
 }
-/* line 84, ../scss/_base.scss */
+/* line 88, ../scss/_base.scss */
 table.basic-table tr td {
   height: auto;
   vertical-align: top;
 }
-/* line 90, ../scss/_base.scss */
+/* line 94, ../scss/_base.scss */
 table.basic-table tr.odd {
   background: #fafafa;
 }
-/* line 92, ../scss/_base.scss */
+/* line 96, ../scss/_base.scss */
 table.basic-table input {
   margin: 0px;
 }
 
 @media only screen and (min-width: 40.0625em) {
-  /* line 96, ../scss/_base.scss */
+  /* line 100, ../scss/_base.scss */
   .reveal-modal {
     top: 12.5rem;
   }
 }
 
-/* line 102, ../scss/_base.scss */
+/* line 106, ../scss/_base.scss */
 .login-box {
   margin: 200px 0;
   padding: 0px;
   min-width: 500px;
 }
-/* line 114, ../scss/_base.scss */
+/* line 118, ../scss/_base.scss */
 .login-box #login-box-content {
   margin-top: 20px;
   padding: 40px 20px 0 20px;
@@ -9659,7 +9664,7 @@ table.basic-table input {
 }
 
 @media (max-width: 610px) {
-  /* line 126, ../scss/_base.scss */
+  /* line 130, ../scss/_base.scss */
   .login-box {
     position: static;
     width: 100%;
@@ -9668,22 +9673,22 @@ table.basic-table input {
     margin-top: 50px;
   }
 }
-/* line 130, ../scss/_base.scss */
+/* line 134, ../scss/_base.scss */
 .inline-list li {
   margin-bottom: 10px;
 }
 
-/* line 134, ../scss/_base.scss */
+/* line 138, ../scss/_base.scss */
 td {
   word-break: break-all;
 }
 
-/* line 136, ../scss/_base.scss */
+/* line 140, ../scss/_base.scss */
 td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext {
   word-break: normal;
 }
 
-/* line 139, ../scss/_base.scss */
+/* line 143, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -9691,29 +9696,29 @@ td button, td .button, td input[type="button"], td input[type="submit"], td .but
   padding: 8px 0px;
 }
 
-/* line 145, ../scss/_base.scss */
+/* line 149, ../scss/_base.scss */
 fieldset {
   border: none;
 }
-/* line 148, ../scss/_base.scss */
+/* line 152, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-/* line 155, ../scss/_base.scss */
+/* line 159, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 162, ../scss/_base.scss */
+/* line 166, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 166, ../scss/_base.scss */
+/* line 170, ../scss/_base.scss */
 .rotate-90 {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -9721,7 +9726,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 173, ../scss/_base.scss */
+/* line 177, ../scss/_base.scss */
 .rotate-180 {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -9729,7 +9734,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 180, ../scss/_base.scss */
+/* line 184, ../scss/_base.scss */
 .rotate-270 {
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -9737,7 +9742,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 187, ../scss/_base.scss */
+/* line 191, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -9761,36 +9766,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 209, ../scss/_base.scss */
+/* line 213, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 214, ../scss/_base.scss */
+/* line 218, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 216, ../scss/_base.scss */
+/* line 220, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 217, ../scss/_base.scss */
+/* line 221, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 218, ../scss/_base.scss */
+/* line 222, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 219, ../scss/_base.scss */
+/* line 223, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 223, ../scss/_base.scss */
+/* line 227, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -9803,52 +9808,52 @@ code .TRACE {
   font-size: 1.2rem;
 }
 
-/* line 235, ../scss/_base.scss */
+/* line 239, ../scss/_base.scss */
 .postfix i {
   font-size: 1.2rem;
 }
 
-/* line 237, ../scss/_base.scss */
+/* line 241, ../scss/_base.scss */
 .postfix .fi {
   font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1.2rem;
   line-height: 0.9rem;
 }
 
-/* line 244, ../scss/_base.scss */
+/* line 248, ../scss/_base.scss */
 ul.chart-legend {
   list-style: none;
 }
 
-/* line 252, ../scss/_base.scss */
+/* line 256, ../scss/_base.scss */
 div.section-screenlet-content {
   margin-bottom: 0.5rem;
 }
 
-/* line 258, ../scss/_base.scss */
+/* line 262, ../scss/_base.scss */
 div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 
 /*  FOOTER */
-/* line 263, ../scss/_base.scss */
+/* line 267, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 268, ../scss/_base.scss */
+/* line 272, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 273, ../scss/_base.scss */
+/* line 277, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 277, ../scss/_base.scss */
+/* line 281, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -9856,35 +9861,35 @@ div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
 }
 
 /*MISC*/
-/* line 287, ../scss/_base.scss */
+/* line 291, ../scss/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 292, ../scss/_base.scss */
+/* line 296, ../scss/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
 }
 
-/* line 298, ../scss/_base.scss */
+/* line 302, ../scss/_base.scss */
 .form-field-input-asterisk {
   display: none;
 }
 
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 305, ../scss/_base.scss */
+  /* line 309, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 310, ../scss/_base.scss */
+  /* line 314, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 312, ../scss/_base.scss */
+  /* line 316, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }

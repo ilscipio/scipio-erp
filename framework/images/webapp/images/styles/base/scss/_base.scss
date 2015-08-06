@@ -72,6 +72,10 @@ input,select,text-area {max-width:50em;}
     position: relative;
 }
 
+h1 {
+    margin-bottom:1rem;
+}
+
 // Using the default styles
 input[type="button"], input[type="submit"],.buttontext  { @include button; @include button-size($padding:$button-tny); }
 

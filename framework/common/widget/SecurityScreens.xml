@@ -333,6 +333,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleImportCertificate"/>
                 <set field="tabButtonItem" value="EditCertIssuerProvisions"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/ViewCertificate.groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">

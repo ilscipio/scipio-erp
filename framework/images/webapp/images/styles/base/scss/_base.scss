@@ -246,6 +246,13 @@ ul {
     }
 }
 
+div.section-screenlet {
+    //margin-bottom: 10px;
+}
+div.section-screenlet-content {
+    // add to this one so margin can combine with content's margins
+    margin-bottom: 1rem;
+}
 
 /*  FOOTER */
 #body-content {

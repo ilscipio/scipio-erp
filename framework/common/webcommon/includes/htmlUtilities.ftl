@@ -542,17 +542,19 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     offset          = offset in number of columns
     TODO: smallOffset, mediumOffset, largeOffset
 -->
-<#macro cell columns="" small="" medium="" large="" offset=0 class="" id="" collapse=false nocells=false>
-    <#local specColsClasses><#if small?has_content> ${styles.grid_small!}${small}</#if><#if medium?has_content> ${styles.grid_medium!}${medium}</#if><#if large?has_content> ${styles.grid_large!}${large}<#elseif columns?has_content> ${styles.grid_large!}${columns}</#if></#local>
-    <#if class?has_content>
-        <#local colSizeClasses = (class + specColsClasses)?trim>
-    <#else>
-        <#local colSizeClasses = specColsClasses?trim>
+<#macro cell columns=0 small=0 medium=0 large=0 offset=0 class="" id="" collapse=false nocells=false>
+    <#if !nocells>
+        <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
+        <#if class?has_content>
+            <#local colSizeClasses = (class + specColsClasses)?trim>
+        <#else>
+            <#local colSizeClasses = specColsClasses?trim>
+        </#if>
+        <#if !colSizeClasses?has_content>
+            <#local colSizeClasses = "${styles.grid_large!}12">
+        </#if>
+        <div class="${colSizeClasses}<#if (offset > 0)> ${styles.grid_offset!}${offset!}</#if> ${styles.grid_cell!}" <#if id?has_content> id="${id}"</#if>><#rt/>
     </#if>
-    <#if !colSizeClasses?has_content>
-        <#local colSizeClasses = "${styles.grid_large!}12">
-    </#if>
-    <#if !nocells><div class="${colSizeClasses}<#if (offset > 0)> ${styles.grid_offset!}${offset!}</#if> ${styles.grid_cell!}" <#if id?has_content> id="${id}"</#if>><#rt/></#if>
         <#nested />
     <#if !nocells></div></#if>
 </#macro>

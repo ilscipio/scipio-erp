@@ -184,7 +184,12 @@ under the License.
      fromWidgets: hint of whether called by renderer or ftl macros
      hasContent: hint to say there will be content, workaround for styling -->
 <#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true>
-<div class="section-screenlet<#if !title?has_content> no-title</#if><#if !hasContent> no-content</#if><#if collapsed> toggleField</#if>">
+<#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
+     note: with recent patch, menuString passed by renderer is rendered by macro renderer. -->
+<#local menuString = menuString?trim>
+<#local hasMenu = (menuString?has_content || requireMenu || forceEmptyMenu)>
+<#local contentFlagClasses><#if !title?has_content> no-title</#if><#if !hasMenu> no-menu</#if><#if !hasContent> no-content</#if></#local>
+<div class="section-screenlet${contentFlagClasses}<#if collapsed> toggleField</#if>">
 <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
 <div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}">
@@ -204,11 +209,7 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 </#if>
  -->
  
-<#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
-     note: with recent patch, menuString passed by renderer is rendered by macro renderer. -->
-<#local menuString = menuString?trim>
-<#if menuString?has_content || requireMenu || forceEmptyMenu>
-
+<#if hasMenu>
   <#-- temporarily (?) unnecessary; all use styles.button_group and hacks moved
   <#local screenletPaginateMenu = (menuRole == "paginate-menu") && widgetRender>
   <#local screenletNavMenu = (menuRole == "nav-menu") && widgetRender>
@@ -232,7 +233,7 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 
 </#if>
     <#-- note: may need to keep this div free of foundation grid classes -->
-    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content<#if !title?has_content> no-title</#if><#if !hasContent> no-content</#if>"><#rt>
+    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content${contentFlagClasses}"><#rt>
 </#macro>
 
 <#macro renderScreenletSubWidget></#macro>

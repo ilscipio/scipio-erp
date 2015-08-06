@@ -338,9 +338,6 @@ under the License.
             <widgets>
                 <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="page-title">
-                            <label text="${uiLabelMap.PageTitleImportCertificate}"/>
-                        </container>
                         <container style="widget-container">
                             <platform-specific>
                                 <html>

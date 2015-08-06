@@ -21,25 +21,45 @@ under the License.
 <#if (requestParameters.certString?has_content)>
     <#assign cert = Static["org.ofbiz.base.util.KeyStoreUtil"].pemToCert(requestParameters.certString)/>
 </#if>-->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.CertDetails}</h3>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.CertDetails}">
     <#if (cert?has_content)>
-        <span class="label">${uiLabelMap.CertType}</span>&nbsp;${cert.getType()} : ${cert.getSubjectX500Principal()}
-        <span class="label">${uiLabelMap.CertName}</span>&nbsp;${cert.getSubjectX500Principal().getName()}
-        <span class="label">${uiLabelMap.CertSerialNumber}</span>&nbsp;${cert.getSerialNumber().toString(16)}
+      <@row>
+        <@cell columns=2 small=2><label>${uiLabelMap.CertType}</label></@cell>
+        <@cell columns=10 small=10>${cert.getType()} : ${cert.getSubjectX500Principal()}</@cell>
+      </@row>
+      <@row>
+        <@cell columns=2 small=2><label>${uiLabelMap.CertName}</label></@cell>
+        <@cell columns=10 small=10>${cert.getSubjectX500Principal().getName()}</@cell>
+      </@row>
+      <@row>
+        <@cell columns=2 small=2><label>${uiLabelMap.CertSerialNumber}</label></@cell>
+        <@cell columns=10 small=10>${cert.getSerialNumber().toString(16)}</@cell>
+      </@row>
     <#else>
-        <h3>${uiLabelMap.CertInvalid}</h3>
+        <p>${uiLabelMap.CertInvalid}</p>
     </#if>
-  </div>
-</div>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.CertSaveToKeyStore}</h3>
-  </div>
-  <div class="screenlet-body">
+</@section>
+<#if (cert?has_content)>
+<@section title="${uiLabelMap.CertSaveToKeyStore}">
+    <script language="JavaScript" type="text/javascript">
+    <!-- //
+        jQuery(document).ready(function() {
+            jQuery('form.savecertform').submit(function(event) {
+                var form = jQuery(this);
+                var row = form.parents('.savecertform_row').first();
+                
+                jQuery('input[name=importIssuer]', form).remove();
+                var checkboxElem = jQuery('input[name=importIssuerVisible]', row)[0];
+                if (checkboxElem.checked) {
+                    form.append('<input type="hidden" name="importIssuer" value="' + checkboxElem.value + '" />')
+                }
+                
+                jQuery('input[name=alias]', form).val(jQuery('input[name=aliasVisible]', row).val());
+            });
+        });
+    // -->
+    </script>
+    
     <table cellspacing="0" class="basic-table">
       <thead>
       <tr class="header-row">
@@ -54,21 +74,26 @@ under the License.
         <#assign keystores = component.getKeystoreInfos()!/>
           <#list keystores as store>
             <#if (store.isTrustStore())>
-              <tr>
-                <form method="post" action="<@ofbizUrl>/importIssuerProvision</@ofbizUrl>">
-                  <input type="hidden" name="componentName" value="${component.getComponentName()}"/>
-                  <input type="hidden" name="keystoreName" value="${store.getName()}"/>
-                  <input type="hidden" name="certString" value="${parameters.certString}"/>
+              <tr class="savecertform_row">
                   <td>${component.getComponentName()}</td>
                   <td>${store.getName()}</td>
-                  <td align="center"><input type="checkbox" name="importIssuer" value="Y"/>
-                  <td><input type="text" name="alias" size="20"/>
-                  <td align="right"><input type="submit" value="${uiLabelMap.CommonSave}"/>
-                </form>
+                  <td><input type="checkbox" name="importIssuerVisible" value="Y"/></td>
+                  <td><input type="text" name="aliasVisible" size="20"/></td>
+                  <td>
+                    <form class="savecertform" method="post" action="<@ofbizUrl>importIssuerProvision</@ofbizUrl>">
+                      <input type="hidden" name="componentName" value="${component.getComponentName()}"/>
+                      <input type="hidden" name="keystoreName" value="${store.getName()}"/>
+                      <input type="hidden" name="certString" value="${parameters.certString}"/>
+                      
+                      <input type="hidden" name="alias" value=""/>
+                      
+                      <input type="submit" value="${uiLabelMap.CommonSave}"/>
+                    </form>
+                  </td>
               </tr>
             </#if>
           </#list>
       </#list>
     </table>
-  </div>
-</div>
+</@section>
+</#if>

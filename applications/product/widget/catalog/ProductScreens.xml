@@ -1320,7 +1320,7 @@ under the License.
                             <include-form name="ListBestProduct" location="component://product/widget/catalog/ProductForms.xml"/>
                         </widgets>
                         <fail-widgets>
-                            <label  text="${uiLabelMap.ProductNoProductFound}"></label>
+                            <label text="${uiLabelMap.ProductNoProductFound}."></label>
                         </fail-widgets>
                     </section>
                 </screenlet>

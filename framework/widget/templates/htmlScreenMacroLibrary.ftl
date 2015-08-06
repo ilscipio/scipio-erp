@@ -230,7 +230,8 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 </#if>
 
 </#if>
-    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if>>
+    <#-- note: may need to keep this div free of foundation grid classes -->
+    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content">
 </#macro>
 
 <#macro renderScreenletSubWidget></#macro>

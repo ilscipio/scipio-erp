@@ -465,3 +465,9 @@ CatoUploadProgress.loadUiLabels = function() {
 };
 
 
+function checkboxToFormHiddenInput(checkboxElem, formSel) {
+	jQuery(formSel + ' input[name="' + checkboxElem.name + '"]').remove();
+	if (checkboxElem.checked) {
+		jQuery(formSel).append('<input type="hidden" name="' + checkboxElem.name + '" value="' + checkboxElem.value + '" />')
+	}
+}

@@ -21,7 +21,6 @@ under the License.
         <#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>    
           ${uiLabelMap.PartyYouHave} ${totalSubRemainingAmount} ${uiLabelMap.PartyPointsFrom} ${totalOrders} ${uiLabelMap.PartyOrderInLast} ${monthsToInclude} ${uiLabelMap.CommonMonths}.
         </#if>
-        <br/><br/>
     </@section>
 
   

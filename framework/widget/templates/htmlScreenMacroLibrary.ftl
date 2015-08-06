@@ -192,7 +192,7 @@ under the License.
 <div class="section-screenlet${contentFlagClasses}<#if collapsed> toggleField</#if>">
 <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
-<div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}">
+<div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!} section-screenlet-container${contentFlagClasses}">
 
 <#if showMore>
 <#if title?has_content><h${headerLevel}>${title}</h${headerLevel}></#if>    

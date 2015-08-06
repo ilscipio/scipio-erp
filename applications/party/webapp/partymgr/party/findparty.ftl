@@ -126,7 +126,7 @@ under the License.
         <@field type="input" label="${uiLabelMap.PartyContactInformation}" name="infoString" value="${parameters.infoString!}"/>
     </#if>
 
-        <@field type="submitrow">
+        <@field type="submit">
             <input type="submit" value="${uiLabelMap.CommonFind}" onclick="javascript:document.lookupparty.submit();"/>
         </@field>
       </form>

@@ -231,7 +231,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     * password *
     autocomplete    = true/false, default true (false to prevent)
     
-    * submitrow *
+    * submit *
     <#nested>       = button(s) (<input, <a, <button) to include
     progressOptions = if this is an upload form, specify progress upload options, enables progress next to buttons. 
                       see @progress[Script] macro[s]. should specify formSel, (progBarId and/or progTextBoxId), and others.
@@ -265,7 +265,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 </#if>
 
 <@row collapse=collapse!false norows=norows class="form-field-entry">
-    <#if label?has_content && type != "submitrow">
+    <#if label?has_content && type != "submit">
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         
@@ -410,7 +410,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
           <#case "password">
             <@renderPasswordField className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") />
             <#break> 
-          <#case "submitrow">
+          <#case "submit">
             <@row>
               <#local hasProgress = (progressOptions.formSel)?has_content>
               <#if hasProgress>

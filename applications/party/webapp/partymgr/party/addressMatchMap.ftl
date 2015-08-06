@@ -26,7 +26,7 @@ under the License.
     <@field type="input" name="mapKey" label="${uiLabelMap.PartyAddressMatchKey}" />
     <@field type="input" name="mapValue" label="${uiLabelMap.PartyAddressMatchValue}" />
     <@field type="input" name="sequenceNum" label="${uiLabelMap.CommonSequence}" value="0" size=5/>
-    <@field type="submitrow">
+    <@field type="submit">
       <a href="javascript:document.addaddrmap.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></td>
     </@field>
   </form>
@@ -51,7 +51,7 @@ under the License.
 
         "successRedirectUrl" : "${successUrl}"
     }>
-    <@field type="submitrow" progressOptions=progressOptions>
+    <@field type="submit" progressOptions=progressOptions>
       <input type="submit" value="${uiLabelMap.CommonUpload} CSV"/>    
     </@field>
   </form>

@@ -251,7 +251,7 @@ div.section-screenlet {
 }
 div.section-screenlet-content {
     // add to this one so margin can combine with content's margins
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 // note: browsers don't support :blank, so if content may be empty, 
 // template must make sure to not output extra whitespace, or use no-content class

@@ -58,7 +58,7 @@ under the License.
                 <form method="post" action="<@ofbizUrl>/importIssuerProvision</@ofbizUrl>">
                   <input type="hidden" name="componentName" value="${component.getComponentName()}"/>
                   <input type="hidden" name="keystoreName" value="${store.getName()}"/>
-                  <input type="hidden" name="certString" value="${requestParameters.certString}"/>
+                  <input type="hidden" name="certString" value="${parameters.certString}"/>
                   <td>${component.getComponentName()}</td>
                   <td>${store.getName()}</td>
                   <td align="center"><input type="checkbox" name="importIssuer" value="Y"/>

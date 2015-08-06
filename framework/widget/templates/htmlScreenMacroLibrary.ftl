@@ -231,12 +231,12 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 
 </#if>
     <#-- note: may need to keep this div free of foundation grid classes -->
-    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content">
+    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content"><#rt>
 </#macro>
 
 <#macro renderScreenletSubWidget></#macro>
 
-<#macro renderScreenletEnd></div></div></div></div></#macro>
+<#macro renderScreenletEnd><#lt></div></div></div></div></#macro>
 
 <#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl>
     <li class="${paginateFirstStyle?default("nav-first")}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${firstLinkUrl}" class="${styles.button_default!}">${paginateFirstLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.button_default!}">${paginateFirstLabel}</a></#if></li>

@@ -9825,25 +9825,30 @@ div.section-screenlet-content {
   margin-bottom: 1rem;
 }
 
-/*  FOOTER */
 /* line 258, ../scss/_base.scss */
+div.section-screenlet-content:empty {
+  margin-bottom: 0;
+}
+
+/*  FOOTER */
+/* line 263, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 263, ../scss/_base.scss */
+/* line 268, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 268, ../scss/_base.scss */
+/* line 273, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 272, ../scss/_base.scss */
+/* line 277, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -9851,35 +9856,35 @@ div.section-screenlet-content {
 }
 
 /*MISC*/
-/* line 282, ../scss/_base.scss */
+/* line 287, ../scss/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 287, ../scss/_base.scss */
+/* line 292, ../scss/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
 }
 
-/* line 293, ../scss/_base.scss */
+/* line 298, ../scss/_base.scss */
 .form-field-input-asterisk {
   display: none;
 }
 
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 300, ../scss/_base.scss */
+  /* line 305, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 305, ../scss/_base.scss */
+  /* line 310, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 307, ../scss/_base.scss */
+  /* line 312, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }

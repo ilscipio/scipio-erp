@@ -100,33 +100,32 @@ function submitFindForm(val){
 <input type="hidden" name="viewSize" value="${viewSize}"/>
 <input type="hidden" name="viewIndex" value="${viewIndex}"/>
 
-<@section>
-   
-    <ul class="button-group">
-      <#if (requestParameters.hideFields!"N") == "Y">
-        <li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" class="tiny button">${uiLabelMap.CommonShowLookupFields}</a></li>
-      <#else>
-        <#if orderList??><li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields!"Y"}.submit()"  class="tiny button">${uiLabelMap.CommonHideFields}</a></li></#if>
-        <li><a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}"  class="tiny button">${uiLabelMap.PartyLookupParty}</a></li>
-        <li><a href="javascript:lookupOrders(true);"  class="tiny button">${uiLabelMap.OrderLookupOrder}</a></li>
-      </#if>
-    </ul>
-
-  <#if (parameters.hideFields!"N") != "Y">
-    <@row>
+<#assign menuHtml>
+  <#if (requestParameters.hideFields!"N") == "Y">
+    <li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" class="tiny button">${uiLabelMap.CommonShowLookupFields}</a></li>
+  <#else>
+    <#if orderList??><li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields!"Y"}.submit()"  class="tiny button">${uiLabelMap.CommonHideFields}</a></li></#if>
+    <li><a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}"  class="tiny button">${uiLabelMap.PartyLookupParty}</a></li>
+    <li><a href="javascript:lookupOrders(true);"  class="tiny button">${uiLabelMap.OrderLookupOrder}</a></li>
+  </#if>
+</#assign>
+<#assign showFields = ((parameters.hideFields!"N") != "Y")>
+<@section menuHtml=menuHtml hasContent=showFields>
+<#if showFields>
+  <@row>
     <@cell class="${styles.grid_large!}9 columns">
 
-      <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
+        <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
       
-      <@row collapse=true>
-                <@cell class="${styles.grid_large!}2 ${styles.grid_small!}3"> <label>${uiLabelMap.CommonDateFilter}</label></@cell>
-                <@cell class="${styles.grid_large!}10 ${styles.grid_small!}9">
-                    <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" collapse=true/>
-                    <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate" collapse=true/>
-                </@cell>
+        <@row collapse=true>
+          <@cell class="${styles.grid_large!}2 ${styles.grid_small!}3"><label>${uiLabelMap.CommonDateFilter}</label></@cell>
+          <@cell class="${styles.grid_large!}10 ${styles.grid_small!}9">
+            <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" collapse=true/>
+            <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate" collapse=true/>
+          </@cell>
         </@row>
       
-      <@fieldset title="${uiLabelMap.CommonAdvancedSearch}" collapsed=true>
+        <@fieldset title="${uiLabelMap.CommonAdvancedSearch}" collapsed=true>
           <@field type="input" label="${uiLabelMap.OrderExternalId}" name="externalId"/>
           <@field type="input" label="${uiLabelMap.OrderCustomerPo}" name="correspondingPoId" value="${requestParameters.correspondingPoId!}"/>
           <@field type="input" label="${uiLabelMap.OrderInternalCode}" name="internalCode" value="${requestParameters.internalCode!}"/>
@@ -297,11 +296,11 @@ function submitFindForm(val){
         <@field type="submitarea">
             <input type="submit" value='${uiLabelMap.CommonFind}'/>
         </@field>
-      </@cell>
+    </@cell>
   </@row>    
-      </#if>
+</#if>
 </@section>
-<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:lookupOrders(true);"/>
+<#--<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:lookupOrders(true);"/>-->
 </form>
 <#if (requestParameters.hideFields!"N") != "Y">
 <script language="JavaScript" type="text/javascript">
@@ -310,8 +309,6 @@ document.lookuporder.orderId.focus();
 //-->
 </script>
 </#if>
-
-<br />
 
 <#if (searchPerformed!false)==true>
 <@section title="${uiLabelMap.CommonSearchResults}">

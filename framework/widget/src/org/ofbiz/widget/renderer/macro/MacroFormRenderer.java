@@ -1744,9 +1744,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
      */
     private void appendPositionParams(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, StringWriter sr) throws IOException {
         Integer positions = (Integer) context.get("formFieldRender_positions");
+        Integer position = (Integer) context.get("formFieldRender_position");
         Integer positionSpan = (Integer) context.get("formFieldRender_positionSpan");
         Integer nextPositionInRow = (Integer) context.get("formFieldRender_nextPositionInRow");
         sr.append(" positions=" + (positions != null ? positions.toString() : "\"\""));
+        sr.append(" position=" + (position != null ? position.toString() : "\"\""));
         sr.append(" positionSpan=" + (positionSpan != null ? positionSpan.toString() : "\"\""));
         sr.append(" nextPositionInRow=" + (nextPositionInRow != null ? nextPositionInRow.toString() : "\"\""));
     }

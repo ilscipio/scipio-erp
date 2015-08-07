@@ -81,10 +81,10 @@ under the License.
 
 <#macro renderFormatFieldRowOpen positions=""></#macro>
 <#macro renderFormatFieldRowClose></#macro>
-<#macro renderFormatFieldRowTitleCellOpen style positions="" positionSpan="" nextPositionInRow=""></#macro>
+<#macro renderFormatFieldRowTitleCellOpen style positions="" position="" positionSpan="" nextPositionInRow=""></#macro>
 <#macro renderFormatFieldRowTitleCellClose></#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" nextPositionInRow=""></#macro>
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" position="" nextPositionInRow=""></#macro>
 <#macro renderFormatFieldRowWidgetCellClose></#macro>
 
 <#macro renderFormatEmptySpace> </#macro>

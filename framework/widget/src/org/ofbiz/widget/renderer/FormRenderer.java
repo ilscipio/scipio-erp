@@ -1240,6 +1240,7 @@ public class FormRenderer {
 
             // Cato: pass these (and unset below)
             context.put("formFieldRender_positions", positions);
+            context.put("formFieldRender_position", currentFormField.getPosition());
             context.put("formFieldRender_positionSpan", positionSpan);
             context.put("formFieldRender_nextPositionInRow", nextPositionInRow);
             
@@ -1296,6 +1297,7 @@ public class FormRenderer {
             
             // Cato: unset
             context.remove("formFieldRender_positions");
+            context.remove("formFieldRender_position");
             context.remove("formFieldRender_positionSpan");
             context.remove("formFieldRender_nextPositionInRow");
         }

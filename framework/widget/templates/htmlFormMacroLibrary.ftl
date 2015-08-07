@@ -609,7 +609,7 @@ under the License.
     </div>
   </div>
 </#macro>
-<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" positionSpan="" nextPositionInRow="">
+<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="">
   <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
   <#-- FIXME: grid sizes doesnt work for multiple-fields-on-one-row -->
   <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}">
@@ -622,7 +622,7 @@ under the License.
       </div>
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" nextPositionInRow="">
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" nextPositionInRow="">
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}7 ${styles.grid_large!}8</#if> ${styles.grid_cell!} ${styles.grid_end!}">
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>

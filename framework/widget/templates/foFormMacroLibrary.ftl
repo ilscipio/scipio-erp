@@ -109,10 +109,10 @@ under the License.
 
 <#macro renderFormatFieldRowOpen positions=""><fo:table-row></#macro>
 <#macro renderFormatFieldRowClose></fo:table-row></#macro>
-<#macro renderFormatFieldRowTitleCellOpen style positions="" positionSpan="" nextPositionInRow=""><fo:table-cell font-weight="bold" text-align="right" padding="3pt"><fo:block></#macro>
+<#macro renderFormatFieldRowTitleCellOpen style positions="" position="" positionSpan="" nextPositionInRow=""><fo:table-cell font-weight="bold" text-align="right" padding="3pt"><fo:block></#macro>
 <#macro renderFormatFieldRowTitleCellClose></fo:block></fo:table-cell></#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" nextPositionInRow=""><fo:table-cell text-align="left" padding="2pt" padding-left="5pt" <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if>></#macro>
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" position="" nextPositionInRow=""><fo:table-cell text-align="left" padding="2pt" padding-left="5pt" <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if>></#macro>
 <#macro renderFormatFieldRowWidgetCellClose></fo:table-cell></#macro>
 
 <#macro renderFormatEmptySpace> </#macro>

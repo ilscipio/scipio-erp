@@ -42,9 +42,12 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.widget.WidgetWorker;
+import org.ofbiz.widget.model.AbstractModelAction;
+import org.ofbiz.widget.model.FieldInfo;
 import org.ofbiz.widget.model.*;
 import org.ofbiz.widget.model.ModelForm.FieldGroup;
 import org.ofbiz.widget.model.ModelForm.FieldGroupBase;
+import org.ofbiz.widget.model.ModelFormField;
 
 /**
  * A form rendering engine.
@@ -1114,8 +1117,6 @@ public class FormRenderer {
             }
         }
 
-        RenderRowFieldEntrySequence rowFieldEntries = null;
-        
         boolean isFirstPass = true;
         boolean haveRenderedOpenFieldRow = false;
         while (currentFormField != null) {
@@ -1164,7 +1165,6 @@ public class FormRenderer {
                     lastFieldGroupName = lastFieldGroup.getId();
                     if (!lastFieldGroupName.equals(currentFieldGroupName)) {
                         if (haveRenderedOpenFieldRow) {
-                            rowFieldEntries.render(writer, context, positions);
                             formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
                             haveRenderedOpenFieldRow = false;
                         }
@@ -1243,7 +1243,6 @@ public class FormRenderer {
                 //formStringRenderer.renderFormatFieldRowSpacerCell(writer, context, currentFormField);
             } else {
                 if (haveRenderedOpenFieldRow) {
-                    rowFieldEntries.render(writer, context, positions);
                     // render row formatting close
                     formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
                     haveRenderedOpenFieldRow = false;
@@ -1252,7 +1251,6 @@ public class FormRenderer {
                 // render row formatting open
                 formStringRenderer.renderFormatFieldRowOpen(writer, context, modelForm);
                 haveRenderedOpenFieldRow = true;
-                rowFieldEntries = new RenderRowFieldEntrySequence();
             }
 
             //
@@ -1261,54 +1259,8 @@ public class FormRenderer {
             if (!haveRenderedOpenFieldRow) {
                 formStringRenderer.renderFormatFieldRowOpen(writer, context, modelForm);
                 haveRenderedOpenFieldRow = true;
-                rowFieldEntries = new RenderRowFieldEntrySequence();
             }
 
-            // Cato: don't render form field entry here. accumulate them for row and then render all at once at row close.
-            // render form field
-            //new RenderFieldEntry(currentFormField, positionSpan, nextPositionInRow).render(writer, context, positions);
-            rowFieldEntries.add(new RenderFieldEntry(currentFormField, positionSpan, nextPositionInRow));
-            
-        }
-        // render row formatting close after the end if needed
-        if (haveRenderedOpenFieldRow) {
-            rowFieldEntries.render(writer, context, positions);
-            formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
-        }
-
-        if (lastFieldGroup != null) {
-            lastFieldGroup.renderEndString(writer, context, formStringRenderer);
-        }
-        // render formatting wrapper close
-        // should be handled by renderEndString
-        //formStringRenderer.renderFormatSingleWrapperClose(writer, context, this);
-
-        // render form close
-        if (!modelForm.getSkipEnd())
-            formStringRenderer.renderFormClose(writer, context, modelForm);
-
-    }
-
-    /**
-     * Cato: Factored out field entry render code
-     */
-    private class RenderFieldEntry {
-        private final ModelFormField currentFormField;
-        private final int positionSpan;
-        private final Integer nextPositionInRow;
-        
-        public RenderFieldEntry(ModelFormField currentFormField,
-                int positionSpan, Integer nextPositionInRow) {
-            super();
-            this.currentFormField = currentFormField;
-            this.positionSpan = positionSpan;
-            this.nextPositionInRow = nextPositionInRow;
-        }
-        
-        public void render(Appendable writer, Map<String, Object> context, 
-                int positions) throws IOException {
-            FieldInfo fieldInfo = currentFormField.getFieldInfo();
-            
             // render title formatting open
             formStringRenderer.renderFormatFieldRowTitleCellOpen(writer, context, currentFormField);
 
@@ -1336,28 +1288,26 @@ public class FormRenderer {
             // render widget formatting close
             formStringRenderer.renderFormatFieldRowWidgetCellClose(writer, context, currentFormField, positions, positionSpan,
                     nextPositionInRow);
+
         }
-        
+        // render row formatting close after the end if needed
+        if (haveRenderedOpenFieldRow) {
+            formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
+        }
+
+        if (lastFieldGroup != null) {
+            lastFieldGroup.renderEndString(writer, context, formStringRenderer);
+        }
+        // render formatting wrapper close
+        // should be handled by renderEndString
+        //formStringRenderer.renderFormatSingleWrapperClose(writer, context, this);
+
+        // render form close
+        if (!modelForm.getSkipEnd())
+            formStringRenderer.renderFormClose(writer, context, modelForm);
+
     }
-    
-    /**
-     * Cato: renders accumulated field entries all at once (for delayed render).
-     */
-    private class RenderRowFieldEntrySequence {
-        private List<RenderFieldEntry> fieldEntries = new ArrayList<RenderFieldEntry>();
-        
-        public void add(RenderFieldEntry fieldEntry) {
-            fieldEntries.add(fieldEntry);
-        }
-        
-        public void render(Appendable writer, Map<String, Object> context, 
-                int positions) throws IOException {
-            for(RenderFieldEntry fieldEntry : fieldEntries) {
-                fieldEntry.render(writer, context, positions);
-            }
-        }
-    }
-    
+
     private void resetBshInterpreter(Map<String, Object> context) {
         context.remove("bshInterpreter");
     }

@@ -144,7 +144,7 @@ under the License.
   <#local dateFormat><#if (shortDateInput!false) == true>yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local useTsFormat = (((shortDateInput!false) == false) && dateType!="time")>
 
-  <div class="${styles.grid_row!} collapse date" data-date="" data-date-format="${dateFormat}">
+  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
         <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
           <#if dateType == "time">
             <input type="text" name="${name}" <@renderClass className alert /><#rt/>
@@ -684,7 +684,7 @@ under the License.
   <#local dateFormat><#if dateType == "date">yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local useTsFormat = (dateType != "date" && dateType != "time")>
   
-  <div class="${styles.grid_row!} collapse date" data-date="" data-date-format="${dateFormat}">
+  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
         <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
         <input class="${styles.grid_small!}3 ${styles.grid_cell!}" id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
         </div>
@@ -1138,11 +1138,11 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible>
 <div class="${styles.grid_row!}">
-  <div class="fieldgroup ${styles.grid_large!}12 ${styles.grid_cell!} <#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> collapsed</#if></#if>"<#if id?has_content> id="${id}"</#if>>
+  <div class="fieldgroup ${styles.grid_large!}12 ${styles.grid_cell!}<#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> ${styles.collapse!}</#if></#if>"<#if id?has_content> id="${id}"</#if>>
     <fieldset<#if style?has_content || collapsed> class="${style!}"</#if>>
       <#--<#if collapsible>
         <ul>
-          <li class="<#if collapsed>collapsed">
+          <li class="<#if collapsed>${styles.collapse!}">
                       <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${expandToolTip}', '${collapseToolTip}');">
                     <#else>expanded">
                       <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${expandToolTip}', '${collapseToolTip}');">

@@ -1253,6 +1253,11 @@ public class FormRenderer {
                 haveRenderedOpenFieldRow = true;
             }
 
+            // Cato: pass these (and unset below)
+            context.put("formFieldRender_positions", positions);
+            context.put("formFieldRender_positionSpan", positionSpan);
+            context.put("formFieldRender_nextPositionInRow", nextPositionInRow);
+            
             //
             // It must be a row open before rendering a field. If not, open it
             //
@@ -1288,7 +1293,11 @@ public class FormRenderer {
             // render widget formatting close
             formStringRenderer.renderFormatFieldRowWidgetCellClose(writer, context, currentFormField, positions, positionSpan,
                     nextPositionInRow);
-
+            
+            // Cato: unset
+            context.remove("formFieldRender_positions");
+            context.remove("formFieldRender_positionSpan");
+            context.remove("formFieldRender_nextPositionInRow");
         }
         // render row formatting close after the end if needed
         if (haveRenderedOpenFieldRow) {

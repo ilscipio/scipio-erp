@@ -1238,6 +1238,11 @@ public class FormRenderer {
                 }
             }
 
+            // Cato: pass these (and unset below)
+            context.put("formFieldRender_positions", positions);
+            context.put("formFieldRender_positionSpan", positionSpan);
+            context.put("formFieldRender_nextPositionInRow", nextPositionInRow);
+            
             if (stayingOnRow) {
                 // no spacer cell, might add later though...
                 //formStringRenderer.renderFormatFieldRowSpacerCell(writer, context, currentFormField);
@@ -1253,11 +1258,6 @@ public class FormRenderer {
                 haveRenderedOpenFieldRow = true;
             }
 
-            // Cato: pass these (and unset below)
-            context.put("formFieldRender_positions", positions);
-            context.put("formFieldRender_positionSpan", positionSpan);
-            context.put("formFieldRender_nextPositionInRow", nextPositionInRow);
-            
             //
             // It must be a row open before rendering a field. If not, open it
             //

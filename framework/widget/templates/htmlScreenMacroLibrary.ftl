@@ -184,11 +184,12 @@ under the License.
      fromWidgets: hint of whether called by renderer or ftl macros
      hasContent: hint to say there will be content, workaround for styling -->
 <#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true>
+<#-- TODO: there should be a "level" param and class to follow nesting (similar to headerLevel), but no way to do this from this macro because no request object here to keep attrib... -->
 <#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
      note: with recent patch, menuString passed by renderer is rendered by macro renderer. -->
 <#local menuString = menuString?trim>
 <#local hasMenu = (menuString?has_content || requireMenu || forceEmptyMenu)>
-<#local contentFlagClasses><#if !title?has_content> no-title</#if><#if !hasMenu> no-menu</#if><#if !hasContent> no-content</#if></#local>
+<#local contentFlagClasses> header-level-${headerLevel}<#if title?has_content> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
 <div class="section-screenlet${contentFlagClasses}<#if collapsed> toggleField</#if>">
 <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
@@ -228,7 +229,6 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
     ${menuString}
   </#if>
   <#if !menuString?ends_with("</ul>")></ul></#if>
-
 </#if>
 
 </#if>

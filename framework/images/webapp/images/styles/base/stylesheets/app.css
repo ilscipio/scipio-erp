@@ -9835,25 +9835,35 @@ div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 
+/* line 271, ../scss/_base.scss */
+div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
+  margin-top: 0.2rem;
+}
+
+/* line 275, ../scss/_base.scss */
+div.section-screenlet-container.no-title.no-menu {
+  margin-top: 0;
+}
+
 /*  FOOTER */
-/* line 267, ../scss/_base.scss */
+/* line 280, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 272, ../scss/_base.scss */
+/* line 285, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 277, ../scss/_base.scss */
+/* line 290, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 281, ../scss/_base.scss */
+/* line 294, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -9861,35 +9871,35 @@ div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
 }
 
 /*MISC*/
-/* line 291, ../scss/_base.scss */
+/* line 304, ../scss/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 296, ../scss/_base.scss */
+/* line 309, ../scss/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
 }
 
-/* line 302, ../scss/_base.scss */
+/* line 315, ../scss/_base.scss */
 .form-field-input-asterisk {
   display: none;
 }
 
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 309, ../scss/_base.scss */
+  /* line 322, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 314, ../scss/_base.scss */
+  /* line 327, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 316, ../scss/_base.scss */
+  /* line 329, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }

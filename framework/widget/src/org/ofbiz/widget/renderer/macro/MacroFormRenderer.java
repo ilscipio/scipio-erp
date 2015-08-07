@@ -1723,10 +1723,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("\"/>");
         executeMacro(writer, sr.toString());
     }
-
+    
     public void renderFormatFieldRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        Integer positions = (Integer) context.get("formFieldRender_positions");
         StringWriter sr = new StringWriter();
-        sr.append("<@renderFormatFieldRowOpen />");
+        sr.append("<@renderFormatFieldRowOpen");
+        sr.append(" positions=" + (positions != null ? positions.toString() : "\"\""));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -1735,6 +1738,18 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("<@renderFormatFieldRowClose />");
         executeMacro(writer, sr.toString());
     }
+    
+    /**
+     * Cato: appends position params.
+     */
+    private void appendPositionParams(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, StringWriter sr) throws IOException {
+        Integer positions = (Integer) context.get("formFieldRender_positions");
+        Integer positionSpan = (Integer) context.get("formFieldRender_positionSpan");
+        Integer nextPositionInRow = (Integer) context.get("formFieldRender_nextPositionInRow");
+        sr.append(" positions=" + (positions != null ? positions.toString() : "\"\""));
+        sr.append(" positionSpan=" + (positionSpan != null ? positionSpan.toString() : "\"\""));
+        sr.append(" nextPositionInRow=" + (nextPositionInRow != null ? nextPositionInRow.toString() : "\"\""));
+    }
 
     public void renderFormatFieldRowTitleCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         String style = modelFormField.getTitleAreaStyle();
@@ -1742,7 +1757,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("<@renderFormatFieldRowTitleCellOpen ");
         sr.append(" style=\"");
         sr.append(style);
-        sr.append("\" />");
+        sr.append("\"");
+        appendPositionParams(writer, context, modelFormField, sr); 
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 
@@ -1759,11 +1776,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String areaStyle = modelFormField.getWidgetAreaStyle();
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatFieldRowWidgetCellOpen ");
-        sr.append(" positionSpan=");
-        sr.append(Integer.toString(positionSpan));
+        //sr.append(" positionSpan=");
+        //sr.append(Integer.toString(positionSpan));
         sr.append(" style=\"");
         sr.append(areaStyle);
-        sr.append("\" />");
+        sr.append("\"");
+        appendPositionParams(writer, context, modelFormField, sr);
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 

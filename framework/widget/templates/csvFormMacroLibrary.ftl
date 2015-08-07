@@ -84,13 +84,13 @@ under the License.
 <#macro renderFormatSingleWrapperClose formName>
 </#macro>
 
-<#macro renderFormatFieldRowOpen></#macro>
+<#macro renderFormatFieldRowOpen positions=""></#macro>
 <#macro renderFormatFieldRowClose>
 </#macro>
-<#macro renderFormatFieldRowTitleCellOpen style> </#macro>
+<#macro renderFormatFieldRowTitleCellOpen style positions="" positionSpan="" nextPositionInRow=""> </#macro>
 <#macro renderFormatFieldRowTitleCellClose></#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan style></#macro>
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" nextPositionInRow=""></#macro>
 <#macro renderFormatFieldRowWidgetCellClose></#macro>
 
 <#macro renderFormatEmptySpace>&nbsp;</#macro>

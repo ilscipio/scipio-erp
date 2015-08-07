@@ -107,12 +107,12 @@ under the License.
 <#macro renderFormatSingleWrapperOpen formName style><fo:table><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-body></#macro>
 <#macro renderFormatSingleWrapperClose formName></fo:table-body></fo:table></#macro>
 
-<#macro renderFormatFieldRowOpen><fo:table-row></#macro>
+<#macro renderFormatFieldRowOpen positions=""><fo:table-row></#macro>
 <#macro renderFormatFieldRowClose></fo:table-row></#macro>
-<#macro renderFormatFieldRowTitleCellOpen style><fo:table-cell font-weight="bold" text-align="right" padding="3pt"><fo:block></#macro>
+<#macro renderFormatFieldRowTitleCellOpen style positions="" positionSpan="" nextPositionInRow=""><fo:table-cell font-weight="bold" text-align="right" padding="3pt"><fo:block></#macro>
 <#macro renderFormatFieldRowTitleCellClose></fo:block></fo:table-cell></#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan style><fo:table-cell text-align="left" padding="2pt" padding-left="5pt" <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if>></#macro>
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" nextPositionInRow=""><fo:table-cell text-align="left" padding="2pt" padding-left="5pt" <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if>></#macro>
 <#macro renderFormatFieldRowWidgetCellClose></fo:table-cell></#macro>
 
 <#macro renderFormatEmptySpace> </#macro>

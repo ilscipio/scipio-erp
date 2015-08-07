@@ -600,30 +600,34 @@ under the License.
 </#macro>
 
 <#macro renderFormatFieldRowOpen collapse=false style="">
-   <div class="${styles.grid_row!} form-field-row">
+  <div class="${styles.grid_row!} form-field-row">
     <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}">
-      <div class="${styles.grid_row!} form-field-entry <#if collapse>${styles.collapse!}</#if>">
+      <div class="${styles.grid_row!}<#if collapse> ${styles.collapse!}</#if>">
 </#macro>
 <#macro renderFormatFieldRowClose>
-        </div>
+      </div>
     </div>
   </div>
 </#macro>
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
+  <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
   <#-- FIXME: grid sizes doesnt work for multiple-fields-on-one-row -->
-  <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!}">
-      <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
+  <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}">
+    <div class="${styles.grid_row!} form-field-entry">
+      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!}">
+        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false>
-      <#if collapse></span><#else></label></#if>
-    </div>
+        <#if collapse></span><#else></label></#if>
+      </div>
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="">
-  <#-- FIXME: grid sizes doesnt work for multiple-fields-on-one-row -->
-  <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}10 ${styles.grid_large!}10</#if> ${styles.grid_cell!}">
+      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}7 ${styles.grid_large!}8</#if> ${styles.grid_cell!} ${styles.grid_end!}">
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>
+      </div>
+    </div>
   </div>
 </#macro>
 

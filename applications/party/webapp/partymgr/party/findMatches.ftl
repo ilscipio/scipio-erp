@@ -17,68 +17,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="address-match-map" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PageTitleAddressMatches}</li>
-      <li><a href="<@ofbizUrl>addressMatchMap</@ofbizUrl>">${uiLabelMap.PageTitleAddressMatchMap}</a></li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
-    <table class="basic-table" cellspacing="0">
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>addressMatchMap</@ofbizUrl>">${uiLabelMap.PageTitleAddressMatchMap}</a></li>
+</#assign>
+<@section id="address-match-map">
+
       <form name="matchform" method="post" action="<@ofbizUrl>findAddressMatch?match=true</@ofbizUrl>">
-        <tr>
-          <td>${uiLabelMap.PartyLastName}</td>
-          <td><input type="text" name="lastName" class="required" value="${parameters.lastName!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.PartyFirstName}</td>
-          <td><input type="text" name="firstName" class="required" value="${parameters.firstName!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.CommonAddress1}</td>
-          <td><input type="text" name="address1" class="required" value="${parameters.address1!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.CommonAddress2}</td>
-          <td><input type="text" name="address2" value="${parameters.address2!}"/></td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.CommonCity}</td>
-          <td><input type="text" name="city" class="required" value="${parameters.city!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.CommonStateProvince}</td>
-          <td>
-            <select name="stateProvinceGeoId">
-              <#if currentStateGeo?has_content>
-                <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
-                <option value="${currentStateGeo.geoId}">---</option>
-              </#if>
-              <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
-              ${screens.render("component://common/widget/CommonScreens.xml#states")}
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.PartyZipCode}</td>
-          <td><input type="text" name="postalCode" class="required" value="${parameters.postalCode!}"/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit" value="${uiLabelMap.PageTitleFindMatches}" /></td>
-        </tr>
+        <@field type="input" name="lastName" label="${uiLabelMap.PartyLastName}" value="${parameters.lastName!}" required=true />
+        <@field type="input" name="firstName" label="${uiLabelMap.PartyFirstName}" value="${parameters.firstName!}" required=true />
+        <@field type="input" name="address1" label="${uiLabelMap.CommonAddress1}" value="${parameters.address1!}" required=true />
+        <@field type="input" name="address2" label="${uiLabelMap.CommonAddress2}" value="${parameters.address2!}" />
+        <@field type="input" name="city" label="${uiLabelMap.CommonCity}" value="${parameters.city!}" required=true />
+      
+        <@field type="select" label="${uiLabelMap.CommonStateProvince}" name="stateProvinceGeoId" currentValue="${(currentStateGeo.geoId)!}">
+            <#if currentStateGeo?has_content>
+              <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
+              <option value="${currentStateGeo.geoId}">---</option>
+            </#if>
+            <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
+            ${screens.render("component://common/widget/CommonScreens.xml#states")}
+        </@field>
+        
+        <@field type="input" name="postalCode" label="${uiLabelMap.PartyZipCode}" value="${parameters.postalCode!}" required=true />
+      
+        <@field type="submitarea">
+            <input type="submit" value="${uiLabelMap.PageTitleFindMatches}" /></td>
+        </@field>
+        
       </form>
-      <#if match?has_content>
-        <tr><td colspan="5">&nbsp;</td></tr>
-        <tr>
-          <td colspan="2">
+      <script language="JavaScript" type="text/javascript">
+      <!-- //
+          jQuery("form[name=matchform]").validate();
+      // -->
+      </script>
+      
+      
+          <#if match?has_content>
             <#if matches?has_content>
               <table cellspacing="0" class="basic-table">
                 <thead>
                 <tr>
-                  <td  colspan="7">${uiLabelMap.PartyAddressMatching} ${lastName} / ${firstName} @ ${addressString}</td>
+                  <td colspan="7">${uiLabelMap.PartyAddressMatching} ${lastName} / ${firstName} @ ${addressString}</td>
                 </tr>
                 <tr class="header-row">
                   <th>${uiLabelMap.PartyLastName}</th>
@@ -106,16 +85,12 @@ under the License.
                     <td>${Static["org.ofbiz.party.party.PartyWorker"].makeMatchingString(delegator, match.address2?default("N/A"))}</td>
                     <td>${match.city}</td>
                     <td>${match.postalCode}</td>
-                    <td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${match.partyId}</@ofbizUrl>">${match.partyId}</a></td>
+                    <td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${match.partyId}</@ofbizUrl>" class="${styles.button_default!}">${match.partyId}</a></td>
                   </tr>
                 </#list>
               </table>
             <#else>
-              ${uiLabelMap.PartyNoMatch}
+              <p>${uiLabelMap.PartyNoMatch}</p>
             </#if>
-          </td>
-        </tr>
-      </#if>
-    </table>
-  </div>
-</div>
+          </#if>
+</@section>

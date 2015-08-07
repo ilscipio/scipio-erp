@@ -13016,4 +13016,9 @@
         <value xml:lang="en">Party Content Type</value>
         <value xml:lang="fr">Type du contenu de l'acteur</value>
     </property>
+    <property key="PageTitleCreateAddressMatchMap">
+        <value xml:lang="de">Address-Karte erstellen</value>
+        <value xml:lang="en">Create Address Match Map</value>
+        <value xml:lang="fr">Créer couples clefs-valeurs d'addresses comparables</value>
+    </property>
 </resource>

@@ -20,7 +20,7 @@ under the License.
 <#assign menuHtml>
   <li><a href="<@ofbizUrl>findAddressMatch</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PageTitleFindMatches}</a></li>
 </#assign>
-<@section id="address-match-map" title="${uiLabelMap.PageTitleAddressMatchMap}" menuHtml=menuHtml>
+<@section id="address-match-map" title="${uiLabelMap.PageTitleCreateAddressMatchMap}" menuHtml=menuHtml>
   <@section id="addressmatchmap_create">
   <form name="addaddrmap" method="post" action="<@ofbizUrl>createAddressMatchMap</@ofbizUrl>">
     <@field type="input" name="mapKey" label="${uiLabelMap.PartyAddressMatchKey}" />

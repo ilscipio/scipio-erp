@@ -144,8 +144,8 @@ under the License.
   <#local dateFormat><#if (shortDateInput!false) == true>yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local useTsFormat = (((shortDateInput!false) == false) && dateType!="time")>
 
-  <div class="row collapse date" data-date="" data-date-format="${dateFormat}">
-        <div class="${styles.grid_small!}11 columns">
+  <div class="${styles.grid_row!} collapse date" data-date="" data-date-format="${dateFormat}">
+        <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
           <#if dateType == "time">
             <input type="text" name="${name}" <@renderClass className alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -153,7 +153,7 @@ under the License.
             <#if value?has_content> value="${value}"</#if>
             <#if size?has_content> size="${size}"</#if><#rt/>
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
-            <#if id?has_content> id="${id}"</#if> class="${styles.grid_small!}3 columns"/><#rt/>
+            <#if id?has_content> id="${id}"</#if> class="${styles.grid_small!}3 ${styles.grid_cell!}"/><#rt/>
           <#else>
             <input type="text" name="${name}_i18n" <@renderClass className alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -161,12 +161,12 @@ under the License.
             <#if value?has_content> value="${value}"</#if>
             <#if size?has_content> size="${size}"</#if><#rt/>
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
-            <#if id?has_content> id="${id}_i18n"</#if> class="${styles.grid_small!}3 columns"/><#rt/>
+            <#if id?has_content> id="${id}_i18n"</#if> class="${styles.grid_small!}3 ${styles.grid_cell!}"/><#rt/>
 
             <input type="hidden" name="${name}" <#if id?has_content> id="${id}"</#if> <#if value?has_content> value="${value}"</#if> />            
           </#if>
         </div>
-        <div class="${styles.grid_small!}1 columns">
+        <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
         <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
         </div>
       <#if dateType != "time">
@@ -612,7 +612,7 @@ under the License.
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
   <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
   <#-- FIXME: grid sizes doesnt work for multiple-fields-on-one-row -->
-  <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}">
+  <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}6</#if> ${styles.grid_cell!}">
     <div class="${styles.grid_row!} form-field-entry">
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!}">
         <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
@@ -684,14 +684,14 @@ under the License.
   <#local dateFormat><#if dateType == "date">yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local useTsFormat = (dateType != "date" && dateType != "time")>
   
-  <div class="row collapse date" data-date="" data-date-format="${dateFormat}">
-        <div class="${styles.grid_small!}5 columns">
-        <input class="${styles.grid_small!}3 columns" id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
+  <div class="${styles.grid_row!} collapse date" data-date="" data-date-format="${dateFormat}">
+        <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
+        <input class="${styles.grid_small!}3 ${styles.grid_cell!}" id="${name?html}_fld0_value" type="text" <@renderClass className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
         </div>
-        <div class="${styles.grid_small!}1 columns">
+        <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
         <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
         </div>
-        <div class="${styles.grid_small!}5 columns ${styles.grid_small!}offset-1">
+        <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
         <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
           <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
           <option value="sameDay"<#if defaultOptionFrom=="sameDay"> selected="selected"</#if>>${opSameDay}</option><#rt/>

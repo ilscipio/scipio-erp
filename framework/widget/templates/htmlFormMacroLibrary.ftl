@@ -601,7 +601,7 @@ under the License.
 
 <#macro renderFormatFieldRowOpen collapse=false style="">
    <div class="${styles.grid_row!} form-field-row">
-    <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}9</#if> ${styles.grid_cell!}">
+    <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}">
       <div class="${styles.grid_row!} form-field-entry <#if collapse>${styles.collapse!}</#if>">
 </#macro>
 <#macro renderFormatFieldRowClose>
@@ -610,7 +610,7 @@ under the License.
   </div>
 </#macro>
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
-  <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!} ">
+  <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!}">
       <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false>
@@ -619,7 +619,8 @@ under the License.
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="">
-  <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}9 ${styles.grid_large!}10</#if> ${styles.grid_cell!}">
+  <#-- WARN/FIXME: ${styles.grid_end!} may be necessary but not sure will always be last... more logic needed?... -->
+  <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}7 ${styles.grid_large!}8</#if> ${styles.grid_cell!} ${styles.grid_end!}">
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>
   </div>

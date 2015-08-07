@@ -30,9 +30,6 @@ under the License.
             <widgets>
                 <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="page-title">
-                            <label text="${uiLabelMap.NewSecurityGroup}"/>
-                        </container>
                         <include-form name="CreateSecurityGroup" location="component://common/widget/SecurityForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -51,9 +48,6 @@ under the License.
             <widgets>
                 <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="page-title">
-                            <label text="${uiLabelMap.CreateUserLogin}"/>
-                        </container>
                         <include-form name="AddUserLogin" location="component://common/widget/SecurityForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -72,9 +66,9 @@ under the License.
             <widgets>
                 <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="page-title">
+                        <!-- duplicate info: <container style="page-title">
                             <label text="${uiLabelMap.PageTitleEditSecurityGroup} - ${groupId}"/>
-                        </container>
+                        </container>-->
                         <include-form name="EditSecurityGroup" location="component://common/widget/SecurityForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -255,9 +249,6 @@ under the License.
             <widgets>
                 <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="page-title">
-                            <label text="${uiLabelMap.PageTitleFindSecurityGroup}"/>
-                        </container>
                         <container style="button-bar">
                             <link target="CreateNewSecurityGroup" style="${styles.button_default} create" text="${uiLabelMap.CommonCreateNew}"/>
                         </container>
@@ -280,9 +271,6 @@ under the License.
             <widgets>
                 <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="page-title">
-                            <label text="${uiLabelMap.FindUserLogin}"/>
-                        </container>
                         <container style="button-bar">
                             <link target="createnewlogin" style="${styles.button_default} create" text="${uiLabelMap.CommonCreateNew}"/>
                         </container>

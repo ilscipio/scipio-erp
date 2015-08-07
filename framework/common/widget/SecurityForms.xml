@@ -75,8 +75,8 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonN}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="cancelLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -111,8 +111,8 @@ under the License.
     <form name="CreateSecurityGroup" type="single" target="createSecurityGroup" default-map-name="securityGroup">
         <field name="groupId" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="required" tooltip="${uiLabelMap.CommonRequired}"><text size="20" maxlength="20"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="60" maxlength="250"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
-        <field name="cancelLink" title=" " widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="${styles.button_default}"><submit button-type="button"/></field>
+        <field name="cancelLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -276,7 +276,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" widget-style="smallSubmit">
+        <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${userLoginId}" target="javascript:set_value('${userLoginId}', '${userLoginId}', '${parameters.webSitePublishPoint}')"/>
         </field>
         <field name="enabled"><display/></field>
@@ -295,8 +295,8 @@ under the License.
         <field name="currentPassword"><password/></field>
         <field name="newPassword"><password/></field>
         <field name="newPasswordVerify"><password/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="cancelLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="userLoginId"/>
                 <parameter param-name="partyId"/>
@@ -314,8 +314,8 @@ under the License.
         <field name="userLoginId"><hidden/></field>
         <field name="userLdapDn" use-when="&quot;true&quot;.equals(ldapEnabled)"><text/></field>
         <field name="userLdapDn" use-when="!&quot;true&quot;.equals(ldapEnabled)"><ignored/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="cancelLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="userLoginId"/>
                 <parameter param-name="partyId"/>

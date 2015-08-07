@@ -23,7 +23,7 @@ under the License.
 function collapseFieldset(){
 	var parent = $(".toggleField");
 	parent.each(function( index ) {
-		$(this).find("fieldset .row").wrapAll( "<div class='collapsehide'/>");
+		$(this).find("fieldset > .row").wrapAll('<div class="collapsehide"/>');
 		if(parent.hasClass("collapsed")){
 			parent.find(".collapsehide").hide();
 		} 

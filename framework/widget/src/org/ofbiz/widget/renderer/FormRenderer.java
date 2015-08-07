@@ -1261,34 +1261,8 @@ public class FormRenderer {
                 haveRenderedOpenFieldRow = true;
             }
 
-            // render title formatting open
-            formStringRenderer.renderFormatFieldRowTitleCellOpen(writer, context, currentFormField);
-
-            // render title (unless this is a submit or a reset field)
-            if (fieldInfo.getFieldType() != FieldInfo.SUBMIT
-                    && fieldInfo.getFieldType() != FieldInfo.RESET) {
-                formStringRenderer.renderFieldTitle(writer, context, currentFormField);
-            } else {
-                formStringRenderer.renderFormatEmptySpace(writer, context, modelForm);
-            }
-
-            // render title formatting close
-            formStringRenderer.renderFormatFieldRowTitleCellClose(writer, context, currentFormField);
-
-            // render separator
-            formStringRenderer.renderFormatFieldRowSpacerCell(writer, context, currentFormField);
-
-            // render widget formatting open
-            formStringRenderer.renderFormatFieldRowWidgetCellOpen(writer, context, currentFormField, positions, positionSpan,
-                    nextPositionInRow);
-
-            // render widget
-            currentFormField.renderFieldString(writer, context, formStringRenderer);
-
-            // render widget formatting close
-            formStringRenderer.renderFormatFieldRowWidgetCellClose(writer, context, currentFormField, positions, positionSpan,
-                    nextPositionInRow);
-
+            // render form field
+            renderFieldEntry(writer, context, positions, currentFormField, positionSpan, nextPositionInRow);
         }
         // render row formatting close after the end if needed
         if (haveRenderedOpenFieldRow) {
@@ -1308,6 +1282,42 @@ public class FormRenderer {
 
     }
 
+    /**
+     * Cato: Factored out field entry render method
+     */
+    private void renderFieldEntry(Appendable writer, Map<String, Object> context, 
+            int positions, ModelFormField currentFormField, int positionSpan, Integer nextPositionInRow) throws IOException {
+        FieldInfo fieldInfo = currentFormField.getFieldInfo();
+        
+        // render title formatting open
+        formStringRenderer.renderFormatFieldRowTitleCellOpen(writer, context, currentFormField);
+
+        // render title (unless this is a submit or a reset field)
+        if (fieldInfo.getFieldType() != FieldInfo.SUBMIT
+                && fieldInfo.getFieldType() != FieldInfo.RESET) {
+            formStringRenderer.renderFieldTitle(writer, context, currentFormField);
+        } else {
+            formStringRenderer.renderFormatEmptySpace(writer, context, modelForm);
+        }
+
+        // render title formatting close
+        formStringRenderer.renderFormatFieldRowTitleCellClose(writer, context, currentFormField);
+
+        // render separator
+        formStringRenderer.renderFormatFieldRowSpacerCell(writer, context, currentFormField);
+
+        // render widget formatting open
+        formStringRenderer.renderFormatFieldRowWidgetCellOpen(writer, context, currentFormField, positions, positionSpan,
+                nextPositionInRow);
+
+        // render widget
+        currentFormField.renderFieldString(writer, context, formStringRenderer);
+
+        // render widget formatting close
+        formStringRenderer.renderFormatFieldRowWidgetCellClose(writer, context, currentFormField, positions, positionSpan,
+                nextPositionInRow);
+    }
+    
     private void resetBshInterpreter(Map<String, Object> context) {
         context.remove("bshInterpreter");
     }

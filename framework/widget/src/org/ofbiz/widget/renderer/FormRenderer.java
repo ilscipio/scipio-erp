@@ -1114,6 +1114,8 @@ public class FormRenderer {
             }
         }
 
+        RenderRowFieldEntries rowFieldEntries = null;
+        
         boolean isFirstPass = true;
         boolean haveRenderedOpenFieldRow = false;
         while (currentFormField != null) {
@@ -1162,6 +1164,7 @@ public class FormRenderer {
                     lastFieldGroupName = lastFieldGroup.getId();
                     if (!lastFieldGroupName.equals(currentFieldGroupName)) {
                         if (haveRenderedOpenFieldRow) {
+                            rowFieldEntries.render(writer, context, positions);
                             formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
                             haveRenderedOpenFieldRow = false;
                         }
@@ -1240,6 +1243,7 @@ public class FormRenderer {
                 //formStringRenderer.renderFormatFieldRowSpacerCell(writer, context, currentFormField);
             } else {
                 if (haveRenderedOpenFieldRow) {
+                    rowFieldEntries.render(writer, context, positions);
                     // render row formatting close
                     formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
                     haveRenderedOpenFieldRow = false;
@@ -1248,6 +1252,7 @@ public class FormRenderer {
                 // render row formatting open
                 formStringRenderer.renderFormatFieldRowOpen(writer, context, modelForm);
                 haveRenderedOpenFieldRow = true;
+                rowFieldEntries = new RenderRowFieldEntries();
             }
 
             //
@@ -1256,13 +1261,18 @@ public class FormRenderer {
             if (!haveRenderedOpenFieldRow) {
                 formStringRenderer.renderFormatFieldRowOpen(writer, context, modelForm);
                 haveRenderedOpenFieldRow = true;
+                rowFieldEntries = new RenderRowFieldEntries();
             }
 
+            // Cato: don't render form field entry here. accumulate them for row and then render all at once at row close.
             // render form field
-            new RenderFieldEntry(currentFormField, positionSpan, nextPositionInRow).render(writer, context, positions);
+            //new RenderFieldEntry(currentFormField, positionSpan, nextPositionInRow).render(writer, context, positions);
+            rowFieldEntries.add(new RenderFieldEntry(currentFormField, positionSpan, nextPositionInRow));
+            
         }
         // render row formatting close after the end if needed
         if (haveRenderedOpenFieldRow) {
+            rowFieldEntries.render(writer, context, positions);
             formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
         }
 

@@ -47,6 +47,7 @@ under the License.
     "radius" : "radius",
     "expand" : "expand",
     "collapse" : "collapse",
+    "collapsed" : "collapsed",
     "hidden" : "hide",
     "icon" : "fi",
     "icon_button" : "fi-widget",

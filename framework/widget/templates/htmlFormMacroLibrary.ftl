@@ -992,6 +992,8 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel forcePost=false viewIndexFirst=0 listItemsOnly=false>
   <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
   <#local minPageSize = availPageSizes?first>
+  <#local itemRange = 2/>
+  <#local placeHolder ="..."/>
   
   <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
   <#if (!viewSize?is_number)>
@@ -1057,16 +1059,22 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
             <li class="${paginateFirstStyle}<#if (viewIndex> viewIndexFirst)>"><a ${actionStr}>${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPreviousUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${previousUrl}')"</#if><#else>href="${previousUrl}"</#if></#local>
             <li class="${paginatePreviousStyle}<#if (viewIndex> viewIndexFirst)>"><a ${actionStr}>${paginatePreviousLabel}</a><#else> unavailable">${paginatePreviousLabel}</#if></li>
-
+        <#local displayDots = true/>
         <#if (listSize > 0)> 
           <#assign x=(listSize/viewSize)?ceiling>
             <#list 1..x as i>
               <#local vi = viewIndexFirst + (i - 1)>
-              <#if vi == viewIndex>
-                <li class="current"><a href="javascript:void(0)">${i}</a></li>
+              <#if (vi gte viewIndexFirst && vi lte viewIndexFirst+itemRange) || (vi gte viewIndex-itemRange && vi lte viewIndex+itemRange)>
+                <#local displayDots = true/>
+                <#if vi == viewIndex>
+                  <li class="current"><a href="javascript:void(0)">${i}</a></li>
+                <#else>
+                  <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${vi}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectUrl}${vi}')"</#if><#else>href="${selectUrl}${vi}"</#if></#local>
+                  <li><a ${actionStr}>${i}</a></li>
+                </#if>
               <#else>
-                <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${vi}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectUrl}${vi}')"</#if><#else>href="${selectUrl}${vi}"</#if></#local>
-                <li><a ${actionStr}>${i}</a></li>
+              <#if displayDots>${placeHolder!}</#if>
+              <#local displayDots = false/>
               </#if>
             </#list>
         </#if>

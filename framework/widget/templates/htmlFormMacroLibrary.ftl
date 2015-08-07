@@ -612,7 +612,7 @@ under the License.
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
   <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
   <#-- FIXME: grid sizes doesnt work for multiple-fields-on-one-row -->
-  <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}6</#if> ${styles.grid_cell!}">
+  <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}">
     <div class="${styles.grid_row!} form-field-entry">
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!}">
         <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>

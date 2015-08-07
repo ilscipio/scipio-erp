@@ -74,6 +74,9 @@ public class KeyStoreUtil {
 
     public static KeyStore getComponentKeyStore(String componentName, String keyStoreName) throws IOException, GeneralSecurityException, GenericConfigException {
         ComponentConfig.KeystoreInfo ks = ComponentConfig.getKeystoreInfo(componentName, keyStoreName);
+        if (ks == null) {
+            throw new IOException("Could not get keystore info for given keystore; not found");
+        }
         return getStore(ks.createResourceHandler().getURL(), ks.getPassword(), ks.getType());
     }
 

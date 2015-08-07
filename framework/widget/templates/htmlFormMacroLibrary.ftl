@@ -610,6 +610,7 @@ under the License.
   </div>
 </#macro>
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false>
+  <#-- FIXME: grid sizes doesnt work for multiple-fields-on-one-row -->
   <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!}">
       <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
 </#macro>
@@ -619,8 +620,8 @@ under the License.
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="">
-  <#-- WARN/FIXME: ${styles.grid_end!} may be necessary but not sure will always be last... more logic needed?... -->
-  <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}7 ${styles.grid_large!}8</#if> ${styles.grid_cell!} ${styles.grid_end!}">
+  <#-- FIXME: grid sizes doesnt work for multiple-fields-on-one-row -->
+  <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}10 ${styles.grid_large!}10</#if> ${styles.grid_cell!}">
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>
   </div>

@@ -1114,7 +1114,7 @@ public class FormRenderer {
             }
         }
 
-        RenderRowFieldEntries rowFieldEntries = null;
+        RenderRowFieldEntrySequence rowFieldEntries = null;
         
         boolean isFirstPass = true;
         boolean haveRenderedOpenFieldRow = false;
@@ -1252,7 +1252,7 @@ public class FormRenderer {
                 // render row formatting open
                 formStringRenderer.renderFormatFieldRowOpen(writer, context, modelForm);
                 haveRenderedOpenFieldRow = true;
-                rowFieldEntries = new RenderRowFieldEntries();
+                rowFieldEntries = new RenderRowFieldEntrySequence();
             }
 
             //
@@ -1261,7 +1261,7 @@ public class FormRenderer {
             if (!haveRenderedOpenFieldRow) {
                 formStringRenderer.renderFormatFieldRowOpen(writer, context, modelForm);
                 haveRenderedOpenFieldRow = true;
-                rowFieldEntries = new RenderRowFieldEntries();
+                rowFieldEntries = new RenderRowFieldEntrySequence();
             }
 
             // Cato: don't render form field entry here. accumulate them for row and then render all at once at row close.
@@ -1343,7 +1343,7 @@ public class FormRenderer {
     /**
      * Cato: renders accumulated field entries all at once (for delayed render).
      */
-    private class RenderRowFieldEntries {
+    private class RenderRowFieldEntrySequence {
         private List<RenderFieldEntry> fieldEntries = new ArrayList<RenderFieldEntry>();
         
         public void add(RenderFieldEntry fieldEntry) {

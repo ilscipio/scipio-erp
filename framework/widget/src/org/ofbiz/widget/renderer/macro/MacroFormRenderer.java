@@ -1747,10 +1747,12 @@ public final class MacroFormRenderer implements FormStringRenderer {
         Integer position = (Integer) context.get("formFieldRender_position");
         Integer positionSpan = (Integer) context.get("formFieldRender_positionSpan");
         Integer nextPositionInRow = (Integer) context.get("formFieldRender_nextPositionInRow");
+        Integer lastPositionInRow = (Integer) context.get("formFieldRender_lastPositionInRow");
         sr.append(" positions=" + (positions != null ? positions.toString() : "\"\""));
         sr.append(" position=" + (position != null ? position.toString() : "\"\""));
         sr.append(" positionSpan=" + (positionSpan != null ? positionSpan.toString() : "\"\""));
         sr.append(" nextPositionInRow=" + (nextPositionInRow != null ? nextPositionInRow.toString() : "\"\""));
+        sr.append(" lastPositionInRow=" + (lastPositionInRow != null ? lastPositionInRow.toString() : "\"\""));
     }
 
     public void renderFormatFieldRowTitleCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) throws IOException {

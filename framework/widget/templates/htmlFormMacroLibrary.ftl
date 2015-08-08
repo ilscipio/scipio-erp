@@ -609,10 +609,9 @@ under the License.
     </div>
   </div>
 </#macro>
-<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="">
+<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="">
   <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
-  <#-- FIXME: grid sizes doesnt work for multiple-fields-on-one-row -->
-  <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}">
+  <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}</#if><#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if>">
     <div class="${styles.grid_row!} form-field-entry">
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!}">
         <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
@@ -622,7 +621,7 @@ under the License.
       </div>
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" nextPositionInRow="">
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" nextPositionInRow="" lastPositionInRow="">
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}7 ${styles.grid_large!}8</#if> ${styles.grid_cell!} ${styles.grid_end!}">
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>

@@ -1117,6 +1117,8 @@ public class FormRenderer {
             }
         }
 
+        Integer lastPositionInRow = null;
+        
         boolean isFirstPass = true;
         boolean haveRenderedOpenFieldRow = false;
         while (currentFormField != null) {
@@ -1240,9 +1242,6 @@ public class FormRenderer {
 
             // Cato: pass these (and unset below)
             context.put("formFieldRender_positions", positions);
-            context.put("formFieldRender_position", currentFormField.getPosition());
-            context.put("formFieldRender_positionSpan", positionSpan);
-            context.put("formFieldRender_nextPositionInRow", nextPositionInRow);
             
             if (stayingOnRow) {
                 // no spacer cell, might add later though...
@@ -1257,6 +1256,7 @@ public class FormRenderer {
                 // render row formatting open
                 formStringRenderer.renderFormatFieldRowOpen(writer, context, modelForm);
                 haveRenderedOpenFieldRow = true;
+                lastPositionInRow = null;
             }
 
             //
@@ -1265,8 +1265,14 @@ public class FormRenderer {
             if (!haveRenderedOpenFieldRow) {
                 formStringRenderer.renderFormatFieldRowOpen(writer, context, modelForm);
                 haveRenderedOpenFieldRow = true;
+                lastPositionInRow = null;
             }
 
+            context.put("formFieldRender_position", currentFormField.getPosition());
+            context.put("formFieldRender_positionSpan", positionSpan);
+            context.put("formFieldRender_nextPositionInRow", nextPositionInRow);
+            context.put("formFieldRender_lastPositionInRow", lastPositionInRow);
+            
             // render title formatting open
             formStringRenderer.renderFormatFieldRowTitleCellOpen(writer, context, currentFormField);
 
@@ -1300,6 +1306,8 @@ public class FormRenderer {
             context.remove("formFieldRender_position");
             context.remove("formFieldRender_positionSpan");
             context.remove("formFieldRender_nextPositionInRow");
+            context.remove("formFieldRender_lastPositionInRow");
+            lastPositionInRow = currentFormField.getPosition();
         }
         // render row formatting close after the end if needed
         if (haveRenderedOpenFieldRow) {

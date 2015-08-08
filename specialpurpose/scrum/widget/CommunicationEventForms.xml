@@ -48,7 +48,6 @@ under the License.
             use-when="&quot;${communicationEvent.statusId}&quot;!=&quot;COM_COMPLETE&quot;&amp;&amp;&quot;${communicationEvent.statusId}&quot;!=&quot;COM_IN_PROGRESS&quot;">
             <submit button-type="button"/>
         </field>
-        <field name="dummy" position="400"><hidden/></field>
     </form>
     <form name="ViewRequestCommunicationEvents" type="list" paginate="true" list-name="commEvents"
         odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">

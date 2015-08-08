@@ -180,7 +180,6 @@ under the License.
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditEmail.form.value='list'),(document.EditEmail.statusId.value='COM_PENDING'),(document.EditEmail.submit())"/>
         </field>
         <field name="createButton" use-when="communicationEvent==null"><submit/></field>
-        <field name="dummy" position="320"><hidden/></field>
     </form>
     <form name="EditInternalNote" type="single" target="createCommunicationEvent" default-map-name="communicationEvent">
         <actions>
@@ -214,7 +213,6 @@ under the License.
             <hyperlink also-hidden="true" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditInternalNote.form.value='list'),(document.EditInternalNote.submit())"/>
         </field>
         <field name="createButton" use-when="communicationEvent==null"><submit/></field>
-        <field name="dummy" position="320"><hidden/></field>
     </form>
 
     <form name="ViewEmail" type="single" default-map-name="communicationEvent">
@@ -346,8 +344,8 @@ under the License.
     <form name="findCommEvents" type="single" target="FindCommunicationEvents" paginate="true" focus-field-name="submitButton"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="communicationEventId" position="1"><text-find/></field>
-        <field name="parentCommEventId" position="2"><text-find/></field>
+        <field name="communicationEventId" position="2"><text-find/></field>
+        <field name="parentCommEventId" position="1"><text-find/></field>
         <!-- <field name="origCommEventId"><text-find/></field-->
         <field name="partyIdFrom" position="1" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonFrom}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyIdTo" position="2" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonTo}"><lookup target-form-name="LookupPartyName"/></field>

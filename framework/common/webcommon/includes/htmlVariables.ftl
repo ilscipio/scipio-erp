@@ -74,6 +74,9 @@ under the License.
     "grid_medium" : "medium-",
     "grid_large" : "large-",       <#-- Bootstrap: "col-lg-" -->
     "grid_offset" : "offset-",      <#-- Bootstrap: "col-md-offset-" -->
+    "grid_small_offset" : "small-offset-",     
+    "grid_medium_offset" : "medium-offset-",    
+    "grid_large_offset" : "large-offset-",   
     "grid_block" : "block-grid-",
     "grid_columns_1" : "large-1 columns",
     "grid_columns_2" : "large-2 medium-3 columns",

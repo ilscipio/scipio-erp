@@ -1226,23 +1226,35 @@ public class FormRenderer {
                 }
             }
 
-            int positionSpan;
             Integer nextPositionInRow = null;
-            if (nextFormField != null) {
-                if (nextFormField.getPosition() > currentFormField.getPosition()) {
-                    positionSpan = nextFormField.getPosition() - currentFormField.getPosition() - 1;
-                    nextPositionInRow = Integer.valueOf(nextFormField.getPosition());
-                } else {
-                    positionSpan = positions - currentFormField.getPosition();
-                    if (!stayingOnRow && nextFormField.getPosition() > 1) {
-                        // TODO: here is a weird case where it is setup such
-                        //that the first position(s) in the row are skipped
-                        // not sure what to do about this right now...
-                    }
-                }
+            // Cato: support a specific position span. note: the value we pass to macro is one less.
+            Integer fieldPositionSpan = currentFormField.getPositionSpan();
+            int positionSpan;
+            if (fieldPositionSpan != null && fieldPositionSpan > 0) {
+                positionSpan = fieldPositionSpan - 1;
             }
             else {
-                positionSpan = positions - currentFormField.getPosition();
+                if (nextFormField != null) {
+                    if (nextFormField.getPosition() > currentFormField.getPosition()) {
+                        positionSpan = nextFormField.getPosition() - currentFormField.getPosition() - 1;
+                        nextPositionInRow = Integer.valueOf(nextFormField.getPosition());
+                    } else {
+                        positionSpan = positions - currentFormField.getPosition();
+                    }
+                }
+                else {
+                    positionSpan = positions - currentFormField.getPosition();
+                }
+                if (fieldPositionSpan == null) {
+                    Integer defaultPositionSpan = modelForm.getDefaultPositionSpan();
+                    if (defaultPositionSpan != null && defaultPositionSpan > 0) {
+                        // form default shouldn't permit breaking grid, less strong 
+                        defaultPositionSpan = defaultPositionSpan - 1;
+                        if (defaultPositionSpan < positionSpan) {
+                            positionSpan = defaultPositionSpan;
+                        }
+                    }
+                }
             }
 
             // Cato: pass these (and unset below)
@@ -1407,18 +1419,35 @@ public class FormRenderer {
                     nextFormField = fieldEntries.get(i + 1).getCurrentFormField();
                 }
                     
-                int positionSpan;
                 Integer nextPositionInRow = null;
-                if (nextFormField != null) {
-                    if (nextFormField.getPosition() > currentFormField.getPosition()) {
-                        positionSpan = nextFormField.getPosition() - currentFormField.getPosition() - 1;
-                        nextPositionInRow = Integer.valueOf(nextFormField.getPosition());
-                    } else {
-                        positionSpan = positions - currentFormField.getPosition();
-                    }
+                // Cato: support a specific position span. note: the value we pass to macro is one less.
+                Integer fieldPositionSpan = currentFormField.getPositionSpan();
+                int positionSpan;
+                if (fieldPositionSpan != null && fieldPositionSpan > 0) {
+                    positionSpan = fieldPositionSpan - 1;
                 }
                 else {
-                    positionSpan = positions - currentFormField.getPosition();
+                    if (nextFormField != null) {
+                        if (nextFormField.getPosition() > currentFormField.getPosition()) {
+                            positionSpan = nextFormField.getPosition() - currentFormField.getPosition() - 1;
+                            nextPositionInRow = Integer.valueOf(nextFormField.getPosition());
+                        } else {
+                            positionSpan = positions - currentFormField.getPosition();
+                        }
+                    }
+                    else {
+                        positionSpan = positions - currentFormField.getPosition();
+                    }
+                    if (fieldPositionSpan == null) {
+                        Integer defaultPositionSpan = modelForm.getDefaultPositionSpan();
+                        if (defaultPositionSpan != null && defaultPositionSpan > 0) {
+                            // form default shouldn't permit breaking grid, is weaker than field setting
+                            defaultPositionSpan = defaultPositionSpan - 1;
+                            if (defaultPositionSpan < positionSpan) {
+                                positionSpan = defaultPositionSpan;
+                            }
+                        }
+                    }
                 }
                 
                 fieldEntry.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow);

@@ -119,6 +119,7 @@ public class ModelFormField {
     private final List<UpdateArea> onClickUpdateAreas;
     private final String parameterName;
     private final Integer position;
+    private final Integer positionSpan;
     private final String redWhen;
     private final Boolean requiredField;
     private final String requiredFieldStyle;
@@ -170,6 +171,7 @@ public class ModelFormField {
         }
         this.parameterName = builder.getParameterName();
         this.position = builder.getPosition();
+        this.positionSpan = builder.getPositionSpan();
         this.redWhen = builder.getRedWhen();
         this.requiredField = builder.getRequiredField();
         this.requiredFieldStyle = builder.getRequiredFieldStyle();
@@ -500,6 +502,10 @@ public class ModelFormField {
         if (this.position == null)
             return 1;
         return position.intValue();
+    }
+    
+    public Integer getPositionSpan() {
+        return positionSpan;
     }
 
     public String getRedWhen() {

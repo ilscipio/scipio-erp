@@ -86,6 +86,7 @@ public class ModelFormFieldBuilder {
     private List<UpdateArea> onClickUpdateAreas = new ArrayList<UpdateArea>();
     private String parameterName = "";
     private Integer position = null;
+    private Integer positionSpan = null;
     private String redWhen = "";
     private Boolean requiredField = null;
     private String requiredFieldStyle = "";
@@ -105,7 +106,7 @@ public class ModelFormFieldBuilder {
     private String widgetAreaStyle = "";
     private FlexibleStringExpander widgetStyle = FlexibleStringExpander.getInstance("");
     private String parentFormName = "";
-
+    
     public ModelFormFieldBuilder() {
     }
 
@@ -133,6 +134,12 @@ public class ModelFormFieldBuilder {
             position = Integer.parseInt(positionAtttr);
         }
         this.position = position;
+        String positionSpanAttr = fieldElement.getAttribute("position-span");
+        Integer positionSpan = null;
+        if (!positionSpanAttr.isEmpty()) {
+            positionSpan = Integer.parseInt(positionSpanAttr);
+        }
+        this.positionSpan = positionSpan;
         this.redWhen = fieldElement.getAttribute("red-when");
         String requiredField = fieldElement.getAttribute("required-field");
         this.requiredField = requiredField.isEmpty() ? null : "true".equals(requiredField);
@@ -239,6 +246,7 @@ public class ModelFormFieldBuilder {
         this.onClickUpdateAreas.addAll(modelFormField.getOnClickUpdateAreas());
         this.parameterName = modelFormField.getParameterName();
         this.position = modelFormField.getPosition();
+        this.positionSpan = modelFormField.getPositionSpan();
         this.redWhen = modelFormField.getRedWhen();
         this.requiredField = modelFormField.getRequiredField();
         this.requiredFieldStyle = modelFormField.getRequiredFieldStyle();
@@ -279,6 +287,7 @@ public class ModelFormFieldBuilder {
         this.onClickUpdateAreas.addAll(builder.getOnClickUpdateAreas());
         this.parameterName = builder.getParameterName();
         this.position = builder.getPosition();
+        this.positionSpan = builder.getPositionSpan();
         this.redWhen = builder.getRedWhen();
         this.requiredField = builder.getRequiredField();
         this.requiredFieldStyle = builder.getRequiredFieldStyle();
@@ -388,6 +397,10 @@ public class ModelFormFieldBuilder {
 
     public Integer getPosition() {
         return position;
+    }
+    
+    public Integer getPositionSpan() {
+        return positionSpan;
     }
 
     public String getRedWhen() {
@@ -836,6 +849,11 @@ public class ModelFormFieldBuilder {
 
     public ModelFormFieldBuilder setPosition(Integer position) {
         this.position = position;
+        return this;
+    }
+    
+    public ModelFormFieldBuilder setPositionSpan(Integer positionSpan) {
+        this.positionSpan = positionSpan;
         return this;
     }
 

@@ -355,6 +355,12 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            
+            <xs:attribute name="default-position-span" type="xs:integer" default="0">
+                <xs:annotation>
+                    <xs:documentation>Cato: default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="grid">
@@ -656,6 +662,11 @@ under the License.
                 </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="default-position" type="xs:positiveInteger" default="1" />
+            <xs:attribute name="default-position-span" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>Cato: default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="auto-fields-entity">
@@ -673,6 +684,11 @@ under the License.
                 </xs:simpleType>
             </xs:attribute>
             <xs:attribute type="xs:positiveInteger" name="default-position" default="1" />
+            <xs:attribute name="default-position-span" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>Cato: default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="sort-order">
@@ -739,6 +755,11 @@ under the License.
         <xs:complexType>
             <xs:attribute name="name" type="xs:string" use="required" />
             <xs:attribute name="position" type="xs:positiveInteger" />
+            <xs:attribute name="position-span" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>Cato: position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="last-field">
@@ -870,6 +891,11 @@ under the License.
             <xs:attribute type="xs:positiveInteger" name="position" default="1">
                 <xs:annotation>
                     <xs:documentation>For row oriented forms (single type) can specify that the field should be put a column other than the first; for column oriented forms (list type) specifies the row the field should be put in.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="position-span" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>Cato: position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="red-when" default="by-name">

@@ -205,6 +205,8 @@ public abstract class ModelForm extends ModelWidget {
     private final FlexibleStringExpander progressOptions;
     private final FlexibleStringExpander progressSuccessAction;
     
+    private final Integer defaultPositionSpan;
+    
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
         super(formElement);
@@ -421,6 +423,21 @@ public abstract class ModelForm extends ModelWidget {
             progressSuccessAction = parentModel.progressSuccessAction;
         }
         this.progressSuccessAction = progressSuccessAction;
+        
+        String defaultPositionSpanStr = formElement.getAttribute("default-position-span");
+        int defaultPositionSpan = 0;
+        try {
+            if (UtilValidate.isNotEmpty(defaultPositionSpanStr)) {
+                defaultPositionSpan = Integer.valueOf(defaultPositionSpanStr);
+            }
+            else if (parentModel != null) {
+                defaultPositionSpan = parentModel.defaultPositionSpan;
+            }
+        } catch (Exception e) {
+            Debug.logError(e, "Could not convert position span attribute to an integer: [" + defaultPositionSpanStr
+                    + "]; using the default of the form renderer", module);
+        }
+        this.defaultPositionSpan = defaultPositionSpan;
         
         String clientAutocompleteFields = formElement.getAttribute("client-autocomplete-fields");
         if (clientAutocompleteFields.isEmpty() && parentModel != null) {
@@ -700,7 +717,8 @@ public abstract class ModelForm extends ModelWidget {
                 if (tagName.equals("sort-field")) {
                     String fieldName = sortFieldElement.getAttribute("name");
                     String position = sortFieldElement.getAttribute("position");
-                    sortOrderFields.add(new SortField(fieldName, position));
+                    String positionSpan = sortFieldElement.getAttribute("position-span");
+                    sortOrderFields.add(new SortField(fieldName, position, positionSpan));
                     fieldGroupMap.put(fieldName, lastFieldGroup);
                 } else if (tagName.equals("last-field")) {
                     String fieldName = sortFieldElement.getAttribute("name");
@@ -821,6 +839,7 @@ public abstract class ModelForm extends ModelWidget {
             builder.setFieldName(modelField.getName());
             builder.induceFieldInfoFromEntityField(modelEntity, modelField, autoFieldsEntity.defaultFieldType);
             builder.setPosition(autoFieldsEntity.defaultPosition);
+            builder.setPositionSpan(autoFieldsEntity.defaultPositionSpan);
             if (UtilValidate.isNotEmpty(autoFieldsEntity.mapName)) {
                 builder.setMapName(autoFieldsEntity.mapName);
             }
@@ -883,6 +902,7 @@ public abstract class ModelForm extends ModelWidget {
                 builder.setRequiredField(!modelParam.optional);
                 builder.induceFieldInfoFromServiceParam(modelService, modelParam, autoFieldsService.defaultFieldType);
                 builder.setPosition(autoFieldsService.defaultPosition);
+                builder.setPositionSpan(autoFieldsService.defaultPositionSpan);
                 if (UtilValidate.isNotEmpty(autoFieldsService.mapName)) {
                     builder.setMapName(autoFieldsService.mapName);
                 }
@@ -1223,6 +1243,12 @@ public abstract class ModelForm extends ModelWidget {
 
     public String getProgressSuccessAction(Map<String, Object> context) {
         return this.progressSuccessAction.expandString(context);
+    }
+
+    public int getDefaultPositionSpan() {
+        if (this.defaultPositionSpan == null)
+            return 0;
+        return defaultPositionSpan;
     }
 
     public String getItemIndexSeparator() {
@@ -1657,6 +1683,7 @@ public abstract class ModelForm extends ModelWidget {
         public final String mapName;
         public final String defaultFieldType;
         public final int defaultPosition;
+        public final Integer defaultPositionSpan;
 
         public AutoFieldsEntity(Element element) {
             this.entityName = element.getAttribute("entity-name");
@@ -1673,6 +1700,18 @@ public abstract class ModelForm extends ModelWidget {
                         + "], using the default of the form renderer", module);
             }
             this.defaultPosition = position;
+            
+            String positionSpanStr = element.getAttribute("default-position-span");
+            Integer positionSpan = null;
+            try {
+                if (UtilValidate.isNotEmpty(positionSpanStr)) {
+                    positionSpan = Integer.valueOf(positionSpanStr);
+                }
+            } catch (Exception e) {
+                Debug.logError(e, "Could not convert position span attribute of the field element to an integer: [" + positionSpanStr
+                        + "], using the default of the form renderer", module);
+            }
+            this.defaultPositionSpan = positionSpan;
         }
     }
 
@@ -1681,6 +1720,7 @@ public abstract class ModelForm extends ModelWidget {
         public final String mapName;
         public final String defaultFieldType;
         public final int defaultPosition;
+        public final Integer defaultPositionSpan;
 
         public AutoFieldsService(Element element) {
             this.serviceName = element.getAttribute("service-name");
@@ -1697,6 +1737,18 @@ public abstract class ModelForm extends ModelWidget {
                         + "], using the default of the form renderer", module);
             }
             this.defaultPosition = position;
+            
+            String positionSpanStr = element.getAttribute("default-position-span");
+            Integer positionSpan = null;
+            try {
+                if (UtilValidate.isNotEmpty(positionSpanStr)) {
+                    positionSpan = Integer.valueOf(positionSpanStr);
+                }
+            } catch (Exception e) {
+                Debug.logError(e, "Could not convert position span attribute of the field element to an integer: [" + positionSpanStr
+                        + "], using the default of the form renderer", module);
+            }
+            this.defaultPositionSpan = positionSpan;
         }
     }
 
@@ -1786,7 +1838,8 @@ public abstract class ModelForm extends ModelWidget {
                 }
                 for (Element sortFieldElement : UtilXml.childElementList(sortOrderElement, "sort-field")) {
                     sortOrderFields.add(new SortField(sortFieldElement.getAttribute("name"), sortFieldElement
-                            .getAttribute("position")));
+                            .getAttribute("position"), sortFieldElement
+                            .getAttribute("position-span")));
                     fieldGroupMap.put(sortFieldElement.getAttribute("name"), this);
                 }
             } else {
@@ -1864,12 +1917,13 @@ public abstract class ModelForm extends ModelWidget {
     public static class SortField {
         private final String fieldName;
         private final Integer position;
+        private final Integer positionSpan;
 
         public SortField(String name) {
-            this(name, null);
+            this(name, null, null);
         }
 
-        public SortField(String name, String position) {
+        public SortField(String name, String position, String positionSpan) {
             this.fieldName = name;
             if (UtilValidate.isNotEmpty(position)) {
                 Integer posParam = null;
@@ -1881,6 +1935,16 @@ public abstract class ModelForm extends ModelWidget {
             } else {
                 this.position = null;
             }
+            if (UtilValidate.isNotEmpty(positionSpan)) {
+                Integer posParam = null;
+                try {
+                    posParam = Integer.valueOf(positionSpan);
+                } catch (Exception e) {/* just ignore the exception*/
+                }
+                this.positionSpan = posParam;
+            } else {
+                this.positionSpan = null;
+            }
         }
 
         public String getFieldName() {
@@ -1889,6 +1953,10 @@ public abstract class ModelForm extends ModelWidget {
 
         public Integer getPosition() {
             return this.position;
+        }
+
+        public Integer getPositionSpan() {
+            return positionSpan;
         }
     }
 

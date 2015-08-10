@@ -699,8 +699,8 @@ under the License.
       <input type="hidden" name="${name}_ic" value=<#if ignCase>"Y"<#else> ""</#if>/><#rt/>
     <#else>
             <div class="">
-                <input type="checkbox" id="${name}_ic" name="${name}_ic" value="Y" <#if ignCase> checked="checked"</#if> />
-                <label for="${name}_ic">${ignoreCase!}</label>
+                <label for="${name}_ic"><input type="checkbox" id="${name}_ic" name="${name}_ic" value="Y" <#if ignCase> checked="checked"</#if> />
+                ${ignoreCase!}</label>
                 <#rt/>
             </div>
     </#if>

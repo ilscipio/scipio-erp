@@ -108,7 +108,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="contentMimeTypeId">
+        <field name="contentMimeTypeId" encode-output="false">
             <drop-down no-current-selected-key="text/plain" allow-empty="false">
                 <entity-options description="${mimeTypeId}" entity-name="MimeType" key-field-name="mimeTypeId">
                     <entity-order-by field-name="mimeTypeId"/>
@@ -225,7 +225,7 @@ under the License.
             </entity-one>
         </actions>
         <field name="communicationEventId">
-                <hyperlink description="${communicationEvent.communicationEventId}" target="ViewCommunicationEvent">
+            <hyperlink description="${communicationEvent.communicationEventId}" target="ViewCommunicationEvent">
                 <parameter param-name="communicationEventId" from-field="communicationEvent.communicationEventId"/>
             </hyperlink>
         </field>

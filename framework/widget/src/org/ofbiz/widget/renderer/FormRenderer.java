@@ -1226,7 +1226,7 @@ public class FormRenderer {
                 }
             }
 
-            int positionSpan = 1;
+            int positionSpan;
             Integer nextPositionInRow = null;
             if (nextFormField != null) {
                 if (nextFormField.getPosition() > currentFormField.getPosition()) {
@@ -1240,6 +1240,9 @@ public class FormRenderer {
                         // not sure what to do about this right now...
                     }
                 }
+            }
+            else {
+                positionSpan = positions - currentFormField.getPosition();
             }
 
             // Cato: pass these (and unset below)
@@ -1404,9 +1407,7 @@ public class FormRenderer {
                     nextFormField = fieldEntries.get(i + 1).getCurrentFormField();
                 }
                     
-                // note: the actual pos logic here is being unchanged for now... just delayed
-                // and the delay implicit fixes bugs...
-                int positionSpan = 1;
+                int positionSpan;
                 Integer nextPositionInRow = null;
                 if (nextFormField != null) {
                     if (nextFormField.getPosition() > currentFormField.getPosition()) {
@@ -1415,6 +1416,9 @@ public class FormRenderer {
                     } else {
                         positionSpan = positions - currentFormField.getPosition();
                     }
+                }
+                else {
+                    positionSpan = positions - currentFormField.getPosition();
                 }
                 
                 fieldEntry.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow);

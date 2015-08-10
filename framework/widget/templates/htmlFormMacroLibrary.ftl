@@ -610,7 +610,7 @@ under the License.
     </div>
   </div>
 </#macro>
-<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="">
+<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="">
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
   <!-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
   <#local gridSize = 12>
@@ -641,15 +641,15 @@ under the License.
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!}">
         <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
 </#macro>
-<#macro renderFormatFieldRowTitleCellClose collapse=false>
+<#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="">
         <#if collapse></span><#else></label></#if>
       </div>
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" nextPositionInRow="" lastPositionInRow="">
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" nextPositionInRow="" lastPositionInRow="" fieldType="">
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!}">
 </#macro>
-<#macro renderFormatFieldRowWidgetCellClose>
+<#macro renderFormatFieldRowWidgetCellClose fieldType="">
       </div>
     </div>
   </div>

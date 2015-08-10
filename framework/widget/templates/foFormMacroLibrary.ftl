@@ -109,11 +109,11 @@ under the License.
 
 <#macro renderFormatFieldRowOpen positions=""><fo:table-row></#macro>
 <#macro renderFormatFieldRowClose></fo:table-row></#macro>
-<#macro renderFormatFieldRowTitleCellOpen style positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow=""><fo:table-cell font-weight="bold" text-align="right" padding="3pt"><fo:block></#macro>
-<#macro renderFormatFieldRowTitleCellClose></fo:block></fo:table-cell></#macro>
+<#macro renderFormatFieldRowTitleCellOpen style positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType=""><fo:table-cell font-weight="bold" text-align="right" padding="3pt"><fo:block></#macro>
+<#macro renderFormatFieldRowTitleCellClose fieldType=""></fo:block></fo:table-cell></#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" position="" nextPositionInRow="" lastPositionInRow=""><fo:table-cell text-align="left" padding="2pt" padding-left="5pt" <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if>></#macro>
-<#macro renderFormatFieldRowWidgetCellClose></fo:table-cell></#macro>
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" position="" nextPositionInRow="" lastPositionInRow="" fieldType=""><fo:table-cell text-align="left" padding="2pt" padding-left="5pt" <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if>></#macro>
+<#macro renderFormatFieldRowWidgetCellClose fieldType=""></fo:table-cell></#macro>
 
 <#macro renderFormatEmptySpace> </#macro>
 

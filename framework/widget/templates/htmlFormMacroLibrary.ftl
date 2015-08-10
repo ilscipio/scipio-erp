@@ -611,35 +611,29 @@ under the License.
   </div>
 </#macro>
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="">
-  <#-- FIXME: there's a stock ofbiz bug where nextPositionInRow is sometimes missing when expected, see
-              component://party/widget/partymgr/CommunicationEventForms.xml#EditEmail -->
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
   <!-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
   <#local gridSize = 12>
   <#local markLast = false>
   <#local fieldEntryOffset = 0>
-  <#if positions?has_content && position?has_content>
-    <#if nextPositionInRow?has_content>
-      <#local posSpan = nextPositionInRow - position>
-    <#else>
-      <#local posSpan = positions - (position - 1)>
-      <#local markLast = true>
-    </#if>
+  <#if positions?has_content && positionSpan?has_content && position?has_content>
+    <#-- note: positionSpan is one less than you'd expect -->
+    <#local posSpan = positionSpan + 1>
     <#local fieldEntrySize = ((posSpan*gridSize) / positions)?floor>
-    <#if (fieldEntrySize >= gridSize)>
-      <#local markLast = false>
+    <#if !nextPositionInRow?has_content && (fieldEntrySize < gridSize)>
+      <#local markLast = true>
     </#if>
     <#-- calc offset if needed -->
     <#if (position > 1)>
         <#local expectedFieldEntryOffset = (((position-1)*gridSize) / positions)?floor>
         <#local fieldEntryOffset = (expectedFieldEntryOffset - renderFormatFieldRow_gridUsed)>
     </#if>
+    
+    <#-- WARN: if style specified manually, isn't taken into account here -->
+    <#global renderFormatFieldRow_gridUsed = renderFormatFieldRow_gridUsed + fieldEntrySize + fieldEntryOffset>
   <#else>
     <#local fieldEntrySize = gridSize>
   </#if>
-  
-  <#-- WARN: if style specified manually, isn't taken into account here -->
-  <#global renderFormatFieldRow_gridUsed = renderFormatFieldRow_gridUsed + fieldEntrySize + fieldEntryOffset>
   
   <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
   <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if>">

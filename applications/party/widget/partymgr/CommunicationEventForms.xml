@@ -119,7 +119,7 @@ under the License.
         <field name="content" title="${uiLabelMap.CommonContent}"><textarea cols="60" rows="10"/></field>
 
         <field name="note" title="${uiLabelMap.CommonNote}"><textarea cols="60" rows="3"/></field>
-        <field name="messageId"><display/></field>
+        <field name="messageId" use-when="communicationEvent!=null"><display/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
     </form>
     <form name="EditEmail" type="single" target="createCommunicationEvent" default-map-name="communicationEvent" id="EditEmail">

@@ -62,7 +62,8 @@ public abstract class FieldInfo {
     public static final int SOURCE_AUTO_ENTITY = 2;
     public static final int SOURCE_AUTO_SERVICE = 3;
     private static Map<String, Integer> fieldTypeByName = createFieldTypeMap();
-
+    private static Map<Integer, String> fieldTypeByNumber = createFieldTypeNumberMap(fieldTypeByName);
+    
     private static Map<String, Integer> createFieldTypeMap() {
         Map<String, Integer> fieldTypeByName = new HashMap<String, Integer>();
         fieldTypeByName.put("display", Integer.valueOf(1));
@@ -87,6 +88,14 @@ public abstract class FieldInfo {
         fieldTypeByName.put("display-entity", Integer.valueOf(20));
         fieldTypeByName.put("container", Integer.valueOf(21));
         return Collections.unmodifiableMap(fieldTypeByName);
+    }
+    
+    private static Map<Integer, String> createFieldTypeNumberMap(Map<String, Integer> fieldTypeByName) {
+        Map<Integer, String> fieldTypeByNumber = new HashMap<Integer, String>();
+        for(Map.Entry<String, Integer> entry : fieldTypeByName.entrySet()) {
+            fieldTypeByNumber.put(entry.getValue(), entry.getKey());
+        }
+        return Collections.unmodifiableMap(fieldTypeByNumber);
     }
 
     public static int findFieldTypeFromName(String name) {
@@ -131,6 +140,10 @@ public abstract class FieldInfo {
 
     public int getFieldType() {
         return fieldType;
+    }
+    
+    public String getFieldTypeName() {
+        return fieldTypeByNumber.get(getFieldType());
     }
 
     public ModelFormField getModelFormField() {

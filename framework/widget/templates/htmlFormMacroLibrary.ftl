@@ -418,7 +418,7 @@ under the License.
 <#macro renderSubmitField buttonType className alert formName title name event action imgSrc confirmation containerId ajaxUrl>
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
   <#if buttonType!="image">
-    <#if !className?has_content || className=="smallSubmit" || className=="_BUTTON_">
+    <#if !className?has_content || className=="smallSubmit">
       <#local className = "${styles.button_default!}">
     </#if>
   </#if>

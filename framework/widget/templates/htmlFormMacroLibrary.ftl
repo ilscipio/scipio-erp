@@ -419,7 +419,7 @@ under the License.
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
   <#if buttonType!="image">
     <#if !className?has_content || className=="smallSubmit" || className=="_BUTTON_">
-      <#local className = "${styles.button!} ${styles.tiny!}">
+      <#local className = "${styles.button_default!}">
     </#if>
   </#if>
 

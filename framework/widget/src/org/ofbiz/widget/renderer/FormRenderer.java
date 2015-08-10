@@ -1118,6 +1118,7 @@ public class FormRenderer {
         }
 
         Integer lastPositionInRow = null;
+        RenderRowFieldEntrySequencer rowFieldEntries = null;
         
         boolean isFirstPass = true;
         boolean haveRenderedOpenFieldRow = false;
@@ -1167,6 +1168,7 @@ public class FormRenderer {
                     lastFieldGroupName = lastFieldGroup.getId();
                     if (!lastFieldGroupName.equals(currentFieldGroupName)) {
                         if (haveRenderedOpenFieldRow) {
+                            rowFieldEntries.processRowEnd(writer, context, positions);
                             formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
                             haveRenderedOpenFieldRow = false;
                         }
@@ -1248,6 +1250,7 @@ public class FormRenderer {
                 //formStringRenderer.renderFormatFieldRowSpacerCell(writer, context, currentFormField);
             } else {
                 if (haveRenderedOpenFieldRow) {
+                    rowFieldEntries.processRowEnd(writer, context, positions);
                     // render row formatting close
                     formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
                     haveRenderedOpenFieldRow = false;
@@ -1257,6 +1260,7 @@ public class FormRenderer {
                 formStringRenderer.renderFormatFieldRowOpen(writer, context, modelForm);
                 haveRenderedOpenFieldRow = true;
                 lastPositionInRow = null;
+                rowFieldEntries = new RenderRowFieldEntrySequencer();
             }
 
             //
@@ -1266,8 +1270,67 @@ public class FormRenderer {
                 formStringRenderer.renderFormatFieldRowOpen(writer, context, modelForm);
                 haveRenderedOpenFieldRow = true;
                 lastPositionInRow = null;
+                rowFieldEntries = new RenderRowFieldEntrySequencer();
             }
+            
+            context.remove("formFieldRender_positions");
+            
+            // Cato: don't force render form field entry here. allow to accumulate them for row and render all at once at row close.
+            // This allows delayed render so more info available and fixes ofbiz bug where nextFormField was
+            // sometimes a field that was not going to be rendered, giving invalid positions.
+            // render form field
+            //new RenderFieldEntry(...).render(...);
+            rowFieldEntries.acceptFieldEntry(new RenderFieldEntry(currentFormField, positionSpan, nextPositionInRow, lastPositionInRow));
+            
+            lastPositionInRow = currentFormField.getPosition();
+        }
+        // render row formatting close after the end if needed
+        if (haveRenderedOpenFieldRow) {
+            rowFieldEntries.processRowEnd(writer, context, positions);
+            formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
+        }
 
+        if (lastFieldGroup != null) {
+            lastFieldGroup.renderEndString(writer, context, formStringRenderer);
+        }
+        // render formatting wrapper close
+        // should be handled by renderEndString
+        //formStringRenderer.renderFormatSingleWrapperClose(writer, context, this);
+
+        // render form close
+        if (!modelForm.getSkipEnd())
+            formStringRenderer.renderFormClose(writer, context, modelForm);
+
+    }
+
+    /**
+     * Cato: Factored out field entry render code
+     */
+    private class RenderFieldEntry {
+        private final ModelFormField currentFormField;
+        // change in plans: recalculate these at end and ignore ones in loop
+        //private final int positionSpan;
+        //private final Integer nextPositionInRow;
+        //private final Integer lastPositionInRow;
+        
+        public RenderFieldEntry(ModelFormField currentFormField,
+                int positionSpan, Integer nextPositionInRow, Integer lastPositionInRow) {
+            super();
+            this.currentFormField = currentFormField;
+            //this.positionSpan = positionSpan;
+            //this.nextPositionInRow = nextPositionInRow;
+            //this.lastPositionInRow = lastPositionInRow;
+        }
+        
+        public ModelFormField getCurrentFormField() {
+            return currentFormField;
+        }
+        
+        public void render(Appendable writer, Map<String, Object> context, 
+                int positions, int positionSpan, Integer nextPositionInRow, Integer lastPositionInRow) throws IOException {
+            FieldInfo fieldInfo = currentFormField.getFieldInfo();
+            
+            context.put("formFieldRender_positions", positions);
             context.put("formFieldRender_position", currentFormField.getPosition());
             context.put("formFieldRender_positionSpan", positionSpan);
             context.put("formFieldRender_nextPositionInRow", nextPositionInRow);
@@ -1301,32 +1364,66 @@ public class FormRenderer {
             formStringRenderer.renderFormatFieldRowWidgetCellClose(writer, context, currentFormField, positions, positionSpan,
                     nextPositionInRow);
             
-            // Cato: unset
             context.remove("formFieldRender_positions");
             context.remove("formFieldRender_position");
             context.remove("formFieldRender_positionSpan");
             context.remove("formFieldRender_nextPositionInRow");
             context.remove("formFieldRender_lastPositionInRow");
-            lastPositionInRow = currentFormField.getPosition();
         }
-        // render row formatting close after the end if needed
-        if (haveRenderedOpenFieldRow) {
-            formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
-        }
-
-        if (lastFieldGroup != null) {
-            lastFieldGroup.renderEndString(writer, context, formStringRenderer);
-        }
-        // render formatting wrapper close
-        // should be handled by renderEndString
-        //formStringRenderer.renderFormatSingleWrapperClose(writer, context, this);
-
-        // render form close
-        if (!modelForm.getSkipEnd())
-            formStringRenderer.renderFormClose(writer, context, modelForm);
-
+        
     }
-
+    
+    /**
+     * Cato: renders accumulated field entries all at once (for delayed render).
+     */
+    private class RenderRowFieldEntrySequencer {
+        private List<RenderFieldEntry> fieldEntries = new ArrayList<RenderFieldEntry>();
+        
+        /**
+         * Accepts a new field entry for rendering. Currently simply accumulates.
+         */
+        public void acceptFieldEntry(RenderFieldEntry fieldEntry) {
+            // simply accumulate
+            fieldEntries.add(fieldEntry);
+        }
+        
+        /**
+         * Processes row close. Currently renders all accumulated entries.
+         */
+        public void processRowEnd(Appendable writer, Map<String, Object> context, 
+                int positions) throws IOException {
+            // note: the "last" and "next" form fields here may differ from the ones in the main loop
+            // these are for calculating positions only
+            
+            Integer lastPositionInRow = null;
+            for(int i = 0; i < fieldEntries.size(); i++) {
+                RenderFieldEntry fieldEntry = fieldEntries.get(i);
+                ModelFormField currentFormField = fieldEntry.getCurrentFormField();
+                ModelFormField nextFormField = null;
+                if ((i + 1) < fieldEntries.size()) {
+                    nextFormField = fieldEntries.get(i + 1).getCurrentFormField();
+                }
+                    
+                // note: the actual pos logic here is being unchanged for now... just delayed
+                // and the delay implicit fixes bugs...
+                int positionSpan = 1;
+                Integer nextPositionInRow = null;
+                if (nextFormField != null) {
+                    if (nextFormField.getPosition() > currentFormField.getPosition()) {
+                        positionSpan = nextFormField.getPosition() - currentFormField.getPosition() - 1;
+                        nextPositionInRow = Integer.valueOf(nextFormField.getPosition());
+                    } else {
+                        positionSpan = positions - currentFormField.getPosition();
+                    }
+                }
+                
+                fieldEntry.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow);
+                
+                lastPositionInRow = currentFormField.getPosition();
+            }
+        }
+    }
+    
     private void resetBshInterpreter(Map<String, Object> context) {
         context.remove("bshInterpreter");
     }

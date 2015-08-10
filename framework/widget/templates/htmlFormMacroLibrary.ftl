@@ -653,7 +653,7 @@ under the License.
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" nextPositionInRow="" lastPositionInRow="">
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}7 ${styles.grid_large!}8</#if> ${styles.grid_cell!} ${styles.grid_end!}">
+      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!}">
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose>
       </div>

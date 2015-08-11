@@ -1333,11 +1333,21 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PartyParty} ${uiLabelMap.CommonImportExport} ID Name, single role (employee, customer, supplier) and contactmechs">
+                        <screenlet>
+                            <label text="${uiLabelMap.PartyParty} ${uiLabelMap.CommonImportExport} ID Name, single role (employee, customer, supplier) and contactmechs" />
                             <container style="${styles.grid_row}">
                                 <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                     <label style="h2">${uiLabelMap.CommonImport}</label>
-                                    <include-form name="ImportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <actions>          
+                                            <set field="showProgress" type="Boolean" value="true" /> 
+                                            <set field="progressSuccessAction" value="none" /> <!-- success is enough: redirect;;ImportExport -->
+                                            <set field="progressOptions" value="" />
+                                        </actions>
+                                        <widgets>
+                                            <include-form name="ImportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
                                 </container>
                                 <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                     <label style="h2">${uiLabelMap.CommonExport}</label>

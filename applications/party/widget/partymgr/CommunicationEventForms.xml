@@ -20,12 +20,12 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-    <form name="EditCommEvent" type="single" target="updateCommunicationEvent" default-map-name="communicationEvent">
+    <form name="EditCommEvent" type="single" target="updateCommunicationEvent" default-map-name="communicationEvent" default-position-span="1">
         <alt-target target="createCommunicationEvent" use-when="communicationEvent==null"/>
         <field name="action"><hidden value="${parameters.action}"/></field>
         <field name="communicationEventId" use-when="communicationEvent!=null"><display/></field>
         <field name="my"><hidden value="${my}"/></field>
-        <field name="parentCommEventId" position="2">
+        <field name="parentCommEventId" position="1">
             <lookup target-form-name="LookupCommEvent">
                 <sub-hyperlink link-style="${styles.button_default}" target="EditCommunicationEvent" description="${uiLabelMap.PartyGoToParent}" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;parentCommEventId&quot;)!=null">
                 <parameter param-name="communicationEventId" from-field="parentCommEventId"/>
@@ -116,9 +116,9 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="content" title="${uiLabelMap.CommonContent}"><textarea cols="60" rows="10"/></field>
+        <field name="content" title="${uiLabelMap.CommonContent}" position-span="0"><textarea cols="60" rows="10"/></field>
 
-        <field name="note" title="${uiLabelMap.CommonNote}"><textarea cols="60" rows="3"/></field>
+        <field name="note" title="${uiLabelMap.CommonNote}" position-span="0"><textarea cols="60" rows="3"/></field>
         <field name="messageId" use-when="communicationEvent!=null"><display/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
     </form>
@@ -224,7 +224,7 @@ under the License.
                 <field-map field-name="contactMechId" from-field="communicationEvent.contactMechIdTo"/>
             </entity-one>
         </actions>
-        <field name="communicationEventId">
+        <field name="communicationEventId" widget-style="${styles.button_default}">
             <hyperlink description="${communicationEvent.communicationEventId}" target="ViewCommunicationEvent">
                 <parameter param-name="communicationEventId" from-field="communicationEvent.communicationEventId"/>
             </hyperlink>
@@ -696,13 +696,22 @@ under the License.
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="removeButton" widget-style="smallSubmit"><submit/></field>
     </form>
+    
+    <form name="ListCommRolesInline" extends="ListCommRoles" hide-table-when="list-empty" use-no-result-text-when="never" paginate="false">
+    </form>
 
-    <form name="ViewCommRoles" extends="ListCommRoles">
+    <form name="ViewCommRoles" extends="ListCommRoles" paginate="false">
         <field name="removeButton"><ignored/></field>
     </form>
 
     <form name="AddEventRole" type="single" target="createCommunicationEventRole"
         header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <!-- 
+            <set field="AddEventRole_submitAction" from-field="AddEventRole_submitAction" default-value="javascript:(document.AddEventRole.communicationEventId.value=document.EditEmail.communicationEventId.value),(document.AddEventRole.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.AddEventRole.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.AddEventRole.subject.value=document.EditEmail.subject.value),(document.AddEventRole.content.value=document.EditEmail.content.value),(document.AddEventRole.submit())" />
+            -->
+            <set field="AddEventRole_submitAction" from-field="AddEventRole_submitAction" default-value="javascript:document.AddEventRole.submit()" />
+        </actions>
         <field name="subject"><hidden/></field>
         <field name="content"><hidden/></field>
         <field name="partyIdTo"><hidden/></field>
@@ -711,7 +720,7 @@ under the License.
         <field name="datetimeStarted"><hidden/></field>
         <field name="communicationEventId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" position="1"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="roleTypeId" position="2">
+        <field name="roleTypeId" position="1">
             <drop-down>
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
                     <entity-constraint name="parentTypeId" value="COMMEVENT_ROLE"/>
@@ -723,12 +732,12 @@ under the License.
         <field name="submitButton" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.PartyAddRole}"
-                target="javascript:(document.AddEventRole.communicationEventId.value=document.EditEmail.communicationEventId.value),(document.AddEventRole.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.AddEventRole.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.AddEventRole.subject.value=document.EditEmail.subject.value),(document.AddEventRole.content.value=document.EditEmail.content.value),(document.AddEventRole.submit())"/>
+                target="${AddEventRole_submitAction}"/>
         </field>
     </form>
 
-    <form name="listCommContent" type="list" list-name="contentDataResourceList" paginate-target="/ListCommContent" target="removeAttachFile"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+    <form name="listCommContent" type="list" list-name="contentDataResourceList" target="removeAttachFile"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" hide-table-when="list-empty" use-no-result-text-when="never" paginate="false"> <!-- doesn't work: paginate-target="/ListCommContent" -->
         <actions>
             <entity-and entity-name="CommEventContentDataResource" list="contentDataResourceList">
                 <field-map field-name="communicationEventId" from-field="parameters.communicationEventId"/>
@@ -866,7 +875,11 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpload}"><submit/></field>
     </form>
     
-    <form name="uploadContent" type="upload" target="uploadAttachFiletoEmail">
+    <form name="uploadContent" type="upload" target="uploadAttachFiletoEmail"
+        show-progress="${showProgress}" progress-success-action="${progressSuccessAction}" progress-options="${progressOptions}">
+        <actions>
+            <set field="uploadContent_submitAction" from-field="uploadContent_submitAction" default-value="javascript:(document.uploadContent.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.uploadContent.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.uploadContent.subject.value=document.EditEmail.subject.value),(document.uploadContent.content.value=document.EditEmail.content.value),(jQuery(document.uploadContent).trigger('submit')),void(0)" />
+        </actions>
         <field name="dataCategoryId"><hidden value="PERSONAL"/></field>
         <field name="contentTypeId"><hidden value="DOCUMENT"/></field>
         <field name="resourceStatusId"><hidden value="CTNT_PUBLISHED"/></field>
@@ -888,8 +901,10 @@ under the License.
         <field name="send" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonUpload}"
-                target="javascript:(document.uploadContent.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.uploadContent.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.uploadContent.subject.value=document.EditEmail.subject.value),(document.uploadContent.content.value=document.EditEmail.content.value),(document.uploadContent.submit())"/>
+                target="${uploadContent_submitAction}"/>
         </field>
+        <!-- Cato: this at least allows to show progress bar if enabled... -->
+        <field name="submitProgress" title=" " combine-previous="false"><submit/></field>
     </form>
     <form name="uploadContent1" type="upload" extends="uploadContent" target="uploadAttachFile">
         <field name="send"><ignored/></field>

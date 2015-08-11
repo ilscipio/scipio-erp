@@ -49,7 +49,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -86,7 +86,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -132,7 +132,7 @@ under the License.
                                 <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListPendingCommEvents"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -279,7 +279,7 @@ under the License.
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -307,7 +307,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -340,7 +340,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -375,7 +375,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -493,16 +493,16 @@ under the License.
                                 <widgets>
                                     <screenlet>
                                         <container>
-                                            <label style="h2" text="${uiLabelMap.PartyOriginEmailNotKnown}"/>
+                                            <label text="${uiLabelMap.PartyOriginEmailNotKnown}"/>
                                         </container>
                                         <container>
-                                            <label style="h3" text="${uiLabelMap.PartyEmailMessage}"/>
+                                            <label text="${uiLabelMap.PartyEmailMessage}:"/>
                                         </container>
                                         <include-form name="allocateMsgToPartyForm" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                                     </screenlet>
                                 </widgets>
                             </section>
-                            <include-form  name="ViewEmail" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                            <include-form name="ViewEmail" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                         </widgets>
                         <fail-widgets>
                             <include-form name="ViewCommEvent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
@@ -626,7 +626,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyCommWorkEfforts}">
                             <container style="button-bar">
-                                <link style="smallSubmit" target="AddCommEventWorkEffort" text="${uiLabelMap.PartyNewCommWorkEffort}">
+                                <link style="${styles.button_default}" target="AddCommEventWorkEffort" text="${uiLabelMap.PartyNewCommWorkEffort}">
                                     <parameter param-name="communicationEventId"/>
                                     <parameter param-name="partyId"/>
                                 </link>
@@ -711,7 +711,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -745,7 +745,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -818,7 +818,7 @@ under the License.
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -833,6 +833,8 @@ under the License.
                 <set field="titleProperty" value="PageTitleCommEvents"/>
                 <set field="headerItem" value="mycomm"/>
                 <set field="my" value="My" global="true"/>
+                
+                <set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" />
             </actions>
             <widgets>
                 <decorator-screen  name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -852,8 +854,6 @@ under the License.
                 <set field="internalNotesOnly" from-field="internalNotesOnly" default-value="false"/>
                 <set field="partyId" from-field="communicationPartyId" default-value="${userLogin.partyId}"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
-                
-                <set field="widePage" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.PartyCommunicationsOfParty}: ${partyName.firstName} ${partyName.middleName} ${partyName.lastName} ${partyName.groupName} [${partyId}] "
@@ -1093,6 +1093,9 @@ under the License.
     </screen>
     <screen name="editCommEvent">
         <section>
+            <actions>
+                <set field="parameters.communicationEventId" from-field="communicationEvent.communicationEventId" />
+            </actions>
             <widgets>
                 <section><!-- Email -->
                     <condition>
@@ -1121,14 +1124,32 @@ under the License.
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                         <screenlet title="${uiLabelMap.PartyCommEventRoles}">
-                                            <include-form name="ListCommRoles" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                            <include-form name="AddEventRole" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                            <include-form name="ListCommRolesInline" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                            <section>
+                                                <actions>  
+                                                    <set field="AddEventRole_submitAction" from-field="AddEventRole_submitAction" default-value="javascript:(document.AddEventRole.communicationEventId.value=document.EditEmail.communicationEventId.value),(document.AddEventRole.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.AddEventRole.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.AddEventRole.subject.value=document.EditEmail.subject.value),(document.AddEventRole.content.value=document.EditEmail.content.value),(document.AddEventRole.submit())" />
+                                                </actions>
+                                                <widgets>
+                                                    <include-form name="AddEventRole" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                                </widgets>
+                                            </section>
                                         </screenlet>
                                     </container>
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                         <screenlet title="${uiLabelMap.PartyCommContent}">
                                             <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                            <include-form name="uploadContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                            <section>
+                                                <actions>          
+                                                    <!-- Cato: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
+                                                    <set field="showProgress" type="Boolean" value="false" /> 
+                                                    <set field="progressSuccessAction" value="redirect;;MyCommunicationEvents?partyIdFrom=${partyId}&amp;statusId=COM_PENDING&amp;form=new&amp;my=My&amp;communicationEventTypeId=EMAIL_COMMUNICATION&amp;communicationEventId=${communicationEvent.communicationEventId}&amp;portalPageId=${parameters.portalPageId}" />
+                                                    <set field="progressOptions" value="" />
+                                                    <set field="uploadContent_submitAction" value="javascript:(document.uploadContent.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.uploadContent.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.uploadContent.subject.value=document.EditEmail.subject.value),(document.uploadContent.content.value=document.EditEmail.content.value),(jQuery(document.uploadContent).trigger('submit')),void(0)" />
+                                                </actions>
+                                                <widgets>
+                                                    <include-form name="uploadContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                                </widgets>
+                                            </section>
                                         </screenlet>
                                     </container>
                                 </container>
@@ -1163,12 +1184,30 @@ under the License.
                                     </container>
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                         <screenlet title="${uiLabelMap.PartyCommEventRoles}">
-                                            <include-form name="ListCommRoles" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                            <include-form name="AddEventRole" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                            <include-form name="ListCommRolesInline" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                            <section>
+                                                <actions>  
+                                                    <set field="AddEventRole_submitAction" from-field="AddEventRole_submitAction" default-value="javascript:(document.AddEventRole.communicationEventId.value=document.EditInternalNote.communicationEventId.value),(document.AddEventRole.datetimeStarted.value=document.EditInternalNote.datetimeStarted.value),(document.AddEventRole.partyIdTo.value=document.EditInternalNote.partyIdTo.value),(document.AddEventRole.subject.value=document.EditInternalNote.subject.value),(document.AddEventRole.content.value=document.EditInternalNote.content.value),(document.AddEventRole.submit())" />
+                                                </actions>
+                                                <widgets>
+                                                    <include-form name="AddEventRole" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                                </widgets>
+                                            </section>
                                         </screenlet>
                                         <screenlet title="${uiLabelMap.PartyCommContent}">
                                             <include-form name="listCommContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
-                                            <include-form  name="uploadContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                            <section>
+                                                <actions>          
+                                                    <!-- Cato: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
+                                                    <set field="showProgress" type="Boolean" value="false" /> 
+                                                    <set field="progressSuccessAction" value="redirect;;MyCommunicationEvents?partyIdFrom=${partyId}&amp;statusId=COM_PENDING&amp;form=new&amp;my=My&amp;communicationEventTypeId=COMMENT_NOTE&amp;communicationEventId=${communicationEvent.communicationEventId}&amp;portalPageId=${parameters.portalPageId}" />
+                                                    <set field="progressOptions" value="" />
+                                                    <set field="uploadContent_submitAction" value="javascript:(document.uploadContent.datetimeStarted.value=document.EditInternalNote.datetimeStarted.value),(document.uploadContent.partyIdTo.value=document.EditInternalNote.partyIdTo.value),(document.uploadContent.subject.value=document.EditInternalNote.subject.value),(document.uploadContent.content.value=document.EditInternalNote.content.value),(jQuery(document.uploadContent).trigger('submit')),void(0)" />
+                                                </actions>
+                                                <widgets>
+                                                    <include-form name="uploadContent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                                                </widgets>
+                                            </section>
                                         </screenlet>
                                     </container>
                                 </container>
@@ -1192,7 +1231,7 @@ under the License.
                             <include-form name="EditCommEvent" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PartyOtherAndGeneralCommunicationEvents}" navigation-form-name="ListChildCommEvents">
-                            <include-form  name="ListChildCommEvents" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
+                            <include-form name="ListChildCommEvents" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                         </screenlet>
                     </widgets>
                 </section>

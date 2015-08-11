@@ -1246,7 +1246,8 @@ under the License.
         <field name="countryGeoId" title="countryGeoId"><display/></field>
     </form>
     
-    <form name="ImportParty" type="upload" target="uploadParty" title="" >
+    <form name="ImportParty" type="upload" target="uploadParty" title="" 
+        show-progress="${showProgress}" progress-success-action="${progressSuccessAction}" progress-options="${progressOptions}">
         <field name="uploadedFile"><file/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpload}"><submit button-type="button"/></field>
     </form>

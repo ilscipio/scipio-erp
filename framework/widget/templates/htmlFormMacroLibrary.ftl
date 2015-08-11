@@ -615,7 +615,7 @@ under the License.
     <#return (fieldType=="submit" || fieldType=="reset")>
 </#function>
 
-<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="">
+<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
   <#local isSubmitField = isFieldTypeSubmit(fieldType)>
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
   <!-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
@@ -649,7 +649,7 @@ under the License.
         <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
     </#if>
 </#macro>
-<#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="">
+<#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
   <#local isSubmitField = isFieldTypeSubmit(fieldType)>
     <#if !isSubmitField>
         <#if collapse></span><#else></label></#if>
@@ -657,7 +657,7 @@ under the License.
     </#if>
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" nextPositionInRow="" lastPositionInRow="" fieldType="">
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
   <#local isSubmitField = isFieldTypeSubmit(fieldType)>
     <#if !isSubmitField>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!}">
@@ -665,7 +665,7 @@ under the License.
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!}">
     </#if>
 </#macro>
-<#macro renderFormatFieldRowWidgetCellClose fieldType="">
+<#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false>
   <#local isSubmitField = isFieldTypeSubmit(fieldType)>
       </div>
     </div>

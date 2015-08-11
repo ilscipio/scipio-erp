@@ -1755,7 +1755,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" lastPositionInRow=" + (lastPositionInRow != null ? lastPositionInRow.toString() : "\"\""));
     }
 
-    private void appendFieldType(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, StringWriter sr) throws IOException {
+    private void appendFieldInfo(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, StringWriter sr) throws IOException {
         String fieldType = null;
         if (modelFormField.getFieldInfo() != null) {
             fieldType = modelFormField.getFieldInfo().getFieldTypeName();
@@ -1763,7 +1763,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (fieldType == null) {
             fieldType = "";
         }
-        sr.append(" fieldType=\"" + fieldType + "\"");
+        sr.append(" fieldType=\"" + fieldType + "\" ");
+        
+        boolean fieldTitleBlank = modelFormField.isBlankTitle(context);
+        sr.append(" fieldTitleBlank=" + fieldTitleBlank + " ");
     }
     
     public void renderFormatFieldRowTitleCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
@@ -1774,7 +1777,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(style);
         sr.append("\"");
         appendPositionParams(writer, context, modelFormField, sr);
-        appendFieldType(writer, context, modelFormField, sr);
+        appendFieldInfo(writer, context, modelFormField, sr);
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
@@ -1782,7 +1785,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderFormatFieldRowTitleCellClose(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatFieldRowTitleCellClose ");
-        appendFieldType(writer, context, modelFormField, sr);
+        appendFieldInfo(writer, context, modelFormField, sr);
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
@@ -1800,7 +1803,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(areaStyle);
         sr.append("\"");
         appendPositionParams(writer, context, modelFormField, sr);
-        appendFieldType(writer, context, modelFormField, sr);
+        appendFieldInfo(writer, context, modelFormField, sr);
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
@@ -1808,7 +1811,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderFormatFieldRowWidgetCellClose(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) throws IOException {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatFieldRowWidgetCellClose ");
-        appendFieldType(writer, context, modelFormField, sr);
+        appendFieldInfo(writer, context, modelFormField, sr);
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }

@@ -361,7 +361,7 @@ under the License.
                     <xs:documentation>Cato: default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="default-combine-action-fields" default="false">
+            <xs:attribute name="default-combine-action-fields" default="true">
                 <xs:annotation>
                     <xs:documentation>Cato: If true, uses combine-previous on groups of adjacent action-button-like field (submit, reset, hyperlink with no title) so they render together</xs:documentation>
                 </xs:annotation>

@@ -445,7 +445,8 @@ under the License.
 </#if>
   <#if (htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true>
       <#local baseId = htmlFormRenderFormInfo.name + "_catouplprogform">
-      <@row>
+      <#local rowClass>submit-progress-row<#if buttonMarkup?has_content> has-submit-button<#else> no-submit-button</#if></#local>
+      <@row class=rowClass>
       <#if buttonMarkup?has_content>
         <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
           ${buttonMarkup}
@@ -649,9 +650,9 @@ under the License.
   
   <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
   <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if>">
-    <div class="${styles.grid_row!} form-field-entry">
+    <div class="${styles.grid_row!} form-field-entry field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
     <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!}">
+      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!} field-entry-title field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
         <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
     </#if>
 </#macro>
@@ -666,9 +667,9 @@ under the License.
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
     <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!}">
+      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
     <#else>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!}">
+      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
     </#if>
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false>

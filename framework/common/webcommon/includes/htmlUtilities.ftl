@@ -275,7 +275,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         </#if>
         
         <#if !radioSingle>
-            <@cell class=subclasses nocells=nocells>
+            <@cell class=subclasses+" field-entry-title" nocells=nocells>
                 <#if type=="checkbox" || collapse==false>
                     <label class="form-field-label"<#if id?has_content> for="${id}"</#if>>${label}</label>
                 <#else>
@@ -284,7 +284,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
             </@cell>
         </#if>
     </#if>
-    <@cell class="${classes!}" nocells=nocells>
+    <@cell class="${classes!}"+" field-entry-widget" nocells=nocells>
         <#switch type>
           <#case "input">
                 <@renderTextField name=name 

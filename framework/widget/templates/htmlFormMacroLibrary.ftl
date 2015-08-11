@@ -1042,8 +1042,9 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </#if>
 </#function>
 
-<#-- Cato: new params: forcePost, viewIndexFirst, listItemsOnly -->
-<#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel forcePost=false viewIndexFirst=0 listItemsOnly=false>
+<#-- Cato: new params: paginate, forcePost, viewIndexFirst, listItemsOnly
+     paginate is a display hint, does not seem to mean guarantee data wasn't paginated -->
+<#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false>
   <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
   <#local minPageSize = availPageSizes?first>
   <#local itemRange = 2/>

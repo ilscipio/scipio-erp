@@ -2512,6 +2512,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 selectSizeUrl = rh.makeLink(this.request, this.response, urlPath + linkText);
             }
         }
+        boolean paginate = modelForm.getPaginate(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderNextPrev ");
         sr.append(" paginateStyle=\"");
@@ -2578,7 +2579,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(paginateLastLabel);
         sr.append("\" paginateViewSizeLabel=\"");
         sr.append(paginateViewSizeLabel);
-        sr.append("\" />");
+        sr.append("\" paginate=");
+        sr.append(Boolean.toString(paginate));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
     }
 

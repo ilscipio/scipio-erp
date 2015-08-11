@@ -514,16 +514,16 @@ public class ModelFormField {
         return combinePrevious;
     }
     
-    public boolean isCombinePrevious(ModelFormField prevField) {
+    public boolean isCombinePrevious(Map<String, Object> context, ModelFormField prevField) {
         if (combinePrevious != null) {
             return combinePrevious;
         }
-        String fieldType = fieldInfo.getFieldTypeName();
-        if ("submit".equals(fieldType) || "hyperlink".equals(fieldType)) {
+        int fieldType = fieldInfo.getFieldType();
+        if (fieldType == FieldInfo.SUBMIT || fieldType == FieldInfo.RESET || (fieldType == FieldInfo.HYPERLINK && this.isBlankTitle(context))) {
             if (modelForm.getDefaultCombineActionFields()) {
                 if (prevField != null) {
-                    String prevFieldType = prevField.getFieldInfo().getFieldTypeName();
-                    if ("submit".equals(prevFieldType) || "hyperlink".equals(prevFieldType)) {
+                    int prevFieldType = prevField.getFieldInfo().getFieldType();
+                    if (prevFieldType == FieldInfo.SUBMIT || prevFieldType == FieldInfo.RESET || (prevFieldType == FieldInfo.HYPERLINK && prevField.isBlankTitle(context))) {
                         return true;
                     }
                 }
@@ -634,6 +634,14 @@ public class ModelFormField {
         }
 
         return autoTitlewriter.toString();
+    }
+    
+    public boolean isBlankTitle(Map<String, Object> context) {
+        String title = getTitle(context);
+        if (title == null || title.trim().length() == 0) {
+            return true;
+        }
+        return false;
     }
 
     public String getTitleAreaStyle() {

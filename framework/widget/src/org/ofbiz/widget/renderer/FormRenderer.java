@@ -1217,7 +1217,7 @@ public class FormRenderer {
 
             boolean stayingOnRow = false;
             if (lastFormField != null) {
-                if (currentFormField.isCombinePrevious(lastFormField)) {
+                if (currentFormField.isCombinePrevious(context, lastFormField)) {
                     // staying on same row
                     stayingOnRow = true;
                 }
@@ -1439,7 +1439,7 @@ public class FormRenderer {
                 RenderFieldEntry prevEntry = fieldEntry;
                 while(nextFormField == null && j < fieldEntries.size()) {
                     RenderFieldEntry candidateEntry = fieldEntries.get(j);
-                    if (candidateEntry.getFormField().isCombinePrevious(prevEntry.getFormField())) {
+                    if (candidateEntry.getFormField().isCombinePrevious(context, prevEntry.getFormField())) {
                         combinedFields.add(candidateEntry);
                     }
                     else {

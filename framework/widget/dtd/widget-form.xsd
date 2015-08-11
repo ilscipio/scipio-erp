@@ -363,7 +363,7 @@ under the License.
             </xs:attribute>
             <xs:attribute name="default-combine-action-fields" default="false">
                 <xs:annotation>
-                    <xs:documentation>Cato: Default value for combine-previous for action fields (submit, hyperlink)</xs:documentation>
+                    <xs:documentation>Cato: If true, uses combine-previous on groups of adjacent action-button-like field (submit, reset, hyperlink with no title) so they render together</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

@@ -9699,26 +9699,28 @@ td button, td .button, td input[type="button"], td input[type="submit"], td .but
 /* line 149, ../scss/_base.scss */
 fieldset {
   border: none;
+  padding-left: 0px;
+  padding-right: 0px;
 }
-/* line 152, ../scss/_base.scss */
+/* line 154, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-/* line 159, ../scss/_base.scss */
+/* line 161, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 166, ../scss/_base.scss */
+/* line 168, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 170, ../scss/_base.scss */
+/* line 172, ../scss/_base.scss */
 .rotate-90 {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -9726,7 +9728,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 177, ../scss/_base.scss */
+/* line 179, ../scss/_base.scss */
 .rotate-180 {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -9734,7 +9736,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 184, ../scss/_base.scss */
+/* line 186, ../scss/_base.scss */
 .rotate-270 {
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -9742,7 +9744,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 191, ../scss/_base.scss */
+/* line 193, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -9766,36 +9768,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 213, ../scss/_base.scss */
+/* line 215, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 218, ../scss/_base.scss */
+/* line 220, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 220, ../scss/_base.scss */
+/* line 222, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 221, ../scss/_base.scss */
+/* line 223, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 222, ../scss/_base.scss */
+/* line 224, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 223, ../scss/_base.scss */
+/* line 225, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 227, ../scss/_base.scss */
+/* line 229, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -9808,62 +9810,62 @@ code .TRACE {
   font-size: 1.2rem;
 }
 
-/* line 239, ../scss/_base.scss */
+/* line 241, ../scss/_base.scss */
 .postfix i {
   font-size: 1.2rem;
 }
 
-/* line 241, ../scss/_base.scss */
+/* line 243, ../scss/_base.scss */
 .postfix .fi {
   font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1.2rem;
   line-height: 0.9rem;
 }
 
-/* line 248, ../scss/_base.scss */
+/* line 250, ../scss/_base.scss */
 ul.chart-legend {
   list-style: none;
 }
 
-/* line 256, ../scss/_base.scss */
+/* line 258, ../scss/_base.scss */
 div.section-screenlet-content {
   margin-bottom: 0.5rem;
 }
 
-/* line 262, ../scss/_base.scss */
+/* line 264, ../scss/_base.scss */
 div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 
-/* line 271, ../scss/_base.scss */
+/* line 273, ../scss/_base.scss */
 div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
   margin-top: 0.2rem;
 }
 
-/* line 275, ../scss/_base.scss */
+/* line 277, ../scss/_base.scss */
 div.section-screenlet-container.no-title.no-menu {
   margin-top: 0;
 }
 
 /*  FOOTER */
-/* line 280, ../scss/_base.scss */
+/* line 282, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 285, ../scss/_base.scss */
+/* line 287, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 290, ../scss/_base.scss */
+/* line 292, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 294, ../scss/_base.scss */
+/* line 296, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -9871,35 +9873,35 @@ div.section-screenlet-container.no-title.no-menu {
 }
 
 /*MISC*/
-/* line 304, ../scss/_base.scss */
+/* line 306, ../scss/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 309, ../scss/_base.scss */
+/* line 311, ../scss/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
 }
 
-/* line 315, ../scss/_base.scss */
+/* line 317, ../scss/_base.scss */
 .form-field-input-asterisk {
   display: none;
 }
 
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 322, ../scss/_base.scss */
+  /* line 324, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 327, ../scss/_base.scss */
+  /* line 329, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 329, ../scss/_base.scss */
+  /* line 331, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }

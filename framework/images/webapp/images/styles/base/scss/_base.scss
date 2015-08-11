@@ -148,6 +148,8 @@ td button, td .button, td input[type="button"], td input[type="submit"], td .but
 }
 fieldset {
     border:none;
+    padding-left: 0px;
+    padding-right: 0px;
     
     legend{
         padding:0px;

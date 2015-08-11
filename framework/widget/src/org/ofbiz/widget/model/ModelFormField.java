@@ -120,6 +120,7 @@ public class ModelFormField {
     private final String parameterName;
     private final Integer position;
     private final Integer positionSpan;
+    private final Boolean combinePrevious;
     private final String redWhen;
     private final Boolean requiredField;
     private final String requiredFieldStyle;
@@ -172,6 +173,7 @@ public class ModelFormField {
         this.parameterName = builder.getParameterName();
         this.position = builder.getPosition();
         this.positionSpan = builder.getPositionSpan();
+        this.combinePrevious = builder.getCombinePrevious();
         this.redWhen = builder.getRedWhen();
         this.requiredField = builder.getRequiredField();
         this.requiredFieldStyle = builder.getRequiredFieldStyle();
@@ -506,6 +508,28 @@ public class ModelFormField {
     
     public Integer getPositionSpan() {
         return positionSpan;
+    }
+    
+    public Boolean getCombinePrevious() {
+        return combinePrevious;
+    }
+    
+    public boolean isCombinePrevious(ModelFormField prevField) {
+        if (combinePrevious != null) {
+            return combinePrevious;
+        }
+        String fieldType = fieldInfo.getFieldTypeName();
+        if ("submit".equals(fieldType) || "hyperlink".equals(fieldType)) {
+            if (modelForm.getDefaultCombineActionFields()) {
+                if (prevField != null) {
+                    String prevFieldType = prevField.getFieldInfo().getFieldTypeName();
+                    if ("submit".equals(prevFieldType) || "hyperlink".equals(prevFieldType)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public String getRedWhen() {

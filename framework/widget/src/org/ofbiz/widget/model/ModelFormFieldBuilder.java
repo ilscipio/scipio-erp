@@ -87,6 +87,7 @@ public class ModelFormFieldBuilder {
     private String parameterName = "";
     private Integer position = null;
     private Integer positionSpan = null;
+    private Boolean combinePrevious = null;
     private String redWhen = "";
     private Boolean requiredField = null;
     private String requiredFieldStyle = "";
@@ -140,6 +141,15 @@ public class ModelFormFieldBuilder {
             positionSpan = Integer.parseInt(positionSpanAttr);
         }
         this.positionSpan = positionSpan;
+        if ("true".equals(fieldElement.getAttribute("combine-previous"))) {
+            this.combinePrevious = true;
+        }
+        else if ("false".equals(fieldElement.getAttribute("combine-previous"))) {
+            this.combinePrevious = false;
+        }
+        else {
+            this.combinePrevious = null;
+        }
         this.redWhen = fieldElement.getAttribute("red-when");
         String requiredField = fieldElement.getAttribute("required-field");
         this.requiredField = requiredField.isEmpty() ? null : "true".equals(requiredField);
@@ -247,6 +257,7 @@ public class ModelFormFieldBuilder {
         this.parameterName = modelFormField.getParameterName();
         this.position = modelFormField.getPosition();
         this.positionSpan = modelFormField.getPositionSpan();
+        this.combinePrevious = modelFormField.getCombinePrevious();
         this.redWhen = modelFormField.getRedWhen();
         this.requiredField = modelFormField.getRequiredField();
         this.requiredFieldStyle = modelFormField.getRequiredFieldStyle();
@@ -288,6 +299,7 @@ public class ModelFormFieldBuilder {
         this.parameterName = builder.getParameterName();
         this.position = builder.getPosition();
         this.positionSpan = builder.getPositionSpan();
+        this.combinePrevious = builder.getCombinePrevious();
         this.redWhen = builder.getRedWhen();
         this.requiredField = builder.getRequiredField();
         this.requiredFieldStyle = builder.getRequiredFieldStyle();
@@ -401,6 +413,10 @@ public class ModelFormFieldBuilder {
     
     public Integer getPositionSpan() {
         return positionSpan;
+    }
+    
+    public Boolean getCombinePrevious() {
+        return combinePrevious;
     }
 
     public String getRedWhen() {
@@ -854,6 +870,11 @@ public class ModelFormFieldBuilder {
     
     public ModelFormFieldBuilder setPositionSpan(Integer positionSpan) {
         this.positionSpan = positionSpan;
+        return this;
+    }
+    
+    public ModelFormFieldBuilder setCombinePrevious(Boolean combinePrevious) {
+        this.combinePrevious = combinePrevious;
         return this;
     }
 

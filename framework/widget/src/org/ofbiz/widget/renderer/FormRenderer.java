@@ -1217,7 +1217,11 @@ public class FormRenderer {
 
             boolean stayingOnRow = false;
             if (lastFormField != null) {
-                if (lastFormField.getPosition() >= currentFormField.getPosition()) {
+                if (currentFormField.isCombinePrevious(lastFormField)) {
+                    // staying on same row
+                    stayingOnRow = true;
+                }
+                else if (lastFormField.getPosition() >= currentFormField.getPosition()) {
                     // moving to next row
                     stayingOnRow = false;
                 } else {
@@ -1322,7 +1326,7 @@ public class FormRenderer {
      * Cato: Factored out field entry render code
      */
     private class RenderFieldEntry {
-        private final ModelFormField currentFormField;
+        private final ModelFormField formField;
         // change in plans: recalculate these at end and ignore ones in loop
         //private final int positionSpan;
         //private final Integer nextPositionInRow;
@@ -1331,53 +1335,65 @@ public class FormRenderer {
         public RenderFieldEntry(ModelFormField currentFormField,
                 int positionSpan, Integer nextPositionInRow, Integer lastPositionInRow) {
             super();
-            this.currentFormField = currentFormField;
+            this.formField = currentFormField;
             //this.positionSpan = positionSpan;
             //this.nextPositionInRow = nextPositionInRow;
             //this.lastPositionInRow = lastPositionInRow;
         }
         
-        public ModelFormField getCurrentFormField() {
-            return currentFormField;
+        public ModelFormField getFormField() {
+            return formField;
         }
         
         public void render(Appendable writer, Map<String, Object> context, 
                 int positions, int positionSpan, Integer nextPositionInRow, Integer lastPositionInRow) throws IOException {
-            FieldInfo fieldInfo = currentFormField.getFieldInfo();
+            this.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow, true, true, true);
+        }
+        
+        public void render(Appendable writer, Map<String, Object> context, 
+                int positions, int positionSpan, Integer nextPositionInRow, Integer lastPositionInRow,
+                boolean openWrappers, boolean renderBody, boolean closeWrappers) throws IOException {
+            FieldInfo fieldInfo = formField.getFieldInfo();
             
             context.put("formFieldRender_positions", positions);
-            context.put("formFieldRender_position", currentFormField.getPosition());
+            context.put("formFieldRender_position", formField.getPosition());
             context.put("formFieldRender_positionSpan", positionSpan);
             context.put("formFieldRender_nextPositionInRow", nextPositionInRow);
             context.put("formFieldRender_lastPositionInRow", lastPositionInRow);
             
-            // render title formatting open
-            formStringRenderer.renderFormatFieldRowTitleCellOpen(writer, context, currentFormField);
-
-            // render title (unless this is a submit or a reset field)
-            if (fieldInfo.getFieldType() != FieldInfo.SUBMIT
-                    && fieldInfo.getFieldType() != FieldInfo.RESET) {
-                formStringRenderer.renderFieldTitle(writer, context, currentFormField);
-            } else {
-                formStringRenderer.renderFormatEmptySpace(writer, context, modelForm);
+            if (openWrappers) {
+                // render title formatting open
+                formStringRenderer.renderFormatFieldRowTitleCellOpen(writer, context, formField);
+    
+                // render title (unless this is a submit or a reset field)
+                if (fieldInfo.getFieldType() != FieldInfo.SUBMIT
+                        && fieldInfo.getFieldType() != FieldInfo.RESET) {
+                    formStringRenderer.renderFieldTitle(writer, context, formField);
+                } else {
+                    formStringRenderer.renderFormatEmptySpace(writer, context, modelForm);
+                }
+    
+                // render title formatting close
+                formStringRenderer.renderFormatFieldRowTitleCellClose(writer, context, formField);
+    
+                // render separator
+                formStringRenderer.renderFormatFieldRowSpacerCell(writer, context, formField);
+    
+                // render widget formatting open
+                formStringRenderer.renderFormatFieldRowWidgetCellOpen(writer, context, formField, positions, positionSpan,
+                        nextPositionInRow);
             }
 
-            // render title formatting close
-            formStringRenderer.renderFormatFieldRowTitleCellClose(writer, context, currentFormField);
+            if (renderBody) {
+                // render widget
+                formField.renderFieldString(writer, context, formStringRenderer);
+            }
 
-            // render separator
-            formStringRenderer.renderFormatFieldRowSpacerCell(writer, context, currentFormField);
-
-            // render widget formatting open
-            formStringRenderer.renderFormatFieldRowWidgetCellOpen(writer, context, currentFormField, positions, positionSpan,
-                    nextPositionInRow);
-
-            // render widget
-            currentFormField.renderFieldString(writer, context, formStringRenderer);
-
-            // render widget formatting close
-            formStringRenderer.renderFormatFieldRowWidgetCellClose(writer, context, currentFormField, positions, positionSpan,
-                    nextPositionInRow);
+            if (closeWrappers) {
+                // render widget formatting close
+                formStringRenderer.renderFormatFieldRowWidgetCellClose(writer, context, formField, positions, positionSpan,
+                        nextPositionInRow);
+            }
             
             context.remove("formFieldRender_positions");
             context.remove("formFieldRender_position");
@@ -1413,10 +1429,24 @@ public class FormRenderer {
             Integer lastPositionInRow = null;
             for(int i = 0; i < fieldEntries.size(); i++) {
                 RenderFieldEntry fieldEntry = fieldEntries.get(i);
-                ModelFormField currentFormField = fieldEntry.getCurrentFormField();
+                ModelFormField currentFormField = fieldEntry.getFormField();
+                
                 ModelFormField nextFormField = null;
-                if ((i + 1) < fieldEntries.size()) {
-                    nextFormField = fieldEntries.get(i + 1).getCurrentFormField();
+                List<RenderFieldEntry> combinedFields = new ArrayList<RenderFieldEntry>();
+                // find out if any fields are supposed to be body-combined with this one
+                // and get next non-combining field
+                int j = i + 1;
+                RenderFieldEntry prevEntry = fieldEntry;
+                while(nextFormField == null && j < fieldEntries.size()) {
+                    RenderFieldEntry candidateEntry = fieldEntries.get(j);
+                    if (candidateEntry.getFormField().isCombinePrevious(prevEntry.getFormField())) {
+                        combinedFields.add(candidateEntry);
+                    }
+                    else {
+                        nextFormField = candidateEntry.getFormField();
+                    }
+                    prevEntry = candidateEntry;
+                    j++;
                 }
                     
                 Integer nextPositionInRow = null;
@@ -1450,9 +1480,22 @@ public class FormRenderer {
                     }
                 }
                 
-                fieldEntry.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow);
+                if (combinedFields.size() <= 0) {
+                    fieldEntry.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow);
+                }
+                else {
+                    fieldEntry.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow, true, true, false);
+                    for(RenderFieldEntry combinedField : combinedFields) {
+                        combinedField.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow, false, true, false);
+                    }
+                    fieldEntry.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow, false, false, true);
+                }
                 
                 lastPositionInRow = currentFormField.getPosition();
+                // skip the combined ones
+                if (combinedFields.size() > 0) {
+                    i += combinedFields.size();
+                }
             }
         }
     }

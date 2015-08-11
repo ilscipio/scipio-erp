@@ -361,6 +361,17 @@ under the License.
                     <xs:documentation>Cato: default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="default-combine-action-fields" default="false">
+                <xs:annotation>
+                    <xs:documentation>Cato: Default value for combine-previous for action fields (submit, hyperlink)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="grid">
@@ -897,6 +908,17 @@ under the License.
                 <xs:annotation>
                     <xs:documentation>Cato: position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="combine-previous">
+                <xs:annotation>
+                    <xs:documentation>Cato: If true, the field body will be combined with the previous field</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="red-when" default="by-name">
                 <xs:annotation>

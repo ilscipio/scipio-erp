@@ -207,6 +207,8 @@ public abstract class ModelForm extends ModelWidget {
     
     private final Integer defaultPositionSpan;
     
+    private final boolean defaultCombineActionFields;
+    
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
         super(formElement);
@@ -438,6 +440,13 @@ public abstract class ModelForm extends ModelWidget {
                     + "]; using the default of the form renderer", module);
         }
         this.defaultPositionSpan = defaultPositionSpan;
+        
+        String defaultCombineActionFields = formElement.getAttribute("default-combine-action-fields");
+        if (defaultCombineActionFields.isEmpty() && parentModel != null) {
+            this.defaultCombineActionFields = parentModel.defaultCombineActionFields;
+        } else {
+            this.defaultCombineActionFields = "true".equals(defaultCombineActionFields);
+        }
         
         String clientAutocompleteFields = formElement.getAttribute("client-autocomplete-fields");
         if (clientAutocompleteFields.isEmpty() && parentModel != null) {
@@ -1249,6 +1258,10 @@ public abstract class ModelForm extends ModelWidget {
         if (this.defaultPositionSpan == null)
             return 0;
         return defaultPositionSpan;
+    }
+    
+    public boolean getDefaultCombineActionFields() {
+        return defaultCombineActionFields;
     }
 
     public String getItemIndexSeparator() {

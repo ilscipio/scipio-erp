@@ -611,12 +611,12 @@ under the License.
   </div>
 </#macro>
 
-<#function isFieldTypeSubmit fieldType>
-    <#return (fieldType=="submit" || fieldType=="reset")>
+<#function isFieldTypeAction fieldType fieldTitleBlank>
+    <#return (fieldType=="submit" || fieldType=="reset" || (fieldType=="hyperlink" && fieldTitleBlank))>
 </#function>
 
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
-  <#local isSubmitField = isFieldTypeSubmit(fieldType)>
+  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
   <!-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
   <#local gridSize = 12>
@@ -644,29 +644,29 @@ under the License.
   <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
   <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if>">
     <div class="${styles.grid_row!} form-field-entry">
-    <#if !isSubmitField>
+    <#if !isActionField>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!}">
         <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label"></#if>
     </#if>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
-  <#local isSubmitField = isFieldTypeSubmit(fieldType)>
-    <#if !isSubmitField>
+  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
+    <#if !isActionField>
         <#if collapse></span><#else></label></#if>
       </div>
     </#if>
 </#macro>
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
-  <#local isSubmitField = isFieldTypeSubmit(fieldType)>
-    <#if !isSubmitField>
+  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
+    <#if !isActionField>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!}">
     <#else>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!}">
     </#if>
 </#macro>
 <#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false>
-  <#local isSubmitField = isFieldTypeSubmit(fieldType)>
+  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
       </div>
     </div>
   </div>

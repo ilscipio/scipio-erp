@@ -612,7 +612,7 @@ under the License.
 </#macro>
 
 <#function isFieldTypeSubmit fieldType>
-    <#return (fieldType=="submit")>
+    <#return (fieldType=="submit" || fieldType=="reset")>
 </#function>
 
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="">

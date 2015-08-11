@@ -1234,8 +1234,25 @@ public abstract class ModelForm extends ModelWidget {
         return this.showProgress.getOriginal();
     }
 
-    public String getShowProgress(Map<String, Object> context) {
-        return this.showProgress.expandString(context);
+    public Boolean getShowProgress(Map<String, Object> context) {
+        String showProgStr = this.showProgress.expandString(context);
+        if ("true".equals(showProgStr)) {
+            return Boolean.TRUE;
+        }
+        else if ("false".equals(showProgStr)) {
+            return Boolean.FALSE;
+        }
+        else {
+            return null;
+        }
+    }
+    
+    public boolean isShowProgress(Map<String, Object> context) {
+        Boolean res = getShowProgress(context);
+        if (res == null) {
+            return false;
+        }
+        return res;
     }
     
     public String getProgressOptions() {

@@ -1325,8 +1325,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             autocomplete = "off";
         }
         
-        String showProgressStr = modelForm.getShowProgress(context);
-        boolean showProgress = "true".equals(showProgressStr);
+        boolean showProgress = modelForm.isShowProgress(context);
         String progressOptions = "";
         String progressSuccessAction = "";
         if (showProgress) {

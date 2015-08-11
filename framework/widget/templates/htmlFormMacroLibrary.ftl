@@ -423,6 +423,10 @@ under the License.
     </#if>
   </#if>
 
+<#-- Cato: to omit button (show progress only), we use empty title hack " " similar to what ofbiz does with hyperlinks with no label -->
+<#if (buttonType=="text-link" || buttonType!="image") && !(title?trim?has_content)>
+  <#local buttonMarkup = "">
+<#else>
   <#local buttonMarkup>
   <#if buttonType=="text-link">
     <a <@renderClass className alert /> href="javascript:document.${formName}.submit()" <#if confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>><#if title?has_content>${title}</#if> </a>
@@ -438,13 +442,15 @@ under the License.
     </#if>/>
   </#if>
   </#local>
-  
+</#if>
   <#if (htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true>
       <#local baseId = htmlFormRenderFormInfo.name + "_catouplprogform">
       <@row>
+      <#if buttonMarkup?has_content>
         <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
           ${buttonMarkup}
         </@cell>
+      </#if>
         <@cell class="${styles.grid_small!}6 ${styles.grid_large!}6">
           
           <#local progressOptions = {
@@ -472,7 +478,7 @@ under the License.
           
           <@progress id="${baseId}_progbar" type="info" addWrapClass="${styles.hidden!}" progressOptions=progressOptions/>
         </@cell>
-        <@cell class="${styles.grid_small!}3 ${styles.grid_large!}4" id="${baseId}_textbox">
+        <@cell class="${styles.grid_small!}3 ${styles.grid_large!}4 ${styles.grid_end!}" id="${baseId}_textbox">
         </@cell>
       </@row>
   <#else>

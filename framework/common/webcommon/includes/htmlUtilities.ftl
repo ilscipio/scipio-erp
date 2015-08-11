@@ -1236,6 +1236,7 @@ TODO: document better if needed
   <#if options?has_content && options.formSel?has_content>
     <#if htmlwrap>
     <script type="text/javascript">
+    //<![CDATA[
     </#if>
     
     <#-- This belongs here, but due to Ofbiz bug, moved to commonScripts.ftl
@@ -1249,7 +1250,10 @@ TODO: document better if needed
             uploadProgress = new CatoUploadProgress({
             <#list options?keys as opt>
                 <#local val = options[opt]!>
-                <#if val?is_number>
+                <#if opt=="successRedirectUrl">
+                  <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
+                  "${opt}" : "${val?replace("&amp;", "&")}",
+                <#elseif val?is_number>
                   "${opt}" : ${val},
                 <#elseif val?is_boolean>
                   "${opt}" : ${val?string("true", "false")},
@@ -1282,6 +1286,7 @@ TODO: document better if needed
     })();
     
     <#if htmlwrap>
+    //]]>
     </script>
     </#if>
   </#if>

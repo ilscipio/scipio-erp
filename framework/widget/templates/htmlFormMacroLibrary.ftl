@@ -1045,6 +1045,8 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#-- Cato: new params: paginate, forcePost, viewIndexFirst, listItemsOnly
      paginate is a display hint, does not seem to mean guarantee data wasn't paginated -->
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false>
+<#-- note: possible that data was paginated even if paginate false, but don't bother right now -->
+<#if paginate>
   <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
   <#local minPageSize = availPageSizes?first>
   <#local itemRange = 2/>
@@ -1163,6 +1165,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </div>
     </#if>
   </#if>
+</#if>
 </#macro>
 
 <#macro renderFileField className alert name value size maxlength autocomplete>

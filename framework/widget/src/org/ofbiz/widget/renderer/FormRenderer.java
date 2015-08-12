@@ -706,6 +706,8 @@ public class FormRenderer {
         boolean hasResult = false;
         boolean listNull = true;
         if (iter != null) {
+            context.put("currentForm_hasList", Boolean.TRUE);
+            
             listNull = false;
             
             // Cato: Delay render table til know we had a query (list)
@@ -732,6 +734,7 @@ public class FormRenderer {
             Map<String, Object> previousItem = new HashMap<String, Object>();
             while ((item = safeNext(iter)) != null) {
                 hasResult = true;
+                context.put("currentForm_hasResult", Boolean.TRUE);
                 
                 // Cato: Last chance to delay-open wrapper til know query had results (in list)
                 if (!wrapperOpened) {
@@ -980,6 +983,9 @@ public class FormRenderer {
 
     private void renderListFormString(Appendable writer, Map<String, Object> context,
             int positions) throws IOException {
+        context.put("currentForm_hasList", Boolean.FALSE);
+        context.put("currentForm_hasResult", Boolean.FALSE);
+        
         // render list/tabular type forms
 
         // prepare the items iterator and compute the pagination parameters
@@ -1011,10 +1017,16 @@ public class FormRenderer {
             // render formatting wrapper close
             formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
         }
+        
+        context.remove("currentForm_hasList");
+        context.remove("currentForm_hasResult");
     }
 
     private void renderMultiFormString(Appendable writer, Map<String, Object> context, 
             int positions) throws IOException {
+        context.put("currentForm_hasList", Boolean.FALSE);
+        context.put("currentForm_hasResult", Boolean.FALSE);
+        
         if (!modelForm.getSkipStart()) {
             formStringRenderer.renderFormOpen(writer, context, modelForm);
         }
@@ -1052,6 +1064,8 @@ public class FormRenderer {
             formStringRenderer.renderMultiFormClose(writer, context, modelForm);
         }
 
+        context.remove("currentForm_hasList");
+        context.remove("currentForm_hasResult");
     }
 
     private void renderSingleFormString(Appendable writer, Map<String, Object> context, 

@@ -96,16 +96,80 @@ Adds parameters from a hash to a URL param string (no full URL logic).
 
 <#-- 
 *************
-* containsStyleClass function
+* splitStyleNames function
+************
+splits a style classes string into sequence, same order.
+                    
+   * Parameters *
+    styleString     = style string containing classes
+   * Return value *
+    a sequence of style names, same order.
+-->
+<#function splitStyleNames styleString>
+  <#return styleString?split(r'\s+', 'r')>
+</#function> 
+
+<#-- 
+*************
+* splitStyleNamesToSet function
+************
+splits a style classes string into a Set of unique elems, no order.
+                    
+   * Parameters *
+    styleString     = style string containing classes
+   * Return value *
+    a java Set of style names (can be seen as sequence)
+-->
+<#function splitStyleNamesToSet styleString>
+  <#return Static['org.ofbiz.base.util.UtilMisc'].collectionToSet(styleString?split(r'\s+', 'r'))>
+</#function> 
+
+<#-- 
+*************
+* containsStyleName function
 ************
 Returns true if class/style string contains given style.
                     
    * Parameters *
-    classes         = classes string
+    styleString     = style string containing classes
     className       = name of class to find
+   * Return value *
+    true if class/style string contains given style, false otherwise.
 -->
-<#function containsStyleClass classes className>
-  <#return classes?split(" ")?seq_contains(className)>
+<#function containsStyleName styleString className>
+  <#-- don't need regexp -->
+  <#return styleString?split(" ")?seq_contains(className)> 
+</#function> 
+
+<#-- 
+*************
+* removeStyleNames function
+************   
+Removes style classes from a style string. 
+strips lead/trailing space.
+           
+   * Parameters *
+    styleString     = style string containing classes
+    namesToRemove   = array of names or space-separated string of names to remove 
+                      (can be single name)
+   * Return value *
+    the style string with names removed, same order but reformatted.
+-->
+<#function removeStyleNames styleString namesToRemove>
+  <#if namesToRemove?is_string>
+    <#local namesToRemove = splitStyleNamesToSet(namesToRemove)>
+  <#else>
+    <#local namesToRemove = Static['org.ofbiz.base.util.UtilMisc'].collectionToSet(namesToRemove)>
+  </#if>
+  <#local res = "">
+  <#-- don't need regexp, multiple spaces don't affect result -->
+  <#local styleArr = styleString?split(" ")>
+  <#list styleArr as style>
+    <#if style?has_content && !namesToRemove.contains(style)>
+        <#local res = res + " " + style>
+    </#if>
+  </#list>
+  <#return res?trim>
 </#function> 
 
 <#-- 
@@ -256,7 +320,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     <#local classes="${styles.grid_small!}${12-columnspostfix}"/>
 </#if>
 
-<#if required && (!containsStyleClass(class, "required"))>
+<#if required && (!containsStyleName(class, "required"))>
     <#local class = class + " required">
 </#if>
 

@@ -22,60 +22,49 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     * menu-sidebar
     * menu-button
     * menu-tab // ToDo
-
 -->
 <#macro renderMenuBegin boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="">
+  <#local styleSet = splitStyleNamesToSet(style)>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
   <#if !inlineEntries>
-      <#--
-          <nav>
-              <h2>${navigation!}</h2>
-              <ul class="side-nav">
-                  <li>
-      -->
-      
-    <#if style?contains("menu-main")>
+    <#if styleSet.contains("menu-main")>
+      <#local remStyle = removeStyleNames(style, "menu-main")>
         <li class="has-dropdown not-click active"><a href="#">${title!}</a>
-            <ul class="dropdown">
-    <#elseif style?contains("menu-sidebar")>
+            <ul class="dropdown<#if remStyle?has_content> ${remStyle}</#if>">
+    <#elseif styleSet.contains("menu-sidebar")>
+      <#local remStyle = removeStyleNames(style, "menu-sidebar")>
         <nav>
-              <h2>${navigation!}</h2>
-              <ul class="side-nav">
-                  <#--<li>-->
-    <#elseif style?contains("menu-button")>
-        <ul class="${styles.button_group!} ${styles.button_force!}">
-    <#elseif style?contains("menu-tab")>    
-        <ul class="${styles.button_group!} ${styles.button_force!}">
-    <#elseif style?contains("button-bar")>
-        <#-- right now translating button-bar menu-container-style here to avoid modifying all menu 
-             styles, but this limits possible styles
-             note: button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear -->
-        <ul class="${styles.button_group!} ${styles.button_force!}">
+            <h2>${navigation!}</h2>
+            <ul class="side-nav<#if remStyle?has_content> ${remStyle}</#if>">
+    <#elseif styleSet.contains("menu-button")>
+      <#local remStyle = removeStyleNames(style, "menu-button")>
+        <ul class="${styles.button_group!} ${styles.button_force!}<#if remStyle?has_content> ${remStyle}</#if>">
+    <#elseif styleSet.contains("menu-tab")>    
+      <#local remStyle = removeStyleNames(style, "menu-tab")>
+        <ul class="${styles.button_group!} ${styles.button_force!}<#if remStyle?has_content> ${remStyle}</#if>">
+    <#elseif styleSet.contains("button-bar")>
+      <#local remStyle = removeStyleNames(style, ["button-bar", "no-clear"])>
+      <#-- right now translating button-bar menu-container-style here to avoid modifying all menu styles
+           note: in stock, button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear (removed above) -->
+      <#-- WARN: stock ofbiz usually applied styles to a containing div, 
+           not sure should keep that behavior or not, but might not consistent with foundation styles? -->
+        <ul class="${styles.button_group!}<#if remStyle?has_content> ${remStyle}</#if>">
     <#else>
-        <#-- This is a fallback so unhandled cases don't produce invalid HTML and classes can pass through -->
-        <#if style?has_content>
-            <div class="${style}">
-        <#else>
-            <div>
-        </#if>
-                <ul>
-    </#if> 
-      
+      <#-- all other cases -->
+      <#-- WARN: stock ofbiz usually applied styles to a containing div, 
+           not sure should keep that behavior or not, but might not consistent with foundation styles? -->
+        <ul<#if style?has_content> class="${style}"</#if>>
+    </#if>
   </#if>
 </#macro>
 
 <#macro renderMenuEnd boundaryComment="" style="" inlineEntries=false menuCtxRole="">
+  <#local styleSet = splitStyleNamesToSet(style)>
   <#if !inlineEntries>
-  
-            <#--</li>
-            </ul>
-            </nav>
-            -->    
     <#--        
     <#if isSubMenu>
-
             </ul>
     <#else>
         </ul>
@@ -83,26 +72,22 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
         <#global isSubMenu=true/>
     </#if>
     -->
-    <#if style?contains("menu-main")>
+    <#if styleSet.contains("menu-main")>
             </ul>
         </li>
-    <#elseif style?contains("menu-sidebar")>
-                <#--</li>-->
+    <#elseif styleSet.contains("menu-sidebar")>
             </ul>
         </nav>
-    <#elseif style?contains("menu-button")>
+    <#elseif styleSet.contains("menu-button")>
         </ul>
-    <#elseif style?contains("menu-tab")>
+    <#elseif styleSet.contains("menu-tab")>
         </ul>
-    <#elseif style?contains("button-bar")>
+    <#elseif styleSet.contains("button-bar")>
         </ul>
     <#else>
-            </ul>
-        </div>
-    </#if> 
-    
+        </ul>
+    </#if>
   </#if>
-  
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>

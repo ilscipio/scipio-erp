@@ -1118,7 +1118,7 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
     
-    private String getWidgetDefDefault(Map<String, Object> context, String propName) {
+    static String getWidgetDefDefault(Map<String, Object> context, String propName, boolean expand) {
         Properties props = UtilProperties.getProperties("widget.properties");
         if (props == null) {
             return "";
@@ -1132,17 +1132,32 @@ public abstract class ModelForm extends ModelWidget {
                 if (props != null) {
                     val = props.getProperty("widget.defs.form." + propName + ".default." + renderType);
                     if (val != null) {
-                        return FlexibleStringExpander.expandString(val.trim(), context);
+                        if (expand) {
+                            return FlexibleStringExpander.expandString(val.trim(), context);
+                        }
+                        else {
+                            return val.trim();
+                        }
                     }
                 }
             }
         }
         val = props.getProperty("widget.defs.form." + propName + ".default");
         if (val != null) {
-            return FlexibleStringExpander.expandString(val.trim(), context);
+            if (expand) {
+                return FlexibleStringExpander.expandString(val.trim(), context);
+            }
+            else {
+                return val.trim();
+            }
         }
         return "";
     }
+    
+    static String getWidgetDefDefault(Map<String, Object> context, String propName) {
+        return getWidgetDefDefault(context, propName, true);
+    }
+    
     
     private Boolean getBooleanExprResult(String val, String name) {
         if (UtilValidate.isNotEmpty(val)) {

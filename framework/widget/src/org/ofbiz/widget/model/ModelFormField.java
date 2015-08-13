@@ -855,10 +855,27 @@ public class ModelFormField {
         return false;
     }
 
+    static String getWidgetDefDefault(Map<String, Object> context, String propName, boolean expand) {
+        return ModelForm.getWidgetDefDefault(context, propName, expand);
+    }
+    
     public boolean shouldUse(Map<String, Object> context) {
         String useWhenStr = this.getUseWhen(context);
-        if (UtilValidate.isEmpty(useWhenStr))
-            return true;
+        if (UtilValidate.isEmpty(useWhenStr)) {
+            String fieldType = getFieldInfo().getFieldTypeName();
+            if (UtilValidate.isNotEmpty(fieldType)) {
+                String formType = modelForm.getType();
+                if (UtilValidate.isNotEmpty(formType)) {
+                    useWhenStr = getWidgetDefDefault(context, "byType." + formType + ".field.byType." + fieldType + ".useWhen", false);
+                }
+                if (UtilValidate.isEmpty(useWhenStr)) {
+                    useWhenStr = getWidgetDefDefault(context, "field.byType." + fieldType + ".useWhen", false);
+                }
+            }
+            if (UtilValidate.isEmpty(useWhenStr)) {
+                return true;
+            }
+        }
 
         try {
             Interpreter bsh = this.modelForm.getBshInterpreter(context);

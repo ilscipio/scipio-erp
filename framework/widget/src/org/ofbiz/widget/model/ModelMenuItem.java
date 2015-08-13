@@ -89,6 +89,8 @@ public class ModelMenuItem extends ModelWidget {
     private final String tooltipStyle;
     private final String widgetStyle;
     private final String linkStyle;
+    
+    private final String overrideMode;
 
     // ===== CONSTRUCTORS =====
 
@@ -108,6 +110,7 @@ public class ModelMenuItem extends ModelWidget {
         this.disabledTitleStyle = menuItemElement.getAttribute("disabled-title-style");
         this.widgetStyle = menuItemElement.getAttribute("widget-style");
         this.linkStyle = menuItemElement.getAttribute("link-style");
+        this.overrideMode = menuItemElement.getAttribute("override-mode");
         this.tooltipStyle = menuItemElement.getAttribute("tooltip-style");
         this.selectedStyle = menuItemElement.getAttribute("selected-style");
         String hideIfSelected = menuItemElement.getAttribute("hide-if-selected");
@@ -200,6 +203,7 @@ public class ModelMenuItem extends ModelWidget {
         this.tooltipStyle = "";
         this.widgetStyle = "";
         this.linkStyle = "";
+        this.overrideMode = "";
         this.link = new MenuLink(portalPage, parentMenuItem, locale);
         this.modelMenu = parentMenuItem.modelMenu;
     }
@@ -272,6 +276,7 @@ public class ModelMenuItem extends ModelWidget {
         this.subMenu = existingMenuItem.subMenu;
         this.tooltipStyle = existingMenuItem.tooltipStyle;
         this.link = existingMenuItem.link;
+        this.overrideMode = existingMenuItem.overrideMode;
     }
 
     @Override
@@ -283,8 +288,16 @@ public class ModelMenuItem extends ModelWidget {
             Map<String, ModelMenuItem> menuItemMap) {
         ModelMenuItem existingMenuItem = menuItemMap.get(modelMenuItem.getName());
         if (existingMenuItem != null) {
-            // does exist, update the item by doing a merge/override
-            ModelMenuItem mergedMenuItem = existingMenuItem.mergeOverrideModelMenuItem(modelMenuItem);
+            // Cato: support a replace mode as well
+            ModelMenuItem mergedMenuItem;
+            if ("replace".equals(modelMenuItem.getOverrideMode())) {
+                mergedMenuItem = modelMenuItem;
+            }
+            else {
+                // does exist, update the item by doing a merge/override
+                mergedMenuItem = existingMenuItem.mergeOverrideModelMenuItem(modelMenuItem);
+            }
+            
             int existingItemIndex = menuItemList.indexOf(existingMenuItem);
             menuItemList.set(existingItemIndex, mergedMenuItem);
             menuItemMap.put(modelMenuItem.getName(), mergedMenuItem);
@@ -494,6 +507,10 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             return this.modelMenu.getDefaultLinkStyle();
         }
+    }
+    
+    public String getOverrideMode() {
+        return this.overrideMode;
     }
 
     public boolean isSelected(Map<String, Object> context) {

@@ -19,19 +19,28 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * Models the &lt;menu&gt; element.
@@ -275,11 +284,10 @@ public class ModelMenu extends ModelWidget {
         this.fillStyle = fillStyle;
         this.id = id;
         this.menuContainerStyleExdr = menuContainerStyleExdr;
-        List<? extends Element> itemElements = UtilXml.childElementList(menuElement, "menu-item");
-        for (Element itemElement : itemElements) {
-            ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, this);
-            addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
-        }
+        
+        // Cato: include-menu-items and menu-item
+        processIncludeMenuItems(menuElement, menuItemList, menuItemMap, menuLocation, true, null);
+        
         menuItemList.trimToSize();
         this.menuItemList = Collections.unmodifiableList(menuItemList);
         this.menuItemMap = Collections.unmodifiableMap(menuItemMap);
@@ -294,6 +302,126 @@ public class ModelMenu extends ModelWidget {
         this.type = type;
     }
 
+    /**
+     * Cato: implements include-menu-items and menu-item reading (moved here).
+     */
+    private void processIncludeMenuItems(Element menuElement, List<ModelMenuItem> menuItemList,
+            Map<String, ModelMenuItem> menuItemMap, String currResource, boolean processIncludes, Set<String> excludeItems) {
+        if (excludeItems == null) {
+            excludeItems = new HashSet<String>();
+        }
+        
+        if (processIncludes) {
+            List<? extends Element> itemInclElements = UtilXml.childElementList(menuElement, "include-menu-items");
+            for (Element itemInclElement : itemInclElements) {
+                String inclMenuName = itemInclElement.getAttribute("menu-name");
+                String inclResource = itemInclElement.getAttribute("resource");
+                String inclDepth = itemInclElement.getAttribute("include-depth");
+                
+                Set<String> inclExcludeItems = new HashSet<String>();
+                List<? extends Element> skipItemElems = UtilXml.childElementList(itemInclElement, "exclude-item");
+                for (Element skipItemElem : skipItemElems) {
+                    String itemName = skipItemElem.getAttribute("name");
+                    if (UtilValidate.isNotEmpty(itemName)) {
+                        inclExcludeItems.add(itemName);
+                    }
+                } 
+                
+                if ("non-recursive".equals(inclDepth) || "recursive-includes".equals(inclDepth) ||
+                    "recursive-extends".equals(inclDepth) || "recursive-full".equals(inclDepth)) {
+                    Element inclMenuElem = loadIncludedMenu(inclMenuName, inclResource, menuElement, currResource);
+                    
+                    if (inclMenuElem != null) {
+                        inclExcludeItems.addAll(excludeItems);
+                        String nextResource;
+                        if (UtilValidate.isNotEmpty(inclResource)) {
+                            nextResource = inclResource;
+                        }
+                        else {
+                            nextResource = currResource;
+                        }
+                        
+                        if ("recursive-extends".equals(inclDepth) || "recursive-full".equals(inclDepth)) {
+                            String parentResource = inclMenuElem.getAttribute("extends-resource");
+                            String parentMenu = inclMenuElem.getAttribute("extends");
+                            if (UtilValidate.isNotEmpty(parentMenu)) {
+                                Element parentMenuElem = loadIncludedMenu(parentMenu, parentResource, inclMenuElem, currResource);
+                                if (parentMenuElem != null) {
+                                    processIncludeMenuItems(parentMenuElem, menuItemList, menuItemMap, nextResource, true, inclExcludeItems);
+                                }
+                                else {
+                                    Debug.logError("Failed to find (via include-menu-items) parent menu definition '" + parentMenu + "' in resource '" + parentResource + "'", module);
+                                }
+                            }
+                        }
+                        
+                        if ("recursive-includes".equals(inclDepth) || "recursive-full".equals(inclDepth)) {
+                            processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, nextResource, true, inclExcludeItems);
+                        }
+                        else {
+                            processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, nextResource, false, inclExcludeItems);
+                        }
+                    }
+                    else {
+                        Debug.logError("Failed to find include-menu-items menu definition '" + inclMenuName + "' in resource '" + inclResource + "'", module);
+                    }
+                }
+                else {
+                    Debug.logError("Unrecognized include-menu-items mode: " + inclDepth, module);
+                }
+            } 
+        }
+        
+        List<? extends Element> itemElements = UtilXml.childElementList(menuElement, "menu-item");
+        for (Element itemElement : itemElements) {
+            String itemName = itemElement.getAttribute("name");
+            if (!excludeItems.contains(itemName)) {
+                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, this);
+                addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
+            }
+        }
+    }
+    
+    private Element loadIncludedMenu(String menuName, String resource, Element currMenuElem, String currResource) {
+        Element inclMenuElem = null;
+        Element inclRootElem = null;
+        String targetResource;
+        if (UtilValidate.isNotEmpty(resource)) {
+            targetResource = resource;
+        }
+        else {
+            targetResource = currResource;
+        }
+        
+        if (true) { // UtilValidate.isNotEmpty(resource)
+            try {
+                URL menuFileUrl = FlexibleLocation.resolveLocation(targetResource);
+                Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
+                inclRootElem = menuFileDoc.getDocumentElement();
+            } catch (Exception e) {
+                Debug.logError(e, "Failed to load include-menu-items resource: " + resource, module);
+            }
+        }
+        else {
+            // Cato: No! we must reload the orig doc always because the Elements get written to!
+            // must have fresh versions.
+            // try to find a menu definition in the same file
+            //inclRootElem = currMenuElem.getOwnerDocument().getDocumentElement();
+        }
+        
+        if (inclRootElem != null) {
+            List<? extends Element> menuElements = UtilXml.childElementList(inclRootElem, "menu");
+            for (Element menuElementEntry : menuElements) {
+                if (menuElementEntry.getAttribute("name").equals(menuName)) {
+                    inclMenuElem = menuElementEntry;
+                    break;
+                }
+            }
+        }
+        return inclMenuElem;
+    }
+    
+    
     @Override
     public void accept(ModelWidgetVisitor visitor) throws Exception {
         visitor.visit(this);
@@ -307,8 +435,15 @@ public class ModelMenu extends ModelWidget {
             Map<String, ModelMenuItem> menuItemMap) {
         ModelMenuItem existingMenuItem = menuItemMap.get(modelMenuItem.getName());
         if (existingMenuItem != null) {
-            // does exist, update the item by doing a merge/override
-            ModelMenuItem mergedMenuItem = existingMenuItem.mergeOverrideModelMenuItem(modelMenuItem);
+            // Cato: support a replace mode as well
+            ModelMenuItem mergedMenuItem;
+            if ("replace".equals(modelMenuItem.getOverrideMode())) {
+                mergedMenuItem = modelMenuItem;
+            }
+            else {
+                // does exist, update the item by doing a merge/override
+                mergedMenuItem = existingMenuItem.mergeOverrideModelMenuItem(modelMenuItem);
+            }
             int existingItemIndex = menuItemList.indexOf(existingMenuItem);
             menuItemList.set(existingItemIndex, mergedMenuItem);
             menuItemMap.put(modelMenuItem.getName(), mergedMenuItem);

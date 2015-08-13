@@ -30,6 +30,7 @@ under the License.
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="actions" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-menu-items" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
@@ -95,6 +96,38 @@ under the License.
             <xs:attribute type="xs:string" name="default-permission-entity-action" />
         </xs:complexType>
     </xs:element>
+    <xs:element name="include-menu-items">
+        <xs:annotation>
+            <xs:documentation>Cato: includes a menu's items into another. Works on a textual xml level.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="exclude-item" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Cato: menu-items to not include. helps as workaround to odd merging behavior. works recursively.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute type="xs:string" name="name" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="menu-name" use="required" />
+            <xs:attribute type="xs:string" name="resource" />
+            <xs:attribute name="include-depth" use="required">
+                <xs:annotation>
+                    <xs:documentation>Cato: include depth.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="non-recursive" />
+                        <xs:enumeration value="recursive-includes" />
+                        <xs:enumeration value="recursive-extends" />
+                        <xs:enumeration value="recursive-full" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="menu-item">
         <xs:complexType>
             <xs:sequence>
@@ -155,6 +188,18 @@ under the License.
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="left" />
                         <xs:enumeration value="right" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="override-mode" default="merge">
+                <xs:annotation>
+                    <xs:documentation>Cato: can be used to change the default override behavior.
+                        'replace' causes this item to override any prior definition instead of merging, which can be problematic.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="merge" />
+                        <xs:enumeration value="replace" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

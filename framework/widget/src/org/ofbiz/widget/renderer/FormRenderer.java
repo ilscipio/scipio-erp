@@ -954,28 +954,29 @@ public class FormRenderer {
         }
         
         public void renderInit() throws IOException {
-            context.put("currentForm_hasList", false);
-            context.put("currentForm_hasResult", false);   
-            context.put("currentForm_hasDisplayResult", false); 
+            context.put("currentFormHasList", hasList);
+            context.put("currentFormHasResult", hasResult);   
+            context.put("currentFormHasDisplayResult", hasDisplayResult); 
         }
 
         @Override
         public void notifyHasList() throws IOException {
             hasList = true;
-            context.put("currentForm_hasList", Boolean.TRUE);
+            context.put("currentFormHasList", hasList);
         }
         
         @Override
         public void notifyHasResult() throws IOException {
             hasResult = true;
-            context.put("currentForm_hasResult", Boolean.TRUE);
+            context.put("currentFormHasResult", hasResult);
         }
         
         @Override
         public void notifyHasDisplayResult() throws IOException {
             hasDisplayResult = true;
-            context.put("currentForm_hasDisplayResult", Boolean.TRUE);
+            context.put("currentFormHasDisplayResult", hasDisplayResult);
             
+            // MUST render the table wrapper if results are going to be displayed
             renderTableOpen(true, false);
         }
         
@@ -997,9 +998,9 @@ public class FormRenderer {
         }
         
         public void renderFinalize() throws IOException {
-            context.remove("currentForm_hasList");
-            context.remove("currentForm_hasResult"); 
-            context.remove("currentForm_hasDisplayResult"); 
+            context.remove("currentFormHasList");
+            context.remove("currentFormHasResult"); 
+            context.remove("currentFormHasDisplayResult"); 
         }
         
         private void renderTableWrapperOpen(boolean required) throws IOException {

@@ -48,6 +48,20 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty-section section-name="left-column" /></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="left-column"/>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-menu location="component://webtools/widget/Menus.xml" name="WebtoolsSideBar"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>
@@ -64,13 +78,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
-                        <section>
-                            <widgets>
-                                <include-menu name="MainTabBar" location="component://webtools/widget/Menus.xml"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://webtools/webapp/webtools/main.ftl"/></html></platform-specific>
                     </decorator-section>

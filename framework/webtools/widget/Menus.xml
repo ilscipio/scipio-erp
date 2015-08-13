@@ -65,7 +65,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="MainTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="WebtoolsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <menu-item name="logging" title="${uiLabelMap.WebtoolsLogging}">
             <link target="LogView"/>

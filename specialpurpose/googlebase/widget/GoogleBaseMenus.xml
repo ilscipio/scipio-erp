@@ -23,4 +23,11 @@ under the License.
         <menu-item name="googlebase" title="${uiLabelMap.GoogleBaseExportToGoogle}"><link target="advancedsearch"/></menu-item>
         <menu-item name="GooglebaseAutoUpdate" title="${uiLabelMap.GoogleBaseAutoUpdate}"><link target="GooglebaseAutoUpdate"/></menu-item>
     </menu>
+    
+    <menu name="GoogleBaseSideBar" title="${uiLabelMap.GoogleBaseApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <menu-item name="GoogleBaseConfigs" title="${uiLabelMap.GoogleBaseConfiguration}"><link target="EditGoogleBaseConfigs"/></menu-item>
+        <menu-item name="googlebase" title="${uiLabelMap.GoogleBaseExportToGoogle}"><link target="advancedsearch"/></menu-item>
+        <menu-item name="GooglebaseAutoUpdate" title="${uiLabelMap.GoogleBaseAutoUpdate}"><link target="GooglebaseAutoUpdate"/></menu-item>
+    </menu>
 </menus>

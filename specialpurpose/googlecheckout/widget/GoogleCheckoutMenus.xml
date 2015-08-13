@@ -24,4 +24,10 @@ under the License.
         <menu-item name="GoogleCheckoutConfigurations" title="${uiLabelMap.GoogleCheckoutGoogleCheckoutConfiguration}"><link target="GoogleCheckoutConfigurations"/></menu-item>
         <menu-item name="GoogleCheckoutShippingMethods" title="${uiLabelMap.GoogleCheckoutShippingMethods}"><link target="GoogleCheckoutShippingMethods"/></menu-item>
     </menu>
+    
+    <menu name="GoogleCheckoutSideBar" title="${uiLabelMap.GoogleCheckoutApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <menu-item name="GoogleCheckoutConfigurations" title="${uiLabelMap.GoogleCheckoutGoogleCheckoutConfiguration}"><link target="GoogleCheckoutConfigurations"/></menu-item>
+        <menu-item name="GoogleCheckoutShippingMethods" title="${uiLabelMap.GoogleCheckoutShippingMethods}"><link target="GoogleCheckoutShippingMethods"/></menu-item>
+    </menu>
 </menus>

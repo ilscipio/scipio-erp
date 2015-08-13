@@ -46,6 +46,34 @@ under the License.
             <link target="ExampleBarChart"/>
         </menu-item>
     </menu>
+    
+    <menu name="ExampleSideBar" title="${uiLabelMap.ExampleApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <menu-item name="ExampleMenuItem" title="${uiLabelMap.ExampleExample}">
+            <link target="FindExample"/>
+        </menu-item>
+        <menu-item name="ExampleFeature" title="${uiLabelMap.ExampleFeature}">
+            <link target="FindExampleFeature"/>
+        </menu-item>
+        <menu-item name="FormWidgetExamples" title="${uiLabelMap.ExampleFormWidgetExamples}">
+            <link target="FormWidgetExamples"/>
+        </menu-item>
+        <menu-item name="AjaxExample" title="${uiLabelMap.ExampleAjaxExamples}">
+            <link target="authview/findExampleAjax"/>
+        </menu-item>
+        <menu-item name="portalPage" parent-portal-page-value="EXAMPLE"/>
+        <menu-item name="Dashboard" title="${uiLabelMap.ExampleDashboard}" align-style="opposed">
+            <link target="ManagePortalPages" link-type="anchor">
+                <parameter param-name="parentPortalPageId" value="EXAMPLE"/>
+            </link>
+        </menu-item>
+        <menu-item name="ExampleGeoLocation" title="${uiLabelMap.CommonGeoLocation}">
+            <link target="ExampleGeoLocationPointSet1"/>
+        </menu-item>
+        <menu-item name="ExampleCharts" title="Chart examples">
+            <link target="ExampleBarChart"/>
+        </menu-item>
+    </menu>
 
     <menu name="EditExample" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditExample" title="${uiLabelMap.ExampleExample}">

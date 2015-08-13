@@ -26,6 +26,16 @@ under the License.
         <menu-item name="findVendors" title="${uiLabelMap.AccountingApPageTitleFindVendors}"><link target="findVendors"/></menu-item>
         <menu-item name="reports" title="${uiLabelMap.AccountingReports}"><link target="listReports"/></menu-item>
     </menu>
+    
+    <menu name="ApSideBar" title="${uiLabelMap.AccountingApManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}"><link target="FindAgreement"/></menu-item>
+        <menu-item name="invoices" title="${uiLabelMap.AccountingInvoicesMenu}"><link target="FindApInvoices"/></menu-item>
+        <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}"><link target="findPayments"/></menu-item>
+        <menu-item name="apPaymentGroups" title="${uiLabelMap.AccountingApPaymentGroupMenu}"><link target="FindApPaymentGroups"/></menu-item>
+        <menu-item name="findVendors" title="${uiLabelMap.AccountingApPageTitleFindVendors}"><link target="findVendors"/></menu-item>
+        <menu-item name="reports" title="${uiLabelMap.AccountingReports}"><link target="listReports"/></menu-item>
+    </menu>
 
     <menu name="ApInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
             default-menu-item-name="viewInvoices">

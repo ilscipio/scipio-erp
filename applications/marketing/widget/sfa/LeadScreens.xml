@@ -31,10 +31,7 @@ under the License.
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute(&quot;contactDescription&quot;)}"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
-                        <include-screen name="leftbar" location="component://marketing/widget/sfa/CommonScreens.xml"/>
-                    </decorator-section>                    
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">on>                    
                     <decorator-section name="body">
                         <section>
                             <widgets>

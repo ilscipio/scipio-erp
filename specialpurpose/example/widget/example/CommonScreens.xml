@@ -47,6 +47,20 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty-section section-name="left-column" /></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="left-column"/>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-menu location="component://example/widget/example/ExampleMenus.xml" name="ExampleSideBar"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>

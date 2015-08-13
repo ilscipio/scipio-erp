@@ -30,4 +30,14 @@ under the License.
         </menu-item>
     </menu>
 
+    <menu name="MyPortalSideBar" title="${uiLabelMap.PageTitleMyPortal}"
+        extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <menu-item name="main" parent-portal-page-value="${parameters.parentPortalPageId}"/>
+        <menu-item name="Dashboard" title="${uiLabelMap.CommonPreferences}" align-style="opposed">
+            <link target="ManagePortalPages" link-type="anchor">
+                <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>
+            </link>
+        </menu-item>
+    </menu>
 </menus>

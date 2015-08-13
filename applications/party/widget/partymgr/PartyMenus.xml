@@ -38,7 +38,7 @@
         <menu-item name="importexport" title="${uiLabelMap.CommonImportExport}"><link target="ImportExport"/></menu-item>
     </menu>
 
-    <menu name="MainSideBar" title="${uiLabelMap.PartyManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="PartySideBar" title="${uiLabelMap.PartyManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
           <menu-item name="find" title="${uiLabelMap.PartyParties}"><link target="findparty"/></menu-item>
         <menu-item name="mycomm" title="${uiLabelMap.PartyMyCommunications}"><link target="MyCommunicationEvents"/></menu-item>

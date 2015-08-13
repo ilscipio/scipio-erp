@@ -43,6 +43,20 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty-section section-name="left-column" /></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="left-column"/>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-screen name="leftbar"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>
@@ -60,10 +74,7 @@ under the License.
                 <set field="removeLeadDescription" value="${groovy:session.removeAttribute(&quot;leadDescription&quot;)}"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
-                        <include-screen name="leftbar"/>
-                    </decorator-section>                    
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">                 
                     <decorator-section name="body">
                         <include-portal-page id="${parameters.portalPageId}"/>
                     </decorator-section>
@@ -76,7 +87,7 @@ under the License.
         <section>
             <condition><not><if-empty field="userLogin"/></not></condition>
             <widgets>
-                <screenlet id ="SfaQuickAddContactPanel" title="${uiLabelMap.SfaQuickAddContact}" collapsible="true">
+                <screenlet id="SfaQuickAddContactPanel" title="${uiLabelMap.SfaQuickAddContact}" collapsible="true">
                     <include-form name="QuickAddContact" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                 </screenlet>
                 <screenlet id= "SfaQuickAddLeadPanel" title="${uiLabelMap.SfaQuickAddLead}" collapsible="true">
@@ -96,10 +107,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
                         <include-menu name="OpportunityTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                    </decorator-section>
-                    <decorator-section name="left-column">
-                        <include-screen name="leftbar"/>
-                    </decorator-section>                    
+                    </decorator-section>                 
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>
@@ -381,10 +389,7 @@ under the License.
                         <decorator-screen name="main-decorator">
                             <decorator-section name="pre-body">
                                 <include-menu name="OpportunityTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                            </decorator-section>
-                            <decorator-section name="left-column">
-                                <include-screen name="leftbar"/>
-                            </decorator-section>                    
+                            </decorator-section>                 
                             <decorator-section name="body">
                                 <include-menu name="OpportunitySubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                                 <decorator-section-include name="body"/>
@@ -401,10 +406,7 @@ under the License.
                 <decorator-screen name="main-decorator">
                     <decorator-section name="pre-body">
                         <include-menu name="AccountTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                    </decorator-section>
-                    <decorator-section name="left-column">
-                        <include-screen name="leftbar"/>
-                    </decorator-section>                    
+                    </decorator-section>                  
                     <decorator-section name="body">
                         <include-menu name="AccountSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                         <decorator-section-include name="body"/>
@@ -419,10 +421,7 @@ under the License.
                 <decorator-screen name="main-decorator">
                     <decorator-section name="pre-body">
                         <include-menu name="ContactTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                    </decorator-section>
-                    <decorator-section name="left-column">
-                        <include-screen name="leftbar"/>
-                    </decorator-section>                    
+                    </decorator-section>                 
                     <decorator-section name="body">
                         <include-menu name="ContactSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                         <decorator-section-include name="body"/>
@@ -463,10 +462,7 @@ under the License.
                 <decorator-screen name="main-decorator">
                     <decorator-section name="pre-body">
                         <include-menu name="EventTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                    </decorator-section>
-                    <decorator-section name="left-column">
-                        <include-screen name="leftbar"/>
-                    </decorator-section>                    
+                    </decorator-section>                 
                     <decorator-section name="body">
                         <include-menu name="EventSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                         <decorator-section-include name="body"/>

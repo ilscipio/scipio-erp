@@ -27,6 +27,14 @@
         <menu-item name="fixedAssetMaints" title="${uiLabelMap.AccountingFixedAssetMaints}"><link target="findFixedAssetMaints"/></menu-item>
         <menu-item name="facility" title="${uiLabelMap.ProductFacility}"><link target="FindFacility"/></menu-item>
     </menu>
+    
+    <menu name="AssetMaintSideBar" title="${uiLabelMap.AssetMaintManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <menu-item name="task" title="${uiLabelMap.WorkEffortTaskList}"><link target="mytasks"/></menu-item>
+        <menu-item name="ListFixedAssets" title="${uiLabelMap.AccountingFixedAssets}"><link target="ListFixedAssets"/></menu-item>
+        <menu-item name="fixedAssetMaints" title="${uiLabelMap.AccountingFixedAssetMaints}"><link target="findFixedAssetMaints"/></menu-item>
+        <menu-item name="facility" title="${uiLabelMap.ProductFacility}"><link target="FindFacility"/></menu-item>
+    </menu>
 
     <menu name="FixedAssetTabBar" extends="FixedAssetTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
         <menu-item name="EditProductMaints" title="${uiLabelMap.AssetMaintProductMaint}">

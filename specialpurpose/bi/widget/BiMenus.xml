@@ -21,4 +21,9 @@ under the License.
     <menu name="BiAppBar" title="${uiLabelMap.BusinessIntelligenceApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="reportbuilder" title="${uiLabelMap.BusinessIntelligenceReportBuilder}"><link target="ReportBuilderSelectStarSchema"/></menu-item>
     </menu>
+    
+    <menu name="BiSideBar" title="${uiLabelMap.BusinessIntelligenceApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <menu-item name="reportbuilder" title="${uiLabelMap.BusinessIntelligenceReportBuilder}"><link target="ReportBuilderSelectStarSchema"/></menu-item>
+    </menu>
 </menus>

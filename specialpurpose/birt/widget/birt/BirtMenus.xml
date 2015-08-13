@@ -23,6 +23,11 @@ under the License.
 
     <menu name="BirtAppBar" title="${uiLabelMap.BirtApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
     </menu>
+    
+    <menu name="BirtSideBar" title="${uiLabelMap.BirtApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+    </menu>
+    
     <menu name="BirtTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="Report" title="${uiLabelMap.ExampleBirtReport}"><link target="Report"/></menu-item>
         <menu-item name="Export" title="${uiLabelMap.ExampleBirtViewHandler}"><link target="ViewHandler"/></menu-item>

@@ -47,6 +47,19 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                    <!-- menu is empty: <decorator-section name="left-column" use-when="${context.widePage != true}">
+                        <section>
+                            <condition>
+                                <not><if-empty-section section-name="left-column" /></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="left-column"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-menu location="component://birt/widget/birt/BirtMenus.xml" name="BirtSideBar"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>-->
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>

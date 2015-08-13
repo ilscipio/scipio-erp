@@ -139,5 +139,5 @@ under the License.
       </#if>
     </#if>
 <#else>
-  <h2>${uiLabelMap.CommonNoGeolocationAvailable}</h2>
+  <p>${uiLabelMap.CommonNoGeolocationAvailable}</p>
 </#if>

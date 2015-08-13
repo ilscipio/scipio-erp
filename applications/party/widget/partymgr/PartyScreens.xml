@@ -885,11 +885,12 @@ under the License.
                 <decorator-screen name="CommonPartyDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListContent}">
+                            <!-- links to same page
                             <container>
                                 <link target="EditPartyContents" text="${uiLabelMap.CommonCreateNew}" style="${styles.button_default}">
                                     <parameter param-name="partyId"/>
                                 </link>
-                            </container>
+                            </container>-->
                             <section>
                                 <actions>
                                     <set field="paginateTarget" value="EditPartyContents?partyId=${parameters.partyId}" />

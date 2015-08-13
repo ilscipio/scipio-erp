@@ -25,7 +25,7 @@ under the License.
         <table class="basic-table" cellspacing="0">
          <thead>
           <tr class="header-row">
-            <th style="min-width:5em;">${uiLabelMap.PartyVisitId}</th>
+            <th>${uiLabelMap.PartyVisitId}</th>
             <th>${uiLabelMap.PartyUserLogin}</th>
             <th>${uiLabelMap.PartyNewUser}</th>
             <th>${uiLabelMap.PartyWebApp}</th>

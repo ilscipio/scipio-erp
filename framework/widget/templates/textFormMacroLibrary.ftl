@@ -118,5 +118,5 @@ under the License.
 <#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description><@renderField description /></#macro>
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc alternate linkUrl targetWindow description><@renderField description /></#macro>
 
-<#macro renderNoResultText className text wrapperOpened headerRendered numOfColumns></#macro>
+<#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns></#macro>
 

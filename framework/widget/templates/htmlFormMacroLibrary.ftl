@@ -1262,7 +1262,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
         <#if imgSrc?has_content><img src="${imgSrc}" alt="${alternate}" title="${title}"/></#if>${description}</a>
 </#macro>
 
-<#macro renderNoResultText className text wrapperOpened headerRendered numOfColumns>
+<#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns>
   <#-- note: numOfColumns may be zero when no header -->
   <#if wrapperOpened>
     <tr>

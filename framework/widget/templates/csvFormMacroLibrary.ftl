@@ -118,4 +118,4 @@ under the License.
 <#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description><@renderField description /></#macro>
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation><@renderField description />,<#rt/></#macro>
 
-<#macro renderNoResultText className text wrapperOpened headerRendered numOfColumns></#macro>
+<#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns></#macro>

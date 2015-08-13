@@ -940,7 +940,7 @@ public class FormRenderer {
         
         private boolean wrapperOpened = false;
         private boolean headerRendered = false;
-        private boolean noResultTextRendered = false;
+        private boolean alternateTextRendered = false;
         private boolean wrapperClosed = false;
         
         private boolean hasList = false;
@@ -954,27 +954,27 @@ public class FormRenderer {
         }
         
         public void renderInit() throws IOException {
-            context.put("currentFormHasList", hasList);
-            context.put("currentFormHasResult", hasResult);   
-            context.put("currentFormHasDisplayResult", hasDisplayResult); 
+            context.put("formHasList", hasList);
+            context.put("formHasResult", hasResult);   
+            context.put("formHasDisplayResult", hasDisplayResult); 
         }
 
         @Override
         public void notifyHasList() throws IOException {
             hasList = true;
-            context.put("currentFormHasList", hasList);
+            context.put("formHasList", hasList);
         }
         
         @Override
         public void notifyHasResult() throws IOException {
             hasResult = true;
-            context.put("currentFormHasResult", hasResult);
+            context.put("formHasResult", hasResult);
         }
         
         @Override
         public void notifyHasDisplayResult() throws IOException {
             hasDisplayResult = true;
-            context.put("currentFormHasDisplayResult", hasDisplayResult);
+            context.put("formHasDisplayResult", hasDisplayResult);
             
             // MUST render the table wrapper if results are going to be displayed
             renderTableOpen(true, false);
@@ -993,21 +993,19 @@ public class FormRenderer {
         public void renderTableClose() throws IOException {
             renderTableWrapperOpen(false);
             renderTableHeader(false);
-            renderNoResultText(false);
+            renderAlternateText(false);
             renderTableWrapperClose();
         }
         
         public void renderFinalize() throws IOException {
-            context.remove("currentFormHasList");
-            context.remove("currentFormHasResult"); 
-            context.remove("currentFormHasDisplayResult"); 
+            context.remove("formHasList");
+            context.remove("formHasResult"); 
+            context.remove("formHasDisplayResult"); 
         }
         
         private void renderTableWrapperOpen(boolean required) throws IOException {
             if (!wrapperOpened) {
-                if (required || 
-                    (!(modelForm.getHideTableNoList(context) && !hasList) &&
-                     !(modelForm.getHideTableEmptyList(context) && !hasResult))) {   
+                if (required || !modelForm.isHideTableWhen(context)) {   
                     formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
                     wrapperOpened = true;
                 }
@@ -1017,23 +1015,20 @@ public class FormRenderer {
         private void renderTableHeader(boolean required) throws IOException {
             if (wrapperOpened && !headerRendered) {
                 if (required ||
-                    (!(modelForm.getHideHeaderNoList(context) && !hasList) &&
-                     !(modelForm.getHideHeaderEmptyList(context) && !hasResult) &&
-                     !(modelForm.getHideHeader(context)))) {   
+                    (!modelForm.isHideHeaderWhen(context) && !modelForm.getHideHeader(context))) {   
                     numOfColumns = renderHeaderRow(writer, context);
                     headerRendered = true;
                 }
             }  
         }
         
-        private void renderNoResultText(boolean required) throws IOException {
-            if (!noResultTextRendered && !hasResult) {
-                String when = modelForm.getUseNoResultTextWhen(context);
-                if (required || "always".equals(when) || (hasList && "list-not-null".equals(when))) {
+        private void renderAlternateText(boolean required) throws IOException {
+            if (!alternateTextRendered) {
+                if (required || modelForm.isUseAlternateTextWhen(context)) {
                     // note: numColumns may be zero if no header printed...
-                    formStringRenderer.renderNoResultText(writer, context, modelForm, wrapperOpened, headerRendered, numOfColumns);
+                    formStringRenderer.renderAlternateText(writer, context, modelForm, wrapperOpened, headerRendered, numOfColumns);
                 }
-                noResultTextRendered = true;
+                alternateTextRendered = true;
             }
         }
         

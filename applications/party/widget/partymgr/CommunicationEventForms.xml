@@ -697,7 +697,7 @@ under the License.
         <field name="removeButton" widget-style="smallSubmit"><submit/></field>
     </form>
     
-    <form name="ListCommRolesInline" extends="ListCommRoles" hide-table-when="list-empty" use-no-result-text-when="never" paginate="false">
+    <form name="ListCommRolesInline" extends="ListCommRoles" hide-table-when="${!formHasResult}" use-alternate-text-when="${false}" paginate="false">
     </form>
 
     <form name="ViewCommRoles" extends="ListCommRoles" paginate="false">
@@ -737,7 +737,7 @@ under the License.
     </form>
 
     <form name="listCommContent" type="list" list-name="contentDataResourceList" target="removeAttachFile"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" hide-table-when="list-empty" use-no-result-text-when="never" paginate="false"> <!-- doesn't work: paginate-target="/ListCommContent" -->
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" hide-table-when="${!formHasResult}" use-alternate-text-when="${false}" paginate="false"> <!-- doesn't work: paginate-target="/ListCommContent" -->
         <actions>
             <entity-and entity-name="CommEventContentDataResource" list="contentDataResourceList">
                 <field-map field-name="communicationEventId" from-field="parameters.communicationEventId"/>

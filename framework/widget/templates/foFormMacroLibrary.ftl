@@ -142,7 +142,7 @@ under the License.
 <#macro renderTooltip tooltip tooltipStyle></#macro>
 <#macro renderAsterisks requiredField requiredStyle></#macro>
 
-<#macro renderNoResultText className text wrapperOpened headerRendered numOfColumns>
+<#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns>
     <#if wrapperOpened>
       <fo:table-row>
         <fo:table-cell <#if (numOfColumns > 1)>number-columns-spanned="${numOfColumns}"</#if>>

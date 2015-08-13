@@ -3302,11 +3302,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         executeMacro(writer, sr.toString());
     }
 
-    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException {
-        String className = UtilFormatOut.checkNull(modelForm.getNoResultTextStyle(context));
-        String text = UtilFormatOut.checkNull(modelForm.getNoResultText(context));
+    public void renderAlternateText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException {
+        String className = UtilFormatOut.checkNull(modelForm.getAlternateTextStyle(context));
+        String text = UtilFormatOut.checkNull(modelForm.getAlternateText(context));
         StringWriter sr = new StringWriter();
-        sr.append("<@renderNoResultText ");
+        sr.append("<@renderAlternateText ");
         sr.append("className=\"");
         sr.append(className);
         sr.append("\" text=\"");

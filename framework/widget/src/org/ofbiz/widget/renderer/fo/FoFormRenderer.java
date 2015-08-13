@@ -426,7 +426,7 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
     public void renderContainerFindField(Appendable writer, Map<String, Object> context, ContainerField containerField) throws IOException {
     }
 
-    public void renderNoResultText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException {
+    public void renderAlternateText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException {
         if (wrapperOpened) {
             writer.append("<fo:table-row>");
             
@@ -438,7 +438,7 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
             }
         }
         
-        this.makeBlockString(writer, modelForm.getNoResultTextStyle(context), modelForm.getNoResultText(context));
+        this.makeBlockString(writer, modelForm.getAlternateTextStyle(context), modelForm.getAlternateText(context));
         
         if (wrapperOpened) {
             writer.append("</fo:table-cell>");

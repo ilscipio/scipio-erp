@@ -113,4 +113,4 @@ under the License.
 <#macro renderTooltip tooltip tooltipStyle></#macro>
 <#macro renderAsterisks requiredField requiredStyle></#macro>
 
-<#macro renderNoResultText className text wrapperOpened headerRendered numOfColumns></#macro>
+<#macro renderAlternateText className text wrapperOpened headerRendered numOfColumns></#macro>

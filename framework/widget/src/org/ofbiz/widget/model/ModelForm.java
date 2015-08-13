@@ -197,9 +197,9 @@ public abstract class ModelForm extends ModelWidget {
     
     private final FlexibleStringExpander hideHeaderWhen;
     private final FlexibleStringExpander hideTableWhen;
-    private final FlexibleStringExpander useNoResultTextWhen;
-    private final FlexibleStringExpander noResultText;
-    private final FlexibleStringExpander noResultTextStyle;
+    private final FlexibleStringExpander useAlternateTextWhen;
+    private final FlexibleStringExpander alternateText;
+    private final FlexibleStringExpander alternateTextStyle;
     
     private final FlexibleStringExpander showProgress;
     private final FlexibleStringExpander progressOptions;
@@ -394,21 +394,21 @@ public abstract class ModelForm extends ModelWidget {
         }
         this.hideTableWhen = hideTableWhen;
         
-        FlexibleStringExpander useNoResultTextWhen = FlexibleStringExpander.getInstance(formElement.getAttribute("use-no-result-text-when"));
-        if (useNoResultTextWhen.isEmpty() && parentModel != null) {
-            useNoResultTextWhen = parentModel.useNoResultTextWhen;
+        FlexibleStringExpander useAlternateTextWhen = FlexibleStringExpander.getInstance(formElement.getAttribute("use-alternate-text-when"));
+        if (useAlternateTextWhen.isEmpty() && parentModel != null) {
+            useAlternateTextWhen = parentModel.useAlternateTextWhen;
         }
-        this.useNoResultTextWhen = useNoResultTextWhen;
-        FlexibleStringExpander noResultText = FlexibleStringExpander.getInstance(formElement.getAttribute("no-result-text"));
-        if (noResultText.isEmpty() && parentModel != null) {
-            noResultText = parentModel.noResultText;
+        this.useAlternateTextWhen = useAlternateTextWhen;
+        FlexibleStringExpander alternateText = FlexibleStringExpander.getInstance(formElement.getAttribute("alternate-text"));
+        if (alternateText.isEmpty() && parentModel != null) {
+            alternateText = parentModel.alternateText;
         }
-        this.noResultText = noResultText;
-        FlexibleStringExpander noResultTextStyle = FlexibleStringExpander.getInstance(formElement.getAttribute("no-result-text-style"));
-        if (noResultTextStyle.isEmpty() && parentModel != null) {
-            noResultTextStyle = parentModel.noResultTextStyle;
+        this.alternateText = alternateText;
+        FlexibleStringExpander alternateTextStyle = FlexibleStringExpander.getInstance(formElement.getAttribute("alternate-text-style"));
+        if (alternateTextStyle.isEmpty() && parentModel != null) {
+            alternateTextStyle = parentModel.alternateTextStyle;
         }
-        this.noResultTextStyle = noResultTextStyle;
+        this.alternateTextStyle = alternateTextStyle;
         
         FlexibleStringExpander showProgress = FlexibleStringExpander.getInstance(formElement.getAttribute("show-progress"));
         if (showProgress.isEmpty() && parentModel != null) {
@@ -1109,12 +1109,9 @@ public abstract class ModelForm extends ModelWidget {
     }
     
     public boolean getHideHeader(Map<String, Object> context) {
-        String when = getHideHeaderWhen(context);
-        if ("never".equals(when)) {
-            return false;
-        }
-        else if ("always".equals(when)) {
-            return true;
+        Boolean when = getHideHeaderWhen(context);
+        if (when != null) {
+            return when;
         }
         else {
             return this.hideHeader;
@@ -1147,84 +1144,104 @@ public abstract class ModelForm extends ModelWidget {
         return "";
     }
     
+    private Boolean getBooleanExprResult(String val, String name) {
+        if (UtilValidate.isNotEmpty(val)) {
+            if ("true".equals(val)) {
+                return true;
+            }
+            else if ("false".equals(val)) {
+                return false;
+            }
+            else {
+                Debug.logError("Model form widget expression for " + name + " attribute of form "
+                        + this.getFormLocation() + "#" + this.getName() + " "
+                        + "did not evaluate to a boolean expression: " + val, module);
+                return null;
+            }
+        }
+        return null;
+    }
+    
     public String getHideHeaderWhen() {
         return this.hideHeaderWhen.getOriginal();
     }
     
-    public String getHideHeaderWhen(Map<String, Object> context) {
+    public Boolean getHideHeaderWhen(Map<String, Object> context) {
         String when = this.hideHeaderWhen.expandString(context);
         if (UtilValidate.isEmpty(when)) {
             when = getWidgetDefDefault(context, "hideHeaderWhen");
         }
-        //Debug.logError("============================ getHideHeaderWhen: " + when, module);
-        return when;
+        return getBooleanExprResult(when, "hide-header-when");
     }
     
-    public boolean getHideHeaderNoList(Map<String, Object> context) {
-        String when = getHideHeaderWhen(context);
-        return "list-null".equals(when);
-    }
-
-    public boolean getHideHeaderEmptyList(Map<String, Object> context) {
-        String when = getHideHeaderWhen(context);
-        return "list-empty".equals(when);
+    public boolean isHideHeaderWhen(Map<String, Object> context) {
+        Boolean res = getHideHeaderWhen(context);
+        if (res != null) {
+            return res;
+        }
+        return false;
     }
     
     public String getHideTableWhen() {
         return this.hideTableWhen.getOriginal();
     }
     
-    public String getHideTableWhen(Map<String, Object> context) {
+    public Boolean getHideTableWhen(Map<String, Object> context) {
         String when = this.hideTableWhen.expandString(context);
         if (UtilValidate.isEmpty(when)) {
             when = getWidgetDefDefault(context, "hideTableWhen");
         }
-        //Debug.logError("============================ getHideTableWhen: " + when, module);
-        return when;
+        return getBooleanExprResult(when, "hide-table-when");
     }
     
-    public boolean getHideTableNoList(Map<String, Object> context) {
-        String when = getHideTableWhen(context);
-        return "list-null".equals(when);
-    }
-
-    public boolean getHideTableEmptyList(Map<String, Object> context) {
-        String when = getHideTableWhen(context);
-        return "list-empty".equals(when);
-    }
-    
-    public String getUseNoResultTextWhen() {
-        return this.useNoResultTextWhen.getOriginal();
-    }
-    
-    public String getUseNoResultTextWhen(Map<String, Object> context) {
-        String when = this.useNoResultTextWhen.expandString(context);
-        if (UtilValidate.isEmpty(when)) {
-            when = getWidgetDefDefault(context, "useNoResultTextWhen");
+    public boolean isHideTableWhen(Map<String, Object> context) {
+        Boolean res = getHideTableWhen(context);
+        if (res != null) {
+            return res;
         }
-        return when;
+        return false;
     }
     
-    public String getNoResultText() {
-        return this.noResultText.getOriginal();
+    public String getUseAlternateTextWhen() {
+        return this.useAlternateTextWhen.getOriginal();
     }
     
-    public String getNoResultText(Map<String, Object> context) {
-        String val = this.noResultText.expandString(context);
+    public Boolean getUseAlternateTextWhen(Map<String, Object> context) {
+        String when = this.useAlternateTextWhen.expandString(context);
+        if (UtilValidate.isEmpty(when)) {
+            when = getWidgetDefDefault(context, "useAlternateTextWhen");
+        }
+        return getBooleanExprResult(when, "use-alternate-text-when");
+    }
+    
+    public boolean isUseAlternateTextWhen(Map<String, Object> context) {
+        Boolean res = getUseAlternateTextWhen(context);
+        if (res != null) {
+            return res;
+        }
+        return false;
+    }
+    
+    public String getAlternateText() {
+        return this.alternateText.getOriginal();
+    }
+    
+    public String getAlternateText(Map<String, Object> context) {
+        String val = this.alternateText.expandString(context);
         if (UtilValidate.isEmpty(val)) {
-            val = getWidgetDefDefault(context, "noResultText");
+            val = getWidgetDefDefault(context, "alternateText");
         }
         return val;
     }
     
-    public String getNoResultTextStyle() {
-        return this.noResultTextStyle.getOriginal();
+    public String getAlternateTextStyle() {
+        return this.alternateTextStyle.getOriginal();
     }
     
-    public String getNoResultTextStyle(Map<String, Object> context) {
-        String val = this.noResultTextStyle.expandString(context);
+    public String getAlternateTextStyle(Map<String, Object> context) {
+        String val = this.alternateTextStyle.expandString(context);
         if (UtilValidate.isEmpty(val)) {
-            val = getWidgetDefDefault(context, "noResultTextStyle");
+            val = getWidgetDefDefault(context, "alternateTextStyle");
         }
         return val;
     }

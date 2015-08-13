@@ -42,12 +42,9 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.widget.WidgetWorker;
-import org.ofbiz.widget.model.AbstractModelAction;
-import org.ofbiz.widget.model.FieldInfo;
 import org.ofbiz.widget.model.*;
 import org.ofbiz.widget.model.ModelForm.FieldGroup;
 import org.ofbiz.widget.model.ModelForm.FieldGroupBase;
-import org.ofbiz.widget.model.ModelFormField;
 
 /**
  * A form rendering engine.
@@ -663,9 +660,18 @@ public class FormRenderer {
         formStringRenderer.renderFormatItemRowClose(writer, localContext, modelForm);
     }
 
+    /**
+     * Cato: callbacks for important render item rows events.
+     */
+    private interface RenderItemRowsEventHandler {
+        void notifyHasList() throws IOException;
+        void notifyHasResult() throws IOException;
+        void notifyHasDisplayResult() throws IOException;
+        int getNumOfColumns();
+    }
+    
     private void renderItemRows(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer,
-            boolean formPerItem, int numOfColumns, 
-            boolean wrapperOpened, boolean headerRendered) throws IOException {
+            boolean formPerItem, int numOfColumns, RenderItemRowsEventHandler listFormHandler) throws IOException {
         String lookupName = modelForm.getListName();
         if (UtilValidate.isEmpty(lookupName)) {
             Debug.logError("No value for list or iterator name found.", module);
@@ -675,10 +681,6 @@ public class FormRenderer {
         if (obj == null) {
             if (Debug.verboseOn())
                 Debug.logVerbose("No object for list or iterator name [" + lookupName + "] found, so not rendering rows.", module);
-            
-            renderItemRowNoResultText(writer, context, formStringRenderer, formPerItem, 
-                    numOfColumns, wrapperOpened, headerRendered, true);
-            
             return;
         }
         // if list is empty, do not render rows
@@ -702,30 +704,9 @@ public class FormRenderer {
             highIndex = ((Integer) context.get("viewSize")).intValue();
         }
 
-        boolean delayedWrapperOpened = false; // record, to close
-        boolean hasResult = false;
-        boolean listNull = true;
         if (iter != null) {
-            context.put("currentForm_hasList", Boolean.TRUE);
             
-            listNull = false;
-            
-            // Cato: Delay render table til know we had a query (list)
-            if (!wrapperOpened && !modelForm.getHideTableEmptyList(context)) {
-                // render formatting wrapper open
-                formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
-                delayedWrapperOpened = true;
-                wrapperOpened = true;
-            }
-            
-            if (wrapperOpened) {
-                // Cato: Only render header if we had a query (list)
-                // ===== render header row =====
-                if (!headerRendered && !modelForm.getHideHeader(context) && !modelForm.getHideHeaderEmptyList(context)) {
-                    numOfColumns = this.renderHeaderRow(writer, context);
-                    headerRendered = true;
-                }
-            }
+            listFormHandler.notifyHasList();
             
             // render item rows
             int itemIndex = -1;
@@ -733,24 +714,8 @@ public class FormRenderer {
             context.put("wholeFormContext", context);
             Map<String, Object> previousItem = new HashMap<String, Object>();
             while ((item = safeNext(iter)) != null) {
-                hasResult = true;
-                context.put("currentForm_hasResult", Boolean.TRUE);
                 
-                // Cato: Last chance to delay-open wrapper til know query had results (in list)
-                if (!wrapperOpened) {
-                    formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
-                    delayedWrapperOpened = true;
-                    wrapperOpened = true;
-                }
-                
-                if (wrapperOpened) {
-                    // Cato: Only render header if we had a result (in list)
-                    // ===== render header row =====
-                    if (!headerRendered && !modelForm.getHideHeader(context)) {
-                        numOfColumns = this.renderHeaderRow(writer, context);
-                        headerRendered = true;
-                    }
-                }
+                listFormHandler.notifyHasResult();
                 
                 itemIndex++;
                 if (itemIndex >= highIndex) {
@@ -762,6 +727,8 @@ public class FormRenderer {
                     continue;
                 }
 
+                listFormHandler.notifyHasDisplayResult();
+                
                 // reset/remove the BshInterpreter now as well as later because chances are there is an interpreter at this level of the stack too
                 this.resetBshInterpreter(context);
 
@@ -933,6 +900,9 @@ public class FormRenderer {
                     // of one row (for the current position).
                     if (innerDisplayHyperlinkFieldsBegin.size() > 0 || innerFormFields.size() > 0
                             || innerDisplayHyperlinkFieldsEnd.size() > 0) {
+                        
+                        numOfColumns = listFormHandler.getNumOfColumns();
+                                
                         this.renderItemRow(writer, localContext, formStringRenderer, formPerItem, hiddenIgnoredFieldList,
                                 innerDisplayHyperlinkFieldsBegin, innerFormFields, innerDisplayHyperlinkFieldsEnd,
                                 fieldListByPosition, currentPosition, numOfColumns);
@@ -956,76 +926,149 @@ public class FormRenderer {
                 }
             }
         }
-        
-        if (!hasResult) {
-            renderItemRowNoResultText(writer, context, formStringRenderer, formPerItem, 
-                    numOfColumns, wrapperOpened, headerRendered, listNull);
-        }
-        
-        if (delayedWrapperOpened) {
-            // render formatting wrapper close
-            formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
-        }
-    }
-    
-    /**
-     * Cato: render no-result-text, if enabled.
-     */
-    private void renderItemRowNoResultText(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer,
-            boolean formPerItem, int numOfColumns, 
-            boolean wrapperOpened, boolean headerRendered, boolean listNull) throws IOException {
-        String when = modelForm.getUseNoResultTextWhen(context);
-        if ("always".equals(when) || (!listNull && "list-not-null".equals(when))) {
-            // note: numColumns may be zero if no header printed...
-            formStringRenderer.renderNoResultText(writer, context, modelForm, wrapperOpened, headerRendered, numOfColumns);
-        }
     }
 
+    /**
+     * Cato: Helper object to handle renderer the table wrappers, headers, etc.
+     */
+    private class RenderListFormHandler implements RenderItemRowsEventHandler {
+        
+        private Appendable writer;
+        private Map<String, Object> context;
+        
+        private int numOfColumns = 0;
+        
+        private boolean wrapperOpened = false;
+        private boolean headerRendered = false;
+        private boolean noResultTextRendered = false;
+        private boolean wrapperClosed = false;
+        
+        private boolean hasList = false;
+        private boolean hasResult = false;
+        private boolean hasDisplayResult = false;
+        
+        public RenderListFormHandler(Appendable writer, Map<String, Object> context) {
+            super();
+            this.writer = writer;
+            this.context = context;
+        }
+        
+        public void renderInit() throws IOException {
+            context.put("currentForm_hasList", false);
+            context.put("currentForm_hasResult", false);   
+            context.put("currentForm_hasDisplayResult", false); 
+        }
+
+        @Override
+        public void notifyHasList() throws IOException {
+            hasList = true;
+            context.put("currentForm_hasList", Boolean.TRUE);
+        }
+        
+        @Override
+        public void notifyHasResult() throws IOException {
+            hasResult = true;
+            context.put("currentForm_hasResult", Boolean.TRUE);
+        }
+        
+        @Override
+        public void notifyHasDisplayResult() throws IOException {
+            hasDisplayResult = true;
+            context.put("currentForm_hasDisplayResult", Boolean.TRUE);
+            
+            renderTableOpen(true, false);
+        }
+        
+        public void renderTableOpen(boolean wrapperRequired, boolean headerRequired) throws IOException {
+            renderTableWrapperOpen(wrapperRequired);
+            renderTableHeader(headerRequired);
+        }
+        
+        @Override
+        public int getNumOfColumns() {
+            return numOfColumns;
+        }
+        
+        public void renderTableClose() throws IOException {
+            renderTableWrapperOpen(false);
+            renderTableHeader(false);
+            renderNoResultText(false);
+            renderTableWrapperClose();
+        }
+        
+        public void renderFinalize() throws IOException {
+            context.remove("currentForm_hasList");
+            context.remove("currentForm_hasResult"); 
+            context.remove("currentForm_hasDisplayResult"); 
+        }
+        
+        private void renderTableWrapperOpen(boolean required) throws IOException {
+            if (!wrapperOpened) {
+                if (required || 
+                    (!(modelForm.getHideTableNoList(context) && !hasList) &&
+                     !(modelForm.getHideTableEmptyList(context) && !hasResult))) {   
+                    formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
+                    wrapperOpened = true;
+                }
+            }
+        }
+        
+        private void renderTableHeader(boolean required) throws IOException {
+            if (wrapperOpened && !headerRendered) {
+                if (required ||
+                    (!(modelForm.getHideHeaderNoList(context) && !hasList) &&
+                     !(modelForm.getHideHeaderEmptyList(context) && !hasResult) &&
+                     !(modelForm.getHideHeader(context)))) {   
+                    numOfColumns = renderHeaderRow(writer, context);
+                    headerRendered = true;
+                }
+            }  
+        }
+        
+        private void renderNoResultText(boolean required) throws IOException {
+            if (!noResultTextRendered && !hasResult) {
+                String when = modelForm.getUseNoResultTextWhen(context);
+                if (required || "always".equals(when) || (hasList && "list-not-null".equals(when))) {
+                    // note: numColumns may be zero if no header printed...
+                    formStringRenderer.renderNoResultText(writer, context, modelForm, wrapperOpened, headerRendered, numOfColumns);
+                }
+                noResultTextRendered = true;
+            }
+        }
+        
+        private void renderTableWrapperClose() throws IOException {
+            if (wrapperOpened && !wrapperClosed) {
+                // render formatting wrapper close
+                formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
+                this.wrapperClosed = true;
+            }
+        }
+
+    }
+    
     private void renderListFormString(Appendable writer, Map<String, Object> context,
             int positions) throws IOException {
-        context.put("currentForm_hasList", Boolean.FALSE);
-        context.put("currentForm_hasResult", Boolean.FALSE);
+        RenderListFormHandler listFormHandler = new RenderListFormHandler(writer, context);
+        listFormHandler.renderInit();
         
         // render list/tabular type forms
 
         // prepare the items iterator and compute the pagination parameters
         Paginator.preparePager(modelForm, context);
 
-        boolean wrapperOpened = false;
-        // Cato: Only print table wrapper now if no requirements on list
-        if (!modelForm.getHideTableNoList(context) && !modelForm.getHideTableEmptyList(context)) {
-            // render formatting wrapper open
-            formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
-            wrapperOpened = true;
-        }
+        int numOfColumns = listFormHandler.getNumOfColumns();
         
-        boolean headerRendered = false;
-        int numOfColumns = 0;
-        if (wrapperOpened) {
-            // ===== render header row =====
-            if (!modelForm.getHideHeader(context) && !modelForm.getHideHeaderNoList(context) && !modelForm.getHideHeaderEmptyList(context)) {
-                numOfColumns = this.renderHeaderRow(writer, context);
-                headerRendered = true;
-            }
-        }
-
         // ===== render the item rows =====
-        this.renderItemRows(writer, context, formStringRenderer, true, numOfColumns, 
-                wrapperOpened, headerRendered);
+        this.renderItemRows(writer, context, formStringRenderer, true, numOfColumns, listFormHandler);
 
-        if (wrapperOpened) {
-            // render formatting wrapper close
-            formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
-        }
-        
-        context.remove("currentForm_hasList");
-        context.remove("currentForm_hasResult");
+        listFormHandler.renderTableClose();
+        listFormHandler.renderFinalize();
     }
 
     private void renderMultiFormString(Appendable writer, Map<String, Object> context, 
             int positions) throws IOException {
-        context.put("currentForm_hasList", Boolean.FALSE);
-        context.put("currentForm_hasResult", Boolean.FALSE);
+        RenderListFormHandler listFormHandler = new RenderListFormHandler(writer, context);
+        listFormHandler.renderInit();
         
         if (!modelForm.getSkipStart()) {
             formStringRenderer.renderFormOpen(writer, context, modelForm);
@@ -1034,38 +1077,18 @@ public class FormRenderer {
         // prepare the items iterator and compute the pagination parameters
         Paginator.preparePager(modelForm, context);
 
-        boolean wrapperOpened = false;
-        // Cato: Only print table wrapper now if no requirements on list
-        if (!modelForm.getHideTableNoList(context) && !modelForm.getHideTableEmptyList(context)) {
-            // render formatting wrapper open
-            formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
-            wrapperOpened = true;
-        }
+        int numOfColumns = listFormHandler.getNumOfColumns();
         
-        boolean headerRendered = false;
-        int numOfColumns = 0;
-        if (wrapperOpened) {
-            // ===== render header row =====
-            if (!modelForm.getHideHeader(context) && !modelForm.getHideHeaderNoList(context) && !modelForm.getHideHeaderEmptyList(context)) {
-                numOfColumns = this.renderHeaderRow(writer, context);
-                headerRendered = true;
-            }
-        }
-
         // ===== render the item rows =====
-        this.renderItemRows(writer, context, formStringRenderer, false, numOfColumns,
-                wrapperOpened, headerRendered);
+        this.renderItemRows(writer, context, formStringRenderer, false, numOfColumns, listFormHandler);
 
-        if (wrapperOpened) {
-            formStringRenderer.renderFormatListWrapperClose(writer, context, modelForm);
-        }
+        listFormHandler.renderTableClose();
 
         if (!modelForm.getSkipEnd()) {
             formStringRenderer.renderMultiFormClose(writer, context, modelForm);
         }
 
-        context.remove("currentForm_hasList");
-        context.remove("currentForm_hasResult");
+        listFormHandler.renderFinalize();
     }
 
     private void renderSingleFormString(Appendable writer, Map<String, Object> context, 

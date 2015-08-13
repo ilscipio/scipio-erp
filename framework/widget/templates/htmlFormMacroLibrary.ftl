@@ -625,7 +625,7 @@ under the License.
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
-  <!-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
+  <#-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
   <#local gridSize = 12>
   <#local markLast = false>
   <#local fieldEntryOffset = 0>

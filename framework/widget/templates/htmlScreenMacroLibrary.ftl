@@ -50,7 +50,7 @@ under the License.
 <#if autoUpdateLink?has_content>
 <script type="text/javascript">ajaxUpdateAreaPeriodic('${id}', '${autoUpdateLink}', '', '${autoUpdateInterval}');</script>
 </#if>
-<div class="<#if style?has_content>${style}</#if>" <#if id?has_content>id="${id!}"</#if>>
+<div <#if style?has_content> class="${style}"</#if> <#if id?has_content>id="${id!}"</#if>>
 </#macro>
 
 <#macro renderContainerEnd></div></#macro>

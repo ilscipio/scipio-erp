@@ -955,7 +955,7 @@ public class FormRenderer {
         
         public void renderInit() throws IOException {
             context.put("formHasList", hasList);
-            context.put("formHasResult", hasResult);   
+            context.put("formHasListResult", hasResult);   
             context.put("formHasDisplayResult", hasDisplayResult); 
         }
 
@@ -968,7 +968,7 @@ public class FormRenderer {
         @Override
         public void notifyHasResult() throws IOException {
             hasResult = true;
-            context.put("formHasResult", hasResult);
+            context.put("formHasListResult", hasResult);
         }
         
         @Override
@@ -999,7 +999,7 @@ public class FormRenderer {
         
         public void renderFinalize() throws IOException {
             context.remove("formHasList");
-            context.remove("formHasResult"); 
+            context.remove("formHasListResult"); 
             context.remove("formHasDisplayResult"); 
         }
         

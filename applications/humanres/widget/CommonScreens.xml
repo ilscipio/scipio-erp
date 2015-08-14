@@ -56,7 +56,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanResSideBar"/>
+                                <include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanResAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

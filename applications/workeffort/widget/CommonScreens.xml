@@ -57,7 +57,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://workeffort/widget/WorkEffortMenus.xml" name="WorkEffortSideBar"/>
+                                <include-menu location="component://workeffort/widget/WorkEffortMenus.xml" name="WorkEffortAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

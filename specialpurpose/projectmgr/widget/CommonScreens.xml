@@ -59,7 +59,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://projectmgr/widget/ProjectMenus.xml" name="ProjectMgrSideBar"/>
+                                <include-menu location="component://projectmgr/widget/ProjectMenus.xml" name="ProjectMgrAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

@@ -46,7 +46,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://accounting/widget/ar/ArMenus.xml" name="ArSideBar"/>
+                                <include-menu location="component://accounting/widget/ar/ArMenus.xml" name="ArAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

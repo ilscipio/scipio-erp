@@ -25,9 +25,8 @@
         <menu-item name="MessageErrorInfos" title="${uiLabelMap.OagisMessageErrorInfo}"><link target="FindMessageErrorInfo"/></menu-item>
     </menu>
 
-    <menu name="OagisSideBar" title="${uiLabelMap.OagisApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="OagisAppSideBar" title="${uiLabelMap.OagisApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <menu-item name="MessageInfos" title="${uiLabelMap.OagisMessageInfo}"><link target="FindMessageInfo"/></menu-item>
-        <menu-item name="MessageErrorInfos" title="${uiLabelMap.OagisMessageErrorInfo}"><link target="FindMessageErrorInfo"/></menu-item>
+        <include-menu-items menu-name="OagisAppBar" include-depth="recursive-includes" />
     </menu>
 </menus>

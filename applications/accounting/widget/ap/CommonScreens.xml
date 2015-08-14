@@ -44,7 +44,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://accounting/widget/ap/ApMenus.xml" name="ApSideBar"/>
+                                <include-menu location="component://accounting/widget/ap/ApMenus.xml" name="ApAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

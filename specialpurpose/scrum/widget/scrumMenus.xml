@@ -79,63 +79,9 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ScrumSideBar" title="${uiLabelMap.ScrumApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="ScrumAppSideBar" title="${uiLabelMap.ScrumApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <menu-item name="products" title="${uiLabelMap.ScrumProductBacklog}">
-            <condition>
-                <if-service-permission service-name="scrumPermissionCheck" main-action="VIEW" resource-description="SCRUM"/>
-            </condition>
-               <link target="main"/>
-        </menu-item>
-        <menu-item name="Sprints" title="${uiLabelMap.ScrumProjectSprint}">
-            <link target="Sprints"/>
-        </menu-item>
-        <menu-item name="ProjectMember" title="${uiLabelMap.ScrumMembers}">
-            <condition>
-                <and>
-                    <not><if-has-permission permission="SCRUM" action="_ADMIN"/></not>
-                    <and>
-                        <if-service-permission service-name="scrumPermissionCheck" main-action="CREATE" resource-description="MEMBER"/>
-                    </and>
-                </and>
-            </condition>
-            <link target="FindResource"/>
-        </menu-item>
-        <menu-item name="MyWork" title="${uiLabelMap.ScrumMyWork}">
-            <condition>
-                <if-service-permission service-name="scrumPermissionCheck" main-action="CREATE" resource-description="TASK"/>
-            </condition>
-            <link target="MyWork"/>
-        </menu-item>
-        <menu-item name="Tasks" title="${uiLabelMap.ScrumTasks}">
-            <condition>
-                <if-service-permission service-name="scrumPermissionCheck" main-action="CREATE" resource-description="TASK"/>
-               </condition>
-            <link target="FindTask"/>
-        </menu-item>
-        <menu-item name="openTest" title="${uiLabelMap.ScrumOpenTest}">
-            <condition>
-                <if-service-permission service-name="scrumPermissionCheck" main-action="VIEW" resource-description="TEST"/>
-            </condition>
-            <link target="openTest"/>
-        </menu-item>
-        <menu-item name="revision" title="${uiLabelMap.ScrumRevision}">
-            <condition>
-                <if-service-permission service-name="scrumPermissionCheck" main-action="CREATE" resource-description="TASK"/>
-            </condition>
-            <link target="FindTaskRevision"/>
-        </menu-item>
-        <menu-item name="admin" title="${uiLabelMap.ScrumAdmin}">
-               <condition>
-                     <if-has-permission permission="SCRUM" action="_ADMIN"/>
-               </condition>
-               <link target="adminScrum"/>
-        </menu-item>
-        <menu-item name="myProfile" title="${uiLabelMap.ScrumMyProfile}">
-            <link target="viewprofile">
-                <parameter param-name="partyId" from-field="userLogin.partyId"/>
-            </link>
-        </menu-item>
+        <include-menu-items menu-name="ScrumAppBar" include-depth="recursive-includes" />
     </menu>
     
     <menu name="ScrumAdminSubMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

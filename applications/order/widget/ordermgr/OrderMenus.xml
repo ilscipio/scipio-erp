@@ -99,85 +99,9 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="OrderSideBar" title="${uiLabelMap.OrderManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="OrderAppSideBar" title="${uiLabelMap.OrderManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <menu-item name="main" title="${uiLabelMap.CommonDashboard}">
-            <condition>
-                <or>
-                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
-                </or>
-            </condition>
-            <link target="main"/>
-        </menu-item>
-        <menu-item name="request" title="${uiLabelMap.OrderRequests}">
-            <condition>
-                <or>
-                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
-                </or>
-            </condition>
-            <link target="FindRequest"/>
-        </menu-item>
-
-        <menu-item name="quote" title="${uiLabelMap.OrderOrderQuotes}">
-            <condition>
-                <or>
-                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
-                </or>
-            </condition>
-            <link target="FindQuote"/>
-        </menu-item>
-
-        <menu-item name="orderlist" title="${uiLabelMap.OrderOrderList}">
-            <condition>
-                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-            </condition>
-            <link target="orderlist"/>
-        </menu-item>
-
-        <menu-item name="findorders" title="${uiLabelMap.OrderFindOrder}">
-            <condition>
-                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-            </condition>
-            <link target="findorders"/>
-        </menu-item>
-
-        <menu-item name="orderentry" title="${uiLabelMap.OrderOrderEntry}">
-            <condition>
-                <or>
-                    <if-has-permission permission="ORDERMGR" action="_CREATE"/>
-                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_CREATE"/>
-                </or>
-            </condition>
-            <link target="orderentry" link-type="anchor"/>
-        </menu-item>
-
-        <menu-item name="return" title="${uiLabelMap.OrderOrderReturns}">
-            <condition>
-                <if-has-permission permission="ORDERMGR" action="_RETURN"/>
-            </condition>
-            <link target="findreturn"/>
-        </menu-item>
-
-        <menu-item name="requirement" title="${uiLabelMap.OrderRequirements}">
-            <condition>
-                <or>
-                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                    <if-has-permission permission="ORDERMGR_ROLE" action="_VIEW"/>
-                </or>
-            </condition>
-            <link target="FindRequirements"/>
-        </menu-item>
-
-        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
-            <link target="OrderPurchaseReportOptions"/>
-        </menu-item>
-
-        <menu-item name="stats" title="${uiLabelMap.CommonStats}">
-            <link target="orderstats"/>
-        </menu-item>
+        <include-menu-items menu-name="OrderAppBar" include-depth="recursive-includes" />
     </menu>
 
     <menu name="RequirementsTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

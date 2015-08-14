@@ -29,14 +29,9 @@
         </menu-item>
     </menu>
     
-    <menu name="SetupSideBar" title="${uiLabelMap.SetupApp}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="SetupAppSideBar" title="${uiLabelMap.SetupApp}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <menu-item name="main" title="${uiLabelMap.SetupInitialSetup}">
-            <link target="initialsetup"/>
-        </menu-item>
-        <menu-item name="export" title="${uiLabelMap.PageTitleEntityExportAll}">
-            <link target="EntityExportAll"/>
-        </menu-item>
+        <include-menu-items menu-name="SetupAppBar" include-depth="recursive-includes" />
     </menu>
     
     <menu name="SetupSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

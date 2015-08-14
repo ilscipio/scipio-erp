@@ -49,7 +49,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://scrum/widget/scrumMenus.xml" name="ScrumSideBar"/>
+                                <include-menu location="component://scrum/widget/scrumMenus.xml" name="ScrumAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

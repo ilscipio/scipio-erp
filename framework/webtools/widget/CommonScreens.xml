@@ -58,7 +58,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://webtools/widget/Menus.xml" name="WebtoolsSideBar"/>
+                                <include-menu location="component://webtools/widget/Menus.xml" name="WebtoolsAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

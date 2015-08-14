@@ -53,7 +53,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AccountingSideBar"/>
+                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AccountingAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

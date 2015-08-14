@@ -46,7 +46,7 @@
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://ebaystore/widget/EbayStoreMenus.xml" name="EbayStoreSideBar"/>
+                                <include-menu location="component://ebaystore/widget/EbayStoreMenus.xml" name="EbayStoreAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

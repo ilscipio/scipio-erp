@@ -56,7 +56,7 @@ under the License.
                                 <decorator-section-include name="left-column"/>
                             </widgets>
                             <fail-widgets>
-                                <include-menu location="component://birt/widget/birt/BirtMenus.xml" name="BirtSideBar"/>
+                                <include-menu location="component://birt/widget/birt/BirtMenus.xml" name="BirtAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>-->

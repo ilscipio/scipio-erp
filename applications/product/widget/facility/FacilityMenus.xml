@@ -42,26 +42,9 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="FacilitySideBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="FacilityAppSideBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <menu-item name="facility" title="${uiLabelMap.ProductFacilities}"><link target="FindFacility"/></menu-item>
-        <menu-item name="facilityGroup" title="${uiLabelMap.ProductFacilityGroups}"><link target="FindFacilityGroup"/></menu-item>
-        <menu-item name="inventoryItemLabel" title="${uiLabelMap.ProductInventoryItemLabels}"><link target="FindInventoryItemLabels"/></menu-item>
-        <menu-item name="ShipmentGatewayConfig" title="${uiLabelMap.FacilityShipmentGatewayConfig}">
-            <condition>
-                <if-has-permission permission="PAYPROC" action="_ADMIN"/>
-            </condition>
-            <link target="FindShipmentGatewayConfig"/>
-        </menu-item>
-        <menu-item name="shipment" title="${uiLabelMap.ProductShipments}"><link target="FindShipment"/></menu-item>
-        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
-            <condition>
-                <not><if-empty field="facilityId"/></not>
-            </condition>
-            <link target="InventoryReports">
-                <parameter param-name="facilityId"/>
-            </link>
-        </menu-item>
+        <include-menu-items menu-name="FacilityAppBar" include-depth="recursive-includes" />
     </menu>
 
     <menu name="FacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

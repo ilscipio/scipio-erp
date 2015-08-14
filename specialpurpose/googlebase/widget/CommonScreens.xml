@@ -48,7 +48,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://googlebase/widget/GoogleBaseMenus.xml" name="GoogleBaseSideBar"/>
+                                <include-menu location="component://googlebase/widget/GoogleBaseMenus.xml" name="GoogleBaseAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

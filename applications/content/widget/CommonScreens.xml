@@ -51,7 +51,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://content/widget/content/ContentMenus.xml" name="ContentSideBar"/>
+                                <include-menu location="component://content/widget/content/ContentMenus.xml" name="ContentAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

@@ -64,7 +64,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="PartySideBar"/>
+                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="PartyAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

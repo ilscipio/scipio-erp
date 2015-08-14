@@ -46,7 +46,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://googlecheckout/widget/GoogleCheckoutMenus.xml" name="GoogleCheckoutSideBar"/>
+                                <include-menu location="component://googlecheckout/widget/GoogleCheckoutMenus.xml" name="GoogleCheckoutAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

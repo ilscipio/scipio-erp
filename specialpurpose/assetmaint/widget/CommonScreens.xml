@@ -52,7 +52,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://assetmaint/widget/AssetmaintMenus.xml" name="AssetMaintSideBar"/>
+                                <include-menu location="component://assetmaint/widget/AssetmaintMenus.xml" name="AssetMaintAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

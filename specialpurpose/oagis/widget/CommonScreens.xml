@@ -48,7 +48,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://oagis/widget/OagisMenus.xml" name="OagisSideBar"/>
+                                <include-menu location="component://oagis/widget/OagisMenus.xml" name="OagisAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

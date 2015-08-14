@@ -48,7 +48,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <!-- provide default column for all others -->
-                                <include-menu location="component://ebay/widget/EbayMenus.xml" name="EbaySideBar"/>
+                                <include-menu location="component://ebay/widget/EbayMenus.xml" name="EbayAppSideBar"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

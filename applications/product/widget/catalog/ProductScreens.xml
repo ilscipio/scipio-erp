@@ -51,7 +51,7 @@ under the License.
                                 <entity-one entity-name="Product" value-field="product"/>
                             </actions>
                             <widgets>
-                                <include-menu name="ProductTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                <include-menu name="ProductSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                 <!--<include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>-->
                                 <!--<include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>-->
                             </widgets>

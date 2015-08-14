@@ -228,7 +228,7 @@ under the License.
                                 <if-has-permission permission="CATALOG" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="ShippingTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                <include-menu name="ShippingSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </widgets>
                         </section>
                         <include-screen name="leftbar"/>
@@ -424,7 +424,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
-                        <include-menu name="ImageManagementTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                        <include-menu name="ImageManagementSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                         <include-screen name="leftbar"/>
                     </decorator-section>
                     <decorator-section name="body">

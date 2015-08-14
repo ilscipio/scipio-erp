@@ -104,12 +104,18 @@ under the License.
         <p${idText}>${text}</p>
       <#elseif style=="span">
         <span${idText}>${text}</span>
+      <#-- specific permission error class -->
       <#elseif style=="perm-error-msg">
         <p${idText} class="perm-error-msg">${text}</p>
+      <#-- more general security error class -->
       <#elseif style=="security-error-msg">
         <p${idText} class="security-error-msg">${text}</p>
+      <#-- general error class -->
       <#elseif style=="error-msg">
         <p${idText} class="error-msg">${text}</p>
+      <#-- result message class: sometimes messages like "no product found" are not an error but expected possible result -->
+      <#elseif style=="result-msg">
+        <p${idText} class="result-msg">${text}</p>
       <#elseif style=="message">
         <@alert type="info">
           ${text}

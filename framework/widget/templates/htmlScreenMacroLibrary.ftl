@@ -104,6 +104,8 @@ under the License.
         <p${idText}>${text}</p>
       <#elseif style=="span">
         <span${idText}>${text}</span>
+      <#elseif style=="perm-error">
+        <p${idText} class="perm-error">${text}</p>
       <#elseif style=="error">
         <p${idText}>${text}</p>
       <#elseif style=="message">

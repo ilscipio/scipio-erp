@@ -49,7 +49,7 @@ under the License.
     
     <menu name="ExampleAppSideBar" title="${uiLabelMap.ExampleApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="ExampleAppBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="ExampleAppBar" recursive="includes-only" />
     </menu>
 
     <menu name="EditExample" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

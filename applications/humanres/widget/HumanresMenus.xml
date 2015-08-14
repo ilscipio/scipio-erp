@@ -37,7 +37,7 @@
     
     <menu name="HumanResAppSideBar" title="${uiLabelMap.HumanResManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="HumanResAppBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="HumanResAppBar" recursive="includes-only" />
     </menu>
     
     <menu name="EmploymentBar" default-menu-item-name="EditPartyBenefit" default-selected-style="selected"

@@ -40,7 +40,7 @@
 
     <menu name="PartyAppSideBar" title="${uiLabelMap.PartyManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="PartyAppBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="PartyAppBar" recursive="includes-only" />
     </menu>
 
     <menu name="ProfileTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -153,7 +153,7 @@
     
     <menu name="ProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="viewprofile" selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="ProfileTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="ProfileTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="ProfileSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -272,7 +272,7 @@
     
     <menu name="PartyInvitationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="PartyInvitationTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="PartyInvitationTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="personUpdate">
@@ -600,7 +600,7 @@
     </menu>
     <menu name="CommEventSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="CommEventTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="CommEventTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="CommFindTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -733,7 +733,7 @@
     
     <menu name="PartyClassificationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="PartyClassificationTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="PartyClassificationTabBar" recursive="includes-only" />
     </menu>
     
 </menus>

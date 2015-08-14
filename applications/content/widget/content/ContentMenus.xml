@@ -35,7 +35,7 @@ under the License.
     
     <menu name="ContentAppSideBar" title="${uiLabelMap.ContentContentManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="ContentAppBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="ContentAppBar" recursive="includes-only" />
     </menu>
 
     <menu name="content"  menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"

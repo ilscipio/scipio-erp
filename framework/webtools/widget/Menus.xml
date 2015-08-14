@@ -67,7 +67,7 @@ under the License.
 
     <menu name="WebtoolsAppSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="WebtoolsAppBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="WebtoolsAppBar" recursive="includes-only" />
     </menu>
 
     <menu name="configurationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -82,7 +82,7 @@ under the License.
     
     <menu name="configurationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="page.tabButtonItem">
-        <include-menu-items menu-name="configurationTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="configurationTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="importExportTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -118,7 +118,7 @@ under the License.
     
     <menu name="importExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="page.tabButtonItem">
-        <include-menu-items menu-name="importExportTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="importExportTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="serviceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -142,7 +142,7 @@ under the License.
     
     <menu name="serviceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="page.tabButtonItem">
-        <include-menu-items menu-name="serviceTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="serviceTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="LoggingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -160,7 +160,7 @@ under the License.
     
     <menu name="LoggingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem">
-        <include-menu-items menu-name="LoggingTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="LoggingTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="CacheTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -172,7 +172,7 @@ under the License.
     
     <menu name="CacheSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="logMenuItem">
-        <include-menu-items menu-name="CacheTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="CacheTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="artifactTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -191,7 +191,7 @@ under the License.
     
     <menu name="artifactSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem">
-        <include-menu-items menu-name="artifactTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="artifactTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="TempExprTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -242,7 +242,7 @@ under the License.
     </menu>
     
     <menu name="EntitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="EntityTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="EntityTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="PortalPageAdmin">
@@ -273,7 +273,7 @@ under the License.
     
     <menu name="StatsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem">
-        <include-menu-items menu-name="StatsTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="StatsTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="StatsSinceStart" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -309,7 +309,7 @@ under the License.
     </menu>
     
     <menu name="FindCacheSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="FindCacheTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="FindCacheTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="CacheElements" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -348,7 +348,7 @@ under the License.
     </menu>    
     
     <menu name="geoManagementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="geoManagementTabBar" include-depth="recursive-includes" />
+        <include-menu-items menu-name="geoManagementTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="LayoutDemoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

@@ -316,7 +316,7 @@ public class ModelMenu extends ModelWidget {
             for (Element itemInclElement : itemInclElements) {
                 String inclMenuName = itemInclElement.getAttribute("menu-name");
                 String inclResource = itemInclElement.getAttribute("resource");
-                String inclDepth = itemInclElement.getAttribute("include-depth");
+                String inclRecursive = itemInclElement.getAttribute("recursive");
                 
                 Set<String> inclExcludeItems = new HashSet<String>();
                 List<? extends Element> skipItemElems = UtilXml.childElementList(itemInclElement, "exclude-item");
@@ -327,8 +327,8 @@ public class ModelMenu extends ModelWidget {
                     }
                 } 
                 
-                if ("non-recursive".equals(inclDepth) || "recursive-includes".equals(inclDepth) ||
-                    "recursive-extends".equals(inclDepth) || "recursive-full".equals(inclDepth)) {
+                if ("no".equals(inclRecursive) || "includes-only".equals(inclRecursive) ||
+                    "extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                     Element inclMenuElem = loadIncludedMenu(inclMenuName, inclResource, menuElement, currResource);
                     
                     if (inclMenuElem != null) {
@@ -341,7 +341,7 @@ public class ModelMenu extends ModelWidget {
                             nextResource = currResource;
                         }
                         
-                        if ("recursive-extends".equals(inclDepth) || "recursive-full".equals(inclDepth)) {
+                        if ("extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                             String parentResource = inclMenuElem.getAttribute("extends-resource");
                             String parentMenu = inclMenuElem.getAttribute("extends");
                             if (UtilValidate.isNotEmpty(parentMenu)) {
@@ -355,7 +355,7 @@ public class ModelMenu extends ModelWidget {
                             }
                         }
                         
-                        if ("recursive-includes".equals(inclDepth) || "recursive-full".equals(inclDepth)) {
+                        if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
                             processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, nextResource, true, inclExcludeItems);
                         }
                         else {
@@ -367,7 +367,7 @@ public class ModelMenu extends ModelWidget {
                     }
                 }
                 else {
-                    Debug.logError("Unrecognized include-menu-items mode: " + inclDepth, module);
+                    Debug.logError("Unrecognized include-menu-items recursive mode: " + inclRecursive, module);
                 }
             } 
         }

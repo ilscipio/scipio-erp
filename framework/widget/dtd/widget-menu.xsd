@@ -113,16 +113,16 @@ under the License.
             </xs:sequence>
             <xs:attribute type="xs:string" name="menu-name" use="required" />
             <xs:attribute type="xs:string" name="resource" />
-            <xs:attribute name="include-depth" use="required">
+            <xs:attribute name="recursive" use="required">
                 <xs:annotation>
-                    <xs:documentation>Cato: include depth.</xs:documentation>
+                    <xs:documentation>Cato: if and what to recurse when included menus have their own extends and includes.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
-                        <xs:enumeration value="non-recursive" />
-                        <xs:enumeration value="recursive-includes" />
-                        <xs:enumeration value="recursive-extends" />
-                        <xs:enumeration value="recursive-full" />
+                        <xs:enumeration value="no" />
+                        <xs:enumeration value="includes-only" />
+                        <xs:enumeration value="extends-only" />
+                        <xs:enumeration value="full" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

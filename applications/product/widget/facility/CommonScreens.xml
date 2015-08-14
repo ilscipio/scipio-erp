@@ -96,7 +96,7 @@ under the License.
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -117,12 +117,12 @@ under the License.
                                         <decorator-section-include name="body"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label >${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
+                                        <label style="error-msg">${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
                                     </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -153,7 +153,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -183,16 +183,16 @@ under the License.
                                         <not><if-empty field="inventoryItemLabel"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h1">${uiLabelMap.ProductInventoryItemLabel} [${inventoryItemLabelId}]</label>
+                                        <label style="h2">${uiLabelMap.ProductInventoryItemLabel} [${inventoryItemLabelId}]</label>
                                         <decorator-section-include name="body"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label >${uiLabelMap.ProductErrorInventoryItemLabelIdNotFound}</label>
+                                        <label style="error-msg">${uiLabelMap.ProductErrorInventoryItemLabelIdNotFound}</label>
                                     </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

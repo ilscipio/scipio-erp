@@ -39,16 +39,14 @@ under the License.
                                         <include-menu name="ProductionRunTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                                     </widgets>
                                 </section>
-                                <container>
-                                    <label style="h1">[${uiLabelMap.CommonId} ${productionRunId}]</label>
-                                </container>
+                                <label style="h2">[${uiLabelMap.CommonId} ${productionRunId}]</label>
                                 <container style="button-bar">
                                     <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.button_default}"/>
                                 </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ManufacturingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ManufacturingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

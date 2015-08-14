@@ -37,13 +37,11 @@ under the License.
                                         <include-menu name="RequirementTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                                     </widgets>
                                 </section>
-                                <container>
-                                    <label style="h2">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
-                                </container>
+                                <label style="h2">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.OrderViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -69,7 +67,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.OrderViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

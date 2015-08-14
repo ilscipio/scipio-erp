@@ -66,14 +66,14 @@ under the License.
                                         <not><if-empty field="example"/></not><!-- This is a check useful when only seed data are loaded -->
                                     </condition>
                                     <widgets>
-                                        <container style="h1"><label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label></container>
+                                        <label style="h2">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
                                         <container style="button-bar"><link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.button_default}"/></container>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ExampleViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ExampleViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

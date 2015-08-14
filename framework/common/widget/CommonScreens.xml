@@ -876,7 +876,7 @@ under the License.
                 <decorator-screen name="SimpleDecorator">
                     <decorator-section name="body">
                         <label style="h1">${uiLabelMap.PageTitleHelp}</label>
-                        <label style="h3">${helpText}</label>
+                        <label>${helpText}</label>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

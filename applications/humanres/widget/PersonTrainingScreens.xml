@@ -154,11 +154,11 @@
                             </condition>
                             <widgets><!-- edit section -->
                                 <container style="large-6">
-                                    <label style="h1" text="${uiLabelMap.WorkEffortAddCalendarEvent}"/>
+                                    <label style="h2" text="${uiLabelMap.WorkEffortAddCalendarEvent}"/>
                                     <include-form name="editTrainingCalendar" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
                                 </container>
                                 <container style="large-6">
-                                    <label style="h1" text="${uiLabelMap.WorkEffortParticipants}"/>
+                                    <label style="h2" text="${uiLabelMap.WorkEffortParticipants}"/>
                                     <include-form name="ListTrainingParticipants" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
                                     <section>
                                         <condition>
@@ -178,7 +178,7 @@
                             </widgets>
                             <fail-widgets><!-- view section -->
                                 <container style="large-6">
-                                    <label style="h1" text="${uiLabelMap.WorkEffortSummary}"/>
+                                    <label style="h2" text="${uiLabelMap.WorkEffortSummary}"/>
                                     <include-form name="showTrainingCalendar" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
                                 </container>
                             </fail-widgets>

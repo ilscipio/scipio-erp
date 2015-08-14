@@ -104,16 +104,16 @@ under the License.
                                         <not><if-empty field="fixedAssetId"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h1" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
+                                        <label style="h2" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h1" text="${uiLabelMap[titleProperty]}"/>
+                                        <label style="h2" text="${uiLabelMap[titleProperty]}"/>
                                     </fail-widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label  text="${uiLabelMap.AccountingViewPermissionError}"/>
+                                <label style="perm-error-msg" text="${uiLabelMap.AccountingViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -529,12 +529,12 @@ under the License.
                         <section>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationHistory}">
-                                    <label >${uiLabelMap.FormFieldTitle_purchaseCost}: ${fixedAsset.purchaseCost}</label>
-                                    <label >${uiLabelMap.FormFieldTitle_depreciation}: ${depreciation}</label>
-                                    <label >${uiLabelMap.FormFieldTitle_salvageValue}: ${fixedAsset.salvageValue}</label>
-                                    <label >${uiLabelMap.FormFieldTitle_dateAcquired}: ${fixedAsset.dateAcquired}</label>
-                                    <label >${uiLabelMap.FormFieldTitle_expectedEndOfLife}: ${fixedAsset.expectedEndOfLife}</label>
-                                    <label >${uiLabelMap.FormFieldTitle_NextDepreciationAmount}: ${assetDepreciationResultMap.nextDepreciationAmount}</label>
+                                    <label>${uiLabelMap.FormFieldTitle_purchaseCost}: ${fixedAsset.purchaseCost}</label>
+                                    <label>${uiLabelMap.FormFieldTitle_depreciation}: ${depreciation}</label>
+                                    <label>${uiLabelMap.FormFieldTitle_salvageValue}: ${fixedAsset.salvageValue}</label>
+                                    <label>${uiLabelMap.FormFieldTitle_dateAcquired}: ${fixedAsset.dateAcquired}</label>
+                                    <label>${uiLabelMap.FormFieldTitle_expectedEndOfLife}: ${fixedAsset.expectedEndOfLife}</label>
+                                    <label>${uiLabelMap.FormFieldTitle_NextDepreciationAmount}: ${assetDepreciationResultMap.nextDepreciationAmount}</label>
                                     <section>
                                         <condition>
                                             <and>
@@ -579,9 +579,9 @@ under the License.
                                 </screenlet>
                                 <screenlet title="${uiLabelMap.AccountingGlMappings}">
                                     <include-form name="AddFixedAssetTypeGlAccount" location="component://accounting/widget/FixedAssetForms.xml"/>
-                                    <label >${uiLabelMap.PageTitleFixedAssetMappings}</label>
+                                    <label>${uiLabelMap.PageTitleFixedAssetMappings}</label>
                                     <include-form name="FixedAssetTypeGlAccounts" location="component://accounting/widget/FixedAssetForms.xml"/>
-                                    <label >${uiLabelMap.PageTitleFixedAssetGlobalMappings}</label>
+                                    <label>${uiLabelMap.PageTitleFixedAssetGlobalMappings}</label>
                                     <include-form name="GlobalFixedAssetTypeGlAccounts" location="component://accounting/widget/FixedAssetForms.xml"/>
                                 </screenlet>
                                 <section>
@@ -595,7 +595,7 @@ under the License.
                                     </widgets>
                                     <fail-widgets>
                                         <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationReport}">
-                                            <label >${assetDepreciationResultMessages}</label>
+                                            <label>${assetDepreciationResultMessages}</label>
                                         </screenlet>
                                     </fail-widgets>
                                 </section>

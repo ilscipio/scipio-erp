@@ -49,7 +49,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -86,7 +86,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -123,7 +123,7 @@ under the License.
                                     </widgets>
                                 </section>
                                 <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommFindTabBar"/>
-                                <container><label style="h2" text="${uiLabelMap.PartyPendingCommunicationEvents}"/></container>
+                                <label style="h2" text="${uiLabelMap.PartyPendingCommunicationEvents}"/>
                                 <container>
                                     <link style="smallSubmit" target="ViewCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}">
                                         <parameter param-name="partyId"/>
@@ -132,7 +132,7 @@ under the License.
                                 <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListPendingCommEvents"/>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -176,7 +176,7 @@ under the License.
                                 <if-service-permission service-name="partyCommunicationEventPermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <container style="h2"><label text="${uiLabelMap.PageTitleListCommunications} ${partyId}"/></container>
+                                <label style="h2" text="${uiLabelMap.PageTitleListCommunications} ${partyId}"/>
                                 <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                 <section>
                                     <condition>
@@ -184,7 +184,7 @@ under the License.
                                     </condition>
                                     <widgets> 
                                         <horizontal-separator/>
-                                        <container style="h2"><label text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/></container>
+                                        <label style="h2" text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/>
                                         <iterate-section entry="contact" list="contacts">
                                             <section>
                                                 <condition>
@@ -197,7 +197,7 @@ under the License.
                                                     </entity-condition>
                                                 </actions>
                                                 <widgets>
-                                                    <container style="h3"><label text="${contact.partyIdTo}"/></container>
+                                                    <label style="h3" text="${contact.partyIdTo}"/>
                                                     <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                                 </widgets>
                                             </section>
@@ -240,8 +240,8 @@ under the License.
                                             </condition>
                                             <widgets>
                                                 <horizontal-separator/>
-                                                <container style="h2"><label text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/></container>
-                                                <container style="h3"><label text="${partyIdFrom}"/></container>       
+                                                <label style="h2" text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/>
+                                                <label style="h3" text="${partyIdFrom}"/>  
                                                 <iterate-section entry="account" list="accounts">
                                                     <section>
                                                         <widgets>
@@ -266,7 +266,7 @@ under the License.
                                                                     <if-compare field="contact.partyIdTo" operator="not-equals" value="${partyId}"/>
                                                                 </condition>
                                                                 <widgets>
-                                                                    <container style="h3"><label text="${contact.partyIdTo}"/></container>
+                                                                    <label style="h3" text="${contact.partyIdTo}"/>
                                                                     <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                                                 </widgets>
                                                             </section>
@@ -279,7 +279,7 @@ under the License.
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -307,7 +307,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -340,7 +340,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -375,7 +375,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -711,7 +711,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -745,7 +745,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -785,7 +785,7 @@ under the License.
                                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
                                     </widgets>
                                 </section>
-                                <container style="h2"><label text="${uiLabelMap.PageTitleEditCommContent}"/></container>
+                                <label style="h2" text="${uiLabelMap.PageTitleEditCommContent}"/>
                                 <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="editCommContent"/>
                                 <section>
                                     <condition>
@@ -811,14 +811,14 @@ under the License.
                                     <widgets>
                                         <screenlet title="${uiLabelMap.PartyViewImage}">
                                             <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="uploadCommContent"/>
-                                            <label text="${uiLabelMap.PartyViewImage}" style="h2"/>
+                                            <label text="${uiLabelMap.PartyViewImage}" style="h3"/>
                                             <content dataresource-id="${commEventContentDataResource.drDataResourceId}"/>
                                         </screenlet>
                                     </widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

@@ -499,7 +499,7 @@ under the License.
             <widgets>
                 <section>
                     <widgets>
-                        <!--<label style="h1" text="Popular Categories"/>-->
+                        <!--<label style="h2" text="Popular Categories"/>-->
                         <include-screen name="showBestSellingCategory"/>
                     </widgets>
                 </section>

@@ -126,7 +126,7 @@
                                     <condition><not><if-empty field="partyId"/></not></condition>
                                     <widgets>
                                         <container style="clear"/>
-                                        <container style="h1">
+                                        <container style="h2">
                                             <section>
                                                 <condition><not><if-empty field="lookupGroup"/></not></condition>
                                                 <widgets>
@@ -143,7 +143,7 @@
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

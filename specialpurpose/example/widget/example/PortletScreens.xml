@@ -84,13 +84,13 @@ under the License.
             <widgets>
                 <screenlet title="${uiLabelMap.ExamplePortletThird}">
                     <container style="leftclear">
-                        <label style="h1" text="${uiLabelMap.ExamplePortletThird}"/>
+                        <label style="h2" text="${uiLabelMap.ExamplePortletThird}"/>
                     </container>
                     <container style="leftclear">
-                        <label style="h2" text="${uiLabelMap.ExamplePortletSpecificTitle}: ${SpecificTitle}"/>
+                        <label style="h3" text="${uiLabelMap.ExamplePortletSpecificTitle}: ${SpecificTitle}"/>
                     </container>
                     <container style="leftclear">
-                        <label style="h2" text="${uiLabelMap.ExamplePortletSpecificSubTitle}: ${SpecificSubTitle}"/>
+                        <label style="h3" text="${uiLabelMap.ExamplePortletSpecificSubTitle}: ${SpecificSubTitle}"/>
                     </container>
                 </screenlet>
             </widgets>

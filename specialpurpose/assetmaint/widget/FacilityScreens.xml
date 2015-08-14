@@ -50,8 +50,8 @@
                     <decorator-section name="body">
 
                         <container>
-                            <label style="h1">${uiLabelMap.PageTitleEditFacilityInventoryItems} ${uiLabelMap.CommonFor}:</label>
-                            <label style="h2">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
+                            <label style="h2">${uiLabelMap.PageTitleEditFacilityInventoryItems} ${uiLabelMap.CommonFor}:</label>
+                            <label style="h3">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
                         </container>
                         <container>
                             <link target="EditFacilityInventoryItems" text="${uiLabelMap.ProductInventoryItems}" style="${styles.button_default}">

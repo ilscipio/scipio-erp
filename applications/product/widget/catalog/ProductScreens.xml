@@ -84,7 +84,7 @@ under the License.
                                             <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
                                         </platform-specific>
                                         
-                                        <label style="h1">${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
+                                        <label style="h2">${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
                                         <image src="${product.smallImageUrl}" url-mode="content" alt="${product.internalName}" style="cssImgSmall"/>
                                         
                                     </widgets>
@@ -105,7 +105,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductCatalogViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -137,7 +137,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.AccountingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -223,7 +223,7 @@ under the License.
                             <include-form name="UpdateProductPrice" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleAddProductPrices}">
-                            <label  text="${uiLabelMap.ProductPricesWarning}"/>
+                            <label text="${uiLabelMap.ProductPricesWarning}"/>
                             <include-form name="AddProductPrice" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -450,7 +450,7 @@ under the License.
                         <screenlet title="${uiLabelMap.ProductRoutings}">
                             <include-form name="ListProductRoutings" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
-                        <container><label style="h2">${uiLabelMap.ProductLowLevelCode}: ${product.billOfMaterialLevel}</label></container>
+                        <label style="h2">${uiLabelMap.ProductLowLevelCode}: ${product.billOfMaterialLevel}</label>
                         <screenlet title="${uiLabelMap.ProductComponents}">
                             <include-form name="ListProductComponents" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
@@ -1320,7 +1320,7 @@ under the License.
                             <include-form name="ListBestProduct" location="component://product/widget/catalog/ProductForms.xml"/>
                         </widgets>
                         <fail-widgets>
-                            <label text="${uiLabelMap.ProductNoProductFound}."></label>
+                            <label style="result-msg" text="${uiLabelMap.ProductNoProductFound}."></label>
                         </fail-widgets>
                     </section>
                 </screenlet>

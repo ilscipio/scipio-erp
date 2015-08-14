@@ -47,7 +47,7 @@ under the License.
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -136,7 +136,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container>
-                                    <label >${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                    <label style="error-msg">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
                                 </container>
                             </fail-widgets>
                         </section>

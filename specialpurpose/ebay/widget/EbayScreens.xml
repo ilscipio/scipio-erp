@@ -168,7 +168,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.EbayViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.EbayViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -280,7 +280,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.EbayViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.EbayViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

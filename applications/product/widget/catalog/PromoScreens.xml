@@ -41,16 +41,14 @@ under the License.
                                         <container style="button-bar">
                                             <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.button_default}"/>
                                         </container>
-                                        <container>
-                                            <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productPromo.promoName} [${uiLabelMap.CommonId}:${productPromoId}]  ${${extraFunctionName}}</label>
-                                        </container>
+                                        <label style="h2">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productPromo.promoName} [${uiLabelMap.CommonId}:${productPromoId}]  ${${extraFunctionName}}</label>
                                     </widgets>
                                 </section>
 
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductCatalogViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

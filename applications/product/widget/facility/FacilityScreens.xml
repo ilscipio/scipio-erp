@@ -62,17 +62,17 @@ under the License.
                                                                 <parameter param-name="externalLoginKey" from-field="parameters.externalLoginKey"/>
                                                             </link>
                                                         </container>
-                                                        <label style="h1">${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facilityId}]</label>
+                                                        <label style="h2">${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facilityId}]</label>
                                                         <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
                                                     </widgets>
                                                     <fail-widgets>
-                                                        <label style="h1">${uiLabelMap.ProductNewFacility}"</label>
+                                                        <label style="h2">${uiLabelMap.ProductNewFacility}"</label>
                                                         <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
                                                     </fail-widgets>
                                                 </section>
                                             </widgets>
                                             <fail-widgets>
-                                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                                             </fail-widgets>
                                         </section>
                                     </widgets>
@@ -82,7 +82,7 @@ under the License.
                                         <if-compare field="showScreen" value="ten" operator="equals"/>
                                     </condition>
                                     <widgets>
-                                        <label text="${uiLabelMap.FacilitySelection}" style="h1"/>
+                                        <label text="${uiLabelMap.FacilitySelection}" style="h2"/>
                                         <section>
                                             <condition>
                                                 <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
@@ -123,7 +123,7 @@ under the License.
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -191,7 +191,7 @@ under the License.
                                         </section>
                                     </widgets>
                                     <fail-widgets>
-                                        <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                        <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                                     </fail-widgets>
                                 </section>
                             </decorator-section>
@@ -205,11 +205,11 @@ under the License.
                                         <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
                                     </condition>
                                     <widgets>
-                                        <label style="h1">${uiLabelMap.ProductNewFacility}</label>
+                                        <label style="h2">${uiLabelMap.ProductNewFacility}</label>
                                         <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
                                     </widgets>
                                     <fail-widgets>
-                                        <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                        <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                                     </fail-widgets>
                                 </section>
                             </decorator-section>
@@ -255,7 +255,7 @@ under the License.
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label >${uiLabelMap.CommonView} </label>
+                            <label>${uiLabelMap.CommonView} </label>
                             <link target="FindFacilityTransfers" text="${uiLabelMap.ProductActiveOnly}" style="${styles.button_default}">
                                 <parameter param-name="facilityId" from-field="facilityId"/>
                                 <parameter param-name="activeOnly" value="true"/>
@@ -405,9 +405,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container>
-                            <label style="h1">${uiLabelMap.ProductInventoryItemsFor} ${facility.facilityName} [${uiLabelMap.CommonId}:${facility.facilityId}]</label>
-                        </container>
+                        <label style="h2">${uiLabelMap.ProductInventoryItemsFor} ${facility.facilityName} [${uiLabelMap.CommonId}:${facility.facilityId}]</label>
                         <container>
                             <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="${styles.button_default}"/>
                             <link target="EditInventoryItem" text="${uiLabelMap.ProductCreateNewInventoryItemFacility}" style="${styles.button_default}">
@@ -503,7 +501,7 @@ under the License.
                     <decorator-section name="body">
 
                         <container>
-                            <label style="h1">${uiLabelMap.PageTitleEditFacilityInventoryItems} ${uiLabelMap.CommonFor}:</label>
+                            <label style="h2">${uiLabelMap.PageTitleEditFacilityInventoryItems} ${uiLabelMap.CommonFor}:</label>
                             <label style="h2">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
                         </container>
                         <container>
@@ -683,13 +681,9 @@ under the License.
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/InventoryItemTotals.groovy"/>
             </actions>
             <widgets>
-                <container>
-                    <label style="h2" text="${uiLabelMap.ProductInventoryItemTotals} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
-                </container>
+                <label style="h2" text="${uiLabelMap.ProductInventoryItemTotals} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
                 <include-form name="InventoryItemTotalsExport" location="component://product/widget/facility/FacilityForms.xml"/>
-                <container>
-                    <label style="h2" text="${uiLabelMap.ProductInventoryItemGrandTotals} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
-                </container>
+                <label style="h2" text="${uiLabelMap.ProductInventoryItemGrandTotals} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
                 <include-form name="InventoryItemGrandTotalsExport" location="component://product/widget/facility/FacilityForms.xml"/>
             </widgets>
         </section>
@@ -924,7 +918,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <include-menu name="InventoryItemTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
-                                <container style="h1">
+                                <container style="h2">
                                     <label text="${uiLabelMap.PageTitleEditInventoryItem}"/>
                                 </container>
                                 <container style="widget-container">
@@ -938,7 +932,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <container style="h1">
+                                <container style="h2">
                                     <label text="${uiLabelMap.ProductNewInventoryItem}"/>
                                 </container>
                             </fail-widgets>
@@ -1500,9 +1494,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container>
-                            <label style="h1">${title}</label>
-                        </container>
+                        <label style="h2">${title}</label>
                         <screenlet id="add-facility-content" title="${uiLabelMap.ProductAddFacilityContent}" collapsible="true">
                             <include-form name="AddFacilityContent" location="component://product/widget/facility/FacilityForms.xml"/>
                         </screenlet>

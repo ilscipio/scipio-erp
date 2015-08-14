@@ -92,14 +92,14 @@
                                         </actions>
                                         <widgets>
                                            <include-form location="component://ebaystore/widget/EbayStoreForms.xml" name="EbayAccountSelection"/>
-                                              <label text="${uiLabelMap.EbayAccount} : ${person.firstName} ${person.lastName}" style="h1"></label>
+                                              <label text="${uiLabelMap.EbayAccount} : ${person.firstName} ${person.lastName}" style="h2"></label>
                                         </widgets>
                                     </section>
                                 </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.EbayViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.EbayViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -134,7 +134,7 @@
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3" text="${uiLabelMap.EbayViewPermissionError}"/>
+                                <label style="perm-error-msg" text="${uiLabelMap.EbayViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

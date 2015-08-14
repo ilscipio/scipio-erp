@@ -55,7 +55,7 @@ under the License.
                                 <not><if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/></not>
                             </condition>
                             <widgets>
-                                <label  text="${uiLabelMap.AccountingViewPermissionError}"/>
+                                <label style="perm-error-msg" text="${uiLabelMap.AccountingViewPermissionError}"/>
                             </widgets>
                         </section>
                         <decorator-section-include name="body"/>
@@ -131,13 +131,13 @@ under the License.
                                 <container style="button-bar">
                                     <link target="EditFinAccount" text="${uiLabelMap.AccountingCreateNewFinAccount}" style="${styles.button_default} create"/>
                                 </container>
-                                <label style="h1" text="${uiLabelMap.AccountingEditFinAccount}"></label>
+                                <label style="h2" text="${uiLabelMap.AccountingEditFinAccount}"></label>
                                 <screenlet id="EditFinAccountPanel" collapsible="true">
                                     <include-form name="EditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h1" text="${uiLabelMap.AccountingCreateNewFinAccount}"></label>
+                                <label style="h2" text="${uiLabelMap.AccountingCreateNewFinAccount}"></label>
                                 <screenlet id="CreateFinAccountPanel" collapsible="true">
                                     <include-form name="EditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
                                 </screenlet>
@@ -163,7 +163,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="h1" text="${uiLabelMap.AccountingEditFinAccountRoleFor}"/>
+                        <label style="h2" text="${uiLabelMap.AccountingEditFinAccountRoleFor}"/>
                         <screenlet id="FinAccountRolePanel" collapsible="true">
                             <include-form name="AddFinAccountRole" location="component://accounting/widget/FinAccountForms.xml"/>
                         </screenlet>
@@ -186,7 +186,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="h1" text="${uiLabelMap.AccountingEditFinAccountTransactionFor}"/>
+                        <label style="h2" text="${uiLabelMap.AccountingEditFinAccountTransactionFor}"/>
                         <screenlet id="FinAccountTransPanel" collapsible="true">
                             <include-form name="AddFinAccountTrans" location="component://accounting/widget/FinAccountForms.xml"/>
                         </screenlet>
@@ -480,7 +480,7 @@ under the License.
                         <link target="EditFinAccountTrans" text="${uiLabelMap.CommonCreateNew}" style="${styles.button_default}">
                             <parameter param-name="finAccountId" from-field="finAccountId"/>
                         </link>
-                            <label style="h1" text="${uiLabelMap.AccountingReconcileFinAccountTransFor}"/>
+                            <label style="h2" text="${uiLabelMap.AccountingReconcileFinAccountTransFor}"/>
                         <section>
                             <condition>
                                 <not>
@@ -547,7 +547,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
-                            <label style="h1" text="${uiLabelMap.AccountingCreateNewDepositPaymentFor}"/>
+                            <label style="h2" text="${uiLabelMap.AccountingCreateNewDepositPaymentFor}"/>
                         <screenlet id="EditDepositPaymentPanel" collapsible="true">
                             <include-form name="EditDepositPayment" location="component://accounting/widget/FinAccountForms.xml"/>
                         </screenlet>
@@ -569,8 +569,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
-                            <label style="h1" text="${uiLabelMap.AccountingCreateNewWithdrawalPaymentFor}"/>
-                        <screenlet id="EditWithdrawalPaymentPanel" collapsible="true">
+                        <screenlet id="EditWithdrawalPaymentPanel" collapsible="true" title="${uiLabelMap.AccountingCreateNewWithdrawalPaymentFor}">
                             <include-form name="EditWithdrawalPayment" location="component://accounting/widget/FinAccountForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -651,7 +650,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="h1" text="${uiLabelMap.AccountingGlReconciliationFor}"></label>
+                        <label style="h2" text="${uiLabelMap.AccountingGlReconciliationFor}"></label>
                         <platform-specific>
                             <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/GlReconciledFinAccountTrans.ftl"/></html>
                         </platform-specific>

@@ -160,7 +160,7 @@ under the License.
                                         <if-empty field="phases"/>
                                     </condition>
                                     <widgets>
-                                        <label style="h3" text="${uiLabelMap.ProjectMgrNoPhasesYet}"/>
+                                        <label text="${uiLabelMap.ProjectMgrNoPhasesYet}"/>
                                     </widgets>
                                     <fail-widgets>
                                         <include-form name="EditTask" location="component://projectmgr/widget/forms/TaskForms.xml"/>
@@ -242,7 +242,7 @@ under the License.
                             </condition>
                             <!-- Add a new Task -->
                             <widgets>
-                                <label style="h1">${uiLabelMap.PageTitleEditTask}</label>
+                                <label style="h2">${uiLabelMap.PageTitleEditTask}</label>
                                 <platform-specific>
                                     <html><html-template location="component://projectmgr/webapp/projectmgr/project/edittask.ftl"/></html>
                                 </platform-specific>
@@ -263,13 +263,13 @@ under the License.
                                     <!-- Edit an existing SubTask -->
                                     <fail-widgets>
                                         <container>
-                                            <link  text="${uiLabelMap.CommonGoBack}" target="FindTask" style="${styles.button_default}">
+                                            <link text="${uiLabelMap.CommonGoBack}" target="FindTask" style="${styles.button_default}">
                                                 <parameter param-name="workEffortId" from-field="task.workEffortParentId"/>
                                                 <parameter param-name="workEffortTypeId" value="TASK"/>
                                             </link>
                                         </container>
-                                        <label style="h1">${uiLabelMap.ProjectMgrSubTaskName}: ${task.workEffortName}</label>
-                                        <container><label style="h1">${uiLabelMap.PageTitleEditSubTask}</label></container>
+                                        <label style="h2">${uiLabelMap.ProjectMgrSubTaskName}: ${task.workEffortName}</label>
+                                        <label style="h2">${uiLabelMap.PageTitleEditSubTask}</label>
                                         <platform-specific>
                                             <html><html-template location="component://projectmgr/webapp/projectmgr/project/edittaskandassoc.ftl"/></html>
                                         </platform-specific>
@@ -676,7 +676,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label text="${uiLabelMap.PageTitleNewPartyNote}" style="h2"/></container>
+                        <label text="${uiLabelMap.PageTitleNewPartyNote}" style="h2"/>
                         <include-form name="AddPartyNote" location="component://party/widget/partymgr/PartyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -715,7 +715,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container>
-                                    <label style="h3">${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
+                                    <label style="perm-error-msg">${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
                                 </container>
                                 <container>
                                     <link target="authview/${donePage}" text="[${uiLabelMap.CommonBack}]" style="smallSubmit"/>
@@ -761,10 +761,10 @@ under the License.
                                         <not><if-empty field="communicationEvent"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h1" text="${uiLabelMap.PartyEditCommunicationEvent}"/>
+                                        <label style="h2" text="${uiLabelMap.PartyEditCommunicationEvent}"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h1" text="${uiLabelMap.PartyNewCommunication}"/>
+                                        <label style="h2" text="${uiLabelMap.PartyNewCommunication}"/>
                                     </fail-widgets>
                                 </section>
                                 <section>
@@ -843,7 +843,7 @@ under the License.
                                 </platform-specific>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -874,7 +874,7 @@ under the License.
                                 </platform-specific>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -993,7 +993,7 @@ under the License.
                             <set field="project" from-field="result.projectInfo"/>
                         </actions>
                         <widgets>
-                            <label style="h1" text="${uiLabelMap.ProjectMgrProjectCurrent}: ${project.projectName}[${project.projectId}]"/>
+                            <label style="h2" text="${uiLabelMap.ProjectMgrProjectCurrent}: ${project.projectName}[${project.projectId}]"/>
                             <container style="large-6">
                                 <screenlet title="${uiLabelMap.PageTitleProjectInformation}">
                                     <include-form name="ProjectInfo" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
@@ -1043,7 +1043,7 @@ under the License.
                         <if-empty field="projects"/>
                     </condition>
                     <widgets>
-                        <label style="h2" text="${uiLabelMap.ProjectMgrNoProjectsFound}"/>
+                        <label style="result-msg" text="${uiLabelMap.ProjectMgrNoProjectsFound}"/>
                     </widgets>
                 </section>
             </widgets>
@@ -1093,7 +1093,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProjectDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label  style="h1" text="${uiLabelMap[titleProperty]}"/>
+                        <label style="h2" text="${uiLabelMap[titleProperty]}"/>
                         <section>
                             <condition>
                                 <or>

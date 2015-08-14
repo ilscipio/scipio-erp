@@ -52,12 +52,12 @@ under the License.
                                                 </condition>
                                                 <widgets>
                                                     <!-- list all contacts -->
-                                                    <label style="h1" text="${uiLabelMap.SfaAllContacts}"/>
+                                                    <label style="h2" text="${uiLabelMap.SfaAllContacts}"/>
                                                     <include-form name="ListContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                                                 </widgets>
                                                 <fail-widgets>
                                                     <!-- list my contacts -->
-                                                    <label style="h1" text="${uiLabelMap.SfaMyContacts}"/>
+                                                    <label style="h2" text="${uiLabelMap.SfaMyContacts}"/>
                                                     <include-form name="ListMyContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                                                 </fail-widgets>
                                             </section>
@@ -134,7 +134,7 @@ under the License.
                 <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleCreateContactFromVCard}">
-                            <container><label  text="${uiLabelMap.SfaAutoCreateContactByImportingVCard}"/></container>
+                            <container><label text="${uiLabelMap.SfaAutoCreateContactByImportingVCard}"/></container>
                             <include-form  name="NewContactFromVCard" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                         </screenlet>
                     </decorator-section>

@@ -41,7 +41,7 @@ under the License.
                 </screenlet>
             </widgets>
             <fail-widgets>
-                <label style="h2" text="${uiLabelMap.ProjectMgrAdminViewPermissionError}"/>
+                <label style="perm-error-msg" text="${uiLabelMap.ProjectMgrAdminViewPermissionError}"/>
             </fail-widgets>
         </section>
     </screen>

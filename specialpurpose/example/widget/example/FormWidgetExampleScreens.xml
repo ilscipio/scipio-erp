@@ -35,7 +35,7 @@ under the License.
                                 <if-has-permission permission="EXAMPLE" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <container style="h1"><label>${uiLabelMap.PageTitleFormWidgetExamples}</label></container>
+                                <label style="h2">${uiLabelMap.PageTitleFormWidgetExamples}</label>
                                 <container style="screenlet-body">
                                     <container style="button-bar"><label style="h2">${uiLabelMap.ExampleDateTimeFields}</label></container>
                                     <container style="screenlet-body">
@@ -123,7 +123,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ExampleViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ExampleViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

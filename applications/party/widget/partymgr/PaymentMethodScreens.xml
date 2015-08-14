@@ -42,7 +42,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container>
-                                    <label >${uiLabelMap.AccountingCardInfoNotBelongToYou}</label>
+                                    <label>${uiLabelMap.AccountingCardInfoNotBelongToYou}</label>
                                 </container>
                                 <container>
                                     <link target="authview/${donePage}" text="${uiLabelMap.CommonBack}" style="smallSubmit"/>
@@ -141,7 +141,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

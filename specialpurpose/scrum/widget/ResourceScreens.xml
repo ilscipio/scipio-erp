@@ -167,7 +167,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container>
-                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                    <label style="error-msg">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
                                 </container>
                             </fail-widgets>
                         </section>

@@ -81,7 +81,7 @@
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.AssetMaintViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.AssetMaintViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

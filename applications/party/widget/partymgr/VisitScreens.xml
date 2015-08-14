@@ -47,7 +47,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -83,7 +83,7 @@ under the License.
                 </screenlet>
             </widgets>
             <fail-widgets>
-                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -111,7 +111,7 @@ under the License.
                                 </platform-specific>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

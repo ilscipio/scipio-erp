@@ -156,9 +156,7 @@ under the License.
             <widgets>
                 <decorator-screen name="FacilityDecorator">
                     <decorator-section name="body">
-                        <container>
-                            <label style="h1">${uiLabelMap.ProductReceiptPurchaseOrder}</label>
-                        </container>
+                        <label style="h2">${uiLabelMap.ProductReceiptPurchaseOrder}</label>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -205,9 +203,7 @@ under the License.
             <widgets>
                 <decorator-screen name="FacilityDecorator">
                     <decorator-section name="body">
-                        <container>
-                            <label style="h1">${uiLabelMap.ProductFacilityMovement}</label>
-                        </container>
+                        <label style="h2">${uiLabelMap.ProductFacilityMovement}</label>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -219,9 +215,7 @@ under the License.
             <widgets>
                 <decorator-screen name="FacilityDecorator">
                     <decorator-section name="body">
-                        <container>
-                            <label style="h1">${uiLabelMap.ProductPicking}</label>
-                        </container>
+                        <label style="h2">${uiLabelMap.ProductPicking}</label>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -233,9 +227,7 @@ under the License.
             <widgets>
                 <decorator-screen name="FacilityDecorator">
                     <decorator-section name="body">
-                        <container>
-                            <label style="h1">${uiLabelMap.ProductPacking}</label>
-                        </container>
+                        <label style="h2">${uiLabelMap.ProductPacking}</label>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

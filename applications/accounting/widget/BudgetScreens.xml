@@ -106,7 +106,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="BudgetSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        <label style="h1" text="Budget : [${budgetId}]"/>
+                                        <label style="h2" text="Budget : [${budgetId}]"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

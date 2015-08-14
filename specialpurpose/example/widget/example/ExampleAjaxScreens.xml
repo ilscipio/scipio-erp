@@ -36,7 +36,7 @@ under the License.
                                 <if-has-permission permission="EXAMPLE" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <container style="h1"><label>${uiLabelMap[titleProperty]}</label></container>
+                                <label style="h2">${uiLabelMap[titleProperty]}</label>
                                 <section>
                                     <condition>
                                         <if-compare field="javaScriptEnabled" value="true" operator="equals"/>
@@ -49,13 +49,13 @@ under the License.
                                 <container id="ListExamplesAjax">
                                     <include-screen name="ListExampleFormOnly"/>
                                 </container>
-                                <container style="h2"><label>${uiLabelMap.ExampleNewExample}</label></container>
+                                <label style="h2">${uiLabelMap.ExampleNewExample}</label>
                                 <container id="EditExampleAjax">
                                     <include-screen name="CreateExampleFormOnly"/>
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ExampleViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ExampleViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

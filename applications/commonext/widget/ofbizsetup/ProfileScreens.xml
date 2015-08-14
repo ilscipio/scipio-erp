@@ -73,7 +73,7 @@
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

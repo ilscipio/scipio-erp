@@ -35,15 +35,14 @@ under the License.
                             <widgets>
                                 <include-menu name="GlAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
 
-                                    <!-- label style="h1">List Accounts</label -->
-                                    <label style="h1">${uiLabelMap[labelTitleProperty]}</label>
+                                <label style="h2">${uiLabelMap[labelTitleProperty]}</label>
 
                                 <!-- Now call the SimpleScreen form -->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <!--
                             <fail-widgets>
-                                <label >${uiLabelMap.XxxxViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.XxxxViewPermissionError}</label>
                             </fail-widgets>
                             -->
                         </section>
@@ -69,12 +68,12 @@ under the License.
                             </condition -->
                             <widgets>
                                 <include-menu name="GlAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <label style="h1">${uiLabelMap[labelTitleProperty]} ${product.internalName} [${uiLabelMap.CommonId}:${productId}]</label>
+                                <label style="h2">${uiLabelMap[labelTitleProperty]} ${product.internalName} [${uiLabelMap.CommonId}:${productId}]</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <!--
                             <fail-widgets>
-                                <label >${uiLabelMap.XxxxViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.XxxxViewPermissionError}</label>
                             </fail-widgets>
                             -->
                         </section>

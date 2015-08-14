@@ -116,7 +116,7 @@ under the License.
                         <include-screen name="${detailScreen}"/>
                     </widgets>
                     <fail-widgets>
-                        <label style="h2">${uiLabelMap.ProductCategoryNotFoundForCategoryID} ${productCategoryId}!</label>
+                        <label style="error-msg">${uiLabelMap.ProductCategoryNotFoundForCategoryID} ${productCategoryId}!</label>
                     </fail-widgets>
                 </section>
             </widgets>
@@ -151,7 +151,7 @@ under the License.
                                 <include-screen name="${detailScreen}"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h2">${uiLabelMap.ProductProductNotFound} ${productId}!</label>
+                                <label style="error-msg">${uiLabelMap.ProductProductNotFound} ${productId}!</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

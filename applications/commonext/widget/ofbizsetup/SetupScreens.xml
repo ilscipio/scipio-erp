@@ -95,10 +95,10 @@
                                         <not><if-empty field="facility"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h1" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
+                                        <label style="h2" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h1" text="${uiLabelMap.ProductNewFacility}"></label>
+                                        <label style="h2" text="${uiLabelMap.ProductNewFacility}"></label>
                                     </fail-widgets>
                                 </section>
                                 <section>
@@ -108,7 +108,7 @@
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -141,9 +141,7 @@
                                 <section>
                                     <condition><not><if-empty field="productStoreId"/></not></condition>
                                     <widgets>
-                                        <container>
-                                            <label style="h1" text="${uiLabelMap.PageTitleEditProductStore} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]"/>
-                                        </container>
+                                        <label style="h2" text="${uiLabelMap.PageTitleEditProductStore} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]"/>
                                     </widgets>
                                 </section>
                                 <screenlet title="${uiLabelMap.SetupEditProductStore}">
@@ -156,7 +154,7 @@
                                         <if-compare field="showScreen" operator="equals" value="message"/>
                                     </condition>
                                     <widgets>
-                                        <label >${uiLabelMap.SetupPageError}</label>
+                                        <label style="error-msg">${uiLabelMap.SetupPageError}</label>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -188,9 +186,7 @@
                                 <section>
                                     <condition><not><if-empty field="webSite"/></not></condition>
                                     <widgets>
-                                        <container>
-                                            <label style="h1" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>
-                                        </container>
+                                        <label style="h2" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>
                                     </widgets>
                                 </section>
                                 <section>
@@ -207,7 +203,7 @@
                                         <if-compare field="showScreen" operator="equals" value="message"/>
                                     </condition>
                                     <widgets>
-                                        <label >${uiLabelMap.SetupPageError}</label>
+                                        <label style="error-msg">${uiLabelMap.SetupPageError}</label>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -235,10 +231,7 @@
                                 <if-compare field="showScreen" operator="equals" value="origin"/>
                             </condition>
                             <widgets>
-                                <container>
-                                    <label style="h1">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
-                                </container>
-                                <container style="clear"/>
+                                <label style="h2">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
                                 <screenlet title="${uiLabelMap.PageTitleEditProductCatalog}">
                                     <include-form name="EditProdCatalog" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                                 </screenlet>
@@ -269,15 +262,13 @@
                                 <if-compare field="showErrorMsg" operator="equals" value="N"/>
                             </condition>
                             <widgets>
-                                <container>
-                                    <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.description} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
-                                </container>
+                                <label style="h2">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.description} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
                                 <screenlet name="CreateProductCategory" title="${uiLabelMap.PageTitleEditProductCategory}">
                                     <include-form name="EditProductCategory" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h2">${uiLabelMap.SetupPageError}</label>
+                                <label style="error-msg">${uiLabelMap.SetupPageError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -305,12 +296,12 @@
                             </condition>
                             <widgets>
                                 <container>
-                                    <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
+                                    <label style="h2">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
                                 </container>
                                 <include-form name="EditProduct" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h2">${uiLabelMap.SetupPageError}</label>
+                                <label style="error-msg">${uiLabelMap.SetupPageError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

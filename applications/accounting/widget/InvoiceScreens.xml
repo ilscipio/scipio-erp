@@ -53,14 +53,14 @@ under the License.
                                     <widgets>
                                         <include-menu name="InvoiceSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                         <container style="leftclear">
-                                            <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${invoice.description} [${invoiceId}]  ${${extraFunctionName}}"/>
+                                            <label style="h2" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${invoice.description} [${invoiceId}]  ${${extraFunctionName}}"/>
                                         </container>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.AccountingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -376,7 +376,7 @@ under the License.
                                         <if-empty field="invoiceApplications"/>
                                     </condition>
                                     <widgets>
-                                        <container><label  text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
+                                        <container><label text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
                                     </widgets>
                                 </section>
                                 <section>
@@ -420,7 +420,7 @@ under the License.
                                         <if-empty field="invoiceApplications"/>
                                     </condition>
                                     <widgets>
-                                        <container><label  text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
+                                        <container><label text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
                                     </widgets>
                                 </section>
                             </fail-widgets>

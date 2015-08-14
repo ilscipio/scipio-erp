@@ -36,9 +36,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container>
-                            <label style="h1">${uiLabelMap.ManufacturingManageCostComponentCalc}</label>
-                        </container>
+                        <label style="h2">${uiLabelMap.ManufacturingManageCostComponentCalc}</label>
                         <screenlet id="ManufacturingCostComponentCalcPanel" title="${uiLabelMap.ManufacturingEditCostComponentCalc}" collapsible="true">
                             <include-form name="EditCostComponentCalc" location="component://manufacturing/widget/manufacturing/CostForms.xml"/>
                         </screenlet>

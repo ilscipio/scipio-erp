@@ -52,12 +52,12 @@ under the License.
                                                 </condition>
                                                 <widgets>
                                                     <!-- list all leads -->
-                                                    <label style="h1" text="${uiLabelMap.SfaAllLeads}"/>
+                                                    <label style="h2" text="${uiLabelMap.SfaAllLeads}"/>
                                                     <include-form name="ListLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
                                                 </widgets>
                                                 <fail-widgets>
                                                     <!-- list my leads -->
-                                                    <label style="h1" text="${uiLabelMap.SfaMyLeads}"/>
+                                                    <label style="h2" text="${uiLabelMap.SfaMyLeads}"/>
                                                     <include-form name="ListMyLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
                                                 </fail-widgets>
                                             </section>
@@ -110,7 +110,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label text="Please first add related company." style="h2"/>
+                                <label text="Please first add related company." />
                                 <screenlet title="${uiLabelMap.PageTitleAddRelatedCompany}" >
                                     <include-form name="AddRelatedCompany" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
                                 </screenlet>
@@ -183,7 +183,7 @@ under the License.
                 <decorator-screen name="CommonLeadDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleCreateLeadFromVCard}">
-                            <container><label  text="${uiLabelMap.SfaAutoCreateLeadByImportingVCard}"/></container>
+                            <container><label text="${uiLabelMap.SfaAutoCreateLeadByImportingVCard}"/></container>
                             <include-form  name="NewLeadFromVCard" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
                         </screenlet>
                     </decorator-section>

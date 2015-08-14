@@ -52,9 +52,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                        <container>
-                                            <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.categoryName} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
-                                        </container>
+                                        <label style="h2">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.categoryName} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
                                     </widgets>
                                     <fail-widgets>
                                         <section>
@@ -70,7 +68,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductCatalogViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -169,9 +167,7 @@ under the License.
                                     <widgets>
                                         <include-menu name="CategoryTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                         <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                        <container>
-                                            <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.description} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
-                                        </container>
+                                        <label style="h2">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.description} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
                                     </widgets>
                                     <fail-widgets>
                                         <section>
@@ -187,7 +183,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductCatalogViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                         <platform-specific>
@@ -526,7 +522,7 @@ under the License.
                             <include-form name="ListProductCategoryLinks" location="component://product/widget/catalog/CategoryForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleCreateProductCategoryLink}">
-                            <label >&gt;&gt;&gt;&gt;&gt;This function is depreciated and replaced by the function under the tab &quot;Content&quot; with the content type "Related URL"</label>
+                            <label>&gt;&gt;&gt;&gt;&gt;This function is depreciated and replaced by the function under the tab &quot;Content&quot; with the content type "Related URL"</label>
                             <include-form name="AddProductCategoryLink" location="component://product/widget/catalog/CategoryForms.xml"/>
                         </screenlet>
                     </decorator-section>

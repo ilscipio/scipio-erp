@@ -307,7 +307,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.SecurityViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.SecurityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

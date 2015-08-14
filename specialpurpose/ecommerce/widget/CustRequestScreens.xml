@@ -107,7 +107,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.OrderNoRequestFound}</label>
+                                <label>${uiLabelMap.OrderNoRequestFound}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

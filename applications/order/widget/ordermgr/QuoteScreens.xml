@@ -48,7 +48,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.OrderViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -653,7 +653,7 @@ under the License.
                     <include-screen name="ViewQuoteItemInfo"/>
             </widgets>
             <fail-widgets>
-                <label >${uiLabelMap.OrderNoQuoteFound}</label>
+                <label style="error-msg">${uiLabelMap.OrderNoQuoteFound}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -873,7 +873,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label >${uiLabelMap.OrderViewPermissionError}</label>
+                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -902,7 +902,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label >${uiLabelMap.OrderViewPermissionError}</label>
+                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>

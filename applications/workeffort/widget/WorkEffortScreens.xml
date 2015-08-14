@@ -47,7 +47,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -77,7 +77,7 @@ under the License.
                                 <platform-specific><html><html-template location="component://workeffort/webapp/workeffort/task/mytasks.ftl"/></html></platform-specific>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -229,7 +229,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="h1">
+                        <container style="h2">
                             <label text="${uiLabelMap.PageTitleAddWorkEffort} ${uiLabelMap.WorkEffortAssociatedFromParentToChild}"/>
                         </container>
                         <include-form name="AddWorkEffortAndAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
@@ -278,7 +278,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="h1">
+                        <container style="h2">
                             <label text="${uiLabelMap.PageTitleEditWorkEffortAssoc}"/>
                         </container>
                         <include-form name="AddWorkEffortAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
@@ -798,13 +798,13 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <container style="h1">
+                                <container style="h2">
                                     <label text="${title}"/>
                                 </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -827,7 +827,7 @@ under the License.
                                 <if-service-permission service-name="workEffortManagerPermission" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <container style="h1">
+                                <container style="h2">
                                     <label text="${uiLabelMap.WorkEffortICalendarFind}"/>
                                 </container>
                                 <container style="button-bar">
@@ -837,7 +837,7 @@ under the License.
                                 <include-form name="ListIcalendars" location="component://workeffort/widget/WorkEffortForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

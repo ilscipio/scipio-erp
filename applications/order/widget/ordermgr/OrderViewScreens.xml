@@ -102,12 +102,12 @@ under the License.
                 <not><if-empty field="orderHeader"/></not>
             </condition>
             <widgets>
-                    <container style="row">
-                        <container style="large-12 columns">
-                            <label style="h2" text="${uiLabelMap.OrderInfo}"/>
-                            <include-screen name="orderactions"/>
-                        </container>
-                    </container>
+                   <container style="row">
+                       <container style="large-12 columns">
+                           <label style="h2" text="${uiLabelMap.OrderInfo}"/>
+                           <include-screen name="orderactions"/>
+                       </container>
+                   </container>
                    <container style="row ">
                         <container style="large-6 columns">
                         <include-screen name="orderinfo"/>
@@ -130,7 +130,7 @@ under the License.
 
             </widgets>
             <fail-widgets>
-                <label style="h2" text="${uiLabelMap.OrderNoOrderFound}: [${orderId}]"></label>
+                <label style="error-msg" text="${uiLabelMap.OrderNoOrderFound}: [${orderId}]"></label>
             </fail-widgets>
         </section>
     </screen>
@@ -324,7 +324,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label >${uiLabelMap.OrderViewPermissionError}</label>
+                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -586,7 +586,7 @@ under the License.
                         </platform-specific>
                     </widgets>
                     <fail-widgets>
-                        <label  text="${uiLabelMap.OrderViewPermissionError}"/>
+                        <label style="perm-error-msg" text="${uiLabelMap.OrderViewPermissionError}"/>
                     </fail-widgets>
                 </section>
             </widgets>
@@ -610,7 +610,7 @@ under the License.
                         </screenlet>
                     </widgets>
                     <fail-widgets>
-                        <label  text="${uiLabelMap.OrderViewPermissionError}"/>
+                        <label style="perm-error-msg" text="${uiLabelMap.OrderViewPermissionError}"/>
                     </fail-widgets>
                 </section>
             </widgets>

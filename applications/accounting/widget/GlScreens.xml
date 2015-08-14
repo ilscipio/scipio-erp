@@ -33,7 +33,7 @@ under the License.
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.partyDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="OrganizationAccountingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
+                        <label style="h2">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -410,7 +410,7 @@ under the License.
                             </screenlet>
                         </widgets>
                         <fail-widgets>
-                            <label >${uiLabelMap.AccountingPrintChecksPermissionError}</label>
+                            <label style="perm-error-msg">${uiLabelMap.AccountingPrintChecksPermissionError}</label>
                         </fail-widgets>
                       </section>
                     </decorator-section>
@@ -457,7 +457,7 @@ under the License.
                             </screenlet>
                         </widgets>
                         <fail-widgets>
-                            <label >${uiLabelMap.AccountingUpdatePaymentPermissionError}</label>
+                            <label style="perm-error-msg">${uiLabelMap.AccountingUpdatePaymentPermissionError}</label>
                         </fail-widgets>
                       </section>
                     </decorator-section>

@@ -150,7 +150,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -199,8 +199,8 @@ under the License.
                                                 <container style="button-bar">
                                                     <link target="EditEmployment" text="${uiLabelMap.HumanResNewEmployment}" style="${styles.button_default}"/>
                                                 </container>
-                                                <label style="h1" text="${emplName.lastName},${emplName.firstName} ${emplName.middleName} [${emplName.partyId}] ${uiLabelMap.CommonFor}"></label>
-                                                <label style="h1" text="${orgName.groupName} [${orgName.partyId}]"></label>
+                                                <label style="h2" text="${emplName.lastName},${emplName.firstName} ${emplName.middleName} [${emplName.partyId}] ${uiLabelMap.CommonFor}"></label>
+                                                <label style="h2" text="${orgName.groupName} [${orgName.partyId}]"></label>
                                             </widgets>
                                         </section>
                                     </widgets>
@@ -208,7 +208,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -241,13 +241,13 @@ under the License.
                                     </actions>
                                     <widgets>
                                         <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                                        <label style="h1" text="${uiLabelMap.HumanResPerfReview} [${perfReview.perfReviewId}] ${partyNameView.lastName} ${partyNameView.firstName} ${partyNameView.middleName}"></label>
+                                        <label style="h2" text="${uiLabelMap.HumanResPerfReview} [${perfReview.perfReviewId}] ${partyNameView.lastName} ${partyNameView.firstName} ${partyNameView.middleName}"></label>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.HumanResViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.HumanResViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -288,14 +288,14 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="partyId"/></not></condition>
                                     <widgets>
-                                        <container style="h1">
+                                        <container style="h2">
                                             <section>
                                                 <condition><not><if-empty field="lookupPerson"/></not></condition>
                                                 <widgets>
-                                                    <label text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} [${partyId}]"/>
+                                                    <label style="h2" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} [${partyId}]"/>
                                                 </widgets>
                                                 <fail-widgets>
-                                                    <label style="h1" text="${uiLabelMap.HumanResNewEmployee}"/>
+                                                    <label style="h2" text="${uiLabelMap.HumanResNewEmployee}"/>
                                                 </fail-widgets>
                                             </section>
                                         </container>
@@ -304,7 +304,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -346,7 +346,7 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="partyId"/></not></condition>
                                     <widgets>
-                                        <container style="h1">
+                                        <container style="h2">
                                             <section>
                                                 <condition>
                                                     <or>
@@ -358,7 +358,7 @@ under the License.
                                                     <label text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/>
                                                 </widgets>
                                                 <fail-widgets>
-                                                    <label style="h1" text="${uiLabelMap.PartyNewUser}"/>
+                                                    <label style="h2" text="${uiLabelMap.PartyNewUser}"/>
                                                 </fail-widgets>
                                             </section>
                                         </container>
@@ -367,7 +367,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -447,7 +447,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

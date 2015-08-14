@@ -47,7 +47,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PortalPageViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PortalPageViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

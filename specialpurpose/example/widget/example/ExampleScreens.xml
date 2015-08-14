@@ -50,7 +50,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ExampleViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ExampleViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

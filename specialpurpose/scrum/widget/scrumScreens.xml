@@ -97,7 +97,7 @@ under the License.
                         </widgets>
                         <fail-widgets>
                                 <screenlet>
-                                    <label style="h3">You[${userLogin.partyId}] are have not permission to perform this action</label>
+                                    <label style="perm-error-msg">You[${userLogin.partyId}] are have not permission to perform this action</label>
                                 </screenlet>
                             </fail-widgets>
                         </section>
@@ -295,7 +295,7 @@ under the License.
                                 </link>
                             </container>
                             <screenlet>
-                                <label style="h3">You[${userLogin.partyId}] are have not permission to perform this action</label>
+                                <label style="perm-error-msg">You[${userLogin.partyId}] are have not permission to perform this action</label>
                             </screenlet>
                         </fail-widgets>
                     </section>
@@ -1856,7 +1856,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.ScrumBillingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ScrumBillingViewPermissionError}</label>
                             </fail-widgets>
                          </section>
                     </decorator-section>
@@ -2265,7 +2265,7 @@ under the License.
                         </widgets>
                         <fail-widgets>
                                 <screenlet>
-                                    <label style="h3">You[${userLogin.partyId}] are have not permission to perform this action</label>
+                                    <label style="perm-error-msg">You[${userLogin.partyId}] are have not permission to perform this action</label>
                                 </screenlet>
                             </fail-widgets>
                         </section>
@@ -2463,13 +2463,13 @@ under the License.
                 <container style="large-6">
                     <section>
                         <widgets>
-                            <label style="h1" text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
+                            <label style="h2" text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
                             <include-screen name="commEvent"/>
                         </widgets>
                     </section>
                 </container>
                 <container style="large-6">
-                    <label style="h1" text="${uiLabelMap.CommonRelatedInformation}"/>
+                    <label style="h2" text="${uiLabelMap.CommonRelatedInformation}"/>
                     <section>
                         <condition>
                             <if-empty field="communicationEvent.contactListId"/>
@@ -2530,12 +2530,8 @@ under the License.
                                 </condition>
                                 <widgets>
                                     <screenlet>
-                                        <container>
-                                            <label style="h1" text="${uiLabelMap.PartyOriginEmailNotKnown}"/>
-                                        </container>
-                                        <container>
-                                            <label style="h2" text="${uiLabelMap.PartyEmailMessage}"/>
-                                        </container>
+                                        <label style="h2" text="${uiLabelMap.PartyOriginEmailNotKnown}"/>
+                                        <label style="h3" text="${uiLabelMap.PartyEmailMessage}"/>
                                         <include-form name="allocateMsgToPartyForm" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                                     </screenlet>
                                 </widgets>
@@ -2708,7 +2704,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="h3">${uiLabelMap.ScrumBillingViewPermissionError}</label>
+                <label style="perm-error-msg">${uiLabelMap.ScrumBillingViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -2958,7 +2954,7 @@ under the License.
                         </widgets>
                         <fail-widgets>
                                 <screenlet>
-                                    <label style="h3">You[${userLogin.partyId}] are have not permission to perform this action</label>
+                                    <label style="perm-error-msg">You[${userLogin.partyId}] are have not permission to perform this action</label>
                                 </screenlet>
                             </fail-widgets>
                         </section>

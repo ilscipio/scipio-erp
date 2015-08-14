@@ -63,7 +63,7 @@ under the License.
                                         <not><if-empty field="shipment"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h1" text="${uiLabelMap.ProductShipmentId}: ${shipment.shipmentId}"/>
+                                        <label style="h2" text="${uiLabelMap.ProductShipmentId}: ${shipment.shipmentId}"/>
                                         <container>
                                             <link style="${styles.button_default}" text="${uiLabelMap.ProductGenerateShipmentManifestReport}" target="ShipmentManifest.pdf" target-window="_BLANK">
                                                 <parameter param-name="shipmentId" from-field="shipment.shipmentId"/>
@@ -112,7 +112,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

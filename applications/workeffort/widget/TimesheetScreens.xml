@@ -154,7 +154,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

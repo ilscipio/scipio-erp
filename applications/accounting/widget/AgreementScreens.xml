@@ -64,13 +64,13 @@ under the License.
                                                 <include-menu name="AgreementItemTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                             </widgets>
                                         </section>
-                                        <label style="h1">${agreement.description} [${agreement.agreementId}] </label>
+                                        <label style="h2">${agreement.description} [${agreement.agreementId}] </label>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.AccountingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -108,7 +108,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.AccountingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -664,9 +664,7 @@ under the License.
             <fail-widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
                     <decorator-section name="body">
-                        <container>
-                            <label style="h2">${uiLabelMap.AccountingAgreementIsNotSetForSupplierProducts}</label>
-                        </container>
+                        <label style="h2">${uiLabelMap.AccountingAgreementIsNotSetForSupplierProducts}</label>
                     </decorator-section>
                 </decorator-screen>
             </fail-widgets>

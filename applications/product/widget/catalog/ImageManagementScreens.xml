@@ -68,7 +68,7 @@ under the License.
         </section>
     </screen>
     
-     <screen name="ListImageGallery">
+    <screen name="ListImageGallery">
         <section>
             <condition>
                 <not><if-empty field="parameters.productId"/></not>
@@ -103,7 +103,7 @@ under the License.
                             <widgets>
                                 <decorator-screen name="ImageManagementDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
-                                        <label style="h1">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
+                                        <label style="h2">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
                                         <screenlet title="${uiLabelMap.ImageManagementGallery}">
                                             <platform-specific>
                                                 <html><html-template location="component://product/webapp/catalog/imagemanagement/ImageGallery.ftl"/></html>
@@ -122,7 +122,7 @@ under the License.
                             <widgets>
                                 <decorator-screen name="ImageManagementDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
-                                        <label text="${uiLabelMap.ProductNoExistingProductsFound}"/>
+                                        <label style="error-msg" text="${uiLabelMap.ProductNoExistingProductsFound}"/>
                                     </decorator-section>
                                 </decorator-screen>
                             </widgets>
@@ -430,7 +430,7 @@ under the License.
                                         <not><if-empty field="product"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h1">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
+                                        <label style="h2">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
                                         <screenlet title="${uiLabelMap.CommonManage}">
                                             <include-form name="ListImageManage" location="component://product/widget/catalog/ImageManagementForms.xml"/>
                                         </screenlet>
@@ -439,7 +439,7 @@ under the License.
                                         </screenlet>
                                     </widgets>
                                     <fail-widgets>
-                                        <label text="${uiLabelMap.ProductNoExistingProductsFound}"/>
+                                        <label style="error-msg" text="${uiLabelMap.ProductNoExistingProductsFound}"/>
                                     </fail-widgets>
                                 </section>
                             </widgets>
@@ -695,7 +695,7 @@ under the License.
                                         <not><if-empty field="product"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h1">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
+                                        <label style="h2">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
                                         <container style="large-6">
                                             <screenlet title="${uiLabelMap.ImageManagementChooseReplacementImage}">
                                                 <include-form name="ListImageExist" location="component://product/widget/catalog/ImageManagementForms.xml"/>
@@ -712,7 +712,7 @@ under the License.
                                         </screenlet>
                                     </widgets>
                                     <fail-widgets>
-                                        <label text="${uiLabelMap.ProductNoExistingProductsFound}"/>
+                                        <label style="error-msg" text="${uiLabelMap.ProductNoExistingProductsFound}"/>
                                     </fail-widgets>
                                 </section>
                             </widgets>
@@ -882,7 +882,7 @@ under the License.
                                 <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
                             </condition>
                             <widgets>
-                                <!--<label style="h1">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>-->
+                                <!--<label style="h2">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>-->
                                 <screenlet title="${uiLabelMap.ImageManagementThumbnailSizeExistingInProduct} : ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]">
                                     <include-form name="SizeListOfProduct" location="component://product/widget/catalog/ImageManagementForms.xml"/>
                                 </screenlet>

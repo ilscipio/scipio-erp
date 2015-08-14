@@ -199,7 +199,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label  text="${uiLabelMap.AccountingViewPermissionError}"/>
+                                <label style="perm-error-msg" text="${uiLabelMap.AccountingViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -232,10 +232,10 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        <label style="h1">${uiLabelMap.AccountingPaymentGroupOverviewFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
+                                        <label style="h2">${uiLabelMap.AccountingPaymentGroupOverviewFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h1">${uiLabelMap.AccountingNewPaymentGroup}</label>
+                                        <label style="h2">${uiLabelMap.AccountingNewPaymentGroup}</label>
                                     </fail-widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

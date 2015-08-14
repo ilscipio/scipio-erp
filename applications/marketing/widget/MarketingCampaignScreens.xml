@@ -55,7 +55,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.MarketingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.MarketingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -148,9 +148,7 @@ under the License.
                         </container>
                         <include-form name="EditMarketingCampaignRoles" location="component://marketing/widget/MarketingCampaignForms.xml" />
                         <!-- 
-                        <container>
-                            <label style="h2" text="${uiLabelMap.CommonStatusHistory}" />
-                        </container>
+                        <label style="h2" text="${uiLabelMap.CommonStatusHistory}" />
                          -->
                     </decorator-section>
                 </decorator-screen>

@@ -35,7 +35,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ManufacturingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ManufacturingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -123,7 +123,7 @@ under the License.
                                 </platform-specific>
                             </widgets>
                             <fail-widgets>
-                                <label style="h1">${uiLabelMap.ManufacturingMrpJobIsRunning}</label>
+                                <label style="result-msg">${uiLabelMap.ManufacturingMrpJobIsRunning}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

@@ -144,12 +144,8 @@ under the License.
                         </widgets>
                         <fail-widgets>
                             <screenlet title="${uiLabelMap.PageTitleTaskAssignedToMe}">
-                                <container>
-                                    <label style="h3" text="${uiLabelMap.ProjectMgrTaskNoOpen1}"/>
-                                </container>
-                                <container>
-                                    <label style="h3" text="${uiLabelMap.ProjectMgrTaskNoOpen2}"/>
-                                </container>
+                                <label style="p" text="${uiLabelMap.ProjectMgrTaskNoOpen1}"/>
+                                <label style="p" text="${uiLabelMap.ProjectMgrTaskNoOpen2}"/>
                             </screenlet>
                         </fail-widgets>
                     </section>
@@ -480,7 +476,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTaskDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="h1" text="${uiLabelMap.OrderRequest} : ${custRequest.custRequestName} [${parameters.custRequestId}] ${uiLabelMap.CommonFrom} ${partyName.firstName} ${partyName.middleName} ${partyName.lastName} ${partyName.groupName} "/>
+                        <label style="h2" text="${uiLabelMap.OrderRequest} : ${custRequest.custRequestName} [${parameters.custRequestId}] ${uiLabelMap.CommonFrom} ${partyName.firstName} ${partyName.middleName} ${partyName.lastName} ${partyName.groupName} "/>
                         <container style="large-6">
                             <screenlet title="${uiLabelMap.PageTitleCreateTaskbyRequest}">
                                 <include-form name="EditTaskFromRequest" location="component://projectmgr/widget/forms/TaskForms.xml"/>

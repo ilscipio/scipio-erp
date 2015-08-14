@@ -90,7 +90,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -130,10 +130,10 @@ under the License.
                                         <not><if-empty field="currentValue.contentId"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentValue.contentName},${currentValue.description} [${currentValue.contentId}]  ${${extraFunctionName}}"/>
+                                        <label style="h2" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentValue.contentName},${currentValue.description} [${currentValue.contentId}]  ${${extraFunctionName}}"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h1" text="${uiLabelMap.PageTitleAddContent}"/>
+                                        <label style="h2" text="${uiLabelMap.PageTitleAddContent}"/>
                                     </fail-widgets>
                                 </section>
                                 <container style="no-clear">
@@ -141,7 +141,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -178,7 +178,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -218,7 +218,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="dataresource" location="component://content/widget/content/DataResourceMenus.xml"/>
-                                        <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentValue.dataResourceName} [${currentValue.dataResourceId}]  ${${extraFunctionName}}"/>
+                                        <label style="h2" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentValue.dataResourceName} [${currentValue.dataResourceId}]  ${${extraFunctionName}}"/>
                                     </widgets>
                                 </section>
                                 <container style="no-clear">
@@ -226,7 +226,7 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -246,7 +246,7 @@ under the License.
                         <include-menu name="${menuName}" location="component://content/widget/compdoc/CompDocMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <label text="${title}" style="h1"/>
+                        <label text="${title}" style="h2"/>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -280,7 +280,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -315,7 +315,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -356,11 +356,11 @@ under the License.
                                 <container>
                                     <include-menu name="websiteMenu" location="component://content/widget/content/ContentMenus.xml"/>
                                 </container>
-                                <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]  ${${extraFunctionName}}"/>
+                                <label style="h2" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]  ${${extraFunctionName}}"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -395,7 +395,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -498,11 +498,11 @@ under the License.
                                 <container style="button-bar">
                                     <include-menu name="WebAnalyticsConfigButtonBar" location="component://content/widget/content/ContentMenus.xml"/>
                                 </container>
-                                <label style="h1" text="${uiLabelMap.CatalogWebAnalytics} ${uiLabelMap.CommonFor} : ${webSite.siteName} [${webSite.webSiteId}]  ${${extraFunctionName}}"/>
+                                <label style="h2" text="${uiLabelMap.CatalogWebAnalytics} ${uiLabelMap.CommonFor} : ${webSite.siteName} [${webSite.webSiteId}]  ${${extraFunctionName}}"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

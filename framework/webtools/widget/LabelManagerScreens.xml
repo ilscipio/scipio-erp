@@ -51,7 +51,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="h3">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
+                <label style="perm-error-msg">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -73,7 +73,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="h3">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
+                <label style="perm-error-msg">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -95,7 +95,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="h3">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
+                <label style="perm-error-msg">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -119,7 +119,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="h3">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
+                <label style="perm-error-msg">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
             </fail-widgets>
         </section>
     </screen>

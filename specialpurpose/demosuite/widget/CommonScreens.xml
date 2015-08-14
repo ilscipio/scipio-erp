@@ -37,7 +37,7 @@
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.DemoSuiteViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.DemoSuiteViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

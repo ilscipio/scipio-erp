@@ -160,7 +160,7 @@ under the License.
                                 </link>
                             </container>
                             <include-form name="EditContactListParty" location="component://marketing/widget/ContactListForms.xml"/>
-                            <container><label style="h2" text="${uiLabelMap.CommonStatusHistory}"/></container>
+                            <label style="h2" text="${uiLabelMap.CommonStatusHistory}"/>
                             <iterate-section entry="contactListPartyStatus" list="contactListPartyStatusList">
                                 <section>
                                     <widgets>

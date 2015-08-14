@@ -49,11 +49,11 @@ under the License.
                                 <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <container style="h1"><label text="${pageTitle}"/></container>
+                                <label style="h2" text="${pageTitle}"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

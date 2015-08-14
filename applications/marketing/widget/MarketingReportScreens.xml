@@ -36,7 +36,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.MarketingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.MarketingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -53,7 +53,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonMarketReportDecorator">
                     <decorator-section name="body">
-                        <container style="h1">
+                        <container style="h2">
                             <label text="${uiLabelMap.MarketingReports}"/>
                         </container>
                         <container style="large-6">

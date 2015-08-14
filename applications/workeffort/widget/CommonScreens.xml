@@ -112,7 +112,7 @@ under the License.
                                         </not>
                                     </condition>
                                     <widgets>
-                                        <container style="h1">
+                                        <container style="h2">
                                             <label>${uiLabelMap[titleProperty]} - ${workEffort.workEffortName} [${workEffortId}]</label>
                                         </container>
                                     </widgets>
@@ -120,7 +120,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -148,7 +148,7 @@ under the License.
                                     <condition><not><if-empty field="timesheetId"/></not></condition>
                                     <widgets>
                                         <include-menu name="TimesheetTabBar" location="component://workeffort/widget/TimesheetMenus.xml"/>
-                                        <container><label style="h1">${uiLabelMap.WorkEffortTimesheetTimesheetId} ${timesheetId}</label></container>
+                                        <label style="h2">${uiLabelMap.WorkEffortTimesheetTimesheetId} ${timesheetId}</label>
                                     </widgets>
                                 </section>
                             </widgets>
@@ -164,7 +164,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -195,7 +195,7 @@ under the License.
                                 <decorator-section-include name="body" />
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.WorkEffortViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.WorkEffortViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

@@ -31,13 +31,11 @@ under the License.
                                 <if-has-permission permission="ORDERMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <container>
-                                    <label style="h2">${uiLabelMap.CommonId}:${orderHeader.orderId}</label>
-                                </container>
+                                <label style="h2">${uiLabelMap.CommonId}:${orderHeader.orderId}</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.OrderViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

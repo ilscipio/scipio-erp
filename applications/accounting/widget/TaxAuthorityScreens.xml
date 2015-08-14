@@ -54,12 +54,12 @@ under the License.
                                     <widgets>
                                         <include-menu name="TaxAuthorityTabBar" location="component://accounting/widget/TaxAuthorityMenus.xml"/>
                                         <container><link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="${styles.button_default}"/></container>
-                                        <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${uiLabelMap.AccountingTaxAuthorityParty} &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${uiLabelMap.CommonId}:${taxAuthPartyId}], ${uiLabelMap.CommonGeo} &quot;${taxAuthGeo.geoName}&quot; [${uiLabelMap.CommonId}:${taxAuthGeoId}] ${${extraFunctionName}}"/>
+                                        <label style="h2" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${uiLabelMap.AccountingTaxAuthorityParty} &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${uiLabelMap.CommonId}:${taxAuthPartyId}], ${uiLabelMap.CommonGeo} &quot;${taxAuthGeo.geoName}&quot; [${uiLabelMap.CommonId}:${taxAuthGeoId}] ${${extraFunctionName}}"/>
                                     </widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.AccountingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                         <decorator-section-include name="body"/>
@@ -193,10 +193,10 @@ under the License.
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="TaxAuthorityCategoryPanel" title="${uiLabelMap.PageTitleAddTaxAuthorityCategory}" collapsible="true">
-                            <label >${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>
+                            <label>${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>
                             <include-form name="AddTaxAuthorityRateProduct" location="component://accounting/widget/TaxAuthorityForms.xml"/>
                         </screenlet>
-                        <label >${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>                        
+                        <label>${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>                        
                         <include-form name="ListTaxAuthorityRateProducts" location="component://accounting/widget/TaxAuthorityForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

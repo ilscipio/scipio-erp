@@ -100,15 +100,13 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="contactListId"/></not></condition>
                                     <widgets>
-                                        <container>
-                                            <label style="h1">${uiLabelMap.MarketingContactList} ${contactList.contactListName} [${contactListId}]</label>
-                                        </container>
+                                        <label style="h2">${uiLabelMap.MarketingContactList} ${contactList.contactListName} [${contactListId}]</label>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.MarketingViewPermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.MarketingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

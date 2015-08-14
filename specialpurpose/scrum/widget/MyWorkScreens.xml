@@ -96,10 +96,10 @@ under the License.
                     <fail-widgets>
                         <screenlet title="${uiLabelMap.PageTitleTaskAssignedToMe}" collapsible="true" initially-collapsed="false" id="titleMyTaskListFail">
                             <container>
-                                <label style="h3" text="${uiLabelMap.ScrumTaskNoOpen1}"/>
+                                <label text="${uiLabelMap.ScrumTaskNoOpen1}"/>
                             </container>
                             <container>
-                                <label style="h3" text="${uiLabelMap.ScrumTaskNoOpen2}"/>
+                                <label text="${uiLabelMap.ScrumTaskNoOpen2}"/>
                             </container>
                         </screenlet>
                     </fail-widgets>

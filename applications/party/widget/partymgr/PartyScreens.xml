@@ -47,7 +47,7 @@ under the License.
                                 </platform-specific>
                             </widgets>
                             <fail-widgets>
-                                <label  text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                                <label style="perm-error-msg" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -139,7 +139,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container>
-                                    <label>${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                    <label style="error-msg">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
                                 </container>
                             </fail-widgets>
                         </section>
@@ -179,8 +179,10 @@ under the License.
                                         <include-form name="AddPartyMainRole" location="component://party/widget/partymgr/PartyForms.xml"/>
                                         <container id="addPartySecondaryRole"/>
                                     </container>
-                                    <label style="h2">${uiLabelMap.PartyAddToRoleViewAll}</label>
-                                    <include-form name="AddPartyRole" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <container>
+                                        <label style="h2">${uiLabelMap.PartyAddToRoleViewAll}</label>
+                                        <include-form name="AddPartyRole" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    </container>
                                 </screenlet>
                             </widgets>
                         </section>
@@ -238,7 +240,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label  text="${uiLabelMap.PartyPermissionError}"/>
+                                <label style="perm-error-msg" text="${uiLabelMap.PartyPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -463,7 +465,7 @@ under the License.
                                     <link target="backHome" text="[${uiLabelMap.CommonBack}]" style="smallSubmit"/>
                                 </container>
                                 <container>
-                                    <label >${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
+                                    <label>${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
                                 </container>
                             </fail-widgets>
                         </section>
@@ -684,7 +686,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -730,7 +732,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -775,7 +777,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -820,7 +822,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                                <label style="perm-error-msg">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

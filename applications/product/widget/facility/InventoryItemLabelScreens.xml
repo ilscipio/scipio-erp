@@ -116,7 +116,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonInventoryItemLabelDecorator" location="${parameters.commonFacilityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label style="h2">${uiLabelMap.CommonType}: ${inventoryItemLabelType.description} [${inventoryItemLabelType.inventoryItemLabelTypeId}]</label></container>
+                        <label style="h2">${uiLabelMap.CommonType}: ${inventoryItemLabelType.description} [${inventoryItemLabelType.inventoryItemLabelTypeId}]</label>
                         <screenlet id="AddInventoryItemLabelApplPanel" title="${uiLabelMap.PageTitleAddInventoryItemLabelAppls}" collapsible="true">
                             <include-form name="AddInventoryItemLabelAppl" location="component://product/widget/facility/InventoryItemLabelForms.xml"/>
                         </screenlet>

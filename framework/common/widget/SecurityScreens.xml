@@ -285,29 +285,29 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="security"/>
+                <service service-name="securityPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-menu name="SecurityGroupTabBar" location="component://common/widget/SecurityMenus.xml"/>
-                            </widgets>
-                        </section>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                    <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
+                        <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupSideBar"/>
+                    </decorator-section>
+                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
+                        <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupTabBar"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label >${uiLabelMap.SecurityViewPermissionError}</label>
+                                <label>${uiLabelMap.SecurityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

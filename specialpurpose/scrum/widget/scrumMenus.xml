@@ -19,9 +19,9 @@ under the License.
 -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
-    <menu name="ScrumAppBar" title="${uiLabelMap.ScrumApplication}" 
-        default-menu-item-name="products" id="app-navigation" type="simple"
-                default-selected-style="selected" menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="headerItem">
+    <menu name="ScrumAppBar" title="${uiLabelMap.ScrumApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="products" selected-menuitem-context-field-name="headerItem"> <!-- id="app-navigation" type="simple"
+                default-selected-style="selected" menu-container-style="button-bar tab-bar" -->
         <menu-item name="products" title="${uiLabelMap.ScrumProductBacklog}">
             <condition>
                 <if-service-permission service-name="scrumPermissionCheck" main-action="VIEW" resource-description="SCRUM"/>
@@ -263,7 +263,7 @@ under the License.
                 org.ofbiz.base.util.UtilMisc.toMap(&quot;userLogin&quot;, parameters.get(&quot;userLogin&quot;),
                 &quot;resourceDescription&quot;, &quot;PRODUCT&quot;,
                 &quot;mainAction&quot;, &quot;VIEW&quot;,
-                &quot;productId&quot;, productId));
+                &quot;productId&quot;, context.get(&quot;productId&quot;)));
                 return result.get(&quot;hasPermission&quot;); }" type="Boolean"/>
         </actions>
         <menu-item name="view" title="${uiLabelMap.ScrumProductOverview}">
@@ -643,7 +643,7 @@ under the License.
                 org.ofbiz.base.util.UtilMisc.toMap(&quot;userLogin&quot;, parameters.get(&quot;userLogin&quot;),
                 &quot;resourceDescription&quot;, &quot;PRODUCT&quot;,
                 &quot;mainAction&quot;, &quot;VIEW&quot;,
-                &quot;productId&quot;, productId));
+                &quot;productId&quot;, context.get(&quot;productId&quot;)));
                 return result.get(&quot;hasPermission&quot;); }" type="Boolean"/>
           </actions>
         <menu-item name="AddProduct">

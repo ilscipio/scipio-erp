@@ -131,7 +131,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}">
                         <section>
                             <condition>
                                 <if-has-permission permission="ENTITY_MAINT"/>
@@ -169,7 +169,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}">
                         <section>
                             <condition>
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
@@ -207,7 +207,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}">
                         <section>
                             <condition>
                                 <if-has-permission permission="ENTITY_MAINT"/>
@@ -245,7 +245,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}">
                         <section>
                             <condition>
                                 <if-has-permission permission="ENTITY_MAINT"/>
@@ -283,13 +283,13 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}">
                         <section>
                             <condition>
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
-                                <include-menu name="configurationTabBar" location="component://webtools/widget/Menus.xml"/>
+                                <include-menu name="configurationSideBar" location="component://webtools/widget/Menus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -321,7 +321,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}">
                         <section>
                             <condition>
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>

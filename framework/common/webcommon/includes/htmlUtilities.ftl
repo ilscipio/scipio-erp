@@ -608,6 +608,12 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     last            = boolean, usually optional, if true indicate last cell in row 
 -->
 <#macro cell columns=0 small=0 medium=0 large=0 offset=0 class="" id="" collapse=false nocells=false last=false>
+    <#local columns = columns?number>
+    <#local small = small?number>
+    <#local medium = medium?number>
+    <#local large = large?number>
+    <#local offset = offset?number>
+    
     <#if !nocells>
         <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
         <#if class?has_content>

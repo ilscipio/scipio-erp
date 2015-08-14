@@ -70,7 +70,7 @@ under the License.
         <include-menu-items menu-name="WebtoolsAppBar" include-depth="recursive-includes" />
     </menu>
 
-    <menu name="configurationTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="configurationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="page.tabButtonItem">
         <menu-item name="tempexpr" title="${uiLabelMap.WebtoolsTemporalExpression}">
             <link target="findTemporalExpression"/>
@@ -79,8 +79,13 @@ under the License.
             <link target="myCertificates"/>
         </menu-item>
     </menu>
+    
+    <menu name="configurationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="page.tabButtonItem">
+        <include-menu-items menu-name="configurationTabBar" include-depth="recursive-includes" />
+    </menu>
 
-    <menu name="importExportTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="importExportTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="page.tabButtonItem">
         <menu-item name="data" title="${uiLabelMap.WebtoolsDataFileTools}">
             <link target="viewdatafile"/>
@@ -111,7 +116,12 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="serviceTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="importExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="page.tabButtonItem">
+        <include-menu-items menu-name="importExportTabBar" include-depth="recursive-includes" />
+    </menu>
+    
+    <menu name="serviceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="page.tabButtonItem">
         <menu-item name="serviceList" title="${uiLabelMap.WebtoolsServiceReference}">
             <link target="ServiceList"/>
@@ -129,8 +139,13 @@ under the License.
             <link target="runService"/>
         </menu-item>
     </menu>
+    
+    <menu name="serviceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="page.tabButtonItem">
+        <include-menu-items menu-name="serviceTabBar" include-depth="recursive-includes" />
+    </menu>
 
-    <menu name="LoggingTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="LoggingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="logView" title="${uiLabelMap.WebtoolsViewLog}">
             <link target="LogView"/>
@@ -142,15 +157,25 @@ under the License.
             <link target="LogConfiguration"/>
         </menu-item>
     </menu>
+    
+    <menu name="LoggingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem">
+        <include-menu-items menu-name="LoggingTabBar" include-depth="recursive-includes" />
+    </menu>
 
-    <menu name="CacheTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="CacheTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="logMenuItem">
         <menu-item name="findUtilCache" title="${uiLabelMap.WebtoolsCacheMaintenance}">
             <link target="FindUtilCache"/>
         </menu-item>
     </menu>
+    
+    <menu name="CacheSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="logMenuItem">
+        <include-menu-items menu-name="CacheTabBar" include-depth="recursive-includes" />
+    </menu>
 
-    <menu name="artifactTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="artifactTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="viewents" title="${uiLabelMap.WebtoolsViewComponents}">
             <link target="ViewComponents"/>
@@ -162,6 +187,11 @@ under the License.
         <menu-item name="labels" title="${uiLabelMap.WebtoolsLabelManager}">
             <link target="SearchLabels"/>
         </menu-item>-->
+    </menu>
+    
+    <menu name="artifactSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem">
+        <include-menu-items menu-name="artifactTabBar" include-depth="recursive-includes" />
     </menu>
     
     <menu name="TempExprTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -179,7 +209,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="EntityTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="EntityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="entitymaint" title="${uiLabelMap.WebtoolsEntityDataMaintenance}">
             <link target="entitymaint"/>
         </menu-item>
@@ -210,6 +240,10 @@ under the License.
             <link target="EntityPerformanceTest"/>
         </menu-item>
     </menu>
+    
+    <menu name="EntitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-menu-items menu-name="EntityTabBar" include-depth="recursive-includes" />
+    </menu>
 
     <menu name="PortalPageAdmin">
         <menu-item name="duplicate" title="${uiLabelMap.CommonDuplicate}">
@@ -227,7 +261,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="StatsTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="StatsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="stats" title="${uiLabelMap.WebtoolsStatistics}">
             <link target="StatsSinceStart"/>
@@ -235,6 +269,11 @@ under the License.
         <menu-item name="metrics" title="${uiLabelMap.WebtoolsMetrics}">
             <link target="ViewMetrics"/>
         </menu-item>
+    </menu>
+    
+    <menu name="StatsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem">
+        <include-menu-items menu-name="StatsTabBar" include-depth="recursive-includes" />
     </menu>
 
     <menu name="StatsSinceStart" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -257,8 +296,8 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="FindCache" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style=" refresh">
+    <menu name="FindCacheTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="refresh">
             <link target="FindUtilCache"/>
         </menu-item>
         <menu-item name="clearAll" title="${uiLabelMap.WebtoolsClearAllCaches}">
@@ -267,6 +306,10 @@ under the License.
         <menu-item name="forceGarbageCollection" title="${uiLabelMap.WebtoolsRunGC}">
             <link target="ForceGarbageCollection"/>
         </menu-item>
+    </menu>
+    
+    <menu name="FindCacheSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-menu-items menu-name="FindCacheTabBar" include-depth="recursive-includes" />
     </menu>
 
     <menu name="CacheElements" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -287,7 +330,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="geoManagement" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="geoManagementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!--menu-container-style="button-bar button-style-2 no-clear"-->
         <menu-item name="FindGeo" title="${uiLabelMap.WebtoolsGeosFind}">
             <link target="FindGeo"/>            
@@ -302,9 +345,13 @@ under the License.
                 <parameter param-name="geoId" from-field="parameters.geoId"/>
             </link>
         </menu-item>
+    </menu>    
+    
+    <menu name="geoManagementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-menu-items menu-name="geoManagementTabBar" include-depth="recursive-includes" />
     </menu>
     
-    <menu name="LayoutDemo" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="LayoutDemoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="Selected" title="${uiLabelMap.CommonSelected}" widget-style="active">
             <link target="${demoTargetUrl}">
                 <parameter param-name="demoParam1"/>

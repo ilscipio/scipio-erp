@@ -83,7 +83,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="LayoutDemo" location="component://webtools/widget/Menus.xml"/>
+                                <include-menu name="LayoutDemoSideBar" location="component://webtools/widget/Menus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

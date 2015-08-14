@@ -110,7 +110,7 @@ under the License.
                     <decorator-section name="left-column">
                         <section>
                             <widgets>
-                                <include-menu name="configurationTabBar" location="component://webtools/widget/Menus.xml"/>
+                                <include-menu name="configurationSideBar" location="component://webtools/widget/Menus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -137,7 +137,7 @@ under the License.
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
-                                <include-menu name="EntityTabBar" location="component://webtools/widget/Menus.xml"/>
+                                <include-menu name="EntitySideBar" location="component://webtools/widget/Menus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -175,7 +175,7 @@ under the License.
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="serviceTabBar" location="component://webtools/widget/Menus.xml"/>
+                                <include-menu name="serviceSideBar" location="component://webtools/widget/Menus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -213,7 +213,7 @@ under the License.
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
-                                <include-menu name="importExportTabBar" location="component://webtools/widget/Menus.xml"/>
+                                <include-menu name="importExportSideBar" location="component://webtools/widget/Menus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -251,7 +251,7 @@ under the License.
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
-                                <include-menu name="artifactTabBar" location="component://webtools/widget/Menus.xml"/>
+                                <include-menu name="artifactSideBar" location="component://webtools/widget/Menus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -327,7 +327,7 @@ under the License.
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="geoManagement" location="component://webtools/widget/Menus.xml"/>
+                                <include-menu name="geoManagementSideBar" location="component://webtools/widget/Menus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

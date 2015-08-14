@@ -195,8 +195,12 @@ under the License.
 <#-- Cato: new params: headerLevel, fromWidgets, menuClass, menuId, menuRole, requireMenu, forceEmptyMenu,noContent
      fromWidgets: hint of whether called by renderer or ftl macros
      hasContent: hint to say there will be content, workaround for styling -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel=2 fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true>
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel="" fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="">
 <#-- TODO: there should be a "level" param and class to follow nesting (similar to headerLevel), but no way to do this from this macro because no request object here to keep attrib... -->
+<#if !headerLevel?has_content || ((headerLevel?number) < 1)>
+  <#local headerLevel = 2>
+</#if>
+
 <#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
      note: with recent patch, menuString passed by renderer is rendered by macro renderer. -->
 <#local menuString = menuString?trim>
@@ -208,7 +212,18 @@ under the License.
 <div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!} section-screenlet-container${contentFlagClasses}">
 
 <#if showMore>
-<#if title?has_content><h${headerLevel}>${title}</h${headerLevel}></#if>    
+<#if title?has_content>
+  <#if titleStyle?has_content>
+    <#local titleStyleLower = titleStyle?lower_case>
+    <#if ['h1','h2','h3','h4','h5','h6']?seq_contains(titleStyleLower)>
+      <${titleStyleLower}>${title}</${titleStyleLower}>
+    <#else>
+      <h${headerLevel} class="${titleStyle}">${title}</h${headerLevel}>
+    </#if>
+  <#else>
+    <h${headerLevel}>${title}</h${headerLevel}>
+  </#if>
+</#if>    
     
     <#--
 <#if collapsible>

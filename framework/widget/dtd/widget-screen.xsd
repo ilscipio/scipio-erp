@@ -320,6 +320,11 @@ under the License.
                     <xs:documentation>Title text to be placed in the screenlet title bar.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="title-style">
+                <xs:annotation>
+                    <xs:documentation>Cato: style for the title (may be h1-h6).</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="id" type="xs:string" />
             <xs:attribute name="name" type="xs:string" />
             <xs:attribute name="collapsible" default="false">

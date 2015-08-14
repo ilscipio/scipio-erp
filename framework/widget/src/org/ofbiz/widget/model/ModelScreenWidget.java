@@ -582,6 +582,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public static final String TAG_NAME = "screenlet";
         private final FlexibleStringExpander idExdr;
         private final FlexibleStringExpander titleExdr;
+        private final FlexibleStringExpander titleStyleExdr;
         private final Menu navigationMenu;
         private final Menu tabMenu;
         private final Form navigationForm;
@@ -608,6 +609,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 throw new IllegalArgumentException("Collapsible screenlets must have a name or id [" + getModelScreen().getName() + "]");
             }
             this.titleExdr = FlexibleStringExpander.getInstance(screenletElement.getAttribute("title"));
+            this.titleStyleExdr = FlexibleStringExpander.getInstance(screenletElement.getAttribute("title-style"));
             List<? extends Element> subElementList = UtilXml.childElementList(screenletElement);
             // Make a copy of the unmodifiable List so we can modify it.
             ArrayList<ModelScreenWidget> subWidgets = new ArrayList<ModelScreenWidget>(ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList));
@@ -721,6 +723,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 title = simpleEncoder.encode(title);
             }
             return title;
+        }
+        
+        public String getTitleStyle(Map<String, Object> context) {
+            return this.titleStyleExdr.expandString(context);
         }
 
         public Menu getNavigationMenu() {

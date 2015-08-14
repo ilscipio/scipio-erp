@@ -593,6 +593,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         }
 
         String title = screenlet.getTitle(context);
+        String titleStyle = screenlet.getTitleStyle(context);
         boolean collapsible = screenlet.collapsible();
         ModelScreenWidget.Menu navMenu = screenlet.getNavigationMenu();
         ModelScreenWidget.Form navForm = screenlet.getNavigationForm();
@@ -641,6 +642,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("title", title);
+        parameters.put("titleStyle", titleStyle);
         parameters.put("collapsible", collapsible);
         parameters.put("saveCollapsed", screenlet.saveCollapsed());
         if (UtilValidate.isNotEmpty (screenlet.getId(context))) {

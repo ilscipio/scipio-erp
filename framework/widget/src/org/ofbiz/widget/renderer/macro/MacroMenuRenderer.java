@@ -46,7 +46,6 @@ import org.ofbiz.widget.model.ModelMenuItem;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
-import org.ofbiz.widget.renderer.macro.MacroScreenRenderer.ContextHandler;
 
 import freemarker.core.Environment;
 import freemarker.template.Template;
@@ -61,8 +60,6 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
 
-    private ContextHandler contextHandler = new ContextHandler("menu");
-    
     public MacroMenuRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
         this.macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
         this.request = request;
@@ -137,7 +134,6 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         Environment environment = environments.get(writer);
         if (environment == null) {
             Map<String, Object> input = UtilMisc.toMap("key", null);
-            contextHandler.populateInitialContext(writer, input);
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
         }

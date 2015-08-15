@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -81,90 +80,6 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     private static final String formrenderer = UtilProperties.getPropertyValue("widget", "screen.formrenderer");
     private int screenLetsIdCounter = 1;
 
-    private WeakHashMap<Appendable, Map<String, WeakReference<Object>>> initialContexts = new WeakHashMap<Appendable, Map<String, WeakReference<Object>>>();
-    
-    /**
-     * Cato: saves some values from the initial context.
-     * <p>
-     * WeakReference needed because the values may indirectly hold refs to the writer.
-     * Assume the context map is the original (otherwise would have to weakref map entries of a new map).
-     */
-    static class ContextHandler {
-
-        private final String rendererLabel;
-        private MacroScreenRenderer screenRenderer = null;
-
-        public ContextHandler(String rendererLabel) {
-            super();
-            this.rendererLabel = rendererLabel;
-        }
-
-        private void registerScreenRenderer(Appendable writer, Map<String, Object> context) throws IOException {
-            screenRenderer = (MacroScreenRenderer) context.get("screenStringRenderer");
-        }
-        
-        public void registerInitialContext(Appendable writer, Map<String, Object> context) throws IOException {
-            registerScreenRenderer(writer, context);
-            if (screenRenderer != null) {
-                if (screenRenderer.initialContexts.get(writer) == null) {
-                    Map<String, WeakReference<Object>> initContext = new HashMap<String, WeakReference<Object>>();
-                    // wrap everything in weak ref because may hold refs to writer
-                    for(Map.Entry<String, Object> entry : context.entrySet()) {
-                        if (entry.getValue() != null) {
-                            initContext.put(entry.getKey(), new WeakReference<Object>(entry.getValue()));
-                        }
-                    }
-                    screenRenderer.initialContexts.put(writer, initContext);
-                }
-            }
-            else {
-                Debug.logError("macro " + rendererLabel + " renderer template environment initial context register "
-                        + "could not retrieve macro screen renderer instance", module);
-            }
-        }
-        
-        public void populateInitialContext(Appendable writer, Map<String, Object> target) throws IOException {
-            if (screenRenderer != null) {
-                Map<String, WeakReference<Object>> initContext = screenRenderer.initialContexts.get(writer);
-                if (initContext != null) {
-                    populateInitialContext(initContext, target);
-                }
-                else {
-                    Debug.logError("macro " + rendererLabel + " renderer template environment initial context absent", module);
-                }
-            }
-            else {
-                Debug.logError("macro " + rendererLabel + " renderer template environment initial context populate "
-                        + "could not retrieve macro screen renderer instance", module);
-            }
-        }
-        
-        private void populateInitialContext(Map<String, WeakReference<Object>> context, Map<String, Object> target) throws IOException {
-            // WARNING/FIXME: This may (through HttpServletRequest, etc. objects) add an indirect strong ref
-            // back to the writer in the Environment object data model, preventing WeakHashMap environments
-            // from clearing?
-            // However this same problem already exists in the stock code: the Environment object 
-            // keeps a ref internally to the writer... so this probably changes nothing...
-            // for now each render gets a new MacroScreenRenderer anyway so probably no leaks possible.
-            for(Map.Entry<String, WeakReference<Object>> entry : context.entrySet()) {
-                WeakReference<Object> ref = entry.getValue();
-                if (ref != null) {
-                    Object val = ref.get();
-                    if (val != null) {
-                        target.put(entry.getKey(), val);
-                    }
-                    else {
-                        Debug.logWarning("macro " + rendererLabel + " renderer template environment initial context value with key '" + 
-                                entry.getKey() + "' released prematurely", module);
-                    }
-                }
-            }
-        }
-    }
-    
-    private ContextHandler contextHandler = new ContextHandler("screen");
-    
-    
     public MacroScreenRenderer(String name, String macroLibraryPath) throws TemplateException, IOException {
         macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
         rendererName = name;
@@ -221,7 +136,6 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         Environment environment = environments.get(writer);
         if (environment == null) {
             Map<String, Object> input = UtilMisc.toMap("key", null);
-            contextHandler.populateInitialContext(writer, input);
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
         }
@@ -233,7 +147,6 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
-        contextHandler.registerInitialContext(writer, context);
         executeMacro(writer, "renderScreenBegin", null);
     }
 

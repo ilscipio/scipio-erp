@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.ref.WeakReference;
 import java.rmi.server.UID;
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -87,6 +88,7 @@ import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.Paginator;
 import org.ofbiz.widget.renderer.UtilHelpText;
+import org.ofbiz.widget.renderer.macro.MacroScreenRenderer.ContextHandler;
 
 import com.ibm.icu.util.Calendar;
 
@@ -111,6 +113,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
     private boolean renderPagination = true;
     private boolean widgetCommentsEnabled = false;
 
+    private ContextHandler contextHandler = new ContextHandler("form");
+    
     public MacroFormRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
         macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
         this.request = request;
@@ -152,12 +156,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         Environment environment = environments.get(writer);
         if (environment == null) {
             Map<String, Object> input = UtilMisc.toMap("key", null);
+            contextHandler.populateInitialContext(writer, input);
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
         }
         return environment;
     }
-
+    
     private String encode(String value, ModelFormField modelFormField, Map<String, Object> context) {
         if (UtilValidate.isEmpty(value)) {
             return value;

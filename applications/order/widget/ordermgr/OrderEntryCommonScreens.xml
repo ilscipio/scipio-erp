@@ -29,15 +29,15 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <container style="row">
-                                    <container style="large-12 columns">
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                 <platform-specific>
                                     <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryTabBar.ftl"/></html>
                                 </platform-specific>
                                     </container>
                                 </container>
-                                <container style="row ">
-                                    <container style="large-12 columns">
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                 <decorator-section-include name="body"/>
                                     </container>
                                 </container>

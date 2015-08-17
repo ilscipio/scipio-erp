@@ -346,12 +346,12 @@ under the License.
                         <container>
                             <include-menu name="quoteTermSubTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                         </container>
-                        <container style="large-6">
+                        <container style="${styles.grid_large}6">
                             <screenlet title="${uiLabelMap.OrderOrderQuoteEditItems}" >
                                 <include-form name="EditQuoteItem" location="component://order/widget/ordermgr/QuoteForms.xml"/>
                             </screenlet>
                         </container>
-                        <container style="large-6">
+                        <container style="${styles.grid_large}6">
                             <section>
                                 <condition>
                                     <not><if-empty field="quoteItemSeqId"/></not>
@@ -670,10 +670,10 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <container style="large-6">
+                <container style="${styles.grid_large}6">
                     <include-screen name="quoteInfo"/>
                 </container>
-                <container style="large-6">
+                <container style="${styles.grid_large}6">
                     <include-screen name="quoteDate"/>
                     <include-screen name="quoteRoles"/>
                     <include-screen name="ListQuoteInfo"/>

@@ -42,19 +42,19 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="row">
-                            <container style="large-4 columns">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
                                 <include-screen name="DashboardStatsOrderTotalDay" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                             </container>
-                            <container style="large-4 columns">
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
                                 <include-screen name="DashboardStatsOrderCountWeek" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                             </container>
-                            <container style="large-4 columns">
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
                                 <include-screen name="DashboardStatsOrderTotalMonth" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                             </container>
                         </container>
-                        <container style="row">
-                            <container style="large-12 columns">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                 <include-portal-page id="OrderPortalPage"/>
                             </container>
                         </container>
@@ -78,8 +78,8 @@ under the License.
                 <decorator-screen name="CommonOrderViewDecorator">
                     <decorator-section name="body">
                         <include-screen name="orderHeader"/>
-                        <container style="row">
-                            <container style="large-12 columns">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/order/orderitems.ftl"/></html>
                         </platform-specific>
@@ -102,27 +102,27 @@ under the License.
                 <not><if-empty field="orderHeader"/></not>
             </condition>
             <widgets>
-                   <container style="row">
-                       <container style="large-12 columns">
+                   <container style="${styles.grid_row}">
+                       <container style="${styles.grid_large}12 ${styles.grid_cell}">
                            <label style="h2" text="${uiLabelMap.OrderInfo}"/>
                            <include-screen name="orderactions"/>
                        </container>
                    </container>
-                   <container style="row ">
-                        <container style="large-6 columns">
+                   <container style="${styles.grid_row}">
+                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
                         <include-screen name="orderinfo"/>
                         <include-screen name="orderterms"/>
                         </container>
-                        <container style="large-6 columns">
+                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
                             <include-screen name="ordercontactinfo"/>
                         </container>
                     </container>
-                    <container style="row">
-                        <container style="large-6 columns">
+                    <container style="${styles.grid_row}">
+                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
                         <include-screen name="orderpaymentinfo"/>
                         <include-screen name="projectAssoOrder"/>
                     </container>
-                        <container style="large-6 columns">
+                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
                         <include-screen name="ordershippinginfo"/>
                         <include-screen name="OrderSalesReps"/>
                     </container>

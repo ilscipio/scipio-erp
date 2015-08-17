@@ -226,13 +226,13 @@ under the License.
                     <decorator-section name="body">
                         <label text="${blogEntry.contentName}: ${blogEntry.description}" style="h2"/>
                         <horizontal-separator/>
-                        <container style="large-6">
+                        <container style="${styles.grid_large}6">
                             <label text="${uiLabelMap.ContentImage}"/>
                             <container>
                                 <sub-content content-id="${contentId}" map-key="IMAGE"/>
                             </container>
                         </container>
-                        <container style="large-6">
+                        <container style="${styles.grid_large}6">
                             <label text="${uiLabelMap.ContentBlogSummary}"/>
                             <container>
                                 <sub-content content-id="${contentId}" map-key="SUMMARY"/>

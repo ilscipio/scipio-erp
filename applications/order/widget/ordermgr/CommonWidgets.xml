@@ -24,9 +24,9 @@ under the License.
   <screen name="DashboardStatsOrderTotal">
       <section>
             <widgets>
-                <container style="large-4 columns"><include-screen name="DashboardStatsOrderTotalDay"/></container>
-                <container style="large-4 columns"><include-screen name="DashboardStatsOrderTotalWeek"/></container>
-                <container style="large-4 columns"><include-screen name="DashboardStatsOrderTotalMonth"/></container>
+                <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalDay"/></container>
+                <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalWeek"/></container>
+                <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalMonth"/></container>
             </widgets>
       </section>
   </screen>

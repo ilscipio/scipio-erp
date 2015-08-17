@@ -32,7 +32,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label style="message">${uiLabelMap.BirtOrderReportsWarning}</label>
-                        <container style="large-12 columns">
+                        <container style="${styles.grid_large}12 ${styles.grid_cell}">
                         <include-portal-page id="OrderReportPage"/>
                         </container>
                     </decorator-section>

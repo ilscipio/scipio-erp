@@ -235,26 +235,26 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderCheckoutDecorator">
                     <decorator-section name="body">
-                        <container style="row ">
-                            <container style="large-6 columns">
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderheaderinfo.ftl"/></html>
-                        </platform-specific>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/entry/order/orderheaderinfo.ftl"/></html>
+                                </platform-specific>
                             </container>
-                            <container style="large-6 columns">
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderpaymentinfo.ftl"/></html>
-                        </platform-specific>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/entry/order/orderpaymentinfo.ftl"/></html>
+                                </platform-specific>
                             </container>
                         </container>
-                        <container style="row ">
-                        <container style="large-12 columns">
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/order/shipGroupConfirmSummary.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderitems.ftl"/></html>
-                        </platform-specific>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/entry/order/shipGroupConfirmSummary.ftl"/></html>
+                                </platform-specific>
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/entry/order/orderitems.ftl"/></html>
+                                </platform-specific>
                             </container>
                         </container>
                     </decorator-section>

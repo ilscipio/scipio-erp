@@ -696,12 +696,12 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <label style="h2">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
-                                        <container style="large-6">
+                                        <container style="${styles.grid_large}6">
                                             <screenlet title="${uiLabelMap.ImageManagementChooseReplacementImage}">
                                                 <include-form name="ListImageExist" location="component://product/widget/catalog/ImageManagementForms.xml"/>
                                             </screenlet>
                                         </container>
-                                        <container style="large-6">
+                                        <container style="${styles.grid_large}6">
                                             <screenlet title="${uiLabelMap.ImageManagementChooseImageToReplace}">
                                                 <include-form name="ListImageReplace" location="component://product/widget/catalog/ImageManagementForms.xml"/>
                                             </screenlet>

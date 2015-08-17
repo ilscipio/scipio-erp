@@ -367,7 +367,7 @@ under the License.
                                 <if-compare field="payment.statusId" operator="equals"  value="PMNT_NOT_PAID"/>
                             </condition>
                             <widgets>
-                                <container style="large-6">
+                                <container style="${styles.grid_large}6">
                                     <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
                                         <link target="editPayment" text="${uiLabelMap.CommonUpdate}" style="${styles.button_default}">
                                             <parameter param-name="paymentId"/>
@@ -375,7 +375,7 @@ under the License.
                                         <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
                                     </screenlet>
                                 </container>
-                                <container style="large-6">
+                                <container style="${styles.grid_large}6">
                                     <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
                                         <link target="editPaymentApplications" text="${uiLabelMap.CommonUpdate}" style="${styles.button_default}">
                                             <parameter param-name="paymentId"/>
@@ -399,12 +399,12 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <container style="large-6">
+                                <container style="${styles.grid_large}6">
                                     <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
                                         <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
                                     </screenlet>
                                 </container>
-                                <container style="large-6">
+                                <container style="${styles.grid_large}6">
                                     <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
                                         <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>
                                     </screenlet>

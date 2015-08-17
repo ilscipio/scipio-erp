@@ -201,7 +201,7 @@
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <container style="large-6">
+                                <container style="${styles.grid_large}6">
                                     <screenlet title="${uiLabelMap.HumanResEmployeePosition} ${uiLabelMap.CommonInformation}">
                                         <section>
                                             <widgets>
@@ -212,7 +212,7 @@
                                     <include-screen name="EmplPositionFulfilmentView"/>
                                     <include-screen name="EmplPositionResponsibilityView"/>
                                 </container>
-                                <container style="large-6">
+                                <container style="${styles.grid_large}6">
                                     <include-screen name="EmplPositionReportsToView"/>
                                     <include-screen name="EmplPositionReportedToView"/>
                                 </container>

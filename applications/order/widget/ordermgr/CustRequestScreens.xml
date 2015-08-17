@@ -91,17 +91,17 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <container style="large-9">
+                <container style="${styles.grid_large}9">
                     <screenlet title="${uiLabelMap.OrderRequest} ${custRequest.custRequestId} ${uiLabelMap.CommonInformation}">
                         <include-form name="requestInfo" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
                     </screenlet>
                 </container>
-                <container style="large-12">
+                <container style="${styles.grid_large}12">
                     <screenlet title="${uiLabelMap.OrderRequestRoles}">
                         <include-form name="ViewRequestRoles" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
                     </screenlet>
                 </container>
-                <container style="large-12">
+                <container style="${styles.grid_large}12">
                     <screenlet title="${uiLabelMap.OrderCustRequestStatusList}" navigation-form-name="ViewRequest">
                         <include-form name="ViewRequestStatus" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
                     </screenlet>

@@ -332,11 +332,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTaskDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="large-6">
+                        <container style="${styles.grid_large}6">
                             <include-screen name="ViewTask"/>
                             <include-screen name="RevisionList"/>
                         </container>
-                        <container style="large-6">
+                        <container style="${styles.grid_large}6">
                             <screenlet title="${uiLabelMap.ScrumTaskAttachements}">
                                 <include-form location="component://scrum/widget/OpenTestForms.xml" name="contentTask"/>
                             </screenlet>

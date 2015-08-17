@@ -153,7 +153,7 @@ under the License.
                         <screenlet title="${uiLabelMap.${titleProperty}}">
                             <include-form name="EditProjectTasks" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
                         </screenlet>
-                        <container style="large-6">
+                        <container style="${styles.grid_large}6">
                             <screenlet title="${uiLabelMap.PageTitleAddTask}">
                                 <section>
                                     <condition>
@@ -168,7 +168,7 @@ under the License.
                                 </section>
                             </screenlet>
                         </container>
-                        <container style="large-6">
+                        <container style="${styles.grid_large}6">
                             <screenlet title="${uiLabelMap.PageTitleAddPhase}">
                                 <include-form name="AddProjectPhase" location="component://projectmgr/widget/forms/TaskForms.xml"/>
                             </screenlet>
@@ -388,14 +388,14 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProjectDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="large-6">
+                        <container style="${styles.grid_large}6">
                             <screenlet title="${uiLabelMap.PageTitleProjectInformation}">
                                 <include-form name="ProjectInfo" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
                             </screenlet>
                             <include-screen name="SubProjectsInfo"/>
                             <include-screen name="PhasesInfo"/>
                         </container>
-                        <container style="large-6">
+                        <container style="${styles.grid_large}6">
                             <include-screen name="PartiesInfo"/>
                             <include-screen name="NoteInfo"/>
                             <include-screen name="ListProjectContent"/>
@@ -994,7 +994,7 @@ under the License.
                         </actions>
                         <widgets>
                             <label style="h2" text="${uiLabelMap.ProjectMgrProjectCurrent}: ${project.projectName}[${project.projectId}]"/>
-                            <container style="large-6">
+                            <container style="${styles.grid_large}6">
                                 <screenlet title="${uiLabelMap.PageTitleProjectInformation}">
                                     <include-form name="ProjectInfo" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
                                 </screenlet>
@@ -1014,7 +1014,7 @@ under the License.
                                     </widgets>
                                 </section>
                             </container>
-                            <container style="large-6">
+                            <container style="${styles.grid_large}6">
                                 <section>
                                     <actions>
                                         <service service-name="getProjectTaskList" result-map="result">

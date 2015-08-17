@@ -310,7 +310,7 @@ under the License.
                     </widgets>
                 </section>
                 <!-- render content area -->
-                <container style="row fullWidth" id="content-main-section">
+                <container style="${styles.grid_row} fullWidth" id="content-main-section">
                     <!-- TODO?: could have a layoutSettings.inlineJavaScripts[] containing FTL locations for templates to 
                          include in <head></head>, but doesn't seem worth it for now -->
                     <platform-specific>

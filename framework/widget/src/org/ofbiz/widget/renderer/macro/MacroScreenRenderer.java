@@ -80,6 +80,93 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     private static final String formrenderer = UtilProperties.getPropertyValue("widget", "screen.formrenderer");
     private int screenLetsIdCounter = 1;
 
+    private Map<String, Object> initialContext = null;
+    
+    /**
+     * Cato: for each macro class, saves some values from the context as needed, 
+     * and saves/handles initial context so its values may be part of environment of
+     * macro calls (the major objects: request, response, etc.).
+     * <p>
+     * part of macro renderer initial context mod.
+     * <p>
+     * NOTE: this only allows macro environment to get vars part of the INITIAL context,
+     * not values from the current context. access to current context from macros is not possible without
+     * intrusive changes (changing all methods params; also problem that environment is shared
+     * so context stack wouldn't work so each macro call would need its own env, way too heavy).
+     * <p>
+     * relies on "screenStringRenderer" being in context (added in another Cato patch).
+     */
+    static class ContextHandler {
+
+        private final String rendererLabel;
+        private MacroScreenRenderer screenRenderer = null;
+
+        public ContextHandler(String rendererLabel) {
+            super();
+            this.rendererLabel = rendererLabel;
+        }
+
+        private void registerScreenRenderer(Appendable writer, Map<String, Object> context) throws IOException {
+            if (screenRenderer == null && context.get("screenStringRenderer") != null) {
+                screenRenderer = (MacroScreenRenderer) context.get("screenStringRenderer");
+            }
+        }
+        
+        /**
+         * Registers the context as an initial context for the render thread.
+         * Call from methods where the original context is expected to be passed at some point.
+         */
+        public void registerInitialContext(Appendable writer, Map<String, Object> context) throws IOException {
+            registerScreenRenderer(writer, context);
+            if (screenRenderer != null) {
+                if (screenRenderer.initialContext == null) {
+                    Map<String, Object> initialContext = new HashMap<String, Object>();
+                    initialContext.putAll(context);
+                    screenRenderer.initialContext = initialContext;
+                }
+            }
+            else {
+                Debug.logError("macro " + rendererLabel + " renderer template environment initial context register "
+                        + "could not retrieve macro screen renderer instance", module);
+            }
+        }
+        
+        /**
+         * Registers/saves elements from context as needed.
+         * Call from any *StringRenderer method that may be important.
+         */
+        public void registerContext(Appendable writer, Map<String, Object> context) throws IOException {
+            registerScreenRenderer(writer, context);
+        }
+        
+        /**
+         * Populates a target context destined as source for data model for a new Environment.
+         */
+        public void populateInitialContext(Appendable writer, Map<String, Object> targetContext) throws IOException {
+            if (screenRenderer != null) {
+                Map<String, Object> initContext = screenRenderer.initialContext;
+                if (initContext != null) {
+                    populateInitialContext(initContext, targetContext);
+                }
+                else {
+                    Debug.logError("macro " + rendererLabel + " renderer template environment initial context absent", module);
+                }
+            }
+            else {
+                Debug.logError("macro " + rendererLabel + " renderer template environment initial context populate "
+                        + "could not retrieve macro screen renderer instance", module);
+            }
+        }
+        
+        private void populateInitialContext(Map<String, Object> context, Map<String, Object> targetContext) throws IOException {
+            // this could more more complex or selective, but for now just dump whole initial context
+            targetContext.putAll(context);
+        }
+    }
+    
+    private ContextHandler contextHandler = new ContextHandler("screen");
+    
+    
     public MacroScreenRenderer(String name, String macroLibraryPath) throws TemplateException, IOException {
         macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
         rendererName = name;
@@ -136,6 +223,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         Environment environment = environments.get(writer);
         if (environment == null) {
             Map<String, Object> input = UtilMisc.toMap("key", null);
+            contextHandler.populateInitialContext(writer, input);
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
         }
@@ -147,6 +235,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
+        contextHandler.registerInitialContext(writer, context);
         executeMacro(writer, "renderScreenBegin", null);
     }
 

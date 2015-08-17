@@ -87,6 +87,7 @@ import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.Paginator;
 import org.ofbiz.widget.renderer.UtilHelpText;
+import org.ofbiz.widget.renderer.macro.MacroScreenRenderer.ContextHandler;
 
 import com.ibm.icu.util.Calendar;
 
@@ -111,6 +112,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
     private boolean renderPagination = true;
     private boolean widgetCommentsEnabled = false;
 
+    private ContextHandler contextHandler = new ContextHandler("form");
+    
     public MacroFormRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
         macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
         this.request = request;
@@ -152,12 +155,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         Environment environment = environments.get(writer);
         if (environment == null) {
             Map<String, Object> input = UtilMisc.toMap("key", null);
+            contextHandler.populateInitialContext(writer, input);
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
         }
         return environment;
     }
-
+    
     private String encode(String value, ModelFormField modelFormField, Map<String, Object> context) {
         if (UtilValidate.isEmpty(value)) {
             return value;
@@ -1297,6 +1301,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        contextHandler.registerContext(writer, context);
         this.widgetCommentsEnabled = ModelWidget.widgetBoundaryCommentsEnabled(context);
         if (modelForm instanceof ModelSingleForm) {
             renderBeginningBoundaryComment(writer, "Form Widget - Form Element", modelForm);
@@ -1489,6 +1494,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatListWrapperOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        contextHandler.registerContext(writer, context);
         Map<String, Object> inputFields = UtilGenerics.checkMap(context.get("requestParameters"));
         Map<String, Object> queryStringMap = UtilGenerics.toMap(context.get("queryStringMap"));
         if (UtilValidate.isNotEmpty(queryStringMap)) {
@@ -1564,6 +1570,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatHeaderRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        contextHandler.registerContext(writer, context);
         String headerStyle = FlexibleStringExpander.expandString(modelForm.getHeaderRowStyle(), context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatHeaderRowOpen ");

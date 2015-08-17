@@ -16,7 +16,10 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
+<#-- 
+Cato: WARN: note that unlike other macro libs, tree lib renderer does NOT currently support
+initial context objects (request, response, etc.) from macro renderer initial context mod.
+-->
 <#macro renderNodeBegin style>
 <#if style?has_content><ul class="${style}"></#if>
 <li><#rt/>

@@ -325,7 +325,7 @@ under the License.
                             <if-empty field="userLogin" />
                         </condition>
                         <actions>
-                            <set field="columnMainStyle" value="large-12 columns"/>
+                            <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
                             <set field="noTitle" value="true"/>                        
                         </actions>
                         <widgets>
@@ -349,7 +349,7 @@ under the License.
                                     </and>
                                 </condition>
                                 <actions>
-                                    <set field="columnMainStyle" value="large-12 columns"/>                            
+                                    <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>                            
                                 </actions>
                                 <widgets>
                                     <container id="content-main-body">
@@ -373,8 +373,8 @@ under the License.
                                     </and>
                                 </condition>
                                 <actions>
-                                   <set field="columnLeftStyle" value="large-2 medium-3 columns" />
-                                   <set field="columnMainStyle" value="large-10 medium-9 columns" />
+                                   <set field="columnLeftStyle" value="${styles.grid_large}2 ${styles.grid_medium}3 ${styles.grid_cell}" />
+                                   <set field="columnMainStyle" value="${styles.grid_large}10 ${styles.grid_medium}9 ${styles.grid_cell}" />
                                 </actions>
                                 <widgets>
                                     <include-screen name="column-left"/>
@@ -397,8 +397,8 @@ under the License.
                                     </and>
                                 </condition>
                                 <actions>
-                                   <set field="columnRightStyle" value="large-2 medium-3 columns" />
-                                   <set field="columnMainStyle" value="large-10 medium-9 columns" />
+                                   <set field="columnRightStyle" value="${styles.grid_large}2 ${styles.grid_medium}3 ${styles.grid_cell}" />
+                                   <set field="columnMainStyle" value="${styles.grid_large}10 ${styles.grid_medium}9 ${styles.grid_cell}" />
                                 </actions>
                                 <widgets>
                                     <include-screen name="column-main"/>
@@ -423,9 +423,9 @@ under the License.
                                     </and>
                                 </condition>
                                 <actions>
-                                   <set field="columnLeftStyle" value="large-2 medium-3 columns" />
-                                   <set field="columnRightStyle" value="large-2 medium-3 columns" />
-                                   <set field="columnMainStyle" value="large-8 medium-6 columns" />
+                                   <set field="columnLeftStyle" value="${styles.grid_large}2 ${styles.grid_medium}3 ${styles.grid_cell}" />
+                                   <set field="columnRightStyle" value="${styles.grid_large}2 ${styles.grid_medium}3 ${styles.grid_cell}" />
+                                   <set field="columnMainStyle" value="${styles.grid_large}8 ${styles.grid_medium}6 ${styles.grid_cell}" />
                                 </actions>
                                 <widgets>
                                     <include-screen name="column-left"/>

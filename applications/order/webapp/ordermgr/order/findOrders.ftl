@@ -329,8 +329,14 @@ document.lookuporder.orderId.focus();
         <#assign url><@ofbizUrl>searchorders</@ofbizUrl></#assign>
         <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
         <#-- forcePost required because search done from service event with https="true" -->
-        <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 />
+        <#macro paginateOrders>
+          <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 />
+        </#macro>
         <#assign paginated = true>
+    </#if>
+    
+    <#if paginated>
+      <@paginateOrders />
     </#if>
     
     <form name="massOrderChangeForm" method="post" action="javascript:void(0);">
@@ -508,7 +514,7 @@ document.lookuporder.orderId.focus();
     </form>
     
     <#if paginated>
-        <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 />
+      <@paginateOrders />
     </#if>
     
   <#else>

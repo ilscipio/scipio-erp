@@ -135,8 +135,16 @@ under the License.
 <#if hasPermission>
   <@section title="${uiLabelMap.OrderOrderList}" id="findOrderList">
         <#assign url><@ofbizUrl>orderlist</@ofbizUrl></#assign>
-        <@paginate url=url viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=state.getSize() altParam=true/>
-  
+        
+        <#macro paginateOrders>
+          <@paginate url=url viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=state.getSize() altParam=true/>
+        </#macro>
+        <#assign paginated = true>
+        
+        <#if paginated>
+          <@paginateOrders />
+        </#if>
+        
         <table class="" cellspacing='0'>
           <thead>
           <tr>
@@ -223,8 +231,9 @@ under the License.
           </#if>
         </table>
         
-        <@paginate url=url viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=state.getSize() altParam=true/>
-        
+        <#if paginated>
+          <@paginateOrders />
+        </#if>
         
     </@section>
 <#else>

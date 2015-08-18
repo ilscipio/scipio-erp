@@ -643,9 +643,11 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
    * General Attributes *
     class               = css classes
     id                  = set id
+    title               = section title
+    titleClass          = section title class (rarely needed, usually headerLevel enough)
     padded              = 
-    autoHeaderLevel     = auto increase header level when title present
-    headerLevel         = force this header level for title. if autoHeaderLevel true, also influences nested elems (even if no title here).
+    autoHeaderLevel     = auto increase header level when title present (enabled by default)
+    headerLevel         = force this header level for title. if autoHeaderLevel true, also influences nested elems (even if no title here, but if no title won't consume a size).
     defaultHeaderLevel  = default header level (same as headerLevel if autoHeaderLevel false)
     menuHtml            = optional HTML menu data, li elements only (ul auto added)
     menuClass           = menu class, default is buttons class. "none" prevents class.
@@ -654,38 +656,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true>
-    <#local explicitHeaderLevel = false>
-    <#local updatedHeaderLevel = false> <#-- just so consistent -->
-    <#if autoHeaderLevel>
-        <#local prevHeaderLevel = request.getAttribute("catoCurrentHeaderLevel")!"">
-        <#if headerLevel?has_content>
-            <#local level = headerLevel>
-            <#local explicitHeaderLevel = true>
-        <#elseif prevHeaderLevel?has_content>
-            <#local level = prevHeaderLevel>
-        <#else>
-            <#local level = defaultHeaderLevel>
-        </#if>
-        <#if title?has_content>
-            <#local dummy = request.setAttribute("catoCurrentHeaderLevel", (level + 1))!>
-            <#-- might as well set global so read easy, but not enough -->
-            <#global catoCurrentHeaderLevel = (level + 1)>
-            <#local updatedHeaderLevel = true>
-        <#elseif explicitHeaderLevel>
-            <#-- set here but don't increase if none title -->
-            <#local dummy = request.setAttribute("catoCurrentHeaderLevel", level)!>
-            <#global catoCurrentHeaderLevel = level>
-            <#local updatedHeaderLevel = true>
-        </#if>
-    <#else>
-        <#if headerLevel?has_content>
-            <#local level = headerLevel>
-            <#local explicitHeaderLevel = true>
-        <#else>
-            <#local level = defaultHeaderLevel>
-        </#if>
-    </#if>
+<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
     <#if id?has_content>
         <#local contentId = id + "_content">
         <#local menuId = id + "_menu">
@@ -693,13 +664,11 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         <#local contentId = "">
         <#local menuId = "">
     </#if>
-    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml headerLevel=level fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu forceEmptyMenu=forceEmptyMenu hasContent=hasContent/>
+    <#-- note: autoHeaderLevel logic now implemented in renderScreenletBegin -->
+    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu 
+        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeaderLevel=autoHeaderLevel headerLevel=headerLevel defaultHeaderLevel=defaultHeaderLevel titleStyle=titleClass/>
         <#nested />
     <@renderScreenletEnd />
-    <#if autoHeaderLevel && updatedHeaderLevel>
-        <#local dummy = request.setAttribute("catoCurrentHeaderLevel", prevHeaderLevel)!>
-        <#global catoCurrentHeaderLevel = prevHeaderLevel>
-    </#if>
 </#macro>
 
 

@@ -196,20 +196,76 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderContentFrame fullUrl width height border><iframe src="${fullUrl}" width="${width}" height="${height}" <#if border?has_content>border="${border}"</#if> /></#macro>
 
-<#-- Cato: new params: headerLevel, fromWidgets, menuClass, menuId, menuRole, requireMenu, forceEmptyMenu,noContent
+<#-- Cato:
      fromWidgets: hint of whether called by renderer or ftl macros
      hasContent: hint to say there will be content, workaround for styling -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true headerLevel="" fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="">
-<#-- TODO: there should be a "level" param and class to follow nesting (similar to headerLevel), but no way to do this from this macro because no request object here to keep attrib... -->
-<#if !headerLevel?has_content || ((headerLevel?number) < 1)>
-  <#local headerLevel = 2>
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2>
+
+<#-- level logic begin -->
+    <#-- note: request obj only available because of macro renderer initial context mod -->
+    <#local sLevel = request.getAttribute("catoCurrentSectionLevel")!"">
+    <#if !sLevel?has_content>
+      <#local sLevel = 1>
+    </#if>
+    <#-- set as request attrib so survives template environments and screens.render -->
+    <#local dummy = request.setAttribute("catoCurrentSectionLevel", sLevel+1)!>
+    <#global catoCurrentHeaderLevel = sLevel>
+<#-- level logic end -->
+
+<#local titleStyleIsHeader = false>
+<#if titleStyle?has_content && ['h1','h2','h3','h4','h5','h6']?seq_contains(titleStyle?lower_case)>
+  <#local titleStyleIsHeader = true>
+  <#-- overrides headerLevel (so style from screen affects header calc) -->
+  <#local headerLevel = titleStyle?substring(1)?number>
 </#if>
+
+<#-- auto-header-level logic begin -->
+    <#local explicitHeaderLevel = false>
+    <#local updatedHeaderLevel = false> <#-- just so consistent -->
+    <#local prevHeaderLevel = "">
+    <#if autoHeaderLevel>
+        <#local prevHeaderLevel = request.getAttribute("catoCurrentHeaderLevel")!"">
+        <#if headerLevel?has_content>
+            <#local hLevel = headerLevel>
+            <#local explicitHeaderLevel = true>
+        <#elseif prevHeaderLevel?has_content>
+            <#local hLevel = prevHeaderLevel>
+        <#else>
+            <#local hLevel = defaultHeaderLevel>
+        </#if>
+        <#if title?has_content>
+            <#local dummy = request.setAttribute("catoCurrentHeaderLevel", (hLevel + 1))!>
+            <#-- might as well set global so read easy, but not enough -->
+            <#global catoCurrentHeaderLevel = (hLevel + 1)>
+            <#local updatedHeaderLevel = true>
+        <#elseif explicitHeaderLevel>
+            <#-- set here but don't increase if none title -->
+            <#local dummy = request.setAttribute("catoCurrentHeaderLevel", hLevel)!>
+            <#global catoCurrentHeaderLevel = hLevel>
+            <#local updatedHeaderLevel = true>
+        </#if>
+    <#else>
+        <#if headerLevel?has_content>
+            <#local hLevel = headerLevel>
+            <#local explicitHeaderLevel = true>
+        <#else>
+            <#local hLevel = defaultHeaderLevel>
+        </#if>
+    </#if>
+    <#-- FIXME: this is highly suboptimal way to preserve info, but need a stack to record
+         values we had, for the end macro, because the way the macros are split... -->
+    <#if renderScreenletHeaderStack?has_content && (renderScreenletHeaderStack?size > 0)>
+      <#global renderScreenletHeaderStack = renderScreenletHeaderStack + [{"autoHeaderLevel":autoHeaderLevel, "updatedHeaderLevel":updatedHeaderLevel, "prevHeaderLevel":prevHeaderLevel}]>
+    <#else>
+      <#global renderScreenletHeaderStack = [{"autoHeaderLevel":autoHeaderLevel, "updatedHeaderLevel":updatedHeaderLevel, "prevHeaderLevel":prevHeaderLevel}]>
+    </#if>
+<#-- auto-header-level logic end -->
 
 <#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
      note: with recent patch, menuString passed by renderer is rendered by macro renderer. -->
 <#local menuString = menuString?trim>
 <#local hasMenu = (menuString?has_content || requireMenu || forceEmptyMenu)>
-<#local contentFlagClasses> header-level-${headerLevel}<#if title?has_content> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
+<#local contentFlagClasses> section-level-${sLevel} header-level-${hLevel}<#if title?has_content> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
 <div class="section-screenlet${contentFlagClasses}<#if collapsed> toggleField</#if>">
 <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
@@ -217,16 +273,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#if showMore>
 <#if title?has_content>
-  <#if titleStyle?has_content>
-    <#local titleStyleLower = titleStyle?lower_case>
-    <#if ['h1','h2','h3','h4','h5','h6']?seq_contains(titleStyleLower)>
-      <${titleStyleLower}>${title}</${titleStyleLower}>
-    <#else>
-      <h${headerLevel} class="${titleStyle}">${title}</h${headerLevel}>
-    </#if>
-  <#else>
-    <h${headerLevel}>${title}</h${headerLevel}>
-  </#if>
+  <h${hLevel}<#if titleStyle?has_content && !titleStyleIsHeader> class="${titleStyle}"</#if>>${title}</h${hLevel}>
 </#if>    
     
     <#--
@@ -269,7 +316,34 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 
 <#macro renderScreenletSubWidget></#macro>
 
-<#macro renderScreenletEnd><#lt></div></div></div></div></#macro>
+<#macro renderScreenletEnd>
+<#-- level logic begin -->
+    <#local sLevel = request.getAttribute("catoCurrentSectionLevel") - 1>
+    <#local dummy = request.setAttribute("catoCurrentSectionLevel", sLevel)!>
+    <#global catoCurrentHeaderLevel = sLevel>
+<#-- level logic end -->
+<#-- auto-header-level logic begin -->
+    <#local headerValues = renderScreenletHeaderStack?last>
+    <#local stackSize = renderScreenletHeaderStack?size>
+
+    <#local autoHeaderLevel = headerValues.autoHeaderLevel>
+    <#local updatedHeaderLevel = headerValues.updatedHeaderLevel>
+    <#local prevHeaderLevel = headerValues.prevHeaderLevel>
+
+    <#if autoHeaderLevel && updatedHeaderLevel>
+        <#local dummy = request.setAttribute("catoCurrentHeaderLevel", prevHeaderLevel)!>
+        <#global catoCurrentHeaderLevel = prevHeaderLevel>
+    </#if>
+    
+    <#-- FIXME: this is highly suboptimal way to use stack... -->
+    <#if (stackSize > 1)>
+      <#global renderScreenletHeaderStack = renderScreenletHeaderStack?chunk(stackSize - 1)?first>
+    <#else>
+      <#global renderScreenletHeaderStack = []>
+    </#if>
+<#-- auto-header-level logic end -->
+    <#lt></div></div></div></div>
+</#macro>
 
 <#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl>
     <li class="${paginateFirstStyle?default("nav-first")}<#if !firstLinkUrl?has_content> disabled</#if>"><#if firstLinkUrl?has_content><a href="${firstLinkUrl}" class="${styles.button_default!}">${paginateFirstLabel}</a><#else><a href="javascript:void(0);" class="disabled ${styles.button_default!}">${paginateFirstLabel}</a></#if></li>

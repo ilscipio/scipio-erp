@@ -29,8 +29,10 @@ under the License.
     <xs:element name="menu">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" ref="actions" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-elements" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-actions" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="include-menu-items" />
+                <xs:element minOccurs="0" ref="actions" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
@@ -96,9 +98,59 @@ under the License.
             <xs:attribute type="xs:string" name="default-permission-entity-action" />
         </xs:complexType>
     </xs:element>
+    <xs:element name="include-elements">
+        <xs:annotation>
+            <xs:documentation>Cato: includes another menu's elements (actions and menu items) into this one. Works on a textual xml level.
+                This is a convenience directive and same as declaring all the other include-* directives individually.
+                Can use to include all elements from another menu at first, then later split into more precise directives as needed.
+                The more precise directives will override this one for a given menu.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="menu-name" use="required" />
+            <xs:attribute type="xs:string" name="resource" />
+            <xs:attribute name="recursive" use="required">
+                <xs:annotation>
+                    <xs:documentation>Cato: if and what to recurse when included menus have their own extends and includes.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="no" />
+                        <xs:enumeration value="includes-only" />
+                        <xs:enumeration value="extends-only" />
+                        <xs:enumeration value="full" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-actions">
+        <xs:annotation>
+            <xs:documentation>Cato: includes another menu's actions into this one. Works on a textual xml level.
+                Warning: diamond-like include+extends patterns can result in duplicate actions; use recursive with care.
+                Usually "includes-only" or "no" for recursive option is safest.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="menu-name" use="required" />
+            <xs:attribute type="xs:string" name="resource" />
+            <xs:attribute name="recursive" use="required">
+                <xs:annotation>
+                    <xs:documentation>Cato: if and what to recurse when included menus have their own extends and includes.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="no" />
+                        <xs:enumeration value="includes-only" />
+                        <xs:enumeration value="extends-only" />
+                        <xs:enumeration value="full" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="include-menu-items">
         <xs:annotation>
-            <xs:documentation>Cato: includes a menu's items into another. Works on a textual xml level.</xs:documentation>
+            <xs:documentation>Cato: includes another menu's items into this one. Works on a textual xml level.
+                Note: duplicates are not concern as menu items are keyed by name.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>

@@ -22,9 +22,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -258,11 +260,11 @@ public class ModelMenu extends ModelWidget {
             fillStyle = menuElement.getAttribute("fill-style");
         if (!menuElement.getAttribute("extra-index").isEmpty())
             extraIndex = FlexibleStringExpander.getInstance(menuElement.getAttribute("extra-index"));
-        // read all actions under the "actions" element
-        Element actionsElement = UtilXml.firstChildElement(menuElement, "actions");
-        if (actionsElement != null) {
-            actions.addAll(ModelMenuAction.readSubActions(this, actionsElement));
-        }
+        
+        // Cato: include-actions and actions
+        Map<String, Element> menuElemCache = new HashMap<String, Element>();
+        processIncludeActions(menuElement, actions, menuLocation, true, menuElemCache);
+        
         actions.trimToSize();
         this.actions = Collections.unmodifiableList(actions);
         this.defaultAlign = defaultAlign;
@@ -286,7 +288,8 @@ public class ModelMenu extends ModelWidget {
         this.menuContainerStyleExdr = menuContainerStyleExdr;
         
         // Cato: include-menu-items and menu-item
-        processIncludeMenuItems(menuElement, menuItemList, menuItemMap, menuLocation, true, null);
+        processIncludeMenuItems(menuElement, menuItemList, menuItemMap, 
+                menuLocation, true, null, menuElemCache);
         
         menuItemList.trimToSize();
         this.menuItemList = Collections.unmodifiableList(menuItemList);
@@ -303,17 +306,103 @@ public class ModelMenu extends ModelWidget {
     }
 
     /**
+     * Cato: implements include-actions and actions reading (moved here).
+     * Also does include-elements.
+     */
+    private void processIncludeActions(Element menuElement, List<ModelAction> actions, 
+            String currResource, boolean processIncludes, Map<String, Element> menuElemCache) {
+        // don't think any problems from local cache for actions
+        final boolean useCache = true;  
+        final boolean cacheConsume = false;
+
+        if (processIncludes) {
+            List<Element> actionInclElements = new ArrayList<Element>();
+            actionInclElements.addAll(UtilXml.childElementList(menuElement, "include-elements"));
+            actionInclElements.addAll(UtilXml.childElementList(menuElement, "include-actions"));
+            for (Element actionInclElement : getMergedIncludeDirectives(actionInclElements, menuLocation)) {
+                String inclMenuName = actionInclElement.getAttribute("menu-name");
+                String inclResource = actionInclElement.getAttribute("resource");
+                String inclRecursive = actionInclElement.getAttribute("recursive");
+                
+                if ("no".equals(inclRecursive) || "includes-only".equals(inclRecursive) ||
+                    "extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
+                    Element inclMenuElem = loadIncludedMenu(inclMenuName, inclResource, 
+                            menuElement, currResource, menuElemCache, useCache, cacheConsume);
+                    
+                    if (inclMenuElem != null) {
+                        String nextResource;
+                        if (UtilValidate.isNotEmpty(inclResource)) {
+                            nextResource = inclResource;
+                        }
+                        else {
+                            nextResource = currResource;
+                        }
+                        
+                        if ("extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
+                            String parentResource = inclMenuElem.getAttribute("extends-resource");
+                            String parentMenu = inclMenuElem.getAttribute("extends");
+                            if (UtilValidate.isNotEmpty(parentMenu)) {
+                                Element parentMenuElem = loadIncludedMenu(parentMenu, parentResource, 
+                                        inclMenuElem, currResource, menuElemCache, useCache, cacheConsume);
+                                if (parentMenuElem != null) {
+                                    processIncludeActions(parentMenuElem, actions, 
+                                            nextResource, true, menuElemCache);
+                                }
+                                else {
+                                    Debug.logError("Failed to find (via include-actions or include-elements) parent menu definition '" + parentMenu + "' in resource '" + parentResource + "'", module);
+                                }
+                            }
+                        }
+                        
+                        if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
+                            processIncludeActions(inclMenuElem, actions, 
+                                    nextResource, true, menuElemCache);
+                        }
+                        else {
+                            processIncludeActions(inclMenuElem, actions, 
+                                    nextResource, false, menuElemCache);
+                        }
+                    }
+                    else {
+                        Debug.logError("Failed to find include-actions or include-elements menu definition '" + inclMenuName + "' in resource '" + inclResource + "'", module);
+                    }
+                }
+                else {
+                    Debug.logError("Unrecognized include-actions or include-elements recursive mode: " + inclRecursive, module);
+                }
+            } 
+        }
+        
+        // read all actions under the "actions" element
+        Element actionsElement = UtilXml.firstChildElement(menuElement, "actions");
+        if (actionsElement != null) {
+            actions.addAll(ModelMenuAction.readSubActions(this, actionsElement));
+        }
+    }
+    
+    /**
      * Cato: implements include-menu-items and menu-item reading (moved here).
+     * Also does include-elements.
      */
     private void processIncludeMenuItems(Element menuElement, List<ModelMenuItem> menuItemList,
-            Map<String, ModelMenuItem> menuItemMap, String currResource, boolean processIncludes, Set<String> excludeItems) {
+            Map<String, ModelMenuItem> menuItemMap, String currResource, 
+            boolean processIncludes, Set<String> excludeItems, Map<String, Element> menuElemCache) {
+        // WARN: even local cache not fully used (cacheConsume=true so only uses cached from prev actions includes) 
+        // to be safe because known that menu-item Elements get written to in some places and 
+        // reuse _might_ affect results in complex includes (?).
+        // final menus are cached anyway.
+        final boolean useCache = true;  
+        final boolean cacheConsume = true;
+        
         if (excludeItems == null) {
             excludeItems = new HashSet<String>();
         }
         
         if (processIncludes) {
-            List<? extends Element> itemInclElements = UtilXml.childElementList(menuElement, "include-menu-items");
-            for (Element itemInclElement : itemInclElements) {
+            List<Element> itemInclElements = new ArrayList<Element>();
+            itemInclElements.addAll(UtilXml.childElementList(menuElement, "include-elements"));
+            itemInclElements.addAll(UtilXml.childElementList(menuElement, "include-menu-items"));
+            for (Element itemInclElement : getMergedIncludeDirectives(itemInclElements, menuLocation)) {
                 String inclMenuName = itemInclElement.getAttribute("menu-name");
                 String inclResource = itemInclElement.getAttribute("resource");
                 String inclRecursive = itemInclElement.getAttribute("recursive");
@@ -329,7 +418,8 @@ public class ModelMenu extends ModelWidget {
                 
                 if ("no".equals(inclRecursive) || "includes-only".equals(inclRecursive) ||
                     "extends-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
-                    Element inclMenuElem = loadIncludedMenu(inclMenuName, inclResource, menuElement, currResource);
+                    Element inclMenuElem = loadIncludedMenu(inclMenuName, inclResource, 
+                            menuElement, currResource, menuElemCache, useCache, cacheConsume);
                     
                     if (inclMenuElem != null) {
                         inclExcludeItems.addAll(excludeItems);
@@ -345,29 +435,33 @@ public class ModelMenu extends ModelWidget {
                             String parentResource = inclMenuElem.getAttribute("extends-resource");
                             String parentMenu = inclMenuElem.getAttribute("extends");
                             if (UtilValidate.isNotEmpty(parentMenu)) {
-                                Element parentMenuElem = loadIncludedMenu(parentMenu, parentResource, inclMenuElem, currResource);
+                                Element parentMenuElem = loadIncludedMenu(parentMenu, parentResource, 
+                                        inclMenuElem, currResource, menuElemCache, useCache, cacheConsume);
                                 if (parentMenuElem != null) {
-                                    processIncludeMenuItems(parentMenuElem, menuItemList, menuItemMap, nextResource, true, inclExcludeItems);
+                                    processIncludeMenuItems(parentMenuElem, menuItemList, menuItemMap, 
+                                            nextResource, true, inclExcludeItems, menuElemCache);
                                 }
                                 else {
-                                    Debug.logError("Failed to find (via include-menu-items) parent menu definition '" + parentMenu + "' in resource '" + parentResource + "'", module);
+                                    Debug.logError("Failed to find (via include-menu-items or include-elements) parent menu definition '" + parentMenu + "' in resource '" + parentResource + "'", module);
                                 }
                             }
                         }
                         
                         if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
-                            processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, nextResource, true, inclExcludeItems);
+                            processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, 
+                                    nextResource, true, inclExcludeItems, menuElemCache);
                         }
                         else {
-                            processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, nextResource, false, inclExcludeItems);
+                            processIncludeMenuItems(inclMenuElem, menuItemList, menuItemMap, 
+                                    nextResource, false, inclExcludeItems, menuElemCache);
                         }
                     }
                     else {
-                        Debug.logError("Failed to find include-menu-items menu definition '" + inclMenuName + "' in resource '" + inclResource + "'", module);
+                        Debug.logError("Failed to find include-menu-items or include-elements menu definition '" + inclMenuName + "' in resource '" + inclResource + "'", module);
                     }
                 }
                 else {
-                    Debug.logError("Unrecognized include-menu-items recursive mode: " + inclRecursive, module);
+                    Debug.logError("Unrecognized include-menu-items or include-elements recursive mode: " + inclRecursive, module);
                 }
             } 
         }
@@ -382,7 +476,35 @@ public class ModelMenu extends ModelWidget {
         }
     }
     
-    private Element loadIncludedMenu(String menuName, String resource, Element currMenuElem, String currResource) {
+    private Collection<Element> getMergedIncludeDirectives(Collection<Element> includeElems, String menuLocation) {
+        if (includeElems.size() <= 0) {
+            return includeElems;
+        }
+        
+        // must preserve order
+        Map<String, Element> dirMap = new LinkedHashMap<String, Element>();
+        for(Element inclElem : includeElems) {
+            String inclMenuName = inclElem.getAttribute("menu-name");
+            String inclResource = inclElem.getAttribute("resource");
+            if (UtilValidate.isEmpty(inclResource)) {
+                inclResource = menuLocation;
+            }
+            String fullLocation = inclResource + "#" + inclMenuName;
+            
+            // here, we only want to keep the LAST include directive, so later ones override previous,
+            // so must remove first
+            if (dirMap.containsKey(fullLocation)) {
+                dirMap.remove(fullLocation);
+            }
+            dirMap.put(fullLocation, inclElem);
+        }
+
+        return dirMap.values();
+    }
+    
+    private Element loadIncludedMenu(String menuName, String resource, 
+            Element currMenuElem, String currResource, 
+            Map<String, Element> menuElemCache, boolean useCache, boolean cacheConsume) {
         Element inclMenuElem = null;
         Element inclRootElem = null;
         String targetResource;
@@ -393,34 +515,45 @@ public class ModelMenu extends ModelWidget {
             targetResource = currResource;
         }
         
-        if (true) { // UtilValidate.isNotEmpty(resource)
-            try {
-                URL menuFileUrl = FlexibleLocation.resolveLocation(targetResource);
-                Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
-                inclRootElem = menuFileDoc.getDocumentElement();
-            } catch (Exception e) {
-                Debug.logError(e, "Failed to load include-menu-items resource: " + resource, module);
+        String fullLocation = targetResource + "#" + menuName;
+        if (useCache && menuElemCache.containsKey(fullLocation)) {
+            inclMenuElem = menuElemCache.get(fullLocation);
+            if (cacheConsume) {
+                menuElemCache.remove(fullLocation);
             }
         }
         else {
-            // Cato: No! we must reload the orig doc always because the Elements get written to!
-            // must have fresh versions.
-            // try to find a menu definition in the same file
-            //inclRootElem = currMenuElem.getOwnerDocument().getDocumentElement();
-        }
-        
-        if (inclRootElem != null) {
-            List<? extends Element> menuElements = UtilXml.childElementList(inclRootElem, "menu");
-            for (Element menuElementEntry : menuElements) {
-                if (menuElementEntry.getAttribute("name").equals(menuName)) {
-                    inclMenuElem = menuElementEntry;
-                    break;
+            if (true) { // UtilValidate.isNotEmpty(resource)
+                try {
+                    URL menuFileUrl = FlexibleLocation.resolveLocation(targetResource);
+                    Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
+                    inclRootElem = menuFileDoc.getDocumentElement();
+                } catch (Exception e) {
+                    Debug.logError(e, "Failed to load include-menu-items resource: " + resource, module);
                 }
+            }
+            //else {
+                // Cato: No! we must reload the orig doc always because the Elements get written to!
+                // must have fresh versions.
+                // try to find a menu definition in the same file
+                //inclRootElem = currMenuElem.getOwnerDocument().getDocumentElement();
+            //}
+            
+            if (inclRootElem != null) {
+                List<? extends Element> menuElements = UtilXml.childElementList(inclRootElem, "menu");
+                for (Element menuElementEntry : menuElements) {
+                    if (menuElementEntry.getAttribute("name").equals(menuName)) {
+                        inclMenuElem = menuElementEntry;
+                        break;
+                    }
+                }
+            }
+            if (useCache && !cacheConsume) {
+                menuElemCache.put(fullLocation, inclMenuElem);
             }
         }
         return inclMenuElem;
     }
-    
     
     @Override
     public void accept(ModelWidgetVisitor visitor) throws Exception {

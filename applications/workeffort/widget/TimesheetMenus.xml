@@ -39,6 +39,6 @@ under the License.
     </menu>
     <menu name="TimesheetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Timesheet">
-        <include-menu-items menu-name="TimesheetTabBar" recursive="includes-only" />
+        <include-elements menu-name="TimesheetTabBar" recursive="includes-only" />
     </menu>
 </menus>

@@ -36,7 +36,7 @@ under the License.
     </menu>
     <menu name="CatalogAppSideBar" title="${uiLabelMap.ProductCatalogManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="CatalogAppBar" recursive="includes-only" />
+        <include-elements menu-name="CatalogAppBar" recursive="includes-only" />
     </menu>
 
     <menu name="CatalogTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -62,7 +62,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="CatalogSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="CatalogTabBar" recursive="includes-only" />
+        <include-elements menu-name="CatalogTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="CatalogSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -95,7 +95,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="FeaturesSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="FeaturesTabBar" recursive="includes-only" />
+        <include-elements menu-name="FeaturesTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="ShippingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -110,7 +110,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="ShippingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="ShippingTabBar" recursive="includes-only" />
+        <include-elements menu-name="ShippingTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="CategoryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -161,7 +161,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="CategorySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="CategoryTabBar" recursive="includes-only" />
+        <include-elements menu-name="CategoryTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="CategorySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -285,7 +285,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="ProductStoreSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="ProductStoreTabBar" recursive="includes-only" />
+        <include-elements menu-name="ProductStoreTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="ProductStoreSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -539,7 +539,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="ProductSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="ProductTabBar" recursive="includes-only" />
+        <include-elements menu-name="ProductTabBar" recursive="includes-only" />
     </menu>
 
 <!-- Deprecated - replaced by component://product/webapp/catalog/menu/ProductSubTabBar.ftl -->
@@ -692,6 +692,6 @@ under the License.
     </menu>
     <menu name="ImageManagementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
            selected-menuitem-context-field-name="userTabButtonImage">
-        <include-menu-items menu-name="ImageManagementTabBar" recursive="includes-only" />
+        <include-elements menu-name="ImageManagementTabBar" recursive="includes-only" />
     </menu>
 </menus>

@@ -26,6 +26,6 @@
     </menu>
     <menu name="OagisAppSideBar" title="${uiLabelMap.OagisApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="OagisAppBar" recursive="includes-only" />
+        <include-elements menu-name="OagisAppBar" recursive="includes-only" />
     </menu>
 </menus>

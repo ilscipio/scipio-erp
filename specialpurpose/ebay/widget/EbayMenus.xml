@@ -27,7 +27,7 @@ under the License.
     </menu>
     <menu name="EbayAppSideBar" title="${uiLabelMap.EbayApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="EbayAppBar" recursive="includes-only" />
+        <include-elements menu-name="EbayAppBar" recursive="includes-only" />
     </menu>
     
     <menu name="EbayConfigTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -52,7 +52,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="EbayConfigSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="EbayConfigTabBar" recursive="includes-only" />
+        <include-elements menu-name="EbayConfigTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="EbayConfigSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

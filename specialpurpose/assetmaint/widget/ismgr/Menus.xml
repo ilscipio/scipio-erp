@@ -27,7 +27,7 @@ under the License.
         <menu-item name="ComputerSoftware" title="${uiLabelMap.IsMgrComputerSoftware}"><link target="ListComputerSoftware"/></menu-item>
     </menu>    
     <menu name="IsMgrAppSideBar" title="${uiLabelMap.IsMgrApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="IsMgrAppBar" recursive="includes-only" />
+        <include-elements menu-name="IsMgrAppBar" recursive="includes-only" />
     </menu>
 
     <menu name="FixedAssetSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -50,7 +50,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="FixedAssetSubSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="FixedAssetSubTabBar" recursive="includes-only" />
+        <include-elements menu-name="FixedAssetSubTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="ComputerHardwareTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -102,6 +102,6 @@ under the License.
     </menu>
     <menu name="ComputerHardwareSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditComputerHardware">
-        <include-menu-items menu-name="ComputerHardwareTabBar" recursive="includes-only" />
+        <include-elements menu-name="ComputerHardwareTabBar" recursive="includes-only" />
     </menu>
 </menus>

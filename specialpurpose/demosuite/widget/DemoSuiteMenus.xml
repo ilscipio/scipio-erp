@@ -4,6 +4,6 @@
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
     </menu>
     <menu name="MainAppSideBar" title="${uiLabelMap.DemoSuiteApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="MainAppBar" recursive="includes-only" />
+        <include-elements menu-name="MainAppBar" recursive="includes-only" />
     </menu>
 </menus>

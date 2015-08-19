@@ -29,7 +29,7 @@
     </menu>
     <menu name="AssetMaintAppSideBar" title="${uiLabelMap.AssetMaintManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="AssetMaintAppBar" recursive="includes-only" />
+        <include-elements menu-name="AssetMaintAppBar" recursive="includes-only" />
     </menu>
 
     <menu name="FixedAssetTabBar" extends="FixedAssetTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
@@ -42,7 +42,7 @@
         </menu-item>
     </menu>
     <menu name="FixedAssetSideBar" extends="FixedAssetSideBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
-        <include-menu-items menu-name="FixedAssetTabBar" recursive="includes-only" />
+        <include-elements menu-name="FixedAssetTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="FixedAssetMaintTabBar" extends="FixedAssetMaintTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
@@ -120,6 +120,6 @@
     </menu>
     <menu name="FacilitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="ViewFacilityInventoryByProduct">
-        <include-menu-items menu-name="FacilityTabBar" recursive="includes-only" />
+        <include-elements menu-name="FacilityTabBar" recursive="includes-only" />
     </menu>
 </menus>

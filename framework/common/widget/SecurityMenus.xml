@@ -82,6 +82,6 @@
     </menu>
     <menu name="SecurityGroupSideBar" default-menu-item-name="EditSecurityGroup"
         extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="SecurityGroupTabBar" recursive="includes-only" />
+        <include-elements menu-name="SecurityGroupTabBar" recursive="includes-only" />
     </menu>
 </menus>

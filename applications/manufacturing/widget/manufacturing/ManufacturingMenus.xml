@@ -79,7 +79,7 @@ under the License.
     </menu>
     <menu name="ManufacturingAppSideBar" title="${uiLabelMap.ManufacturingManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="ManufacturingAppBar" recursive="includes-only" />
+        <include-elements menu-name="ManufacturingAppBar" recursive="includes-only" />
     </menu>
 
     <menu name="BomTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

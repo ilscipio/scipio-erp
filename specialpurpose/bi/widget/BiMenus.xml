@@ -23,6 +23,6 @@ under the License.
     </menu>
     <menu name="BiAppSideBar" title="${uiLabelMap.BusinessIntelligenceApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="BiAppBar" recursive="includes-only" />
+        <include-elements menu-name="BiAppBar" recursive="includes-only" />
     </menu>
 </menus>

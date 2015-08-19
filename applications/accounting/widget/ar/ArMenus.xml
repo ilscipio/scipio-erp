@@ -28,7 +28,7 @@ under the License.
     </menu>
     <menu name="ArAppSideBar" title="${uiLabelMap.AccountingArManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="ArAppBar" recursive="includes-only" />
+        <include-elements menu-name="ArAppBar" recursive="includes-only" />
     </menu>
     
     <menu name="ArPaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

@@ -23,7 +23,7 @@
     </menu>
     <menu name="EbayStoreAppSideBar" title="${uiLabelMap.EbayStoreApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="EbayStoreAppBar" recursive="includes-only" />
+        <include-elements menu-name="EbayStoreAppBar" recursive="includes-only" />
     </menu>
     
     <menu name="EbaySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -70,7 +70,7 @@
         </menu-item>
     </menu>
     <menu name="EbayStoreFunctionSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="EbayStoreFunctionTabBar" recursive="includes-only" />
+        <include-elements menu-name="EbayStoreFunctionTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="EbaySellingManagerTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -118,7 +118,7 @@
     </menu>
     <menu name="EbaySellingManagerSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="sellingManagerItem">
-        <include-menu-items menu-name="EbaySellingManagerTabBar" recursive="includes-only" />
+        <include-elements menu-name="EbaySellingManagerTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="EbayAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -136,7 +136,7 @@
     </menu>
     <menu name="EbayAccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="accountItem">
-        <include-menu-items menu-name="EbayAccountTabBar" recursive="includes-only" />
+        <include-elements menu-name="EbayAccountTabBar" recursive="includes-only" />
     </menu> 
     
     <menu name="EbayFeedbackTabBar" selected-menuitem-context-field-name="feedbackItem" type="simple" 

@@ -54,7 +54,7 @@ under the License.
     </menu>
     <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="AccountingAppBar" recursive="includes-only" />
+        <include-elements menu-name="AccountingAppBar" recursive="includes-only" />
     </menu>
 
     <menu name="InvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -679,7 +679,7 @@ under the License.
     </menu>
     <menu name="FixedAssetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditFixedAsset">
-        <include-menu-items menu-name="FixedAssetTabBar" recursive="includes-only" />      
+        <include-elements menu-name="FixedAssetTabBar" recursive="includes-only" />      
     </menu>
 
     <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

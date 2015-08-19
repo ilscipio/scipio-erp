@@ -43,7 +43,7 @@ under the License.
     </menu>
     <menu name="FacilityAppSideBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-menu-items menu-name="FacilityAppBar" recursive="includes-only" />
+        <include-elements menu-name="FacilityAppBar" recursive="includes-only" />
     </menu>
 
     <menu name="FacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -173,7 +173,7 @@ under the License.
     </menu>
     <menu name="FacilitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditFacility">
-        <include-menu-items menu-name="FacilityTabBar" recursive="includes-only" />
+        <include-elements menu-name="FacilityTabBar" recursive="includes-only" />
     </menu>      
     
     <menu name="InventoryItemLabelsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -187,7 +187,7 @@ under the License.
     </menu> 
     <menu name="InventoryItemLabelsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="FindInventoryItemLabels">
-        <include-menu-items menu-name="InventoryItemLabelsTabBar" recursive="includes-only" />
+        <include-elements menu-name="InventoryItemLabelsTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="InventoryItemLabelTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

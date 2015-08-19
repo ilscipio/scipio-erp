@@ -96,6 +96,8 @@ under the License.
                 <set field="layoutSettings.styleSheets[]" value="/images/prototypejs/progress_bar.css" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+                
+                <set field="widePage" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -145,14 +147,14 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}">
+                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="${styles.button_default}">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                             </link>
                                         </container>
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}">
+                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="${styles.button_default}">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                                 <parameter param-name="SHOW_OLD" value="true"/>
                                             </link>

@@ -64,7 +64,6 @@ under the License.
             <link target="WebtoolsLayoutDemo" />
         </menu-item>
     </menu>
-
     <menu name="WebtoolsAppSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <include-menu-items menu-name="WebtoolsAppBar" recursive="includes-only" />
@@ -79,7 +78,6 @@ under the License.
             <link target="myCertificates"/>
         </menu-item>
     </menu>
-    
     <menu name="configurationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="page.tabButtonItem">
         <include-menu-items menu-name="configurationTabBar" recursive="includes-only" />
@@ -115,7 +113,6 @@ under the License.
             <link target="EntityImportReaders"/>
         </menu-item>
     </menu>
-    
     <menu name="importExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="page.tabButtonItem">
         <include-menu-items menu-name="importExportTabBar" recursive="includes-only" />
@@ -139,7 +136,6 @@ under the License.
             <link target="runService"/>
         </menu-item>
     </menu>
-    
     <menu name="serviceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="page.tabButtonItem">
         <include-menu-items menu-name="serviceTabBar" recursive="includes-only" />
@@ -157,7 +153,6 @@ under the License.
             <link target="LogConfiguration"/>
         </menu-item>
     </menu>
-    
     <menu name="LoggingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem">
         <include-menu-items menu-name="LoggingTabBar" recursive="includes-only" />
@@ -169,7 +164,6 @@ under the License.
             <link target="FindUtilCache"/>
         </menu-item>
     </menu>
-    
     <menu name="CacheSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="logMenuItem">
         <include-menu-items menu-name="CacheTabBar" recursive="includes-only" />
@@ -188,7 +182,6 @@ under the License.
             <link target="SearchLabels"/>
         </menu-item>-->
     </menu>
-    
     <menu name="artifactSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem">
         <include-menu-items menu-name="artifactTabBar" recursive="includes-only" />
@@ -240,7 +233,6 @@ under the License.
             <link target="EntityPerformanceTest"/>
         </menu-item>
     </menu>
-    
     <menu name="EntitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-menu-items menu-name="EntityTabBar" recursive="includes-only" />
     </menu>
@@ -270,7 +262,6 @@ under the License.
             <link target="ViewMetrics"/>
         </menu-item>
     </menu>
-    
     <menu name="StatsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem">
         <include-menu-items menu-name="StatsTabBar" recursive="includes-only" />
@@ -307,7 +298,6 @@ under the License.
             <link target="ForceGarbageCollection"/>
         </menu-item>
     </menu>
-    
     <menu name="FindCacheSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-menu-items menu-name="FindCacheTabBar" recursive="includes-only" />
     </menu>
@@ -346,7 +336,6 @@ under the License.
             </link>
         </menu-item>
     </menu>    
-    
     <menu name="geoManagementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-menu-items menu-name="geoManagementTabBar" recursive="includes-only" />
     </menu>

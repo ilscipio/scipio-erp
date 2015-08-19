@@ -95,7 +95,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="WorkEffortTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                                <include-menu name="WorkEffortSideBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -147,13 +147,11 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="timesheetId"/></not></condition>
                                     <widgets>
-                                        <include-menu name="TimesheetTabBar" location="component://workeffort/widget/TimesheetMenus.xml"/>
-                                        <label style="h2">${uiLabelMap.WorkEffortTimesheetTimesheetId} ${timesheetId}</label>
+                                        <include-menu name="TimesheetSideBar" location="component://workeffort/widget/TimesheetMenus.xml"/>
                                     </widgets>
                                 </section>
                             </widgets>
                         </section>
-
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -161,6 +159,7 @@ under the License.
                                 <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
+                                <label style="p">${uiLabelMap.WorkEffortTimesheetTimesheetId}: ${timesheetId}</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

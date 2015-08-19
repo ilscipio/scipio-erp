@@ -35,7 +35,8 @@
                     }" type="String"/>
                 <set field="facilityId"  value="${groovy:
                     if(check.equals(&quot;true&quot;)) facility = productStoreFacilityList.get(0);
-                    if(facility!=null) facilityId = facility.facilityId;
+                    facilityId = null;
+                    if(context.facility!=null) facilityId = context.facility.facilityId;
                     return facilityId;}" type="String"/>
             </actions>
             <widgets>

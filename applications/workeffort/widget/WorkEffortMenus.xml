@@ -31,7 +31,6 @@ under the License.
         <menu-item name="userJobs" title="${uiLabelMap.WorkEffortJobList}"><link target="UserJobs"/></menu-item>
         <menu-item name="WorkEffortICalendar" title="${uiLabelMap.WorkEffortICalendar}"><link target="FindICalendars"/></menu-item>
     </menu>
-    
     <menu name="WorkEffortAppSideBar" title="${uiLabelMap.WorkEffortManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active" default-menu-item-name="task">
         <include-menu-items menu-name="WorkEffortAppBar" recursive="includes-only" />
@@ -146,6 +145,11 @@ under the License.
             </link>
         </menu-item>
     </menu>
+    <menu name="WorkEffortSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="WorkEffort">
+        <include-menu-items menu-name="WorkEffortTabBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="Day" extends="Calendar">
         <menu-item name="next">
             <link target="${parameters._LAST_VIEW_NAME_}" text="${uiLabelMap.WorkEffortNextDay}">

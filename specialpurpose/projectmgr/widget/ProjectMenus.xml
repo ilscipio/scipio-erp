@@ -52,7 +52,6 @@
             <link target="requestlist"/>
         </menu-item>
     </menu>
-    
     <menu name="ProjectMgrAppSideBar" title="${uiLabelMap.ProjectMgr}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <include-menu-items menu-name="ProjectMgrAppBar" recursive="includes-only" />
@@ -224,6 +223,28 @@
             </link>
         </menu-item>
     </menu>
+    <menu name="ProjectSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
+            <set field="hasUpdatePermission" value="${bsh:
+                result = dispatcher.runSync(&quot;projectMgrPermission&quot;,
+                org.ofbiz.base.util.UtilMisc.toMap(&quot;userLogin&quot;, parameters.get(&quot;userLogin&quot;),
+                &quot;resourceDescription&quot;, &quot;Project&quot;,
+                &quot;mainAction&quot;, &quot;UPDATE&quot;,
+                &quot;projectId&quot;, projectId));
+                return result.get(&quot;hasPermission&quot;); }" type="Boolean"/>
+            <set field="hasViewPermission" value="${bsh:
+                result = dispatcher.runSync(&quot;projectMgrPermission&quot;,
+                org.ofbiz.base.util.UtilMisc.toMap(&quot;userLogin&quot;, parameters.get(&quot;userLogin&quot;),
+                &quot;resourceDescription&quot;, &quot;Project&quot;,
+                &quot;mainAction&quot;, &quot;VIEW&quot;,
+                &quot;projectId&quot;, projectId));
+                return result.get(&quot;hasPermission&quot;); }" type="Boolean"/>
+        </actions>
+        <include-menu-items menu-name="ProjectTabBar" recursive="includes-only" />
+    </menu>
+    
+    
     <menu name="ProjectButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <actions>
             <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
@@ -404,6 +425,10 @@
             </link>
         </menu-item>
     </menu>
+    <menu name="TaskSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-menu-items menu-name="TaskTabBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="TaskSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2">
         <menu-item name="new" title="${uiLabelMap.CommonNew}">
@@ -504,6 +529,7 @@
             </link>
         </menu-item>
     </menu>
+    
     <menu name="MyTimeSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2">
         <menu-item name="TimeSheetStatusToComplete" title="${uiLabelMap.CommonStatustoComplete}">
@@ -519,6 +545,10 @@
             </link>
         </menu-item>
     </menu>
+    <menu name="MyTimeSubSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-menu-items menu-name="MyTimeSubTabBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="ResourceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="edittimesheet">
         <menu-item name="ResourcesProfile" title="${uiLabelMap.PartyProfile}">
@@ -552,6 +582,11 @@
             </link>
         </menu-item>
     </menu>
+    <menu name="ResourceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="edittimesheet">
+        <include-menu-items menu-name="ResourceTabBar" recursive="includes-only" />      
+    </menu>
+    
     <menu name="RequestTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="ViewRequest" title="${uiLabelMap.ProjectMgrView}">
             <condition>

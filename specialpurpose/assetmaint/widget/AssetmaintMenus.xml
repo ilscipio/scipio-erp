@@ -27,7 +27,6 @@
         <menu-item name="fixedAssetMaints" title="${uiLabelMap.AccountingFixedAssetMaints}"><link target="findFixedAssetMaints"/></menu-item>
         <menu-item name="facility" title="${uiLabelMap.ProductFacility}"><link target="FindFacility"/></menu-item>
     </menu>
-    
     <menu name="AssetMaintAppSideBar" title="${uiLabelMap.AssetMaintManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <include-menu-items menu-name="AssetMaintAppBar" recursive="includes-only" />
@@ -41,6 +40,9 @@
                 <parameter param-name="productId" from-field="fixedAsset.instanceOfProductId"/>
             </link>
         </menu-item>
+    </menu>
+    <menu name="FixedAssetSideBar" extends="FixedAssetSideBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
+        <include-menu-items menu-name="FixedAssetTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="FixedAssetMaintTabBar" extends="FixedAssetMaintTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
@@ -116,5 +118,8 @@
             </link>
         </menu-item>
     </menu>
-
+    <menu name="FacilitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="ViewFacilityInventoryByProduct">
+        <include-menu-items menu-name="FacilityTabBar" recursive="includes-only" />
+    </menu>
 </menus>

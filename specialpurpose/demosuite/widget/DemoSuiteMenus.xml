@@ -3,7 +3,6 @@
     <menu name="MainAppBar" title="${uiLabelMap.DemoSuiteApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
     </menu>
-    
     <menu name="MainAppSideBar" title="${uiLabelMap.DemoSuiteApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-menu-items menu-name="MainAppBar" recursive="includes-only" />
     </menu>

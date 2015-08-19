@@ -122,7 +122,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
-                        <include-menu name="TaskTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                        <include-menu name="TaskSideBar" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -191,7 +191,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
-                        <include-menu name="ProductTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                        <include-menu name="ProductSideBar" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -237,7 +237,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
-                        <include-menu name="ProductBackLogItemTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                        <include-menu name="ProductBackLogItemSideBar" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -307,7 +307,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
-                        <include-menu name="ProductBackLogItemTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                        <include-menu name="ProductBackLogItemSideBar" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -393,7 +393,10 @@ under the License.
                     <widgets/>
                 </section>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}">
+                        <include-menu location="component://scrum/widget/scrumMenus.xml" name="ResourceSideBar"/>
+                    </decorator-section>
+                    <decorator-section name="pre-body" use-when="${context.widePage == true}">
                         <include-menu location="component://scrum/widget/scrumMenus.xml" name="ResourceTabBar"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -412,14 +415,12 @@ under the License.
                                         <container>
                                             <section>
                                                 <widgets>
-                                                    <label style="h2" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName}"/>
+                                                    <label style="p" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/>
                                                 </widgets>
                                                 <fail-widgets>
-                                                    <label style="h2" text="${uiLabelMap.PartyNewUser}"/>
+                                                    <label style="p" text="${uiLabelMap.PartyNewUser}"/>
                                                 </fail-widgets>
                                             </section>
-
-                                            <label text="[${partyId}]"/>
                                         </container>
                                     </widgets>
                                 </section>

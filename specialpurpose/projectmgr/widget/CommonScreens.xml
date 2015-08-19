@@ -91,7 +91,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="ProjectTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                                <include-menu name="ProjectSideBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -143,7 +143,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="TaskTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                                <include-menu name="TaskSideBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -278,7 +278,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
-                        <include-menu name="MyTimeSubTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                        <include-menu name="MyTimeSubSideBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -345,7 +345,10 @@ under the License.
                     <widgets/>
                 </section>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}">
+                        <include-menu location="component://projectmgr/widget/ProjectMenus.xml" name="ResourceSideBar"/>
+                    </decorator-section>
+                    <decorator-section name="pre-body" use-when="${context.widePage == true}">
                         <include-menu location="component://projectmgr/widget/ProjectMenus.xml" name="ResourceTabBar"/>
                     </decorator-section>
                     <decorator-section name="body">

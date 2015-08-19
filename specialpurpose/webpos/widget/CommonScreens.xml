@@ -68,6 +68,21 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                    <!-- CATO NOTE: not sure sidebar makes sense for web POS, but leaving here for now, comment out if undesired -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty-section section-name="left-column" /></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="left-column"/>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-menu location="component://webpos/widget/WebPosMenus.xml" name="WebPosAppSideBar"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>
@@ -79,7 +94,7 @@ under the License.
     <screen name="CommonWebPosMainDecorator">
         <section>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
                     <decorator-section name="pre-body">
                         <section>
                             <widgets/>
@@ -120,11 +135,11 @@ under the License.
     <screen name="CommonWebPosManagerDecorator">
         <section>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
                     <decorator-section name="left-column">
                         <section>
                             <widgets>
-                                <include-menu name="ManagerTabBar" location="component://webpos/widget/WebPosMenus.xml"/>
+                                <include-menu name="ManagerSideBar" location="component://webpos/widget/WebPosMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

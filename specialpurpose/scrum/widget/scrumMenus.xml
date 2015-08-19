@@ -78,7 +78,6 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    
     <menu name="ScrumAppSideBar" title="${uiLabelMap.ScrumApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <include-menu-items menu-name="ScrumAppBar" recursive="includes-only" />
@@ -257,7 +256,7 @@ under the License.
     
     <menu name="ProductTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <actions>
-          <set field="productId" from-field="parameters.productId"/>
+            <set field="productId" from-field="parameters.productId"/>
             <set field="hasUpdatePermission" value="${bsh:
                 result = dispatcher.runSync(&quot;scrumPermissionCheck&quot;,
                 org.ofbiz.base.util.UtilMisc.toMap(&quot;userLogin&quot;, parameters.get(&quot;userLogin&quot;),
@@ -408,7 +407,21 @@ under the License.
             </link>
         </menu-item>
     </menu>
-     <menu name="ProductBackLogItemTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ProductSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="productId" from-field="parameters.productId"/>
+            <set field="hasUpdatePermission" value="${bsh:
+                result = dispatcher.runSync(&quot;scrumPermissionCheck&quot;,
+                org.ofbiz.base.util.UtilMisc.toMap(&quot;userLogin&quot;, parameters.get(&quot;userLogin&quot;),
+                &quot;resourceDescription&quot;, &quot;PRODUCT&quot;,
+                &quot;mainAction&quot;, &quot;VIEW&quot;,
+                &quot;productId&quot;, context.get(&quot;productId&quot;)));
+                return result.get(&quot;hasPermission&quot;); }" type="Boolean"/>
+        </actions>
+        <include-menu-items menu-name="ProductTabBar" recursive="includes-only" />
+    </menu>    
+    
+    <menu name="ProductBackLogItemTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="view" title="${uiLabelMap.CommonOverview}">
             <condition>
                    <not><if-empty field="product"/></not>
@@ -498,6 +511,10 @@ under the License.
             </link>
         </menu-item>
     </menu>
+    <menu name="ProductBackLogItemSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-menu-items menu-name="ProductBackLogItemTabBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="ProductBackLogItemStatusTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2">
         <menu-item name="addProdBacklog" title="${uiLabelMap.ScrumNewBacklogItem}" >
@@ -800,6 +817,11 @@ under the License.
             </link>
         </menu-item>
     </menu>
+    <menu name="ResourceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="edittimesheet">
+        <include-menu-items menu-name="ResourceTabBar" recursive="includes-only" />      
+    </menu>
+    
     <menu name="TaskTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="FindTask" title="${uiLabelMap.CommonFind}">
             <condition>
@@ -854,6 +876,9 @@ under the License.
                 <parameter param-name="taskId" from-field="parameters.taskId"/>
             </link>
         </menu-item>
+    </menu>
+    <menu name="TaskSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-menu-items menu-name="TaskTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="TaskSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

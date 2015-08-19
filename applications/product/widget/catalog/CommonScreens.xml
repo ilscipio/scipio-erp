@@ -67,7 +67,7 @@ under the License.
                                 <not><if-empty field="prodCatalog"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="CatalogTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                <include-menu name="CatalogSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </widgets>
                         </section>
                         <include-screen name="leftbar"/>
@@ -127,7 +127,7 @@ under the License.
                             <condition><not><if-empty field="productStore"/></not></condition>
                             <widgets>
                                 <container>
-                                    <include-menu name="ProductStoreTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                    <include-menu name="ProductStoreSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                 </container>
                             </widgets>
                         </section>
@@ -469,7 +469,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="left-column">
-                        <include-menu name="ProductStoreTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                        <include-menu name="ProductStoreSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                         <include-screen name="leftbar"/>
                     </decorator-section>
                     <decorator-section name="body">

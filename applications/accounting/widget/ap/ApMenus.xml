@@ -26,7 +26,6 @@ under the License.
         <menu-item name="findVendors" title="${uiLabelMap.AccountingApPageTitleFindVendors}"><link target="findVendors"/></menu-item>
         <menu-item name="reports" title="${uiLabelMap.AccountingReports}"><link target="listReports"/></menu-item>
     </menu>
-    
     <menu name="ApAppSideBar" title="${uiLabelMap.AccountingApManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <include-menu-items menu-name="ApAppBar" recursive="includes-only" />

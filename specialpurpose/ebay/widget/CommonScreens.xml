@@ -71,9 +71,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                <decorator-section name="left-column">
-                    <include-menu name="ProductTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                </decorator-section>
+                    <decorator-section name="left-column">
+                        <include-menu name="ProductSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for EBAY, _VIEW permission -->
@@ -146,10 +146,10 @@ under the License.
                 <set field="headerItem" value="eBayConfigurations"/>
             </actions>
             <widgets>
-                <decorator-screen name="left-column">
-                    <include-menu name="EbayConfigTabBar"  location="component://ebay/widget/EbayMenus.xml"/>
-                </decorator-screen>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu name="EbayConfigSideBar"  location="component://ebay/widget/EbayMenus.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for Ebay, _VIEW permission -->

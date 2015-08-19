@@ -25,8 +25,7 @@ under the License.
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
         <menu-item name="ComputerHardware" title="${uiLabelMap.IsMgrComputerHardware}"><link target="ListComputerHardware"/></menu-item>
         <menu-item name="ComputerSoftware" title="${uiLabelMap.IsMgrComputerSoftware}"><link target="ListComputerSoftware"/></menu-item>
-    </menu>
-    
+    </menu>    
     <menu name="IsMgrAppSideBar" title="${uiLabelMap.IsMgrApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-menu-items menu-name="IsMgrAppBar" recursive="includes-only" />
     </menu>
@@ -50,7 +49,10 @@ under the License.
             <link target="EditComputerSoftware"/>
         </menu-item>
     </menu>
-
+    <menu name="FixedAssetSubSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-menu-items menu-name="FixedAssetSubTabBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="ComputerHardwareTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditComputerHardware">
         <!-- Tab Bar customized for Fixed Assets of type Computer Hardware  -->
@@ -98,5 +100,8 @@ under the License.
         </menu-item>
          -->
     </menu>
-
+    <menu name="ComputerHardwareSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditComputerHardware">
+        <include-menu-items menu-name="ComputerHardwareTabBar" recursive="includes-only" />
+    </menu>
 </menus>

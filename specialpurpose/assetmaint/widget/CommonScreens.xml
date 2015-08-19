@@ -74,7 +74,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column">
-                        <include-menu name="FacilityTabBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
+                        <include-menu name="FacilitySideBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -122,7 +122,7 @@ under the License.
                                 <not><if-empty field="fixedAssetId"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="FixedAssetTabBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
+                                <include-menu name="FixedAssetSideBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
                             </widgets>
                         </section>
                         <decorator-section-include name="pre-body"/>

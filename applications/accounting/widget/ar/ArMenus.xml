@@ -26,7 +26,6 @@ under the License.
         <menu-item name="paymentGroups" title="${uiLabelMap.AccountingArPaymentGroupMenu}"><link target="FindArPaymentGroups"/></menu-item>
         <menu-item name="reports" title="${uiLabelMap.AccountingReports}"><link target="ListReports"/></menu-item>
     </menu>
-    
     <menu name="ArAppSideBar" title="${uiLabelMap.AccountingArManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <include-menu-items menu-name="ArAppBar" recursive="includes-only" />

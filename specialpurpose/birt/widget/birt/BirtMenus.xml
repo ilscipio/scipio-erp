@@ -22,8 +22,7 @@ under the License.
        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <menu name="BirtAppBar" title="${uiLabelMap.BirtApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-    </menu>
-    
+    </menu>  
     <menu name="BirtAppSideBar" title="${uiLabelMap.BirtApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
           <include-menu-items menu-name="BirtAppBar" recursive="includes-only" />

@@ -86,7 +86,7 @@ under the License.
                                      <#assign row="alternate-row">
                             </#if>
                             <#assign partyNameView = delegator.findOne("PartyNameView", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", custRequestItemNoteViewList.partyId), false)!/>
-                            <tr class="${row}">
+                            <tr<@dataRowClassStr alt=(row == "alternate-row") />>
                                 <td>
                                 </td>
                                 <td>

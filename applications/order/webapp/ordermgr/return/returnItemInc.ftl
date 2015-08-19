@@ -65,7 +65,7 @@ under the License.
             <#assign adjustmentType = orderItem.getRelatedOne("OrderAdjustmentType", false)/>
             <#assign description = orderItem.description?default(adjustmentType.get("description",locale))/>
 
-            <tr id="returnItemId_tableRow_${rowCount}" valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr id="returnItemId_tableRow_${rowCount}" valign="middle"<@dataRowClassStr alt=alt_row />>
               <td colspan="4">
             <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
             <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${orderItem.orderAdjustmentId}"/>
@@ -97,7 +97,7 @@ under the License.
             <#assign itemPrice = orderItem.unitPrice>
             <#-- end of order item information -->
 
-            <tr id="returnItemId_tableRow_${rowCount}" valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr id="returnItemId_tableRow_${rowCount}" valign="middle"<@dataRowClassStr alt=alt_row />>
               <td>
             <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="${returnItemType}"/>
             <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>

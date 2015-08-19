@@ -83,7 +83,7 @@ under the License.
                     <input type="hidden" value="${leaveFeedback.userID}" name="targetUser${feedbackCounter}"/>
                     <input type="hidden" value="${leaveFeedback.commentingUser}" name="commentingUser${feedbackCounter}"/>
                     <input type="hidden" value="${leaveFeedback.role}" name="role${feedbackCounter}"/>
-                    <tr class="${row}" style="border:#eeeeee solid thin">
+                    <tr<@dataRowClassStr alt=(row == "alternate-row") /> style="border:#eeeeee solid thin">
                         <td valign="top">
                         ${leaveFeedback.itemID} - ${leaveFeedback.title}
                         <a target="_blank" href="http://payments.sandbox.ebay.com/ws/eBayISAPI.dll?ViewPaymentStatus&amp;transId=${leaveFeedback.transactionID}&amp;ssPageName=STRK:MESOX:VPS&amp;itemid=${leaveFeedback.itemID}">order details</a>
@@ -114,7 +114,7 @@ under the License.
                     <input type="hidden" value="${leaveFeedback.userID}" name="targetUser${feedbackCounter}"/>
                     <input type="hidden" value="${leaveFeedback.commentingUser}" name="commentingUser${feedbackCounter}"/>
                     <input type="hidden" value="${leaveFeedback.role}" name="role${feedbackCounter}"/>
-                    <tr class="${row}"  style="border:#eeeeee solid thin">
+                    <tr<@dataRowClassStr alt=(row == "alternate-row") /> style="border:#eeeeee solid thin">
                         <td valign="top">
                         ${leaveFeedback.itemID} - ${leaveFeedback.title}
                         <a target="_blank" href="http://payments.sandbox.ebay.com/ws/eBayISAPI.dll?ViewPaymentStatus&amp;transId=${leaveFeedback.transactionID}&amp;ssPageName=STRK:MESOX:VPS&amp;itemid=${leaveFeedback.itemID}">order details</a>
@@ -240,7 +240,7 @@ under the License.
                 <input type="hidden" value="${leaveFeedback.userID}" name="targetUser${feedbackCounter}"/>
                 <input type="hidden" value="${leaveFeedback.commentingUser}" name="commentingUser${feedbackCounter}"/>
                 <input type="hidden" value="${leaveFeedback.role}" name="role${feedbackCounter}"/>
-                <tr class="${row}" style="border:#eeeeee solid thin">
+                <tr<@dataRowClassStr alt=(row == "alternate-row") /> style="border:#eeeeee solid thin">
                     <td valign="top">
                     ${leaveFeedback.itemID}]${leaveFeedback.title}
                     <a target="_blank" href="http://payments.sandbox.ebay.com/ws/eBayISAPI.dll?ViewPaymentStatus&amp;transId=${leaveFeedback.transactionID}&amp;ssPageName=STRK:MESOX:VPS&amp;itemid=${leaveFeedback.itemID}">order details</a>
@@ -273,7 +273,7 @@ under the License.
                 <input type="hidden" value="${leaveFeedback.userID}" name="targetUser${feedbackCounter}"/>
                 <input type="hidden" value="${leaveFeedback.commentingUser}" name="commentingUser${feedbackCounter}"/>
                 <input type="hidden" value="${leaveFeedback.role}" name="role${feedbackCounter}"/>
-                <tr class="${row}"  style="border:#eeeeee solid thin">
+                <tr<@dataRowClassStr alt=(row == "alternate-row") />  style="border:#eeeeee solid thin">
                     <td valign="top">
                     ${leaveFeedback.itemID} - ${leaveFeedback.title}
                     <a target="_blank" href="http://payments.sandbox.ebay.com/ws/eBayISAPI.dll?ViewPaymentStatus&amp;transId=${leaveFeedback.transactionID}&amp;ssPageName=STRK:MESOX:VPS&amp;itemid=${leaveFeedback.itemID}">order details</a>
@@ -397,7 +397,7 @@ under the License.
             <input type="hidden" value="${leaveFeedback.userID}" name="targetUser${feedbackCounter}"/>
             <input type="hidden" value="${leaveFeedback.commentingUser}" name="commentingUser${feedbackCounter}"/>
             <input type="hidden" value="${leaveFeedback.role}" name="role${feedbackCounter}"/>
-            <tr class="${row}">
+            <tr<@dataRowClassStr alt=(row == "alternate-row") />>
                 <td>
                 ${leaveFeedback.itemID} - ${leaveFeedback.title}
                 <a target="_blank" href="http://payments.sandbox.ebay.com/ws/eBayISAPI.dll?ViewPaymentStatus&amp;transId=${leaveFeedback.transactionID}&amp;ssPageName=STRK:MESOX:VPS&amp;itemid=${leaveFeedback.itemID}">order details</a>

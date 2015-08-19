@@ -123,7 +123,7 @@ function doPublish() {
         <#assign rowClass = "2">
         <#list productAssocs as productAssoc>
             <#assign assocProduct = productAssoc.getRelatedOne("AssocProduct", false)/>
-            <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                 <td nowrap="nowrap">
                 <input type="hidden" name="productId${idx}" value="${assocProduct.productId!}"/>
                 <a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.productId!}</a></td>
@@ -186,7 +186,7 @@ function doPublish() {
                 <#assign idx=0/>
                 <#assign rowClass = "2">
                 <#list distinguishingFeatures as distinguishingFeature>
-                <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                     <td><a href="<@ofbizUrl>quickAdminRemoveProductFeature?productId=${productId}&amp;productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">x</a>&nbsp;
                     ${distinguishingFeature.productFeatureId} ${productFeatureTypeLookup.get(distinguishingFeature.productFeatureId).get("description",locale)}: ${distinguishingFeature.get("description",locale)}
                     &nbsp;
@@ -237,7 +237,7 @@ function doPublish() {
             <#assign idx=0/>
             <#assign rowClass = "2">
             <#list assocProducts as assocProduct>
-                <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                     <td><input type="text" name="productHeight${idx}" size="6" maxlength="20" value="${assocProduct.productHeight!}"/></td>
                     <td><input type="text" name="productWidth${idx}" size="6" maxlength="20" value="${assocProduct.productWidth!}"/></td>
                     <td><input type="text" name="productDepth${idx}" size="6" maxlength="20" value="${assocProduct.productDepth!}"/></td>
@@ -304,7 +304,7 @@ function doPublish() {
             <table cellspacing="0" class="basic-table">
                 <#assign rowClass = "2">
                 <#list addedFeatureTypeIds as addedFeatureTypeId>
-                    <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                    <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                         <td align="right">${addedFeatureTypes.get(addedFeatureTypeId).description}</td>
                         <td>
                             <select name="productFeatureId">
@@ -334,7 +334,7 @@ function doPublish() {
                 <#assign rowClass = "2">
                 <#list standardFeatureAppls as standardFeatureAppl>
                     <#assign featureId = standardFeatureAppl.productFeatureId/>
-                    <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                    <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                         <td colspan="2"><a href='<@ofbizUrl>quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId!}&amp;productFeatureId=${featureId!}&amp;fromDate=${(standardFeatureAppl.fromDate)!}</@ofbizUrl>' class="${styles.button_default!}">x</a>
                         ${productFeatureTypeLookup.get(featureId).description}: ${standardFeatureLookup.get(featureId).description}
                         </td>
@@ -410,7 +410,7 @@ function doPublish() {
                     <#assign rowClass = "2">
                     <#list productCategoryMembers as prodCatMemb>
                         <#assign prodCat = prodCatMemb.getRelatedOne("ProductCategory", false)/>
-                        <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                        <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                             <td colspan="2">
                               <form name="quickAdminRemoveProductFromCategory_${prodCatMemb_index}" action="<@ofbizUrl>quickAdminRemoveProductFromCategory</@ofbizUrl>" method="post">
                                 <input type="hidden" name="productId" value="${prodCatMemb.productId!}" />

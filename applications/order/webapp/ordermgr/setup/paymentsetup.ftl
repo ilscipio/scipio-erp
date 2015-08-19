@@ -63,7 +63,7 @@ under the License.
                   <#else>
                     <#assign rowStyle = "alternate-row">
                   </#if>
-                  <tr class="${rowStyle}">
+                  <tr<@dataRowClassStr alt=true selected=(rowStyle == "alternate-rowSelected") />>
                     <td><div>${paymentSetting.siteName!}</div></td>
                     <td><div>${paymentSetting.description!}</div></td>
                     <td><div>${paymentSetting.paymentAuthService!}</div></td>

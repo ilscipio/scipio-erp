@@ -38,7 +38,7 @@ under the License.
       <#if productPromoRule_index != 0>
         <tr><td colspan="3"><hr /></td></tr>
       </#if>
-      <tr valign="middle" class="row-level-one<#if ruleClass == "1"> alternate-row</#if>">
+      <tr valign="middle"<@dataRowClassStr class="row-level-one" alt=(ruleClass == "1") />>
         <td><b> ${uiLabelMap.ProductRule} ${(productPromoRule.productPromoRuleId)!}</b></td>
         <td>
           <form method="post" action="<@ofbizUrl>updateProductPromoRule</@ofbizUrl>">
@@ -59,14 +59,14 @@ under the License.
         </td>
       </tr>
       <tr><td><hr /></td><td colspan="2"></td></tr>
-      <tr valign="top" class="row-level-one<#if ruleClass == "1"> alternate-row</#if>">
+      <tr valign="top"<@dataRowClassStr class="row-level-one" alt=(ruleClass == "1") />>
         <td align="right">${uiLabelMap.ProductConditionsForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
         <td colspan="2">
           <table cellspacing="0" class="basic-table">
     <#assign maxCondSeqId = 1>
     <#assign condClass = "2">
     <#list productPromoConds as productPromoCond>
-            <tr class="row-level-two<#if condClass == "1"> alternate-row</#if>">
+            <tr<@dataRowClassStr class="row-level-two" alt=(condClass == "1") />>
               <!-- if cur seq id is a number and is greater than max, set new max for input box prefill below -->
       <#if (productPromoCond.productPromoCondSeqId)??>
         <#assign curCondSeqId = Static["java.lang.Integer"].valueOf(productPromoCond.getString("productPromoCondSeqId"))>
@@ -265,13 +265,13 @@ under the License.
         </td>
       </tr>
       <tr><td><hr /></td><td colspan="2"></td></tr>
-      <tr valign="top" class="row-level-one<#if ruleClass == "1"> alternate-row</#if>">
+      <tr valign="top"<@dataRowClassStr class="row-level-one" alt=(ruleClass == "1") />>
         <td align="right">${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
         <td colspan="2">
           <table cellspacing="0" class="basic-table">
     <#assign actionClass = "2">
     <#list productPromoActions as productPromoAction>
-            <tr class="row-level-two<#if actionClass == "1"> alternate-row</#if>">
+            <tr<@dataRowClassStr class="row-level-two" alt=(actionClass == "1") />>
               <td></td>
               <td>
                 <div>

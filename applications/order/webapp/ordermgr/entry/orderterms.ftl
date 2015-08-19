@@ -37,7 +37,7 @@ under the License.
                                 </tr>
                    </thead>
                                 <#list orderTerms as orderTerm>
-                                    <tr <#if orderTerm_index % 2 != 0>class="alternate-row"</#if> >
+                                    <tr<@dataRowClassStr alt=(orderTerm_index % 2 != 0) />>
                                         <td nowrap="nowrap">${orderTerm.getRelatedOne('TermType', false).get('description', locale)}</td>
                                         <td align="center">${orderTerm.termValue!}</td>
                                         <td align="center">${orderTerm.termDays!}</td>

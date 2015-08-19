@@ -65,7 +65,7 @@ under the License.
         </thead>
         <#assign alt_row = false>
         <#list visitList as visitObj>
-          <tr class="<#if alt_row>odd<#else>even</#if>">
+          <tr<@dataRowClassStr alt=alt_row />>
             <td class="button-col"><a href="<@ofbizUrl>visitdetail?visitId=${visitObj.visitId}</@ofbizUrl>" class="${styles.button_default!}">${visitObj.visitId}</a></td>
             <td>${visitObj.visitorId!}</td>
             <td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${visitObj.partyId!}</@ofbizUrl>" class="${styles.button_default!}">${visitObj.partyId!}</a></td>

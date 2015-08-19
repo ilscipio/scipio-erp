@@ -37,7 +37,7 @@ under the License.
           </thead>
         <#assign rowClass = "2">
         <#list 0..featureNum-1 as feature>
-          <tr id="productFeatureTypeId_tableRow_${feature_index}" valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+          <tr id="productFeatureTypeId_tableRow_${feature_index}" valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
               <td><input type="text" size='15' name="description_o_${feature_index}" /></td>
               <td><select name='productFeatureTypeId_o_${feature_index}' size="1">
                   <#list productFeatureTypes as productFeatureType>

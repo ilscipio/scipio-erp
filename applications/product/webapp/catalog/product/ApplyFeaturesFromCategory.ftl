@@ -74,7 +74,7 @@ under the License.
 <#if (listSize > 0)>
 <#list productFeatures as productFeature>
   <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
-    <tr id="productFeatureId_tableRow_${rowCount}"  valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+    <tr id="productFeatureId_tableRow_${rowCount}"  valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
         <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
         <td><a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">${productFeature.productFeatureId}</a></td>
         <td>${productFeature.description!}</td>

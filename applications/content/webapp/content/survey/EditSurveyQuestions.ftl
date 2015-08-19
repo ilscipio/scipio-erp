@@ -54,7 +54,7 @@ under the License.
             <#assign currentSurveyMultiRespColumns = []/>
           </#if>
           
-            <tr<#if alt_row> class="alternate-row"</#if>>
+            <tr<@dataRowClassStr alt=alt_row />>
             <form method="post" action="<@ofbizUrl>updateSurveyQuestionAppl</@ofbizUrl>">
               <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}" />
               <input type="hidden" name="surveyQuestionId" value="${surveyQuestionAndAppl.surveyQuestionId}" />
@@ -167,7 +167,7 @@ under the License.
               <input type="hidden" name="surveyId" value="${requestParameters.surveyId}" />
               <input type="hidden" name="surveyQuestionId" value="${question.surveyQuestionId}" />
               <input type="hidden" name="surveyQuestionCategoryId" value="${requestParameters.surveyQuestionCategoryId}" />
-              <tr<#if alt_row> class="alternate-row"</#if>>
+              <tr<@dataRowClassStr alt=alt_row />>
                 <th><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${question.surveyQuestionId}&amp;surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="${styles.button_default!}">${question.surveyQuestionId}</a></td>
                 <td>${question.description!}</td>
                 <td>${questionType.get("description",locale)}</td>
@@ -285,7 +285,7 @@ under the License.
       </thead>
       <#assign alt_row = false>
       <#list questionOptions as option>
-        <tr<#if alt_row> class="alternate-row"</#if>>
+        <tr<@dataRowClassStr alt=alt_row />>
           <td>${option.description!}</td>
           <td>${option.sequenceNum!}</td>
           <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${option.surveyQuestionId}&amp;surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a></td>

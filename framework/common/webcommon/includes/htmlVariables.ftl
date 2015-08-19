@@ -54,7 +54,10 @@ under the License.
     "icon_button_value" : "&#xf214;",
     "icon_calendar" : "fi-calendar",
     "icon_arrow" : "fi-arrow-right",
-
+    "row_reg" : "even",
+    "row_alt" : "odd",
+    "row_selected" : "selected",
+    
 <#-- Colors -->
     "color_green" : "success",
     "color_red" : "alert",

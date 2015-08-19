@@ -113,7 +113,7 @@ function ShowTab(lname) {
                   <#if newFieldPkList?has_content>
                     <input type="hidden" name="UPDATE_MODE" value="UPDATE"/>
                     <#list newFieldPkList as field>
-                      <tr<#if alt_row> class="alternate-row"</#if>>
+                      <tr<@dataRowClassStr alt=alt_row />>
                         <td class=>${field.name}</td>
                         <td>
                           <input type="hidden" name="${field.name}" value="${field.value}"/>
@@ -133,7 +133,7 @@ function ShowTab(lname) {
                     <p>${uiLabelMap.WebtoolsYouMayCreateAnEntity}</p>
                     <input type="hidden" name="UPDATE_MODE" value="CREATE"/>
                     <#list newFieldPkList as field>
-                      <tr<#if alt_row> class="alternate-row"</#if>>
+                      <tr<@dataRowClassStr alt=alt_row />>
                         <td class=>${field.name}</td>
                         <td>
                           <#if field.fieldType == 'DateTime'>
@@ -173,7 +173,7 @@ function ShowTab(lname) {
                 <#if newFieldNoPkList?has_content>
                   <#assign alt_row = false>
                   <#list newFieldNoPkList as field>
-                    <tr<#if alt_row> class="alternate-row"</#if>>
+                    <tr<@dataRowClassStr alt=alt_row />>
                       <td class=>${field.name}</td>
                       <td>
                         <#if field.fieldType == 'DateTime'>
@@ -208,7 +208,7 @@ function ShowTab(lname) {
                   <#else>
                     <#assign button = "${uiLabelMap.CommonCreate}">
                   </#if>
-                  <tr<#if alt_row> class="alternate-row"</#if>>
+                  <tr<@dataRowClassStr alt=alt_row />>
                     <td>&nbsp;</td>
                     <td>
                       <input type="submit" name="Update" value="${button}" />
@@ -235,7 +235,7 @@ function ShowTab(lname) {
                   </tr>
                   </thead>
                   <#list fields as field>
-                    <tr<#if alt_row> class="alternate-row"</#if>>
+                    <tr<@dataRowClassStr alt=alt_row />>
                       <td>${field.name}</td>
                       <td>${field.value}</td>
                     </tr>
@@ -276,12 +276,12 @@ function ShowTab(lname) {
                                         </tr>
                                     </thead>
                 <#assign alt_row = false>
-                <tr<#if alt_row> class="alternate-row"</#if>>
+                <tr<@dataRowClassStr alt=alt_row />>
                                       <td class="">${uiLabelMap.WebtoolsPk}</td>
                   <td>${relation.valueRelatedPk}</td>
                 </tr>
                 <#list relation.relatedFieldsList as relatedField>
-                  <tr<#if alt_row> class="alternate-row"</#if>>
+                  <tr<@dataRowClassStr alt=alt_row />>
                                         <td class="">${relatedField.name}</td>
                     <td>${relatedField.value}</td>
                   </tr>

@@ -72,14 +72,14 @@
       <#list contentAssoc as contentData>
       <#if tabButtonItem=="ListContentTree">
         <#--Form ListContentTree-->
-          <tr <#if alt_row> class="alternate-row"</#if>> 
+          <tr<@dataRowClassStr alt=alt_row />> 
               <td><a class="plain" href="javascript:set_value('${contentData.contentId!}')">${contentData.contentId!}</a></td>
               <td>${contentData.contentName!}</td>
               <td>${contentData.mimeTypeId!}</td>
           </tr>
       <#elseif tabButtonItem=="ListDocument">
           <#--Form ListDocument-->
-          <tr <#if alt_row> class="alternate-row"</#if>>
+          <tr<@dataRowClassStr alt=alt_row />>
               <td><a class="plain" href="/content/control/editContent?contentId=${contentData.contentId!}">${contentData.contentName!}[${contentData.contentId!}]</a></td>
               <td><a class="plain" href="/content/control/showContent?contentId=${contentData.contentId!}" target="_blank">${uiLabelMap.CommonView}</a></td>
               <td>${contentData.contentTypeId!}</td>

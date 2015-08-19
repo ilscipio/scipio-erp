@@ -62,7 +62,7 @@ under the License.
             <#assign currencyUom = shipmentRouteSegmentData.currencyUom!>
             <#assign billingWeightUom = shipmentRouteSegmentData.billingWeightUom!>
             <#assign carrierServiceStatusValidChangeToDetails = shipmentRouteSegmentData.carrierServiceStatusValidChangeToDetails!>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td>${shipmentRouteSegment.shipmentRouteSegmentId}</td>
                 <td>
                     <span>${(carrierPerson.firstName)!} ${(carrierPerson.middleName)!} ${(carrierPerson.lastName)!} ${(carrierPartyGroup.groupName)!} [${shipmentRouteSegment.carrierPartyId!}]</span>
@@ -103,7 +103,7 @@ under the License.
                 </td>
             </tr>
             <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td>&nbsp;</td>
                 <td><span>${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}</td>
                 <td><span>${uiLabelMap.ProductTracking}</span> ${shipmentPackageRouteSeg.trackingCode!}</td>

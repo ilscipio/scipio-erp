@@ -42,7 +42,7 @@ under the License.
                 <#list productFeatureCatGrpAppls as productFeatureCatGrpAppl>
                 <#assign line = line + 1>
                 <#assign productFeatureGroup = (productFeatureCatGrpAppl.getRelatedOne("ProductFeatureGroup", false))?default(null)>
-                <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                     <td><a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if productFeatureGroup??>${(productFeatureGroup.description)!}</#if> [${(productFeatureCatGrpAppl.productFeatureGroupId)!}]</a></td>
                     <#assign hasntStarted = false>
                     <#if (productFeatureCatGrpAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productFeatureCatGrpAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
@@ -123,7 +123,7 @@ under the License.
                 <#list productFeatureCategoryAppls as productFeatureCategoryAppl>
                 <#assign line = line + 1>
                 <#assign productFeatureCategory = (productFeatureCategoryAppl.getRelatedOne("ProductFeatureCategory", false))?default(null)>
-                <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                     <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if productFeatureCategory??>${(productFeatureCategory.description)!}</#if> [${(productFeatureCategoryAppl.productFeatureCategoryId)!}]</a></td>
                     <#assign hasntStarted = false>
                     <#if (productFeatureCategoryAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productFeatureCategoryAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>

@@ -68,7 +68,7 @@ under the License.
                             <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeaderAndRole)>
                             <#assign statusItem = orderHeaderAndRole.getRelatedOne("StatusItem", true)>
                             <#assign placingParty = orh.getPlacingParty()!>
-                            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                               <td><a href="<@ofbizUrl>orderview?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='${styles.button_default!}'>${orderHeaderAndRole.orderId}</a></td>
                               <td>
                                 <div>
@@ -132,7 +132,7 @@ under the License.
                           </thead>
                           <#assign alt_row = false>
                           <#list partyTasks as task>
-                            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                               <td>
                                 <#assign orderStr = "orderId=" + task.orderId + "&amp;partyId=" + userLogin.partyId + "&amp;roleTypeId=" + task.roleTypeId + "&amp;workEffortId=" + task.workEffortId + "&amp;fromDate=" + task.get("fromDate").toString()>
                                 <a href="<@ofbizUrl>orderview?${orderStr}</@ofbizUrl>" class="${styles.button_default!}">
@@ -223,7 +223,7 @@ under the License.
                                 <input type="hidden" name="toFromDate" value="${now}" />
                                 <input type="hidden" name="startActivity" value="true" />
                               </#if>
-                              <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                              <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                                 <td>
                                   <a href="javascript:viewOrder(document.F${task.workEffortId});" class="${styles.button_default!}">
                                     ${task.orderId}

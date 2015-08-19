@@ -46,7 +46,7 @@ under the License.
             <form method="post" action="<@ofbizUrl>updateShipmentPackage</@ofbizUrl>" name="updateShipmentPackageForm${shipmentPackageData_index}">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td>${shipmentPackage.shipmentPackageSeqId}</td>
                 <td>${(shipmentPackage.dateCreated.toString())!}</td>
                 <td>
@@ -85,7 +85,7 @@ under the License.
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
             </form>
         <#list shipmentPackageContents as shipmentPackageContent>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td>&nbsp;</td>
                 <td><span>${uiLabelMap.ProductItem}</span> ${shipmentPackageContent.shipmentItemSeqId}</td>
                 <td colspan="2">
@@ -104,7 +104,7 @@ under the License.
                 <input type="hidden" name="shipmentItemSeqId" value="${shipmentPackageContent.shipmentItemSeqId}"/>
             </form>
         </#list>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <form name="createShipmentPackageContentForm${shipmentPackageData_index}" method="post" action="<@ofbizUrl>createShipmentPackageContent</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
@@ -135,7 +135,7 @@ under the License.
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentPackageRouteSeg.shipmentRouteSegmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td>&nbsp;</td>
                 <td><span>${uiLabelMap.ProductRouteSegment}</span> ${shipmentPackageRouteSeg.shipmentRouteSegmentId}</td>
                 <td><span>${uiLabelMap.ProductTrack}</span> <input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/></td>
@@ -157,7 +157,7 @@ under the License.
             </form>
         </#list>
             <#--
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <form action="<@ofbizUrl>createShipmentPackageRouteSeg</@ofbizUrl>" name="createShipmentPackageRouteSegForm${shipmentPackageData_index}">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>

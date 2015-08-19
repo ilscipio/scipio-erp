@@ -44,7 +44,7 @@ under the License.
            </thead>
             <#assign alt_row = false>
             <#list relations as relation>
-                <tr<#if alt_row> class="alternate-row"</#if>>
+                <tr<@dataRowClassStr alt=alt_row />>
                     <td>${relation.title}</td>
                     <td class="button-col"><a href='<@ofbizUrl>FindGeneric?entityName=${relation.relEntityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>'>${relation.relEntityName}</a></td>
                     <td>${relation.type}</td>

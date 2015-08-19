@@ -47,7 +47,7 @@ under the License.
             <#assign product = shipmentItemData.product!>
             <#assign totalQuantityPackaged = shipmentItemData.totalQuantityPackaged>
             <#assign totalQuantityToPackage = shipmentItemData.totalQuantityToPackage>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td>${shipmentItem.shipmentItemSeqId}</td>
                 <td colspan="2">${(product.internalName)!} <a href="/catalog/control/EditProduct?productId=${shipmentItem.productId!}" class="${styles.button_default!}">${shipmentItem.productId!}</a></td>
                 <td>${shipmentItem.quantity?default("&nbsp;")}</td>
@@ -59,7 +59,7 @@ under the License.
                 <input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
             </form>
             <#list orderShipments as orderShipment>
-                <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                     <td>&nbsp;</td>
                     <td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}" class="${styles.button_default!}">${orderShipment.orderId!}</a> ${orderShipment.orderItemSeqId!}</td>
                     <td>&nbsp;</td>
@@ -70,7 +70,7 @@ under the License.
                 </tr>
             </#list>
             <#list itemIssuances as itemIssuance>
-                <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                     <td>&nbsp;</td>
                     <td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}" class="${styles.button_default!}">${itemIssuance.orderId!}</a> ${itemIssuance.orderItemSeqId!}</td>
                     <td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" class="${styles.button_default!}">${itemIssuance.inventoryItemId!}</a></td>
@@ -81,7 +81,7 @@ under the License.
                 </tr>
             </#list>
             <#list shipmentPackageContents as shipmentPackageContent>
-                <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                     <td>&nbsp;</td>
                     <td colspan="2"><span>${uiLabelMap.ProductPackage}</span> ${shipmentPackageContent.shipmentPackageSeqId}</td>
                     <td>${shipmentPackageContent.quantity!}&nbsp;</td>
@@ -100,7 +100,7 @@ under the License.
                 </form>
             </#list>
             <#if (totalQuantityToPackage > 0)>
-                <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                     <form action="<@ofbizUrl>createShipmentItemPackageContent</@ofbizUrl>" method="post" name="createShipmentPackageContentForm${shipmentItemData_index}">
                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                     <input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>

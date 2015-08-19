@@ -111,7 +111,7 @@ under the License.
           <#assign orderNeedsStockMoveInfoListSize = (orderNeedsStockMoveInfoList.size())?default(0)>
           <#assign orderReadyToPickInfoListSizeTotal = orderReadyToPickInfoListSizeTotal + orderReadyToPickInfoListSize>
           <#assign orderNeedsStockMoveInfoListSizeTotal = orderNeedsStockMoveInfoListSizeTotal + orderNeedsStockMoveInfoListSize>
-          <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+          <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td>
                     <form name="viewGroupDetail_${pickMoveInfo_index}" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>" method="post">
                       <input type ="hidden" name="viewDetail" value= "${groupName!}"/>
@@ -200,7 +200,7 @@ under the License.
           <#assign alt_row = !alt_row>
         </#list>
         <#if ((requestParameters.groupByShippingMethod?? && requestParameters.groupByShippingMethod == "Y") || (requestParameters.groupByWarehouseArea?? && requestParameters.groupByWarehouseArea == "Y") || (requestParameters.groupByNoOfOrderItems?? && requestParameters.groupByNoOfOrderItems == "Y"))>
-          <tr<#if alt_row> class="alternate-row"</#if>>
+          <tr<@dataRowClassStr alt=alt_row />>
             <th>${uiLabelMap.CommonAllMethods}</div></th>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
@@ -278,7 +278,7 @@ under the License.
           <#list oiasgal as oiasga>
             <#assign orderProduct = oiasga.getRelatedOne("OrderItem", false).getRelatedOne("Product", false)!>
             <#assign product = oiasga.getRelatedOne("InventoryItem", false).getRelatedOne("Product", false)!>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
               <td><a href="/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${oiasga.orderId}</a></td>
               <td>${header.orderDate?string}</td>
               <td>${(channel.description)!}</td>

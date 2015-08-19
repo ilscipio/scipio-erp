@@ -40,7 +40,7 @@ under the License.
                 <#else>
                     <#assign itemClass = "2">
                     <#list orderItemList as orderItem>
-                        <#if itemClass == "1"><#assign rowColor="odd"><#else><#assign rowColor="even"></#if> 
+                        <#if itemClass == "1"><#assign rowColor=styles.row_alt!><#else><#assign rowColor=styles.row_reg!></#if> 
                         <#assign orderItemContentWrapper = Static["org.ofbiz.order.order.OrderContentWrapper"].makeOrderContentWrapper(orderItem, request)>
                         <#assign orderItemShipGrpInvResList = orderReadHelper.getOrderItemShipGrpInvResList(orderItem)>
                         <#if orderHeader.orderTypeId == "SALES_ORDER"><#assign pickedQty = orderReadHelper.getItemPickedQuantityBd(orderItem)></#if>

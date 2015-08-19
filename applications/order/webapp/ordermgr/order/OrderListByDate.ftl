@@ -26,7 +26,6 @@ under the License.
         1-${orderHeaderList.size()} ${uiLabelMap.CommonOf} ${state.getSize()}
       </#if>
 
-  
     <#if orderHeaderList?has_content>
       <table class="basic-table hover-bar" cellspacing='0'>
         <thead>
@@ -49,7 +48,7 @@ under the License.
             <#assign billTo = billToPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")/>
           </#if>
           <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
-          <tr<#if alt_row> class="alternate-row"</#if>>
+          <tr<@dataRowClassStr alt=alt_row />>
             <#assign alt_row = !alt_row>
             <td><a href="/ordermgr/control/orderview?orderId=${orderHeader.orderId}" class="${styles.button_default!}">${orderHeader.orderId}</a></td>
             <td>${billTo!}</td>

@@ -34,7 +34,7 @@ under the License.
           <#assign alt_row = false>
           <#list workEfforts as calendarEntry>
             <#assign workEffort = calendarEntry.workEffort>
-            <tr<#if alt_row> class="alternate-row"</#if>>
+            <tr<@dataRowClassStr alt=alt_row />>
               <td><#if workEffort.actualStartDate??>${workEffort.actualStartDate}<#else>${workEffort.estimatedStartDate}</#if></td>
               <td><#if workEffort.actualCompletionDate??>${workEffort.actualCompletionDate}<#else>${workEffort.estimatedCompletionDate}</#if></td>
               <td>${workEffort.getRelatedOne("WorkEffortType", false).get("description",locale)}</td>

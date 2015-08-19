@@ -54,7 +54,7 @@ under the License.
         <#if tree?has_content>
           <#assign alt_row = false>
           <#list tree as node>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
               <td>
               <table cellspacing="1">
               <tr>
@@ -113,7 +113,7 @@ under the License.
           <#assign alt_row = false>
           <#list productsData as productData>
             <#assign node = productData.node>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
               <td><a href="/catalog/control/EditProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${node.product.productId}</a></td>
               <td>${node.product.internalName?default("&nbsp;")}</td>
               <td align="right">${node.quantity}</td>

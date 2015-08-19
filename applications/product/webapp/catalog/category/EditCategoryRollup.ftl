@@ -57,7 +57,7 @@ under the License.
                     <#if productCategoryRollup.fromDate?? && nowTimestamp.before(productCategoryRollup.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
                     <#assign hasExpired = false>
                     <#if productCategoryRollup.thruDate?? && nowTimestamp.after(productCategoryRollup.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
-                    <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                    <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                         <td><#if curCategory?has_content>
                                 <a href="<@ofbizUrl>EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" >
                                     <#assign catContentWrapper = Static["org.ofbiz.product.category.CategoryContentWrapper"].makeCategoryContentWrapper(curCategory, request)!>
@@ -169,7 +169,7 @@ under the License.
                     <#if productCategoryRollup.fromDate?? && nowTimestamp.before(productCategoryRollup.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
                     <#assign hasExpired = false>
                     <#if productCategoryRollup.thruDate?? && nowTimestamp.after(productCategoryRollup.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
-                        <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                        <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                             <td><#if curCategory?has_content>
                                     <a href="<@ofbizUrl>EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" >
                                         <#assign catContentWrapper = Static["org.ofbiz.product.category.CategoryContentWrapper"].makeCategoryContentWrapper(curCategory, request)!>

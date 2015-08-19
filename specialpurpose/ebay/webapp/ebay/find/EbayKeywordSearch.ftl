@@ -84,7 +84,7 @@ under the License.
             <#list productIds as productId>
               <#assign altRow = !altRow />
               <#assign product = delegator.findOne("Product", {"productId" : productId}, true) />
-              <tr <#if altRow> class="alternate-row"</#if>>
+              <tr<@dataRowClassStr alt=altRow />>
                 <td>
                   <input type="checkbox" name="selectResult" value="${productId}"/>
                   <a href="<@ofbizUrl>EditProduct?productId=${productId}</@ofbizUrl>" class="${styles.button_default!}">[${productId}] ${(product.internalName)!}</a>

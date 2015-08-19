@@ -108,7 +108,7 @@ under the License.
         <#if serverHits?has_content>
         <#list serverHits[lowIndex..highIndex-1] as hit>
           <#assign serverHitType = hit.getRelatedOne("ServerHitType", false)!>
-          <tr class="<#if alt_row>odd<#else>even</#if>">
+          <tr<@dataRowClassStr alt=alt_row />>
             <td>${hit.contentId!}</td>
             <td>${serverHitType.get("description",locale)!}</td>
             <td>&nbsp;&nbsp;${hit.numOfBytes?default("?")}</td>

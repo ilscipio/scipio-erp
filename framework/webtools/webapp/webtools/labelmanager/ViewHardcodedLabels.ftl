@@ -32,7 +32,7 @@ under the License.
       <#assign labelFound = 'N'>
       <#assign refNum = factory.getLabelReferenceFile(reference)>
       <#if (refNum > 0)>
-        <tr <#if rowNum == "1">class="alternate-row"</#if>>
+        <tr<@dataRowClassStr alt=(rowNum == "1") />>
           <td>${rowNumber}</td>
           <td>${reference}</td>
           <td align="center"><#if (refNum > 0)><a href="<@ofbizUrl>ViewReferences?sourceKey=${reference}</@ofbizUrl>">${refNum}</a><#else>${refNum}</#if></td>

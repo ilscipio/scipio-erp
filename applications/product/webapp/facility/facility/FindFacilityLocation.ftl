@@ -93,7 +93,7 @@ under the License.
         <#assign rowClass = "2">
         <#list foundLocations as location>
         <#assign locationTypeEnum = location.getRelatedOne("TypeEnumeration", true)!>
-        <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+        <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
             <td><a href="<@ofbizUrl>EditFacility?facilityId=${(location.facilityId)!}</@ofbizUrl>">${(location.facilityId)!}</a></td>
             <td><a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>">${(location.locationSeqId)!}</a></td>
             <td>${(locationTypeEnum.get("description",locale))?default(location.locationTypeEnumId!)}</td>

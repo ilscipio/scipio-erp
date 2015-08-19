@@ -556,10 +556,19 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                     
    * General Attributes *
     class           = css classes
+    alt             = boolean, if true alternate row (odd), if false regular (even)
+    selected        = boolean, if true row is marked selected
 -->
-<#macro row class="" id="" collapse=false norows=false>
+<#macro row class="" id="" collapse=false norows=false alt="" selected="">
     <#if !norows>
-    <div class="${styles.grid_row!} <#if class?has_content> ${class!}</#if><#if collapse> collapse</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
+      <#local altClass = "">
+      <#if alt?is_boolean>
+        <#local altClass = alt?string(styles.row_alt!, styles.row_reg!)>
+      </#if>
+      <#if selected?is_boolean && selected == true>
+        <#local altClass = (altClass + " " + styles.row_selected!)?trim>
+      </#if>
+    <div class="${styles.grid_row!}<#if class?has_content> ${class}</#if><#if collapse> collapse</#if><#if altClass?has_content> ${altClass}</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
     </#if>
         <#nested />
     <#if !norows>    
@@ -1020,6 +1029,30 @@ Creates a very basic wrapper for code blocks
     <#nested>
     </#compress>
     </code></pre>
+</#macro>
+
+<#-- 
+*************
+* Data row class string
+************
+Helps build common data/table row class string (odd, even, etc.). Common pattern.
+    Usage example:  
+    <tr<@dataRowClassStr class="myClass" alt=false/>>
+                    
+   * General Attributes *
+    class           = manual classes to add
+    alt             = boolean, if true is alternate row (odd), if false regular (even)
+    selected        = boolean, if true marked as selected
+-->
+<#macro dataRowClassStr class="" alt="" selected="">
+  <#local str = class>
+  <#if alt?is_boolean>
+    <#local str = (str + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
+  </#if>
+  <#if selected?is_boolean && selected == true>
+    <#local str = (str + " " + styles.row_selected!)?trim>
+  </#if>
+  <#if str?has_content> class="${str}"</#if>
 </#macro>
 
 <#-- 

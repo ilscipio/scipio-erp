@@ -73,7 +73,7 @@ function uploadTrackingCode(orderId, productStoreId) {
               <#assign displayParty = orh.getPlacingParty()!>
             </#if>
             <#assign partyId = displayParty.partyId?default("_NA_")>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
               <td>${orderType.get("description",locale)?default(orderType.orderTypeId?default(""))}</td>
               <td><a href="#" onclick="javascript:uploadTrackingCode('${orderHeader.orderId}','${productStoreId}')" class='${styles.button_default!}'>${orderHeader.orderId}</a></td>
               <td>

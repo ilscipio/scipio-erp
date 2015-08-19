@@ -205,7 +205,7 @@ under the License.
             <#list assocFromProducts as assocFromProduct>
             <#assign listToProduct = assocFromProduct.getRelatedOne("AssocProduct", true)>
             <#assign curProductAssocType = assocFromProduct.getRelatedOne("ProductAssocType", true)>
-            <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                 <td><a href="<@ofbizUrl>EditProduct?productId=${(assocFromProduct.productIdTo)!}</@ofbizUrl>" class="${styles.button_default!}">${(assocFromProduct.productIdTo)!}</a></td>
                 <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocFromProduct.productIdTo)!}</@ofbizUrl>" class="${styles.button_default!}">${(listToProduct.internalName)!}</a></#if>&nbsp;</td>
                 <td <#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))> style="color: red;"</#if>>
@@ -254,7 +254,7 @@ under the License.
             <#list assocToProducts as assocToProduct>
             <#assign listToProduct = assocToProduct.getRelatedOne("MainProduct", true)>
             <#assign curProductAssocType = assocToProduct.getRelatedOne("ProductAssocType", true)>
-            <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                 <td><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.button_default!}">${(assocToProduct.productId)!}</a></td>
                 <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.button_default!}">${(listToProduct.internalName)!}</a></#if></td>
                 <td>${(assocToProduct.getTimestamp("fromDate"))!}&nbsp;</td>

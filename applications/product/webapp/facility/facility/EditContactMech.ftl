@@ -93,7 +93,7 @@ under the License.
               <#assign alt_row = false>
               <#list mechMap.facilityContactMechPurposes as facilityContactMechPurpose>
                 <#assign contactMechPurposeType = facilityContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
-                <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                   <td>
                       <#if contactMechPurposeType?has_content>
                         <b>${contactMechPurposeType.get("description",locale)}</b>

@@ -195,7 +195,7 @@ function runAction() {
         <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", Static["org.ofbiz.base.util.UtilMisc"].toMap("invoiceId", invoice.invoiceId, "userLogin", userLogin))/>
         <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
           <#assign statusItem = invoice.getRelatedOne("StatusItem", true)>
-          <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+          <tr valign="middle"<@dataRowClassStr alt=alt_row />>
             <td><a class="${styles.button_default!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></td>
             <td><#if invoice.get("invoiceDate")?has_content>${invoice.get("invoiceDate")?date}</td></#if>
             <td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date}</td></#if>

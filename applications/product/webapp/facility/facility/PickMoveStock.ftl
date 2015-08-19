@@ -74,7 +74,7 @@ under the License.
                         <#assign targetProductFacilityLocation = moveByOisgirInfo.targetProductFacilityLocation>
                         <#assign facilityLocationTypeEnumTo = (facilityLocationTo.getRelatedOne("TypeEnumeration", true))!>
                         <#assign totalQuantity = moveByOisgirInfo.totalQuantity>
-                        <tr id="moveInfoId_tableRow_${rowCount}" valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                        <tr id="moveInfoId_tableRow_${rowCount}" valign="middle"<@dataRowClassStr alt=alt_row />>
                             <td>${product.productId}</td>
                             <td>${product.internalName!}</td>
                             <td>${facilityLocationFrom.areaId!}:${facilityLocationFrom.aisleId!}:${facilityLocationFrom.sectionId!}:${facilityLocationFrom.levelId!}:${facilityLocationFrom.positionId!}<#if facilityLocationTypeEnumFrom?has_content>(${facilityLocationTypeEnumFrom.description})</#if>[${facilityLocationFrom.locationSeqId}]</td>
@@ -108,7 +108,7 @@ under the License.
                         <#assign targetProductFacilityLocation = moveByPflInfo.targetProductFacilityLocation>
                         <#assign facilityLocationTypeEnumTo = (facilityLocationTo.getRelatedOne("TypeEnumeration", true))!>
                         <#assign totalQuantity = moveByPflInfo.totalQuantity>
-                        <tr id="moveInfoId_tableRow_${rowCount}" valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                        <tr id="moveInfoId_tableRow_${rowCount}" valign="middle"<@dataRowClassStr alt=alt_row />>
                             <td>${product.productId}</td>
                             <td>${product.internalName!}</td>
                             <td>${facilityLocationFrom.areaId!}:${facilityLocationFrom.aisleId!}:${facilityLocationFrom.sectionId!}:${facilityLocationFrom.levelId!}:${facilityLocationFrom.positionId!}<#if facilityLocationTypeEnumFrom?has_content>(${facilityLocationTypeEnumFrom.description})</#if>[${facilityLocationFrom.locationSeqId}]</td>

@@ -109,7 +109,7 @@ under the License.
         <#if showLabel && parameters.labelFileName?? && parameters.labelFileName != "" && parameters.labelFileName != label.fileName>
           <#assign showLabel = false>
         </#if>
-          <tr <#if rowNum == "1">class="alternate-row"</#if>>
+          <tr<@dataRowClassStr alt=(rowNum == "1") />>
             <#--<td>${rowNumber}</td>-->
             <td><a href="<@ofbizUrl>UpdateLabel?sourceKey=${labelKey}&amp;sourceFileName=${label.fileName}&amp;sourceKeyComment=${label.labelKeyComment!}</@ofbizUrl>" <#if previousKey == labelKey>class="submenutext"</#if>>${label.labelKey}</a></td>
             <td>${label.fileName}</td>

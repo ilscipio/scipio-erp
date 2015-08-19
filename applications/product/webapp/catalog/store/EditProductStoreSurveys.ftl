@@ -38,7 +38,7 @@ under the License.
             <#list productStoreSurveys as storeSurvey>
               <#assign surveyType = storeSurvey.getRelatedOne("SurveyApplType", false)>
               <#assign survey = storeSurvey.getRelatedOne("Survey", false)>
-              <tr valign="middle"<#if alt_row>class="alternate-row"</#if>>
+              <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td>${surveyType.get("description",locale)}</td>
                 <td>${storeSurvey.groupName!}</td>
                 <td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="${styles.button_default!}">${survey.description?default("[" + survey.surveyId + "]")}</a></td>

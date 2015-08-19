@@ -376,7 +376,7 @@ under the License.
         <#list servicesList as service>
           <#assign firstChar = service.serviceName?substring(0, 1)>
           <#assign anchor="id=\"Service_${firstChar}\" data-magellan-destination=\"Service_${firstChar}\"">
-          <tr<#if alt_row> class="alternate-row"</#if>>
+          <tr<@dataRowClassStr alt=alt_row />>
             <td <#if anchor?has_content> ${anchor}</#if>><a href='<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>'>${service.serviceName}</a></td>
             <td><a href='<@ofbizUrl>${url}?constraint=engine_name@${service.engineName?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.engineName}</a></td>
             <td><a href='<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.defaultEntityName}</a></td>

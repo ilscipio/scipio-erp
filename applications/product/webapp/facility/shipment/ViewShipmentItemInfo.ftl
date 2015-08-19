@@ -37,14 +37,14 @@ under the License.
             <#assign orderShipments = shipmentItemData.orderShipments>
             <#assign shipmentPackageContents = shipmentItemData.shipmentPackageContents>
             <#assign product = shipmentItemData.product!>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td>${shipmentItem.shipmentItemSeqId}</td>
                 <td colspan="2">${(product.internalName)!} <a href="/catalog/control/EditProduct?productId=${shipmentItem.productId!}" class="${styles.button_default!}">${shipmentItem.productId!}</a></td>
                 <td>${shipmentItem.quantity?default("&nbsp;")}</td>
                 <td colspan="2">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</td>
             </tr>
             <#list orderShipments as orderShipment>
-                <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                     <td>&nbsp;</td>
                     <td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${orderShipment.orderId!}</a>${orderShipment.orderItemSeqId!}</td>
                     <td>&nbsp;</td>
@@ -54,7 +54,7 @@ under the License.
                 </tr>
             </#list>
             <#list itemIssuances as itemIssuance>
-                <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                     <td>&nbsp;</td>
                     <td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${itemIssuance.orderId!}</a>${itemIssuance.orderItemSeqId!}</td>
                     <td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" class="${styles.button_default!}">${itemIssuance.inventoryItemId!}</a></td>
@@ -64,7 +64,7 @@ under the License.
                 </tr>
             </#list>
             <#list shipmentPackageContents as shipmentPackageContent>
-                <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                     <td>&nbsp;</td>
                     <td colspan="2"><span>${uiLabelMap.ProductPackage}</span> ${shipmentPackageContent.shipmentPackageSeqId}</td>
                     <td>${shipmentPackageContent.quantity!}</td>

@@ -33,7 +33,7 @@ under the License.
             <#if resultPartialList?has_content>
                 <#assign alt_row = false>
                 <#list records as record>
-                    <tr<#if alt_row> class="alternate-row"</#if>>
+                    <tr<@dataRowClassStr alt=alt_row />>
                         <td>
                             <a href="<@ofbizUrl>ViewGeneric?${record.findString}</@ofbizUrl>">${uiLabelMap.CommonView}</a>
                         <#if hasDeletePermission == 'Y'>

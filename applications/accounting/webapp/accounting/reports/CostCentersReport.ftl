@@ -32,7 +32,7 @@ under the License.
     </thead>
     <#assign alt_row = false>
     <#list glAcctBalancesByCostCenter as glAcctBalanceByCostCenter>
-        <tr <#if alt_row> class="alternate-row"</#if>>
+        <tr<@dataRowClassStr alt=alt_row />>
           <td>${glAcctBalanceByCostCenter.glAccountId!}</td>
           <td>${glAcctBalanceByCostCenter.accountCode!}</td>
           <td>${glAcctBalanceByCostCenter.accountName!}</td>

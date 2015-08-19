@@ -30,7 +30,7 @@ under the License.
   </thead>
     <#assign alt_row = false>
     <#list records as record>
-    <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+    <tr valign="middle"<@dataRowClassStr alt=alt_row />>
         <#list columnNames as columnName>
         <#assign columnValue = record[columnName]?default("")>
         <td<#if columnValue?is_number> class="align-text"</#if>>

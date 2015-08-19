@@ -128,7 +128,7 @@ under the License.
                         <#assign availableToReceive = orderItemData.availableToReceive?default(0)>
                         <#assign backOrderedQuantity = orderItemData.backOrderedQuantity?default(0)>
                         <#assign fulfilledReservations = orderItemData.fulfilledReservations>
-                        <tr id="orderItemData_tableRow_${rowCount}" valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                        <tr id="orderItemData_tableRow_${rowCount}" valign="middle"<@dataRowClassStr alt=alt_row />>
                             <td>${(product.internalName)!} [${orderItem.productId?default("N/A")}]</div></td>
                             <td>
                                 <div>

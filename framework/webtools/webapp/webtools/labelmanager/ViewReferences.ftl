@@ -37,7 +37,7 @@ under the License.
               <#if reference?? &&  reference?has_content>
                 <#assign entries = reference.entrySet()>
                 <#list entries as entry>
-                  <tr <#if rowNum == "1">class="alternate-row"</#if>>
+                  <tr<@dataRowClassStr alt=(rowNum == "1") />>
                     <td>${rowNumber}</td>
                     <td><a href="<@ofbizUrl>ViewFile?fileName=${entry.getKey()}&amp;sourceKey=${parameters.sourceKey!}</@ofbizUrl>">${entry.getKey()}</a></td>
                     <td>${entry.getValue()}</td>
@@ -50,7 +50,7 @@ under the License.
                 </#if>
                 <#assign rowNumber = rowNumber + 1>
                 </#list>
-                  <tr <#if rowNum == "1">class="alternate-row"</#if>>
+                  <tr<@dataRowClassStr alt=(rowNum == "1") />>
                     <td>&nbsp;</td>
                     <td><b>${uiLabelMap.CommonTotal}</b></td>
                     <td>${totalRefs}</td>

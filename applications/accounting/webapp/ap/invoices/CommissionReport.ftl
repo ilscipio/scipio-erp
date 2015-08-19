@@ -36,7 +36,7 @@ under the License.
     <#-- Header Ends-->
     <#assign alt_row = false>
     <#list commissionReportList as commissionReport>
-      <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+      <tr valign="middle"<@dataRowClassStr alt=alt_row />>
         <td><a href="/catalog/control/EditProduct?productId=${commissionReport.productId!}">${commissionReport.productName!}</a></td>
         <td>${commissionReport.quantity!}</td>
         <td>

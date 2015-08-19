@@ -33,7 +33,7 @@ under the License.
           </thead>
           <#assign rowClass = "2">
           <#list productFeatureGroups as productFeatureGroup>
-            <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                 <td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${productFeatureGroup.productFeatureGroupId}</a></td>
                 <td>
                     <form method='post' action='<@ofbizUrl>UpdateProductFeatureGroup</@ofbizUrl>'>

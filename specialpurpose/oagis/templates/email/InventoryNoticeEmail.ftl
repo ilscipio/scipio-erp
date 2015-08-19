@@ -48,7 +48,7 @@
         <tr><td colspan="10"><hr /></td></tr>
         <#assign alt_row = false>
         <#list inventoryMapList as inventoryMap>
-          <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+          <tr valign="middle"<@dataRowClassStr alt=alt_row />>
             <td valign="top"> ${inventoryMap.productId!}</td>
             <td align="right" valign="top"> ${inventoryMap.timestamp!!}</td>
             <td align="right" valign="top"> ${inventoryMap.statusId!!}</td>

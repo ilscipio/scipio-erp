@@ -174,7 +174,7 @@ under the License.
             <#assign alt_row = false>
             <#list partyList as partyRow>
             <#assign partyType = partyRow.getRelatedOne("PartyType", false)!>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td><a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td>
                 <td><#if partyRow.containsKey("userLoginId")>
                         ${partyRow.userLoginId?default("N/A")}

@@ -32,7 +32,7 @@ under the License.
     </thead>
     <#assign alt_row = false>
       <#list glAcctgAndAmountPercentageList as glAcctgAndAmountPercentage>
-        <tr id="row_${glAcctgAndAmountPercentage.glAccountId}" class="alternate-row">
+        <tr id="row_${glAcctgAndAmountPercentage.glAccountId}"<@dataRowClassStr alt=true />>
           <td>${glAcctgAndAmountPercentage.organizationPartyId}</td>
           <td><input type="hidden" id="glAccountId_${glAcctgAndAmountPercentage.glAccountId}" name="glAccountId_o_${glAcctgAndAmountPercentage_index}" value="${glAcctgAndAmountPercentage.glAccountId!}"/>
               <input name="_rowSubmit_o_${glAcctgAndAmountPercentage_index}" type="hidden" value="Y"/>          

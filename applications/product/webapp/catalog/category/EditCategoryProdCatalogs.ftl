@@ -36,7 +36,7 @@ under the License.
             <#assign line = line + 1>
             <#assign prodCatalog = prodCatalogCategory.getRelatedOne("ProdCatalog", false)>
             <#assign curProdCatalogCategoryType = prodCatalogCategory.getRelatedOne("ProdCatalogCategoryType", true)>
-            <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                 <td><a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if prodCatalog??>${(prodCatalog.catalogName)!}</#if> [${(prodCatalogCategory.prodCatalogId)!}]</a></td>
                 <td>
                     ${(curProdCatalogCategoryType.get("description",locale))?default(prodCatalogCategory.prodCatalogCategoryTypeId)}

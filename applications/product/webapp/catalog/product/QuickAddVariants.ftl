@@ -72,7 +72,7 @@ function clickAll(e) {
             <#assign curProductFeatureAndAppls = featureCombinationInfo.curProductFeatureAndAppls>
             <#assign existingVariantProductIds = featureCombinationInfo.existingVariantProductIds>
             <#assign defaultVariantProductId = featureCombinationInfo.defaultVariantProductId>
-            <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                 <#assign productFeatureIds = "">
                 <#list curProductFeatureAndAppls as productFeatureAndAppl>
                 <td>

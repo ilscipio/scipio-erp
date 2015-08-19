@@ -35,7 +35,7 @@ under the License.
       <#list allThreadList as javaThread>
       <#if javaThread??>
         <#assign stackTraceArray = javaThread.getStackTrace()/>
-        <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+        <tr valign="middle"<@dataRowClassStr alt=alt_row />>
           <td valign="top">${(javaThread.getThreadGroup().getName())!}</td>
           <td valign="top">${javaThread.getId()?string}</td>
           <td valign="top">

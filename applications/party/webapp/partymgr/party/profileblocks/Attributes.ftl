@@ -34,7 +34,7 @@ under the License.
           </thead>
           <#assign alt_row = false>
           <#list attributes as attr>
-            <tr class="<#if alt_row>odd<#else>even</#if>">
+            <tr<@dataRowClassStr alt=alt_row />>
               <td>
                 ${attr.attrName!}
               </td>

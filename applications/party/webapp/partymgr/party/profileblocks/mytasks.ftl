@@ -38,7 +38,7 @@ under the License.
     </thead>
     <#assign alt_row = false>
     <#list tasks as workEffort>
-      <tr class="<#if alt_row>odd<#else>even</#if>">
+      <tr<@dataRowClassStr alt=alt_row />>
         <td>${(workEffort.estimatedStartDate.toString())!}</td>
         <td>${workEffort.priority!}</td>
         <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</td>
@@ -67,7 +67,7 @@ under the License.
       </thead>
       <#assign alt_row = false>
       <#list activities as workEffort>
-        <tr class="<#if alt_row>odd<#else>even</#if>">
+        <tr<@dataRowClassStr alt=alt_row />>
           <td>${(workEffort.estimatedStartDate.toString())!}</td>
           <td>${workEffort.priority!}</td>
           <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</td>
@@ -99,7 +99,7 @@ under the License.
       </thead>
       <#assign alt_row = false>
       <#list roleActivities as workEffort>
-        <tr class="<#if alt_row>odd<#else>even</#if>">
+        <tr<@dataRowClassStr alt=alt_row />>
           <td>${(workEffort.estimatedStartDate.toString())!}</td>
           <td>${workEffort.priority!}</td>
           <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</td>
@@ -131,7 +131,7 @@ under the License.
       </thead>
       <#assign alt_row = false>
       <#list groupActivities as workEffort>
-        <tr class="<#if alt_row>odd<#else>even</#if>">
+        <tr<@dataRowClassStr alt=alt_row />>
           <td>${(workEffort.estimatedStartDate.toString())!}</td>
           <td>${workEffort.priority!}</td>
           <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</td>

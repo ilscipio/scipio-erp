@@ -83,7 +83,7 @@ under the License.
         <form action="<@ofbizUrl>updateShipmentRouteSegment</@ofbizUrl>" method="post" name="updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
         <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
-        <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+        <tr valign="middle"<@dataRowClassStr alt=alt_row />>
             <td valign="top">
                 <div>
                     ${shipmentRouteSegment.shipmentRouteSegmentId}
@@ -306,7 +306,7 @@ under the License.
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
         <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentPackageRouteSeg.shipmentRouteSegmentId}"/>
         <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
-        <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+        <tr valign="middle"<@dataRowClassStr alt=alt_row />>
             <td>&nbsp;</td>
             <td valign="top">
                 <div>

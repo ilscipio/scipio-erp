@@ -80,7 +80,7 @@ under the License.
             <#if records?has_content>
             <#assign alt_row = false>
             <#list records as record>
-                <tr <#if alt_row> class="alternate-row"</#if> >
+                <tr<@dataRowClassStr alt=alt_row /> >
                 <#list record as field>
                     <td><#if field?has_content>${field}</#if></td>
                 </#list>

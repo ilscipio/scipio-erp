@@ -190,7 +190,7 @@ function setServiceName(selection) {
                   <tbody>
                     <#assign alt_row = false>
                     <#list paymentList as payment>
-                      <tr <#if alt_row> class="alternate-row"</#if>>
+                      <tr<@dataRowClassStr alt=alt_row />>
                         <td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.button_default!}">${payment.paymentId}</a></td>
                         <td>
                           ${payment.paymentTypeDesc?default(payment.paymentTypeId)}

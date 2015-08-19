@@ -147,7 +147,7 @@ under the License.
                  <#assign returnTotal = returnTotal + item.get("returnQuantity") * item.get("returnPrice") >
                  <#assign returnItemSubTotal = item.get("returnQuantity") * item.get("returnPrice") >
               </#if>
-              <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+              <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                 <td><a href="<@ofbizUrl>orderview?orderId=${item.orderId}</@ofbizUrl>" class="${styles.button_default!}">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}
                   <input name="orderId_o_${rowCount}" value="${item.orderId}" type="hidden" />
                   <input name="returnId_o_${rowCount}" value="${item.returnId}" type="hidden" />

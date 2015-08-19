@@ -76,7 +76,7 @@ under the License.
                   <#assign maxCondSeqId = 1>
                   <#assign rowClass = "2">
                   <#list productPriceConds as productPriceCond>
-                      <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                      <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                         <#-- if cur seq id is a number and is greater than max, set new max for input box prefill below -->
                         <#assign curCondSeqId = productPriceCond.productPriceCondSeqId?number>
                         <#if (curCondSeqId >= maxCondSeqId)><#assign maxCondSeqId = curCondSeqId + 1></#if>
@@ -162,7 +162,7 @@ under the License.
                   </tr>
                   <#assign rowClass = "2">
                   <#list productPriceActions as productPriceAction>
-                      <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                      <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                         <td><b>${productPriceAction.productPriceActionSeqId}</b></td>
                         <td>
                             <form method="post" action="<@ofbizUrl>updateProductPriceAction</@ofbizUrl>">

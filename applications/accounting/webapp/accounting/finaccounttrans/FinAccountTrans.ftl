@@ -176,7 +176,7 @@ function getFinAccountTransRunningTotalAndBalances() {
           <#if finAccountTrans.partyId?has_content>
             <#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : finAccountTrans.partyId}, true))!>
           </#if>
-          <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+          <tr valign="middle"<@dataRowClassStr alt=alt_row />>
             <td>
               <#if payments?has_content>
                 <a id="togglePayment_${finAccountTrans.finAccountTransId}" href="javascript:void(0)"><img src="<@ofbizContentUrl>/images/expand.gif</@ofbizContentUrl>" alt=""/></a> ${finAccountTrans.finAccountTransId}
@@ -210,7 +210,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                           <#assign paymentGroupMember = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(paymentGroupMembers) />
                         </#if>
                       </#if>
-                      <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                      <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                         <td><#if paymentGroupMember?has_content><a href="<@ofbizUrl>EditDepositSlipAndMembers?paymentGroupId=${paymentGroupMember.paymentGroupId!}&amp;finAccountId=${parameters.finAccountId!}</@ofbizUrl>">${paymentGroupMember.paymentGroupId!}</a></#if></td>
                         <td><#if payment?has_content><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId!}</@ofbizUrl>">${payment.paymentId!}</a></#if></td>
                         <td><#if paymentType?has_content>${paymentType.description!}</#if></td>

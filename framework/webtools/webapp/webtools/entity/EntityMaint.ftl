@@ -68,14 +68,14 @@ under the License.
                 <#assign alt_row = !alt_row>
               </#if>
               <#if firstChar != "*">
-                <tr<#if alt_row> class="alternate-row"</#if>><td colspan="4">&nbsp;</td></tr>
+                <tr<@dataRowClassStr alt=alt_row />><td colspan="4">&nbsp;</td></tr>
                 <#assign alt_row = !alt_row>
               </#if>
               <#assign firstChar = entity.entityName?substring(0, 1)>
               <#assign anchor="id=\"Entity_${firstChar}\" data-magellan-destination=\"Entity_${firstChar}\"">
             </#if>
             <#if !right_col>
-              <tr<#if alt_row> class="alternate-row"</#if>>
+              <tr<@dataRowClassStr alt=alt_row />>
             </#if>
 
             <td<#if anchor?has_content> ${anchor}</#if>>${entity.entityName}<#if entity.viewEntity == 'Y'>&nbsp;(${uiLabelMap.WebtoolsEntityView})</#if></td>

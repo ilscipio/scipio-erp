@@ -104,7 +104,6 @@ document.lookupinventory.productId.focus();
   <tr>
     <td width='100%'>
       <#if inventoryList?has_content>
-         <#assign rowClass = "alternate-row">
          <table class="basic-table" cellspacing="0">
           <tr>
            <td width="50%" class="boxhead">${uiLabelMap.CommonElementsFound}</td>
@@ -210,7 +209,7 @@ document.lookupinventory.productId.focus();
             <#assign quantityAvailableAtDate = quantityAvailableAtDate?default(0) + inven.getBigDecimal("quantity")>
             <#assign productTmp = product>
             <#assign MrpEventType = inven.getRelatedOne("MrpEventType", false)>
-            <tr class="${rowClass}">
+            <tr<@dataRowClassStr alt=true />>
               <td>${MrpEventType.get("description",locale)}</td>
               <td>&nbsp;</td>
               <td>${inven.eventName!}</td>

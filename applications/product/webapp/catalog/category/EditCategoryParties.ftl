@@ -38,7 +38,7 @@ under the License.
             <#list productCategoryRoles as productCategoryRole>
             <#assign line = line + 1>
             <#assign curRoleType = productCategoryRole.getRelatedOne("RoleType", true)>
-            <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
             <td><a href="/partymgr/control/viewprofile?party_id=${(productCategoryRole.partyId)!}" target="_blank" class="${styles.button_default!}">${(productCategoryRole.partyId)!}</a></td>
             <td>${(curRoleType.get("description",locale))!}</td>
             <#assign hasntStarted = false>

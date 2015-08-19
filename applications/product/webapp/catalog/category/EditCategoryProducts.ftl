@@ -76,7 +76,7 @@ under the License.
                 <#if productCategoryMember.fromDate?? && nowTimestamp.before(productCategoryMember.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
                 <#assign hasExpired = false>
                 <#if productCategoryMember.thruDate?? && nowTimestamp.after(productCategoryMember.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
-                  <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                  <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                     <td>
                       <#if (product.smallImageUrl)??>
                          <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>"><img alt="Small Image" src="<@ofbizContentUrl>${product.smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" align="middle" /></a>

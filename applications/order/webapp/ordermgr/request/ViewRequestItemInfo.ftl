@@ -34,7 +34,7 @@ under the License.
                 <#if requestItem.productId??>
                     <#assign product = requestItem.getRelatedOne("Product", false)>
                 </#if>
-                <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                     <td valign="top">
                         <div>
                             <#if showRequestManagementLinks??>

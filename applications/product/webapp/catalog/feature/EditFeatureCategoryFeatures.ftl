@@ -90,7 +90,7 @@ under the License.
             <#assign rowClass = "2">
             <#list productFeatures as productFeature>
             <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
-            <tr id="productFeatureId_tableRow_${rowCount}" valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+            <tr id="productFeatureId_tableRow_${rowCount}" valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
               <td><input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
               <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">${productFeature.productFeatureId}</a></td>
               <td><input type="text" size='15' name="description_o_${rowCount}" value="${productFeature.description}" /></td>

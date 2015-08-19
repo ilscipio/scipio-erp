@@ -166,7 +166,7 @@ under the License.
                   <#list picklistBinInfo.picklistItemInfoList! as picklistItemInfo>
                     <#assign picklistItem = picklistItemInfo.picklistItem>
                     <#assign inventoryItemAndLocation = picklistItemInfo.inventoryItemAndLocation>
-                    <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                    <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                       <td>${picklistItem.orderId}</td>
                       <td>${picklistItem.shipGroupSeqId}</td>
                       <td>${picklistItem.orderItemSeqId}</td>
@@ -223,7 +223,7 @@ under the License.
                         <#assign inventoryItemAndLocation = picklistItemInfo.inventoryItemAndLocation>
                         <#if !picklistItemInfo.product.lotIdFilledIn?has_content || picklistItemInfo.product.lotIdFilledIn != "Forbidden">
                           <form name="editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@ofbizUrl>editPicklistItem</@ofbizUrl>">
-                            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
                               <td>${picklistItem.orderId}</td>
                               <td>${picklistItem.shipGroupSeqId}</td>
                               <td>${picklistItem.orderItemSeqId}</td>

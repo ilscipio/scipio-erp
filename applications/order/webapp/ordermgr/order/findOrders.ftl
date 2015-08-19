@@ -385,7 +385,7 @@ document.lookuporder.orderId.focus();
           </@row>
       </#macro>
       <@massOrderChangeButton id="1"/>
-      <table class="hover-bar" cellspacing='0'>
+      <table class="basic-table hover-bar" cellspacing='0'>
        <thead>
         <tr class="header-row">
           <th width="5%">
@@ -424,7 +424,7 @@ document.lookuporder.orderId.focus();
               <#assign displayParty = orh.getPlacingParty()!>
             </#if>
             <#assign partyId = displayParty.partyId!("_NA_")>
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
               <td>
                  <input type="checkbox" name="orderIdList" value="${orderHeader.orderId}" onchange="javascript:toggleOrderIdList();"/>
               </td>

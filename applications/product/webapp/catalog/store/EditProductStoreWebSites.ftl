@@ -34,7 +34,7 @@ under the License.
             <#if storeWebSites?has_content>
               <#assign rowClass = "2">
               <#list storeWebSites as webSite>
-                <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                   <td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${webSite.siteName!} [${webSite.webSiteId}]</a></td>
                   <td>${webSite.httpHost?default('&nbsp;')}</td>
                   <td>${webSite.httpPort?default('&nbsp;')}</td>

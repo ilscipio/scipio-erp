@@ -35,7 +35,7 @@ under the License.
           <table cellspacing="0" class="basic-table">
             <#assign rowClass = "1">
             <#if idProduct?has_content>
-            <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                 <td>
                     ${idProduct.productId}
                 </td>
@@ -55,7 +55,7 @@ under the License.
                 </#if>
                 <#assign product = goodIdentification.getRelatedOne("Product", true)/>
                 <#assign goodIdentificationType = goodIdentification.getRelatedOne("GoodIdentificationType", true)/>
-                <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                     <td>
                         ${product.productId}
                     </td>

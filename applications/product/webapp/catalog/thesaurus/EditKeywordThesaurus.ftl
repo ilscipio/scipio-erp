@@ -52,7 +52,7 @@ under the License.
                   </td>
                 </tr>
                 </#if>
-                <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                   <td>
                     <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
                       <div>

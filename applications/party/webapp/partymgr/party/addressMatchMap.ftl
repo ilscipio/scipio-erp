@@ -71,7 +71,7 @@ under the License.
           </thead>
           <#assign alt_row = false>
           <#list addressMatchMaps as map>
-            <tr class="<#if alt_row>odd<#else>even</#if>">
+            <tr<@dataRowClassStr alt=alt_row />>
               <td>${map.mapKey}</td>
               <td>=></td>
               <td>${map.mapValue}</td>

@@ -112,7 +112,7 @@ under the License.
                 <#assign orderItemShipGrpInvResDatas = orderItemData.orderItemShipGrpInvResDatas!>
                 <#assign totalQuantityReserved = orderItemData.totalQuantityReserved!>
                 <#assign totalQuantityIssuedAndReserved = orderItemData.totalQuantityIssuedAndReserved!>
-                <tr id="orderItemData_tableRow_${rowCount}" valign="middle"<#if alt_row> class="alternate-row"</#if>>
+                <tr id="orderItemData_tableRow_${rowCount}" valign="middle"<@dataRowClassStr alt=alt_row />>
                     <td><div>${orderItemAndShipGroupAssoc.orderId} / ${orderItemAndShipGroupAssoc.shipGroupSeqId} / ${orderItemAndShipGroupAssoc.orderItemSeqId}</div></td>
                     <td><div>${(product.internalName)!} [${orderItemAndShipGroupAssoc.productId?default("N/A")}]</div></td>
                     <td>

@@ -208,7 +208,7 @@ under the License.
           <#assign totalPrice = shoppingListItemData.totalPrice>
           <#assign productVariantAssocs = shoppingListItemData.productVariantAssocs!>
           <#assign isVirtual = product.isVirtual?? && product.isVirtual.equals("Y")>
-          <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+          <tr valign="middle"<@dataRowClassStr alt=alt_row />>
             <td><a href="/catalog/control/EditProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}">${shoppingListItem.productId} -
               ${productContentWrapper.get("PRODUCT_NAME")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION")!}
             </td>

@@ -62,7 +62,7 @@ under the License.
                     <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOne("TypeEnumeration", true))!>
                     <#assign inventoryItemDetailFirst = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(inventoryItem.getRelated("InventoryItemDetail", null, Static["org.ofbiz.base.util.UtilMisc"].toList("effectiveDate"), false))!>
                     <#if curInventoryItemType??>
-                        <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+                        <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
                             <td><a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${(inventoryItem.inventoryItemId)!}</a></td>
                             <td>&nbsp;${(curInventoryItemType.get("description",locale))!}</td>
                             <td>

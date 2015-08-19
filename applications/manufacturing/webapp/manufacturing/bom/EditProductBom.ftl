@@ -263,7 +263,7 @@ function lookupBom() {
     <#list assocFromProducts! as assocFromProduct>
     <#assign listToProduct = assocFromProduct.getRelatedOne("AssocProduct", true)>
     <#assign curProductAssocType = assocFromProduct.getRelatedOne("ProductAssocType", true)>
-      <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+      <tr valign="middle"<@dataRowClassStr alt=alt_row />>
         <td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.button_default!}">${(assocFromProduct.productIdTo)!}</a></td>
         <td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.button_default!}">${(listToProduct.internalName)!}</a></#if>&nbsp;</td>
         <td<#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))> class="alert"</#if>>
@@ -311,7 +311,7 @@ function lookupBom() {
         <#list assocToProducts! as assocToProduct>
         <#assign listToProduct = assocToProduct.getRelatedOne("MainProduct", true)>
         <#assign curProductAssocType = assocToProduct.getRelatedOne("ProductAssocType", true)>
-        <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+        <tr valign="middle"<@dataRowClassStr alt=alt_row />>
             <td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.button_default!}">${(assocToProduct.productId)!}</a></td>
 <!--                <td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.button_default!}">${(listToProduct.internalName)!}</a></#if></td> -->
             <td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.button_default!}">${(listToProduct.internalName)!}</a></#if></td>

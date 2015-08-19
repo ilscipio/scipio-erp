@@ -56,7 +56,7 @@ function insertImageName(size,nameValue) {
         <#list productContentList as entry>
         <#assign productContent=entry.productContent/>
         <#assign productContentType=productContent.getRelatedOne("ProdConfItemContentType", true)/>
-        <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
+        <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
             <td><a href="<@ofbizUrl>EditProductConfigItemContentContent?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="${styles.button_default!}">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</td>
             <td>${productContentType.description?default(productContent.confItemContentTypeId)}</td>
             <td>${productContent.fromDate?default("N/A")}</td>

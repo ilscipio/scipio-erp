@@ -99,7 +99,7 @@ function getPaymentRunningTotal() {
                     </thead>
                     <#assign alt_row = false>
                     <#list paymentList as payment>
-                        <tr <#if alt_row> class="alternate-row"</#if>>
+                        <tr<@dataRowClassStr alt=alt_row />>
                             <td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>">${payment.paymentId}</a></td>
                             <td>${payment.paymentTypeDesc!}</td>
                             <td>${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}</td>

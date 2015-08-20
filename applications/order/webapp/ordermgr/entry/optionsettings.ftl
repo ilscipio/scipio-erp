@@ -174,5 +174,5 @@ under the License.
 </#list>
 </form>
 <#else>
-  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
+  <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

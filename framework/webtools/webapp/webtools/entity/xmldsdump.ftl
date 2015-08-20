@@ -105,6 +105,6 @@ under the License.
     </form>
 
 <#else>
-    <div>${uiLabelMap.WebtoolsPermissionMaint}</div>
+    <@alert type="error">${uiLabelMap.WebtoolsPermissionMaint}</@alert>
 </#if>
 </#if>

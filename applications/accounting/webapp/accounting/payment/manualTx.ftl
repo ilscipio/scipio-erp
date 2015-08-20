@@ -115,5 +115,5 @@ under the License.
     </table>
   </form>
 <#else>
-  <h3>${uiLabelMap.AccountingPermissionError}</h3>
+  <@alert type="error">${uiLabelMap.AccountingPermissionError}</@alert>
 </#if>

@@ -18,7 +18,7 @@ under the License.
 -->
 
 <h2>${uiLabelMap.AccountingEditCustomTimePeriods}</h2>
-<br />
+
 <#if security.hasPermission("PERIOD_MAINT", session)>
    <div class="screenlet">
      <div class="screenlet-title-bar">
@@ -298,5 +298,5 @@ under the License.
     </div>
   </div>
 <#else>
-  <h3>${uiLabelMap.AccountingPermissionPeriod}.</h3>
+  <@alert type="error">${uiLabelMap.AccountingPermissionPeriod}.</@alert>
 </#if>

@@ -378,5 +378,5 @@ under the License.
     </script>
   </#if>
 <#else>
-  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
+  <@alert type="error">${uiLabelMap.ProductFacilityViewPermissionError}</@alert>
 </#if>

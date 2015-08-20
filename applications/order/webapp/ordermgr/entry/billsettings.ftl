@@ -515,5 +515,5 @@ function makeExpDate() {
       </@row>
     </@section>
 <#else>
-  <@section title="${uiLabelMap.OrderViewPermissionError}"/>
+  <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

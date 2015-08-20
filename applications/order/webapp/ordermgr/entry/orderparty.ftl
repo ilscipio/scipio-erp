@@ -53,5 +53,5 @@ under the License.
   </tr>
 </table>
 <#else>
-  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
+  <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

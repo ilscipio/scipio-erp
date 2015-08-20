@@ -79,13 +79,13 @@ function getFinAccountTransRunningTotalAndBalances() {
 }
 </script>
 
-<div class="screenlet screenlet-body">
+<@section>
   <#if finAccountTransList?has_content && parameters.noConditionFind?? && parameters.noConditionFind == 'Y'>
     <#if !grandTotal??>
-      <div>
+      <p>
         <span>${uiLabelMap.AccountingRunningTotal} :</span>
-        <span  id="showFinAccountTransRunningTotal"></span>
-      </div>
+        <span id="showFinAccountTransRunningTotal"></span>
+      </p>
     </#if>
     <form id="listFinAccTra" name="selectAllForm" method="post" action="<@ofbizUrl><#if !grandTotal??>reconcileFinAccountTrans?clearAll=Y<#else>assignGlRecToFinAccTrans?clearAll=Y</#if></@ofbizUrl>">
       <input name="_useRowSubmit" type="hidden" value="Y"/>
@@ -97,7 +97,8 @@ function getFinAccountTransRunningTotalAndBalances() {
       </#if>
       <#assign glReconciliations = delegator.findByAnd("GlReconciliation", {"glAccountId" : finAccount.postToGlAccountId!, "statusId" : "GLREC_CREATED"}, Static["org.ofbiz.base.util.UtilMisc"].toList("reconciledDate DESC"), false)>
       <#if (glReconciliationId?has_content && (glReconciliationId == "_NA_" && finAccountTransList?has_content)) || !grandTotal??>
-        <div align="right">
+        <@row>
+          <@cell addClass="text-right">
           <#if grandTotal??>
             <#if glReconciliations?has_content>
               <select name="glReconciliationId">
@@ -108,44 +109,45 @@ function getFinAccountTransRunningTotalAndBalances() {
               </select>
               <input id="submitButton" type="submit" onclick="javascript:document.selectAllForm.submit();" value="${uiLabelMap.AccountingAssignToReconciliation}" disabled="disabled" />
             <#else>
-              <span class="tooltip">${uiLabelMap.AccountingNoGlReconciliatio??} <a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${parameters.finAccountId!}</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a></span>
+              <span class="tooltip">${uiLabelMap.AccountingNoGlReconciliatio??} <a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${parameters.finAccountId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClickHere}</a></span>
             </#if>
           <#else>
             <input id="submitButton" type="submit" onclick="javascript:document.selectAllForm.submit();" value="${uiLabelMap.AccountingReconcile}" disabled="disabled" />
           </#if>
-        </div>
+          </@cell>
+        </@row>
       </#if>
-      <table class="basic-table hover-bar" cellspacing="0">
+      <@table type="data" useAltRows=true class="basic-table hover-bar" cellspacing="0" scrollable=true>
         <#-- Header Begins -->
-        <thead>
-        <tr class="header-row-2">
-          <th>${uiLabelMap.FormFieldTitle_finAccountTransId}</th>
-          <th>${uiLabelMap.FormFieldTitle_finAccountTransTypeId}</th>
-          <th>${uiLabelMap.PartyParty}</th>
-          <th>${uiLabelMap.FormFieldTitle_glReconciliationName}</th>
-          <th>${uiLabelMap.FormFieldTitle_transactionDate}</th>
-          <th>${uiLabelMap.FormFieldTitle_entryDate}</th>
-          <th>${uiLabelMap.CommonAmount}</th>
-          <th>${uiLabelMap.FormFieldTitle_paymentId}</th>
-          <th>${uiLabelMap.OrderPaymentType}</th>
-          <th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</th>
-          <th>${uiLabelMap.CommonStatus}</th>
-          <th>${uiLabelMap.CommonComments}</th>
+        <@thead>
+        <@tr class="header-row-2">
+          <@th>${uiLabelMap.FormFieldTitle_finAccountTransId}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_finAccountTransTypeId}</@th>
+          <@th>${uiLabelMap.PartyParty}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_glReconciliationName}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_transactionDate}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_entryDate}</@th>
+          <@th>${uiLabelMap.CommonAmount}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_paymentId}</@th>
+          <@th>${uiLabelMap.OrderPaymentType}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</@th>
+          <@th>${uiLabelMap.CommonStatus}</@th>
+          <@th>${uiLabelMap.CommonComments}</@th>
           <#if grandTotal??>
-            <th>${uiLabelMap.AccountingCancelTransactionStatus}</th>
+            <@th>${uiLabelMap.AccountingCancelTransactionStatus}</@th>
           </#if>
           <#if !grandTotal??>
             <#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
-              <th>${uiLabelMap.AccountingRemoveFromGlReconciliation}</th>
+              <@th>${uiLabelMap.AccountingRemoveFromGlReconciliation}</@th>
             </#if>
           </#if>
           <#if ((glReconciliationId?has_content && glReconciliationId == "_NA_") && (glReconciliations?has_content && finAccountTransList?has_content)) || !grandTotal??>
-            <th>${uiLabelMap.CommonSelectAll} <input name="selectAll" type="checkbox" value="N" id="checkAllTransactions" onclick="javascript:togglefinAccountTransId(this);"/></th>
+            <@th>${uiLabelMap.CommonSelectAll} <input name="selectAll" type="checkbox" value="N" id="checkAllTransactions" onclick="javascript:togglefinAccountTransId(this);"/></@th>
           </#if>
-          </thead>
-        </tr>
+        </@tr>
+        </@thead>
         <#-- Header Ends-->
-        <#assign alt_row = false>
+        <@tbody>
         <#list finAccountTransList as finAccountTrans>
           <#assign payment = "">
           <#assign payments = "">
@@ -176,23 +178,23 @@ function getFinAccountTransRunningTotalAndBalances() {
           <#if finAccountTrans.partyId?has_content>
             <#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : finAccountTrans.partyId}, true))!>
           </#if>
-          <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-            <td>
+          <@tr valign="middle">
+            <@td>   
               <#if payments?has_content>
                 <a id="togglePayment_${finAccountTrans.finAccountTransId}" href="javascript:void(0)"><img src="<@ofbizContentUrl>/images/expand.gif</@ofbizContentUrl>" alt=""/></a> ${finAccountTrans.finAccountTransId}
                 <div id="displayPayments_${finAccountTrans.finAccountTransId}" style="display: none;width: 650px;">
-                  <table class="basic-table hover-bar">
-                    <thead>
-                    <tr class="header-row-2">
-                      <th>${uiLabelMap.AccountingDepositSlipId}</th>
-                      <th>${uiLabelMap.FormFieldTitle_paymentId}</th>
-                      <th>${uiLabelMap.OrderPaymentType}</th>
-                      <th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</th>
-                      <th>${uiLabelMap.CommonAmount}</th>
-                      <th>${uiLabelMap.PartyPartyFrom}</th>
-                      <th>${uiLabelMap.PartyPartyTo}</th>
-                     </thead>
-                    </tr>
+                  <@table type="data" useAltRows=true inheritAltRows=true class="basic-table hover-bar">
+                    <@thead>
+                    <@tr class="header-row-2">
+                      <@th>${uiLabelMap.AccountingDepositSlipId}</@th>
+                      <@th>${uiLabelMap.FormFieldTitle_paymentId}</@th>
+                      <@th>${uiLabelMap.OrderPaymentType}</@th>
+                      <@th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</@th>
+                      <@th>${uiLabelMap.CommonAmount}</@th>
+                      <@th>${uiLabelMap.PartyPartyFrom}</@th>
+                      <@th>${uiLabelMap.PartyPartyTo}</@th>
+                    </@tr>
+                    </@thead>
                     <#list payments as payment>
                       <#if payment?? && payment.paymentTypeId?has_content>
                         <#assign paymentType = delegator.findOne("PaymentType", {"paymentTypeId" : payment.paymentTypeId}, true)>
@@ -210,17 +212,17 @@ function getFinAccountTransRunningTotalAndBalances() {
                           <#assign paymentGroupMember = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(paymentGroupMembers) />
                         </#if>
                       </#if>
-                      <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                        <td><#if paymentGroupMember?has_content><a href="<@ofbizUrl>EditDepositSlipAndMembers?paymentGroupId=${paymentGroupMember.paymentGroupId!}&amp;finAccountId=${parameters.finAccountId!}</@ofbizUrl>">${paymentGroupMember.paymentGroupId!}</a></#if></td>
-                        <td><#if payment?has_content><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId!}</@ofbizUrl>">${payment.paymentId!}</a></#if></td>
-                        <td><#if paymentType?has_content>${paymentType.description!}</#if></td>
-                        <td><#if paymentMethodType?has_content>${paymentMethodType.description!}</#if></td>
-                        <td><@ofbizCurrency amount=payment.amount!/></td>
-                        <td><#if fromPartyName?has_content>${fromPartyName.groupName!}${fromPartyName.firstName!} ${fromPartyName.lastName!}<a href="/partymgr/control/viewprofile?partyId=${fromPartyName.partyId!}">[${fromPartyName.partyId!}]</a></#if></td>
-                        <td><#if toPartyName?has_content>${toPartyName.groupName!}${toPartyName.firstName!} ${toPartyName.lastName!}<a href="/partymgr/control/viewprofile?partyId=${toPartyName.partyId!}">[${toPartyName.partyId!}]</a></#if></td>
-                      </tr>
+                      <@tr valign="middle">
+                        <@td><#if paymentGroupMember?has_content><a href="<@ofbizUrl>EditDepositSlipAndMembers?paymentGroupId=${paymentGroupMember.paymentGroupId!}&amp;finAccountId=${parameters.finAccountId!}</@ofbizUrl>" class="${styles.button_default!}">${paymentGroupMember.paymentGroupId!}</a></#if></@td>
+                        <@td><#if payment?has_content><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId!}</@ofbizUrl>" class="${styles.button_default!}">${payment.paymentId!}</a></#if></@td>
+                        <@td><#if paymentType?has_content>${paymentType.description!}</#if></@td>
+                        <@td><#if paymentMethodType?has_content>${paymentMethodType.description!}</#if></@td>
+                        <@td><@ofbizCurrency amount=payment.amount!/></@td>
+                        <@td><#if fromPartyName?has_content>${fromPartyName.groupName!}${fromPartyName.firstName!} ${fromPartyName.lastName!} <a href="/partymgr/control/viewprofile?partyId=${fromPartyName.partyId!}" class="${styles.button_default!}">${fromPartyName.partyId!}</a></#if></@td>
+                        <@td><#if toPartyName?has_content>${toPartyName.groupName!}${toPartyName.firstName!} ${toPartyName.lastName!} <a href="/partymgr/control/viewprofile?partyId=${toPartyName.partyId!}" class="${styles.button_default!}">${toPartyName.partyId!}</a></#if></@td>
+                      </@tr>
                     </#list>
-                  </table>
+                  </@table>
                 </div>
                 <script type="text/javascript">
                    jQuery(document).ready( function() {
@@ -236,30 +238,30 @@ function getFinAccountTransRunningTotalAndBalances() {
                 </script>
                 <a href="<@ofbizUrl>DepositSlip.pdf?finAccountTransId=${finAccountTrans.finAccountTransId}</@ofbizUrl>" target="_BLANK" class="${styles.button_default!}">${uiLabelMap.AccountingDepositSlip}</a>
               <#else>
-                ${finAccountTrans.finAccountTransId}
+                ${finAccountTrans.finAccountTransId}<#t>
               </#if>
-            </td>
-            <td>${finAccountTransType.description!}</td>
-            <td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}<a href="/partymgr/control/viewprofile?partyId=${partyName.partyId}">[${(partyName.partyId)!}]</a></#if></td>
-            <td><#if glReconciliation?has_content>${glReconciliation.glReconciliationName!}<a href="ViewGlReconciliationWithTransaction?glReconciliationId=${glReconciliation.glReconciliationId!}&amp;finAccountId=${parameters.finAccountId!}">[${glReconciliation.glReconciliationId!}]</a></#if></td>
-            <td>${finAccountTrans.transactionDate!}</td>
-            <td>${finAccountTrans.entryDate!}</td>
-            <td>${finAccountTrans.amount!}</td>
-            <td>
+            </@td>
+            <@td>${finAccountTransType.description!}</@td>
+            <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!} <a href="/partymgr/control/viewprofile?partyId=${partyName.partyId}" class="${styles.button_default!}">${(partyName.partyId)!}</a></#if></@td>
+            <@td><#if glReconciliation?has_content>${glReconciliation.glReconciliationName!} <a href="ViewGlReconciliationWithTransaction?glReconciliationId=${glReconciliation.glReconciliationId!}&amp;finAccountId=${parameters.finAccountId!}" class="${styles.button_default!}">${glReconciliation.glReconciliationId!}</a></#if></@td>
+            <@td>${finAccountTrans.transactionDate!}</@td>
+            <@td>${finAccountTrans.entryDate!}</@td>
+            <@td>${finAccountTrans.amount!}</@td>
+            <@td>
               <#if finAccountTrans.paymentId?has_content>
-                <a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>">${finAccountTrans.paymentId}</a>
+                <a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>" class="${styles.button_default!}">${finAccountTrans.paymentId}</a>
               </#if>
-            </td>
-            <td><#if paymentType?has_content>${paymentType.description!}</#if></td>
-            <td><#if paymentMethodType?has_content>${paymentMethodType.description!}</#if></td>
-            <td><#if status?has_content>${status.description!}</#if></td>
-            <td>${finAccountTrans.comments!}</td>
+            </@td>
+            <@td><#if paymentType?has_content>${paymentType.description!}</#if></@td>
+            <@td><#if paymentMethodType?has_content>${paymentMethodType.description!}</#if></@td>
+            <@td><#if status?has_content>${status.description!}</#if></@td>
+            <@td>${finAccountTrans.comments!}</@td>
             <#if grandTotal??>
-              <td>
+              <@td>
                 <#if finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED'>
                   <a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonCancel}</a>
                 </#if>
-              </td>
+              </@td>
             </#if>
             <input name="finAccountTransId_o_${finAccountTrans_index}" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
             <input name="organizationPartyId_o_${finAccountTrans_index}" type="hidden" value="${defaultOrganizationPartyId}"/>
@@ -269,20 +271,19 @@ function getFinAccountTransRunningTotalAndBalances() {
             <#if !(grandTotal??)>
               <#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
                 <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-                  <td><a href="javascript:document.removeFinAccountTransFromReconciliation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a></td>
+                  <@td><a href="javascript:document.removeFinAccountTransFromReconciliation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a></@td>
                 </#if>
               </#if>
             </#if>
             <#if ((glReconciliationId?has_content && glReconciliationId == "_NA_") && (glReconciliations?has_content && finAccountTransList?has_content)) || !grandTotal??>
               <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-                <td><input id="finAccountTransId_${finAccountTrans_index}" name="_rowSubmit_o_${finAccountTrans_index}" type="checkbox" value="Y" onclick="javascript:getFinAccountTransRunningTotalAndBalances();"/></td>
+                <@td><input id="finAccountTransId_${finAccountTrans_index}" name="_rowSubmit_o_${finAccountTrans_index}" type="checkbox" value="Y" onclick="javascript:getFinAccountTransRunningTotalAndBalances();"/></@td>
               </#if>
             </#if>
-          </tr>
-          <#-- toggle the row color -->
-          <#assign alt_row = !alt_row>
+          </@tr>
         </#list>
-      </table>
+        </@tbody>
+      </@table>
     </form>
     <#list finAccountTransList as finAccountTrans>
       <form name="removeFinAccountTransFromReconciliation_${finAccountTrans.finAccountTransId}" method="post" action="<@ofbizUrl>removeFinAccountTransFromReconciliation</@ofbizUrl>">
@@ -301,41 +302,50 @@ function getFinAccountTransRunningTotalAndBalances() {
           </form>
         </#if>
       </#list>
-      <table class="basic-table">
-        <tr>
-          <th>${uiLabelMap.FormFieldTitle_grandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</th>
-          <th>${uiLabelMap.AccountingCreatedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</th>
-          <th>${uiLabelMap.AccountingApprovedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</th>
-          <th>${uiLabelMap.AccountingCreatedApprovedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</th>
-        </tr>
-        <tr>
-          <td>${grandTotal} / ${searchedNumberOfRecords}</td>
-          <td>${createdGrandTotal} / ${totalCreatedTransactions}</td>
-          <td>${approvedGrandTotal} / ${totalApprovedTransactions}</td>
-          <td>${createdApprovedGrandTotal} / ${totalCreatedApprovedTransactions}</td>
-        </tr>
-      </table>
+      <@table type="summary" class="basic-table">
+        <@thead>
+        <@tr>
+          <@th>${uiLabelMap.FormFieldTitle_grandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
+          <@th>${uiLabelMap.AccountingCreatedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
+          <@th>${uiLabelMap.AccountingApprovedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
+          <@th>${uiLabelMap.AccountingCreatedApprovedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
+        </@tr>
+        </@thead>
+        <@tbody>
+        <@tr>
+          <@td>${grandTotal} / ${searchedNumberOfRecords}</@td>
+          <@td>${createdGrandTotal} / ${totalCreatedTransactions}</@td>
+          <@td>${approvedGrandTotal} / ${totalApprovedTransactions}</@td>
+          <@td>${createdApprovedGrandTotal} / ${totalCreatedApprovedTransactions}</@td>
+        </@tr>
+        </@tbody>
+      </@table>
     <#else>
-      <table class="basic-table">
-        <tr>
-          <th>${uiLabelMap.AccountingRunningTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</th>
-          <th>${uiLabelMap.AccountingOpeningBalance}</th>
-          <th>${uiLabelMap.FormFieldTitle_reconciledBalance}</th>
-          <th>${uiLabelMap.FormFieldTitle_closingBalance}</th>
-        </tr>
-        <tr>
-          <td>
+      <@table type="summary" class="basic-table">
+        <@thead>
+        <@tr>
+          <@th>${uiLabelMap.AccountingRunningTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
+          <@th>${uiLabelMap.AccountingOpeningBalance}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_reconciledBalance}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_closingBalance}</@th>
+        </@tr>
+        </@thead>
+        <@tbody>
+        <@tr>
+          <@td>
             <span id="finAccountTransRunningTotal"></span> /
             <span id="numberOfFinAccountTransaction"></span>
-          </td>
-          <td><@ofbizCurrency amount=glReconciliation.openingBalance?default('0')/></td>
-          <td><@ofbizCurrency amount=glReconciliation.reconciledBalance?default('0')/></td>
-          <td id="endingBalance"><@ofbizCurrency amount=glReconciliationApprovedGrandTotal!/></td>
+          </@td>
+          <@td><@ofbizCurrency amount=glReconciliation.openingBalance?default('0')/></@td>
+          <@td><@ofbizCurrency amount=glReconciliation.reconciledBalance?default('0')/></@td>
+          <@td id="endingBalance"><@ofbizCurrency amount=glReconciliationApprovedGrandTotal!/></@td>
           <input type="hidden" id="endingBalanceInput" value="<@ofbizCurrency amount=glReconciliationApprovedGrandTotal!/>"/>
-        </tr>
-      </table>
+        </@tr>
+        </@tbody>
+      </@table>
     </#if>
   <#else>
-    <h2>${uiLabelMap.CommonNoRecordFound}</h2>
+    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
   </#if>
-</div>
+  
+</@section>

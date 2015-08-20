@@ -840,6 +840,22 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     </div>
 </#macro>
 
+<#-- 
+*************
+* query result message
+************
+Common query result message.
+    Usage example:  
+    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>            
+                    
+   * General Attributes *
+    addClass       = additional classes for nested container
+-->
+<#macro resultMsg addClass="">
+  <#local class = ("result-msg " + addClass)?trim>
+  <p<#if class?has_content> class="${class}"</#if>><#nested></p>
+</#macro>
+
 <#--
 *************
 * panel box
@@ -1041,10 +1057,10 @@ Creates a very basic wrapper for code blocks
 *************
 * Table
 ************
-Helps define table. Required wrapper for all table elem macros.
+Helps define table. Required wrapper for all table sub-elem macros.
 
     Usage example:  
-    <@table type="data" class="my-table-class" id="my-table">
+    <@table type="data" class="basic-table" id="my-table">
       <@thead>
         <@tr>
           <@tc width="15%">col 1</@tc>
@@ -1052,7 +1068,7 @@ Helps define table. Required wrapper for all table elem macros.
         </@tr>
       </@thead>
       <@tbody>
-        <@tr class="rowClass">
+        <@tr class="my-row-class" valign="middle">
           <@tc>val 1</@tc>
           <@tc>val 2</@tc>
         </@tr>
@@ -1060,35 +1076,57 @@ Helps define table. Required wrapper for all table elem macros.
     </@table>
                     
    * General Attributes *
-    type            = [generic, data, fields], default generic
+    type            = [generic, data, summary, fields], default generic
+                      generic: generic html table
+                      data: typical record-containing table
+                      summary: usually table with a single row of summary results
+                      fields: label-value pairs for display (note: prefer @field for input forms or @row/@cell instead?)
     class           = manual classes to add, as string, default "basic-table" for data, 
                       if specified as string replaces defaults (class="" prevents class)
+    addClass        = extra classes that don't influence defaults
     id              = table id
     useAltRows      = default true for type data
     firstRowAlt     = default false
+    inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     cellspacing     = cellspacing, default 0, set to "" to remove
     [attribs...]    = legacy <table attributes and values
 -->
-<#macro table type="generic" class=false id="" useAltRows="" firstRowAlt=false cellspacing=0 attribs...>
+<#macro table type="generic" class=true addClass="" id="" useAltRows="" firstRowAlt="" inheritAltRows=false cellspacing=0 attribs...>
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
   <#local prevSectionInfo = catoCurrentTableSectionInfo!>
   <#local prevRowAlt = catoCurrentTableRowAlt!>
   <#if !useAltRows?is_boolean>
-    <#local useAltRows = (type == "data")>
+    <#local useAltRows = (type == "data") || inheritAltRows>
   </#if>
-  <#if !class?is_string>
-    <#if (type == "generic")>
-      <#local class = styles.table_default!>
-    <#elseif (type == "data")>
-      <#local class = styles.table_data!>
+  <#if class?is_boolean>
+    <#if class>
+      <#if !catoDefaultTableStyles?has_content>
+        <#assign catoDefaultTableStyles = {
+          "generic": styles.table_default!,
+          "data": styles.table_data!,
+          "summary": styles.table_summary!,
+          "fields": styles.table_fields!
+        }>
+      </#if>
+      <#local class = catoDefaultTableStyles[type]!"">
     <#else>
       <#local class = "">
     </#if>
   </#if>
-  <#global catoCurrentTableInfo = {"type": type, "useAltRows" : useAltRows}>
+  <#if addClass?is_string && addClass?has_content>
+    <#local class = class + " " + addClass>
+  </#if>
+  <#global catoCurrentTableInfo = {"type": type, "useAltRows": useAltRows,
+    "inheritAltRows": inheritAltRows, "parentRowAlt": prevRowAlt}>
   <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
-  <#global catoCurrentTableRowAlt = firstRowAlt>
+  <#if firstRowAlt?is_boolean>
+    <#global catoCurrentTableRowAlt = firstRowAlt>
+  <#elseif inheritAltRows>
+    <#global catoCurrentTableRowAlt = prevRowAlt> 
+  <#else>
+    <#global catoCurrentTableRowAlt = false> 
+  </#if>
   <table<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#rt>
     <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
     <#nested>
@@ -1133,7 +1171,11 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#local str = class>
   <#if alt?is_boolean || (isBody && ((catoCurrentTableInfo.useAltRows)!)==true)>
     <#if !alt?is_boolean>
-      <#local alt = catoCurrentTableRowAlt!false>
+      <#if ((catoCurrentTableInfo.inheritAltRows)!)==true>
+        <#local alt = (catoCurrentTableInfo.parentRowAlt)!false>
+      <#else>
+        <#local alt = catoCurrentTableRowAlt!false>
+      </#if>
     </#if>
     <#local str = (str + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
   </#if>
@@ -1143,7 +1185,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <tr<#if str?has_content> class="${str}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
     <#nested>
   </tr>
-  <#if alt?is_boolean>
+  <#if alt?is_boolean && ((catoCurrentTableInfo.inheritAltRows)!)==false>
     <#global catoCurrentTableRowAlt = !alt>
   </#if>
 </#macro>
@@ -1177,6 +1219,7 @@ Helps define table cells. tc automatically knows whether th or td via @thead and
 * Data row class string
 ************
 Helps build common data/table row class string (odd, even, etc.). Common pattern.
+Using @table macro is preferred.
     Usage example:  
     <tr<@dataRowClassStr class="myClass" alt=false/>>
                     

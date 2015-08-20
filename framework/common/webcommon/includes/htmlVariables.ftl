@@ -58,6 +58,8 @@ under the License.
 <#-- Data and Tables -->  
     "table_default" : "basic-table",
     "table_data" : "basic-table",
+    "table_summary" : "basic-table",
+    "table_fields" : "",
     "row_reg" : "even",
     "row_alt" : "odd",
     "row_selected" : "selected",

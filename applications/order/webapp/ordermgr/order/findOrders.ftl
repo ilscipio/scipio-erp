@@ -385,35 +385,33 @@ document.lookuporder.orderId.focus();
           </@row>
       </#macro>
       <@massOrderChangeButton id="1"/>
-      <table class="basic-table hover-bar" cellspacing='0'>
-       <thead>
-        <tr class="header-row">
-          <th width="5%">
+      <@table type="data" class="basic-table hover-bar" cellspacing='0'>
+       <@thead>
+        <@tr class="header-row">
+          <@th width="5%">
             <input type="checkbox" id="checkAllOrders" name="checkAllOrders" value="1" onchange="javascript:toggleOrderId(this);"/>
-          </th>
-          <th width="10%">${uiLabelMap.OrderOrderType}</th>
-          <th width="15%">${uiLabelMap.OrderOrderId}</th>
-          <th width="20%">${uiLabelMap.PartyName}</th>
-          <#--<th width="5%" align="right">${uiLabelMap.OrderSurvey}</th>-->
-          <th width="10%" align="right">${uiLabelMap.OrderItemsOrdered}</th>
-          <#--<th width="5%" align="right">${uiLabelMap.OrderItemsBackOrdered}</th>
-          <th width="5%" align="right">${uiLabelMap.OrderItemsReturned}</th>-->
-          <th width="10%" align="right">${uiLabelMap.OrderRemainingSubTotal}</th>
-          <th width="10%" align="right">${uiLabelMap.OrderOrderTotal}</th>
-          <th width="5%">&nbsp;</th>
+          </@th>
+          <@th width="10%">${uiLabelMap.OrderOrderType}</@th>
+          <@th width="15%">${uiLabelMap.OrderOrderId}</@th>
+          <@th width="20%">${uiLabelMap.PartyName}</@th>
+          <#--<@th width="5%" align="right">${uiLabelMap.OrderSurvey}</@th>-->
+          <@th width="10%" align="right">${uiLabelMap.OrderItemsOrdered}</@th>
+          <#--<@th width="5%" align="right">${uiLabelMap.OrderItemsBackOrdered}</@th>
+          <@th width="5%" align="right">${uiLabelMap.OrderItemsReturned}</@th>-->
+          <@th width="10%" align="right">${uiLabelMap.OrderRemainingSubTotal}</@th>
+          <@th width="10%" align="right">${uiLabelMap.OrderOrderTotal}</@th>
+          <@th width="5%">&nbsp;</@th>
             <#if ((requestParameters.filterInventoryProblems!"N") == "Y") || ((requestParameters.filterPOsOpenPastTheirETA!"N") == "Y") || ((requestParameters.filterPOsWithRejectedItems!"N") == "Y") || ((requestParameters.filterPartiallyReceivedPOs!"N") == "Y")>
-              <th width="10%">${uiLabelMap.CommonStatus}</th>
-              <th width="5%">${uiLabelMap.CommonFilter}</th>
+              <@th width="10%">${uiLabelMap.CommonStatus}</@th>
+              <@th width="5%">${uiLabelMap.CommonFilter}</@th>
             <#else>
-              <th width="15%">${uiLabelMap.CommonStatus}</th>
+              <@th width="15%">${uiLabelMap.CommonStatus}</@th>
             </#if>
-          <th width="10%">${uiLabelMap.OrderDate}</th>
-          <th width="10%">${uiLabelMap.PartyPartyId}</th>
-          <th width="10%">&nbsp;</th>
-        </tr>
-        </thead>
-        <#if orderList?has_content>
-          <#assign alt_row = false>
+          <@th width="10%">${uiLabelMap.OrderDate}</@th>
+          <@th width="10%">${uiLabelMap.PartyPartyId}</@th>
+          <@th width="10%">&nbsp;</@th>
+        </@tr>
+        </@thead>
           <#list orderList as orderHeader>
             <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
             <#assign statusItem = orderHeader.getRelatedOne("StatusItem", true)!>
@@ -424,13 +422,13 @@ document.lookuporder.orderId.focus();
               <#assign displayParty = orh.getPlacingParty()!>
             </#if>
             <#assign partyId = displayParty.partyId!("_NA_")>
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-              <td>
+            <@tr valign="middle">
+              <@td>
                  <input type="checkbox" name="orderIdList" value="${orderHeader.orderId}" onchange="javascript:toggleOrderIdList();"/>
-              </td>
-              <td>${(orderType.get("description",locale)!(orderType.orderTypeId!""))!""}</td>
-              <td><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="">${orderHeader.orderId}</a></td>
-              <td>
+              </@td>
+              <@td>${(orderType.get("description",locale)!(orderType.orderTypeId!""))!""}</@td>
+              <@td><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="">${orderHeader.orderId}</a></@td>
+              <@td>
                 <div>
                   <#if displayParty?has_content>
                       <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate!, "userLogin", userLogin))/>
@@ -461,19 +459,18 @@ document.lookuporder.orderId.focus();
                 </#if>
                 </div>
                 -->
-              </td>
-              <#--<td align="right">${orh.hasSurvey()?string.number}</td>-->
-              <td align="right">${orh.getTotalOrderItemsQuantity()?string.number}</td>
-              <#--<td align="right">${orh.getOrderBackorderQuantity()?string.number}</td>
-              <td align="right">${orh.getOrderReturnedQuantity()?string.number}</td>-->
-              <td align="right"><#if orderHeader.remainingSubTotal?has_content><@ofbizCurrency amount=orderHeader.remainingSubTotal isoCode=orh.getCurrency()/></#if></td>
-              <td align="right"><#if orderHeader.grandTotal?has_content><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orh.getCurrency()/></#if></td>
+              </@td>
+              <#--<@td align="right">${orh.hasSurvey()?string.number}</@td>-->
+              <@td align="right">${orh.getTotalOrderItemsQuantity()?string.number}</@td>
+              <#--<@td align="right">${orh.getOrderBackorderQuantity()?string.number}</@td>
+              <@td align="right">${orh.getOrderReturnedQuantity()?string.number}</@td>-->
+              <@td align="right"><#if orderHeader.remainingSubTotal?has_content><@ofbizCurrency amount=orderHeader.remainingSubTotal isoCode=orh.getCurrency()/></#if></@td>
+              <@td align="right"><#if orderHeader.grandTotal?has_content><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orh.getCurrency()/></#if></@td>
 
-              <td>&nbsp;</td>
-              <td>${(statusItem.get("description",locale)!(statusItem.statusId!("N/A")))!""}</td>
-              </td>
+              <@td>&nbsp;</@td>
+              <@td>${(statusItem.get("description",locale)!(statusItem.statusId!("N/A")))!""}</@td>
               <#if ((requestParameters.filterInventoryProblems!"N") == "Y") || ((requestParameters.filterPOsOpenPastTheirETA!"N") == "Y") || ((requestParameters.filterPOsWithRejectedItems!"N") == "Y") || ((requestParameters.filterPartiallyReceivedPOs!"N") == "Y")>
-                  <td>
+                  <@td>
                       <#if filterInventoryProblems.contains(orderHeader.orderId)>
                         Inv&nbsp;
                       </#if>
@@ -486,29 +483,22 @@ document.lookuporder.orderId.focus();
                       <#if filterPartiallyReceivedPOs.contains(orderHeader.orderId)>
                         Part&nbsp;
                       </#if>
-                  </td>
+                  </@td>
               </#if>
-              <td>${orderHeader.getString("orderDate")!}</td>
-              <td>
+              <@td>${orderHeader.getString("orderDate")!}</@td>
+              <@td>
                 <#if partyId != "_NA_">
                   <a href="${customerDetailLink}${partyId}" class="">${partyId}</a>
                 <#else>
                   ${uiLabelMap.CommonNA}
                 </#if>
-              </td>
-              <td align='right'>
+              </@td>
+              <@td align='right'>
                 <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonView}</a>
-              </td>
-            </tr>
-            <#-- toggle the row color -->
-            <#assign alt_row = !alt_row>
+              </@td>
+            </@tr>
           </#list>
-        <#else>
-          <tr>
-            <td colspan='4'><h3>${uiLabelMap.OrderNoOrderFound}</h3></td>
-          </tr>
-        </#if>
-      </table>
+      </@table>
       <@massOrderChangeButton id="2"/>
       
     </form>

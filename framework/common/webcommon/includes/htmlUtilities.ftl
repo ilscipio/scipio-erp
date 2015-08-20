@@ -608,6 +608,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                     
    * General Attributes *
     class           = css classes (if column sizes specified, adds classes; if no column sizes specified, expected to contain manual column sizes and overrides columns size default)
+    addClass        = additional class that never affects defaults
     columns         = expected number of columns to be rendered (specify as number, default 12, default only used if class empty and no column sizes specified)
     small           = specific number of small columns (specify as number), overrides small part general columns value above
     large           = specific number of large columns (specify as number), overrides large part of general columns value above
@@ -616,7 +617,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     TODO: smallOffset, mediumOffset, largeOffset
     last            = boolean, usually optional, if true indicate last cell in row 
 -->
-<#macro cell columns=0 small=0 medium=0 large=0 offset=0 class="" id="" collapse=false nocells=false last=false>
+<#macro cell columns=0 small=0 medium=0 large=0 offset=0 class="" addClass="" id="" collapse=false nocells=false last=false>
     <#local columns = columns?number>
     <#local small = small?number>
     <#local medium = medium?number>
@@ -633,7 +634,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         <#if !colSizeClasses?has_content>
             <#local colSizeClasses = "${styles.grid_large!}12">
         </#if>
-        <div class="${colSizeClasses}<#if (offset > 0)> ${styles.grid_offset!}${offset!}</#if> ${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if>" <#if id?has_content> id="${id}"</#if>><#rt/>
+        <div class="${colSizeClasses}<#if (offset > 0)> ${styles.grid_offset!}${offset!}</#if> ${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if><#if addClass?has_content> ${addClass}</#if>" <#if id?has_content> id="${id}"</#if>><#rt/>
     </#if>
         <#nested />
     <#if !nocells></div></#if>
@@ -1091,7 +1092,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
     cellspacing     = cellspacing, default 0, set to "" to remove
     [attribs...]    = legacy <table attributes and values
 -->
-<#macro table type="generic" class=true addClass="" id="" useAltRows="" firstRowAlt="" inheritAltRows=false cellspacing=0 attribs...>
+<#macro table type="generic" class=true addClass="" id="" useAltRows="" firstRowAlt="" inheritAltRows=false cellspacing=0 scrollable=false attribs...>
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
   <#local prevSectionInfo = catoCurrentTableSectionInfo!>
@@ -1127,10 +1128,19 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#else>
     <#global catoCurrentTableRowAlt = false> 
   </#if>
+  <#local style = "">
+  <#if scrollable>
+  <#-- TODO: change this to something more foundation-like.
+       this is a custom workaround to get scrolling, nothing else working. -->
+  <div class="scrollable-table-container">
+  </#if>
   <table<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#rt>
     <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
     <#nested>
   </table>
+  <#if scrollable>
+  </div>
+  </#if>
   <#global catoCurrentTableInfo = prevTableInfo>
   <#global catoCurrentTableSectionInfo = prevSectionInfo>
   <#global catoCurrentTableRowAlt = prevRowAlt>

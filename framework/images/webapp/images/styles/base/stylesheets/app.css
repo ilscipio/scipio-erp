@@ -9911,6 +9911,17 @@ div.section-screenlet-container.no-title.no-menu {
     min-width: 0;
   }
 }
+/* line 338, ../scss/_base.scss */
+div.scrollable-table-container {
+  overflow-x: scroll;
+  margin-bottom: 1.25rem;
+}
+
+/* line 343, ../scss/_base.scss */
+div.scrollable-table-container > table {
+  margin-bottom: 0;
+}
+
 /* line 1, ../scss/_ui_autocomplete.scss */
 .ui-helper-hidden-accessible {
   display: none;

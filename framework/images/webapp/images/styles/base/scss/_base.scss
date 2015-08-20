@@ -333,3 +333,14 @@ $pie-color: $primary-color; // chart-color
       min-width: 0;
       }
 }
+
+// quick custom workaround for be able to scroll tables.
+div.scrollable-table-container {
+  overflow-x: scroll;
+  // FIXME: should get same margin as table had, not hardcoded, but doesn't collapse
+  margin-bottom: 1.25rem;
+}
+div.scrollable-table-container > table {
+  margin-bottom: 0;
+}
+

@@ -1060,32 +1060,34 @@ Helps define table. Required wrapper for all table elem macros.
     </@table>
                     
    * General Attributes *
-    type            = [data]
+    type            = [generic, data, fields], default generic
     class           = manual classes to add, as string, default "basic-table" for data, 
-                      if specified as string replaces defaults
+                      if specified as string replaces defaults (class="" prevents class)
     id              = table id
     useAltRows      = default true for type data
     firstRowAlt     = default false
-    cellspacing     = cellspacing, default 0, set to "" to override to none
+    cellspacing     = cellspacing, default 0, set to "" to remove
     [attribs...]    = legacy <table attributes and values
 -->
-<#macro table type class=false id="" useAltRows="" firstRowAlt=false cellspacing=0 attribs...>
+<#macro table type="generic" class=false id="" useAltRows="" firstRowAlt=false cellspacing=0 attribs...>
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
   <#local prevSectionInfo = catoCurrentTableSectionInfo!>
-  <#local prevRowIsAlt = catoCurrentTableRowAlt!>
+  <#local prevRowAlt = catoCurrentTableRowAlt!>
   <#if !useAltRows?is_boolean>
     <#local useAltRows = (type == "data")>
   </#if>
   <#if !class?is_string>
-    <#if (type == "data")>
+    <#if (type == "generic")>
       <#local class = styles.table_default!>
+    <#elseif (type == "data")>
+      <#local class = styles.table_data!>
     <#else>
       <#local class = "">
     </#if>
   </#if>
   <#global catoCurrentTableInfo = {"type": type, "useAltRows" : useAltRows}>
-  <#global catoCurrentTableSectionInfo = {}>
+  <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
   <#global catoCurrentTableRowAlt = firstRowAlt>
   <table<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#rt>
     <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
@@ -1093,25 +1095,25 @@ Helps define table. Required wrapper for all table elem macros.
   </table>
   <#global catoCurrentTableInfo = prevTableInfo>
   <#global catoCurrentTableSectionInfo = prevSectionInfo>
-  <#global catoCurrentTableRowAlt = prevRowIsAlt>
+  <#global catoCurrentTableRowAlt = prevRowAlt>
 </#macro>
 
 <#macro thead class="" id="" attribs...>
-  <#local prevTableSectionType = catoCurrentTableSectionInfo!>
+  <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
   <#global catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
   <thead<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
     <#nested>
   </thead>
-  <#global catoCurrentTableSectionInfo = prevTableSectionType>
+  <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
 </#macro>
 
 <#macro tbody class="" id="" attribs...>
-  <#local prevTableSectionType = catoCurrentTableSectionInfo!>
-  <#global catoCurrentTableSectionInfo = {"type": "body"}>
+  <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
+  <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
   <tbody<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
     <#nested>
   </tbody>
-  <#global catoCurrentTableSectionInfo = prevTableSectionType>
+  <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
 </#macro>
 
 <#-- 

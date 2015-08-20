@@ -54,6 +54,10 @@ under the License.
     "icon_button_value" : "&#xf214;",
     "icon_calendar" : "fi-calendar",
     "icon_arrow" : "fi-arrow-right",
+    
+<#-- Data and Tables -->  
+    "table_default" : "basic-table",
+    "table_basic" : "basic-table",
     "row_reg" : "even",
     "row_alt" : "odd",
     "row_selected" : "selected",

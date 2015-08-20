@@ -1031,6 +1031,145 @@ Creates a very basic wrapper for code blocks
     </code></pre>
 </#macro>
 
+<#macro elemAttribStr attribs>
+  <#if attribs?is_hash_ex>
+    <#t><#list attribs?keys as name> ${name}="${attribs[name]?string}"</#list>
+  </#if>
+</#macro>
+
+<#-- 
+*************
+* Table
+************
+Helps define table. Required wrapper for all table elem macros.
+
+    Usage example:  
+    <@table type="data" class="my-table-class" id="my-table">
+      <@thead>
+        <@tr>
+          <@tc width="15%">col 1</@tc>
+          <@tc width="85%">col 2</@tc>
+        </@tr>
+      </@thead>
+      <@tbody>
+        <@tr class="rowClass">
+          <@tc>val 1</@tc>
+          <@tc>val 2</@tc>
+        </@tr>
+      </@tbody>
+    </@table>
+                    
+   * General Attributes *
+    type            = [data]
+    class           = manual classes to add, as string, default "basic-table" for data, 
+                      if specified as string replaces defaults
+    id              = table id
+    useAltRows      = default true for type data
+    firstRowAlt     = default false
+    cellspacing     = cellspacing, default 0, set to "" to override to none
+    [attribs...]    = legacy <table attributes and values
+-->
+<#macro table type class=false id="" useAltRows="" firstRowAlt=false cellspacing=0 attribs...>
+  <#-- save previous globals, for nesting -->
+  <#local prevTableInfo = catoCurrentTableInfo!>
+  <#local prevSectionInfo = catoCurrentTableSectionInfo!>
+  <#local prevRowIsAlt = catoCurrentTableRowAlt!>
+  <#if !useAltRows?is_boolean>
+    <#local useAltRows = (type == "data")>
+  </#if>
+  <#if !class?is_string>
+    <#if (type == "data")>
+      <#local class = styles.table_default!>
+    <#else>
+      <#local class = "">
+    </#if>
+  </#if>
+  <#global catoCurrentTableInfo = {"type": type, "useAltRows" : useAltRows}>
+  <#global catoCurrentTableSectionInfo = {}>
+  <#global catoCurrentTableRowAlt = firstRowAlt>
+  <table<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#rt>
+    <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+    <#nested>
+  </table>
+  <#global catoCurrentTableInfo = prevTableInfo>
+  <#global catoCurrentTableSectionInfo = prevSectionInfo>
+  <#global catoCurrentTableRowAlt = prevRowIsAlt>
+</#macro>
+
+<#macro thead class="" id="" attribs...>
+  <#local prevTableSectionType = catoCurrentTableSectionInfo!>
+  <#global catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
+  <thead<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+    <#nested>
+  </thead>
+  <#global catoCurrentTableSectionInfo = prevTableSectionType>
+</#macro>
+
+<#macro tbody class="" id="" attribs...>
+  <#local prevTableSectionType = catoCurrentTableSectionInfo!>
+  <#global catoCurrentTableSectionInfo = {"type": "body"}>
+  <tbody<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+    <#nested>
+  </tbody>
+  <#global catoCurrentTableSectionInfo = prevTableSectionType>
+</#macro>
+
+<#-- 
+*************
+* Table row
+************
+Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
+                    
+   * General Attributes *
+    class           = manual classes to add
+    alt             = boolean, if specified, override the automatic auto-alt styling with true or false
+    selected        = boolean, if specified and true marked as selected
+    [attribs...]    = legacy <tr attributes and values
+-->
+<#macro tr class="" id="" alt="" selected="" attribs...>
+  <#local isBody = ((catoCurrentTableSectionInfo.type)!"body") == "body">
+  <#local str = class>
+  <#if alt?is_boolean || (isBody && ((catoCurrentTableInfo.useAltRows)!)==true)>
+    <#if !alt?is_boolean>
+      <#local alt = catoCurrentTableRowAlt!false>
+    </#if>
+    <#local str = (str + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
+  </#if>
+  <#if selected?is_boolean && selected == true>
+    <#local str = (str + " " + styles.row_selected!)?trim>
+  </#if>
+  <tr<#if str?has_content> class="${str}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+    <#nested>
+  </tr>
+  <#if alt?is_boolean>
+    <#global catoCurrentTableRowAlt = !alt>
+  </#if>
+</#macro>
+
+<#-- 
+*************
+* Table cell
+************
+Helps define table cells. tc automatically knows whether th or td via @thead and @tbody, but th and td can be used too for legacy for now...
+                    
+   * General Attributes *
+    class           = manual classes to add
+    id              = cell id
+    [attribs...]    = legacy <th and <td attributes and values
+-->
+<#macro tc class="" id="" attribs...>
+  <#local elem = (catoCurrentTableSectionInfo.cellElem)!"td">
+  <${elem}<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></${elem}>
+</#macro>
+
+<#macro th class="" id="" attribs...>
+  <th<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></th>
+</#macro>
+
+<#macro td class="" id="" attribs...>
+  <td<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></td>
+</#macro>
+
 <#-- 
 *************
 * Data row class string

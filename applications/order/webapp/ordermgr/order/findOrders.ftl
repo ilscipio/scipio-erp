@@ -508,7 +508,7 @@ document.lookuporder.orderId.focus();
     </#if>
     
   <#else>
-    <p>${uiLabelMap.OrderNoOrderFound}.</p>
+    <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
   </#if>
     
     </@cell>

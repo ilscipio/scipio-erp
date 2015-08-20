@@ -19,7 +19,7 @@ under the License.
 <script language="JavaScript" type="text/javascript">
     function setNow(field) { eval('document.selectAllForm.' + field + '.value="${nowTimestamp}"'); }
 </script>
-<h1>${title}</h1>
+<h2>${title}</h2>
         <#if invalidProductId??>
             <div class="errorMessage">${invalidProductId}</div>
         </#if>

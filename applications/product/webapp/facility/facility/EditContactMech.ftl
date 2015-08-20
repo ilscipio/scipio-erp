@@ -24,7 +24,7 @@ under the License.
   <#if !mechMap.contactMech??>
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !preContactMechTypeId?has_content>
-    <h1>${title}</h1>
+    <h2>${title}</h2>
     <div class="button-bar">
       <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='${styles.button_default!}'>${uiLabelMap.CommonGoBack}</a>
     </div>
@@ -49,7 +49,7 @@ under the License.
 
   <#if mechMap.contactMechTypeId?has_content>
     <#if !mechMap.contactMech?has_content>
-      <h1>${title}</h1>
+      <h2>${title}</h2>
       <div class="button-bar">
         <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='${styles.button_default!}'>${uiLabelMap.CommonGoBack}</a>
       </div>
@@ -78,7 +78,7 @@ under the License.
           *</td>
         </tr>
     <#else>
-      <h1>${title}</h1>
+      <h2>${title}</h2>
       <div class="button-bar">
         <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='${styles.button_default!}'>${uiLabelMap.CommonGoBack}</a>
         <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewContactMech}</a>

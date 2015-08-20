@@ -24,7 +24,7 @@ function setWeight(weight) {
 </script>
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-  <h1>${uiLabelMap.ProductQuickShipOrderFrom} ${facility.facilityName!} [${uiLabelMap.CommonId}:${facilityId!}]</h1>
+  <h2>${uiLabelMap.ProductQuickShipOrderFrom} ${facility.facilityName!} [${uiLabelMap.CommonId}:${facilityId!}]</h2>
   <div class="button-bar">
     <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNextShipment}</a>
     <#if shipment?has_content>

@@ -47,9 +47,9 @@ under the License.
                   <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
                   <div>
                     <#if contactMechPurposeType?has_content>
-                      <b>${contactMechPurposeType.get("description",locale)}</b>
+                      <strong>${contactMechPurposeType.get("description",locale)}</strong>
                     <#else>
-                      <b>${uiLabelMap.PartyMechPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
+                      <strong>${uiLabelMap.PartyMechPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</strong>
                     </#if>
                     <#if partyContactMechPurpose.thruDate?has_content>
                       (${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate})

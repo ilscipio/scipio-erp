@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<h1>${title}</h1>
+<h2>${title}</h2>
 <#if facilityId?? && locationSeqId??>
   <div class="button-bar">
     <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacility}</a>
@@ -47,7 +47,7 @@ under the License.
         <td>${locationSeqId}</td>
     </tr>
 <#else>
-    <h1>${uiLabelMap.ProductNotCreateLocationFacilityId}</h1>
+    <@alert type="error">${uiLabelMap.ProductNotCreateLocationFacilityId}</@alert>
 </#if>
 
 <#if facilityId??>

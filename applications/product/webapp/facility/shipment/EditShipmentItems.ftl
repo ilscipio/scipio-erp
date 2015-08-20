@@ -147,10 +147,7 @@ under the License.
 <#else>
 <div class="screenlet">
     <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</li>
-        </ul>
-        <br class="clear"/>
+        <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</@alert>
     </div>
 </div>
 </#if>

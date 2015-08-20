@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>${uiLabelMap.OrderReturnsCurrent}</h1>
+<h2>${uiLabelMap.OrderReturnsCurrent}</h2>
 <div><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateReturn}</a></div>
 
 

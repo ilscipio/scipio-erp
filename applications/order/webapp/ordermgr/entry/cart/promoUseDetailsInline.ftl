@@ -18,7 +18,7 @@ under the License.
 -->
 
 <div>
-    <h1>${uiLabelMap.OrderPromotionInformation}:</h1>
+    <h2>${uiLabelMap.OrderPromotionInformation}:</h2>
     <h3>${uiLabelMap.OrderPromotionsApplied}:</h3>
         <ul>    
             <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>

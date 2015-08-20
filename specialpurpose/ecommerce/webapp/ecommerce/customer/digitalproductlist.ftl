@@ -53,7 +53,7 @@ under the License.
             </tr>
           </#list>
           <#if !supplierProductList?has_content>
-            <tr><td colspan="5"><h3>${uiLabelMap.EcommerceNoDigitalProductsFound}</h3></td></tr>
+            <tr><td colspan="5"><@resultMsg>${uiLabelMap.EcommerceNoDigitalProductsFound}</@resultMsg></td></tr>
           </#if>
         </table>
     </div>

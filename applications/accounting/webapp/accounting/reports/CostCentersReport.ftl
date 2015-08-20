@@ -45,5 +45,5 @@ under the License.
     </#list>
   </table>
 <#else>
-  <h2>${uiLabelMap.CommonNoRecordFound}</h2>
+  <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
 </#if>

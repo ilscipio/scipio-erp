@@ -71,10 +71,10 @@ under the License.
     <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME")!/>
     <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION")!/>
     <#if categoryName?has_content>
-        <h1>${categoryName}</h1>
+        <h2>${categoryName}</h2>
     </#if>
     <#if categoryDescription?has_content>
-        <h1>${categoryDescription}</h1>
+        <h2>${categoryDescription}</h2>
     </#if>
     <#if hasQuantities??>
       <form method="post" action="<@ofbizUrl>addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>

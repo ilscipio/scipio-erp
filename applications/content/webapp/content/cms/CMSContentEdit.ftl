@@ -32,8 +32,7 @@ ${menuWrapper.renderMenuString()}
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
     <td>
-      <h1>${contentId!}
-      </h1>
+      <h1>${contentId!}</h1>
     </td>
     <td align="right">
     </td>

@@ -244,5 +244,5 @@ under the License.
     </div>
 </div>
 <#elseif parameters.shipmentId?has_content>
-  <h3>${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId!}]</h3>
+  <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId!}]</@alert>
 </#if>

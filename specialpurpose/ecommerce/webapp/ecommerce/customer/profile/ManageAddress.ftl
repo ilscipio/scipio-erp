@@ -284,17 +284,13 @@ under the License.
                 //]]>
               </script>
             <#else>
-              <div>
-                 <label>${uiLabelMap.PartyPostalInformationNotFound}.</label>
-              </div>
+              <@resultMsg>${uiLabelMap.PartyPostalInformationNotFound}.</@resultMsg>
             </#if>
           </#if>
         </#if>
       </#list>
       <#if postalAddressFlag == "N">
-        <div>
-            <label>${uiLabelMap.PartyPostalInformationNotFound}.</label>
-        </div>
+        <@resultMsg>${uiLabelMap.PartyPostalInformationNotFound}.</@resultMsg>
       </#if>
     </div>
   </div>

@@ -74,9 +74,9 @@ under the License.
     </div>
   </#if>
 <#else>
-  <h1>${uiLabelMap.OrderCreateNewReturn}</h1>
+  <h2>${uiLabelMap.OrderCreateNewReturn}</h2>
   <#if requestParameters.returnId?has_content>
-    <h2>${uiLabelMap.OrderNoReturnFoundWithId} : ${requestParameters.returnId}</h2>
+    <@alert type="error">${uiLabelMap.OrderNoReturnFoundWithId} : ${requestParameters.returnId}</@alert>
   </#if>
   <br />
 </#if>

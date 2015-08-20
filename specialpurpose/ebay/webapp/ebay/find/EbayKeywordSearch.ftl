@@ -28,7 +28,7 @@ under the License.
     <div><a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !productIds?has_content>
-      <div><h2>${uiLabelMap.ProductNoResultsFound}.</h2></div>
+      <div><@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg></div>
     </#if>
 
     <#if productIds?has_content>

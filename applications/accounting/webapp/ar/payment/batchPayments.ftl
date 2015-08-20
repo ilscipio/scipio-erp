@@ -225,7 +225,7 @@ function setServiceName(selection) {
                   </tbody>
                 </table>
             <#else>
-                <h3>${uiLabelMap.CommonNoRecordFound}</h3>
+                <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
             </#if>
         </form>
     </div>

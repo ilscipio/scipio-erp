@@ -82,7 +82,7 @@ under the License.
       </table>
     </div>
     <#else>
-      <label>${uiLabelMap.PartyPersonalInformationNotFound}</label>
+      <@resultMsg>${uiLabelMap.PartyPersonalInformationNotFound}</@resultMsg>
     </#if>
   </div>
 </div>

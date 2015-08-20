@@ -233,7 +233,7 @@ under the License.
           </tr>
         </#if>
       <#else>
-        <tr><td colspan="4"><h3>${uiLabelMap.ProductNoOrdersFoundReadyToPickOrNeedStockMoves}.</h3></td></tr>
+        <tr><td colspan="4"><@resultMsg>${uiLabelMap.ProductNoOrdersFoundReadyToPickOrNeedStockMoves}.</@resultMsg></td></tr>
       </#if>
     </table>
   </div>

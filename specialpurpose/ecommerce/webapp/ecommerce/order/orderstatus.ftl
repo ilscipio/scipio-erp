@@ -26,5 +26,5 @@ under the License.
   </form>
 
 <#else>
-  <h3>${uiLabelMap.OrderSpecifiedNotFound}.</h3>
+  <@alert type="error">${uiLabelMap.OrderSpecifiedNotFound}.</@alert>
 </#if>

@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<h1>${title}</h1>
+<h2>${title}</h2>
       <#if illegalInventoryItem??>
             <div class="errorMessage">${illegalInventoryItem}</div>
       </#if>

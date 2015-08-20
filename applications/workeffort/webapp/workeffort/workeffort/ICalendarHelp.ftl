@@ -19,5 +19,5 @@ under the License.
 <#if wikiContent?has_content>
     ${StringUtil.wrapString(wikiContent)}
 <#else>
-    <h2>${uiLabelMap.CommonHelpNotFound}</h2>
+    <@alert type="error">${uiLabelMap.CommonHelpNotFound}</@alert>
 </#if>

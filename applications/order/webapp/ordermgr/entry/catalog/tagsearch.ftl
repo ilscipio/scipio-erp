@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>${uiLabelMap.ProductProductTaggedWith} "${parameters.SEARCH_STRING}"</h1>
+<h2>${uiLabelMap.ProductProductTaggedWith} "${parameters.SEARCH_STRING}"</h2>
 
 <#if !productIds?has_content>
   <h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>

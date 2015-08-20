@@ -91,7 +91,7 @@ under the License.
         </#list>
       <#else>
         <tr>
-          <td colspan='4'><h3>${uiLabelMap.OrderNoOrderFound}</h3></td>
+          <td colspan='4'><@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg></td>
         </tr>
       </#if>
     </table>

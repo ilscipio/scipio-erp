@@ -23,5 +23,5 @@ under the License.
     ${requestAttributes.surveyWrapper.renderSurvey()}
   </form>
 <#else>
-  <h1>${uiLabelMap.OrderNothingToDoHere}</h1>
+  <@resultMsg>${uiLabelMap.OrderNothingToDoHere}</@resultMsg>
 </#if>

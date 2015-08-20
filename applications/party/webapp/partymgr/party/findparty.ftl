@@ -324,7 +324,7 @@ under the License.
     </#if>
     
   <#else>
-    <p>${uiLabelMap.PartyNoPartiesFound}</p>
+    <@resultMsg>${uiLabelMap.PartyNoPartiesFound}</@resultMsg>
   </#if>
   
       </@cell>

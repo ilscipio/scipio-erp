@@ -472,5 +472,5 @@ function doPublish() {
     </div>
 </div>
   <#else>
-    <h3>${uiLabelMap.ProductProductNotFound} ${productId!}</h3>
+    <@alert type="error">${uiLabelMap.ProductProductNotFound} ${productId!}</@alert>
   </#if>

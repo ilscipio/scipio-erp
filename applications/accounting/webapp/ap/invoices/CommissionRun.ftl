@@ -131,5 +131,5 @@ function enableSubmitButton() {
     </table>
   </form>
 <#else>
-  <h3>${uiLabelMap.AccountingNoInvoicesFound}</h3>
+  <@resultMsg>${uiLabelMap.AccountingNoInvoicesFound}.</@resultMsg>
 </#if>

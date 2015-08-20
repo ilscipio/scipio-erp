@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)>
 <#assign currentCatalogId = Static["org.ofbiz.product.catalog.CatalogWorker"].getCurrentCatalogId(request)>
-<h1>${uiLabelMap.ProductAdvancedSearchInCategory}</h1>
+<h2>${uiLabelMap.ProductAdvancedSearchInCategory}</h2>
 <br />
 <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="margin: 0;">
   <input type="hidden" name="VIEW_SIZE" value="10" />

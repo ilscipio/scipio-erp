@@ -48,7 +48,7 @@ under the License.
     </div>
     <div class="screenlet-body">
     <#if orderId?has_content && !orderHeader??>
-        <h3 style="color: red;"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</h3>
+        <@alert type="error"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</@alert>
     </#if>
     <#if orderHeader??>
         <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId! != "SALES_SHIPMENT">
@@ -237,10 +237,7 @@ under the License.
 <#else>
 <div class="screenlet">
     <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId!}]</li>
-        </ul>
-        <br class="clear"/>
+        <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId!}]</@alert>
     </div>
 </div>
 </#if>

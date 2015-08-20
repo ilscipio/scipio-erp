@@ -846,6 +846,9 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 * query result message
 ************
 Common query result message.
+Note: this is ONLY for expected, non-error messages, such as no records found in a query.
+Other messages such as for missing params/record IDs are usually errors.
+
     Usage example:  
     <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>            
                     

@@ -73,7 +73,6 @@ under the License.
           <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>
           <@td width="1%">&nbsp;</@td>
           <@td valign="top" width="80%">
-            <div>
               <#if displayParty?has_content>
                 <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
                 ${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
@@ -95,7 +94,6 @@ under the License.
                   </form>
                 </#if>
               </#if>
-            </div>
           </@td>
         </@tr>
         <#list orderContactMechValueMaps as orderContactMechValueMap>

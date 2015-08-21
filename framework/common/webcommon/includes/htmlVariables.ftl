@@ -56,7 +56,7 @@ under the License.
     "icon_arrow" : "fi-arrow-right",
     
 <#-- Data and Tables -->  
-    "table_default" : "basic-table",
+    "table_default" : "",
     "table_data" : "basic-table",
     "table_summary" : "basic-table",
     "table_fields" : "",

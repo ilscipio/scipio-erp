@@ -1092,14 +1092,16 @@ Helps define table. Required wrapper for all table sub-elem macros.
     useAltRows      = default true for type data
     firstRowAlt     = default false
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
+    useFootAltRoots = whether use alt row logic in foot or not
     cellspacing     = cellspacing, default 0, set to "" to remove
     [attribs...]    = legacy <table attributes and values
 -->
-<#macro table type="generic" class=true addClass="" id="" useAltRows="" firstRowAlt="" inheritAltRows=false cellspacing=0 scrollable=false attribs...>
+<#macro table type="generic" class=true addClass="" id="" cellspacing=0 scrollable=false useAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs...>
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
   <#local prevSectionInfo = catoCurrentTableSectionInfo!>
   <#local prevRowAlt = catoCurrentTableRowAlt!>
+  <#local prevLastRowAlt = catoCurrentTableLastRowAlt!>
   <#if !useAltRows?is_boolean>
     <#local useAltRows = (type == "data") || inheritAltRows>
   </#if>
@@ -1122,7 +1124,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <#local class = class + " " + addClass>
   </#if>
   <#global catoCurrentTableInfo = {"type": type, "useAltRows": useAltRows,
-    "inheritAltRows": inheritAltRows, "parentRowAlt": prevRowAlt}>
+    "inheritAltRows": inheritAltRows, "parentRowAlt": prevRowAlt, "useFootAltRows": useFootAltRows}>
   <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
   <#if firstRowAlt?is_boolean>
     <#global catoCurrentTableRowAlt = firstRowAlt>
@@ -1130,6 +1132,11 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <#global catoCurrentTableRowAlt = prevRowAlt> 
   <#else>
     <#global catoCurrentTableRowAlt = false> 
+  </#if>
+  <#if prevRowAlt?is_boolean>
+    <#global catoCurrentTableLastRowAlt = prevRowAlt>
+  <#else>
+    <#global catoCurrentTableLastRowAlt = catoCurrentTableRowAlt>
   </#if>
   <#local style = "">
   <#if scrollable>
@@ -1147,6 +1154,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#global catoCurrentTableInfo = prevTableInfo>
   <#global catoCurrentTableSectionInfo = prevSectionInfo>
   <#global catoCurrentTableRowAlt = prevRowAlt>
+  <#global catoCurrentTableLastRowAlt = prevLastRowAlt>
 </#macro>
 
 <#macro thead class="" id="" attribs...>
@@ -1167,6 +1175,15 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
 </#macro>
 
+<#macro tfoot class="" id="" attribs...>
+  <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
+  <#global catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
+  <tfoot<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+    <#nested>
+  </tfoot>
+  <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
+</#macro>
+
 <#-- 
 *************
 * Table row
@@ -1176,20 +1193,31 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
    * General Attributes *
     class           = manual classes to add
     alt             = boolean, if specified, override the automatic auto-alt styling with true or false
+    useLastAlt         = boolean, if specified, sets alt to same as last (row, or parent table row if first row)
+    useParentAlt       = boolean, nested tables only, if specified, use parent table row alt
     selected        = boolean, if specified and true marked as selected
     [attribs...]    = legacy <tr attributes and values
 -->
-<#macro tr class="" id="" alt="" selected="" attribs...>
-  <#local isBody = ((catoCurrentTableSectionInfo.type)!"body") == "body">
+<#macro tr class="" id="" alt="" useLastAlt="" useParentAlt="" selected="" attribs...>
+  <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
+  <#local isRegAltRow = ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
   <#local str = class>
-  <#if alt?is_boolean || (isBody && ((catoCurrentTableInfo.useAltRows)!)==true)>
-    <#if !alt?is_boolean>
+  <#if !alt?is_boolean>
+    <#if useLastAlt?is_boolean && useLastAlt == true>
+      <#local alt = catoCurrentTableLastRowAlt!false>
+    <#elseif useParentAlt?is_boolean && useParentAlt == true>
+      <#local alt = (catoCurrentTableInfo.parentRowAlt)!false>
+      <#if !alt?is_boolean><#local alt = false></#if>
+    <#elseif (isRegAltRow && ((catoCurrentTableInfo.useAltRows)!)==true)>
       <#if ((catoCurrentTableInfo.inheritAltRows)!)==true>
         <#local alt = (catoCurrentTableInfo.parentRowAlt)!false>
+        <#if !alt?is_boolean><#local alt = false></#if>
       <#else>
         <#local alt = catoCurrentTableRowAlt!false>
       </#if>
     </#if>
+  </#if>
+  <#if alt?is_boolean>
     <#local str = (str + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
   </#if>
   <#if selected?is_boolean && selected == true>
@@ -1198,7 +1226,8 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <tr<#if str?has_content> class="${str}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
     <#nested>
   </tr>
-  <#if alt?is_boolean && ((catoCurrentTableInfo.inheritAltRows)!)==false>
+  <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
+    <#global catoCurrentTableLastRowAlt = alt>
     <#global catoCurrentTableRowAlt = !alt>
   </#if>
 </#macro>

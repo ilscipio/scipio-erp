@@ -24,7 +24,7 @@ under the License.
   </#assign>
   <@section id="partyAttributes" title="${uiLabelMap.PartyAttributes}" menuHtml=menuHtml>
       <#if attributes?has_content>
-        <@table type="data" useAltRows=true class="basic-table hover-bar" cellspacing="0">
+        <@table type="data" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
           <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.CommonName}</@th>

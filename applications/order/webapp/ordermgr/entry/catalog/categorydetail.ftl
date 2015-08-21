@@ -138,7 +138,7 @@ under the License.
         style="position: relative; margin-top: ${height}px;"
       </#if>
       class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
-      <@table type="data" class="" useAltRows=false useIf=(numCol?int > 1)>
+      <@table type="data" class="" autoAltRows=false useIf=(numCol?int > 1)>
         <#list productCategoryMembers as productCategoryMember>
           <#if (numCol?int == 1)>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)}

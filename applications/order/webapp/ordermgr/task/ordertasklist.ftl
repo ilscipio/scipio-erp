@@ -41,16 +41,16 @@ under the License.
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
 <#assign tasksFound = false>
 <@section title="${uiLabelMap.OrderOrderNeedingAttention}">
-        <@table type="fields" useAltRows=false cellspacing="0" class="basic-table">
+        <@table type="fields" autoAltRows=false cellspacing="0" class="basic-table">
             <@tr>
               <@td width='100%'>
                 <#if poList?has_content>
                   <#assign tasksFound = true>
-                  <@table type="fields" useAltRows=false cellspacing="0" class="basic-table">
+                  <@table type="fields" autoAltRows=false cellspacing="0" class="basic-table">
                     <@tr>
                       <@td>
                         <h3>${uiLabelMap.OrderOrderPurchaseToBeScheduled}</h3>
-                        <@table type="data" useAltRows=true cellspacing="0" class="basic-table hover-bar">
+                        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table hover-bar">
                          <@thead>
                           <@tr class="header-row">
                             <@th>${uiLabelMap.OrderOrderNumber}</@th>
@@ -110,11 +110,11 @@ under the License.
 
                 <#if partyTasks?has_content>
                   <#assign tasksFound = true>
-                  <@table type="fields" useAltRows=false cellspacing="0" class="basic-table hover-bar">
+                  <@table type="fields" autoAltRows=false cellspacing="0" class="basic-table hover-bar">
                     <@tr>
                       <@td>
                         <h3>${uiLabelMap.OrderWorkflow}</h3>
-                        <@table type="data" useAltRows=true cellspacing="0" class="basic-table">
+                        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
                          <@thead>
                           <@tr class="header-row">
                             <@th><a href="<@ofbizUrl>tasklist?sort=orderId</@ofbizUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
@@ -175,11 +175,11 @@ under the License.
 
                 <#if roleTasks?has_content>
                   <#assign tasksFound = true>
-                  <@table type="fields" useAltRows=false cellspacing="0" class="basic-table">
+                  <@table type="fields" autoAltRows=false cellspacing="0" class="basic-table">
                     <@tr>
                       <@td>
                         <h3>${uiLabelMap.CommonWorkflowActivityUserRole}</h3>
-                        <@table type="data" useAltRows=true cellspacing="0" class="basic-table hover-bar">
+                        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table hover-bar">
                          <@thead>
                           <@tr class="header-row">
                             <@th><a href="<@ofbizUrl>tasklist?sort=orderId</@ofbizUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>

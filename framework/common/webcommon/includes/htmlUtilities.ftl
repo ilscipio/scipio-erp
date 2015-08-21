@@ -1081,7 +1081,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
                     
    * General Attributes *
     type            = [generic, data, summary, fields], default generic
-                      generic: generic html table (free-form, complex)
+                      generic: generic html table (free-form, complex), no features enabled by default
                       data: typical record-containing table
                       summary: usually table with one or a few set row of summary totals
                       fields: label-value pairs for display (note: prefer @field for input forms or @row/@cell instead?)
@@ -1089,7 +1089,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
                       if specified as string replaces defaults (class="" prevents class)
     addClass        = extra classes that don't influence defaults
     id              = table id
-    useAltRows      = default true for type data
+    autoAltRows     = default false for now (temporarily false for type="data" as well, too many complex)
     firstRowAlt     = default false
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
@@ -1097,18 +1097,18 @@ Helps define table. Required wrapper for all table sub-elem macros.
     wrapIf          = condition to wrap nested in table elem, for esoteric cases; avoid
     [attribs...]    = legacy <table attributes and values
 -->
-<#macro table type="generic" class=true addClass="" id="" wrapIf=true cellspacing=0 scrollable=false useAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs...>
+<#macro table type="generic" class=true addClass="" id="" wrapIf=true cellspacing=0 scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs...>
 <#if wrapIf>
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
   <#local prevSectionInfo = catoCurrentTableSectionInfo!>
   <#local prevRowAlt = catoCurrentTableRowAlt!>
   <#local prevLastRowAlt = catoCurrentTableLastRowAlt!>
-  <#if !useAltRows?is_boolean>
+  <#if !autoAltRows?is_boolean>
     <#-- don't enable for all data tables by default for now, too many complex ones...
-    <#local useAltRows = (type == "data") || inheritAltRows>
+    <#local autoAltRows = (type == "data") || inheritAltRows>
     -->
-    <#local useAltRows = inheritAltRows>
+    <#local autoAltRows = inheritAltRows>
   </#if>
   <#if class?is_boolean>
     <#if class>
@@ -1128,7 +1128,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#if addClass?is_string && addClass?has_content>
     <#local class = class + " " + addClass>
   </#if>
-  <#global catoCurrentTableInfo = {"type": type, "useAltRows": useAltRows,
+  <#global catoCurrentTableInfo = {"type": type, "autoAltRows": autoAltRows,
     "inheritAltRows": inheritAltRows, "parentRowAlt": prevRowAlt, "useFootAltRows": useFootAltRows}>
   <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
   <#if firstRowAlt?is_boolean>
@@ -1232,7 +1232,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
       <#elseif useParentAlt?is_boolean && useParentAlt == true>
         <#local alt = (catoCurrentTableInfo.parentRowAlt)!false>
         <#if !alt?is_boolean><#local alt = false></#if>
-      <#elseif (isRegAltRow && ((catoCurrentTableInfo.useAltRows)!)==true)>
+      <#elseif (isRegAltRow && ((catoCurrentTableInfo.autoAltRows)!)==true)>
         <#if ((catoCurrentTableInfo.inheritAltRows)!)==true>
           <#local alt = (catoCurrentTableInfo.parentRowAlt)!false>
           <#if !alt?is_boolean><#local alt = false></#if>

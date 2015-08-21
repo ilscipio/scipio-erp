@@ -25,7 +25,7 @@ under the License.
         <@row>
             <@cell class="${styles.grid_large!}6">
                         <#if orderTerms?has_content && parameters.createNew?default('') != 'Y'>
-                            <@table type="data" useAltRows=true class="basic-table hover-bar">
+                            <@table type="data" autoAltRows=true class="basic-table hover-bar">
                   <@thead>
                                 <@tr class="header-row">
                         <@th>${uiLabelMap.OrderOrderTermType}</@th>

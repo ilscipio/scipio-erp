@@ -26,7 +26,7 @@ under the License.
 </#if>
 
 <#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
-<@table type="fields" useAltRows=false border="0" width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
+<@table type="fields" autoAltRows=false border="0" width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
   <@tr>
     <@td width='100%'>
       <@table type="fields" width='100%' border='0' cellpadding='0' cellspacing='0' class='boxtop'>
@@ -40,10 +40,10 @@ under the License.
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" useAltRows=false width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
+      <@table type="fields" autoAltRows=false width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
         <@tr>
           <@td>
-            <@table type="data" useAltRows=false width="100%" cellpadding="2" cellspacing="2" border="0">
+            <@table type="data" autoAltRows=false width="100%" cellpadding="2" cellspacing="2" border="0">
             <@thead>
               <@tr class="header-row">
                 <@th nowrap="nowrap">WebSite</@th>

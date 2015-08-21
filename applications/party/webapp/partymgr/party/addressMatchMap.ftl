@@ -59,7 +59,7 @@ under the License.
 </@section>
 <@section title="${uiLabelMap.PageTitleAddressMatches}">
       <#if addressMatchMaps?has_content>
-        <@table type="data" useAltRows=true class="basic-table hover-bar" cellspacing="0">
+        <@table type="data" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.PartyAddressMatchKey}</@th>

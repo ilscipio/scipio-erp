@@ -90,7 +90,7 @@ under the License.
 <#if !requestParameters.orderId?? && returnHeader?has_content>
           <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">
           <input type="hidden" name="_useRowSubmit" value="Y" />
-        <@table type="data" useAltRows=false cellspacing="0" class="basic-table">
+        <@table type="data" autoAltRows=false cellspacing="0" class="basic-table">
           <#assign readOnly = (returnHeader.statusId != "RETURN_REQUESTED" && returnHeader.statusId != "SUP_RETURN_REQUESTED")>
           <@tr><@td colspan="10"><h3>${uiLabelMap.OrderOrderReturn} #${returnId}</h3></@td></@tr>
 

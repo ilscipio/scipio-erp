@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@table type="fields" useAltRows=false cellspacing="0" class="basic-table">
+<@table type="fields" autoAltRows=false cellspacing="0" class="basic-table">
     <@tr>
       <@td colspan="7"><h3>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></h3></@td>
       <@td colspan="2" align="right">

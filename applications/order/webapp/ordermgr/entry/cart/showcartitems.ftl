@@ -36,7 +36,7 @@ under the License.
         <input type="hidden" name="finalizeReqPayInfo" value="false"/>
         <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
       </#if>
-      <@table type="data" useAltRows=false class="" cellspacing="0" cellpadding="1" border="0">
+      <@table type="data" autoAltRows=false class="" cellspacing="0" cellpadding="1" border="0">
         <@thead>
         <@tr>
           <@th>&nbsp;</@th>

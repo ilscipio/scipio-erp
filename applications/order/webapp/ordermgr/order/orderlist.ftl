@@ -145,7 +145,7 @@ under the License.
           <@paginateOrders />
         </#if>
         
-        <@table type="data" useAltRows=true class="" cellspacing='0'>
+        <@table type="data" autoAltRows=true cellspacing='0'>
           <@thead>
           <@tr>
             <@th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>

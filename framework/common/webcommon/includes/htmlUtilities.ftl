@@ -823,7 +823,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     </@alert>            
                     
    * General Attributes *
-    type           = (info|success|warning|secondary|alert)
+    type           = (info|success|warning|secondary|alert|error)
     addClass       = additional classes for nested container
 -->
 <#macro alert type="" addClass="">
@@ -1080,10 +1080,12 @@ Helps define table. Required wrapper for all table sub-elem macros.
     </@table>
                     
    * General Attributes *
-    type            = [generic, data, summary, fields], default generic
+    type            = [generic, data-simple, data-complex, summary, fields], default generic
                       TODO: WARN: these are WIP types, may not be enough
                       generic: generic html table (free-form, complex), no features enabled by default
-                      data: typical record-containing table
+                      data-simple: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
+                      data-complex: record-containing table, complex structure (more than one row per record, separators, etc.)
+                      data: DEPRECATED: typical record-containing table
                       summary: usually table with one or a few set row of summary totals
                       fields: label-value pairs for display (note: prefer @field for input forms or @row/@cell instead?)
     class           = manual classes to add, as string, default "basic-table" for data, 

@@ -28,7 +28,7 @@ under the License.
         <@td colspan="2">&nbsp;</@td>
         <@td colspan="3" align="right"><span>${returnAdjustment.get("description",locale)?default("N/A")}</span>
             <#if returnAdjustment.comments?has_content>: ${returnAdjustment.comments}</#if>
-        </div></@td>
+        </@td>
         <#if (adjEditable)>
            <@td align="right">
               <input type="text" size="8" name="amount_o_${rowCount}" value="${returnAdjustment.amount?default(0)?string("##0.00")}"/>

@@ -149,7 +149,6 @@ under the License.
       <@td colspan="3">
                   <#assign affPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", affiliateId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
                   ${affPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
-                </div>
               </@td>
             </@tr>
             </#if>
@@ -165,10 +164,9 @@ under the License.
             </#if>
 
             <#if "SALES_ORDER" == orderHeader.orderTypeId>
-
                 <@tr>
                   <@td>${uiLabelMap.FormFieldTitle_priority}</@td>
-                  <@td colspan="2">
+                  <@td colspan="3">
                      <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
                      <input type = "hidden" name="orderId" value="${orderId}"/>
                     <select name="priority">
@@ -176,27 +174,21 @@ under the License.
                       <option value="2" <#if (orderHeader.priority)! == "2">selected="selected" <#elseif !(orderHeader.priority)?has_content>selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
                       <option value="3" <#if (orderHeader.priority)! == "3">selected="selected" </#if>>${uiLabelMap.CommonLow}</option>
                     </select>
-                    </@td>
-                    <@td>
                     <input type="submit" class="smallSubmit" value="${uiLabelMap.FormFieldTitle_reserveInventory}"/>
-                    </@td>
                     </form>
                   </@td>
                 </@tr>
             </#if>
             <@tr>
               <@td>${uiLabelMap.AccountingInvoicePerShipment}</@td>
-              <@td colspan="2">
+              <@td colspan="3">
                  <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
                  <input type = "hidden" name="orderId" value="${orderId}"/>
                 <select name="invoicePerShipment">
                   <option value="Y" <#if (orderHeader.invoicePerShipment)! == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
                   <option value="N" <#if (orderHeader.invoicePerShipment)! == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>
                 </select>
-                </@td>
-                <@td>
                 <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonUpdate}"/>
-                </@td>
                 </form>
               </@td>
             </@tr>

@@ -27,20 +27,20 @@ these reports and helping to improve them.</div>
 <form method="post" name="orderreportform" action="<@ofbizUrl>orderreportjasper.pdf</@ofbizUrl>" target="OrderReport">
 <@table>
 <@tr>
-<@td><div>From Date:</div></@td>
+<@td>From Date:</@td>
 <@td>
  <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
 </@td>
 </@tr>
 <@tr>
-<@td><div>To Date:</div></@td>
+<@td>To Date:</@td>
 <@td>
  <@htmlTemplate.renderDateTimeField name="toDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="t" oDate1dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
 </@td>
 </@tr>
 <#--
 <@tr>
-<@td><div>Report:</div></@td>
+<@td>Report:</@td>
 <@td>
    <select name="groupName" tabindex="14"  CLASS="stateSelectBox">
      <option value="orderStatus"></option>
@@ -61,20 +61,20 @@ these reports and helping to improve them.</div>
 <form method="post" name="itemreportform" action="<@ofbizUrl>orderitemreportjasper.pdf</@ofbizUrl>" target="OrderReport">
 <@table>
 <@tr>
-<@td><div>From Date:</div></@td>
+<@td>From Date:</@td>
 <@td>
  <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
 </@td>
 </@tr>
 <@tr>
-<@td><div>To Date:</div></@td>
+<@td>To Date:</@td>
 <@td>
  <@htmlTemplate.renderDateTimeField name="toDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="toDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
 </@td>
 </@tr>
 <#--
 <@tr>
-<@td><div>Report:</div></@td>
+<@td>Report:</@td>
 <@td>
    <select name="groupName" tabindex="14"  class="stateSelectBox">
      <option value="orderStatus"></option>

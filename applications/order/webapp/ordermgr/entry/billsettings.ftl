@@ -180,9 +180,7 @@ function makeExpDate() {
               <@td width="26%" class="text-right" valign="top">
                 <input type="checkbox" name="useShipAddr" value="Y" onclick="javascript:shipBillAddr();" <#if requestParameters.useShipAddr??>checked="checked"</#if>/>
               </@td>
-              <@td colspan="2" valign="center">
-                <div>${uiLabelMap.FacilityBillingAddressSameShipping}</div>
-              </@td>
+              <@td colspan="2" valign="center">${uiLabelMap.FacilityBillingAddressSameShipping}</@td>
             </@tr>
             <@tr>
               <@td colspan="3"><hr /></@td>
@@ -202,42 +200,42 @@ function makeExpDate() {
 
             <#-- generic address information -->
             <@tr>
-              <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.CommonToName}</div></@td>
+              <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonToName}</@td>
               <@td width="5">&nbsp;</@td>
               <@td width="74%">
                 <input type="text" size="30" maxlength="60" name="toName" value="${toName}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
               </@td>
             </@tr>
             <@tr>
-              <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.CommonAttentionName}</div></@td>
+              <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonAttentionName}</@td>
               <@td width="5">&nbsp;</@td>
               <@td width="74%">
                 <input type="text" size="30" maxlength="60" name="attnName" value="${postalFields.attnName!}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
               </@td>
             </@tr>
             <@tr>
-              <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.CommonAddressLine} 1</div></@td>
+              <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonAddressLine} 1</@td>
               <@td width="5">&nbsp;</@td>
               <@td width="74%">
                 <input type="text" size="30" maxlength="30" name="address1" value="${postalFields.address1!}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
               *</@td>
             </@tr>
             <@tr>
-              <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.CommonAddressLine} 2</div></@td>
+              <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonAddressLine} 2</@td>
               <@td width="5">&nbsp;</@td>
               <@td width="74%">
                 <input type="text" size="30" maxlength="30" name="address2" value="${postalFields.address2!}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
               </@td>
             </@tr>
             <@tr>
-              <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.CommonCity}</div></@td>
+              <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonCity}</@td>
               <@td width="5">&nbsp;</@td>
               <@td width="74%">
                 <input type="text" size="30" maxlength="30" name="city" value="${postalFields.city!}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
               *</@td>
             </@tr>
             <@tr>
-              <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.CommonStateProvince}</div></@td>
+              <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonStateProvince}</@td>
               <@td width="5">&nbsp;</@td>
               <@td width="74%">
                 <select name="stateProvinceGeoId" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>>
@@ -251,14 +249,14 @@ function makeExpDate() {
               </@td>
             </@tr>
             <@tr>
-              <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.CommonZipPostalCode}</div></@td>
+              <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonZipPostalCode}</@td>
               <@td width="5">&nbsp;</@td>
               <@td width="74%">
                 <input type="text" size="12" maxlength="10" name="postalCode" value="${postalFields.postalCode!}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
               *</@td>
             </@tr>
             <@tr>
-              <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.CommonCountry}</div></@td>
+              <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonCountry}</@td>
               <@td width="5">&nbsp;</@td>
               <@td width="74%">
                 <select name="countryGeoId" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>>
@@ -282,14 +280,14 @@ function makeExpDate() {
               </@tr>
 
                   <@tr>
-                <@td width="26%" class="text-right" valign="middle"><div>${uiLabelMap.AccountingCompanyNameCard}</div></@td>
+                <@td width="26%" class="text-right" valign="middle">${uiLabelMap.AccountingCompanyNameCard}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="middle"><div>${uiLabelMap.AccountingPrefixCard}</div></@td>
+                <@td width="26%" class="text-right" valign="middle">${uiLabelMap.AccountingPrefixCard}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <select name="titleOnCard">
@@ -302,28 +300,28 @@ function makeExpDate() {
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="middle"><div>${uiLabelMap.AccountingFirstNameCard}</div></@td>
+                <@td width="26%" class="text-right" valign="middle">${uiLabelMap.AccountingFirstNameCard}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="middle"><div>${uiLabelMap.AccountingMiddleNameCard}</div></@td>
+                <@td width="26%" class="text-right" valign="middle">${uiLabelMap.AccountingMiddleNameCard}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)!}"/>
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="middle"><div>${uiLabelMap.AccountingLastNameCard}</div></@td>
+                <@td width="26%" class="text-right" valign="middle">${uiLabelMap.AccountingLastNameCard}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="middle"><div>${uiLabelMap.AccountingSuffixCard}</div></@td>
+                <@td width="26%" class="text-right" valign="middle">${uiLabelMap.AccountingSuffixCard}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <select name="suffixOnCard">
@@ -340,7 +338,7 @@ function makeExpDate() {
               </@tr>
 
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.AccountingCardType}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingCardType}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <select name="cardType">
@@ -353,21 +351,21 @@ function makeExpDate() {
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.AccountingCardNumber}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingCardNumber}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}"/>
                 *</@td>
               </@tr>
               <#--<@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.OrderCardSecurityCode}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.OrderCardSecurityCode}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="5" maxlength="10" name="cardSecurityCode" value=""/>
                 </@td>
               </@tr>-->
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.AccountingExpirationDate}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingExpirationDate}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <#assign expMonth = "">
@@ -396,7 +394,7 @@ function makeExpDate() {
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.CommonDescription}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonDescription}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="20" maxlength="30" name="description" value="${creditCard.description!}"/>
@@ -413,35 +411,35 @@ function makeExpDate() {
                 <@td colspan="3"><hr /></@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.AccountingNameAccount}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingNameAccount}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="30" maxlength="60" name="nameOnAccount" value="${eftAccount.nameOnAccount!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.AccountingCompanyNameAccount}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingCompanyNameAccount}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount!}"/>
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.AccountingBankName}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingBankName}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="30" maxlength="60" name="bankName" value="${eftAccount.bankName!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.AccountingRoutingNumber}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingRoutingNumber}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.AccountingAccountType}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingAccountType}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <select name="accountType">
@@ -453,14 +451,14 @@ function makeExpDate() {
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.AccountingAccountNumber}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingAccountNumber}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" class="text-right" valign="top"><div>${uiLabelMap.CommonDescription}</div></@td>
+                <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonDescription}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" size="30" maxlength="60" name="description" value="${eftAccount.description!}"/>
@@ -490,23 +488,23 @@ function makeExpDate() {
               <#if "Y" != requestParameters.createNew?default("")>
               <@tr>
                 <@td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/></@td>
-                <@td nowrap="nowrap"><div>${uiLabelMap.OrderPaymentOfflineCheckMoney}</div></@td>
+                <@td nowrap="nowrap">${uiLabelMap.OrderPaymentOfflineCheckMoney}</@td>
               </@tr>
               
               <@tr>
                 <@td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/></@td>
-                <@td nowrap="nowrap"><div>${uiLabelMap.OrderCOD}</div></@td>
+                <@td nowrap="nowrap">${uiLabelMap.OrderCOD}</@td>
               </@tr>
               
               </#if>
               <@tr>
                 <@td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="CC" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
-                <@td nowrap="nowrap"><div>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</div></@td>
+                <@td nowrap="nowrap">${uiLabelMap.AccountingVisaMastercardAmexDiscover}</@td>
               </@tr>
               
               <@tr>
                 <@td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EFT" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
-                <@td width='50%' nowrap="nowrap"><div>${uiLabelMap.AccountingAHCElectronicCheck}</div></@td>
+                <@td width='50%' nowrap="nowrap">${uiLabelMap.AccountingAHCElectronicCheck}</@td>
               </@tr>
             </@table>
           </form>

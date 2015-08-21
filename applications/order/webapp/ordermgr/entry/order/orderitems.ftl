@@ -43,27 +43,16 @@ under the License.
                 </@td>
               <#else>
                 <@td valign="top">
-                  <div>
                     <#if orderItem.productId??>
                       <a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>">${orderItem.productId} - ${orderItem.itemDescription}</a>
                     <#else>
                       <b>${(itemType.description)!}</b> : ${orderItem.itemDescription!}
                     </#if>
-                  </div>
-
-                </@td>
-                <@td class="text-right" valign="top">
-                  <div>${orderItem.quantity?string.number}</div>
-                </@td>
-                <@td class="text-right" valign="top">
-                  <div><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></div>
-                </@td>
-                <@td class="text-right" valign="top">
-                  <div><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></div>
-                </@td>
-                <@td class="text-right" valign="top">
-                  <div><@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/></div>
-                </@td>
+                  </@td>
+                <@td class="text-right" valign="top">${orderItem.quantity?string.number}</@td>
+                <@td class="text-right" valign="top"><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></@td>
+                <@td class="text-right" valign="top"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></@td>
+                <@td class="text-right" valign="top"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/></@td>
                 <#if maySelectItems?default(false)>
                   <@td>
                     <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox" />
@@ -77,7 +66,7 @@ under the License.
                 <#if WorkOrderItemFulfillments?has_content>
                     <#list WorkOrderItemFulfillments as WorkOrderItemFulfillment>
                         <#assign workEffort = WorkOrderItemFulfillment.getRelatedOne("WorkEffort", true)!>
-                          <@tr><@td>&nbsp;</@td><@td>&nbsp;</@td><@td colspan="8"><div>${uiLabelMap.CommonFrom}: ${workEffort.estimatedStartDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonTo}: ${workEffort.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.OrderNbrPersons}: ${workEffort.reservPersons}</div></@td></@tr>
+                          <@tr><@td>&nbsp;</@td><@td>&nbsp;</@td><@td colspan="8">${uiLabelMap.CommonFrom}: ${workEffort.estimatedStartDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonTo}: ${workEffort.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.OrderNbrPersons}: ${workEffort.reservPersons}</@td></@tr>
                         <#break><#-- need only the first one -->
                     </#list>
                 </#if>
@@ -88,7 +77,6 @@ under the License.
             <#list itemAdjustments as orderItemAdjustment>
               <@tr>
                 <@td>
-                  <div>
                     <b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
                     <#if orderItemAdjustment.description?has_content>: ${StringUtil.wrapString(orderItemAdjustment.get("description",locale))}</#if>
 
@@ -107,13 +95,10 @@ under the License.
                       <#if orderItemAdjustment.customerReferenceId?has_content><b>${uiLabelMap.OrderCustomerTaxId}:</b> ${orderItemAdjustment.customerReferenceId}</#if>
                       <#if orderItemAdjustment.exemptAmount??><b>${uiLabelMap.OrderExemptAmount}:</b> ${orderItemAdjustment.exemptAmount}</#if>
                     </#if>
-                  </div>
-                </@td>
+                  </@td>
                 <@td>&nbsp;</@td>
                 <@td>&nbsp;</@td>
-                <@td class="text-right">
-                  <div><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/></div>
-                </@td>
+                <@td class="text-right"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/></@td>
                 <@td>&nbsp;</@td>
                 <@td>&nbsp;</@td>
                 <#if maySelectItems?default(false)><@td>&nbsp;</@td></#if>
@@ -125,32 +110,30 @@ under the License.
            </#if>
 
           <@tr>
-            <@td colspan="4"><div><b>${uiLabelMap.OrderSubTotal}</b></div></@td>
-            <@td class="text-right"><div>&nbsp;<#if orderSubTotal??><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></#if></div></@td>
+            <@td colspan="4"><b>${uiLabelMap.OrderSubTotal}</b></@td>
+            <@td class="text-right">&nbsp;<#if orderSubTotal??><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></#if></@td>
           </@tr>
           <#list headerAdjustmentsToShow! as orderHeaderAdjustment>
             <@tr>
-              <@td colspan="4"><div><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></div></@td>
-              <@td class="text-right"><div><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></div></@td>
+              <@td colspan="4"><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></@td>
+              <@td class="text-right"><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></@td>
             </@tr>
           </#list>
           <@tr><@td colspan=2></@td><@td colspan="8"><hr /></@td></@tr>
           
           <@tr>
-            <@td colspan="4"><div><b>${uiLabelMap.FacilityShippingAndHandling}</b></div></@td>
-            <@td class="text-right"><div><#if orderShippingTotal??><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></#if></div></@td>
+            <@td colspan="4"><b>${uiLabelMap.FacilityShippingAndHandling}</b></@td>
+            <@td class="text-right"><#if orderShippingTotal??><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></#if></@td>
           </@tr>
           <@tr>
-            <@td colspan="4"><div><b>${uiLabelMap.OrderSalesTax}</b></div></@td>
-            <@td class="text-right"><div><#if orderTaxTotal??><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></#if></div></@td>
+            <@td colspan="4"><b>${uiLabelMap.OrderSalesTax}</b></@td>
+            <@td class="text-right"><#if orderTaxTotal??><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></#if></@td>
           </@tr>
 
           <@tr><@td colspan=2></@td><@td colspan="8"><hr /></@td></@tr>
           <@tr>
-            <@td colspan="4"><div><b>${uiLabelMap.OrderGrandTotal}</b></div></@td>
-            <@td class="text-right">
-              <div><#if orderGrandTotal??><@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/></#if></div>
-            </@td>
+            <@td colspan="4"><b>${uiLabelMap.OrderGrandTotal}</b></@td>
+            <@td class="text-right"><#if orderGrandTotal??><@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/></#if></@td>
           </@tr>
         </@table>
 </@section>

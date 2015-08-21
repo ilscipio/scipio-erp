@@ -43,13 +43,11 @@ under the License.
       <@tr><@td colspan='2'><hr class='sepbar'/></@td></@tr>
       <@tr>
         <@td valign="top" width="0" colspan='2'>
-          <div>
             <#if productCategory.categoryImageUrl??>
               <img src="<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgLarge" alt="" />
             </#if>
             ${productCategory.longDescription!}
-          </div>
-        </@td>
+          </@td>
       </@tr>
     </#if>
   </@table>

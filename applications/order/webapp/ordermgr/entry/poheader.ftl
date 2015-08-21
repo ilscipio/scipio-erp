@@ -20,7 +20,7 @@ under the License.
 <@section title="PO For ${partyId!}" classes="${styles.grid_large!}6">
 
                 <@table width="100%" cellspacing="0">
-                    <@tr><@td><div>Supplier Information Here</div></@td></@tr>
+                    <@tr><@td>Supplier Information Here</@td></@tr>
                 </@table>
 
       <#-- end of header box -->

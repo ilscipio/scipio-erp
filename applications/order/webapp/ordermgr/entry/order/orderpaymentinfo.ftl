@@ -53,12 +53,9 @@ under the License.
           <#-- credit card info -->
           <#if creditCard?has_content>
             <@tr>
-              <@td align="right" valign="top" width="15%">
-                <div>&nbsp;<b>${uiLabelMap.AccountingCreditCard}</b></div>
-              </@td>
+              <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.AccountingCreditCard}</b></@td>
               <@td width="5">&nbsp;</@td>
               <@td valign="top" width="80%">
-                <div>
                   <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br /></#if>
                   <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp;</#if>
                   ${creditCard.firstNameOnCard}&nbsp;
@@ -67,24 +64,19 @@ under the License.
                   <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
                   <br />
                   ${formattedCardNumber}
-                </div>
-              </@td>
+                </@td>
             </@tr>
           <#-- EFT account info -->
           <#elseif eftAccount?has_content>
             <@tr>
-              <@td align="right" valign="top" width="15%">
-                <div>&nbsp;<b>${uiLabelMap.AccountingEFTAccount}</b></div>
-              </@td>
+              <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.AccountingEFTAccount}</b></@td>
               <@td width="5">&nbsp;</@td>
               <@td valign="top" width="80%">
-                <div>
                   ${eftAccount.nameOnAccount}<br />
                   <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br /></#if>
                   Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br />
                   Account #: ${eftAccount.accountNumber}
-                </div>
-              </@td>
+                </@td>
             </@tr>
           </#if>
         </#if>
@@ -95,15 +87,11 @@ under the License.
           </#if>
           <#assign outputted = true/>
           <@tr>
-            <@td align="right" valign="top" width="15%">
-              <div>&nbsp;<b>${uiLabelMap.AccountingBillingAccount}</b></div>
-            </@td>
+            <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.AccountingBillingAccount}</b></@td>
             <@td width="5">&nbsp;</@td>
             <@td valign="top" width="80%">
-              <div>
                 #${billingAccount.billingAccountId!} - ${billingAccount.description!}
-              </div>
-            </@td>
+              </@td>
           </@tr>
         </#if>
       </@table>

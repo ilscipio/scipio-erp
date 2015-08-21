@@ -422,9 +422,7 @@ function getConfigDetails() {
 
   <#-- Long description of product -->
   <@tr>
-    <@td colspan="2">
-      <div>${productContentWrapper.get("LONG_DESCRIPTION")!}</div>
-    </@td>
+    <@td colspan="2">${productContentWrapper.get("LONG_DESCRIPTION")!}</@td>
   </@tr>
 
   <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
@@ -442,10 +440,8 @@ function getConfigDetails() {
         <@table>
           <@tr>
             <@td>
-                <div>
                     <a href="javascript:verifyConfig();" class="${styles.button_default!}">${uiLabelMap.OrderVerifyConfiguration}</a>
-                </div>
-            </@td>
+                </@td>
           </@tr>
           <@tr><@td><hr /></@td></@tr>
           <#assign counter = 0>
@@ -624,13 +620,11 @@ function getConfigDetails() {
     <@tr><@td><hr /></@td></@tr>
     <#list assocProducts as productAssoc>
       <@tr><@td>
-        <div>
           <a href='<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>' class="${styles.button_default!}">
             ${productAssoc.productIdTo!}
           </a>
           - <b>${productAssoc.reason!}</b>
-        </div>
-      </@td></@tr>
+        </@td></@tr>
       ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
       ${setRequestAttribute("listIndex", listIndex)}
       ${setRequestAttribute("formNamePrefix", formNamePrefix)}

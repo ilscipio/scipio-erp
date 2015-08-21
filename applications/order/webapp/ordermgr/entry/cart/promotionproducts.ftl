@@ -39,15 +39,15 @@ under the License.
 
         <@table type="data" autoAltRows=false width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <@tr>
-            <@td><div>${uiLabelMap.CommonQualifier}</div></@td>
-            <@td><div>${uiLabelMap.CommonBenefit}</div></@td>
-            <@td><div>&nbsp;</div></@td>
+            <@td>${uiLabelMap.CommonQualifier}</@td>
+            <@td>${uiLabelMap.CommonBenefit}</@td>
+            <@td>&nbsp;</@td>
           </@tr>
         <#if (listSize > 0)>
           <#list productIds[lowIndex..highIndex-1] as productId>
               <@tr>
-                <@td><div>[<#if productIdsCond.contains(productId)>x<#else>&nbsp;</#if>]</div></@td>
-                <@td><div>[<#if productIdsAction.contains(productId)>x<#else>&nbsp;</#if>]</div></@td>
+                <@td>[<#if productIdsCond.contains(productId)>x<#else>&nbsp;</#if>]</@td>
+                <@td>[<#if productIdsAction.contains(productId)>x<#else>&nbsp;</#if>]</@td>
                 <@td>
                   ${setRequestAttribute("optProductId", productId)}
                   ${setRequestAttribute("listIndex", productId_index)}

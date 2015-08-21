@@ -112,15 +112,11 @@ under the License.
                   ${orderItem.itemDescription!}
                 </div>
               </@td>
-              <@td align='center'>
-                <div>${orderItem.quantity?string.number}</div>
-              </@td>
+              <@td align='center'>${orderItem.quantity?string.number}</@td>
               <@td>
                 <input type="text" size="6" name="returnQuantity_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnableQuantity")}"/>
               </@td>
-              <@td align='left'>
-                <div><@ofbizCurrency amount=orderItem.unitPrice isoCode=orderHeader.currencyUom/></div>
-              </@td>
+              <@td align='left'><@ofbizCurrency amount=orderItem.unitPrice isoCode=orderHeader.currencyUom/></@td>
               <@td>
                 <#if orderItem.productId??>
                   <#assign product = orderItem.getRelatedOne("Product", false)/>

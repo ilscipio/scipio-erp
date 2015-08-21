@@ -37,7 +37,7 @@ under the License.
            <@td align="right"><@ofbizCurrency amount=returnAdjustment.amount?default(0) isoCode=returnHeader.currencyUomId/></@td>
         </#if>
         <@td colspan="2">&nbsp;</@td>
-        <@td><div>
+        <@td>
            <#if (!adjEditable)>
                 <#if adjReturnType?has_content>
                   ${adjReturnType.get("description", locale)?default("${uiLabelMap.CommonNA}")}
@@ -53,8 +53,7 @@ under the License.
                   </#list>
                 </select>
           </#if>
-          </div>
-       </@td>
+          </@td>
        <#if (adjEditable)>
          <@td align='right'><a href='javascript:document.removeReturnAdjustment_${rowCountForAdjRemove}.submit()' class='${styles.button_default!}'>${uiLabelMap.CommonRemove}</a></@td>
        <#else>
@@ -155,20 +154,20 @@ under the License.
                   <input name="returnItemSeqId_o_${rowCount}" value="${item.returnItemSeqId}" type="hidden" />
                   <input type="hidden" name="_rowSubmit_o_${rowCount}" value="Y" />
                 </@td>
-                <@td><div>
+                <@td>
                     <#if item.get("productId")??>
                         <a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="${styles.button_default!}">${item.productId}</a>
                     <#else>
                         N/A
-                    </#if></div></@td>
-                <@td><div>
+                    </#if></@td>
+                <@td>
                     <#if readOnly>
                         ${item.description?default("N/A")}
                     <#else>
                         <input name="description_o_${rowCount}" value="${item.description!}" type="text" size="15" />
                     </#if>
-                    </div></@td>
-                <@td><div>
+                    </@td>
+                <@td>
                     <#if readOnly>
                         ${item.returnQuantity?string.number}
                     <#else>
@@ -180,18 +179,18 @@ under the License.
                             <br />${uiLabelMap.OrderQty}: ${shipmentReceipt.quantityAccepted}, ${shipmentReceipt.datetimeReceived}, <a href="/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}" class="${styles.button_default!}">${shipmentReceipt.inventoryItemId}</a>
                         </#list>
                     </#if>
-                    </div></@td>
-                <@td><div>
+                    </@td>
+                <@td>
                     <#if readOnly>
                         <@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/>
                     <#else>
                         <input name="returnPrice_o_${rowCount}" value="${item.returnPrice?if_exists}" type="text" size="8" align="right" />
                     </#if>
-                    </div></@td>
+                    </@td>
                 <@td>
                     <#if returnItemSubTotal??><@ofbizCurrency amount=returnItemSubTotal isoCode=orderHeader.currencyUom/></#if>
                 </@td>
-                <@td><div>
+                <@td>
                     <#if readOnly>
                         ${returnReason.get("description",locale)?default("N/A")}
                     <#else>
@@ -205,8 +204,8 @@ under the License.
                             </#list>
                         </select>
                     </#if>
-                    </div></@td>
-                <@td><div>
+                    </@td>
+                <@td>
                   <#if readOnly>
                       <#if status?has_content>
                       ${status.get("description",locale)}
@@ -224,8 +223,8 @@ under the License.
                           </#list>
                       </select>
                   </#if>
-                  </div></@td>
-                <@td><div>
+                  </@td>
+                <@td>
                     <#if (readOnly)>
                         ${returnType.get("description",locale)?default("N/A")}
                     <#else>
@@ -238,7 +237,7 @@ under the License.
                                 <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.get("description",locale)!}</option>
                             </#list>
                         </select>
-                    </#if></div></@td>
+                    </#if></@td>
                 <#if (readOnly)>
                   <@td>
                   <#if returnHeader.statusId == "RETURN_COMPLETED" || returnHeader.statusId == "SUP_RETURN_COMPLETED">
@@ -277,7 +276,7 @@ under the License.
             </#list>
         <#else>
             <@tr>
-              <@td colspan="9"><div>${uiLabelMap.OrderNoReturnItemsFound}</div></@td>
+              <@td colspan="9">${uiLabelMap.OrderNoReturnItemsFound}</@td>
             </@tr>
         </#if>
             <@tr><@td colspan="10"><hr/></@td></@tr>
@@ -358,10 +357,10 @@ under the License.
               </@tr>
             <#else>
               <@tr>
-                <@td colspan="4" nowrap="nowrap"><div>${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId?default('_NA_')}" class="${styles.button_default!}">${partyId?default('[null]')}</a></div></@td>
+                <@td colspan="4" nowrap="nowrap">${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId?default('_NA_')}" class="${styles.button_default!}">${partyId?default('[null]')}</a></@td>
               </@tr>
               <@tr>
-                <@td width='25%' align='right' nowrap="nowrap"><div>${uiLabelMap.OrderOrderId}</div></@td>
+                <@td width='25%' align='right' nowrap="nowrap">${uiLabelMap.OrderOrderId}</@td>
                 <@td>&nbsp;</@td>
                 <@td width='25%'>
                   <input type='text' name='orderId' size='20' maxlength='20' />

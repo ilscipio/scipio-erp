@@ -27,7 +27,7 @@ under the License.
   <form method="post" action="<@ofbizUrl>setAdditionalParty</@ofbizUrl>" name="quickAddPartyForm">
 
   <@tr>
-    <@td><div>1) ${uiLabelMap.OrderSelectPartyToOrder} :</div></@td>
+    <@td>1) ${uiLabelMap.OrderSelectPartyToOrder} :</@td>
   </@tr>
   <@tr>
     <@td width="100%">
@@ -71,16 +71,14 @@ under the License.
       <#assign lookupPartyView="LookupPartyGroup">
     </#if>
   <@tr>
-    <@td><div>2) ${uiLabelMap.PartyFindParty} :</div></@td>
+    <@td>2) ${uiLabelMap.PartyFindParty} :</@td>
   </@tr>
 
   <@tr>
     <@td width="100%">
       <@table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <@tr>
-          <@td>
-            <div>${uiLabelMap.CommonIdentifier} :</div>
-          </@td>
+          <@td>${uiLabelMap.CommonIdentifier} :</@td>
           <@td>
             <@htmlTemplate.lookupField value="${additionalPartyId!}" formName="quickAddPartyForm" name="additionalPartyId" id="additionalPartyId" fieldFormName="${lookupPartyView}"/>
           </@td>
@@ -100,7 +98,7 @@ under the License.
 
   <#if roles?has_content>
   <@tr>
-    <@td><div>3) ${uiLabelMap.OrderPartySelectRoleForParty} :</div></@td>
+    <@td>3) ${uiLabelMap.OrderPartySelectRoleForParty} :</@td>
   </@tr>
 
   <@tr>

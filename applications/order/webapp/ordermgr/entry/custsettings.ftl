@@ -27,35 +27,35 @@ under the License.
           <@td>
             <@table width="100%" border="0" cellpadding="1" cellspacing="0">
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.CommonTitle}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.CommonTitle}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" name="personalTitle" value="${requestParameters.personalTitle!}" size="10" maxlength="30"/>
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyFirstName}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyFirstName}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" name="firstName" value="${requestParameters.firstName!}" size="30" maxlength="30"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyMiddleInitial}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyMiddleInitial}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" name="middleName" value="${requestParameters.middleName!}" size="4" maxlength="4"/>
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyLastName}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyLastName}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" name="lastName" value="${requestParameters.lastName!}" size="30" maxlength="30"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartySuffix}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartySuffix}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" name="suffix" value="${requestParameters.suffix!}" size="10" maxlength="30"/>
@@ -65,7 +65,7 @@ under the License.
                 <@td colspan="3">&nbsp;</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyHomePhone}<br/>${uiLabelMap.OrderAllowSolicitation}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyHomePhone}<br/>${uiLabelMap.OrderAllowSolicitation}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" name="homeCountryCode" value="${requestParameters.homeCountryCode!}" size="4" maxlength="10"/>
@@ -83,7 +83,7 @@ under the License.
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyBusinessPhone}<br/>${uiLabelMap.OrderAllowSolicitation}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyBusinessPhone}<br/>${uiLabelMap.OrderAllowSolicitation}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" name="workCountryCode" value="${requestParameters.CUSTOMER_WORK_COUNTRY!}" size="4" maxlength="10"/>
@@ -104,7 +104,7 @@ under the License.
                 <@td colspan="3">&nbsp;</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyEmailAddress}<br/>${uiLabelMap.OrderAllowSolicitation}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyEmailAddress}<br/>${uiLabelMap.OrderAllowSolicitation}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" name="emailAddress" value="" size="60" maxlength="255" />
@@ -122,7 +122,7 @@ under the License.
                 <@td colspan="3">&nbsp;</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.CommonUsername}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.CommonUsername}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" name="userLoginId" value="${requestParameters.USERNAME!}" size="20" maxlength="250"/>

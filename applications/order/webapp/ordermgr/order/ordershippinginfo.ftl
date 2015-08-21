@@ -83,10 +83,10 @@ under the License.
               </#if>
               <#if (quantityOrdered > 0) >
           <@tr>
-              <@td><div><a name="orderItem${index}">${orderItem.orderItemSeqId}</a></div></@td>
-              <@td><div><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="/catalog/control/EditProduct?productId=${orderItem.productId!}" class="link">${orderItem.productId!}</a>]</div></@td>
-              <@td><div>${quantityOrdered}</div></@td>
-              <@td><div>${quantityNotAvailable}</div></@td>
+              <@td><a name="orderItem${index}">${orderItem.orderItemSeqId}</a></@td>
+              <@td><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="/catalog/control/EditProduct?productId=${orderItem.productId!}" class="link">${orderItem.productId!}</a>]</@td>
+              <@td>${quantityOrdered}</@td>
+              <@td>${quantityNotAvailable}</@td>
               <@td colspan="2">
                   <#if !orderItem.statusId?exists || orderItem.statusId == "ITEM_CREATED" || orderItem.statusId == "ITEM_APPROVED">
                   <div id="display${index}">
@@ -233,7 +233,6 @@ under the License.
                     </@td>
                     <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">
-                        <div>
                             <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
                             <select name="contactMechId">
                                 <option selected="selected" value="${shipGroup.contactMechId!}">${(shipGroupAddress.address1)?default("")} - ${shipGroupAddress.city?default("")}</option>
@@ -250,8 +249,7 @@ under the License.
                             <#else>
                             ${(shipGroupAddress.address1)?default("")}
                             </#if>
-                        </div>
-                    </@td>
+                        </@td>
                 </@tr>
 
                 <#-- the setting of shipping method is only supported for sales orders at this time -->
@@ -262,7 +260,6 @@ under the License.
                     </@td>
                     <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">
-                        <div>
                             <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
                             <#-- passing the shipmentMethod value as the combination of three fields value
                             i.e shipmentMethodTypeId & carrierPartyId & roleTypeId. Values are separated by
@@ -287,8 +284,7 @@ under the License.
                                     ${shipmentMethodType.get("description",locale)?default("")}
                                 </#if>
                             </#if>
-                        </div>
-                    </@td>
+                        </@td>
                   </@tr>
                 </#if>
                 <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
@@ -493,7 +489,6 @@ under the License.
             </@td>
             <@td width="5">&nbsp;</@td>
             <@td valign="top" width="80%">
-              <div>
                 <#if shipGroup.maySplit?upper_case == "N">
                     ${uiLabelMap.FacilityWaitEntireOrderReady}
                     <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
@@ -508,8 +503,7 @@ under the License.
                 <#else>
                     ${uiLabelMap.FacilityShipAvailable}
                 </#if>
-              </div>
-            </@td>
+              </@td>
           </@tr>
         </#if>
 

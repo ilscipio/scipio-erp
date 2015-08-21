@@ -199,7 +199,6 @@ under the License.
             <@td width='6%' align='right' valign='top' nowrap="nowrap">${uiLabelMap.OrderReturnFromAddress}</@td>
             <@td width='6%'>&nbsp;</@td>
             <@td width='74%'>
-              <div>
               <#if (addressEditable)>
                 <#list addresses as address >
                   <@displayAddress postalAddress = address.postalAddress editable = true/>
@@ -212,8 +211,7 @@ under the License.
                    ${uiLabelMap.CommonNoAddress}
                  </#if>
               </#if>
-              </div>
-            </@td>
+              </@td>
           </@tr>
           <@tr>
             <@td width='14%'>&nbsp;</@td>

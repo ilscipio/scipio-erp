@@ -77,7 +77,6 @@ under the License.
                         <input type="radio" name="originContactMechId" value="${shippingAddress.contactMechId}"  <#if (shippingContactMechList?size == 1)>checked="checked"</#if> />
                       </@td>
                       <@td width="99%" valign="top" nowrap="nowrap">
-                        <div>
                           <#if shippingAddress.toName?has_content><span>${uiLabelMap.CommonTo}</span>&nbsp;${shippingAddress.toName}<br /></#if>
                           <#if shippingAddress.attnName?has_content><span>${uiLabelMap.CommonAttn}</span></b>&nbsp;${shippingAddress.attnName}<br /></#if>
                           <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
@@ -87,8 +86,7 @@ under the License.
                           <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                           <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                           <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonUpdate}]</a>-->
-                        </div>
-                      </@td>
+                        </@td>
                     </@tr>
                   </#list>
                 </@table>

@@ -71,16 +71,14 @@ under the License.
                     <@td>${paymentSetting.paymentCaptureService!}</@td>
                     <@td>${paymentSetting.paymentRefundService!}</@td>
                     <@td>${paymentSetting.paymentConfiguration!}</@td>
-                    <@td nowrap="nowrap">
-                      <div>&nbsp;
+                    <@td nowrap="nowrap">&nbsp;
                         <#if security.hasEntityPermission("PAYPROC", "_UPDATE", session)>
                         <a href="<@ofbizUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.button_default!}">Edit</a>&nbsp;
                         </#if>
                         <#if security.hasEntityPermission("PAYPROC", "_DELETE", session)>
                         <a href="<@ofbizUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.button_default!}">Remove</a>&nbsp;
                         </#if>
-                      </div>
-                    </@td>
+                      </@td>
                   </@tr>
                 </#list>
               <#else>

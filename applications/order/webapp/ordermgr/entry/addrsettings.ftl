@@ -52,7 +52,6 @@ under the License.
                 </@td>
                 <@td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp;</@td>
                 <@td width="100%">
-                  <div>
                     <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonToName}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                     <#if shippingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
                     <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
@@ -61,8 +60,7 @@ under the License.
                     <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                     <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                     <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                  </div>
-                </@td>
+                  </@td>
               </@tr>
               <@tr><@td colspan="3"><hr /></@td></@tr>
             </#if>

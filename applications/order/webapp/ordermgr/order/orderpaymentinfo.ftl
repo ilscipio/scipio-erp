@@ -180,13 +180,11 @@ under the License.
                 <#assign finAccountType = finAccount.getRelatedOne("FinAccountType", false)!/>
                 <@tr>
                   <@td scope="row" class="${styles.grid_large!}3">
-                    <div>
                     ${uiLabelMap.AccountingFinAccount}
                     <#if orderPaymentPreference.maxAmount?has_content>
                        <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
                     </#if>
-                    </div>
-                  </@td>
+                    </@td>
                   <@td colspan="2">
                     <div>
                       <#if (finAccountType?has_content)>
@@ -242,28 +240,22 @@ under the License.
                 </@tr>
                 <#if paymentList?has_content>
                     <@tr>
-                    <@td>
-                      <div>${uiLabelMap.AccountingInvoicePayments}</div>
-                    </@td>
+                    <@td>${uiLabelMap.AccountingInvoicePayments}</@td>
                       <@td colspan="3">
-                        <div>
                             <#list paymentList as paymentMap>
                                 <a href="/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                             </#list>
-                        </div>
-                      </@td>
+                        </@td>
                     </@tr>
                 </#if>
               </#if>
             <#else>
               <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">
-                  <div>${paymentMethodType.get("description",locale)!}&nbsp;
+                <@td scope="row" class="${styles.grid_large!}3">${paymentMethodType.get("description",locale)!}&nbsp;
                   <#if orderPaymentPreference.maxAmount?has_content>
                   <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
                   </#if>
-                  </div>
-                </@td>
+                  </@td>
                 <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE" && paymentMethodType.paymentMethodTypeId != "EXT_PAYPAL" && paymentMethodType.paymentMethodTypeId != "EXT_COD">
                   <@td colspan="2">
                     <div>
@@ -300,16 +292,12 @@ under the License.
                 </@tr>
                 <#if paymentList?has_content>
                     <@tr>
-                    <@td scope="row" class="${styles.grid_large!}3">
-                      <div>${uiLabelMap.AccountingInvoicePayments}</div>
-                    </@td>
+                    <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.AccountingInvoicePayments}</@td>
                       <@td colspan="3">
-                        <div>
                             <#list paymentList as paymentMap>
                                 <a href="/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                             </#list>
-                        </div>
-                      </@td>
+                        </@td>
                     </@tr>
                 </#if>
             </#if>
@@ -321,13 +309,11 @@ under the License.
                 <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress", false)!>
               </#if>
               <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">
-                  <div>${uiLabelMap.AccountingCreditCard}
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.AccountingCreditCard}
                   <#if orderPaymentPreference.maxAmount?has_content>
                      <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
                   </#if>
-                  </div>
-                </@td>
+                  </@td>
                 <@td colspan="2">
                   <div>
                     <#if creditCard?has_content>
@@ -400,15 +386,12 @@ under the License.
                 <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress", false)!>
               </#if>
               <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">
-                  <div>${uiLabelMap.AccountingEFTAccount}
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.AccountingEFTAccount}
                   <#if orderPaymentPreference.maxAmount?has_content>
                   <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
                   </#if>
-                  </div>
-                </@td>
+                  </@td>
                 <@td colspan="2">
-                  <div>
                     <#if eftAccount?has_content>
                       ${eftAccount.nameOnAccount!}<br />
                       <#if eftAccount.companyNameOnAccount??>${eftAccount.companyNameOnAccount}<br /></#if>
@@ -417,8 +400,7 @@ under the License.
                     <#else>
                       ${uiLabelMap.CommonInformation} ${uiLabelMap.CommonNot} ${uiLabelMap.CommonAvailable}
                     </#if>
-                  </div>
-                </@td>
+                  </@td>
                 <@td>
                   <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                    <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
@@ -435,16 +417,12 @@ under the License.
               </@tr>
               <#if paymentList?has_content>
                 <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">
-                  <div>${uiLabelMap.AccountingInvoicePayments}</div>
-                </@td>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.AccountingInvoicePayments}</@td>
                   <@td colspan="3">
-                    <div>
                         <#list paymentList as paymentMap>
                             <a href="/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                         </#list>
-                    </div>
-                  </@td>
+                    </@td>
                 </@tr>
               </#if>
             <#elseif paymentMethod.paymentMethodTypeId! == "GIFT_CARD">
@@ -453,15 +431,12 @@ under the License.
                 <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress", false)!>
               </#if>
               <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">
-                  <div>${uiLabelMap.OrderGiftCard}
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderGiftCard}
                   <#if orderPaymentPreference.maxAmount?has_content>
                   <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
                   </#if>
-                  </div>
-                </@td>
+                  </@td>
                 <@td colspan="2">
-                  <div>
                     <#if giftCard?has_content>
                       <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
                         ${giftCard.cardNumber?default("N/A")} [${giftCard.pinNumber?default("N/A")}]
@@ -474,8 +449,7 @@ under the License.
                     <#else>
                       ${uiLabelMap.CommonInformation} ${uiLabelMap.CommonNot} ${uiLabelMap.CommonAvailable}
                     </#if>
-                  </div>
-                </@td>
+                  </@td>
                 <@td>
                   <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                    <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
@@ -492,16 +466,12 @@ under the License.
               </@tr>
               <#if paymentList?has_content>
                 <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">
-                  <div>${uiLabelMap.AccountingInvoicePayments}</div>
-                </@td>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.AccountingInvoicePayments}</@td>
                   <@td colspan="3">
-                    <div>
                         <#list paymentList as paymentMap>
                             <a href="/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                         </#list>
-                    </div>
-                  </@td>
+                    </@td>
                 </@tr>
               </#if>
             </#if>
@@ -510,7 +480,6 @@ under the License.
             <@tr>
               <@td>&nbsp;</@td>
               <@td colspan="3">
-                <div>
                   <#if pmBillingAddress.toName?has_content>${uiLabelMap.CommonTo}&nbsp;${pmBillingAddress.toName}<br /></#if>
                   <#if pmBillingAddress.attnName?has_content>${uiLabelMap.CommonAttn}&nbsp;${pmBillingAddress.attnName}<br /></#if>
                   ${pmBillingAddress.address1}<br />
@@ -518,21 +487,16 @@ under the License.
                   ${pmBillingAddress.city}<#if pmBillingAddress.stateProvinceGeoId?has_content>, ${pmBillingAddress.stateProvinceGeoId} </#if>
                   ${pmBillingAddress.postalCode!}<br />
                   ${pmBillingAddress.countryGeoId!}
-                </div>
-              </@td>
+                </@td>
             </@tr>
             <#if paymentList?has_content>
             <@tr>
-            <@td scope="row" class="${styles.grid_large!}3">
-              <div>${uiLabelMap.AccountingInvoicePayments}</div>
-            </@td>
+            <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.AccountingInvoicePayments}</@td>
               <@td colspan="3">
-                <div>
                     <#list paymentList as paymentMap>
                         <a href="/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                     </#list>
-                </div>
-              </@td>
+                </@td>
             </@tr>
             </#if>
           </#if>

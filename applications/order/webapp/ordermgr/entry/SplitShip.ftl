@@ -204,15 +204,11 @@ function submitForm(form, mode, value) {
                 <@td align="right">
                   <div class="tabletext">${cartLine.getQuantity()?string.number}&nbsp;&nbsp;&nbsp;</div>
                 </@td>
-                <@td>
-                  <div>&nbsp;</div>
-                </@td>
+                <@td>&nbsp;</@td>
                 <@td align="center">
                   <input size="6" class="inputBox" type="text" name="quantity" value="${cartLine.getQuantity()?string.number}"/>
                 </@td>
-                <@td>
-                  <div>&nbsp;</div>
-                </@td>
+                <@td>&nbsp;</@td>
                 <@td>
                   <div class="tabletext">${uiLabelMap.CommonFrom}:
                     <select name="fromGroupIndex" class="selectBox">

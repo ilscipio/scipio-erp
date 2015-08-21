@@ -38,7 +38,6 @@ under the License.
                 </@td>
                 <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="70%">
-                    <div>
                       <#if emailAddress?has_content>${emailAddress}</#if>
 
                       <#if postalAddress?has_content>
@@ -66,8 +65,7 @@ under the License.
                           <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.button_default!}">${uiLabelMap.CommonLookupWhitepages}</a>
                         </#if>
                       </#if>
-                    </div>
-                </@td>
+                    </@td>
             </@tr>
         </@table>
     </@section>

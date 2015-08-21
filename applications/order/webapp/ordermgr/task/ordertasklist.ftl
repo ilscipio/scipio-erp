@@ -70,7 +70,6 @@ under the License.
                             <@tr valign="middle">
                               <@td><a href="<@ofbizUrl>orderview?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='${styles.button_default!}'>${orderHeaderAndRole.orderId}</a></@td>
                               <@td>
-                                <div>
                                   <#assign partyId = "_NA_">
                                   <#if placingParty?has_content>
                                     <#assign partyId = placingParty.partyId>
@@ -90,8 +89,7 @@ under the License.
                                   <#else>
                                     ${uiLabelMap.CommonNA}
                                   </#if>
-                                </div>
-                              </@td>
+                                </@td>
                               <@td><span style="white-space: nowrap;">${orderHeaderAndRole.getString("orderDate")}</span></@td>
                               <@td>${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</@td>
                               <@td align="right">${orh.getTotalOrderItemsQuantity()?string.number}</@td>
@@ -136,19 +134,15 @@ under the License.
                                 </a>
                               </@td>
                               <@td>
-                                <div>
                                   <#if task.customerPartyId??>
                                     <a href="${customerDetailLink}${task.customerPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.button_default!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                                   <#else>
                                     N/A
                                   </#if>
-                                </div>
-                              </@td>
+                                </@td>
                               <@td>
-                                <div>
                                   ${task.get("orderDate").toString()}
-                                </div>
-                              </@td>
+                                </@td>
                               <@td width="1" align="right"><@ofbizCurrency amount=task.grandTotal isoCode=orderCurrencyMap.get(task.orderId)/></@td>
                               <@td width="1">&nbsp;&nbsp;</@td>
                               <@td>
@@ -230,10 +224,8 @@ under the License.
                                   </#if>
                                 </@td>
                                 <@td>
-                                  <div>
                                     ${task.get("orderDate").toString()}
-                                  </div>
-                                </@td>
+                                  </@td>
                                 <@td width="1" align="right"><@ofbizCurrency amount=task.grandTotal isoCode=orderCurrencyMap.get(task.orderId)/></@td>
                                 <@td width="1">&nbsp;&nbsp;</@td>
                                 <@td>

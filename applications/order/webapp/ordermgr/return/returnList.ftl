@@ -40,7 +40,7 @@ under the License.
   </#if>
   <@tr>
         <@td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="${styles.button_default!}">${returnHeader.returnId}</a></@td>
-    <@td><div>${returnHeader.entryDate.toString()}</div></@td>
+    <@td>${returnHeader.entryDate.toString()}</@td>
     <@td>
       <#if returnHeader.fromPartyId??>
             <a href="${customerDetailLink}${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" class='${styles.button_default!}'>${returnHeader.fromPartyId}</a>

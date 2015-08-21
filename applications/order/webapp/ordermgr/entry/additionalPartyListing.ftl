@@ -23,30 +23,26 @@ under the License.
       <@table border="0" width="100%" cellpadding="0">
         <#list roleList as role>
           <@tr>
-            <@td valign="bottom"><div>${roleData[role].get("description", locale)}</div></@td>
+            <@td valign="bottom">${roleData[role].get("description", locale)}</@td>
           </@tr>
           <@tr>
             <@td colspan="4"><hr /></@td>
           </@tr>
           <#list additionalPartyRoleMap[role] as party>
             <@tr>
-              <@td><div>${party}</div></@td>
+              <@td>${party}</@td>
               <@td>
-                <div>
                   <#if partyData[party].type == "person">
                     ${partyData[party].firstName!}
                   <#else>
                     ${partyData[party].groupName!}
                   </#if>
-                </div>
-              </@td>
+                </@td>
               <@td>
-                <div>
                   <#if partyData[party].type == "person">
                     ${partyData[party].lastName!}
                   </#if>
-                </div>
-              </@td>
+                </@td>
               <@td align="right">
                 <a href="<@ofbizUrl>removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
               </@td>

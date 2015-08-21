@@ -72,7 +72,6 @@ under the License.
                         <#assign quoteTerms = delegator.findByAnd("QuoteTerm", {"quoteId" : quoteItem.quoteId, "quoteItemSeqId" : quoteItem.quoteItemSeqId})>
                     </@td>
                     <@td valign="top">
-                        <div>
                             <#if quoteItem.productId??>
                               <#assign product = quoteItem.getRelatedOne("Product", false)/>
                               ${(product.internalName)!}&nbsp;
@@ -88,8 +87,7 @@ under the License.
                             <#else>
                                 <a href="<@ofbizUrl>product?product_id=${quoteItem.productId!}</@ofbizUrl>" class="${styles.button_default!}">${quoteItem.productId!}</a>
                             </#if>
-                        </div>
-                    </@td>
+                        </@td>
                     <@td align="right" valign="top">${quoteItem.quantity!}</@td>
                     <@td align="right" valign="top">${quoteItem.selectedAmount!}</@td>
                     <@td></@td>

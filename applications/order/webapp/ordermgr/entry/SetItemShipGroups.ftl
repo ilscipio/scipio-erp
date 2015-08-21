@@ -61,17 +61,10 @@ under the License.
                 <input type="hidden" name="clearEmptyGroups_o_${rowCount}" value="false"/>
                 <input type="hidden" name="fromGroupIndex_o_${rowCount}" value="${shipGroupIndex}"/>
                 <@tr>
+                  <@td>[${shoppingCartItem.getProductId()}] ${shoppingCartItem.getName()!}: ${shoppingCartItem.getDescription()!}</@td>
+                  <@td>${shipGroupItemQuantity}</@td>
+                  <@td><input type="text" name="quantity_o_${rowCount}" value="${shipGroupItemQuantity}"/></@td>
                   <@td>
-                    <div>[${shoppingCartItem.getProductId()}] ${shoppingCartItem.getName()!}: ${shoppingCartItem.getDescription()!}</div>
-                  </@td>
-                  <@td>
-                    <div>${shipGroupItemQuantity}</div>
-                  </@td>
-                  <@td>
-                    <div><input type="text" name="quantity_o_${rowCount}" value="${shipGroupItemQuantity}"/></div>
-                  </@td>
-                  <@td>
-                    <div>
                     <select name="toGroupIndex_o_${rowCount}">
                       <option value="${shipGroupIndex}">---</option>
                       <#list 0..(shoppingCart.getShipGroupSize() - 1) as groupIdx>
@@ -79,8 +72,7 @@ under the License.
                         <option value="${groupIdx}">${uiLabelMap.CommonGroup} ${uiLabelMap.CommonNbr} ${groupNumber}</option>
                       </#list>
                     </select>
-                    </div>
-                  </@td>
+                    </@td>
                 </@tr>
                 <#assign rowCount = rowCount + 1>
               </#list>

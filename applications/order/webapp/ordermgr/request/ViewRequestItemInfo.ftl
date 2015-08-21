@@ -36,24 +36,20 @@ under the License.
                 </#if>
                 <@tr valign="middle">
                     <@td valign="top">
-                        <div>
                             <#if showRequestManagementLinks??>
                                 <a href="<@ofbizUrl>EditRequestItem?custRequestId=${requestItem.custRequestId}&amp;custRequestItemSeqId=${requestItem.custRequestItemSeqId}</@ofbizUrl>" class="${styles.button_default!}">${requestItem.custRequestItemSeqId}</a>
                             <#else>
                                 ${requestItem.custRequestItemSeqId}
                             </#if>
-                        </div>
-                    </@td>
+                        </@td>
                     <@td valign="top">
-                        <div>
                             ${(product.internalName)!}&nbsp;
                             <#if showRequestManagementLinks??>
                                 <a href="/catalog/control/EditProduct?productId=${requestItem.productId!}" class="${styles.button_default!}">${requestItem.productId!}</a>
                             <#else>
                                 <a href="<@ofbizUrl>product?product_id=${requestItem.productId!}</@ofbizUrl>" class="${styles.button_default!}">${requestItem.productId!}</a>
                             </#if>
-                        </div>
-                    </@td>
+                        </@td>
                     <@td align="right" valign="top">${requestItem.quantity!}</@td>
                     <@td align="right" valign="top">${requestItem.selectedAmount!}</@td>
                     <@td align="right" valign="top"><@ofbizCurrency amount=requestItem.maximumAmount isoCode=request.maximumAmountUomId/></@td>

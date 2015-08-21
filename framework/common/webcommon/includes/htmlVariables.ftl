@@ -73,7 +73,8 @@ under the License.
     "color_warning" : "warning",
     "color_success" : "success",  
     "color_alert" : "alert",        <#-- Bootstrap: "danger" -->
-
+    "color_error" : "alert",
+    
 <#-- Grid -->
     "grid_row" : "row",
     "grid_cell" : "columns",

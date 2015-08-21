@@ -157,7 +157,7 @@ under the License.
                         </select>
                       </td>
                       <td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></td>
-                      <td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></div>
+                      <td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                     </tr>
                   </form>
                 </#list>

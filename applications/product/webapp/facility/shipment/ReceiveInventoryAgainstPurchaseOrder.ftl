@@ -129,7 +129,7 @@ under the License.
                         <#assign backOrderedQuantity = orderItemData.backOrderedQuantity?default(0)>
                         <#assign fulfilledReservations = orderItemData.fulfilledReservations>
                         <tr id="orderItemData_tableRow_${rowCount}" valign="middle"<@dataRowClassStr alt=alt_row />>
-                            <td>${(product.internalName)!} [${orderItem.productId?default("N/A")}]</div></td>
+                            <td>${(product.internalName)!} [${orderItem.productId?default("N/A")}]</td>
                             <td>
                                 <div>
                                     <#assign upcaLookup = Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", product.productId, "goodIdentificationTypeId", "UPCA")/>

@@ -201,11 +201,11 @@ under the License.
         </#list>
         <#if ((requestParameters.groupByShippingMethod?? && requestParameters.groupByShippingMethod == "Y") || (requestParameters.groupByWarehouseArea?? && requestParameters.groupByWarehouseArea == "Y") || (requestParameters.groupByNoOfOrderItems?? && requestParameters.groupByNoOfOrderItems == "Y"))>
           <tr<@dataRowClassStr alt=alt_row />>
-            <th>${uiLabelMap.CommonAllMethods}</div></th>
+            <th>${uiLabelMap.CommonAllMethods}</th>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <th>${orderReadyToPickInfoListSizeTotal}</div></th>
-            <th>${orderNeedsStockMoveInfoListSizeTotal}</div></th>
+            <th>${orderReadyToPickInfoListSizeTotal}</th>
+            <th>${orderNeedsStockMoveInfoListSizeTotal}</th>
             <td>
               <#if (orderReadyToPickInfoListSizeTotal > 0)>
                 <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">

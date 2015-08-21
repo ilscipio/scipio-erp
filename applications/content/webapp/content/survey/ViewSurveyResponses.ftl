@@ -114,7 +114,7 @@ under the License.
       </#list>
     <#else>
       <tr>
-        <td>${uiLabelMap.ContentSurveyNoQuestions}</div></td>
+        <td>${uiLabelMap.ContentSurveyNoQuestions}</td>
       </tr>
     </#if>
   </table>

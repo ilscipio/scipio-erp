@@ -180,10 +180,10 @@ under the License.
             <tr>
               <td>${ecaMap.eventName!}</td>
               <#if ecaMap.runOnError??>
-                <td>${ecaMap.runOnError}</div></td>
+                <td>${ecaMap.runOnError}</td>
               </#if>
               <#if ecaMap.runOnFailure??>
-                <td>${ecaMap.runOnFailure}</div></td>
+                <td>${ecaMap.runOnFailure}</td>
               </#if>
               <#if ecaMap.actions?has_content>
                 <td>

@@ -36,8 +36,8 @@ under the License.
           <hr />
           <#if "CUSTOMER_RETURN" == returnHeaderTypeId>
           <h3>${uiLabelMap.FormFieldTitle_paymentMethodId}:</h3>
-          <table cellspacing="0" class="basic-table">
-            <tr><td>
+          <@table cellspacing="0" class="basic-table">
+            <@tr><@td>
               <#if creditCardList?? || eftAccountList??>
                 <select name='paymentMethodId'>
                   <option value=""></option>
@@ -59,24 +59,24 @@ under the License.
               <#if (party.partyId)?has_content>
                 <a href="/partymgr/control/editcreditcard?partyId=${party.partyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="smallSubmit">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
-            </td></tr>
-          </table>
+            </@td></@tr>
+          </@table>
           </#if>
-          <table cellspacing="0" class="basic-table">
-            <tr><td colspan="8"><hr/></td></tr>
-            <tr>
-              <td colspan="8"><h3><#if "CUSTOMER_RETURN" == returnHeaderTypeId>${uiLabelMap.OrderReturnShipFromAddress}<#else>${uiLabelMap["checkhelper.select_shipping_destination"]}</#if></h3></td>
-            </tr>
-            <tr>
-              <td colspan="8">
-                <table cellspacing="0" class="basic-table">
+          <@table cellspacing="0" class="basic-table">
+            <@tr><@td colspan="8"><hr/></@td></@tr>
+            <@tr>
+              <@td colspan="8"><h3><#if "CUSTOMER_RETURN" == returnHeaderTypeId>${uiLabelMap.OrderReturnShipFromAddress}<#else>${uiLabelMap["checkhelper.select_shipping_destination"]}</#if></h3></@td>
+            </@tr>
+            <@tr>
+              <@td colspan="8">
+                <@table cellspacing="0" class="basic-table">
                   <#list shippingContactMechList as shippingContactMech>
                     <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
-                    <tr>
-                      <td align="right" width="1%" valign="top" nowrap="nowrap">
+                    <@tr>
+                      <@td align="right" width="1%" valign="top" nowrap="nowrap">
                         <input type="radio" name="originContactMechId" value="${shippingAddress.contactMechId}"  <#if (shippingContactMechList?size == 1)>checked="checked"</#if> />
-                      </td>
-                      <td width="99%" valign="top" nowrap="nowrap">
+                      </@td>
+                      <@td width="99%" valign="top" nowrap="nowrap">
                         <div>
                           <#if shippingAddress.toName?has_content><span>${uiLabelMap.CommonTo}</span>&nbsp;${shippingAddress.toName}<br /></#if>
                           <#if shippingAddress.attnName?has_content><span>${uiLabelMap.CommonAttn}</span></b>&nbsp;${shippingAddress.attnName}<br /></#if>
@@ -88,12 +88,12 @@ under the License.
                           <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                           <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonUpdate}]</a>-->
                         </div>
-                      </td>
-                    </tr>
+                      </@td>
+                    </@tr>
                   </#list>
-                </table>
-              </td>
-            </tr>
-          </table>
+                </@table>
+              </@td>
+            </@tr>
+          </@table>
         </form>
     </@section>

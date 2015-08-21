@@ -20,10 +20,9 @@ under the License.
 <#if productIds?has_content>
     <@section title="${uiLabelMap.OrderProductsForPromotion}">
         <#if (listSize > 0)>
-            <table border="0" width="100%" cellpadding="2">
-                <tr>
-                <td align="right">
-                    <span>
+            <@table type="fields" border="0" width="100%" cellpadding="2">
+                <@tr>
+                <@td align="right">
                     <b>
                     <#if (viewIndex > 0)>
                     <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
@@ -33,31 +32,30 @@ under the License.
                     | <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
                     </#if>
                     </b>
-                    </span>
-                </td>
-                </tr>
-            </table>
+                </@td>
+                </@tr>
+            </@table>
         </#if>
 
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-          <tr>
-            <td><div>${uiLabelMap.CommonQualifier}</div></td>
-            <td><div>${uiLabelMap.CommonBenefit}</div></td>
-            <td><div>&nbsp;</div></td>
-          </tr>
+        <@table type="data" useAltRows=false width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+          <@tr>
+            <@td><div>${uiLabelMap.CommonQualifier}</div></@td>
+            <@td><div>${uiLabelMap.CommonBenefit}</div></@td>
+            <@td><div>&nbsp;</div></@td>
+          </@tr>
         <#if (listSize > 0)>
           <#list productIds[lowIndex..highIndex-1] as productId>
-              <tr>
-                <td><div>[<#if productIdsCond.contains(productId)>x<#else>&nbsp;</#if>]</div></td>
-                <td><div>[<#if productIdsAction.contains(productId)>x<#else>&nbsp;</#if>]</div></td>
-                <td>
+              <@tr>
+                <@td><div>[<#if productIdsCond.contains(productId)>x<#else>&nbsp;</#if>]</div></@td>
+                <@td><div>[<#if productIdsAction.contains(productId)>x<#else>&nbsp;</#if>]</div></@td>
+                <@td>
                   ${setRequestAttribute("optProductId", productId)}
                   ${setRequestAttribute("listIndex", productId_index)}
                   ${screens.render(productsummaryScreen)}
-                </td>
-              </tr>
+                </@td>
+              </@tr>
           </#list>
         </#if>
-        </table>
+        </@table>
     </@section>
 </#if>

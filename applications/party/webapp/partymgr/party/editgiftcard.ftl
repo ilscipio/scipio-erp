@@ -18,15 +18,12 @@ under the License.
 -->
 
 <!-- begin editgiftcard.ftl -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <#if !giftCard??>
-      <h3>${uiLabelMap.AccountingCreateNewGiftCard}</h3>
-    <#else>
-      <h3>${uiLabelMap.AccountingEditGiftCard}</h3>
-    </#if>
-  </div>
-  <div class="screenlet-body">
+<#if !giftCard??>
+  <#assign title = "${uiLabelMap.AccountingCreateNewGiftCard}">
+<#else>
+  <#assign title = "${uiLabelMap.AccountingEditGiftCard}">
+</#if>
+<@section title=title>
     <#if !giftCard??>
       <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
     <#else>
@@ -35,8 +32,8 @@ under the License.
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
         <div class="button-bar">
-          <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonCancelDone}</a>
-          <a href="javascript:document.editgiftcardform.submit()" class="smallSubmit">${uiLabelMap.CommonSave}</a>
+          <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
+          <a href="javascript:document.editgiftcardform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
         </div>
         <@table type="data" class="basic-table" cellspacing="0">
         <@tbody>
@@ -98,9 +95,8 @@ under the License.
         </@table>
       </form>
       <div class="button-bar">
-        <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonCancelDone}</a>
-        <a href="javascript:document.editgiftcardform.submit()" class="smallSubmit">${uiLabelMap.CommonSave}</a>
+        <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
+        <a href="javascript:document.editgiftcardform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
       </div>
-  </div>
-</div>
+</@section>
 <!-- end editgiftcard.ftl -->

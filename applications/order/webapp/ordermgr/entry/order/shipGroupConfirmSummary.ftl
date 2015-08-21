@@ -28,19 +28,19 @@ standard order confirmation page and to be re-usable by other screens.
 
 <#if cart??>
 <@section title="${uiLabelMap.OrderShippingInformation}">
-    <table class="basic-table">
+    <@table class="basic-table">
 
       <#-- header -->
 
-      <thead>
-      <tr>
-        <th>${uiLabelMap.OrderDestination}</th>
-        <th>${uiLabelMap.PartySupplier}</th>
-        <th>${uiLabelMap.ProductShipmentMethod}</th>
-        <th>${uiLabelMap.ProductItem}</th>
-        <th>${uiLabelMap.ProductQuantity}</th>
-      </tr>
-      </thead>
+      <@thead>
+      <@tr>
+        <@th>${uiLabelMap.OrderDestination}</@th>
+        <@th>${uiLabelMap.PartySupplier}</@th>
+        <@th>${uiLabelMap.ProductShipmentMethod}</@th>
+        <@th>${uiLabelMap.ProductItem}</@th>
+        <@th>${uiLabelMap.ProductQuantity}</@th>
+      </@tr>
+      </@thead>
 
       <#-- BEGIN LIST SHIP GROUPS -->
       <#--
@@ -54,11 +54,11 @@ standard order confirmation page and to be re-usable by other screens.
 
       <#-- spacer goes here -->
 
-      <tr>
+      <@tr>
 
         <#-- address destination column (spans a number of rows = number of cart items in it) -->
 
-        <td rowspan="${numberOfItems}">
+        <@td rowspan="${numberOfItems}">
           <#assign contactMech = delegator.findOne("ContactMech", Static["org.ofbiz.base.util.UtilMisc"].toMap("contactMechId", cartShipInfo.contactMechId), false)! />
           <#if contactMech?has_content>
             <#assign address = contactMech.getRelatedOne("PostalAddress", false)! />
@@ -73,44 +73,44 @@ standard order confirmation page and to be re-usable by other screens.
             <#if address.stateProvinceGeoId?has_content>&nbsp;${address.stateProvinceGeoId}</#if>
             <#if address.postalCode?has_content>, ${address.postalCode!}</#if>
           </#if>
-        </td>
+        </@td>
 
         <#-- supplier id (for drop shipments) (also spans rows = number of items) -->
 
-        <td rowspan="${numberOfItems}" valign="top">
+        <@td rowspan="${numberOfItems}" valign="top">
           <#assign supplier =  delegator.findOne("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", cartShipInfo.getSupplierPartyId()), false)! />
           <#if supplier?has_content>${supplier.groupName?default(supplier.partyId)}</#if>
-        </td>
+        </@td>
 
         <#-- carrier column (also spans rows = number of items) -->
 
-        <td rowspan="${numberOfItems}" valign="top">
+        <@td rowspan="${numberOfItems}" valign="top">
           <#assign carrier =  delegator.findOne("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", cartShipInfo.getCarrierPartyId()), false)! />
           <#assign method =  delegator.findOne("ShipmentMethodType", Static["org.ofbiz.base.util.UtilMisc"].toMap("shipmentMethodTypeId", cartShipInfo.getShipmentMethodTypeId()), false)! />
           <#if carrier?has_content>${carrier.groupName?default(carrier.partyId)}</#if>
           <#if method?has_content>${method.description?default(method.shipmentMethodTypeId)}</#if>
-        </td>
+        </@td>
 
         <#-- list each ShoppingCartItem in this group -->
 
         <#assign itemIndex = 0 />
         <#list cartShipInfo.getShipItems() as shoppingCartItem>
-        <#if (itemIndex > 0)> <tr> </#if>
+        <#if (itemIndex > 0)> <@tr> </#if>
 
-        <td valign="top"> ${shoppingCartItem.getProductId()?default("")} - ${shoppingCartItem.getName()?default("")} </td>
-        <td valign="top"> ${cartShipInfo.getShipItemInfo(shoppingCartItem).getItemQuantity()?default("0")} </td>
+        <@td valign="top"> ${shoppingCartItem.getProductId()?default("")} - ${shoppingCartItem.getName()?default("")} </@td>
+        <@td valign="top"> ${cartShipInfo.getShipItemInfo(shoppingCartItem).getItemQuantity()?default("0")} </@td>
 
-        <#if (itemIndex == 0)> </tr> </#if>
+        <#if (itemIndex == 0)> </@tr> </#if>
         <#assign itemIndex = itemIndex + 1 />
         </#list>
 
-      </tr>
+      </@tr>
 
       </#if>
       </#list>
 
       <#-- END LIST SHIP GROUPS -->
 
-    </table>
+    </@table>
   </@section>
 </#if>

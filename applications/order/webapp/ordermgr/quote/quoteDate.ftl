@@ -17,35 +17,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.CommonDate}">
-        <table cellspacing="0" class="basic-table">
-            <tr>
-                <td align="right" valign="top" width="15%">
+        <@table cellspacing="0" class="basic-table">
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.OrderOrderQuoteIssueDate}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     ${(quote.issueDate.toString())!}
-                </td>
-            </tr>
-            <tr><td colspan="3"><hr /></td></tr>
-            <tr>
-                <td align="right" valign="top" width="15%">
+                </@td>
+            </@tr>
+            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonValidFromDate}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     ${(quote.validFromDate.toString())!}
-                </td>
-            </tr>
-            <tr><td colspan="3"><hr /></td></tr>
-            <tr>
-                <td align="right" valign="top" width="15%">
+                </@td>
+            </@tr>
+            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonValidThruDate}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     ${(quote.validThruDate.toString())!}
-                </td>
-            </tr>
-        </table>
+                </@td>
+            </@tr>
+        </@table>
     </@section>

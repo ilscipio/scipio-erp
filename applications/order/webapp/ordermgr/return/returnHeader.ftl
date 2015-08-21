@@ -28,20 +28,20 @@ under the License.
             <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
         </#if>
 
-        <table cellspacing="0" class="basic-table">
+        <@table cellspacing="0" class="basic-table">
           <#if returnHeader??>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnId}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%' align='left'>${returnHeader.returnId}</td>
-          </tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnId}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%' align='left'>${returnHeader.returnId}</@td>
+          </@tr>
           </#if>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.CommonCurrency}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' nowrap="nowrap">${uiLabelMap.CommonCurrency}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
           <#if returnHeader??>
               ${returnHeader.currencyUomId!}
           <#else>
@@ -60,32 +60,32 @@ under the License.
                 </#if>
              </select>
           </#if>
-            </td>
-          </tr>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderEntryDate}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderEntryDate}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <#if returnInfo.entryDate??>
                 <#assign entryDate = returnInfo.get("entryDate").toString()>
               </#if>
               <@htmlTemplate.renderDateTimeField name="entryDate" event="" action="" value="${entryDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="entryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </td>
-          </tr>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnFromParty}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnFromParty}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <@htmlTemplate.lookupField value='${returnInfo.fromPartyId!}' formName="returnhead" name="fromPartyId" id="fromPartyId" fieldFormName="LookupPartyName"/>
-            </td>
-          </tr>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnToFacility}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnToFacility}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <select name='destinationFacilityId'>
                 <#if currentFacility??>
                   <option value="${currentFacility.facilityId}">${currentFacility.facilityName?default(currentFacility.facilityId)}</option>
@@ -95,13 +95,13 @@ under the License.
                 <#list facilityList as facility>
                   <option value="${facility.facilityId}" <#if (facilityList?size == 1)>selected="selected"</#if>>${facility.facilityName?default(facility.facilityId)}</option>
                 </#list>
-            </td>
-          </tr>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.AccountingBillingAccount}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' nowrap="nowrap">${uiLabelMap.AccountingBillingAccount}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <#if billingAccountList?has_content>
                 <select name='billingAccountId'>
                   <#if currentAccount??>
@@ -116,13 +116,13 @@ under the License.
               <#else>
                 <input type='text' size='20' name='billingAccountId' />
               </#if>
-            </td>
-          </tr>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.FormFieldTitle_paymentMethodId}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' nowrap="nowrap">${uiLabelMap.FormFieldTitle_paymentMethodId}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <#if creditCardList?? || eftAccountList??>
                 <select name='paymentMethodId'>
                   <#if currentCreditCard??>
@@ -150,13 +150,13 @@ under the License.
               <#if (returnHeader.fromPartyId)?has_content>
                 <a href="/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="smallSubmit">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
-            </td>
-          </tr>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnNeedsAutoReceive}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' nowrap="nowrap">${uiLabelMap.OrderReturnNeedsAutoReceive}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <select name='needsInventoryReceive'>
                 <#if needsInventoryReceive??>
                   <#if "Y" == needsInventoryReceive>
@@ -169,14 +169,14 @@ under the License.
                 <option value="Y">${uiLabelMap.CommonYes}</option>
                 <option value="N">${uiLabelMap.CommonNo}</option>
               </select>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
         <#if returnHeader?has_content>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.CommonReturnStatus}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' nowrap="nowrap">${uiLabelMap.CommonReturnStatus}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <select name="statusId">
                 <#if currentStatus??>
                   <option value="${currentStatus.statusId}">${currentStatus.get("description",locale)}</option>
@@ -186,19 +186,19 @@ under the License.
                   <option value="${status.statusIdTo}">${status.get("transitionName",locale)}</option>
                 </#list>
               </select>
-            </td>
-          </tr>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' nowrap="nowrap">${uiLabelMap.FormFieldTitle_createdBy}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>${returnHeader.createdBy?default("Unknown")}</td>
-          </tr>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' valign='top' nowrap="nowrap">${uiLabelMap.OrderReturnFromAddress}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' nowrap="nowrap">${uiLabelMap.FormFieldTitle_createdBy}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>${returnHeader.createdBy?default("Unknown")}</@td>
+          </@tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' valign='top' nowrap="nowrap">${uiLabelMap.OrderReturnFromAddress}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <div>
               <#if (addressEditable)>
                 <#list addresses as address >
@@ -213,38 +213,38 @@ under the License.
                  </#if>
               </#if>
               </div>
-            </td>
-          </tr>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%' align='right' valign='top' nowrap="nowrap">${uiLabelMap.OrderReturnToAddress}</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%' align='right' valign='top' nowrap="nowrap">${uiLabelMap.OrderReturnToAddress}</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <#if (postalAddressTo?has_content)>
                 <@displayAddress postalAddress = postalAddressTo editable=false />
               </#if>
-            </td>
-          </tr>
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <input type="submit" value="${uiLabelMap.CommonUpdate}"/>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
         <#else>
           <input type="hidden" name="statusId" value="RETURN_REQUESTED" />
-          <tr>
-            <td width='14%'>&nbsp;</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='6%'>&nbsp;</td>
-            <td width='74%'>
+          <@tr>
+            <@td width='14%'>&nbsp;</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='6%'>&nbsp;</@td>
+            <@td width='74%'>
               <input type="submit" value="${uiLabelMap.CommonCreateNew}"/>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
         </#if>
-        </table>
+        </@table>
         <#macro displayAddress postalAddress editable>
             <#if postalAddress?has_content>
                     <div>

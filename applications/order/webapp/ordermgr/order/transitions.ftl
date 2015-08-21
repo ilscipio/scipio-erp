@@ -19,56 +19,56 @@ under the License.
 
 <#if inProcess??>
 <@section title="${uiLabelMap.OrderProcessingStatus}">
-    <table class="basic-table" cellspacing='0'>
-      <tr>
-        <td>
+    <@table class="basic-table" cellspacing='0'>
+      <@tr>
+        <@td>
           <!-- Suspended Processes -->
           <#if workEffortStatus == "WF_SUSPENDED">
             <form action="<@ofbizUrl>releasehold</@ofbizUrl>" method="post" name="activityForm">
               <input type="hidden" name="workEffortId" value="${workEffortId}" />
-              <table class="basic-table" cellspacing='0'>
-                <tr>
-                  <td>${uiLabelMap.OrderProcessingInHold}&nbsp;${uiLabelMap.OrderProcessingInHoldNote}</td>
-                  <td align="right" valign="center">
+              <@table class="basic-table" cellspacing='0'>
+                <@tr>
+                  <@td>${uiLabelMap.OrderProcessingInHold}&nbsp;${uiLabelMap.OrderProcessingInHoldNote}</@td>
+                  <@td align="right" valign="center">
                     <a href="javascript:document.activityForm.submit()" class="${styles.button_default!}">${uiLabelMap.OrderRelease}</a>
-                  </td>
-                </tr>
-              </table>
+                  </@td>
+                </@tr>
+              </@table>
             </form>
           </#if>
           <!-- Active Processes -->
           <#if workEffortStatus == "WF_RUNNING">
             <form action="<@ofbizUrl>holdorder</@ofbizUrl>" method="post" name="activityForm">
               <input type="hidden" name="workEffortId" value="${workEffortId}" />
-              <table class="basic-table" cellspacing='0'>
-                <tr>
-                  <td>${uiLabelMap.OrderProcessingInActive}</td>
-                  <td align="right" valign="center">
+              <@table class="basic-table" cellspacing='0'>
+                <@tr>
+                  <@td>${uiLabelMap.OrderProcessingInActive}</@td>
+                  <@td align="right" valign="center">
                     <a href="javascript:document.activityForm.submit()" class="${styles.button_default!}">${uiLabelMap.OrderHold}</a>
-                  </td>
-                </tr>
-              </table>
+                  </@td>
+                </@tr>
+              </@table>
             </form>
           </#if>
-        </td>
-      </tr>
-    </table>
+        </@td>
+      </@tr>
+    </@table>
   </@section>
 </#if>
 <br />
 <#if wfTransitions?? && wfTransitions?has_content>
 <@section title="${uiLabelMap.OrderProcessingTransitions}">
-    <table class="basic-table" cellspacing='0'>
-      <tr>
-        <td>
+    <@table class="basic-table" cellspacing='0'>
+      <@tr>
+        <@td>
           <form action="<@ofbizUrl>completeassignment</@ofbizUrl>" method="post" name="transitionForm">
             <input type="hidden" name="workEffortId" value="${workEffortId}" />
             <input type="hidden" name="partyId" value="${assignPartyId}" />
             <input type="hidden" name="roleTypeId" value="${assignRoleTypeId}" />
             <input type="hidden" name="fromDate" value="${fromDate}" />
-            <table class="basic-table" cellspacing='0'>
-              <tr>
-                <td>
+            <@table class="basic-table" cellspacing='0'>
+              <@tr>
+                <@td>
                   <select name="approvalCode">
                     <#list wfTransitions as trans>
                       <#if trans.extendedAttributes?has_content>
@@ -79,15 +79,15 @@ under the License.
                       </#if>
                     </#list>
                   </select>
-                </td>
-                <td valign="center">
+                </@td>
+                <@td valign="center">
                   <a href="javascript:document.transitionForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a>
-                </td>
-              </tr>
-            </table>
+                </@td>
+              </@tr>
+            </@table>
           </form>
-        </td>
-      </tr>
-    </table>
+        </@td>
+      </@tr>
+    </@table>
   </@section>
 </#if>

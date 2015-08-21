@@ -18,18 +18,15 @@ under the License.
 -->
 
 <!-- begin editcreditcard.ftl -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <#if !creditCard??>
-      <h3>${uiLabelMap.AccountingAddNewCreditCard}</h3>
-    <#else>
-      <h3>${uiLabelMap.AccountingEditCreditCard}</h3>
-    </#if>
-  </div>
-  <div class="screenlet-body">
+<#if !creditCard??>
+  <#assign title = "${uiLabelMap.AccountingAddNewCreditCard}">
+<#else>
+  <#assign title = "${uiLabelMap.AccountingEditCreditCard}">
+</#if>
+<@section title=title>
         <div class="button-bar">
-          <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonCancelDone}</a>
-          <a href="javascript:document.editcreditcardform.submit()" class="smallSubmit">${uiLabelMap.CommonSave}</a>
+          <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
+          <a href="javascript:document.editcreditcardform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
         </div>
     <#if !creditCard??>
       <form method="post" action="<@ofbizUrl>createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform" style="margin: 0;">
@@ -46,7 +43,7 @@ under the License.
           <@td width="5">&nbsp;</@td>
           <@td>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="smallSubmit">
+            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.button_default!}">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
             <@table type="data" cellspacing="0">
@@ -142,9 +139,8 @@ under the License.
         </@table>
       </form>
       <div class="button-bar">
-        <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonCancelDone}</a>
-        <a href="javascript:document.editcreditcardform.submit()" class="smallSubmit">${uiLabelMap.CommonSave}</a>
+        <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
+        <a href="javascript:document.editcreditcardform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
       </div>
-  </div>
-</div>
+</@section>
 <!-- end editcreditcard.ftl -->

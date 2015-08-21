@@ -32,23 +32,23 @@ under the License.
           <@section title=sectionTitle>
               <@row>
                   <@cell>
-                  <table class="basic-table">
-                  <thead>
-              <tr>
-                    <th>
+                  <@table class="basic-table">
+                  <@thead>
+              <@tr>
+                    <@th>
                         ${uiLabelMap.ProductProduct}
-                    </th>
-                    <th>
+                    </@th>
+                    <@th>
                         ${uiLabelMap.CommonQuantity}
-                    </th>
-                    <th>
+                    </@th>
+                    <@th>
                         ${uiLabelMap.ProductMoveQuantity}
-                    </th>
-                    <th>
+                    </@th>
+                    <@th>
                         ${uiLabelMap.OrderShipGroupTo}
-                    </th>
-              </tr>
-                  </thead>
+                    </@th>
+              </@tr>
+                  </@thead>
               <#assign shipGroupItems = shoppingCart.getShipGroupItems(shipGroupIndex)>
               <#assign shoppingCartItems = shipGroupItems.keySet().iterator()>
               <form method="post" action="<@ofbizUrl>assignItemToShipGroups</@ofbizUrl>" name="assignitemtoshipgroup${shipGroupIndex}">
@@ -60,17 +60,17 @@ under the License.
                 <input type="hidden" name="itemIndex_o_${rowCount}" value="${cartLineIndex}"/>
                 <input type="hidden" name="clearEmptyGroups_o_${rowCount}" value="false"/>
                 <input type="hidden" name="fromGroupIndex_o_${rowCount}" value="${shipGroupIndex}"/>
-                <tr>
-                  <td>
+                <@tr>
+                  <@td>
                     <div>[${shoppingCartItem.getProductId()}] ${shoppingCartItem.getName()!}: ${shoppingCartItem.getDescription()!}</div>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <div>${shipGroupItemQuantity}</div>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <div><input type="text" name="quantity_o_${rowCount}" value="${shipGroupItemQuantity}"/></div>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <div>
                     <select name="toGroupIndex_o_${rowCount}">
                       <option value="${shipGroupIndex}">---</option>
@@ -80,19 +80,19 @@ under the License.
                       </#list>
                     </select>
                     </div>
-                  </td>
-                </tr>
+                  </@td>
+                </@tr>
                 <#assign rowCount = rowCount + 1>
               </#list>
               <#if (rowCount > 0)>
-              <tr>
-                <td colspan="3">&nbsp;</td>
-                <td>
+              <@tr>
+                <@td colspan="3">&nbsp;</@td>
+                <@td>
                 <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSubmit}"/>
-                </td>
-              </tr>
+                </@td>
+              </@tr>
               </#if>
-              </table>
+              </@table>
                   </@cell>
             </@row>
         </@section>

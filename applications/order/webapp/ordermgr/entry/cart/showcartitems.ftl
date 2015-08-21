@@ -22,8 +22,8 @@ under the License.
   <#assign productAssocType = (delegator.findOne("ProductAssocType", {"productAssocTypeId" : productAssoc.productAssocTypeId}, false))/>
   <#assign assocProduct = (delegator.findOne("Product", {"productId" : productAssoc.productIdTo}, false))/>
   <#if assocProduct?has_content>
-    <td><a href="<@ofbizUrl>/product?product_id=${productAssoc.productIdTo}</@ofbizUrl>"class="${styles.button_default!}">${productAssoc.productIdTo}</a></td>
-    <td>- ${(assocProduct.productName)!}<i>(${(productAssocType.description)?default("Unknown")})</i></td>
+    <@td><a href="<@ofbizUrl>/product?product_id=${productAssoc.productIdTo}</@ofbizUrl>"class="${styles.button_default!}">${productAssoc.productIdTo}</a></@td>
+    <@td>- ${(assocProduct.productName)!}<i>(${(productAssocType.description)?default("Unknown")})</i></@td>
   </#if>
 </#macro>
 <@section title="${uiLabelMap.OrderOrderItems}">
@@ -36,11 +36,11 @@ under the License.
         <input type="hidden" name="finalizeReqPayInfo" value="false"/>
         <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
       </#if>
-      <table cellspacing="0" cellpadding="1" border="0">
-        <tr>
-          <td>&nbsp;</td>
-          <td colspan="2">
-            <div>
+      <@table type="data" useAltRows=false class="" cellspacing="0" cellpadding="1" border="0">
+        <@thead>
+        <@tr>
+          <@th>&nbsp;</@th>
+          <@th colspan="2">
               <b>${uiLabelMap.ProductProduct}</b>
               <#if (shoppingCart.getOrderType() == 'SALES_ORDER') && (productStore.showCheckoutGiftOptions)?default('Y') != 'N'>
                   <select name="GWALL" onchange="javascript:gwAll(this);">
@@ -53,26 +53,25 @@ under the License.
                     </#if>
                   </select>
               </#if>
-            </div>
-          </td>
-          <td align="center"><div><b>${uiLabelMap.OrderQuantity}</b></div></td>
-          <td align="right"><div><b>${uiLabelMap.CommonUnitPrice}</b></div></td>
-          <td align="right"><div><b>${uiLabelMap.OrderAdjustments}</b></div></td>
-          <td align="right"><div><b>${uiLabelMap.OrderItemTotal}</b></div></td>
-          <td align="center"><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);" /></td>
-        </tr>
+          </@th>
+          <@th align="center"><b>${uiLabelMap.OrderQuantity}</b></@th>
+          <@th align="right"><b>${uiLabelMap.CommonUnitPrice}</b></@th>
+          <@th align="right"><b>${uiLabelMap.OrderAdjustments}</b></@th>
+          <@th align="right"><b>${uiLabelMap.OrderItemTotal}</b></@th>
+          <@th align="center"><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);" /></@th>
+        </@tr>
+        </@thead>
 
         <#assign itemsFromList = false>
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
           <#assign lineOptionalFeatures = cartLine.getOptionalProductFeatures()>
-          <tr><td colspan="8"><hr/></td></tr>
-          <tr valign="top">
-            <td>&nbsp;</td>
-            <td>
-          <table border="0">
-          <tr><td colspan="2">
-                <div>
+          <@tr><@td colspan="8"><hr/></@td></@tr>
+          <@tr valign="top">
+            <@td>&nbsp;</@td>
+            <@td>
+          <@table type="fields" border="0">
+          <@tr><@td colspan="2">
                   <#if cartLine.getProductId()??>
                     <#-- product item -->
                     <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.button_default!}">${cartLine.getProductId()}</a> -
@@ -108,41 +107,39 @@ under the License.
                         <a href="/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" style="font-size: xx-small;">${surveyResponseId}</a>
                        </#list>
                     </#if>
-                </div>
-            </td></tr>
+            </@td></@tr>
             <#if cartLine.getRequirementId()?has_content>
-                <tr>
-                    <td colspan="2">
-                      <div><b>${uiLabelMap.OrderRequirementId}</b>: ${cartLine.getRequirementId()!}</div>
-                    </td>
-                </tr>
+                <@tr>
+                    <@td colspan="2">
+                      <b>${uiLabelMap.OrderRequirementId}</b>: ${cartLine.getRequirementId()!}
+                    </@td>
+                </@tr>
             </#if>
             <#if cartLine.getQuoteId()?has_content>
                 <#if cartLine.getQuoteItemSeqId()?has_content>
-                  <tr>
-                    <td colspan="2">
-                      <div><b>${uiLabelMap.OrderOrderQuoteId}</b>: ${cartLine.getQuoteId()!} - ${cartLine.getQuoteItemSeqId()!}</div>
-                    </td>
-                  </tr>
+                  <@tr>
+                    <@td colspan="2">
+                      <b>${uiLabelMap.OrderOrderQuoteId}</b>: ${cartLine.getQuoteId()!} - ${cartLine.getQuoteItemSeqId()!}
+                    </@td>
+                  </@tr>
                 </#if>
             </#if>
             <#if cartLine.getItemComment()?has_content>
-              <tr><td><div>${uiLabelMap.CommonComment} : </div></td>
-                  <td><div>${cartLine.getItemComment()!}</div>
-              </td></tr>
+              <@tr><@td>${uiLabelMap.CommonComment} : </@td>
+                  <@td>${cartLine.getItemComment()!}
+              </@td></@tr>
             </#if>
             <#if cartLine.getDesiredDeliveryDate()?has_content>
-              <tr><td><div>${uiLabelMap.OrderDesiredDeliveryDate}: </div></td>
-                  <td><div>${cartLine.getDesiredDeliveryDate()!}</div>
-              </td></tr>
+              <@tr><@td>${uiLabelMap.OrderDesiredDeliveryDate}: </@td>
+                  <@td>${cartLine.getDesiredDeliveryDate()!}
+              </@td></@tr>
             </#if>
             <#-- inventory summary -->
             <#if cartLine.getProductId()??>
               <#assign productId = cartLine.getProductId()>
               <#assign product = cartLine.getProduct()>
-              <tr>
-                <td colspan="2">
-                  <div>
+              <@tr>
+                <@td colspan="2">
                     <a href="/catalog/control/EditProductInventoryItems?productId=${productId}" class="${styles.button_default!}"><b>${uiLabelMap.ProductInventory}</b></a>:
                     ${uiLabelMap.ProductAtp} = ${availableToPromiseMap.get(productId)}, ${uiLabelMap.ProductQoh} = ${quantityOnHandMap.get(productId)}
                     <#if Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG")>
@@ -160,15 +157,13 @@ under the License.
                         <span style="color: red;">[${backOrdered!}&nbsp;${uiLabelMap.OrderBackOrdered}]</span>
                       </#if>
                     </#if>
-                  </div>
-                </td>
-              </tr>
+                </@td>
+              </@tr>
             </#if>
             <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
               <#assign currentOrderItemType = cartLine.getItemTypeGenericValue()!/>
-                <tr>
-                  <td>
-                    <div>
+                <@tr>
+                  <@td>
                       ${uiLabelMap.OrderOrderItemType}:
                       <select name="itemType_${cartLineIndex}">
                         <#if currentOrderItemType?has_content>
@@ -180,54 +175,51 @@ under the License.
                         <option value="${orderItemType.orderItemTypeId}">${orderItemType.get("description",locale)}</option>
                         </#list>
                       </select>
-                    </div>
-                  </td>
-                </tr>
+                  </@td>
+                </@tr>
             </#if>
 
             <#-- ship before/after date -->
-            <tr>
-              <td colspan="2">
-               <table border="0" cellpadding="0" cellspacing="0" width="100%">
-               <tr>
-                <td>
-                  <div>${uiLabelMap.OrderShipAfterDate}
+            <@tr>
+              <@td colspan="2">
+               <@table type="fields" border="0" cellpadding="0" cellspacing="0" width="100%">
+               <@tr>
+                <@td>
+                  ${uiLabelMap.OrderShipAfterDate}
                     <@htmlTemplate.renderDateTimeField name="shipAfterDate_${cartLineIndex}" value="${cartLine.getShipAfterDate()?default('')}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipAfterDate_${cartLineIndex}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                  </div>
-                </td>
-                <td>&nbsp;</td>
-                <td>
-                  <div>${uiLabelMap.OrderShipBeforeDate}
+                </@td>
+                <@td>&nbsp;</@td>
+                <@td>
+                  ${uiLabelMap.OrderShipBeforeDate}
                     <@htmlTemplate.renderDateTimeField name="shipBeforeDate_${cartLineIndex}" value="${cartLine.getShipBeforeDate()?default('')}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipBeforeDate_${cartLineIndex}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                  </div>
-                </td>
-               </tr>
-               </table>
-              </td>
-            </tr>
+                </@td>
+               </@tr>
+               </@table>
+              </@td>
+            </@tr>
 
             <#-- Show Associated Products (not for Variants) -->
             <#if cartLine.getProductId()??>
               <#assign itemProductAssocList = cartLine.getProduct().getRelated("MainProductAssoc", null, Static["org.ofbiz.base.util.UtilMisc"].toList("productAssocTypeId", "sequenceNum"), false)!/>
             </#if>
             <#if itemProductAssocList?? && itemProductAssocList?has_content>
-              <tr><td colspan="8"><hr /></td></tr>
-              <tr>
-                <td>${uiLabelMap.OrderAssociatedProducts}</td>
-                <td><a href="<@ofbizUrl>LookupAssociatedProducts?productId=${cartLine.getProductId()!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderQuickLookup}</a></td>
-              </tr>
+              <@tr><@td colspan="8"><hr /></@td></@tr>
+              <@tr>
+                <@td>${uiLabelMap.OrderAssociatedProducts}</@td>
+                <@td><a href="<@ofbizUrl>LookupAssociatedProducts?productId=${cartLine.getProductId()!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderQuickLookup}</a></@td>
+              </@tr>
               <#assign relatedProdCount = 0/>
               <#list itemProductAssocList! as itemProductAssoc>
-                <tr>
+                <@tr>
                   <#if "PRODUCT_VARIANT" != itemProductAssoc.productAssocTypeId>
                     <#assign relatedProdCount = relatedProdCount + 1/>
                     <#if (relatedProdCount > 3)><#break></#if>
                     <@showAssoc productAssoc=itemProductAssoc />
                   </#if>
-                </tr>
+                </@tr>
               </#list>
             </#if>
-          </table>
+          </@table>
 
                 <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                   <#-- Show alternate gifts if there are any... -->
@@ -238,11 +230,11 @@ under the License.
                     <div><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="${styles.button_default!}">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
                   </#list>
                 </#if>
-            </td>
+            </@td>
 
             <#-- gift wrap option -->
             <#assign showNoGiftWrapOptions = false>
-            <td nowrap="nowrap" align="right">
+            <@td nowrap="nowrap" align="right">
               <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP!>
               <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")!>
               <#if giftWrapOption?has_content>
@@ -259,10 +251,9 @@ under the License.
               <#else>
                 &nbsp;
               </#if>
-            </td>
+            </@td>
             <#-- end gift wrap option -->
-            <td nowrap="nowrap" align="center">
-              <div>
+            <@td nowrap="nowrap" align="center">
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
                     ${cartLine.getQuantity()?string.number}
                 <#else>
@@ -271,10 +262,8 @@ under the License.
                 <#if (cartLine.getSelectedAmount() > 0) >
                   <br /><b>${uiLabelMap.OrderAmount}:</b><br /><input size="6" type="text" name="amount_${cartLineIndex}" value="${cartLine.getSelectedAmount()?string.number}"/>
                 </#if>
-              </div>
-            </td>
-            <td nowrap="nowrap" align="right">
-              <div>
+            </@td>
+            <@td nowrap="nowrap" align="right">
                 <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
                   <@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=currencyUomId/>
                 <#else>
@@ -285,63 +274,60 @@ under the License.
                     </#if>
                     <input size="8" type="text" name="price_${cartLineIndex}" value="<@ofbizAmount amount=price/>"/>
                 </#if>
-              </div>
-            </td>
-            <td nowrap="nowrap" align="right"><div><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=currencyUomId/></div></td>
-            <td nowrap="nowrap" align="right"><div><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=currencyUomId/></div></td>
-            <td nowrap="nowrap" align="center"><div><#if !cartLine.getIsPromo()><input type="checkbox" name="selectedItem" value="${cartLineIndex}" onclick="javascript:checkToggle(this);"/><#else>&nbsp;</#if></div></td>
-          </tr>
+            </@td>
+            <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=currencyUomId/></@td>
+            <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=currencyUomId/></@td>
+            <@td nowrap="nowrap" align="center"><#if !cartLine.getIsPromo()><input type="checkbox" name="selectedItem" value="${cartLineIndex}" onclick="javascript:checkToggle(this);"/><#else>&nbsp;</#if></@td>
+          </@tr>
         </#list>
 
         <#if shoppingCart.getAdjustments()?has_content>
-            <tr><td colspan="7"><hr /></td></tr>
-              <tr>
-                <td colspan="4" nowrap="nowrap" align="right"><div>${uiLabelMap.OrderSubTotal}:</div></td>
-                <td nowrap="nowrap" align="right"><div><@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=currencyUomId/></div></td>
-                <td>&nbsp;</td>
-              </tr>
+            <@tr><@td colspan="7"><hr /></@td></@tr>
+              <@tr>
+                <@td colspan="4" nowrap="nowrap" align="right">${uiLabelMap.OrderSubTotal}:</@td>
+                <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=currencyUomId/></@td>
+                <@td>&nbsp;</@td>
+              </@tr>
             <#list shoppingCart.getAdjustments() as cartAdjustment>
               <#assign adjustmentType = cartAdjustment.getRelatedOne("OrderAdjustmentType", true)>
               <#if adjustmentType.get("orderAdjustmentTypeId",locale) != 'SHIPPING_CHARGES'>
-                <tr>
-                  <td colspan="4" nowrap="nowrap" align="right">
-                    <div>
+                <@tr>
+                  <@td colspan="4" nowrap="nowrap" align="right">
                       <i>${uiLabelMap.OrderAdjustment}</i> - ${adjustmentType.get("description",locale)!}
                     <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDetails}</a></#if>:
-                    </div>
-                  </td>
-                  <td nowrap="nowrap" align="right"><div><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=currencyUomId/></div></td>
-                  <td>&nbsp;</td>
-                </tr>
+                  </@td>
+                  <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=currencyUomId/></@td>
+                  <@td>&nbsp;</@td>
+                </@tr>
               </#if>
             </#list>
             <#if orderShippingTotal != 0>
-              <tr>
-                <td align="right" colspan="4"><div>${uiLabelMap.FacilityShippingAndHandling}</div></td>
-                <td align="right" nowrap="nowrap"><div><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></div></td>
-              </tr>
+              <@tr>
+                <@td align="right" colspan="4">${uiLabelMap.FacilityShippingAndHandling}</@td>
+                <@td align="right" nowrap="nowrap"><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></@td>
+              </@tr>
             </#if>
             <#if orderTaxTotal != 0>
-              <tr>
-                <td align="right" colspan="4"><div>${uiLabelMap.OrderSalesTax}</div></td>
-                <td align="right" nowrap="nowrap"><div><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></div></td>
-              </tr>
+              <@tr>
+                <@td align="right" colspan="4">${uiLabelMap.OrderSalesTax}</@td>
+                <@td align="right" nowrap="nowrap"><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
+              </@tr>
             </#if>
         </#if>
 
-        <tr>
-          <td colspan="6" align="right" valign="bottom">
-            <div><b>${uiLabelMap.OrderCartTotal}:</b></div>
-          </td>
-          <td align="right" valign="bottom">
+        <@tr>
+          <@td colspan="6" align="right" valign="bottom">
+            <b>${uiLabelMap.OrderCartTotal}:</b>
+          </@td>
+          <@td align="right" valign="bottom">
             <hr />
             <div><b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></b></div>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="8">&nbsp;</td>
-        </tr>
-      </table>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td colspan="8">&nbsp;</@td>
+        </@tr>
+      </@table>
     </form>
   <#else>
     ${uiLabelMap.OrderNoOrderItemsToDisplay}

@@ -24,7 +24,7 @@ under the License.
   </#assign>
   <@section id="partyNotes" title="${uiLabelMap.CommonNotes}" menuHtml=menuHtml>
       <#if notes?has_content>
-        <@table type="data">
+        <@table type="data" useAltRows=false>
         <@tbody>
           <#list notes as noteRef>
             <@tr>

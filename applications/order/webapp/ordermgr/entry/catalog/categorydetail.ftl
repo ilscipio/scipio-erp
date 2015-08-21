@@ -138,9 +138,7 @@ under the License.
         style="position: relative; margin-top: ${height}px;"
       </#if>
       class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
-      <#if (numCol?int > 1)>
-        <table>
-      </#if>
+      <@table type="data" class="" useAltRows=false useIf=(numCol?int > 1)>
         <#list productCategoryMembers as productCategoryMember>
           <#if (numCol?int == 1)>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)}
@@ -148,20 +146,18 @@ under the License.
             ${setRequestAttribute("listIndex", productCategoryMember_index)}
             ${screens.render(productsummaryScreen)}
           <#else>
-              <#if (tabCol?int = 1)><tr></#if>
-                  <td>
+              <@tr useIf=(tabCol?int = 1)>
+                  <@td>
                       ${setRequestAttribute("optProductId", productCategoryMember.productId)}
                       ${setRequestAttribute("productCategoryMember", productCategoryMember)}
                       ${setRequestAttribute("listIndex", productCategoryMember_index)}
                       ${screens.render(productsummaryScreen)}
-                  </td>
-              <#if (tabCol?int = numCol)></tr></#if>
+                  </@td>
+              </@tr>
               <#assign tabCol = tabCol+1><#if (tabCol?int > numCol)><#assign tabCol = 1></#if>
            </#if>
         </#list>
-      <#if (numCol?int > 1)>
-        </table>
-      </#if>
+      </@table>
       </div>
     <#if paginateEcommerceStyle??>
         <@paginationControls/>

@@ -145,26 +145,26 @@ under the License.
           <@paginateOrders />
         </#if>
         
-        <table class="" cellspacing='0'>
-          <thead>
-          <tr>
-            <th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</td>
-            <th width="15%">${uiLabelMap.CommonDate}</td>
-            <#--<th width="10%">${uiLabelMap.OrderOrderName}</td>-->
-            <#--<th width="10%">${uiLabelMap.OrderOrderType}</td>-->
-            <#--<th width="10%">${uiLabelMap.OrderOrderBillFromParty}</td>-->
-            <th width="10%">${uiLabelMap.OrderOrderBillToParty}</td>
-            <th width="15%">${uiLabelMap.OrderProductStore}</td>
-            <th width="8%">${uiLabelMap.CommonAmount}</td>
+        <@table type="data" useAltRows=true class="" cellspacing='0'>
+          <@thead>
+          <@tr>
+            <@th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
+            <@th width="15%">${uiLabelMap.CommonDate}</@th>
+            <#--<@th width="10%">${uiLabelMap.OrderOrderName}</@th>-->
+            <#--<@th width="10%">${uiLabelMap.OrderOrderType}</@th>-->
+            <#--<@th width="10%">${uiLabelMap.OrderOrderBillFromParty}</@th>-->
+            <@th width="10%">${uiLabelMap.OrderOrderBillToParty}</@th>
+            <@th width="15%">${uiLabelMap.OrderProductStore}</@th>
+            <@th width="8%">${uiLabelMap.CommonAmount}</@th>
             <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
-                <th width="10%">${uiLabelMap.CommonStatus}</td>
-                <th width="5%">${uiLabelMap.CommonFilter}</td>
+                <@th width="10%">${uiLabelMap.CommonStatus}</@th>
+                <@th width="5%">${uiLabelMap.CommonFilter}</@th>
             <#else>
-                <th colspan="2" width="15%">${uiLabelMap.CommonStatus}</td>
+                <@th colspan="2" width="15%">${uiLabelMap.CommonStatus}</@th>
             </#if>
-            <th width="7%">${uiLabelMap.OrderTrackingCode}</td>
-          </tr>
-          </thead>
+            <@th width="7%">${uiLabelMap.OrderTrackingCode}</@th>
+          </@tr>
+          </@thead>
           <#list orderHeaderList as orderHeader>
             <#assign status = orderHeader.getRelatedOne("StatusItem", true)>
             <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
@@ -183,28 +183,28 @@ under the License.
               <#assign billFrom = ''/>
             </#if>
             <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
-            <tr>
-              <td>
+            <@tr>
+              <@td>
                 <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="">${orderHeader.orderId}</a>
-              </td>
-              <td><#if orderHeader.orderDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderHeader.orderDate, "", locale, timeZone)!}</#if></td>
-              <#--<td>${orderHeader.orderName!}</td>-->
-              <#--<td>${orderHeader.getRelatedOne("OrderType", true).get("description",locale)}</td>-->
-              <#--<td>${billFrom!}</td>-->
-              <td>${billTo!}</td>
-              <td><#if productStore?has_content>${productStore.storeName?default(productStore.productStoreId)}</#if></td>
-              <td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></td>
-              <td>${orderHeader.getRelatedOne("StatusItem", true).get("description",locale)}</td>
-              <td>
+              </@td>
+              <@td><#if orderHeader.orderDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderHeader.orderDate, "", locale, timeZone)!}</#if></@td>
+              <#--<@td>${orderHeader.orderName!}</@td>-->
+              <#--<@td>${orderHeader.getRelatedOne("OrderType", true).get("description",locale)}</@td>-->
+              <#--<@td>${billFrom!}</@td>-->
+              <@td>${billTo!}</@td>
+              <@td><#if productStore?has_content>${productStore.storeName?default(productStore.productStoreId)}</#if></@td>
+              <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></@td>
+              <@td>${orderHeader.getRelatedOne("StatusItem", true).get("description",locale)}</@td>
+              <@td>
                 <#assign trackingCodes = orderHeader.getRelated("TrackingCodeOrder", null, null, false)>
                 <#list trackingCodes as trackingCode>
                     <#if trackingCode?has_content>
                         <a href="/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}">${trackingCode.trackingCodeId}</a><br />
                     </#if>
                 </#list>
-              </td>
+              </@td>
               <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
-              <td>
+              <@td>
                   <#if filterInventoryProblems.contains(orderHeader.orderId)>
                     Inv&nbsp;
                   </#if>
@@ -220,16 +220,16 @@ under the License.
                   <#if filterPartiallyReceivedPOs.contains(orderHeader.orderId)>
                     Part&nbsp;
                   </#if>
-              </td>
+              </@td>
               <#else>
-              <td>&nbsp;</td>
+              <@td>&nbsp;</@td>
               </#if>
-            </tr>
+            </@tr>
           </#list>
           <#if !orderHeaderList?has_content>
-            <tr><td colspan="9"><@resultMsg>${uiLabelMap.OrderNoOrderFound}</@resultMsg></td></tr>
+            <@tr><@td colspan="9"><@resultMsg>${uiLabelMap.OrderNoOrderFound}</@resultMsg></@td></@tr>
           </#if>
-        </table>
+        </@table>
         
         <#if paginated>
           <@paginateOrders />

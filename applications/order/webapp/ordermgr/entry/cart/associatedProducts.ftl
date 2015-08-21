@@ -23,20 +23,20 @@ under the License.
 
 <#if associatedProducts?has_content>
   <@section title="${uiLabelMap.OrderHelpAlsoInterestedIn}">
-      <table cellspacing="0" cellpadding="1" border="0">
+      <@table type="data" useAltRows=false cellspacing="0" cellpadding="1" border="0">
         <#-- random complementary products -->
         <#list associatedProducts as assocProduct>
-          <tr>
-            <td>
+          <@tr>
+            <@td>
               ${setRequestAttribute("optProduct", assocProduct)}
               ${setRequestAttribute("listIndex", assocProduct_index)}
               ${screens.render(productsummaryScreen)}
-            </td>
-          </tr>
+            </@td>
+          </@tr>
           <#if assocProduct_has_next>
-            <tr><td><hr/></td></tr>
+            <@tr><@td><hr/></@td></@tr>
           </#if>
         </#list>
-      </table>
+      </@table>
     </@section>
 </#if>

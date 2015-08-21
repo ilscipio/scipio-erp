@@ -29,19 +29,19 @@ under the License.
             <@row>
                 <@cell>
             <#if orderNotes?has_content>
-            <table class="basic-table" cellspacing='0'>
+            <@table class="basic-table" cellspacing='0'>
               <#list orderNotes as note>
-                <tr>
-                  <td valign="top" width="35%">
+                <@tr>
+                  <@td valign="top" width="35%">
                     <#if note.noteParty?has_content>
                               <div>&nbsp;${uiLabelMap.CommonBy}&nbsp;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</div>
                     </#if>
                             <div>&nbsp;${uiLabelMap.CommonAt}&nbsp;<#if note.noteDateTime?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(note.noteDateTime, "", locale, timeZone)!}</#if></div>
-                  </td>
-                  <td valign="top" width="50%">
+                  </@td>
+                  <@td valign="top" width="50%">
                     ${note.noteInfo?replace("\n", "<br/>")}
-                  </td>
-                  <td align="right" valign="top" width="15%">
+                  </@td>
+                  <@td align="right" valign="top" width="15%">
                     <#if note.internalNote! == "N">
                         ${uiLabelMap.OrderPrintableNote}
                         <form name="privateNotesForm_${note_index}" method="post" action="<@ofbizUrl>updateOrderNote</@ofbizUrl>">
@@ -60,13 +60,13 @@ under the License.
                                   <a href="javascript:document.publicNotesForm_${note_index}.submit()" class="${styles.button_default!}">${uiLabelMap.OrderNotesPublic}</a>
                         </form>
                     </#if>
-                  </td>
-                </tr>
+                  </@td>
+                </@tr>
                 <#if note_has_next>
-                  <tr><td colspan="3"><hr/></td></tr>
+                  <@tr><@td colspan="3"><hr/></@td></@tr>
                 </#if>
               </#list>
-            </table>
+            </@table>
             <#else>
                       &nbsp;${uiLabelMap.OrderNoNotes}.
             </#if>

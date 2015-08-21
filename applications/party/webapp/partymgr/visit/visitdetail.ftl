@@ -142,16 +142,9 @@ under the License.
 JIRA OFBIZ-4488: BEGIN
 https://issues.apache.org/jira/browse/OFBIZ-4488
 *******************************************************************************
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PartyPagePushFollowing}</li>
-    </ul>
-    <br class="clear"/>
-  </div>  
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.PartyPagePushFollowing}">
       <#if security.hasPermission("SEND_CONTROL_APPLET", session)>
-        <@table type="data" class="basic-table" cellspacing="0">
+        <@table type="fields" class="basic-table" cellspacing="0">
             <@tr>
               <@th>${uiLabelMap.PartyPushURL}</@th>
               <@td>
@@ -179,8 +172,7 @@ https://issues.apache.org/jira/browse/OFBIZ-4488
             </@tr>
         </@table>
       </#if>
-  </div>
-</div>
+</@section>
 *******************************************************************************
 JIRA OFBIZ-4488: END
 *******************************************************************************

@@ -23,35 +23,35 @@ under the License.
 
 <#if returnList?has_content>
 <@section>
-<table cellspacing="0" class="basic-table">
-     <thead>
-  <tr class="header-row">
-        <th>${uiLabelMap.OrderReturnId} ${uiLabelMap.CommonNbr}</th>
-        <th>${uiLabelMap.FormFieldTitle_entryDate}</th>
-        <th>${uiLabelMap.PartyParty}</th>
-        <th>${uiLabelMap.FacilityFacility}</th>
-        <th>${uiLabelMap.CommonStatus}</th>
-  </tr>
-      </thead>
+<@table cellspacing="0" class="basic-table">
+     <@thead>
+  <@tr class="header-row">
+        <@th>${uiLabelMap.OrderReturnId} ${uiLabelMap.CommonNbr}</@th>
+        <@th>${uiLabelMap.FormFieldTitle_entryDate}</@th>
+        <@th>${uiLabelMap.PartyParty}</@th>
+        <@th>${uiLabelMap.FacilityFacility}</@th>
+        <@th>${uiLabelMap.CommonStatus}</@th>
+  </@tr>
+      </@thead>
   <#list returnList as returnHeader>
   <#assign statusItem = returnHeader.getRelatedOne("StatusItem", false)>
   <#if returnHeader.destinationFacilityId??>
     <#assign facility = returnHeader.getRelatedOne("Facility", false)>
   </#if>
-  <tr>
-        <td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="${styles.button_default!}">${returnHeader.returnId}</a></td>
-    <td><div>${returnHeader.entryDate.toString()}</div></td>
-    <td>
+  <@tr>
+        <@td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="${styles.button_default!}">${returnHeader.returnId}</a></@td>
+    <@td><div>${returnHeader.entryDate.toString()}</div></@td>
+    <@td>
       <#if returnHeader.fromPartyId??>
             <a href="${customerDetailLink}${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" class='${styles.button_default!}'>${returnHeader.fromPartyId}</a>
       <#else>
             <span>${uiLabelMap.CommonNA}</span>
       </#if>
-    </td>
-    <td><#if facility??>${facility.facilityName?default(facility.facilityId)}<#else>${uiLabelMap.CommonNone}</#if></td>
-    <td>${statusItem.get("description",locale)}</td>
-  </tr>
+    </@td>
+    <@td><#if facility??>${facility.facilityName?default(facility.facilityId)}<#else>${uiLabelMap.CommonNone}</#if></@td>
+    <@td>${statusItem.get("description",locale)}</@td>
+  </@tr>
   </#list>
-    </table>
+    </@table>
 </@section>
 </#if>

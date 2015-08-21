@@ -25,46 +25,46 @@ under the License.
         <@row>
             <@cell class="${styles.grid_large!}6">
                         <#if orderTerms?has_content && parameters.createNew?default('') != 'Y'>
-                            <table class="basic-table hover-bar">
-                  <thead>
-                                <tr class="header-row">
-                        <th>${uiLabelMap.OrderOrderTermType}</th>
-                        <th align="center">${uiLabelMap.OrderOrderTermValue}</th>
-                        <th align="center">${uiLabelMap.OrderOrderTermDays}</th>
-                        <th align="center">${uiLabelMap.OrderOrderTextValue}</th>
-                        <th>${uiLabelMap.CommonDescription}</th>
-                        <th>&nbsp;</th>
-                                </tr>
-                   </thead>
+                            <@table type="data" useAltRows=true class="basic-table hover-bar">
+                  <@thead>
+                                <@tr class="header-row">
+                        <@th>${uiLabelMap.OrderOrderTermType}</@th>
+                        <@th align="center">${uiLabelMap.OrderOrderTermValue}</@th>
+                        <@th align="center">${uiLabelMap.OrderOrderTermDays}</@th>
+                        <@th align="center">${uiLabelMap.OrderOrderTextValue}</@th>
+                        <@th>${uiLabelMap.CommonDescription}</@th>
+                        <@th>&nbsp;</@th>
+                                </@tr>
+                   </@thead>
                                 <#list orderTerms as orderTerm>
-                                    <tr<@dataRowClassStr alt=(orderTerm_index % 2 != 0) />>
-                                        <td nowrap="nowrap">${orderTerm.getRelatedOne('TermType', false).get('description', locale)}</td>
-                                        <td align="center">${orderTerm.termValue!}</td>
-                                        <td align="center">${orderTerm.termDays!}</td>
-                                        <td nowrap="nowrap">${orderTerm.textValue!}</td>
-                                        <td nowrap="nowrap">${orderTerm.description?if_exists}</td>
-                                        <td align="right">
+                                    <@tr>
+                                        <@td nowrap="nowrap">${orderTerm.getRelatedOne('TermType', false).get('description', locale)}</@td>
+                                        <@td align="center">${orderTerm.termValue!}</@td>
+                                        <@td align="center">${orderTerm.termDays!}</@td>
+                                        <@td nowrap="nowrap">${orderTerm.textValue!}</@td>
+                                        <@td nowrap="nowrap">${orderTerm.description?if_exists}</@td>
+                                        <@td align="right">
                                 <a href="<@ofbizUrl>setOrderTerm?termIndex=${orderTerm_index}&amp;createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
                                 <a href="<@ofbizUrl>removeCartOrderTerm?termIndex=${orderTerm_index}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
-                                        </td>
-                                    </tr>
+                                        </@td>
+                                    </@tr>
                                 </#list>
-                                <tr>
-                                    <td colspan="5">
+                                <@tr>
+                                    <@td colspan="5">
                             <a href="<@ofbizUrl>setOrderTerm?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a>
-                                    </td>
-                                </tr>
-                            </table>
+                                    </@td>
+                                </@tr>
+                            </@table>
                         <#else>
                             <form method="post" action="<@ofbizUrl>addOrderTerm</@ofbizUrl>" name="termform">
                                 <input type="hidden" name="termIndex" value="${termIndex!}" />
-                                <table class="basic-table">
-                                    <tr>
-                            <td class="${styles.grid_large!}3">
+                                <@table type="fields" class="basic-table">
+                                    <@tr>
+                            <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTermType}
-                                        </td>
-                                        <td width="5">&nbsp;</td>
-                                        <td width="74%">
+                                        </@td>
+                                        <@td width="5">&nbsp;</@td>
+                                        <@td width="74%">
                                             <select name="termTypeId">
                                                 <option value=""></option>
                                                 <#list termTypes! as termType>
@@ -73,52 +73,52 @@ under the License.
                                                     >${termType.get('description', locale)}</option>
                                                 </#list>
                                             </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                        <td class="${styles.grid_large!}3">
+                                        </@td>
+                                    </@tr>
+                                    <@tr>
+                        <@td class="${styles.grid_large!}3">
                                         ${uiLabelMap.OrderOrderTermValue}
-                                    </td>
-                                    <td width="5">&nbsp;</td>
-                                    <td width="74%">
+                                    </@td>
+                                    <@td width="5">&nbsp;</@td>
+                                    <@td width="74%">
                                         <input type="text" size="30" maxlength="60" name="termValue" value="${termValue!}" />
-                                    </td>
-                                    </tr>
-                                    <tr>
-                            <td class="${styles.grid_large!}3">
+                                    </@td>
+                                    </@tr>
+                                    <@tr>
+                            <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTermDays}
-                                        </td>
-                                        <td width="5">&nbsp;</td>
-                                        <td width="74%">
+                                        </@td>
+                                        <@td width="5">&nbsp;</@td>
+                                        <@td width="74%">
                                             <input type="text" size="30" maxlength="60" name="termDays" value="${termDays!}" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                            <td class="${styles.grid_large!}3">
+                                        </@td>
+                                    </@tr>
+                                    <@tr>
+                            <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTextValue}
-                                        </td>
-                                        <td width="5">&nbsp;</td>
-                                        <td width="74%">
+                                        </@td>
+                                        <@td width="5">&nbsp;</@td>
+                                        <@td width="74%">
                                             <input type="text" size="30" maxlength="60" name="textValue" value="${textValue?if_exists}" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                            <td class="${styles.grid_large!}3">
+                                        </@td>
+                                    </@tr>
+                                    <@tr>
+                            <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.CommonDescription}
-                                        </td>
-                                        <td width="5">&nbsp;</td>
-                                        <td width="74%">
+                                        </@td>
+                                        <@td width="5">&nbsp;</@td>
+                                        <@td width="74%">
                                             <input type="text" size="30" maxlength="255" name="description" value="${description?if_exists}" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td width="26%" align="right" valign="top">&nbsp;</td>
-                                        <td width="5">&nbsp;</td>
-                                        <td width="74%">
+                                        </@td>
+                                    </@tr>
+                                    <@tr>
+                                        <@td width="26%" align="right" valign="top">&nbsp;</@td>
+                                        <@td width="5">&nbsp;</@td>
+                                        <@td width="74%">
                                             <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}" />
-                                        </td>
-                                    </tr>
-                                </table>
+                                        </@td>
+                                    </@tr>
+                                </@table>
                             </form>
                         </#if>
             </@cell>

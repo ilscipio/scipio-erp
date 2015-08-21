@@ -25,23 +25,23 @@ these reports and helping to improve them.</div>
 <br />
 
 <form method="post" name="orderreportform" action="<@ofbizUrl>orderreportjasper.pdf</@ofbizUrl>" target="OrderReport">
-<table>
-<tr>
-<td><div>From Date:</div></td>
-<td>
+<@table>
+<@tr>
+<@td><div>From Date:</div></@td>
+<@td>
  <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-</td>
-</tr>
-<tr>
-<td><div>To Date:</div></td>
-<td>
+</@td>
+</@tr>
+<@tr>
+<@td><div>To Date:</div></@td>
+<@td>
  <@htmlTemplate.renderDateTimeField name="toDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="t" oDate1dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-</td>
-</tr>
+</@td>
+</@tr>
 <#--
-<tr>
-<td><div>Report:</div></td>
-<td>
+<@tr>
+<@td><div>Report:</div></@td>
+<@td>
    <select name="groupName" tabindex="14"  CLASS="stateSelectBox">
      <option value="orderStatus"></option>
      <option value="orderStatus">Orders by Order Status</option>
@@ -51,31 +51,31 @@ these reports and helping to improve them.</div>
      <option value="itemStatus">Order Items by Status</option>
      <option value="product">Order Items by Product</option>
    </select>
-</td>
-</tr>
+</@td>
+</@tr>
 -->
-</table>
+</@table>
  <input type="submit" tabindex="16" class="button" name="GoReport" value="Order Report">
 </form>
 
 <form method="post" name="itemreportform" action="<@ofbizUrl>orderitemreportjasper.pdf</@ofbizUrl>" target="OrderReport">
-<table>
-<tr>
-<td><div>From Date:</div></td>
-<td>
+<@table>
+<@tr>
+<@td><div>From Date:</div></@td>
+<@td>
  <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-</td>
-</tr>
-<tr>
-<td><div>To Date:</div></td>
-<td>
+</@td>
+</@tr>
+<@tr>
+<@td><div>To Date:</div></@td>
+<@td>
  <@htmlTemplate.renderDateTimeField name="toDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="toDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-</td>
-</tr>
+</@td>
+</@tr>
 <#--
-<tr>
-<td><div>Report:</div></td>
-<td>
+<@tr>
+<@td><div>Report:</div></@td>
+<@td>
    <select name="groupName" tabindex="14"  class="stateSelectBox">
      <option value="orderStatus"></option>
      <option value="orderStatus">Orders by Order Status</option>
@@ -85,9 +85,9 @@ these reports and helping to improve them.</div>
      <option value="itemStatus">Order Items by Status</option>
      <option value="product">Order Items by Product</option>
    </select>
-</td>
-</tr>
+</@td>
+</@tr>
 -->
-</table>
+</@table>
  <input type="submit" tabindex="16" class="button" name="GoReport" value="Item Report">
 </form>

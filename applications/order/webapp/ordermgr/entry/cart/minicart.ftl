@@ -37,26 +37,26 @@ under the License.
               <li><a href="<@ofbizUrl>googleCheckout</@ofbizUrl>" class="button">${uiLabelMap.EcommerceCartToGoogleCheckout}</a></li>
             </ul>
           </#if>
-          <table>
-            <thead>
-              <tr>
-                <th>${uiLabelMap.OrderQty}</th>
-                <th>${uiLabelMap.OrderItem}</th>
-                <th>${uiLabelMap.CommonSubtotal}</th>
-              </tr>
-            </thead>
-            <tfoot>
-              <tr>
-                <td colspan="3">
+          <@table type="data" class="">
+            <@thead>
+              <@tr>
+                <@th>${uiLabelMap.OrderQty}</@th>
+                <@th>${uiLabelMap.OrderItem}</@th>
+                <@th>${uiLabelMap.CommonSubtotal}</@th>
+              </@tr>
+            </@thead>
+            <@tfoot>
+              <@tr>
+                <@td colspan="3">
                   ${uiLabelMap.OrderTotal}: <@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/>
-                </td>
-              </tr>
-            </tfoot>
-            <tbody>
+                </@td>
+              </@tr>
+            </@tfoot>
+            <@tbody>
             <#list shoppingCart.items() as cartLine>
-              <tr>
-                <td>${cartLine.getQuantity()?string.number}</td>
-                <td>
+              <@tr>
+                <@td>${cartLine.getQuantity()?string.number}</@td>
+                <@td>
                   <#if cartLine.getProductId()??>
                       <#if cartLine.getParentProductId()??>
                           <a href="<@ofbizCatalogAltUrl productId=cartLine.getParentProductId()/>" class="linktext">${cartLine.getName()}</a>
@@ -66,15 +66,15 @@ under the License.
                   <#else>
                     <strong>${cartLine.getItemTypeDescription()!}</strong>
                   </#if>
-                </td>
-                <td><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></td>
-              </tr>
+                </@td>
+                <@td><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></@td>
+              </@tr>
               <#if cartLine.getReservStart()??>
-                <tr><td>&nbsp;</td><td colspan="2">(${cartLine.getReservStart()?string("yyyy-MM-dd")}, ${cartLine.getReservLength()} <#if cartLine.getReservLength() == 1>${uiLabelMap.CommonDay}<#else>${uiLabelMap.CommonDays}</#if>)</td></tr>
+                <@tr><@td>&nbsp;</@td><@td colspan="2">(${cartLine.getReservStart()?string("yyyy-MM-dd")}, ${cartLine.getReservLength()} <#if cartLine.getReservLength() == 1>${uiLabelMap.CommonDay}<#else>${uiLabelMap.CommonDays}</#if>)</@td></@tr>
               </#if>
             </#list>
-            </tbody>
-          </table>
+            </@tbody>
+          </@table>
           <#if hidebottomlinks?default("N") != "Y">
             <ul>
               <li><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="button">${uiLabelMap.OrderViewCart}</a></li>
@@ -85,7 +85,7 @@ under the License.
             </ul>
           </#if>
         <#else>
-          <p>${uiLabelMap.OrderShoppingCartEmpty}</p>
+          <@resultMsg>${uiLabelMap.OrderShoppingCartEmpty}</@resultMsg>
         </#if>
     </div>
 </div>

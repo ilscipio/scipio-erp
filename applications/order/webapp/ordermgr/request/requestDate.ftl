@@ -17,35 +17,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.CommonDate}">
-        <table cellspacing="0" class="basic-table">
-            <tr>
-                <td align="right" valign="top" width="25%">
+        <@table cellspacing="0" class="basic-table">
+            <@tr>
+                <@td align="right" valign="top" width="25%">
                     &nbsp;${uiLabelMap.OrderRequestDate}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="70%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="70%">
                     ${(custRequest.custRequestDate.toString())!}
-                </td>
-            </tr>
-            <tr><td colspan="7"><hr /></td></tr>
-            <tr>
-                <td align="right" valign="top" width="25%">
+                </@td>
+            </@tr>
+            <@tr><@td colspan="7"><hr /></@td></@tr>
+            <@tr>
+                <@td align="right" valign="top" width="25%">
                     &nbsp;${uiLabelMap.OrderRequestCreatedDate}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="70%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="70%">
                     ${(custRequest.createdDate.toString())!}
-                </td>
-            </tr>
-            <tr><td colspan="7"><hr /></td></tr>
-            <tr>
-                <td align="right" valign="top" width="25%">
+                </@td>
+            </@tr>
+            <@tr><@td colspan="7"><hr /></@td></@tr>
+            <@tr>
+                <@td align="right" valign="top" width="25%">
                     &nbsp;${uiLabelMap.OrderRequestLastModifiedDate}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="70%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="70%">
                     ${(custRequest.lastModifiedDate.toString())!}
-                </td>
-            </tr>
-        </table>
+                </@td>
+            </@tr>
+        </@table>
     </@section>

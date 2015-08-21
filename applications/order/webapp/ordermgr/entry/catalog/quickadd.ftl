@@ -18,12 +18,12 @@ under the License.
 -->
 
 <#if productCategory?has_content>
-  <table border='0'  cellpadding='3' cellspacing='0'>
-    <tr>
-      <td>
+  <@table border='0'  cellpadding='3' cellspacing='0'>
+    <@tr>
+      <@td>
         <h2>${productCategory.categoryName!}</h2>
-      </td>
-      <td align="right">
+      </@td>
+      <@td align="right">
         <form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>" style='margin: 0;'>
           <select name='category_id'>
             <option value='${productCategory.productCategoryId}'>${productCategory.categoryName!}</option>
@@ -37,22 +37,22 @@ under the License.
           </select>
           <div><a href="javascript:document.choosequickaddform.submit()" class="${styles.button_default!}">${uiLabelMap.ProductChooseQuickAddCategory}</a></div>
         </form>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
     <#if productCategory.categoryImageUrl?? || productCategory.longDescription??>
-      <tr><td colspan='2'><hr class='sepbar'/></td></tr>
-      <tr>
-        <td valign="top" width="0" colspan='2'>
+      <@tr><@td colspan='2'><hr class='sepbar'/></@td></@tr>
+      <@tr>
+        <@td valign="top" width="0" colspan='2'>
           <div>
             <#if productCategory.categoryImageUrl??>
               <img src="<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgLarge" alt="" />
             </#if>
             ${productCategory.longDescription!}
           </div>
-        </td>
-      </tr>
+        </@td>
+      </@tr>
     </#if>
-  </table>
+  </@table>
 </#if>
 
 <#if productCategoryMembers?? && 0 < productCategoryMembers?size>
@@ -78,13 +78,13 @@ under the License.
   </form>
   </center>
 <#else>
-  <table border="0" cellpadding="2">
-    <tr><td colspan="2"><hr class='sepbar'/></td></tr>
-    <tr>
-      <td>
+  <@table border="0" cellpadding="2">
+    <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
+    <@tr>
+      <@td>
         <div class='tabletext'>${uiLabelMap.ProductNoProductsInThisCategory}.</div>
-      </td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+  </@table>
 </#if>
 

@@ -68,11 +68,11 @@ under the License.
 
 <#if displayParty?has_content || orderContactMechValueMaps?has_content>
 <@section title="${uiLabelMap.OrderContactInformation}">
-      <table class="basic-table" cellspacing='0'>
-        <tr>
-          <td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonName}</td>
-          <td width="1%">&nbsp;</td>
-          <td valign="top" width="80%">
+      <@table class="basic-table" cellspacing='0'>
+        <@tr>
+          <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>
+          <@td width="1%">&nbsp;</@td>
+          <@td valign="top" width="80%">
             <div>
               <#if displayParty?has_content>
                 <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
@@ -96,17 +96,17 @@ under the License.
                 </#if>
               </#if>
             </div>
-          </td>
-        </tr>
+          </@td>
+        </@tr>
         <#list orderContactMechValueMaps as orderContactMechValueMap>
           <#assign contactMech = orderContactMechValueMap.contactMech>
           <#assign contactMechPurpose = orderContactMechValueMap.contactMechPurposeType>
-          <tr>
-            <td scope="row" class="${styles.grid_large!}3">
+          <@tr>
+            <@td scope="row" class="${styles.grid_large!}3">
               ${contactMechPurpose.get("description",locale)}
-            </td>
-            <td width="1%">&nbsp;</td>
-            <td valign="top" width="80%">
+            </@td>
+            <@td width="1%">&nbsp;</@td>
+            <@td valign="top" width="80%">
               <#if contactMech.contactMechTypeId == "POSTAL_ADDRESS">
                 <#assign postalAddress = orderContactMechValueMap.postalAddress>
                 <#if postalAddress?has_content>
@@ -152,9 +152,9 @@ under the License.
                   ${contactMech.infoString!}
                 </div>
               </#if>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
         </#list>
-      </table>
+      </@table>
     </@section>
 </#if>

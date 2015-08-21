@@ -27,18 +27,17 @@ under the License.
       </#if>
 
     <#if orderHeaderList?has_content>
-      <table class="basic-table hover-bar" cellspacing='0'>
-        <thead>
-        <tr class="header-row">
-          <th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</th>
-          <th width="15%">${uiLabelMap.OrderOrderBillToParty}</th>
-          <th width="25%">${uiLabelMap.OrderProductStore}</th>
-          <th width="10%">${uiLabelMap.CommonAmount}</th>
-          <th width="20%">${uiLabelMap.OrderTrackingCode}</th>
-          <th width="20%">${uiLabelMap.CommonStatus}</th>
-        </tr>
-        </thead>
-        <#assign alt_row = false>
+      <@table type="data" useAltRows=true class="basic-table hover-bar" cellspacing='0'>
+        <@thead>
+        <@tr class="header-row">
+          <@th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
+          <@th width="15%">${uiLabelMap.OrderOrderBillToParty}</@th>
+          <@th width="25%">${uiLabelMap.OrderProductStore}</@th>
+          <@th width="10%">${uiLabelMap.CommonAmount}</@th>
+          <@th width="20%">${uiLabelMap.OrderTrackingCode}</@th>
+          <@th width="20%">${uiLabelMap.CommonStatus}</@th>
+        </@tr>
+        </@thead>
         <#list orderHeaderList as orderHeader>
           <#assign status = orderHeader.getRelatedOne("StatusItem", true)>
           <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
@@ -48,24 +47,23 @@ under the License.
             <#assign billTo = billToPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")/>
           </#if>
           <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
-          <tr<@dataRowClassStr alt=alt_row />>
-            <#assign alt_row = !alt_row>
-            <td><a href="/ordermgr/control/orderview?orderId=${orderHeader.orderId}" class="${styles.button_default!}">${orderHeader.orderId}</a></td>
-            <td>${billTo!}</td>
-            <td><#if productStore?has_content>${productStore.storeName?default(productStore.productStoreId)}</#if></td>
-            <td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></td>
-            <td>
+          <@tr>
+            <@td><a href="/ordermgr/control/orderview?orderId=${orderHeader.orderId}" class="${styles.button_default!}">${orderHeader.orderId}</a></@td>
+            <@td>${billTo!}</@td>
+            <@td><#if productStore?has_content>${productStore.storeName?default(productStore.productStoreId)}</#if></@td>
+            <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></@td>
+            <@td>
               <#assign trackingCodes = orderHeader.getRelated("TrackingCodeOrder", null, null, false)>
               <#list trackingCodes as trackingCode>
                 <#if trackingCode?has_content>
                   <a href="/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}">${trackingCode.trackingCodeId}</a><br />
                 </#if>
               </#list>
-            </td>
-            <td>${orderHeader.getRelatedOne("StatusItem", true).get("description",locale)}</td>
-          </tr>
+            </@td>
+            <@td>${orderHeader.getRelatedOne("StatusItem", true).get("description",locale)}</@td>
+          </@tr>
         </#list>
-      </table>
+      </@table>
     <#else>
       <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
     </#if>

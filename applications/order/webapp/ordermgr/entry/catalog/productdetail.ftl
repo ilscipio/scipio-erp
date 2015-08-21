@@ -283,11 +283,11 @@ ${virtualJavaScript!}
 
 <div id="productdetail">
 
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
+<@table border="0" cellpadding="2" cellspacing="0" width="100%">
   <#-- Category next/previous -->
   <#if category??>
-    <tr>
-      <td colspan="2" align="right">
+    <@tr>
+      <@td colspan="2" align="right">
         <#if previousProductId??>
           <a href="<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${previousProductId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
@@ -295,15 +295,15 @@ ${virtualJavaScript!}
         <#if nextProductId??>
           &nbsp;|&nbsp;<a href="<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${nextProductId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
         </#if>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
   </#if>
 
-  <tr><td colspan="2"><hr /></td></tr>
+  <@tr><@td colspan="2"><hr /></@td></@tr>
 
   <#-- Product image/name/price -->
-  <tr>
-    <td valign="top" width="0">
+  <@tr>
+    <@td valign="top" width="0">
       <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL")!>
       <#-- remove the next two lines to always display the virtual image first (virtual images must exist) -->
       <#if firstLargeImage?has_content>
@@ -312,8 +312,8 @@ ${virtualJavaScript!}
       <#if productLargeImageUrl?string?has_content>
         <a href="javascript:popupDetail();"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class='cssImgLarge' alt="" /></a>
       </#if>
-    </td>
-    <td align="right" valign="top">
+    </@td>
+    <@td align="right" valign="top">
       <h2>${productContentWrapper.get("PRODUCT_NAME")!}</h2>
       <div>${productContentWrapper.get("DESCRIPTION")!}</div>
       <div><b>${product.productId!}</b></div>
@@ -509,7 +509,7 @@ ${virtualJavaScript!}
             </#if>
           </#if>
         </#if>
-      </td></tr><tr><td colspan="2" align="right">
+      </@td></@tr><@tr><@td colspan="2" align="right">
         <#-- check to see if introductionDate hasnt passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
         <p>&nbsp;</p>
@@ -530,13 +530,13 @@ ${virtualJavaScript!}
               <input type="text" size="5" name="add_amount" value=""/>
             </div>
             <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
-                <table width="100%"><tr>
+                <@table width="100%"><@tr>
                     <@htmlTemplate.renderDateTimeField name="reservStart" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="startDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <@htmlTemplate.renderDateTimeField name="reservEnd" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="endDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                <tr>
-                <#--td nowrap="nowrap" align="right">Number<br />of days</td><td><input type="textt" size="4" name="reservLength"/></td></tr><tr><td>&nbsp;</td><td align="right" nowrap>&nbsp;</td-->
-                <td nowrap="nowrap" align="right">Number of persons</td><td><input type="text" size="4" name="reservPersons" value="2"/></td>
-                <td nowrap="nowrap" align="right">Number of rooms</td><td><input type="text" size="5" name="quantity" value="1"/></td></tr></table>
+                <@tr>
+                <#--td nowrap="nowrap" align="right">Number<br />of days</@td><@td><input type="textt" size="4" name="reservLength"/></@td></@tr><@tr><@td>&nbsp;</@td><@td align="right" nowrap>&nbsp;</td-->
+                <@td nowrap="nowrap" align="right">Number of persons</@td><@td><input type="text" size="4" name="reservPersons" value="2"/></@td>
+                <@td nowrap="nowrap" align="right">Number of rooms</@td><@td><input type="text" size="5" name="quantity" value="1"/></@td></@tr></@table>
             <#else/>
                 <input type="text" size="5" name="quantity" value="1"<#if product.isVirtual!?upper_case == "Y"> disabled="disabled"</#if>/>
             </#if>
@@ -567,7 +567,7 @@ ${virtualJavaScript!}
           </select>
           &nbsp;&nbsp;
           <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
-              <table><tr><td>&nbsp;</td><td align="right">${uiLabelMap.CommonStartDate} (yyyy-mm-dd)</td><td><input type="text" size="10" name="reservStartStr" /></td><td>Number of&nbsp;days</td><td><input type="text" size="4" name="reservLength" /></td><td>&nbsp;</td><td align="right">Number of&nbsp;persons</td><td><input type="text" size="4" name="reservPersons" value="1" /></td><td align="right">Qty&nbsp;</td><td><input type="text" size="5" name="quantity" value="1" /></td></tr></table>
+              <@table><@tr><@td>&nbsp;</@td><@td align="right">${uiLabelMap.CommonStartDate} (yyyy-mm-dd)</@td><@td><input type="text" size="10" name="reservStartStr" /></@td><@td>Number of&nbsp;days</@td><@td><input type="text" size="4" name="reservLength" /></@td><@td>&nbsp;</@td><@td align="right">Number of&nbsp;persons</@td><@td><input type="text" size="4" name="reservPersons" value="1" /></@td><@td align="right">Qty&nbsp;</@td><@td><input type="text" size="5" name="quantity" value="1" /></@td></@tr></@table>
           <#else>
               <input type="text" size="5" name="quantity" value="1"/>
               <input type="hidden" name="reservStartStr" value= ""/>
@@ -589,8 +589,8 @@ ${virtualJavaScript!}
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
         <p>&nbsp;</p>
-        <table cellspacing="0" cellpadding="0">
-          <tr>
+        <@table cellspacing="0" cellpadding="0">
+          <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>
             <#list imageKeys as key>
@@ -603,23 +603,23 @@ ${virtualJavaScript!}
                 <#if !imageUrl?string?has_content>
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
-                <td align="center" valign="bottom">
+                <@td align="center" valign="bottom">
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class='cssImgSmall' alt="" /></a>
                   <br />
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="linktext">${key}</a>
-                </td>
+                </@td>
               </#if>
               <#assign indexer = indexer + 1>
             </#list>
             <#if (indexer > maxIndex)>
               <div><b>${uiLabelMap.ProductMoreOptions}</b></div>
             </#if>
-          </tr>
-        </table>
+          </@tr>
+        </@table>
       </#if>
-    </td>
-  </tr>
-</table>
+    </@td>
+  </@tr>
+</@table>
 
   <#-- Digital Download Files Associated with this Product -->
   <#if downloadProductContentAndInfoList?has_content>

@@ -171,12 +171,12 @@ function getConfigDetails() {
 
 <div id="productdetail">
 
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
+<@table type="generic" border="0" cellpadding="2" cellspacing="0" width="100%">
 
   <#-- Category next/previous -->
   <#if category??>
-    <tr>
-      <td colspan="2" align="right">
+    <@tr>
+      <@td colspan="2" align="right">
         <#if previousProductId??>
           <a href='<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${previousProductId!}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
@@ -184,15 +184,15 @@ function getConfigDetails() {
         <#if nextProductId??>
           &nbsp;|&nbsp;<a href='<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${nextProductId!}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
         </#if>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
   </#if>
 
-  <tr><td colspan="2"><hr class='sepbar'/></td></tr>
+  <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
 
   <#-- Product image/name/price -->
-  <tr>
-    <td valign="top" width="0">
+  <@tr>
+    <@td valign="top" width="0">
       <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL")!>
       <#-- remove the next two lines to always display the virtual image first (virtual images must exist) -->
       <#if firstLargeImage?has_content>
@@ -201,8 +201,8 @@ function getConfigDetails() {
       <#if productLargeImageUrl?string?has_content>
         <a href="javascript:popupDetail();"><img src='<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' class='cssImgLarge' align='left' alt="" /></a>
       </#if>
-    </td>
-    <td align="right" valign="top">
+    </@td>
+    <@td align="right" valign="top">
       <h2>${productContentWrapper.get("PRODUCT_NAME")!}</h2>
       <div>${productContentWrapper.get("DESCRIPTION")!}</div>
       <div><b>${product.productId!}</b></div>
@@ -318,7 +318,7 @@ function getConfigDetails() {
           </#if>
         </#if>
 
-        </td></tr><tr><td colspan="2" align="right">
+        </@td></@tr><@tr><@td colspan="2" align="right">
 
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
@@ -387,8 +387,8 @@ function getConfigDetails() {
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
         <p>&nbsp;</p>
-        <table cellspacing="0" cellpadding="0">
-          <tr>
+        <@table cellspacing="0" cellpadding="0">
+          <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>
             <#list imageKeys as key>
@@ -401,58 +401,58 @@ function getConfigDetails() {
                 <#if !imageUrl?string?has_content>
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
-                <td align="center" valign="bottom">
+                <@td align="center" valign="bottom">
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class='cssImgStandard' alt="" /></a>
                   <br />
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.button_default!}">${key}</a>
-                </td>
+                </@td>
               </#if>
               <#assign indexer = indexer + 1>
             </#list>
             <#if (indexer > maxIndex)>
               <div><b>${uiLabelMap.OrderMoreOptionsAvailable}.</b></div>
             </#if>
-          </tr>
-        </table>
+          </@tr>
+        </@table>
       </#if>
-    </td>
-  </tr>
+    </@td>
+  </@tr>
 
-  <tr><td colspan="2"><hr class='sepbar'/></td></tr>
+  <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
 
   <#-- Long description of product -->
-  <tr>
-    <td colspan="2">
+  <@tr>
+    <@td colspan="2">
       <div>${productContentWrapper.get("LONG_DESCRIPTION")!}</div>
-    </td>
-  </tr>
+    </@td>
+  </@tr>
 
-  <tr><td colspan="2"><hr class='sepbar'/></td></tr>
+  <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
 
   <#-- Any attributes/etc may go here -->
   <#-- Product Configurator -->
-  <tr>
-    <td colspan="2">
+  <@tr>
+    <@td colspan="2">
       <form name="configform" id="configFormId" method="post" action="<@ofbizUrl>product<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
         <input type='hidden' name='add_product_id' value='${product.productId}' />
         <input type='hidden' name='add_category_id' value='' />
         <input type='hidden' name='quantity' value='1' />
 
         <input type='hidden' name='product_id' value='${product.productId}' />
-        <table>
-          <tr>
-            <td>
+        <@table>
+          <@tr>
+            <@td>
                 <div>
                     <a href="javascript:verifyConfig();" class="${styles.button_default!}">${uiLabelMap.OrderVerifyConfiguration}</a>
                 </div>
-            </td>
-          </tr>
-          <tr><td><hr /></td></tr>
+            </@td>
+          </@tr>
+          <@tr><@td><hr /></@td></@tr>
           <#assign counter = 0>
           <#assign questions = configwrapper.questions>
           <#list questions as question>
-          <tr>
-            <td>
+          <@tr>
+            <@td>
               <div>${question.question}</div>
               <#if question.isFirst()>
                 <a name='#${question.getConfigItem().getString("configItemId")}'></a>
@@ -468,10 +468,10 @@ function getConfigDetails() {
               <#else>
                 <div><a href='#${question.getConfigItem().getString("configItemId")}' class="${styles.button_default!}">Details</a></div>
               </#if>
-            </td>
-          </tr>
-          <tr>
-            <td>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td>
             <#if question.isStandard()>
               <#-- Standard item: all the options are always included -->
               <#assign options = question.options>
@@ -599,51 +599,51 @@ function getConfigDetails() {
                 </#list>
               </#if>
             </#if>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
           <#if question_has_next>
-            <tr><td><hr /></td></tr>
+            <@tr><@td><hr /></@td></@tr>
           </#if>
           <#assign counter = counter + 1>
         </#list>
-        </table>
+        </@table>
       </form>
-    </td>
-  </tr>
-  <tr><td colspan="2"><hr class='sepbar'/></td></tr>
+    </@td>
+  </@tr>
+  <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
-  <#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
+<#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
   <#assign targetRequest = "product">
   <#if targetRequestName?has_content>
     <#assign targetRequest = targetRequestName>
   </#if>
   <#if assocProducts?has_content>
-    <tr><td>&nbsp;</td></tr>
-    <tr><td colspan="2"><h2>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName!}</h2></td></tr>
-    <tr><td><hr /></td></tr>
+    <@tr><@td>&nbsp;</@td></@tr>
+    <@tr><@td colspan="2"><h2>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName!}</h2></@td></@tr>
+    <@tr><@td><hr /></@td></@tr>
     <#list assocProducts as productAssoc>
-      <tr><td>
+      <@tr><@td>
         <div>
           <a href='<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>' class="${styles.button_default!}">
             ${productAssoc.productIdTo!}
           </a>
           - <b>${productAssoc.reason!}</b>
         </div>
-      </td></tr>
+      </@td></@tr>
       ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
       ${setRequestAttribute("listIndex", listIndex)}
       ${setRequestAttribute("formNamePrefix", formNamePrefix)}
       <#if targetRequestName?has_content>
         ${setRequestAttribute("targetRequestName", targetRequestName)}
       </#if>
-      <tr>
-        <td>
+      <@tr>
+        <@td>
           ${screens.render(productsummaryScreen)}
-        </td>
-      </tr>
+        </@td>
+      </@tr>
       <#local listIndex = listIndex + 1>
-      <tr><td><hr /></td></tr>
+      <@tr><@td><hr /></@td></@tr>
     </#list>
     ${setRequestAttribute("optProductId", "")}
     ${setRequestAttribute("formNamePrefix", "")}
@@ -654,7 +654,6 @@ function getConfigDetails() {
 <#assign listIndex = 1>
 ${setRequestAttribute("productValue", productValue)}
 
-<table>
   <#-- obsolete -->
   <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
   <#-- cross sell -->
@@ -663,7 +662,7 @@ ${setRequestAttribute("productValue", productValue)}
   <@associated assocProducts=upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
   <#-- obsolescence -->
   <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>
-</table>
+</@table>
 
 <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
 <#if commonFeatureResultIds?has_content>

@@ -18,27 +18,27 @@ under the License.
 -->
 <@section title="${uiLabelMap.OrderOrderQuoteRoles}">
       <#if quoteRoles?has_content>
-        <table cellspacing="0" class="basic-table">
+        <@table cellspacing="0" class="basic-table">
             <#assign row = 1>
             <#list quoteRoles as quoteRole>
                 <#assign roleType = quoteRole.getRelatedOne("RoleType", false)>
                 <#assign party = quoteRole.getRelatedOne("Party", false)>
                 <#assign rolePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", quoteRole.partyId, "compareDate", quote.issueDate, "userLogin", userLogin))/>
-                <tr>
-                    <td align="right" valign="top" width="15%">
+                <@tr>
+                    <@td align="right" valign="top" width="15%">
                         &nbsp;${roleType.get("description",locale)!}
-                    </td>
-                    <td width="5%">&nbsp;</td>
-                    <td valign="top" width="80%">
+                    </@td>
+                    <@td width="5%">&nbsp;</@td>
+                    <@td valign="top" width="80%">
                         ${rolePartyNameResult.fullName?default("Name Not Found")}
-                    </td>
-                </tr>
+                    </@td>
+                </@tr>
             <#if quoteRoles.size() != row>
-                <tr><td colspan="3"><hr /></td></tr>
+                <@tr><@td colspan="3"><hr /></@td></@tr>
             </#if>
             <#assign row = row + 1>
             </#list>
-        </table>
+        </@table>
       <#else>
         &nbsp;
       </#if>

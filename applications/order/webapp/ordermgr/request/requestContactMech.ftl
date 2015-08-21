@@ -31,13 +31,13 @@ under the License.
 </#if>
 
 <@section title="${uiLabelMap.PartyContactInformation}">
-        <table cellspacing="0" class="basic-table">
-            <tr>
-                <td align="right" valign="top" width="25%">
+        <@table cellspacing="0" class="basic-table">
+            <@tr>
+                <@td align="right" valign="top" width="25%">
                     &nbsp;${label?default(uiLabelMap.PartyUnknown)}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="70%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="70%">
                     <div>
                       <#if emailAddress?has_content>${emailAddress}</#if>
 
@@ -67,8 +67,8 @@ under the License.
                         </#if>
                       </#if>
                     </div>
-                </td>
-            </tr>
-        </table>
+                </@td>
+            </@tr>
+        </@table>
     </@section>
 </#if>

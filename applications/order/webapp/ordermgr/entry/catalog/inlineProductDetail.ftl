@@ -255,9 +255,9 @@ ${virtualJavaScript!}
 
 <#assign price = priceMap!/>
 <div id="inlineproductdetail${inlineCounter}">
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
-  <tr>
-    <td align="left" valign="top" width="0">
+<@table border="0" cellpadding="2" cellspacing="0" width="100%">
+  <@tr>
+    <@td align="left" valign="top" width="0">
       <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL")!>
       <#if firstLargeImage?has_content>
         <#assign productLargeImageUrl = firstLargeImage>
@@ -266,8 +266,8 @@ ${virtualJavaScript!}
         <input type="hidden" name="detailImage${inlineCounter}" value="${firstDetailImage?default(mainDetailImageUrl?default("_NONE_"))}"/>
         <a href="javascript:popupDetailInline('${inlineCounter}');"><img src='<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>' name='mainImage${inlineCounter}' vspace='5' hspace='5' class='cssImgLarge' align='left' alt="" /></a>
       </#if>
-    </td>
-    <td align="right" valign="top" width="100%">
+    </@td>
+    <@td align="right" valign="top" width="100%">
     <#--    <h2>${productContentWrapper.get("PRODUCT_NAME")!}</h2>  -->
         <#assign inStock = true>
         <#if product.isVirtual!?upper_case == "Y">
@@ -323,8 +323,8 @@ ${virtualJavaScript!}
             </#if>
           </#if>
         </#if>
-      </td></tr>
-      <tr><td COLSPAN="2" align="right">
+      </@td></@tr>
+      <@tr><@td COLSPAN="2" align="right">
         <#-- check to see if introductionDate hasnt passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
         <p>&nbsp;</p>
@@ -346,9 +346,9 @@ ${virtualJavaScript!}
             </div>
            </#if>
         </#if>
-      </td></tr>
+      </@td></@tr>
 
-      <tr><td COLSPAN="2" align="right">
+      <@tr><@td COLSPAN="2" align="right">
       <#if variantTree?? && 0 < variantTree.size()>
         <script language="JavaScript" type="text/javascript">eval("list"+ "${inlineCounter}" + "${featureOrderFirst}" + "()");</script>
       </#if>
@@ -358,8 +358,8 @@ ${virtualJavaScript!}
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
         <p>&nbsp;</p>
-        <table cellspacing="0" cellpadding="0">
-          <tr>
+        <@table cellspacing="0" cellpadding="0">
+          <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>
             <#list imageKeys as key>
@@ -372,21 +372,21 @@ ${virtualJavaScript!}
                 <#if !imageUrl?string?has_content>
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
-                <td align="center" valign="bottom">
+                <@td align="center" valign="bottom">
                   <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" alt="" /></a>
                   <br />
                   <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="linktext">${key}</a>
-                </td>
+                </@td>
               </#if>
               <#assign indexer = indexer + 1>
             </#list>
             <#if (indexer > maxIndex)>
               <div><b>${uiLabelMap.ProductMoreOptions}</b></div>
             </#if>
-          </tr>
-        </table>
+          </@tr>
+        </@table>
       </#if>      -->
-    </td>
-  </tr>
-</table>
+    </@td>
+  </@tr>
+</@table>
 </div>

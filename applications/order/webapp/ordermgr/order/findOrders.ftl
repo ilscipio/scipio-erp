@@ -385,7 +385,7 @@ document.lookuporder.orderId.focus();
           </@row>
       </#macro>
       <@massOrderChangeButton id="1"/>
-      <@table type="data" class="basic-table hover-bar" cellspacing='0'>
+      <@table type="data" useAltRows=true class="basic-table hover-bar" cellspacing='0'>
        <@thead>
         <@tr class="header-row">
           <@th width="5%">

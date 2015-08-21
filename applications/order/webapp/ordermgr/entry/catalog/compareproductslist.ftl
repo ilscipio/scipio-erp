@@ -19,21 +19,21 @@ under the License.
 <@section title="${uiLabelMap.ProductCompareProducts}">
   <#assign productCompareList = Static["org.ofbiz.product.product.ProductEvents"].getProductCompareList(request)/>
   <#if productCompareList?has_content>
-    <table>
+    <@table type="data" class="" useAltRows=false>
     <#list productCompareList as product>
-      <tr>
-        <td>
+      <@tr>
+        <@td>
           ${Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "PRODUCT_NAME", request)}
-        </td>
-        <td>
+        </@td>
+        <@td>
           <form method="post" action="<@ofbizUrl>removeFromCompare</@ofbizUrl>" name="removeFromCompare${product_index}form">
             <input type="hidden" name="productId" value="${product.productId}"/>
           </form>
           <a href="javascript:document.removeFromCompare${product_index}form.submit()" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
-        </td>
-      </tr>
+        </@td>
+      </@tr>
     </#list>
-  </table>
+  </@table>
   <div>
     <a href="<@ofbizUrl>clearCompareList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClearAll}</a>
   </div>

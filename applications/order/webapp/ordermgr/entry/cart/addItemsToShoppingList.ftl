@@ -17,13 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<!-- Screenlet to add cart to shopping list. The shopping lists are presented in a dropdown box. -->
+<#-- Screenlet to add cart to shopping list. The shopping lists are presented in a dropdown box. -->
 
 <#if (shoppingLists??) && (shoppingCartSize > 0)>
     <@section title="${uiLabelMap.OrderAddOrderToShoppingList}">
-      <table border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td>
+      <@table type="generic" border="0" cellspacing="0" cellpadding="0">
+        <@tr>
+          <@td>
             <form method="post" name="addBulkToShoppingList" action="<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>" style='margin: 0;'>
               <#assign index = 0/>
               <#list shoppingCart.items() as cartLine>
@@ -32,10 +32,9 @@ under the License.
                 </#if>
                 <#assign index = index + 1/>
               </#list>
-              <table border="0">
-                <tr>
-                  <td>
-                    <div>
+              <@table type="fields" border="0">
+                <@tr>
+                  <@td>
                     <select name='shoppingListId'>
                       <#list shoppingLists as shoppingList>
                         <option value='${shoppingList.shoppingListId}'>${shoppingList.getString("listName")}</option>
@@ -44,13 +43,12 @@ under the License.
                         <option value="">${uiLabelMap.OrderNewShoppingList}</option>
                     </select>
                     <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToShoppingList}"/>
-                    </div>
-                  </td>
-                </tr>
-              </table>
+                  </@td>
+                </@tr>
+              </@table>
             </form>
-          </td>
-        </tr>
-      </table>
+          </@td>
+        </@tr>
+      </@table>
     </@section>
 </#if>

@@ -29,48 +29,48 @@ under the License.
         <input type="hidden" name="partyId" value="${orderRoles[0].partyId}" />
 
         <#if paymentMethods?has_content>
-        <table class="basic-table" cellspacing='0'>
-         <thead>
-          <tr class="header-row">
-            <th width="30%" align="right">${uiLabelMap.PaymentMethod}</th>
-            <th>&nbsp;&nbsp;&nbsp;</th>
-            <th>${uiLabelMap.OrderAmount}</th>
-            <th>&nbsp;&nbsp;&nbsp;</th>
-            <th width="60%">${uiLabelMap.OrderReference}</th>
-          </tr>
-          </thead>
+        <@table class="basic-table" cellspacing='0'>
+         <@thead>
+          <@tr class="header-row">
+            <@th width="30%" align="right">${uiLabelMap.PaymentMethod}</@th>
+            <@th>&nbsp;&nbsp;&nbsp;</@th>
+            <@th>${uiLabelMap.OrderAmount}</@th>
+            <@th>&nbsp;&nbsp;&nbsp;</@th>
+            <@th width="60%">${uiLabelMap.OrderReference}</@th>
+          </@tr>
+          </@thead>
           <#list paymentMethods as payMethod>
-          <tr>
-            <td align="right">${payMethod.get("description",locale)?default(payMethod.paymentMethodId)}</td>
-            <td>&nbsp;&nbsp;&nbsp;</td>
-            <td><input type="text" size="7" name="${payMethod.paymentMethodId}_amount" /></td>
-            <td>&nbsp;&nbsp;&nbsp;</td>
-            <td><input type="text" size="15" name="${payMethod.paymentMethodId}_reference" /></td>
-          </tr>
+          <@tr>
+            <@td align="right">${payMethod.get("description",locale)?default(payMethod.paymentMethodId)}</@td>
+            <@td>&nbsp;&nbsp;&nbsp;</@td>
+            <@td><input type="text" size="7" name="${payMethod.paymentMethodId}_amount" /></@td>
+            <@td>&nbsp;&nbsp;&nbsp;</@td>
+            <@td><input type="text" size="15" name="${payMethod.paymentMethodId}_reference" /></@td>
+          </@tr>
           </#list>
-        </table>
+        </@table>
         </#if>
         <br /> <br />
         <#if paymentMethodTypes?has_content>
-        <table class="basic-table" cellspacing='0'>
-         <thead>
-          <tr class="header-row">
-            <th width="30%" align="right">${uiLabelMap.OrderPaymentType}</th>
-            <th>&nbsp;&nbsp;&nbsp;</th>
-            <th>${uiLabelMap.OrderAmount}</th>
-            <th>&nbsp;&nbsp;&nbsp;</th>
-            <th width="60%">${uiLabelMap.OrderReference}</th>
-          </tr>
+        <@table class="basic-table" cellspacing='0'>
+         <@thead>
+          <@tr class="header-row">
+            <@th width="30%" align="right">${uiLabelMap.OrderPaymentType}</@th>
+            <@th>&nbsp;&nbsp;&nbsp;</@th>
+            <@th>${uiLabelMap.OrderAmount}</@th>
+            <@th>&nbsp;&nbsp;&nbsp;</@th>
+            <@th width="60%">${uiLabelMap.OrderReference}</@th>
+          </@tr>
           <#list paymentMethodTypes as payType>
-          <tr>
-            <td align="right">${payType.get("description",locale)?default(payType.paymentMethodTypeId)}</td>
-            <td>&nbsp;&nbsp;&nbsp;</td>
-            <td><input type="text" size="7" name="${payType.paymentMethodTypeId}_amount" /></td>
-            <td>&nbsp;&nbsp;&nbsp;</td>
-            <td><input type="text" size="15" name="${payType.paymentMethodTypeId}_reference" /></td>
-          </tr>
+          <@tr>
+            <@td align="right">${payType.get("description",locale)?default(payType.paymentMethodTypeId)}</@td>
+            <@td>&nbsp;&nbsp;&nbsp;</@td>
+            <@td><input type="text" size="7" name="${payType.paymentMethodTypeId}_amount" /></@td>
+            <@td>&nbsp;&nbsp;&nbsp;</@td>
+            <@td><input type="text" size="15" name="${payType.paymentMethodTypeId}_reference" /></@td>
+          </@tr>
           </#list>
-        </table>
+        </@table>
         </#if>
       </form>
 

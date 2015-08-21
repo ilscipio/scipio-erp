@@ -17,95 +17,95 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.OrderOrderQuoteId}&nbsp;${quote.quoteId}&nbsp;${uiLabelMap.CommonInformation}">
-        <table cellspacing="0" class="basic-table">
+        <@table cellspacing="0" class="basic-table">
             <#-- quote header information -->
-            <tr>
-                <td align="right" valign="top" width="15%">
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonType}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     ${(quoteType.get("description",locale))?default(quote.quoteTypeId!)}
-                </td>
-            </tr>
-            <tr><td colspan="3"><hr /></td></tr>
+                </@td>
+            </@tr>
+            <@tr><@td colspan="3"><hr /></@td></@tr>
 
             <#-- quote Channel information -->
-            <tr>
-                <td align="right" valign="top" width="15%">
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.OrderSalesChannel}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     ${(salesChannel.get("description",locale))?default(quote.salesChannelEnumId!)}
-                </td>
-            </tr>
-            <tr><td colspan="3"><hr /></td></tr>
+                </@td>
+            </@tr>
+            <@tr><@td colspan="3"><hr /></@td></@tr>
 
             <#-- quote status information -->
-            <tr>
-                <td align="right" valign="top" width="15%">
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonStatus}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     ${(statusItem.get("description", locale))?default(quote.statusId!)}
-                </td>
-            </tr>
+                </@td>
+            </@tr>
             <#-- party -->
-            <tr><td colspan="3"><hr /></td></tr>
-            <tr>
-                <td align="right" valign="top" width="15%">
+            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.PartyPartyId}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     ${quote.partyId!}
-                </td>
-            </tr>
+                </@td>
+            </@tr>
             <#-- quote name -->
-            <tr><td colspan="3"><hr /></td></tr>
-            <tr>
-                <td align="right" valign="top" width="15%">
+            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.OrderOrderQuoteName}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     ${quote.quoteName!}
-                </td>
-            </tr>
+                </@td>
+            </@tr>
             <#-- quote description -->
-            <tr><td colspan="3"><hr /></td></tr>
-            <tr>
-                <td align="right" valign="top" width="15%">
+            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonDescription}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     ${quote.description!}
-                </td>
-            </tr>
+                </@td>
+            </@tr>
             <#-- quote currency -->
-            <tr><td colspan="3"><hr /></td></tr>
-            <tr>
-                <td align="right" valign="top" width="15%">
+            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonCurrency}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     <#if currency??>${currency.get("description",locale)?default(quote.currencyUomId!)}</#if>
-                </td>
-            </tr>
+                </@td>
+            </@tr>
             <#-- quote currency -->
-            <tr><td colspan="3"><hr /></td></tr>
-            <tr>
-                <td align="right" valign="top" width="15%">
+            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr>
+                <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.ProductProductStore}
-                </td>
-                <td width="5%">&nbsp;</td>
-                <td valign="top" width="80%">
+                </@td>
+                <@td width="5%">&nbsp;</@td>
+                <@td valign="top" width="80%">
                     <#if store??>${store.storeName?default(quote.productStoreId!)}</#if>
-                </td>
-            </tr>
-        </table>
+                </@td>
+            </@tr>
+        </@table>
     </@section>

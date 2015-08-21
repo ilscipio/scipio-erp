@@ -21,21 +21,21 @@ under the License.
 
 <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
   <input type="hidden" name="finalizeMode" value="ship"/>
-  <table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
-    <tr><td>
+  <@table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
+    <@tr><@td>
 
       <#-- header table -->
 
-      <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle">
+      <@table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <@tr>
+          <@td valign="middle">
             <div class="boxhead">${uiLabelMap.OrderSelectAShippingAddress}</div>
-          </td>
-        </tr>
-      </table>
+          </@td>
+        </@tr>
+      </@table>
 
-      <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr><td colspan="3"><hr /></td></tr>
+      <@table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <@tr><@td colspan="3"><hr /></@td></@tr>
 
         <#-- postal addresses for chosen id -->
 
@@ -46,12 +46,12 @@ under the License.
             <#-- skip non-postal addresses -->
 
             <#if shippingAddress.toName??>
-              <tr>
-                <td valign="top" nowrap="nowrap">
+              <@tr>
+                <@td valign="top" nowrap="nowrap">
                   <input type="radio" name="shipping_contact_mech_id" value="${partyContactMechPurpose.contactMechId}" />
-                </td>
-                <td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                <td width="100%">
+                </@td>
+                <@td nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp;</@td>
+                <@td width="100%">
                   <div>
                     <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonToName}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                     <#if shippingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
@@ -62,17 +62,17 @@ under the License.
                     <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                     <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                   </div>
-                </td>
-              </tr>
-              <tr><td colspan="3"><hr /></td></tr>
+                </@td>
+              </@tr>
+              <@tr><@td colspan="3"><hr /></@td></@tr>
             </#if>
           </#list>
         </#if>
 
-      </table>
+      </@table>
 
-    </td></tr>
-  </table>
+    </@td></@tr>
+  </@table>
 </form>
 
 <#else>

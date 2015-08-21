@@ -20,18 +20,18 @@ under the License.
 <#-- ==================== Party Listing dialog box ========================= -->
 <#if additionalPartyRoleMap?has_content>
 <@section title="${uiLabelMap.PartyAdditionalPartyListing}">
-      <table border="0" width="100%" cellpadding="0">
+      <@table border="0" width="100%" cellpadding="0">
         <#list roleList as role>
-          <tr>
-            <td valign="bottom"><div>${roleData[role].get("description", locale)}</div></td>
-          </tr>
-          <tr>
-            <td colspan="4"><hr /></td>
-          </tr>
+          <@tr>
+            <@td valign="bottom"><div>${roleData[role].get("description", locale)}</div></@td>
+          </@tr>
+          <@tr>
+            <@td colspan="4"><hr /></@td>
+          </@tr>
           <#list additionalPartyRoleMap[role] as party>
-            <tr>
-              <td><div>${party}</div></td>
-              <td>
+            <@tr>
+              <@td><div>${party}</div></@td>
+              <@td>
                 <div>
                   <#if partyData[party].type == "person">
                     ${partyData[party].firstName!}
@@ -39,21 +39,21 @@ under the License.
                     ${partyData[party].groupName!}
                   </#if>
                 </div>
-              </td>
-              <td>
+              </@td>
+              <@td>
                 <div>
                   <#if partyData[party].type == "person">
                     ${partyData[party].lastName!}
                   </#if>
                 </div>
-              </td>
-              <td align="right">
+              </@td>
+              <@td align="right">
                 <a href="<@ofbizUrl>removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           </#list>
-          <tr><td>&nbsp;</td></tr>
+          <@tr><@td>&nbsp;</@td></@tr>
         </#list>
-      </table>
+      </@table>
     </@section>
 </#if>

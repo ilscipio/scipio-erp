@@ -24,20 +24,20 @@ under the License.
         <input type="hidden" name="_rowSubmit_o_${rowCount}" value="Y" />
         <input type="hidden" name="returnAdjustmentId_o_${rowCount}" value="${returnAdjustment.returnAdjustmentId}" />
     </#if>
-    <tr>
-        <td colspan="2">&nbsp;</td>
-        <td colspan="3" align="right"><span>${returnAdjustment.get("description",locale)?default("N/A")}</span>
+    <@tr>
+        <@td colspan="2">&nbsp;</@td>
+        <@td colspan="3" align="right"><span>${returnAdjustment.get("description",locale)?default("N/A")}</span>
             <#if returnAdjustment.comments?has_content>: ${returnAdjustment.comments}</#if>
-        </div></td>
+        </div></@td>
         <#if (adjEditable)>
-           <td align="right">
+           <@td align="right">
               <input type="text" size="8" name="amount_o_${rowCount}" value="${returnAdjustment.amount?default(0)?string("##0.00")}"/>
-           </td>
+           </@td>
         <#else>
-           <td align="right"><@ofbizCurrency amount=returnAdjustment.amount?default(0) isoCode=returnHeader.currencyUomId/></td>
+           <@td align="right"><@ofbizCurrency amount=returnAdjustment.amount?default(0) isoCode=returnHeader.currencyUomId/></@td>
         </#if>
-        <td colspan="2">&nbsp;</td>
-        <td><div>
+        <@td colspan="2">&nbsp;</@td>
+        <@td><div>
            <#if (!adjEditable)>
                 <#if adjReturnType?has_content>
                   ${adjReturnType.get("description", locale)?default("${uiLabelMap.CommonNA}")}
@@ -54,18 +54,18 @@ under the License.
                 </select>
           </#if>
           </div>
-       </td>
+       </@td>
        <#if (adjEditable)>
-         <td align='right'><a href='javascript:document.removeReturnAdjustment_${rowCountForAdjRemove}.submit()' class='${styles.button_default!}'>${uiLabelMap.CommonRemove}</a></td>
+         <@td align='right'><a href='javascript:document.removeReturnAdjustment_${rowCountForAdjRemove}.submit()' class='${styles.button_default!}'>${uiLabelMap.CommonRemove}</a></@td>
        <#else>
-       <td>&nbsp;</td>
+       <@td>&nbsp;</@td>
        </#if>
         <#if (adjEditable)>
           <#assign rowCount = rowCount + 1>
           <#assign rowCountForAdjRemove = rowCountForAdjRemove + 1>
        </#if>
        <#assign returnTotal = returnTotal + returnAdjustment.amount?default(0)>
-    </tr>
+    </@tr>
 </#macro>
 
     <#if returnHeader?has_content>
@@ -90,47 +90,47 @@ under the License.
 <#if !requestParameters.orderId?? && returnHeader?has_content>
           <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">
           <input type="hidden" name="_useRowSubmit" value="Y" />
-        <table cellspacing="0" class="basic-table">
+        <@table type="data" useAltRows=false cellspacing="0" class="basic-table">
           <#assign readOnly = (returnHeader.statusId != "RETURN_REQUESTED" && returnHeader.statusId != "SUP_RETURN_REQUESTED")>
-          <tr><td colspan="10"><h3>${uiLabelMap.OrderOrderReturn} #${returnId}</h3></td></tr>
+          <@tr><@td colspan="10"><h3>${uiLabelMap.OrderOrderReturn} #${returnId}</h3></@td></@tr>
 
           <#-- information about orders and amount refunded/credited on past returns -->
           <#if orh??>
-          <tr><td colspan="10">
-              <table cellspacing="0" class="basic-table">
-                <tr>
-                  <td  width="25%">${uiLabelMap.OrderOrderTotal}</td>
-                  <td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></td>
-                </tr>
-                <tr>
-                  <td  width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</td>
-                  <td><@ofbizCurrency amount=orh.getReturnedCreditTotalWithBillingAccountBd() isoCode=orh.getCurrency()/></td>
-                </tr>
-                <tr>
-                  <td  width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</td>
-                  <td><@ofbizCurrency amount=orh.getReturnedRefundTotalWithBillingAccountBd() isoCode=orh.getCurrency()/></td>
-                </tr>
-              </table>
-          </td></tr>
+          <@tr><@td colspan="10">
+              <@table type="summary" cellspacing="0" class="basic-table">
+                <@tr>
+                  <@td  width="25%">${uiLabelMap.OrderOrderTotal}</@td>
+                  <@td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></@td>
+                </@tr>
+                <@tr>
+                  <@td  width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</@td>
+                  <@td><@ofbizCurrency amount=orh.getReturnedCreditTotalWithBillingAccountBd() isoCode=orh.getCurrency()/></@td>
+                </@tr>
+                <@tr>
+                  <@td  width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</@td>
+                  <@td><@ofbizCurrency amount=orh.getReturnedRefundTotalWithBillingAccountBd() isoCode=orh.getCurrency()/></@td>
+                </@tr>
+              </@table>
+          </@td></@tr>
           </#if>
-          <tr><td colspan="10"><br /></td></tr>
-          <thead>
-          <tr class="header-row">
-            <th>${uiLabelMap.OrderOrderItems}</th>
-            <th>${uiLabelMap.ProductProduct}</th>
-            <th>${uiLabelMap.CommonDescription}</th>
-            <th>${uiLabelMap.OrderQuantity}</th>
-            <th>${uiLabelMap.OrderPrice}</th>
-            <th>${uiLabelMap.OrderSubTotal}</th>
-            <th>${uiLabelMap.OrderReturnReason}</th>
-            <th>${uiLabelMap.OrderItemStatus}</th>
-            <th>${uiLabelMap.CommonType}</th>
+          <@tr><@td colspan="10"><br /></@td></@tr>
+          <@thead>
+          <@tr class="header-row">
+            <@th>${uiLabelMap.OrderOrderItems}</@th>
+            <@th>${uiLabelMap.ProductProduct}</@th>
+            <@th>${uiLabelMap.CommonDescription}</@th>
+            <@th>${uiLabelMap.OrderQuantity}</@th>
+            <@th>${uiLabelMap.OrderPrice}</@th>
+            <@th>${uiLabelMap.OrderSubTotal}</@th>
+            <@th>${uiLabelMap.OrderReturnReason}</@th>
+            <@th>${uiLabelMap.OrderItemStatus}</@th>
+            <@th>${uiLabelMap.CommonType}</@th>
             <#if (readOnly)>
-            <th>${uiLabelMap.OrderReturnResponse}</th>
+            <@th>${uiLabelMap.OrderReturnResponse}</@th>
             </#if>
-            <th>&nbsp;</th>
-          </tr>
-          </thead>
+            <@th>&nbsp;</@th>
+          </@tr>
+          </@thead>
           <#assign returnTotal = 0.0>
           <#assign rowCount = 0>
           <#assign rowCountForAdjRemove = 0>
@@ -147,28 +147,28 @@ under the License.
                  <#assign returnTotal = returnTotal + item.get("returnQuantity") * item.get("returnPrice") >
                  <#assign returnItemSubTotal = item.get("returnQuantity") * item.get("returnPrice") >
               </#if>
-              <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                <td><a href="<@ofbizUrl>orderview?orderId=${item.orderId}</@ofbizUrl>" class="${styles.button_default!}">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}
+              <@tr valign="middle" alt=alt_row>
+                <@td><a href="<@ofbizUrl>orderview?orderId=${item.orderId}</@ofbizUrl>" class="${styles.button_default!}">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}
                   <input name="orderId_o_${rowCount}" value="${item.orderId}" type="hidden" />
                   <input name="returnId_o_${rowCount}" value="${item.returnId}" type="hidden" />
                   <input name="returnItemTypeId_o_${rowCount}" value="${item.returnItemTypeId}" type="hidden" />
                   <input name="returnItemSeqId_o_${rowCount}" value="${item.returnItemSeqId}" type="hidden" />
                   <input type="hidden" name="_rowSubmit_o_${rowCount}" value="Y" />
-                </td>
-                <td><div>
+                </@td>
+                <@td><div>
                     <#if item.get("productId")??>
                         <a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="${styles.button_default!}">${item.productId}</a>
                     <#else>
                         N/A
-                    </#if></div></td>
-                <td><div>
+                    </#if></div></@td>
+                <@td><div>
                     <#if readOnly>
                         ${item.description?default("N/A")}
                     <#else>
                         <input name="description_o_${rowCount}" value="${item.description!}" type="text" size="15" />
                     </#if>
-                    </div></td>
-                <td><div>
+                    </div></@td>
+                <@td><div>
                     <#if readOnly>
                         ${item.returnQuantity?string.number}
                     <#else>
@@ -180,18 +180,18 @@ under the License.
                             <br />${uiLabelMap.OrderQty}: ${shipmentReceipt.quantityAccepted}, ${shipmentReceipt.datetimeReceived}, <a href="/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}" class="${styles.button_default!}">${shipmentReceipt.inventoryItemId}</a>
                         </#list>
                     </#if>
-                    </div></td>
-                <td><div>
+                    </div></@td>
+                <@td><div>
                     <#if readOnly>
                         <@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/>
                     <#else>
                         <input name="returnPrice_o_${rowCount}" value="${item.returnPrice?if_exists}" type="text" size="8" align="right" />
                     </#if>
-                    </div></td>
-                <td>
+                    </div></@td>
+                <@td>
                     <#if returnItemSubTotal??><@ofbizCurrency amount=returnItemSubTotal isoCode=orderHeader.currencyUom/></#if>
-                </td>
-                <td><div>
+                </@td>
+                <@td><div>
                     <#if readOnly>
                         ${returnReason.get("description",locale)?default("N/A")}
                     <#else>
@@ -205,8 +205,8 @@ under the License.
                             </#list>
                         </select>
                     </#if>
-                    </div></td>
-                <td><div>
+                    </div></@td>
+                <@td><div>
                   <#if readOnly>
                       <#if status?has_content>
                       ${status.get("description",locale)}
@@ -224,8 +224,8 @@ under the License.
                           </#list>
                       </select>
                   </#if>
-                  </div></td>
-                <td><div>
+                  </div></@td>
+                <@td><div>
                     <#if (readOnly)>
                         ${returnType.get("description",locale)?default("N/A")}
                     <#else>
@@ -238,9 +238,9 @@ under the License.
                                 <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.get("description",locale)!}</option>
                             </#list>
                         </select>
-                    </#if></div></td>
+                    </#if></div></@td>
                 <#if (readOnly)>
-                  <td>
+                  <@td>
                   <#if returnHeader.statusId == "RETURN_COMPLETED" || returnHeader.statusId == "SUP_RETURN_COMPLETED">
                     <#assign itemResp = item.getRelatedOne("ReturnItemResponse", false)!>
                     <#if itemResp?has_content>
@@ -257,14 +257,14 @@ under the License.
                   <#else>
                     <div>${uiLabelMap.CommonNA}</div>
                   </#if>
-                </td>
+                </@td>
                 </#if>
                 <#if returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "SUP_RETURN_REQUESTED">
-                  <td align='right'><a href='javascript:document.removeReturnItem_${item_index}.submit()' class='${styles.button_default!}'>${uiLabelMap.CommonRemove}</a></td>
+                  <@td align='right'><a href='javascript:document.removeReturnItem_${item_index}.submit()' class='${styles.button_default!}'>${uiLabelMap.CommonRemove}</a></@td>
                 <#else>
-                  <td>&nbsp;</td>
+                  <@td>&nbsp;</@td>
                 </#if>
-              </tr>
+              </@tr>
               <#assign rowCount = rowCount + 1>
               <#assign returnItemAdjustments = item.getRelated("ReturnAdjustment", null, null, false)>
               <#if (returnItemAdjustments?has_content)>
@@ -276,11 +276,11 @@ under the License.
               <#assign alt_row = !alt_row>
             </#list>
         <#else>
-            <tr>
-              <td colspan="9"><div>${uiLabelMap.OrderNoReturnItemsFound}</div></td>
-            </tr>
+            <@tr>
+              <@td colspan="9"><div>${uiLabelMap.OrderNoReturnItemsFound}</div></@td>
+            </@tr>
         </#if>
-            <tr><td colspan="10"><hr/></td></tr>
+            <@tr><@td colspan="10"><hr/></@td></@tr>
         <#-- these are general return adjustments not associated with a particular item (itemSeqId = "_NA_" -->
         <#if (returnAdjustments?has_content)>
             <#list returnAdjustments as returnAdjustment>
@@ -289,22 +289,22 @@ under the License.
             </#list>
             </#if>
             <#-- show the return total -->
-            <tr><td colspan="5"></td><td><hr /></td></tr>
-            <tr>
-              <td colspan="2">&nbsp;</td>
-              <td colspan="3">${uiLabelMap.OrderReturnTotal}</td>
-              <td align="right"><@ofbizCurrency amount=returnTotal isoCode=returnHeader.currencyUomId/></td>
-            </tr>
+            <@tr><@td colspan="5"></@td><@td><hr /></@td></@tr>
+            <@tr>
+              <@td colspan="2">&nbsp;</@td>
+              <@td colspan="3">${uiLabelMap.OrderReturnTotal}</@td>
+              <@td align="right"><@ofbizCurrency amount=returnTotal isoCode=returnHeader.currencyUomId/></@td>
+            </@tr>
             <#if (!readOnly) && (rowCount > 0)>
-               <tr>
-                  <td colspan="6" align="right">
+               <@tr>
+                  <@td colspan="6" align="right">
                   <input name="returnId" value="${returnHeader.returnId}" type="hidden" />
                   <input name="_rowCount" value="${rowCount}" type="hidden" />
-                  <input type="submit" class="bottontext" value="${uiLabelMap.CommonUpdate}" /></td>
-              </tr>
+                  <input type="submit" class="bottontext" value="${uiLabelMap.CommonUpdate}" /></@td>
+              </@tr>
            </#if>
-           <tr><td colspan="10"><hr/></td></tr>
-        </table>
+           <@tr><@td colspan="10"><hr/></@td></@tr>
+        </@table>
         </form>
         <#if returnItems?has_content>
           <#list returnItems as item>
@@ -341,41 +341,41 @@ under the License.
         <br />
         <form name="returnItems" method="post" action="<@ofbizUrl>returnItems</@ofbizUrl>">
           <input type="hidden" name="returnId" value="${returnId}" />
-          <table border='0' cellpadding='2' cellspacing='0'>
-            <tr><td colspan="4"><h3>${uiLabelMap.OrderReturnItems}</h3></td></tr>
+          <@table border='0' cellpadding='2' cellspacing='0'>
+            <@tr><@td colspan="4"><h3>${uiLabelMap.OrderReturnItems}</h3></@td></@tr>
             <#if partyOrders?has_content>
-              <tr>
-                <td width='25%' align='right' nowrap="nowrap">${uiLabelMap.OrderOrderId}</td>
-                <td>&nbsp;</td>
-                <td width='25%'>
+              <@tr>
+                <@td width='25%' align='right' nowrap="nowrap">${uiLabelMap.OrderOrderId}</@td>
+                <@td>&nbsp;</@td>
+                <@td width='25%'>
                   <select name="orderId">
                     <#list partyOrders as order>
                       <option value="${order.orderId}">${order.orderId} - ${order.orderDate}</option>
                     </#list>
                   </select>
-                </td>
-                <td><div class="tooltip">${uiLabelMap.OrderReturnLoadItems}</div></td>
-              </tr>
+                </@td>
+                <@td><div class="tooltip">${uiLabelMap.OrderReturnLoadItems}</div></@td>
+              </@tr>
             <#else>
-              <tr>
-                <td colspan="4" nowrap="nowrap"><div>${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId?default('_NA_')}" class="${styles.button_default!}">${partyId?default('[null]')}</a></div></td>
-              </tr>
-              <tr>
-                <td width='25%' align='right' nowrap="nowrap"><div>${uiLabelMap.OrderOrderId}</div></td>
-                <td>&nbsp;</td>
-                <td width='25%'>
+              <@tr>
+                <@td colspan="4" nowrap="nowrap"><div>${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId?default('_NA_')}" class="${styles.button_default!}">${partyId?default('[null]')}</a></div></@td>
+              </@tr>
+              <@tr>
+                <@td width='25%' align='right' nowrap="nowrap"><div>${uiLabelMap.OrderOrderId}</div></@td>
+                <@td>&nbsp;</@td>
+                <@td width='25%'>
                   <input type='text' name='orderId' size='20' maxlength='20' />
-                </td>
-                <td><div class="tooltip">${uiLabelMap.OrderReturnLoadItems}</div></td>
-              </tr>
+                </@td>
+                <@td><div class="tooltip">${uiLabelMap.OrderReturnLoadItems}</div></@td>
+              </@tr>
             </#if>
-            <tr>
-              <td colspan="2">&nbsp;</td>
-              <td colspan="2">
+            <@tr>
+              <@td colspan="2">&nbsp;</@td>
+              <@td colspan="2">
                 <a href="javascript:document.returnItems.submit();" class="${styles.button_default!}">${uiLabelMap.OrderReturnLoadItems}</a>
-              </td>
-            </tr>
-          </table>
+              </@td>
+            </@tr>
+          </@table>
         </form>
         </#if>
 <!-- if no requestParameters.orderId??, then show list of items -->

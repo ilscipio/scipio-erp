@@ -16,36 +16,21 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
+<#-- should be done in screen
 <#assign components = Static["org.ofbiz.base.component.ComponentConfig"].getAllComponents()!/>
 <#if (requestParameters.certString?has_content)>
     <#assign cert = Static["org.ofbiz.base.util.KeyStoreUtil"].pemToCert(requestParameters.certString)/>
-</#if>
-<div id="findPartyParameters" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PageTitleImportCertificate}</li>
-    </ul>
-    <br class="clear" />
-  </div>
-  <div class="screenlet-body">
+</#if>-->
+<@section id="findPartyParameters" title="${uiLabelMap.PageTitleImportCertificate}">
     <#if (cert?has_content)>
         <span>${uiLabelMap.PartyCertType}</span>&nbsp;${cert.getType()} : ${cert.getSubjectX500Principal()}
         <span>${uiLabelMap.PartyCertName}</span>&nbsp;${cert.getSubjectX500Principal().getName()}
         <span>${uiLabelMap.PartyCertSerialNumber}</span>&nbsp;${cert.getSerialNumber().toString(16)}
     <#else>
-        <h3>${uiLabelMap.PartyCertInvalid}</h3>
+        <@resultMsg>${uiLabelMap.PartyCertInvalid}</@resultMsg>
     </#if>
-  </div>
-</div>
-<div id="findPartyParameters" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PartyCertSaveToKeyStore}</li>
-    </ul>
-    <br class="clear" />
-  </div>
-  <div class="screenlet-body">
+</@section>
+<@section title="${uiLabelMap.PartyCertSaveToKeyStore}">
     <@table type="data" cellspacing="0">
     <@thead>
       <@tr class="header-row">
@@ -79,5 +64,4 @@ under the License.
       </#list>
     </@tbody>
     </@table>
-  </div>
-</div>
+</@section>

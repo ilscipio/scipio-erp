@@ -18,22 +18,17 @@ under the License.
 -->
 
   <#if savedCartItems?has_content>
-    <div id="partyShoppingCart" class="screenlet">
-      <div class="screenlet-title-bar">
-        <ul>
-          <li class="h3">${uiLabelMap.PartyCurrentShoppingCart}</li>
-          <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
-            <#if savedCartListId?has_content>
-              <#assign listParam = "&amp;shoppingListId=" + savedCartListId>
-            <#else>
-              <#assign listParam = "">
-            </#if>
-            <li><a href="<@ofbizUrl>editShoppingList?partyId=${partyId}${listParam}</@ofbizUrl>">${uiLabelMap.CommonEdit}</a></li>
-          </#if>
-        </ul>
-      <br class="clear" />
-      </div>
-      <div class="screenlet-body">
+    <#assign menuHtml>
+      <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
+        <#if savedCartListId?has_content>
+          <#assign listParam = "&amp;shoppingListId=" + savedCartListId>
+        <#else>
+          <#assign listParam = "">
+        </#if>
+        <li><a href="<@ofbizUrl>editShoppingList?partyId=${partyId}${listParam}</@ofbizUrl>">${uiLabelMap.CommonEdit}</a></li>
+      </#if>
+    </#assign>
+    <@section id="partyShoppingCart" title="${uiLabelMap.PartyCurrentShoppingCart}">
         <#if savedCartItems?has_content>
           <@table type="data" class="basic-table" cellspacing="0">
            <@thead>
@@ -48,7 +43,7 @@ under the License.
             <#list savedCartItems as savedCartItem>
               <@tr>
                 <@td>${savedCartItem.shoppingListItemSeqId!}</@td>
-                <@td class="button-col"><a href="/catalog/control/EditProduct?productId=${savedCartItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}">${savedCartItem.productId!}</a></@td>
+                <@td class="button-col"><a href="/catalog/control/EditProduct?productId=${savedCartItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${savedCartItem.productId!}</a></@td>
                 <@td>${savedCartItem.quantity!}</@td>
                 <@td>${savedCartItem.quantityPurchased!}</@td>
               </@tr>
@@ -56,8 +51,7 @@ under the License.
             </@tbody>
           </@table>
         <#else>
-          ${uiLabelMap.PartyNoShoppingCartSavedForParty}
+          <@resultMsg>${uiLabelMap.PartyNoShoppingCartSavedForParty}</@resultMsg>
         </#if>
-      </div>
-    </div>
+    </@section>
   </#if>

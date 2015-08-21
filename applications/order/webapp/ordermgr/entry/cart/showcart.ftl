@@ -58,22 +58,22 @@ under the License.
         <#if parameters.availabalityList?has_content>
         <@row>
         <@cell>
-          <table>
-            <thead>
-            <tr>
-                  <th>${uiLabelMap.Facility}</td>
-                  <th>${uiLabelMap.ProductQuantityOnHand}</td>
-                  <th>${uiLabelMap.ProductAvailableToPromise}</td>
-            </tr>
-            </thead>
+          <@table type="data" class="" useAltRows=false>
+            <@thead>
+            <@tr>
+                  <@th>${uiLabelMap.Facility}</@th>
+                  <@th>${uiLabelMap.ProductQuantityOnHand}</@th>
+                  <@th>${uiLabelMap.ProductAvailableToPromise}</@th>
+            </@tr>
+            </@thead>
             <#list parameters.availabalityList as availabality>
-               <tr>
-                 <td>${availabality.facilityId}</td>
-                 <td>${availabality.quantityOnHandTotal}</td>
-                 <td>${availabality.availableToPromiseTotal}</td>
-               </tr>
+               <@tr>
+                 <@td>${availabality.facilityId}</@td>
+                 <@td>${availabality.quantityOnHandTotal}</@td>
+                 <@td>${availabality.availableToPromiseTotal}</@td>
+               </@tr>
             </#list>
-          </table>
+          </@table>
           </@cell>
         </@row>
         </#if>
@@ -145,7 +145,7 @@ under the License.
                     <@field type="input" size="25" name="itemComment" value="${defaultComment!}" label="${uiLabelMap.CommonComment}"/>
 
                     <@field type="submitarea">
-                        <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToOrder}"/></td>
+                        <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToOrder}"/>
                     </@field>
             </form>
 

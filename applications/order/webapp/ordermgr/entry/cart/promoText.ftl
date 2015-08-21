@@ -18,18 +18,18 @@ under the License.
 -->
 <#if showPromoText?? && showPromoText>
       <@section title="${uiLabelMap.OrderSpecialOffers}">
-        <table class="basic-table">
+        <@table type="data" class="basic-table">
           <#-- show promotions text -->
           <#list productPromos as productPromo>
-            <tr>
-              <td>
-                <div><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="linktext">${uiLabelMap.CommonDetails}</a> ${StringUtil.wrapString(productPromo.promoText!)}</div>
-              </td>
-            </tr>
+            <@tr>
+              <@td>
+                <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="linktext">${uiLabelMap.CommonDetails}</a> ${StringUtil.wrapString(productPromo.promoText!)}
+              </@td>
+            </@tr>
             <#if productPromo_has_next>
             </#if>
           </#list>
-        </table>
+        </@table>
         
         <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewAllPromotions}</a>
         

@@ -19,23 +19,23 @@ under the License.
 
 <#if salesReps?has_content>
 <@section title="${uiLabelMap.OrderSalesReps}">
-      <table class="basic-table" cellspacing='0'>
-      <thead>
-      <tr class="header-row">
-        <th width="50%">${uiLabelMap.PartyLastName}</th>
-        <th width="50%">${uiLabelMap.PartyFirstName}</th>
-      </tr>
-      </thead>
+      <@table class="basic-table" cellspacing='0'>
+      <@thead>
+      <@tr class="header-row">
+        <@th width="50%">${uiLabelMap.PartyLastName}</@th>
+        <@th width="50%">${uiLabelMap.PartyFirstName}</@th>
+      </@tr>
+      </@thead>
     <#list salesReps as salesRep>
       <#assign party = salesRep.getRelatedOne("Party", false)!/>
       <#assign person = party.getRelatedOne("Person", false)!/>
       <#if person?? && person?has_content>
-      <tr>
-        <td width="50%">${person.lastName}</td>
-        <td width="50%">${person.firstName}</td>
-      </tr>
+      <@tr>
+        <@td width="50%">${person.lastName}</@td>
+        <@td width="50%">${person.firstName}</@td>
+      </@tr>
       </#if>
     </#list>
-      </table>
+      </@table>
     </@section>
 </#if>

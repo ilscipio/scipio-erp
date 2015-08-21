@@ -1081,9 +1081,9 @@ Helps define table. Required wrapper for all table sub-elem macros.
                     
    * General Attributes *
     type            = [generic, data, summary, fields], default generic
-                      generic: generic html table
+                      generic: generic html table (free-form, complex)
                       data: typical record-containing table
-                      summary: usually table with a single row of summary results
+                      summary: usually table with one or a few set row of summary totals
                       fields: label-value pairs for display (note: prefer @field for input forms or @row/@cell instead?)
     class           = manual classes to add, as string, default "basic-table" for data, 
                       if specified as string replaces defaults (class="" prevents class)
@@ -1094,7 +1094,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
     cellspacing     = cellspacing, default 0, set to "" to remove
-    wrapIf          = condition to add elem, for esoteric cases; avoid
+    wrapIf          = condition to wrap nested in table elem, for esoteric cases; avoid
     [attribs...]    = legacy <table attributes and values
 -->
 <#macro table type="generic" class=true addClass="" id="" wrapIf=true cellspacing=0 scrollable=false useAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs...>
@@ -1217,7 +1217,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     useLastAlt      = boolean, if specified, sets alt to same as last (row, or parent table row if first row)
     useParentAlt    = boolean, nested tables only, if specified, use parent table row alt
     selected        = boolean, if specified and true marked as selected
-    wrapIf          = condition to add elem and logic around nested, for esoteric cases; avoid
+    wrapIf          = condition to wrap nested in table elem, for esoteric cases; avoid
     [attribs...]    = legacy <tr attributes and values
 -->
 <#macro tr class="" id="" wrapIf=true useAlt="" alt="" useLastAlt="" useParentAlt="" selected="" attribs...>
@@ -1274,7 +1274,7 @@ Helps define table cells. tc automatically knows whether th or td via @thead and
    * General Attributes *
     class           = manual classes to add
     id              = cell id
-    wrapIf          = condition to add elem, for esoteric cases; avoid
+    wrapIf          = condition to wrap nested in table elem, for esoteric cases; avoid
     [attribs...]    = legacy <th and <td attributes and values
 -->
 <#macro tc class="" id="" wrapIf=true attribs...>

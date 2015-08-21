@@ -18,32 +18,29 @@ under the License.
 -->
 
 <!-- begin editeftaccount.ftl -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <#if !eftAccount??>
-      <h3>${uiLabelMap.AccountingAddNewEftAccount}</h3>
-    <#else>
-      <h3>${uiLabelMap.PageTitleEditEftAccount}</h3>
-    </#if>
-  </div>
-  <div class="screenlet-body">
+<#if !eftAccount??>
+  <#assign title = "${uiLabelMap.AccountingAddNewEftAccount}">
+<#else>
+  <#assign title = "${uiLabelMap.PageTitleEditEftAccount}">
+</#if>
+<@section title=title>
         <div class="button-bar">
-          <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonCancelDone}</a>
-          <a href="javascript:document.editeftaccountform.submit()" class="smallSubmit">${uiLabelMap.CommonSave}</a>
+          <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
+          <a href="javascript:document.editeftaccountform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
         </div>
     <#if !eftAccount??>
       <form method="post" action='<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
     <#else>
       <form method="post" action='<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
-        <input type="hidden" name='paymentMethodId' value='${paymentMethodId}' />
+        <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
-        <@table type="data" class="basic-table" cellspacing="0">
+        <@table type="fields" class="basic-table" cellspacing="0">
         <@tbody>
         <@tr>
           <@td>${uiLabelMap.AccountingNameAccount}</@td>
           <@td>
-            <input type="text" class='required' size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount!}" />
+            <input type="text" class="required" size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
           </@td>
         </@tr>
@@ -56,21 +53,21 @@ under the License.
         <@tr>
           <@td>${uiLabelMap.AccountingBankName}</@td>
           <@td>
-            <input type="text" class='required' size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName!}" />
+            <input type="text" class="required" size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
           </@td>
         </@tr>
         <@tr>
           <@td>${uiLabelMap.AccountingRoutingNumber}</@td>
           <@td>
-            <input type="text" class='required' size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber!}" />
+            <input type="text" class="required" size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
           </@td>
         </@tr>
         <@tr>
           <@td>${uiLabelMap.AccountingAccountType}</@td>
           <@td>
-            <select name="accountType" class='required'>
+            <select name="accountType" class="required">
               <option>${eftAccountData.accountType!}</option>
               <option></option>
               <option>${uiLabelMap.CommonChecking}</option>
@@ -82,14 +79,14 @@ under the License.
         <@tr>
           <@td>${uiLabelMap.AccountingAccountNumber}</@td>
           <@td>
-            <input type="text" class='required' size="20" maxlength="40" name="accountNumber" value="${eftAccountData.accountNumber!}" />
+            <input type="text" class="required" size="20" maxlength="40" name="accountNumber" value="${eftAccountData.accountNumber!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
           </@td>
         </@tr>
         <@tr>
           <@td>${uiLabelMap.CommonDescription}</@td>
           <@td>
-            <input type="text" class='required' size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
+            <input type="text" class="required" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
           </@td>
         </@tr>
@@ -97,10 +94,10 @@ under the License.
           <@td>${uiLabelMap.PartyBillingAddress}</@td>
           <@td>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="smallSubmit">
+            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.button_default!}">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
-            <@table type="data" cellspacing="0">
+            <@table type="fields" cellspacing="0">
             <@tbody>
             <#if curPostalAddress??>
               <@tr>
@@ -177,9 +174,8 @@ under the License.
         </@table>
       </form>
       <div class="button-bar">
-        <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonCancelDone}</a>
-        <a href="javascript:document.editeftaccountform.submit()" class="smallSubmit">${uiLabelMap.CommonSave}</a>
+        <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
+        <a href="javascript:document.editeftaccountform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
       </div>
-  </div>
-</div>
+</@section>
 <!-- end editeftaccount.ftl -->

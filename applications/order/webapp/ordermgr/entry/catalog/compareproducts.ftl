@@ -16,10 +16,10 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<table>
+<@table type="fields">
 <#-- Header row, contains product small image, product name, price -->
-    <tr>
-        <td>&nbsp;</td>
+    <@tr>
+        <@td>&nbsp;</@td>
 <#list compareList as product>
     <#assign tdWidth = 100/compareList?size />
     <#assign productData = productDataMap[product.productId]/>
@@ -30,7 +30,7 @@ under the License.
     <#if smallImageUrl!?length == 0>
         <#assign smallImageUrl = "/images/defaultImage.jpg"/>
     </#if>
-        <td style="width:${tdWidth?c}%;">
+        <@td style="width:${tdWidth?c}%;">
             <img src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image"/><br />
             ${productContentWrapper.get("PRODUCT_NAME")}<br />
     <#if totalPrice??>
@@ -85,42 +85,42 @@ under the License.
         </#if>
     </#if>
             </div>
-        </td>
+        </@td>
 </#list>
-    </tr>
+    </@tr>
     <#-- Brand name -->
-    <tr>
-        <td>${uiLabelMap.ProductBrandName}</td>
+    <@tr>
+        <@td>${uiLabelMap.ProductBrandName}</@td>
 <#list compareList as product>
-        <td>${product.brandName?default("&nbsp;")}</td>
+        <@td>${product.brandName?default("&nbsp;")}</@td>
 </#list>
-    </tr>
+    </@tr>
     <#-- Description -->
-    <tr>
-        <td>${uiLabelMap.ProductProductDescription}</td>
+    <@tr>
+        <@td>${uiLabelMap.ProductProductDescription}</@td>
 <#list compareList as product>
     <#assign productData = productDataMap[product.productId]/>
     <#assign productContentWrapper = productData.productContentWrapper/>
-        <td>${productContentWrapper.get("DESCRIPTION")?default("&nbsp;")}</td>
+        <@td>${productContentWrapper.get("DESCRIPTION")?default("&nbsp;")}</@td>
 </#list>
-    </tr>
+    </@tr>
     <#-- Long Description -->
-    <tr>
-        <td>${uiLabelMap.ProductLongDescription}</td>
+    <@tr>
+        <@td>${uiLabelMap.ProductLongDescription}</@td>
 <#list compareList as product>
     <#assign productData = productDataMap[product.productId]/>
     <#assign productContentWrapper = productData.productContentWrapper/>
-        <td>${productContentWrapper.get("LONG_DESCRIPTION")?default("&nbsp;")}</td>
+        <@td>${productContentWrapper.get("LONG_DESCRIPTION")?default("&nbsp;")}</@td>
 </#list>
-    </tr>
+    </@tr>
 <#list productFeatureTypeIds as productFeatureTypeId>
     <#assign productFeatureType = productFeatureTypeMap[productFeatureTypeId]/>
-    <tr>
-        <td>${productFeatureType.get("description", locale)}</td>
+    <@tr>
+        <@td>${productFeatureType.get("description", locale)}</@td>
     <#list compareList as product>
         <#assign productData = productDataMap[product.productId]/>
         <#assign applMap = productData[productFeatureTypeId]!/>
-        <td>
+        <@td>
         <#if applMap.STANDARD_FEATURE?has_content>
             <#assign features = applMap.STANDARD_FEATURE/>
             <#list features as feature>
@@ -142,14 +142,14 @@ under the License.
             </#list>
             </ul>
         </#if>
-        </td>
+        </@td>
     </#list>
-    </tr>
+    </@tr>
 </#list>
-    <tr>
-        <td>&nbsp;</td>
+    <@tr>
+        <@td>&nbsp;</@td>
 <#list compareList as product>
-        <td>
+        <@td>
             <div class="productbuy">
     <#-- check to see if introductionDate hasn't passed yet -->
     <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
@@ -183,7 +183,7 @@ under the License.
         </#if>
     </#if>
             </div>
-        </td>
+        </@td>
 </#list>
-    </tr>
-</table>
+    </@tr>
+</@table>

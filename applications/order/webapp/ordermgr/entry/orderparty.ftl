@@ -18,23 +18,23 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="center">
+<@table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <@tr>
+    <@td width='100%'>
+      <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <@tr>
+          <@td valign="middle" align="center">
             <div class="boxhead">&nbsp;${uiLabelMap.PartyParty}</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td align="center">
+          </@td>
+        </@tr>
+      </@table>
+    </@td>
+  </@tr>
+  <@tr>
+    <@td width='100%'>
+      <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <@tr>
+          <@td align="center">
             <#if person?has_content>
               <div><a href="${customerDetailLink}${partyId}" class="${styles.button_default!}">${person.firstName!}&nbsp;${person.lastName!}</a></div>
             <#elseif partyGroup?has_content>
@@ -46,12 +46,12 @@ under the License.
                 <a href="javascript:document.setpartyform.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSet}</a>&nbsp;|&nbsp;<a href="/partymgr/control/findparty" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a><#if partyId?default("_NA_") != "_NA_" && partyId?default("_NA_") != "">&nbsp;|&nbsp;<a href="${customerDetailLink}${partyId}" class="${styles.button_default!}">${uiLabelMap.CommonView}</a></#if>
               </div>
             </form>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
+          </@td>
+        </@tr>
+      </@table>
+    </@td>
+  </@tr>
+</@table>
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

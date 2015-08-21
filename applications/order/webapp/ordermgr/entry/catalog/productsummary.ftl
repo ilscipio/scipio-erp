@@ -76,16 +76,16 @@ ${virtualJavaScript!}
             </a>
         </div>
         <div id="${productDetailId}" class="popup" style="display:none;">
-          <table>
-            <tr valign="top">
-              <td>
+          <@table>
+            <@tr valign="top">
+              <@td>
                 <img src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image"/><br />
                 ${uiLabelMap.ProductProductId}   : ${product.productId!}<br />
                 ${uiLabelMap.ProductProductName} : ${product.productName!}<br />
                 ${uiLabelMap.CommonDescription}  : ${product.description!}
-              </td>
-            </tr>
-          </table>
+              </@td>
+            </@tr>
+          </@table>
         </div>
         <script type="text/javascript">
           jQuery("#${productInfoLinkId}").hover(function() {

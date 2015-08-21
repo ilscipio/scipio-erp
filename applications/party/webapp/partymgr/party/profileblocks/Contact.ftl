@@ -138,6 +138,6 @@ under the License.
           </@tbody>
         </@table>
       <#else>
-        ${uiLabelMap.PartyNoContactInformation}
+        <@resultMsg>${uiLabelMap.PartyNoContactInformation}</@resultMsg>
       </#if>
   </@section>

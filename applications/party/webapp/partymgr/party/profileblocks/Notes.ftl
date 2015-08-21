@@ -24,26 +24,28 @@ under the License.
   </#assign>
   <@section id="partyNotes" title="${uiLabelMap.CommonNotes}" menuHtml=menuHtml>
       <#if notes?has_content>
-        <table>
+        <@table type="data">
+        <@tbody>
           <#list notes as noteRef>
-            <tr>
-              <td style="min-width:10em;">
+            <@tr>
+              <@td style="min-width:10em;">
                 <div><strong>${uiLabelMap.FormFieldTitle_noteName}: </strong>${noteRef.noteName!}</div>
                 <#if noteRef.noteParty?has_content>
                   <div><strong>${uiLabelMap.CommonBy}: </strong>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, noteRef.noteParty, true)}</div>
                 </#if>
                 <div><strong>${uiLabelMap.CommonAt}: </strong>${noteRef.noteDateTime.toString()}</div>
-              </td>
-              <td>
+              </@td>
+              <@td>
                 ${noteRef.noteInfo}
-              </td>
-            </tr>
+              </@td>
+            </@tr>
             <#if noteRef_has_next>
-              <tr><td colspan="2"><hr/></td></tr>
+              <@tr><@td colspan="2"><hr/></@td></@tr>
             </#if>
           </#list>
-        </table>
+        </@tbody>
+        </@table>
       <#else>
-        ${uiLabelMap.PartyNoNotesForParty}
+        <@resultMsg>${uiLabelMap.PartyNoNotesForParty}</@resultMsg>
       </#if>
   </@section>

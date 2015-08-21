@@ -17,21 +17,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<br />
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PartyShoppingLists}</li>
+<#assign menuHtml>
       <li>
         <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
           <input type="hidden" name="partyId" value="${partyId!}" />
           <a href="javascript:document.getElementById('createEmptyShoppingList').submit();" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a>
         </form>
       </li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+</#assign>
+<@section title="${uiLabelMap.PartyShoppingLists}" menuHtml=menuHtml>
     <#if shoppingLists?has_content>
       <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
         <select name="shoppingListId">
@@ -44,19 +38,16 @@ under the License.
           </#list>
         </select>
         <input type="hidden" name="partyId" value="${partyId!}" />
-        <a href="javascript:document.selectShoppingList.submit();" class="smallSubmit">${uiLabelMap.CommonEdit}</a>
+        <a href="javascript:document.selectShoppingList.submit();" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
       </form>
     <#else>
-      ${uiLabelMap.PartyNoShoppingListsParty}.
+      <@resultMsg>${uiLabelMap.PartyNoShoppingListsParty}.</@resultMsg>
     </#if>
-  </div>
-</div>
-<br />
+</@section>
+
 <#if shoppingList?has_content>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}</li>
+
+<#assign menuHtml>
       <li><a href="javascript:document.updateList.submit();">${uiLabelMap.CommonSave}</a></li>
       <li>
       <form method="post" name="createQuoteFromShoppingListForm" action="/ordermgr/control/createQuoteFromShoppingList">
@@ -67,25 +58,23 @@ under the License.
       </li>
       <li><a href="/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}">${uiLabelMap.PartyCreateNewCustRequest}</a></li>
       <li><a href="/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}">${uiLabelMap.OrderNewOrder}</a></li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+</#assign>
+<@section title="${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}" menuHtml=menuHtml>
     <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
-      <table class="basic-table" cellspacing='0'>
-        <tr>
-          <td>${uiLabelMap.PartyListName}</td>
-          <td><input type="text" size="25" name="listName" value="${shoppingList.listName}" <#if shoppingList.listName?default("") == "auto-save">disabled="disabled"</#if> />
-        </tr>
-        <tr>
-          <td>${uiLabelMap.CommonDescription}</td>
-          <td><input type="text" size="70" name="description" value="${shoppingList.description!}" <#if shoppingList.listName?default("") == "auto-save">disabled="disabled"</#if> />
-        </tr>
-        <tr>
-          <td>${uiLabelMap.PartyListType}</td>
-          <td>
+      <@table type="fields" class="basic-table" cellspacing='0'>
+        <@tr>
+          <@td>${uiLabelMap.PartyListName}</@td>
+          <@td><input type="text" size="25" name="listName" value="${shoppingList.listName}" <#if shoppingList.listName?default("") == "auto-save">disabled="disabled"</#if> /></@td>
+        </@tr>
+        <@tr>
+          <@td>${uiLabelMap.CommonDescription}</@td>
+          <@td><input type="text" size="70" name="description" value="${shoppingList.description!}" <#if shoppingList.listName?default("") == "auto-save">disabled="disabled"</#if> /></@td>
+        </@tr>
+        <@tr>
+          <@td>${uiLabelMap.PartyListType}</@td>
+          <@td>
             <select name="shoppingListTypeId" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
               <#if shoppingListType??>
                 <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
@@ -95,22 +84,22 @@ under the License.
                 <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
               </#list>
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.PartyPublic}?</td>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td>${uiLabelMap.PartyPublic}?</@td>
+          <@td>
             <select name="isPublic" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
               <option>${shoppingList.isPublic}</option>
               <option value="${shoppingList.isPublic}">--</option>
               <option>${uiLabelMap.CommonYes}</option>
               <option>${uiLabelMap.CommonNo}</option>
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.PartyParentList}</td>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td>${uiLabelMap.PartyParentList}</@td>
+          <@td>
             <select name="parentShoppingListId" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
               <#if parentShoppingList??>
                 <option value="${parentShoppingList.shoppingListId}">${parentShoppingList.listName?default(parentShoppingList.shoppingListId)}</option>
@@ -121,62 +110,52 @@ under the License.
               </#list>
             </select>
             <#if parentShoppingList??>
-              <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
+              <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
             </#if>
-          </td>
-        </tr>
+          </@td>
+        </@tr>
         <#if shoppingList.listName?default("") != "auto-save">
-          <tr>
-            <td>&nbsp;</td>
-            <td><a href="javascript:document.updateList.submit();" class="smallSubmit">${uiLabelMap.CommonSave}</a></td>
-          </tr>
+          <@tr>
+            <@td>&nbsp;</@td>
+            <@td><a href="javascript:document.updateList.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a></@td>
+          </@tr>
         </#if>
-      </table>
+      </@table>
     </form>
-  </div>
-</div>
+</@section>
+
 <#if childShoppingListDatas?has_content>
-<br />
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}</li>
+<#assign menuHtml>
       <li><a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes</@ofbizUrl>">${uiLabelMap.PartyAddChildListsToCart}</a></li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
-    <table class="basic-table" cellspacing="0">
-     <thead>
-      <tr class="header-row">
-        <th>${uiLabelMap.PartyListName}</th>
-        <th>&nbsp;</th>
-      </tr>
-      </thead>
+</#assign>
+<@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuHtml=menuHtml>
+    <@table type="data" useAltRows=true class="basic-table" cellspacing="0">
+     <@thead>
+      <@tr class="header-row">
+        <@th>${uiLabelMap.PartyListName}</@th>
+        <@th>&nbsp;</@th>
+      </@tr>
+      </@thead>
+      <@tbody>
       <#list childShoppingListDatas as childShoppingListData>
         <#assign childShoppingList = childShoppingListData.childShoppingList>
-        <tr>
-          <td class="button-col"><a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a></li>
-          <td class="button-col align-float">
+        <@tr>
+          <@td class="button-col"><a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a></li></@td>
+          <@td class="button-col align-float">
             <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${uiLabelMap.PartyGotoList}</a>
             <a href="<@ofbizUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${uiLabelMap.PartyAddListToCart}</a>
-          </td>
-        </tr>
+          </@td>
+        </@tr>
       </#list>
-    </table>
-  </div>
-</div>
+      </@tbody>
+    </@table>
+</@section>
 </#if>
-<br />
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PartyListItems} - ${shoppingList.listName}</li>
-        <#-- <li><a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>">${uiLabelMap.PartyAddListToCart}</a></li> -->
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+
+<#assign menuHtml>
+<#-- <li><a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>">${uiLabelMap.PartyAddListToCart}</a></li> -->
+</#assign>
+<@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuHtml=menuHtml>
     <#if shoppingListItemDatas?has_content>
         <#-- Pagination -->
         <#include "component://common/webcommon/includes/htmlTemplate.ftl"/>
@@ -187,19 +166,27 @@ under the License.
         <#assign viewIndexLast = Static["org.ofbiz.base.util.UtilMisc"].getViewLastIndex(listSize, viewSize) />
         <#assign messageMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("lowCount", lowIndex, "highCount", highIndex, "total", listSize)/>
         <#assign commonDisplaying = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)/>
-        <@nextPrev commonUrl=commonUrl ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying=commonDisplaying paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" />
-      <table class="basic-table" cellspacing="0">
-       <thead>
-        <tr class="header-row">
-          <th>${uiLabelMap.PartyProduct}</th>
-          <th>${uiLabelMap.PartyQuantity}</th>
-          <th>${uiLabelMap.PartyQuantityPurchased}</th>
-          <th>${uiLabelMap.PartyPrice}</th>
-          <th>${uiLabelMap.PartyTotal}</th>
-          <th>&nbsp;</th>
-        </tr>
-        </thead>
-        <#assign alt_row = false>
+        <#macro paginateShoppingListItems>
+          <@nextPrev commonUrl=commonUrl ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying=commonDisplaying paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" />
+        </#macro>
+        <#assign paginated = true>
+        
+        <#if paginated>
+          <@paginateShoppingListItems />
+        </#if>
+        
+      <@table type="data" useAltRows=true class="basic-table" cellspacing="0">
+       <@thead>
+        <@tr class="header-row">
+          <@th>${uiLabelMap.PartyProduct}</@th>
+          <@th>${uiLabelMap.PartyQuantity}</@th>
+          <@th>${uiLabelMap.PartyQuantityPurchased}</@th>
+          <@th>${uiLabelMap.PartyPrice}</@th>
+          <@th>${uiLabelMap.PartyTotal}</@th>
+          <@th>&nbsp;</@th>
+        </@tr>
+        </@thead>
+        <@tbody>
         <#list shoppingListItemDatas[lowIndex-1..highIndex-1] as shoppingListItemData>
           <#assign shoppingListItem = shoppingListItemData.shoppingListItem>
           <#assign product = shoppingListItemData.product>
@@ -208,10 +195,10 @@ under the License.
           <#assign totalPrice = shoppingListItemData.totalPrice>
           <#assign productVariantAssocs = shoppingListItemData.productVariantAssocs!>
           <#assign isVirtual = product.isVirtual?? && product.isVirtual.equals("Y")>
-          <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-            <td><a href="/catalog/control/EditProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}">${shoppingListItem.productId} -
+          <@tr valign="middle">
+            <@td><a href="/catalog/control/EditProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}">${shoppingListItem.productId} -
               ${productContentWrapper.get("PRODUCT_NAME")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION")!}
-            </td>
+            </@td>
             <form method="post" action="<@ofbizUrl>removeFromShoppingList</@ofbizUrl>" name='removeform_${shoppingListItem.shoppingListItemSeqId}'>
               <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}" />
               <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}" />
@@ -219,43 +206,36 @@ under the License.
             <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}'>
               <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}" />
               <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}" />
-              <td>
+              <@td>
                 <input size="6" type="text" name="quantity" value="${shoppingListItem.quantity?string.number}" />
-              </td>
-              <td>
+              </@td>
+              <@td>
                 <input size="6" type="text" name="quantityPurchased"
                   <#if shoppingListItem.quantityPurchased?has_content>
                     value="${shoppingListItem.quantityPurchased!?string.number}"
                   </#if> />
-              </td>
+              </@td>
             </form>
-            <td class="align-float"><@ofbizCurrency amount=unitPrice isoCode=currencyUomId/></td>
-            <td class="align-float"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/></td>
-            <td class="button-col align-float">
+            <@td class="align-float"><@ofbizCurrency amount=unitPrice isoCode=currencyUomId/></@td>
+            <@td class="align-float"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/></@td>
+            <@td class="button-col align-float">
               <a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();">${uiLabelMap.CommonUpdate}</a>
               <a href="javascript:document.removeform_${shoppingListItem.shoppingListItemSeqId}.submit();">${uiLabelMap.CommonRemove}</a>
-            </td>
-          </tr>
-          <#-- toggle the row color -->
-
-          <#assign alt_row = !alt_row>
+            </@td>
+          </@tr>
         </#list>
-      </table>
-        <@nextPrev commonUrl=commonUrl ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying=commonDisplaying paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" />
+        </@tbody>
+      </@table>
+
+      <#if paginated>
+        <@paginateShoppingListItems />
+      </#if> 
     <#else>
-      ${uiLabelMap.PartyShoppingListEmpty}.
+      <@resultMsg>${uiLabelMap.PartyShoppingListEmpty}.</@resultMsg>
     </#if>
-  </div>
-</div>
-<br />
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PartyQuickAddList}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+</@section>
+
+<@section title="${uiLabelMap.PartyQuickAddList}">
     <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList</@ofbizUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
@@ -263,7 +243,6 @@ under the License.
       <input type="text" size="5" name="quantity" value="${requestParameters.quantity?default("1")}" />
       <input type="submit" value="${uiLabelMap.PartyAddToShoppingList}" />
     </form>
-  </div>
-</div>
+</@section>
+
 </#if>
-<!-- begin editShoppingList.ftl -->

@@ -49,36 +49,36 @@ under the License.
       <@paginateVisits />
     </#if>
     
-      <table class="basic-table hover-bar" cellspacing="0">
-       <thead>
-        <tr class="header-row">
-          <th><a href="<@ofbizUrl>showvisits?sort=visitId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyVisitId}</a></th>
-          <th><a href="<@ofbizUrl>showvisits?sort=visitorId&amp;showAll=${showAll}<#if visitorId?has_content>&amp;visitorId=${visitorId}</#if></@ofbizUrl>">${uiLabelMap.PartyVisitorId}</a></th>
-          <th><a href="<@ofbizUrl>showvisits?sort=partyId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyPartyId}</a></th>
-          <th><a href="<@ofbizUrl>showvisits?sort=userLoginId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonUserLoginId}</a></th>
-          <th><a href="<@ofbizUrl>showvisits?sort=-userCreated&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyNewUser}</a></th>
-          <th><a href="<@ofbizUrl>showvisits?sort=webappName&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyWebApp}</a></th>
-          <th><a href="<@ofbizUrl>showvisits?sort=clientIpAddress&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyClientIP}</a></th>
-          <th><a href="<@ofbizUrl>showvisits?sort=fromDate&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonFromDate}</a></th>
-          <th><a href="<@ofbizUrl>showvisits?sort=thruDate&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonThruDate}</a></th>
-        </tr>
-        </thead>
-        <#assign alt_row = false>
+      <@table type="data" useAltRows=true class="basic-table hover-bar" cellspacing="0">
+       <@thead>
+        <@tr class="header-row">
+          <@th><a href="<@ofbizUrl>showvisits?sort=visitId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyVisitId}</a></@th>
+          <@th><a href="<@ofbizUrl>showvisits?sort=visitorId&amp;showAll=${showAll}<#if visitorId?has_content>&amp;visitorId=${visitorId}</#if></@ofbizUrl>">${uiLabelMap.PartyVisitorId}</a></@th>
+          <@th><a href="<@ofbizUrl>showvisits?sort=partyId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyPartyId}</a></@th>
+          <@th><a href="<@ofbizUrl>showvisits?sort=userLoginId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonUserLoginId}</a></@th>
+          <@th><a href="<@ofbizUrl>showvisits?sort=-userCreated&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyNewUser}</a></@th>
+          <@th><a href="<@ofbizUrl>showvisits?sort=webappName&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyWebApp}</a></@th>
+          <@th><a href="<@ofbizUrl>showvisits?sort=clientIpAddress&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyClientIP}</a></@th>
+          <@th><a href="<@ofbizUrl>showvisits?sort=fromDate&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonFromDate}</a></@th>
+          <@th><a href="<@ofbizUrl>showvisits?sort=thruDate&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.CommonThruDate}</a></@th>
+        </@tr>
+        </@thead>
+        <@tbody>
         <#list visitList as visitObj>
-          <tr<@dataRowClassStr alt=alt_row />>
-            <td class="button-col"><a href="<@ofbizUrl>visitdetail?visitId=${visitObj.visitId}</@ofbizUrl>" class="${styles.button_default!}">${visitObj.visitId}</a></td>
-            <td>${visitObj.visitorId!}</td>
-            <td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${visitObj.partyId!}</@ofbizUrl>" class="${styles.button_default!}">${visitObj.partyId!}</a></td>
-            <td>${visitObj.userLoginId!}</td>
-            <td>${visitObj.userCreated!}</td>
-            <td>${visitObj.webappName!}</td>
-            <td>${visitObj.clientIpAddress!}</td>
-            <td>${(visitObj.fromDate?string)!}</td>
-            <td>${(visitObj.thruDate?string)!}</td>
-          </tr>
-          <#assign alt_row = !alt_row>
+          <@tr>
+            <@td class="button-col"><a href="<@ofbizUrl>visitdetail?visitId=${visitObj.visitId}</@ofbizUrl>" class="${styles.button_default!}">${visitObj.visitId}</a></@td>
+            <@td>${visitObj.visitorId!}</@td>
+            <@td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${visitObj.partyId!}</@ofbizUrl>" class="${styles.button_default!}">${visitObj.partyId!}</a></@td>
+            <@td>${visitObj.userLoginId!}</@td>
+            <@td>${visitObj.userCreated!}</@td>
+            <@td>${visitObj.webappName!}</@td>
+            <@td>${visitObj.clientIpAddress!}</@td>
+            <@td>${(visitObj.fromDate?string)!}</@td>
+            <@td>${(visitObj.thruDate?string)!}</@td>
+          </@tr>
         </#list>
-      </table>
+        </@tbody>
+      </@table>
     
     <#if paginated>
       <@paginateVisits />

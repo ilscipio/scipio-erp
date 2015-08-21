@@ -19,23 +19,24 @@ under the License.
 
   <@section id="partyContentList">
       <#if partyContent?has_content>
-        <table class="basic-table" cellspacing="0">
+        <@table type="data" class="basic-table" cellspacing="0">
+          <@tbody>
           <#list partyContent as pContent>
             <#assign content = pContent.getRelatedOne("Content", false)>
             <#assign contentType = content.getRelatedOne("ContentType", true)>
             <#assign mimeType = content.getRelatedOne("MimeType", true)!>
             <#assign status = content.getRelatedOne("StatusItem", true)!>
             <#assign pcType = pContent.getRelatedOne("PartyContentType", false)>
-            <tr>
-              <td class="button-col"><a href="<@ofbizUrl>EditPartyContents?contentId=${pContent.contentId}&amp;partyId=${pContent.partyId}&amp;partyContentTypeId=${pContent.partyContentTypeId}&amp;fromDate=${pContent.fromDate}</@ofbizUrl>">${content.contentId}</a></td>
-              <td>${(pcType.get("description", locale))!}</td>
-              <td>${content.contentName!}</td>
+            <@tr>
+              <@td class="button-col"><a href="<@ofbizUrl>EditPartyContents?contentId=${pContent.contentId}&amp;partyId=${pContent.partyId}&amp;partyContentTypeId=${pContent.partyContentTypeId}&amp;fromDate=${pContent.fromDate}</@ofbizUrl>">${content.contentId}</a></@td>
+              <@td>${(pcType.get("description", locale))!}</@td>
+              <@td>${content.contentName!}</@td>
               <#-- take too much space -->
-              <#--<td>${(contentType.get("description",locale))!}</td>-->
-              <#--<td>${(mimeType.description)!}</td>-->
-              <td>${(status.get("description",locale))!}</td>
-              <td>${pContent.fromDate!}</td>
-              <td class="button-col">
+              <#--<@td>${(contentType.get("description",locale))!}</@td>-->
+              <#--<@td>${(mimeType.description)!}</@td>-->
+              <@td>${(status.get("description",locale))!}</@td>
+              <@td>${pContent.fromDate!}</@td>
+              <@td class="button-col">
                 <#if (content.contentName?has_content)>
                     <a href="<@ofbizUrl>img/${content.contentName}?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonView}</a>
                 </#if>
@@ -46,10 +47,11 @@ under the License.
                   <input type="hidden" name="fromDate" value="${pContent.fromDate}" />
                   <a href="javascript:document.removePartyContent_${pContent_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
                 </form>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           </#list>
-        </table>
+          </@tbody>
+        </@table>
       <#else>
         ${uiLabelMap.PartyNoContent}
       </#if>

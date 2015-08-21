@@ -27,7 +27,7 @@ under the License.
     <@field type="input" name="mapValue" label="${uiLabelMap.PartyAddressMatchValue}" />
     <@field type="input" name="sequenceNum" label="${uiLabelMap.CommonSequence}" value="0" size=5/>
     <@field type="submitarea">
-      <a href="javascript:document.addaddrmap.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></td>
+      <a href="javascript:document.addaddrmap.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a>
     </@field>
   </form>
   </@section>
@@ -59,28 +59,27 @@ under the License.
 </@section>
 <@section title="${uiLabelMap.PageTitleAddressMatches}">
       <#if addressMatchMaps?has_content>
-        <table class="basic-table hover-bar" cellspacing="0">
-          <thead>
-          <tr class="header-row">
-            <th>${uiLabelMap.PartyAddressMatchKey}</th>
-            <th>=></th>
-            <th>${uiLabelMap.PartyAddressMatchValue}</th>
-            <th>${uiLabelMap.CommonSequence}</th>
-            <th class="button-col"><a href="<@ofbizUrl>clearAddressMatchMap</@ofbizUrl>">${uiLabelMap.CommonClear} ${uiLabelMap.CommonAll}</a></th>
-          </tr>
-          </thead>
-          <#assign alt_row = false>
+        <@table type="data" useAltRows=true class="basic-table hover-bar" cellspacing="0">
+          <@thead>
+          <@tr class="header-row">
+            <@th>${uiLabelMap.PartyAddressMatchKey}</@th>
+            <@th>=></@th>
+            <@th>${uiLabelMap.PartyAddressMatchValue}</@th>
+            <@th>${uiLabelMap.CommonSequence}</@th>
+            <@th class="button-col"><a href="<@ofbizUrl>clearAddressMatchMap</@ofbizUrl>">${uiLabelMap.CommonClear} ${uiLabelMap.CommonAll}</a></@th>
+          </@tr>
+          </@thead>
+          <@tbody>
           <#list addressMatchMaps as map>
-            <tr<@dataRowClassStr alt=alt_row />>
-              <td>${map.mapKey}</td>
-              <td>=></td>
-              <td>${map.mapValue}</td>
-              <td>${map.sequenceNum!}</td>
-              <td class="button-col"><a href="<@ofbizUrl>removeAddressMatchMap?mapKey=${map.mapKey}&amp;mapValue=${map.mapValue}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></td>
-            </tr>
-            <#-- toggle the row color -->
-            <#assign alt_row = !alt_row>
+            <@tr>
+              <@td>${map.mapKey}</@td>
+              <@td>=></@td>
+              <@td>${map.mapValue}</@td>
+              <@td>${map.sequenceNum!}</@td>
+              <@td class="button-col"><a href="<@ofbizUrl>removeAddressMatchMap?mapKey=${map.mapKey}&amp;mapValue=${map.mapValue}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></@td>
+            </@tr>
           </#list>
-        </table>
+          </@tbody>
+        </@table>
       </#if>
 </@section>

@@ -24,32 +24,31 @@ under the License.
   </#assign>
   <@section id="partyAttributes" title="${uiLabelMap.PartyAttributes}" menuHtml=menuHtml>
       <#if attributes?has_content>
-        <table class="basic-table hover-bar" cellspacing="0">
-          <thead>
-            <tr class="header-row">
-              <th>${uiLabelMap.CommonName}</th>
-              <th>${uiLabelMap.CommonValue}</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-          <#assign alt_row = false>
+        <@table type="data" useAltRows=true class="basic-table hover-bar" cellspacing="0">
+          <@thead>
+            <@tr class="header-row">
+              <@th>${uiLabelMap.CommonName}</@th>
+              <@th>${uiLabelMap.CommonValue}</@th>
+              <@th>&nbsp;</@th>
+            </@tr>
+          </@thead>
+          <@tbody>
           <#list attributes as attr>
-            <tr<@dataRowClassStr alt=alt_row />>
-              <td>
+            <@tr>
+              <@td>
                 ${attr.attrName!}
-              </td>
-              <td>
+              </@td>
+              <@td>
                 ${attr.attrValue!}
-              </td>
-              <td class="button-col">
+              </@td>
+              <@td class="button-col">
                 <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId!}&attrName=${attr.attrName!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
-              </td>
-            </tr>
-            <#-- toggle the row color -->
-            <#assign alt_row = !alt_row>
+              </@td>
+            </@tr>
           </#list>
-        </table>
+          </@tbody>
+        </@table>
       <#else>
-        ${uiLabelMap.PartyNoPartyAttributesFound}
+        <@resultMsg>${uiLabelMap.PartyNoPartyAttributesFound}</@resultMsg>
       </#if>
   </@section>

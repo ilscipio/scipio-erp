@@ -24,20 +24,23 @@ under the License.
   </#assign>
   <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}" menuHtml=menuHtml>
       <#if contactMeches?has_content>
-        <table class="basic-table" cellspacing="0">
-          <tr>
-            <th>${uiLabelMap.PartyContactType}</th>
-            <th>${uiLabelMap.PartyContactInformation}</th>
-            <th>${uiLabelMap.PartyContactSolicitingOk}</th>
-            <th>&nbsp;</th>
-          </tr>
+        <@table type="data" class="basic-table" cellspacing="0">
+          <@thead>
+          <@tr>
+            <@th>${uiLabelMap.PartyContactType}</@th>
+            <@th>${uiLabelMap.PartyContactInformation}</@th>
+            <@th>${uiLabelMap.PartyContactSolicitingOk}</@th>
+            <@th>&nbsp;</@th>
+          </@tr>
+          </@thead>
+          <@tbody>
           <#list contactMeches as contactMechMap>
             <#assign contactMech = contactMechMap.contactMech>
             <#assign partyContactMech = contactMechMap.partyContactMech>
-            <tr><td colspan="4"><hr /></td></tr>
-            <tr>
-              <td>${contactMechMap.contactMechType.get("description",locale)}</td>
-              <td>
+            <@tr><@td colspan="4"><hr /></@td></@tr>
+            <@tr>
+              <@td>${contactMechMap.contactMechType.get("description",locale)}</@td>
+              <@td>
                 <#list contactMechMap.partyContactMechPurposes as partyContactMechPurpose>
                   <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
                   <div>
@@ -116,9 +119,9 @@ under the License.
                     <input type="submit" class="smallSubmit" value="${uiLabelMap.PartyCreateNewCustRequest}"/>
                   </form>
                 </#if>
-              </td>
-              <td><b>(${partyContactMech.allowSolicitation!})</b></td>
-              <td class="button-col">
+              </@td>
+              <@td><b>(${partyContactMech.allowSolicitation!})</b></@td>
+              <@td class="button-col">
                 <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId>
                   <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
                 </#if>
@@ -129,10 +132,11 @@ under the License.
                     <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonExpire}"/>
                   </form>
                 </#if>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           </#list>
-        </table>
+          </@tbody>
+        </@table>
       <#else>
         ${uiLabelMap.PartyNoContactInformation}
       </#if>

@@ -17,31 +17,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="serialized-inventory-summary" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.ProductSerializedInventorySummary}</li>
-      </ul>
-      <br class="clear" />
-    </div>
-    <div class="screenlet-body">
-        <table id="serialized-inventory" class="basic-table" cellspacing="0" cellpadding="2">
-            <thead>
-                <tr class="header-row">
-                    <th>${uiLabelMap.ProductInventoryItemId}</th>
-                    <th>${uiLabelMap.ProductProductName}</th>
-                    <th>${uiLabelMap.ProductSerialNumber}</th>
-                    <th>${uiLabelMap.ProductSoftIdentifier}</th>
-                    <th>${uiLabelMap.ProductActivationNumber}</th>
-                    <th>${uiLabelMap.ProductActivationNumber} ${uiLabelMap.CommonValidThruDate}</th>
-                </tr>
-            </thead>
-            <tbody>
+<@section id="serialized-inventory-summary" title="${uiLabelMap.ProductSerializedInventorySummary}">
+
+        <@table type="data" id="serialized-inventory" class="basic-table" cellspacing="0" cellpadding="2">
+            <@thead>
+                <@tr class="header-row">
+                    <@th>${uiLabelMap.ProductInventoryItemId}</@th>
+                    <@th>${uiLabelMap.ProductProductName}</@th>
+                    <@th>${uiLabelMap.ProductSerialNumber}</@th>
+                    <@th>${uiLabelMap.ProductSoftIdentifier}</@th>
+                    <@th>${uiLabelMap.ProductActivationNumber}</@th>
+                    <@th>${uiLabelMap.ProductActivationNumber} ${uiLabelMap.CommonValidThruDate}</@th>
+                </@tr>
+            </@thead>
+            <@tbody>
                 <#list inventoryItemList as inventoryItem>
                     <#assign product = inventoryItem.getRelatedOne('Product', false)!>
-                    <tr>
-                        <td><a href="/facility/control/EditInventoryItem?inventoryItemId=${inventoryItem.inventoryItemId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}" class="linktext">${inventoryItem.inventoryItemId}</a></td>
-                        <td>
+                    <@tr>
+                        <@td><a href="/facility/control/EditInventoryItem?inventoryItemId=${inventoryItem.inventoryItemId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}" class="linktext">${inventoryItem.inventoryItemId}</a></@td>
+                        <@td>
                             <#if product?has_content>
                                 <#if product.isVariant?default('N') == 'Y'>
                                     <#assign product = Static['org.ofbiz.product.product.ProductWorker'].getParentProduct(product.productId, delegator)!>
@@ -51,21 +45,21 @@ under the License.
                                     <a href="/catalog/control/EditProduct?productId=${product.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}">${productName?default(product.productId)}</a>
                                 </#if>
                             </#if>
-                        </td>
-                        <td>${inventoryItem.serialNumber!}</td>
-                        <td>
+                        </@td>
+                        <@td>${inventoryItem.serialNumber!}</@td>
+                        <@td>
                           ${inventoryItem.softIdentifier!}
                           <#if (inventoryItem.softIdentifier?has_content && inventoryItem.softIdentifier?matches("\\d+"))>
                             <#assign sid = Static["java.lang.Long"].decode(inventoryItem.softIdentifier)/>
                             (0x${Static["java.lang.Long"].toHexString(sid)})
                           </#if>
-                        </td>
-                        <td>${inventoryItem.activationNumber!}</td>
-                        <td>${inventoryItem.activationValidThru!}</td>
-                    </tr>
+                        </@td>
+                        <@td>${inventoryItem.activationNumber!}</@td>
+                        <@td>${inventoryItem.activationValidThru!}</@td>
+                    </@tr>
                 </#list>
-            </tbody>
-        </table>
-    </div>
-</div>
+            </@tbody>
+        </@table>
+
+</@section>
 

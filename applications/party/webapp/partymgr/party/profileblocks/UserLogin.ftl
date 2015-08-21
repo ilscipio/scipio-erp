@@ -24,12 +24,13 @@ under the License.
   </#assign>
   <@section id="partyUserLogins" title="${uiLabelMap.PartyUserName}" menuHtml=menuHtml>
       <#if userLogins?has_content>
-        <table class="basic-table" cellspacing="0">
+        <@table type="data" class="basic-table" cellspacing="0">
+          <@tbody>
           <#list userLogins as userUserLogin>
-            <tr>
-              <td>${uiLabelMap.PartyUserLogin}</td>
-              <td>${userUserLogin.userLoginId}</td>
-              <td>
+            <@tr>
+              <@td>${uiLabelMap.PartyUserLogin}</@td>
+              <@td>${userUserLogin.userLoginId}</@td>
+              <@td>
                 <#assign enabled = uiLabelMap.PartyEnabled>
                 <#if (userUserLogin.enabled)?default("Y") == "N">
                   <#if userUserLogin.disabledDateTime??>
@@ -40,19 +41,20 @@ under the License.
                   <#assign enabled = uiLabelMap.PartyDisabled + " - " + disabledTime>
                 </#if>
                 ${enabled}
-              </td>
-              <td class="button-col">
+              </@td>
+              <@td class="button-col">
                 <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
                   <a href="<@ofbizUrl>ProfileEditUserLogin?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
                 </#if>
                 <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
                   <a href="<@ofbizUrl>ProfileEditUserLoginSecurityGroups?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.SecurityGroups}</a>
                 </#if>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           </#list>
-        </table>
+          </@tbody>
+        </@table>
       <#else>
-        ${uiLabelMap.PartyNoUserLogin}
+        <@resultMsg>${uiLabelMap.PartyNoUserLogin}</@resultMsg>
       </#if>
   </@section>

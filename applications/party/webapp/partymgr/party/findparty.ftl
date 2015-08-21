@@ -172,53 +172,53 @@ under the License.
       <@paginateParties />
     </#if>
     
-    <table class="basic-table hover-bar" cellspacing="0">
-     <thead>
-      <tr class="header-row-2">
-        <th>${uiLabelMap.PartyPartyId}</th>
-        <th>${uiLabelMap.PartyUserLogin}</th>
-        <th>${uiLabelMap.PartyName}</th>
+    <@table type="data" useAltRows=true class="basic-table hover-bar" cellspacing="0">
+     <@thead>
+      <@tr class="header-row-2">
+        <@th>${uiLabelMap.PartyPartyId}</@th>
+        <@th>${uiLabelMap.PartyUserLogin}</@th>
+        <@th>${uiLabelMap.PartyName}</@th>
     <#if (extInfo!"") == "P" >
-        <th>${uiLabelMap.PartyCity}</th>
+        <@th>${uiLabelMap.PartyCity}</@th>
     </#if>
     <#if (extInfo!"") == "P">
-        <th>${uiLabelMap.PartyPostalCode}</th>
+        <@th>${uiLabelMap.PartyPostalCode}</@th>
     </#if>
     <#if (extInfo!"") == "T">
-        <th>${uiLabelMap.PartyAreaCode}</th>
+        <@th>${uiLabelMap.PartyAreaCode}</@th>
     </#if>
     <#if (inventoryItemId!"") != "">
-        <th>${uiLabelMap.ProductInventoryItemId}</th>
+        <@th>${uiLabelMap.ProductInventoryItemId}</@th>
     </#if>
     <#if (serialNumber!"") != "">
-        <th>${uiLabelMap.ProductSerialNumber}</th>
+        <@th>${uiLabelMap.ProductSerialNumber}</@th>
     </#if>
     <#if (softIdentifier!"") != "">
-        <th>${uiLabelMap.ProductSoftIdentifier}</th>
+        <@th>${uiLabelMap.ProductSoftIdentifier}</@th>
     </#if>
-        <th>${uiLabelMap.PartyRelatedCompany}</th>
-        <th>${uiLabelMap.PartyType}</th>
-        <th>${uiLabelMap.PartyMainRole}</th>
-        <th>
+        <@th>${uiLabelMap.PartyRelatedCompany}</@th>
+        <@th>${uiLabelMap.PartyType}</@th>
+        <@th>${uiLabelMap.PartyMainRole}</@th>
+        <@th>
             <a href="<@ofbizUrl>findparty</@ofbizUrl>?<#if sortField?has_content><#if sortField == "createdDate">sortField=-createdDate<#elseif sortField == "-createdDate">sortField=createdDate<#else>sortField=createdDate</#if><#else>sortField=createdDate</#if>${paramList!}&VIEW_SIZE=${viewSize!}&VIEW_INDEX=${viewIndex!}" 
                 <#if sortField?has_content><#if sortField == "createdDate">class="sort-order-desc"<#elseif sortField == "-createdDate">class="sort-order-asc"<#else>class="sort-order"</#if><#else>class="sort-order"</#if>>${uiLabelMap.FormFieldTitle_createdDate}
             </a>
-        </th>
-        <th>
+        </@th>
+        <@th>
             <a href="<@ofbizUrl>findparty</@ofbizUrl>?<#if sortField?has_content><#if sortField == "lastModifiedDate">sortField=-lastModifiedDate<#elseif sortField == "-lastModifiedDate">sortField=lastModifiedDate<#else>sortField=lastModifiedDate</#if><#else>sortField=lastModifiedDate</#if>${paramList!}&VIEW_SIZE=${viewSize!}&VIEW_INDEX=${viewIndex!}" 
                 <#if sortField?has_content><#if sortField == "lastModifiedDate">class="sort-order-desc"<#elseif sortField == "-lastModifiedDate">class="sort-order-asc"<#else>class="sort-order"</#if><#else>class="sort-order"</#if>>${uiLabelMap.FormFieldTitle_lastModifiedDate}
             </a>
-        </th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <#assign alt_row = false>
+        </@th>
+        <@th>&nbsp;</@th>
+      </@tr>
+    </@thead>
     <#assign rowCount = 0>
+    <@tbody>
     <#list partyList as partyRow>
       <#assign partyType = partyRow.getRelatedOne("PartyType", false)!>
-      <tr<@dataRowClassStr alt=alt_row />>
-        <td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td>
-        <td>
+      <@tr>
+        <@td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></@td>
+        <@td>
       <#if partyRow.containsKey("userLoginId")>
           ${partyRow.userLoginId!"N/A"}
       <#else>
@@ -234,8 +234,8 @@ under the License.
           (${uiLabelMap.CommonNone})
         </#if>
       </#if>
-        </td>
-        <td>
+        </@td>
+        <@td>
       <#if partyRow.getModelEntity().isField("lastName") && lastName?has_content>
           ${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if>
       <#elseif partyRow.getModelEntity().isField("groupName") && partyRow.groupName?has_content>
@@ -248,27 +248,27 @@ under the License.
           (${uiLabelMap.PartyNoNameFound})
         </#if>
       </#if>
-        </td>
+        </@td>
       <#if (extInfo!"") == "T">
-        <td>${partyRow.areaCode!}</td>
+        <@td>${partyRow.areaCode!}</@td>
       </#if>
       <#if (extInfo!"") == "P" >
-        <td>${partyRow.city!}, ${partyRow.stateProvinceGeoId!}</td>
+        <@td>${partyRow.city!}, ${partyRow.stateProvinceGeoId!}</@td>
       </#if>
       <#if (extInfo!"") == "P">
-        <td>${partyRow.postalCode!}</td>
+        <@td>${partyRow.postalCode!}</@td>
       </#if>
       <#if (inventoryItemId!"") != "">
-        <td>${partyRow.inventoryItemId!}</td>
+        <@td>${partyRow.inventoryItemId!}</@td>
       </#if>
       <#if (serialNumber!"") != "">
-        <td>${partyRow.serialNumber!}</td>
+        <@td>${partyRow.serialNumber!}</@td>
       </#if>
       <#if (softIdentifier!"") != "">
-        <td>${partyRow.softIdentifier!}</td>
+        <@td>${partyRow.softIdentifier!}</@td>
       </#if>
       <#if partyType??>
-        <td>
+        <@td>
         <#if partyType.partyTypeId?has_content && partyType.partyTypeId=="PERSON">
           <#assign partyRelateCom = delegator.findByAnd("PartyRelationship", {"partyIdTo", partyRow.partyId,"roleTypeIdFrom","ACCOUNT","roleTypeIdTo","CONTACT"}, null, false)>
           <#if partyRelateCom?has_content>
@@ -280,19 +280,19 @@ under the License.
             </#list>
           </#if>
         </#if>
-        </td>
-        <td><#if partyType.description??>${partyType.get("description", locale)}<#else>???</#if></td>
+        </@td>
+        <@td><#if partyType.description??>${partyType.get("description", locale)}<#else>???</#if></@td>
       <#else>
-        <td></td><td></td>
+        <@td></@td><@td></@td>
       </#if>
-        <td>
+        <@td>
       <#assign mainRole = dispatcher.runSync("getPartyMainRole", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", partyRow.partyId, "userLogin", userLogin))/>
               ${mainRole.description!}
-        </td>
+        </@td>
         <#assign partyDate = delegator.findOne("Party", {"partyId":partyRow.partyId}, true)/>
-        <td>${partyDate.createdDate!}</td>
-        <td>${partyDate.lastModifiedDate!}</td>
-        <td class="button-col">
+        <@td>${partyDate.createdDate!}</@td>
+        <@td>${partyDate.lastModifiedDate!}</@td>
+        <@td class="button-col">
           <ul class="button-group">
           <li><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDetails}</a></li>
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
@@ -311,13 +311,12 @@ under the License.
           <li><a href="/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}" class="${styles.button_default!}">${uiLabelMap.OrderNewQuote}</a></li>
       </#if>
           </ul>
-        </td>
-      </tr>
+        </@td>
+      </@tr>
       <#assign rowCount = rowCount + 1>
-      <#-- toggle the row color -->
-      <#assign alt_row = !alt_row>
     </#list>
-    </table>
+    </@tbody>
+    </@table>
     
     <#if paginated>
       <@paginateParties />

@@ -38,22 +38,23 @@ under the License.
           <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonCancelDone}</a>
           <a href="javascript:document.editgiftcardform.submit()" class="smallSubmit">${uiLabelMap.CommonSave}</a>
         </div>
-        <table class="basic-table" cellspacing="0">
-        <tr>
-          <td>${uiLabelMap.AccountingCardNumber}</td>
-          <td>
+        <@table type="data" class="basic-table" cellspacing="0">
+        <@tbody>
+        <@tr>
+          <@td>${uiLabelMap.AccountingCardNumber}</@td>
+          <@td>
             <input type="text" size="20" maxlength="60" name="cardNumber" value="${giftCardData.cardNumber!}" />
-          </td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.AccountingPinNumber}</td>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td>${uiLabelMap.AccountingPinNumber}</@td>
+          <@td>
             <input type="text" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber!}" />
-          </td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.CommonExpireDate}</td>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td>${uiLabelMap.CommonExpireDate}</@td>
+          <@td>
             <#assign expMonth = "">
             <#assign expYear = "">
             <#if giftCardData?? && giftCardData.expireDate??>
@@ -85,15 +86,16 @@ under the License.
               </#if>
               ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td>${uiLabelMap.CommonDescription}</td>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td>${uiLabelMap.CommonDescription}</@td>
+          <@td>
             <input type="text" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
-          </td>
-        </tr>
-        </table>
+          </@td>
+        </@tr>
+        </@tbody>
+        </@table>
       </form>
       <div class="button-bar">
         <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonCancelDone}</a>

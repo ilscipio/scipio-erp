@@ -38,26 +38,27 @@ under the License.
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
-        <table class="basic-table" cellspacing="0">
-
+        <@table type="data" class="basic-table" cellspacing="0">
+        <@tbody>
         ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
-        <tr>
-          <td>${uiLabelMap.AccountingBillingAddress}</td>
-          <td width="5">&nbsp;</td>
-          <td>
+        <@tr>
+          <@td>${uiLabelMap.AccountingBillingAddress}</@td>
+          <@td width="5">&nbsp;</@td>
+          <@td>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
             <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="smallSubmit">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
-            <table cellspacing="0">
+            <@table type="data" cellspacing="0">
+            <@tbody>
             <#assign hasCurrent = false>
             <#if curPostalAddress?has_content>
               <#assign hasCurrent = true>
-              <tr>
-                <td class="button-col">
+              <@tr>
+                <@td class="button-col">
                   <input type="radio" name="contactMechId" value="${curContactMechId}" checked="checked" />
-                </td>
-                <td>
+                </@td>
+                <@td>
                   <p><b>${uiLabelMap.PartyUseCurrentAddress}:</b></p>
                   <#list curPartyContactMechPurposes as curPartyContactMechPurpose>
                     <#assign curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
@@ -76,32 +77,32 @@ under the License.
                   <#if curPostalAddress.countryGeoId??><p>${curPostalAddress.countryGeoId}</p></#if>
                   <p>(${uiLabelMap.CommonUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())!})</p>
                   <#if curPartyContactMech.thruDate??><p><b>${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}</b></p></#if>
-                </td>
-              </tr>
+                </@td>
+              </@tr>
             <#else>
-               <#-- <tr>
-                <td valign="top" colspan="2">
+               <#-- <@tr>
+                <@td valign="top" colspan="2">
                   ${uiLabelMap.PartyBillingAddressNotSelected}
-                </td>
-              </tr> -->
+                </@td>
+              </@tr> -->
             </#if>
               <#-- is confusing
-              <tr>
-                <td valign="top" colspan="2">
+              <@tr>
+                <@td valign="top" colspan="2">
                   <b>Select a New Billing Address:</b>
-                </td>
-              </tr>
+                </@td>
+              </@tr>
               -->
               <#list postalAddressInfos as postalAddressInfo>
                 <#assign contactMech = postalAddressInfo.contactMech>
                 <#assign partyContactMechPurposes = postalAddressInfo.partyContactMechPurposes>
                 <#assign postalAddress = postalAddressInfo.postalAddress>
                 <#assign partyContactMech = postalAddressInfo.partyContactMech>
-                <tr>
-                  <td class="button-col">
+                <@tr>
+                  <@td class="button-col">
                     <input type="radio" name="contactMechId" value="${contactMech.contactMechId}" />
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <#list partyContactMechPurposes as partyContactMechPurpose>
                       <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
                       <p>
@@ -117,26 +118,28 @@ under the License.
                     <#if postalAddress.countryGeoId??><p>${postalAddress.countryGeoId}</p></#if>
                     <p>(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})</p>
                     <#if partyContactMech.thruDate??><p><b>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></p></#if>
-                  </td>
-                </tr>
+                  </@td>
+                </@tr>
               </#list>
               <#if !postalAddressInfos?has_content && !curContactMech??>
-                  <tr><td colspan="2">${uiLabelMap.PartyNoContactInformation}.</td></tr>
+                  <@tr><@td colspan="2">${uiLabelMap.PartyNoContactInformation}.</@td></@tr>
               </#if>
               <#-- not yet supported in party manager
-              <tr>
-                <td align="right" valigh="top" width="1%">
+              <@tr>
+                <@td align="right" valigh="top" width="1%">
                   <input type="radio" name="contactMechId" value="_NEW_" <#if !hasCurrent>checked="checked"</#if> />
-                </td>
-                <td valign="middle" width="80%">
+                </@td>
+                <@td valign="middle" width="80%">
                   ${uiLabelMap.PartyCreateNewBillingAddress}.
-                </td>
-              </tr>
+                </@td>
+              </@tr>
               -->
-            </table>
-          </td>
-        </tr>
-        </table>
+            </@tbody>
+            </@table>
+          </@td>
+        </@tr>
+        </@tbody>
+        </@table>
       </form>
       <div class="button-bar">
         <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonCancelDone}</a>

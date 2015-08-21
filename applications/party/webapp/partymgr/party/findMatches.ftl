@@ -41,7 +41,7 @@ under the License.
         <@field type="input" name="postalCode" label="${uiLabelMap.PartyZipCode}" value="${parameters.postalCode!}" required=true />
       
         <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.PageTitleFindMatches}" /></td>
+            <input type="submit" value="${uiLabelMap.PageTitleFindMatches}" />
         </@field>
         
       </form>
@@ -54,43 +54,45 @@ under the License.
       
           <#if match?has_content>
             <#if matches?has_content>
-              <table cellspacing="0" class="basic-table">
-                <thead>
-                <tr>
-                  <td colspan="7">${uiLabelMap.PartyAddressMatching} ${lastName} / ${firstName} @ ${addressString}</td>
-                </tr>
-                <tr class="header-row">
-                  <th>${uiLabelMap.PartyLastName}</th>
-                  <th>${uiLabelMap.PartyFirstName}</th>
-                  <th>${uiLabelMap.CommonAddress1}</th>
-                  <th>${uiLabelMap.CommonAddress2}</th>
-                  <th>${uiLabelMap.CommonCity}</th>
-                  <th>${uiLabelMap.PartyZipCode}</th>
-                  <th>${uiLabelMap.PartyPartyId}</th>
-                </tr>
-                </thead>
+              <@table type="data" cellspacing="0" class="basic-table">
+                <@thead>
+                <@tr>
+                  <@td colspan="7">${uiLabelMap.PartyAddressMatching} ${lastName} / ${firstName} @ ${addressString}</@td>
+                </@tr>
+                <@tr class="header-row">
+                  <@th>${uiLabelMap.PartyLastName}</@th>
+                  <@th>${uiLabelMap.PartyFirstName}</@th>
+                  <@th>${uiLabelMap.CommonAddress1}</@th>
+                  <@th>${uiLabelMap.CommonAddress2}</@th>
+                  <@th>${uiLabelMap.CommonCity}</@th>
+                  <@th>${uiLabelMap.PartyZipCode}</@th>
+                  <@th>${uiLabelMap.PartyPartyId}</@th>
+                </@tr>
+                </@thead>
+                <@tbody>
                 <#list matches as match>
                   <#assign person = match.getRelatedOne("Party", false).getRelatedOne("Person", false)!>
                   <#assign group = match.getRelatedOne("Party", false).getRelatedOne("PartyGroup", false)!>
-                  <tr>
+                  <@tr>
                     <#if person?has_content>
-                      <td>${person.lastName}</td>
-                      <td>${person.firstName}</td>
+                      <@td>${person.lastName}</@td>
+                      <@td>${person.firstName}</@td>
                     <#elseif group?has_content>
-                      <td colspan="2">${group.groupName}</td>
+                      <@td colspan="2">${group.groupName}</@td>
                     <#else>
-                      <td colspan="2">${uiLabelMap.PartyUnknown}</td>
+                      <@td colspan="2">${uiLabelMap.PartyUnknown}</@td>
                     </#if>
-                    <td>${Static["org.ofbiz.party.party.PartyWorker"].makeMatchingString(delegator, match.address1)}</td>
-                    <td>${Static["org.ofbiz.party.party.PartyWorker"].makeMatchingString(delegator, match.address2?default("N/A"))}</td>
-                    <td>${match.city}</td>
-                    <td>${match.postalCode}</td>
-                    <td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${match.partyId}</@ofbizUrl>" class="${styles.button_default!}">${match.partyId}</a></td>
-                  </tr>
+                    <@td>${Static["org.ofbiz.party.party.PartyWorker"].makeMatchingString(delegator, match.address1)}</@td>
+                    <@td>${Static["org.ofbiz.party.party.PartyWorker"].makeMatchingString(delegator, match.address2?default("N/A"))}</@td>
+                    <@td>${match.city}</@td>
+                    <@td>${match.postalCode}</@td>
+                    <@td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${match.partyId}</@ofbizUrl>" class="${styles.button_default!}">${match.partyId}</a></@td>
+                  </@tr>
                 </#list>
-              </table>
+                </@tbody>
+              </@table>
             <#else>
-              <p>${uiLabelMap.PartyNoMatch}</p>
+              <@resultMsg>${uiLabelMap.PartyNoMatch}</@resultMsg>
             </#if>
           </#if>
 </@section>

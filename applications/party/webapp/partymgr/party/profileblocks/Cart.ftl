@@ -35,24 +35,26 @@ under the License.
       </div>
       <div class="screenlet-body">
         <#if savedCartItems?has_content>
-          <table class="basic-table" cellspacing="0">
-           <thead>
-            <tr class="header-row">
-              <th>${uiLabelMap.PartySequenceId}</th>
-              <th>${uiLabelMap.PartyProductId}</th>
-              <th>${uiLabelMap.PartyQuantity}</th>
-              <th>${uiLabelMap.PartyQuantityPurchased}</th>
-            </tr>
-            </thead>
+          <@table type="data" class="basic-table" cellspacing="0">
+           <@thead>
+            <@tr class="header-row">
+              <@th>${uiLabelMap.PartySequenceId}</@th>
+              <@th>${uiLabelMap.PartyProductId}</@th>
+              <@th>${uiLabelMap.PartyQuantity}</@th>
+              <@th>${uiLabelMap.PartyQuantityPurchased}</@th>
+            </@tr>
+            </@thead>
+            <@tbody>
             <#list savedCartItems as savedCartItem>
-              <tr>
-                <td>${savedCartItem.shoppingListItemSeqId!}</td>
-                <td class="button-col"><a href="/catalog/control/EditProduct?productId=${savedCartItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}">${savedCartItem.productId!}</a></td>
-                <td>${savedCartItem.quantity!}</td>
-                <td>${savedCartItem.quantityPurchased!}</td>
-              </tr>
+              <@tr>
+                <@td>${savedCartItem.shoppingListItemSeqId!}</@td>
+                <@td class="button-col"><a href="/catalog/control/EditProduct?productId=${savedCartItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}">${savedCartItem.productId!}</a></@td>
+                <@td>${savedCartItem.quantity!}</@td>
+                <@td>${savedCartItem.quantityPurchased!}</@td>
+              </@tr>
             </#list>
-          </table>
+            </@tbody>
+          </@table>
         <#else>
           ${uiLabelMap.PartyNoShoppingCartSavedForParty}
         </#if>

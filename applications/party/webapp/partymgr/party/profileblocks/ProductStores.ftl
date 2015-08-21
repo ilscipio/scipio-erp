@@ -19,25 +19,27 @@ under the License.
 
 <@section id="partyProductStores" title="${uiLabelMap.ProductStores}">
     <#if productStoreRoles?has_content>
-      <table class="basic-table" cellspacing="0">
-       <thead>
-        <tr class="header-row">
-          <th>${uiLabelMap.ProductStoreNameId}</th>
-          <th>${uiLabelMap.PartyRoleType}</th>
-        </tr>
-        </thead>
+      <@table type="data" class="basic-table" cellspacing="0">
+        <@thead>
+        <@tr class="header-row">
+          <@th>${uiLabelMap.ProductStoreNameId}</@th>
+          <@th>${uiLabelMap.PartyRoleType}</@th>
+        </@tr>
+        </@thead>
+        <@tbody>
         <#list productStoreRoles as productStoreRole>
           <#assign productStore = delegator.findOne("ProductStore", {"productStoreId" : productStoreRole.productStoreId}, true) />
           <#assign roleType = delegator.findOne("RoleType", {"roleTypeId" : productStoreRole.roleTypeId}, true) />
-          <tr>
-            <td class="button-col">
+          <@tr>
+            <@td class="button-col">
               <a href="/catalog/control/FindProductStoreRoles?partyId=${productStoreRole.partyId}&amp;productStoreId=${productStore.productStoreId}">${productStore.storeName!("${uiLabelMap.ProductNoDescription}")} (${productStore.productStoreId})</a>
-            </td>
-            <td>${roleType.description!}</td>
-          </tr>
+            </@td>
+            <@td>${roleType.description!}</@td>
+          </@tr>
         </#list>
-      </table>
+        </@tbody>
+      </@table>
     <#else>
-      ${uiLabelMap.PartyNoProductStoreFoundForThisParty}
+      <@resultMsg>${uiLabelMap.PartyNoProductStoreFoundForThisParty}</@resultMsg>
     </#if>
 </@section>

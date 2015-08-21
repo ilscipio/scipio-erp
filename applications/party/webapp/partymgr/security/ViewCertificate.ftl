@@ -46,36 +46,38 @@ under the License.
     <br class="clear" />
   </div>
   <div class="screenlet-body">
-    <table cellspacing="0">
-    <thead>
-      <tr class="header-row">
-        <th>${uiLabelMap.PartyCertComponent}</th>
-        <th>${uiLabelMap.PartyCertKeyStore}</th>
-        <th>${uiLabelMap.PartyCertImportIssuer}</th>
-        <th>${uiLabelMap.PartyCertKeyAlias}</th>
-        <th>&nbsp;</th>
-      </tr>
-      </thead>
+    <@table type="data" cellspacing="0">
+    <@thead>
+      <@tr class="header-row">
+        <@th>${uiLabelMap.PartyCertComponent}</@th>
+        <@th>${uiLabelMap.PartyCertKeyStore}</@th>
+        <@th>${uiLabelMap.PartyCertImportIssuer}</@th>
+        <@th>${uiLabelMap.PartyCertKeyAlias}</@th>
+        <@th>&nbsp;</@th>
+      </@tr>
+    </@thead>
+    <@tbody>
       <#list components as component>
         <#assign keystores = component.getKeystoreInfos()!/>
           <#list keystores as store>
             <#if (store.isTrustStore())>
-              <tr>
+              <@tr>
                 <form method="post" action="<@ofbizUrl>/importIssuerProvision</@ofbizUrl>">
                   <input type="hidden" name="componentName" value="${component.getComponentName()}"/>
                   <input type="hidden" name="keystoreName" value="${store.getName()}"/>
                   <input type="hidden" name="certString" value="${requestParameters.certString}"/>
 
-                  <td>${component.getComponentName()}</td>
-                  <td>${store.getName()}</td>
-                  <td align="center"><input type="checkbox" name="importIssuer" value="Y"/>
-                  <td><input type="text" name="alias" size="20"/>
-                  <td align="right"><input type="submit" value="${uiLabelMap.CommonSave}"/>
+                  <@td>${component.getComponentName()}</@td>
+                  <@td>${store.getName()}</@td>
+                  <@td align="center"><input type="checkbox" name="importIssuer" value="Y"/></@td>
+                  <@td><input type="text" name="alias" size="20"/></@td>
+                  <@td align="right"><input type="submit" value="${uiLabelMap.CommonSave}"/></@td>
                 </form>
-              </tr>
+              </@tr>
             </#if>
           </#list>
       </#list>
-    </table>
+    </@tbody>
+    </@table>
   </div>
 </div>

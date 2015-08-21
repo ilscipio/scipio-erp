@@ -1081,6 +1081,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
                     
    * General Attributes *
     type            = [generic, data, summary, fields], default generic
+                      TODO: WARN: these are WIP types, may not be enough
                       generic: generic html table (free-form, complex), no features enabled by default
                       data: typical record-containing table
                       summary: usually table with one or a few set row of summary totals

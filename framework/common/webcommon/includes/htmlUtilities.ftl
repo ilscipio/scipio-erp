@@ -1094,16 +1094,21 @@ Helps define table. Required wrapper for all table sub-elem macros.
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
     cellspacing     = cellspacing, default 0, set to "" to remove
+    wrapIf          = condition to add elem, for esoteric cases; avoid
     [attribs...]    = legacy <table attributes and values
 -->
-<#macro table type="generic" class=true addClass="" id="" cellspacing=0 scrollable=false useAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs...>
+<#macro table type="generic" class=true addClass="" id="" wrapIf=true cellspacing=0 scrollable=false useAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs...>
+<#if wrapIf>
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
   <#local prevSectionInfo = catoCurrentTableSectionInfo!>
   <#local prevRowAlt = catoCurrentTableRowAlt!>
   <#local prevLastRowAlt = catoCurrentTableLastRowAlt!>
   <#if !useAltRows?is_boolean>
+    <#-- don't enable for all data tables by default for now, too many complex ones...
     <#local useAltRows = (type == "data") || inheritAltRows>
+    -->
+    <#local useAltRows = inheritAltRows>
   </#if>
   <#if class?is_boolean>
     <#if class>
@@ -1155,33 +1160,48 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#global catoCurrentTableSectionInfo = prevSectionInfo>
   <#global catoCurrentTableRowAlt = prevRowAlt>
   <#global catoCurrentTableLastRowAlt = prevLastRowAlt>
+<#else>
+<#nested>
+</#if>
 </#macro>
 
-<#macro thead class="" id="" attribs...>
+<#macro thead class="" id="" wrapIf=true attribs...>
+<#if wrapIf>
   <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
   <#global catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
   <thead<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
     <#nested>
   </thead>
   <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
+<#else>
+<#nested>
+</#if>
 </#macro>
 
-<#macro tbody class="" id="" attribs...>
+<#macro tbody class="" id="" wrapIf=true attribs...>
+<#if wrapIf>
   <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
   <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
   <tbody<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
     <#nested>
   </tbody>
   <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
+<#else>
+<#nested>
+</#if>  
 </#macro>
 
-<#macro tfoot class="" id="" attribs...>
+<#macro tfoot class="" id="" wrapIf=true attribs...>
+<#if wrapIf>
   <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
   <#global catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
   <tfoot<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
     <#nested>
   </tfoot>
   <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
+<#else>
+<#nested>
+</#if>
 </#macro>
 
 <#-- 
@@ -1197,9 +1217,11 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     useLastAlt      = boolean, if specified, sets alt to same as last (row, or parent table row if first row)
     useParentAlt    = boolean, nested tables only, if specified, use parent table row alt
     selected        = boolean, if specified and true marked as selected
+    wrapIf          = condition to add elem and logic around nested, for esoteric cases; avoid
     [attribs...]    = legacy <tr attributes and values
 -->
-<#macro tr class="" id="" useAlt="" alt="" useLastAlt="" useParentAlt="" selected="" attribs...>
+<#macro tr class="" id="" wrapIf=true useAlt="" alt="" useLastAlt="" useParentAlt="" selected="" attribs...>
+<#if wrapIf>
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
   <#local isRegAltRow = ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
   <#local str = class>
@@ -1238,6 +1260,9 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
       <#global catoCurrentTableRowAlt = !alt>
     </#if>
   </#if>
+<#else>
+<#nested>
+</#if>
 </#macro>
 
 <#-- 
@@ -1249,19 +1274,32 @@ Helps define table cells. tc automatically knows whether th or td via @thead and
    * General Attributes *
     class           = manual classes to add
     id              = cell id
+    wrapIf          = condition to add elem, for esoteric cases; avoid
     [attribs...]    = legacy <th and <td attributes and values
 -->
-<#macro tc class="" id="" attribs...>
+<#macro tc class="" id="" wrapIf=true attribs...>
+<#if wrapIf>
   <#local elem = (catoCurrentTableSectionInfo.cellElem)!"td">
   <${elem}<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></${elem}>
+<#else>
+<#nested>
+</#if>
 </#macro>
 
-<#macro th class="" id="" attribs...>
+<#macro th class="" id="" wrapIf=true attribs...>
+<#if wrapIf>
   <th<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></th>
+<#else>
+<#nested>
+</#if>
 </#macro>
 
-<#macro td class="" id="" attribs...>
+<#macro td class="" id="" wrapIf=true attribs...>
+<#if wrapIf>
   <td<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></td>
+<#else>
+<#nested>
+</#if>
 </#macro>
 
 <#-- 

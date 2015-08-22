@@ -1097,7 +1097,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
     cellspacing     = cellspacing, default 0, set to "" to remove
-    wrapIf          = condition to wrap nested in table elem, for esoteric cases; avoid
+    wrapIf          = advanced structure control, for esoteric cases
     [attribs...]    = legacy <table attributes and values
 -->
 <#macro table type="generic" class=true addClass="" id="" wrapIf=true cellspacing=0 scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs...>
@@ -1220,10 +1220,10 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     useLastAlt      = boolean, if specified, sets alt to same as last (row, or parent table row if first row)
     useParentAlt    = boolean, nested tables only, if specified, use parent table row alt
     selected        = boolean, if specified and true marked as selected
-    wrapIf          = condition to wrap nested in table elem, for esoteric cases; avoid
+    wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (can omit nested)
     [attribs...]    = legacy <tr attributes and values
 -->
-<#macro tr class="" id="" wrapIf=true useAlt="" alt="" useLastAlt="" useParentAlt="" selected="" attribs...>
+<#macro tr class="" id="" wrapIf=true useAlt="" alt="" useLastAlt="" useParentAlt="" selected="" openOnly=false closeOnly=false attribs...>
 <#if wrapIf>
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
   <#local isRegAltRow = ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
@@ -1248,6 +1248,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
       </#if>
     </#if>
   </#if>
+<#if !closeOnly>
   <#if alt?is_boolean>
     <#local str = (str + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
   </#if>
@@ -1255,7 +1256,9 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     <#local str = (str + " " + styles.row_selected!)?trim>
   </#if>
   <tr<#if str?has_content> class="${str}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+</#if>    
     <#nested>
+<#if !openOnly>
   </tr>
   <#if !(useAlt?is_boolean && useAlt == false)>
     <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
@@ -1263,6 +1266,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
       <#global catoCurrentTableRowAlt = !alt>
     </#if>
   </#if>
+</#if>
 <#else>
 <#nested>
 </#if>
@@ -1277,29 +1281,29 @@ Helps define table cells. tc automatically knows whether th or td via @thead and
    * General Attributes *
     class           = manual classes to add
     id              = cell id
-    wrapIf          = condition to wrap nested in table elem, for esoteric cases; avoid
+    wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (can omit nested)
     [attribs...]    = legacy <th and <td attributes and values
 -->
-<#macro tc class="" id="" wrapIf=true attribs...>
+<#macro tc class="" id="" wrapIf=true openOnly=false closeOnly=false attribs...>
 <#if wrapIf>
   <#local elem = (catoCurrentTableSectionInfo.cellElem)!"td">
-  <${elem}<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></${elem}>
+  <#if !closeOnly><${elem}<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>></#if><#nested><#if !openOnly></${elem}></#if>
 <#else>
 <#nested>
 </#if>
 </#macro>
 
-<#macro th class="" id="" wrapIf=true attribs...>
+<#macro th class="" id="" wrapIf=true openOnly=false closeOnly=false attribs...>
 <#if wrapIf>
-  <th<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></th>
+  <#if !closeOnly><th<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>></#if><#nested><#if !openOnly></th></#if>
 <#else>
 <#nested>
 </#if>
 </#macro>
 
-<#macro td class="" id="" wrapIf=true attribs...>
+<#macro td class="" id="" wrapIf=true openOnly=false closeOnly=false attribs...>
 <#if wrapIf>
-  <td<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></td>
+  <#if !closeOnly><td<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>></#if><#nested><#if !openOnly></td></#if>
 <#else>
 <#nested>
 </#if>

@@ -19,33 +19,32 @@ under the License.
 <#if shipmentRouteSegmentDatas?has_content>
 <div class="screenlet">
     <div class="screenlet-body">
-        <table cellspacing="0" cellpadding="2"  class="basic-table">
-         <thead>
-            <tr class="header-row">
-                <th>${uiLabelMap.ProductSegment}</th>
-                <th>
+        <@table type="data-complex" autoAltRows=true cellspacing="0" cellpadding="2"  class="basic-table">
+         <@thead>
+            <@tr class="header-row">
+                <@th>${uiLabelMap.ProductSegment}</@th>
+                <@th>
                     <div>${uiLabelMap.ProductCarrierShipmentMethod}</div>
                     <div>${uiLabelMap.ProductOriginDestinationFacility}</div>
                     <div>${uiLabelMap.ProductOriginDestinationAddressId}</div>
                     <div>${uiLabelMap.ProductOriginDestinationPhoneId}</div>
-                </th>
-                <th>
+                </@th>
+                <@th>
                     <div>${uiLabelMap.ProductCarrierStatus}</div>
                     <div>${uiLabelMap.ProductTrackingNumber}</div>
                     <div>${uiLabelMap.ProductEstimatedStartArrive}</div>
                     <div>${uiLabelMap.ProductActualStartArrive}</div>
-                </th>
-                <th>
+                </@th>
+                <@th>
                     <div>${uiLabelMap.ProductBillingWeightUom}</div>
                     <div>${uiLabelMap.ProductCurrencyUom}</div>
                     <div>${uiLabelMap.ProductActualTransport}</div>
                     <div>${uiLabelMap.ProductActualServices}</div>
                     <div>${uiLabelMap.ProductActualOther}</div>
                     <div>${uiLabelMap.ProductActualTotal}</div>
-                </th>
-            </tr>
-            </thead>
-        <#assign alt_row = false>
+                </@th>
+            </@tr>
+            </@thead>
         <#list shipmentRouteSegmentDatas as shipmentRouteSegmentData>
             <#assign shipmentRouteSegment = shipmentRouteSegmentData.shipmentRouteSegment>
             <#assign shipmentPackageRouteSegs = shipmentRouteSegmentData.shipmentPackageRouteSegs!>
@@ -62,9 +61,9 @@ under the License.
             <#assign currencyUom = shipmentRouteSegmentData.currencyUom!>
             <#assign billingWeightUom = shipmentRouteSegmentData.billingWeightUom!>
             <#assign carrierServiceStatusValidChangeToDetails = shipmentRouteSegmentData.carrierServiceStatusValidChangeToDetails!>
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                <td>${shipmentRouteSegment.shipmentRouteSegmentId}</td>
-                <td>
+            <@tr valign="middle">
+                <@td>${shipmentRouteSegment.shipmentRouteSegmentId}</@td>
+                <@td>
                     <span>${(carrierPerson.firstName)!} ${(carrierPerson.middleName)!} ${(carrierPerson.lastName)!} ${(carrierPartyGroup.groupName)!} [${shipmentRouteSegment.carrierPartyId!}]</span>
                     <span>${shipmentMethodType.description?default(shipmentRouteSegment.shipmentMethodTypeId!)}</span>
                     <br />
@@ -86,34 +85,32 @@ under the License.
                     <span>${uiLabelMap.ProductDest}</span>
                     <span><#if destTelecomNumber?has_content>${destTelecomNumber.countryCode!}  ${destTelecomNumber.areaCode!} ${destTelecomNumber.contactNumber!}</#if> [${shipmentRouteSegment.destTelecomNumberId!}]</span>
                     <br />
-                </td>
-                <td>
+                </@td>
+                <@td>
                     <div>${(carrierServiceStatus.description)?default("&nbsp;")}</div>
                     <div>${shipmentRouteSegment.trackingIdNumber?default("&nbsp;")}</div>
                     <div>${(shipmentRouteSegment.estimatedStartDate.toString())!} - ${(shipmentRouteSegment.estimatedArrivalDate.toString())!}</div>
                     <div>${(shipmentRouteSegment.actualStartDate.toString())!} - ${(shipmentRouteSegment.actualArrivalDate.toString())!}</div>
-                </td>
-                <td>
+                </@td>
+                <@td>
                     <div>${shipmentRouteSegment.billingWeight!} ${(billingWeightUom.get("description",locale))!} [${(billingWeightUom.abbreviation)!}]</div>
                     <div>${(currencyUom.get("description",locale))?default("&nbsp;")}</div>
                     <div>${(shipmentRouteSegment.actualTransportCost)?default("&nbsp;")}</div>
                     <div>${(shipmentRouteSegment.actualServiceCost)?default("&nbsp;")}</div>
                     <div>${(shipmentRouteSegment.actualOtherCost)?default("&nbsp;")}</div>
                     <div>${(shipmentRouteSegment.actualCost)?default("&nbsp;")}</div>
-                </td>
-            </tr>
+                </@td>
+            </@tr>
             <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                <td>&nbsp;</td>
-                <td><span>${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}</td>
-                <td><span>${uiLabelMap.ProductTracking}</span> ${shipmentPackageRouteSeg.trackingCode!}</td>
-                <td><span>${uiLabelMap.ProductBox}</span> ${shipmentPackageRouteSeg.boxNumber!}</td>
-            </tr>
+            <@tr valign="middle" useLastAlt=true>
+                <@td>&nbsp;</@td>
+                <@td><span>${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}</@td>
+                <@td><span>${uiLabelMap.ProductTracking}</span> ${shipmentPackageRouteSeg.trackingCode!}</@td>
+                <@td><span>${uiLabelMap.ProductBox}</span> ${shipmentPackageRouteSeg.boxNumber!}</@td>
+            </@tr>
             </#list>
-            <#-- toggle the row color -->
-            <#assign alt_row = !alt_row>
         </#list>
-        </table>
+        </@table>
     </div>
 </div>
 </#if>

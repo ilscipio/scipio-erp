@@ -17,58 +17,58 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<table class="basic-table hover-bar" cellspacing="0">
- <thead>
-  <tr class="header-row-2">
-    <th>${uiLabelMap.ProductInventoryItemId}</th>
-    <th>${uiLabelMap.ProductFacilityId}</th>
-    <th>${uiLabelMap.ProductLocationSeqId}</th>
-    <th>${uiLabelMap.ProductQoh}</th>
-    <th>${uiLabelMap.ProductAtp}</th>
-    <th>${uiLabelMap.FormFieldTitle_unitCost}</th>
-  </tr>
-  </thead>
+<@table class="basic-table hover-bar" cellspacing="0">
+ <@thead>
+  <@tr class="header-row-2">
+    <@th>${uiLabelMap.ProductInventoryItemId}</@th>
+    <@th>${uiLabelMap.ProductFacilityId}</@th>
+    <@th>${uiLabelMap.ProductLocationSeqId}</@th>
+    <@th>${uiLabelMap.ProductQoh}</@th>
+    <@th>${uiLabelMap.ProductAtp}</@th>
+    <@th>${uiLabelMap.FormFieldTitle_unitCost}</@th>
+  </@tr>
+  </@thead>
   <#if (inventoryItemsForPo?? && inventoryItemsForPo?has_content)>
-    <tr class="header-row-2"><td colspan="6"><span>&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductPurchaseOrder} - ${orderId}</span></td></tr>
+    <@tr class="header-row-2"><@td colspan="6"><span>&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductPurchaseOrder} - ${orderId}</span></@td></@tr>
     <#list inventoryItemsForPo as inventoryItem>
-      <tr>
-        <td><a class="${styles.button_default!}" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
-        <td>${inventoryItem.facilityId!}</td>
-        <td>${inventoryItem.locationSeqId!}</td>
-        <td>${inventoryItem.quantityOnHandTotal!}</td>
-        <td>${inventoryItem.availableToPromiseTotal!}</td>
-        <td>${inventoryItem.unitCost!}</td>
-      </tr>
+      <@tr>
+        <@td><a class="${styles.button_default!}" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></@td>
+        <@td>${inventoryItem.facilityId!}</@td>
+        <@td>${inventoryItem.locationSeqId!}</@td>
+        <@td>${inventoryItem.quantityOnHandTotal!}</@td>
+        <@td>${inventoryItem.availableToPromiseTotal!}</@td>
+        <@td>${inventoryItem.unitCost!}</@td>
+      </@tr>
     </#list>
   </#if>
   <#if (inventoryItemsForSupplier?? && inventoryItemsForSupplier?has_content)>
-    <tr class="header-row-2"><td colspan="6"><span class="label centered">&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductSupplier} - ${partyId}</span></td></tr>
+    <@tr class="header-row-2"><@td colspan="6"><span class="label centered">&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductSupplier} - ${partyId}</span></@td></@tr>
     <#list inventoryItemsForSupplier as inventoryItem>
-      <tr>
-        <td><a class="${styles.button_default!}" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
-        <td>${inventoryItem.facilityId!}</td>
-        <td>${inventoryItem.locationSeqId!}</td>
-        <td>${inventoryItem.quantityOnHandTotal!}</td>
-        <td>${inventoryItem.availableToPromiseTotal!}</td>
-        <td>${inventoryItem.unitCost!}</td>
-      </tr>
+      <@tr>
+        <@td><a class="${styles.button_default!}" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></@td>
+        <@td>${inventoryItem.facilityId!}</@td>
+        <@td>${inventoryItem.locationSeqId!}</@td>
+        <@td>${inventoryItem.quantityOnHandTotal!}</@td>
+        <@td>${inventoryItem.availableToPromiseTotal!}</@td>
+        <@td>${inventoryItem.unitCost!}</@td>
+      </@tr>
     </#list>
   </#if>
   <#if (inventoryItemsForProduct?? && inventoryItemsForProduct?has_content)>
-    <tr class="header-row-2"><td colspan="6"><span>&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductProduct} - ${internalName!} [${productId}]</span></td></tr>
+    <@tr class="header-row-2"><@td colspan="6"><span>&nbsp;${uiLabelMap.ProductInventoryItemsFor} ${uiLabelMap.ProductProduct} - ${internalName!} [${productId}]</span></@td></@tr>
     <#list inventoryItemsForProduct as inventoryItem>
-      <tr>
-        <td><a class="${styles.button_default!}" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></td>
-        <td>${inventoryItem.facilityId!}</td>
-        <td>${inventoryItem.locationSeqId!}</td>
-        <td>${inventoryItem.quantityOnHandTotal!}</td>
-        <td>${inventoryItem.availableToPromiseTotal!}</td>
-        <td>${inventoryItem.unitCost!}</td>
-      </tr>
+      <@tr>
+        <@td><a class="${styles.button_default!}" href="javascript:set_value('${inventoryItem.inventoryItemId}')">${inventoryItem.inventoryItemId}</a></@td>
+        <@td>${inventoryItem.facilityId!}</@td>
+        <@td>${inventoryItem.locationSeqId!}</@td>
+        <@td>${inventoryItem.quantityOnHandTotal!}</@td>
+        <@td>${inventoryItem.availableToPromiseTotal!}</@td>
+        <@td>${inventoryItem.unitCost!}</@td>
+      </@tr>
     </#list>
-    <tr>
+    <@tr>
   </#if>
   <#if !(inventoryItemsForPo?? && inventoryItemsForPo?has_content) && !(inventoryItemsForSupplier?? && inventoryItemsForSupplier?has_content) && !(inventoryItemsForProduct?? && inventoryItemsForProduct?has_content)>
-    <tr><td><span>${uiLabelMap.CommonNo} ${uiLabelMap.ProductInventoryItems} ${uiLabelMap.ProductAvailable}.</span></td></tr>
+    <@tr><@td><span>${uiLabelMap.CommonNo} ${uiLabelMap.ProductInventoryItems} ${uiLabelMap.ProductAvailable}.</span></@td></@tr>
   </#if>
-</table>
+</@table>

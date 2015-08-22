@@ -98,28 +98,27 @@ under the License.
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
                 <input type="hidden" name="shipmentId" value="${shipmentId}" />
                 <input type="hidden" name="_useRowSubmit" value="Y"/>
-                <table cellspacing="0" class="basic-table">
-                    <thead>
-                    <tr class="header-row">
-                        <th>${uiLabelMap.ProductProduct}</th>
+                <@table type="data-simple" autoAltRows=true cellspacing="0" class="basic-table">
+                    <@thead>
+                    <@tr class="header-row">
+                        <@th>${uiLabelMap.ProductProduct}</@th>
                         <#-- Must use the uiLabelMap[""] notation since the label key has . in it -->
-                        <th>${uiLabelMap["GoodIdentificationType.description.UPCA"]}</th>
-                        <th>${uiLabelMap.OrderOrder}</th>
-                        <th>${uiLabelMap.OrderCancelled}</th>
-                        <th>${uiLabelMap.OrderBackOrdered}</th>
-                        <th>${uiLabelMap.CommonReceived}</th>
-                        <th>${uiLabelMap.ProductOpenQuantity}</th>
-                        <th>${uiLabelMap.ProductBackOrders}</th>
+                        <@th>${uiLabelMap["GoodIdentificationType.description.UPCA"]}</@th>
+                        <@th>${uiLabelMap.OrderOrder}</@th>
+                        <@th>${uiLabelMap.OrderCancelled}</@th>
+                        <@th>${uiLabelMap.OrderBackOrdered}</@th>
+                        <@th>${uiLabelMap.CommonReceived}</@th>
+                        <@th>${uiLabelMap.ProductOpenQuantity}</@th>
+                        <@th>${uiLabelMap.ProductBackOrders}</@th>
                         <#if itemsAvailableToReceive>
-                            <th>${uiLabelMap.CommonReceive}</th>
-                            <th>${uiLabelMap.ProductInventoryItemType}</th>
-                            <th colspan="2" align="right">
+                            <@th>${uiLabelMap.CommonReceive}</@th>
+                            <@th>${uiLabelMap.ProductInventoryItemType}</@th>
+                            <@th colspan="2" align="right">
                                 <div>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'orderItemData_tableRow_', 'selectAllForm');" /></div>
-                            </th>
+                            </@th>
                         </#if>
-                    </tr>
-                    </thead>
-                    <#assign alt_row = false>
+                    </@tr>
+                    </@thead>
                     <#list orderItemDatas! as orderItemData>
                         <#assign orderItem = orderItemData.orderItem>
                         <#assign product = orderItemData.product!>
@@ -128,9 +127,9 @@ under the License.
                         <#assign availableToReceive = orderItemData.availableToReceive?default(0)>
                         <#assign backOrderedQuantity = orderItemData.backOrderedQuantity?default(0)>
                         <#assign fulfilledReservations = orderItemData.fulfilledReservations>
-                        <tr id="orderItemData_tableRow_${rowCount}" valign="middle"<@dataRowClassStr alt=alt_row />>
-                            <td>${(product.internalName)!} [${orderItem.productId?default("N/A")}]</td>
-                            <td>
+                        <@tr id="orderItemData_tableRow_${rowCount}" valign="middle">
+                            <@td>${(product.internalName)!} [${orderItem.productId?default("N/A")}]</@td>
+                            <@td>
                                 <div>
                                     <#assign upcaLookup = Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", product.productId, "goodIdentificationTypeId", "UPCA")/>
                                     <#assign upca = delegator.findOne("GoodIdentification", upcaLookup, true)!/>
@@ -138,17 +137,17 @@ under the License.
                                         ${upca.idValue!}
                                     </#if>
                                 </div>
-                            </td>
-                            <td>${orderItem.quantity}</td>
-                            <td>${orderItem.cancelQuantity?default(0)}</td>
-                            <td>
+                            </@td>
+                            <@td>${orderItem.quantity}</@td>
+                            <@td>${orderItem.cancelQuantity?default(0)}</@td>
+                            <@td>
                                 <div ${(backOrderedQuantity &gt; 0)?string(" errorMessage","")}">
                                     ${backOrderedQuantity}
                                 </div>
-                            </td>
-                            <td>${totalQuantityReceived}</td>
-                            <td>${orderItem.quantity - orderItem.cancelQuantity?default(0) - totalQuantityReceived}</td>
-                            <td>
+                            </@td>
+                            <@td>${totalQuantityReceived}</@td>
+                            <@td>${orderItem.quantity - orderItem.cancelQuantity?default(0) - totalQuantityReceived}</@td>
+                            <@td>
                                 <div>
                                     <#if fulfilledReservations?has_content>
                                         <#list fulfilledReservations?sort_by("orderId") as fulfilledReservation>
@@ -156,9 +155,9 @@ under the License.
                                         </#list>
                                     </#if>
                                 </div>
-                            </td>
+                            </@td>
                             <#if availableToReceive &gt; 0 >
-                                <td>
+                                <@td>
                                     <input type="hidden" name="productId_o_${rowCount}" value="${(product.productId)!}"/>
                                     <input type="hidden" name="facilityId_o_${rowCount}" value="${facilityId}"/>
                                     <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipmentId}"/>
@@ -179,8 +178,8 @@ under the License.
                                     </#if>
                                     <#assign totalReadyToReceive = totalReadyToReceive + quantityToReceive/>
                                     <input type="text" size="5" name="quantityAccepted_o_${rowCount}" id="quantityAccepted_o_${rowCount}" value="${quantityToReceive}"/>
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                     <select name="inventoryItemTypeId_o_${rowCount}">
                                       <#list inventoryItemTypes as inventoryItemType>
                                       <option value="${inventoryItemType.inventoryItemTypeId}"
@@ -190,35 +189,35 @@ under the License.
                                       >${inventoryItemType.get("description",locale)?default(inventoryItemType.inventoryItemTypeId)}</option>
                                       </#list>
                                     </select>
-                                </td>
-                                <td align="right">
+                                </@td>
+                                <@td align="right">
                                     <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
-                                </td>
-                                <td align="right">
+                                </@td>
+                                <@td align="right">
                                   <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
-                                </td>
+                                </@td>
                                 <#assign rowCount = rowCount + 1>
                             </#if>
-                        </tr>
-                        <#-- toggle the row color -->
-                        <#assign alt_row = !alt_row>
+                        </@tr>
                     </#list>
                     <#if itemsAvailableToReceive>
-                        <tr>
-                            <td colspan="11" align="right">
+                      <@tfoot>
+                        <@tr>
+                            <@td colspan="11" align="right">
                                 <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClearAll}</a>
-                            </td>
-                            <td align="right">
+                            </@td>
+                            <@td align="right">
                                 <a class="smallSubmit" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();">${uiLabelMap.ProductReceiveItem}</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="12" align="right">
+                            </@td>
+                        </@tr>
+                        <@tr>
+                            <@td colspan="12" align="right">
                                 <a class="smallSubmit" href="<@ofbizUrl>completePurchaseOrder?orderId=${orderId}&amp;facilityId=${facilityId}&amp;shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.OrderForceCompletePurchaseOrder}</a>
-                            </td>
-                        </tr>
+                            </@td>
+                        </@tr>
+                      </@tfoot>
                     </#if>
-                </table>
+                </@table>
                 <input type="hidden" name="_rowCount" value="${rowCount}" />
             </form>
             <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>

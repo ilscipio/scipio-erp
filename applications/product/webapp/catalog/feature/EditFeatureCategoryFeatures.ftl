@@ -46,9 +46,9 @@ under the License.
             <#if productId?has_content>
               <#assign productString = "&amp;productId=" + productId>
             </#if>
-            <table border="0" width="100%" cellpadding="2">
-                <tr>
-                <td align="right">
+            <@table border="0" width="100%" cellpadding="2">
+                <@tr>
+                <@td align="right">
                     <span>
                     <b>
                     <#if (viewIndex > 0)>
@@ -60,41 +60,40 @@ under the License.
                     </#if>
                     </b>
                     </span>
-                </td>
-                </tr>
-            </table>
+                </@td>
+                </@tr>
+            </@table>
         </#if>
         <br />
         <form method='post' action='<@ofbizUrl>UpdateProductFeatureInCategory</@ofbizUrl>' name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
-        <table cellspacing="0" class="basic-table">
-           <thead>
-              <tr class="header-row">
-                <th>${uiLabelMap.CommonId}</th>
-                <th>${uiLabelMap.CommonDescription}</th>
-                <th>${uiLabelMap.ProductFeatureType}</th>
-                <th>${uiLabelMap.ProductFeatureCategory}</th>
-                <th>${uiLabelMap.ProductUnitOfMeasureId}</th>
-                <th>${uiLabelMap.ProductQuantity}</th>
-                <th>${uiLabelMap.ProductAmount}</th>
-                <th>${uiLabelMap.ProductIdSeqNum}</th>
-                <th>${uiLabelMap.ProductIdCode}</th>
-                <th>${uiLabelMap.ProductAbbrev}</th>
-                <th align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureId_tableRow_', 'selectAllForm');" /></th>
-             </tr>
-           </thead>
+        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+           <@thead>
+              <@tr class="header-row">
+                <@th>${uiLabelMap.CommonId}</@th>
+                <@th>${uiLabelMap.CommonDescription}</@th>
+                <@th>${uiLabelMap.ProductFeatureType}</@th>
+                <@th>${uiLabelMap.ProductFeatureCategory}</@th>
+                <@th>${uiLabelMap.ProductUnitOfMeasureId}</@th>
+                <@th>${uiLabelMap.ProductQuantity}</@th>
+                <@th>${uiLabelMap.ProductAmount}</@th>
+                <@th>${uiLabelMap.ProductIdSeqNum}</@th>
+                <@th>${uiLabelMap.ProductIdCode}</@th>
+                <@th>${uiLabelMap.ProductAbbrev}</@th>
+                <@th align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureId_tableRow_', 'selectAllForm');" /></@th>
+             </@tr>
+           </@thead>
         <#if (listSize > 0)>
             <#assign rowCount = 0>
-            <#assign rowClass = "2">
             <#list productFeatures as productFeature>
             <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
-            <tr id="productFeatureId_tableRow_${rowCount}" valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-              <td><input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
-              <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">${productFeature.productFeatureId}</a></td>
-              <td><input type="text" size='15' name="description_o_${rowCount}" value="${productFeature.description}" /></td>
-              <td><select name='productFeatureTypeId_o_${rowCount}' size="1">
+            <@tr id="productFeatureId_tableRow_${rowCount}" valign="middle">
+              <@td><input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
+              <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">${productFeature.productFeatureId}</a></@td>
+              <@td><input type="text" size='15' name="description_o_${rowCount}" value="${productFeature.description}" /></@td>
+              <@td><select name='productFeatureTypeId_o_${rowCount}' size="1">
                 <#if productFeature.productFeatureTypeId?has_content>
                   <option value='${productFeature.productFeatureTypeId}'><#if curProductFeatureType??>${curProductFeatureType.get("description",locale)!}<#else> [${productFeature.productFeatureTypeId}]</#if></option>
                   <option value='${productFeature.productFeatureTypeId}'>---</option>
@@ -102,8 +101,8 @@ under the License.
                 <#list productFeatureTypes as productFeatureType>
                   <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.get("description",locale)!}</option>
                 </#list>
-              </select></td>
-              <td><select name='productFeatureCategoryId_o_${rowCount}' size="1">
+              </select></@td>
+              <@td><select name='productFeatureCategoryId_o_${rowCount}' size="1">
                 <#if productFeature.productFeatureCategoryId?has_content>
                   <#assign curProdFeatCat = productFeature.getRelatedOne("ProductFeatureCategory", false)>
                   <option value='${productFeature.productFeatureCategoryId}'>${(curProdFeatCat.description)!} [${productFeature.productFeatureCategoryId}]</option>
@@ -112,28 +111,25 @@ under the License.
                 <#list productFeatureCategories as productFeatureCategory>
                   <option value='${productFeatureCategory.productFeatureCategoryId}'>${productFeatureCategory.get("description",locale)!} [${productFeatureCategory.productFeatureCategoryId}]</option>
                 </#list>
-              </select></td>
-              <td><input type="text" size='10' name="uomId_o_${rowCount}" value="${productFeature.uomId!}" /></td>
-              <td><input type="text" size='5' name="numberSpecified_o_${rowCount}" value="${productFeature.numberSpecified!}" /></td>
-              <td><input type="text" size='5' name="defaultAmount_o_${rowCount}" value="${productFeature.defaultAmount!}" /></td>
-              <td><input type="text" size='5' name="defaultSequenceNum_o_${rowCount}" value="${productFeature.defaultSequenceNum!}" /></td>
-              <td><input type="text" size='5' name="idCode_o_${rowCount}" value="${productFeature.idCode!}" /></td>
-              <td><input type="text" size='5' name="abbrev_o_${rowCount}" value="${productFeature.abbrev!}" /></td>
-              <td align="right"><input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureId_tableRow_${rowCount}');" /></td>
-            </tr>
+              </select></@td>
+              <@td><input type="text" size='10' name="uomId_o_${rowCount}" value="${productFeature.uomId!}" /></@td>
+              <@td><input type="text" size='5' name="numberSpecified_o_${rowCount}" value="${productFeature.numberSpecified!}" /></@td>
+              <@td><input type="text" size='5' name="defaultAmount_o_${rowCount}" value="${productFeature.defaultAmount!}" /></@td>
+              <@td><input type="text" size='5' name="defaultSequenceNum_o_${rowCount}" value="${productFeature.defaultSequenceNum!}" /></@td>
+              <@td><input type="text" size='5' name="idCode_o_${rowCount}" value="${productFeature.idCode!}" /></@td>
+              <@td><input type="text" size='5' name="abbrev_o_${rowCount}" value="${productFeature.abbrev!}" /></@td>
+              <@td align="right"><input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureId_tableRow_${rowCount}');" /></@td>
+            </@tr>
             <#assign rowCount = rowCount + 1>
-            <#-- toggle the row color -->
-            <#if rowClass == "2">
-              <#assign rowClass = "1">
-            <#else>
-              <#assign rowClass = "2">
-            </#if>
             </#list>
-            <tr><td colspan="11" align="center">
+            <@tfoot>
+            <@tr><@td colspan="11" align="center">
             <input type="hidden" name="_rowCount" value="${rowCount}" />
-            <input type="submit" value='${uiLabelMap.CommonUpdate}'/></td></tr>
+            <input type="submit" value='${uiLabelMap.CommonUpdate}'/>
+            </@td></@tr>
+            </@tfoot>
         </#if>
-        </table>
+        </@table>
         </form>
     </div>
 </div>

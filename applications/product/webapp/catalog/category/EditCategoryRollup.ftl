@@ -24,32 +24,31 @@ under the License.
     </div>
     <div class="screenlet-body">
         <#if currentProductCategoryRollups.size() == 0>
-            <table cellspacing="0" class="basic-table">
-             <thead>
-               <tr class="header-row">
-                  <th><b>${uiLabelMap.ProductParentCategoryId}</b></th>
-                  <th><b>${uiLabelMap.CommonFromDate}</b></th>
-                  <th align="center"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></th>
-                  <th><b>&nbsp;</b></th>
-              </tr>
-              </thead>
-              <tr valign="middle">
-                  <td colspan="4">${uiLabelMap.ProductNoParentCategoriesFound}.</td>
-              </tr>
-           </table>
+            <@table cellspacing="0" class="basic-table">
+             <@thead>
+               <@tr class="header-row">
+                  <@th><b>${uiLabelMap.ProductParentCategoryId}</b></@th>
+                  <@th><b>${uiLabelMap.CommonFromDate}</b></@th>
+                  <@th align="center"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></@th>
+                  <@th><b>&nbsp;</b></@th>
+              </@tr>
+              </@thead>
+              <@tr valign="middle">
+                  <@td colspan="4">${uiLabelMap.ProductNoParentCategoriesFound}.</@td>
+              </@tr>
+           </@table>
         <#else>        
            <form method="post" action="<@ofbizUrl>updateProductCategoryToCategory</@ofbizUrl>" name="updateProductCategoryForm">
            <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
-            <table cellspacing="0" class="basic-table">
-            <thead>
-            <tr class="header-row">
-                    <th>${uiLabelMap.ProductParentCategoryId}</th>
-                    <th>${uiLabelMap.CommonFromDate}</th>
-                    <th align="center">${uiLabelMap.ProductThruDateTimeSequence}</th>
-                    <th>&nbsp;</th>
-            </tr>
-                </thead>
-                    <#assign rowClass = "2">
+            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+            <@thead>
+            <@tr class="header-row">
+                    <@th>${uiLabelMap.ProductParentCategoryId}</@th>
+                    <@th>${uiLabelMap.CommonFromDate}</@th>
+                    <@th align="center">${uiLabelMap.ProductThruDateTimeSequence}</@th>
+                    <@th>&nbsp;</@th>
+            </@tr>
+                </@thead>
                     <#list currentProductCategoryRollups as productCategoryRollup>
                     <#assign suffix = "_o_" + productCategoryRollup_index>
                     <#assign curCategory = productCategoryRollup.getRelatedOne("ParentProductCategory", false)>
@@ -57,8 +56,8 @@ under the License.
                     <#if productCategoryRollup.fromDate?? && nowTimestamp.before(productCategoryRollup.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
                     <#assign hasExpired = false>
                     <#if productCategoryRollup.thruDate?? && nowTimestamp.after(productCategoryRollup.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
-                    <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                        <td><#if curCategory?has_content>
+                    <@tr valign="middle">
+                        <@td><#if curCategory?has_content>
                                 <a href="<@ofbizUrl>EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" >
                                     <#assign catContentWrapper = Static["org.ofbiz.product.category.CategoryContentWrapper"].makeCategoryContentWrapper(curCategory, request)!>
                                     <#if catContentWrapper?has_content>
@@ -69,34 +68,31 @@ under the License.
                                     [${curCategory.productCategoryId}]
                                 </a>
                             </#if>
-                        </td>
-                        <td <#if hasntStarted>style="color: red;"</#if>>${productCategoryRollup.fromDate}</td>
-                        <td align="center">
+                        </@td>
+                        <#assign colorStyle><#if hasntStarted>style="color: red;"</#if></#assign>
+                        <@td style=colorStyle>${productCategoryRollup.fromDate}</@td>
+                        <@td align="center">
                             <input type="hidden" name="showProductCategoryId${suffix}" value="${productCategoryRollup.productCategoryId}" />
                             <input type="hidden" name="productCategoryId${suffix}" value="${productCategoryRollup.productCategoryId}" />
                             <input type="hidden" name="parentProductCategoryId${suffix}" value="${productCategoryRollup.parentProductCategoryId}" />
                             <input type="hidden" name="fromDate${suffix}" value="${productCategoryRollup.fromDate}" />
                             <@htmlTemplate.renderDateTimeField name="thruDate${suffix}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${productCategoryRollup.thruDate!''}" size="25" maxlength="30" id="thruDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                             <input type="text" size="5" name="sequenceNum${suffix}" value="${productCategoryRollup.sequenceNum!}" />
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                             <a href="javascript:document.removeProductCategoryFromCategory_${productCategoryRollup_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
-                        </td>
-                    </tr>
-                    <#-- toggle the row color -->
-                    <#if rowClass == "2">
-                        <#assign rowClass = "1">
-                    <#else>
-                        <#assign rowClass = "2">
-                    </#if>
+                        </@td>
+                    </@tr>
                     </#list>
-                    <tr valign="middle">
-                        <td colspan="4" align="center">
+                    <@tfoot>
+                    <@tr valign="middle">
+                        <@td colspan="4" align="center">
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
                             <input type="hidden" value="${currentProductCategoryRollups.size()}" name="_rowCount" />
-                        </td>
-                    </tr>
-        </table>
+                        </@td>
+                    </@tr>
+                    </@tfoot>
+        </@table>
      </form>
                 <#list currentProductCategoryRollups as productCategoryRollup>
                     <form name="removeProductCategoryFromCategory_${productCategoryRollup_index}" method="post" action="<@ofbizUrl>removeProductCategoryFromCategory</@ofbizUrl>">
@@ -114,8 +110,8 @@ under the License.
         <h3>${uiLabelMap.ProductAddCategoryParent} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</h3>
     </div>
     <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
-            <tr><td>
+        <@table cellspacing="0" class="basic-table">
+            <@tr><@td>
                 <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addParentForm">
                     <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
                     <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
@@ -124,8 +120,8 @@ under the License.
 
                     <input type="submit" value="${uiLabelMap.CommonAdd}" />
                 </form>
-            </td></tr>
-        </table>
+            </@td></@tr>
+        </@table>
     </div>
 </div>
 <div class="screenlet">
@@ -134,33 +130,32 @@ under the License.
     </div>
     <div class="screenlet-body">
         <#if parentProductCategoryRollups.size() == 0>
-            <table cellspacing="0" class="basic-table">
-              <thead>
-                <tr class="header-row">
-                    <th>${uiLabelMap.ProductChildCategoryId}</th>
-                    <th>${uiLabelMap.CommonFromDate}</th>
-                    <th align="center">${uiLabelMap.ProductThruDateTimeSequence}</th>
-                    <th>&nbsp;</th>
-                </tr>
-              </thead>
-                <tr valign="middle">
-                    <td colspan="4">${uiLabelMap.ProductNoChildCategoriesFound}.</td>
-                </tr>
-            </table>
+            <@table cellspacing="0" class="basic-table">
+              <@thead>
+                <@tr class="header-row">
+                    <@th>${uiLabelMap.ProductChildCategoryId}</@th>
+                    <@th>${uiLabelMap.CommonFromDate}</@th>
+                    <@th align="center">${uiLabelMap.ProductThruDateTimeSequence}</@th>
+                    <@th>&nbsp;</@th>
+                </@tr>
+              </@thead>
+                <@tr valign="middle">
+                    <@td colspan="4">${uiLabelMap.ProductNoChildCategoriesFound}.</@td>
+                </@tr>
+            </@table>
         <#else>
             <form method="post" action="<@ofbizUrl>updateProductCategoryToCategory</@ofbizUrl>" name="updateProductCategoryToCategoryChild">
             <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
-            <table cellspacing="0" class="basic-table">
-              <thead>
-                <tr class="header-row">
-                    <th>${uiLabelMap.ProductChildCategoryId}</th>
-                    <th>${uiLabelMap.CommonFromDate}</th>
-                    <th align="center">${uiLabelMap.ProductThruDateTimeSequence}</th>
-                    <th>&nbsp;</th>
-                </tr>           
-               </thead>
+            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+              <@thead>
+                <@tr class="header-row">
+                    <@th>${uiLabelMap.ProductChildCategoryId}</@th>
+                    <@th>${uiLabelMap.CommonFromDate}</@th>
+                    <@th align="center">${uiLabelMap.ProductThruDateTimeSequence}</@th>
+                    <@th>&nbsp;</@th>
+                </@tr>           
+               </@thead>
                     <#assign lineChild = 0>
-                    <#assign rowClass = "2">
                     <#list parentProductCategoryRollups as productCategoryRollup>
                     <#assign suffix = "_o_" + lineChild>
                     <#assign lineChild = lineChild + 1>
@@ -169,8 +164,8 @@ under the License.
                     <#if productCategoryRollup.fromDate?? && nowTimestamp.before(productCategoryRollup.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
                     <#assign hasExpired = false>
                     <#if productCategoryRollup.thruDate?? && nowTimestamp.after(productCategoryRollup.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
-                        <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                            <td><#if curCategory?has_content>
+                        <@tr valign="middle">
+                            <@td><#if curCategory?has_content>
                                     <a href="<@ofbizUrl>EditCategory?productCategoryId=${curCategory.productCategoryId}</@ofbizUrl>" >
                                         <#assign catContentWrapper = Static["org.ofbiz.product.category.CategoryContentWrapper"].makeCategoryContentWrapper(curCategory, request)!>
                                         <#if catContentWrapper?has_content>
@@ -181,34 +176,31 @@ under the License.
                                         [${curCategory.productCategoryId}]
                                     </a>
                                 </#if>
-                            </td>
-                            <td <#if hasntStarted>style="color: red"</#if>>${productCategoryRollup.fromDate}</td>
-                            <td align="center">
+                            </@td>
+                            <#assign colorStyle><#if hasntStarted>style="color: red;"</#if></#assign>
+                            <@td style=colorStyle>${productCategoryRollup.fromDate}</@td>
+                            <@td align="center">
                                 <input type="hidden" name="productCategoryId${suffix}" value="${productCategoryRollup.productCategoryId}" />
                                 <input type="hidden" name="parentProductCategoryId${suffix}" value="${productCategoryRollup.parentProductCategoryId}" />
                                 <input type="hidden" name="fromDate${suffix}" value="${productCategoryRollup.fromDate}" />
                                 <@htmlTemplate.renderDateTimeField name="thruDate${suffix}" event="" action="" className=""  title="Thru Date" value="${productCategoryRollup.thruDate!''}" size="25" maxlength="50" id="thruDatefromDate${suffix}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
 
                                 <input type="text" size="5" name="sequenceNum${suffix}" value="${productCategoryRollup.sequenceNum!}" />
-                            </td>
-                            <td>
+                            </@td>
+                            <@td>
                                 <a href="javascript:document.removeProductCategoryFromCategory_1_${productCategoryRollup_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
-                            </td>
-                        </tr>
-                        <#-- toggle the row color -->
-                        <#if rowClass == "2">
-                            <#assign rowClass = "1">
-                        <#else>
-                            <#assign rowClass = "2">
-                        </#if>
+                            </@td>
+                        </@tr>
                     </#list>
-                    <tr valign="middle">
-                        <td colspan="4" align="center">
+                    <@tfoot>
+                    <@tr valign="middle">
+                        <@td colspan="4" align="center">
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
                             <input type="hidden" value="${lineChild}" name="_rowCount" />
-                        </td>
-                    </tr>
-            </table>
+                        </@td>
+                    </@tr>
+                    </@tfoot>
+            </@table>
             </form>
             <#list parentProductCategoryRollups as productCategoryRollup>
                <form name="removeProductCategoryFromCategory_1_${productCategoryRollup_index}" method="post" action="<@ofbizUrl>removeProductCategoryFromCategory</@ofbizUrl>">
@@ -226,8 +218,8 @@ under the License.
         <h3>${uiLabelMap.ProductAddCategoryChild} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</h3>
     </div>
     <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
-            <tr><td>
+        <@table cellspacing="0" class="basic-table">
+            <@tr><@td>
                 <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addChildForm">
                     <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
                     <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}" />
@@ -235,8 +227,8 @@ under the License.
                     <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <input type="submit" value="${uiLabelMap.CommonAdd}" />
                 </form>
-            </td></tr>
-        </table>
+            </@td></@tr>
+        </@table>
     </div>
 </div>
 </#if>

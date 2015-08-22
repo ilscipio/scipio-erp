@@ -21,38 +21,29 @@ under the License.
         <h3>${uiLabelMap.PageTitleEditProductFeatureGroups}</h3>
     </div>
     <div class="screenlet-body">
-        <br />
-        <table cellspacing="0" class="basic-table">
-         <thead>
-          <tr class="header-row">
-            <td>${uiLabelMap.CommonId}</th>
-            <th>${uiLabelMap.CommonDescription}</th>
-            <th>&nbsp;</th>
-            <th>&nbsp;</th>
-          </tr>
-          </thead>
-          <#assign rowClass = "2">
+        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+         <@thead>
+          <@tr class="header-row">
+            <@th>${uiLabelMap.CommonId}</@th>
+            <@th>${uiLabelMap.CommonDescription}</@th>
+            <@th>&nbsp;</@th>
+            <@th>&nbsp;</@th>
+          </@tr>
+          </@thead>
           <#list productFeatureGroups as productFeatureGroup>
-            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                <td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${productFeatureGroup.productFeatureGroupId}</a></td>
-                <td>
+            <@tr valign="middle">
+                <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${productFeatureGroup.productFeatureGroupId}</a></@td>
+                <@td>
                     <form method='post' action='<@ofbizUrl>UpdateProductFeatureGroup</@ofbizUrl>'>
                     <input type='hidden' name="productFeatureGroupId" value="${productFeatureGroup.productFeatureGroupId}" />
                     <input type='text' size='30' name="description" value="${productFeatureGroup.description!}" />
                     <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                     </form>
-                </td>
-                <td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.ProductFeatureGroupAppls}</a></td>
-            </tr>
-            <#-- toggle the row color -->
-            <#if rowClass == "2">
-              <#assign rowClass = "1">
-            <#else>
-              <#assign rowClass = "2">
-            </#if>
+                </@td>
+                <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.ProductFeatureGroupAppls}</a></@td>
+            </@tr>
           </#list>
-        </table>
-        <br />
+        </@table>
     </div>
 </div>
 <div class="screenlet">
@@ -62,15 +53,15 @@ under the License.
     <div class="screenlet-body">
         <form method="post" action="<@ofbizUrl>CreateProductFeatureGroup</@ofbizUrl>">
           <br />
-          <table cellspacing="0" class="basic-table">
-            <tr>
-              <td>${uiLabelMap.CommonDescription}:</td>
-              <td><input type="text" size='30' name='description' value='' /></td>
-            </tr>
-            <tr>
-              <td colspan='2'><input type="submit" value="${uiLabelMap.CommonCreate}" /></td>
-            </tr>
-          </table>
+          <@table type="fields" cellspacing="0" class="basic-table">
+            <@tr>
+              <@td>${uiLabelMap.CommonDescription}:</@td>
+              <@td><input type="text" size='30' name='description' value='' /></@td>
+            </@tr>
+            <@tr>
+              <@td colspan='2'><input type="submit" value="${uiLabelMap.CommonCreate}" /></@td>
+            </@tr>
+          </@table>
         </form>
         <br />
     </div>

@@ -26,17 +26,17 @@ under the License.
         <br class="clear"/>
     </div>
     <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
-          <thead>
-            <tr class="header-row">
-                <th>${uiLabelMap.ProductPackage}</th>
-                <th>${uiLabelMap.CommonCreated}</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-            </tr>
-          </thead>
+        <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
+          <@thead>
+            <@tr class="header-row">
+                <@th>${uiLabelMap.ProductPackage}</@th>
+                <@th>${uiLabelMap.CommonCreated}</@th>
+                <@th>&nbsp;</@th>
+                <@th>&nbsp;</@th>
+                <@th>&nbsp;</@th>
+                <@th>&nbsp;</@th>
+            </@tr>
+          </@thead>
         <#assign alt_row = false>
         <#list shipmentPackageDatas as shipmentPackageData>
             <#assign shipmentPackage = shipmentPackageData.shipmentPackage>
@@ -46,10 +46,10 @@ under the License.
             <form method="post" action="<@ofbizUrl>updateShipmentPackage</@ofbizUrl>" name="updateShipmentPackageForm${shipmentPackageData_index}">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                <td>${shipmentPackage.shipmentPackageSeqId}</td>
-                <td>${(shipmentPackage.dateCreated.toString())!}</td>
-                <td>
+            <@tr valign="middle" alt=alt_row>
+                <@td>${shipmentPackage.shipmentPackageSeqId}</@td>
+                <@td>${(shipmentPackage.dateCreated.toString())!}</@td>
+                <@td>
                     <span>${uiLabelMap.ProductWeight}</span>
                     <input type="text" size="5" name="weight" value="${shipmentPackage.weight!}"/>
                     <span>${uiLabelMap.ProductWeightUnit}</span>
@@ -64,8 +64,8 @@ under the License.
                             <option value="${weightUomOption.uomId}">${weightUomOption.get("description",locale)} [${weightUomOption.abbreviation}]</option>
                         </#list>
                     </select>
-                </td>
-                <td>
+                </@td>
+                <@td>
                     <span>${uiLabelMap.ProductShipmentBoxType}</span>
                     <select name="shipmentBoxTypeId">
                         <option value="">&nbsp;</option>
@@ -75,41 +75,41 @@ under the License.
                     </select>
                     <span>${uiLabelMap.ProductShipmentInsuredValuePackage}</span>
                     <input type="text" size="5" name="insuredValue" value="${shipmentPackage.insuredValue!}"/>
-                </td>
-                <td><a href="javascript:document.updateShipmentPackageForm${shipmentPackageData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></td>
-                <td><a href="javascript:document.deleteShipmentPackage_${shipmentPackageData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></td>
-            </tr>
+                </@td>
+                <@td><a href="javascript:document.updateShipmentPackageForm${shipmentPackageData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></@td>
+                <@td><a href="javascript:document.deleteShipmentPackage_${shipmentPackageData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></@td>
+            </@tr>
             </form>
             <form name="deleteShipmentPackage_${shipmentPackageData_index}" method="post" action="<@ofbizUrl>deleteShipmentPackage</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
             </form>
         <#list shipmentPackageContents as shipmentPackageContent>
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                <td>&nbsp;</td>
-                <td><span>${uiLabelMap.ProductItem}</span> ${shipmentPackageContent.shipmentItemSeqId}</td>
-                <td colspan="2">
+            <@tr valign="middle" alt=alt_row>
+                <@td>&nbsp;</@td>
+                <@td><span>${uiLabelMap.ProductItem}</span> ${shipmentPackageContent.shipmentItemSeqId}</@td>
+                <@td colspan="2">
                     <div>
                         <span>${uiLabelMap.ProductQuantity}</span>
                         ${shipmentPackageContent.quantity!}
                         <a href="javascript:document.deleteShipmentPackageContent${shipmentPackageData_index}${shipmentPackageContent_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                     </div>
-                </td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-            </tr>
+                </@td>
+                <@td>&nbsp;</@td>
+                <@td>&nbsp;</@td>
+            </@tr>
             <form name="deleteShipmentPackageContent${shipmentPackageData_index}${shipmentPackageContent_index}" method="post" action="<@ofbizUrl>deleteShipmentPackageContent</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageContent.shipmentPackageSeqId}"/>
                 <input type="hidden" name="shipmentItemSeqId" value="${shipmentPackageContent.shipmentItemSeqId}"/>
             </form>
         </#list>
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
+            <@tr valign="middle" alt=alt_row>
                 <form name="createShipmentPackageContentForm${shipmentPackageData_index}" method="post" action="<@ofbizUrl>createShipmentPackageContent</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
-                <td>&nbsp;</td>
-                <td>
+                <@td>&nbsp;</@td>
+                <@td>
                     <div>
                         <span>${uiLabelMap.ProductAddFromItem}</span>
                         <select name="shipmentItemSeqId">
@@ -118,37 +118,37 @@ under the License.
                             </#list>
                         </select>
                     </div>
-                </td>
-                <td colspan="2">
+                </@td>
+                <@td colspan="2">
                     <div>
                         <span>${uiLabelMap.ProductQuantity}</span>
                         <input type="text" name="quantity" size="5" value="0"/>
                         <a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a>
                     </div>
-                </td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
+                </@td>
+                <@td>&nbsp;</@td>
+                <@td>&nbsp;</@td>
                 </form>
-            </tr>
+            </@tr>
         <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
             <form action="<@ofbizUrl>updateShipmentPackageRouteSeg</@ofbizUrl>" method="post" name="updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentPackageRouteSeg.shipmentRouteSegmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                <td>&nbsp;</td>
-                <td><span>${uiLabelMap.ProductRouteSegment}</span> ${shipmentPackageRouteSeg.shipmentRouteSegmentId}</td>
-                <td><span>${uiLabelMap.ProductTrack}</span> <input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/></td>
-                <td colspan="2">
+            <@tr valign="middle" alt=alt_row>
+                <@td>&nbsp;</@td>
+                <@td><span>${uiLabelMap.ProductRouteSegment}</span> ${shipmentPackageRouteSeg.shipmentRouteSegmentId}</@td>
+                <@td><span>${uiLabelMap.ProductTrack}</span> <input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/></@td>
+                <@td colspan="2">
                     <div>
                         <span>${uiLabelMap.ProductBox}</span>
                         <input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber!}"/>
                         <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
                         <a href="javascript:document.deleteShipmentPackageRouteSeg${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                     </div>
-                </td>
-                <td>&nbsp;</td>
-            </tr>
+                </@td>
+                <@td>&nbsp;</@td>
+            </@tr>
             </form>
             <form name="deleteShipmentPackageRouteSeg${shipmentPackageData_index}${shipmentPackageRouteSeg_index}" method="post" action="<@ofbizUrl>deleteShipmentPackageRouteSeg</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -157,12 +157,12 @@ under the License.
             </form>
         </#list>
             <#--
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
+            <@tr valign="middle" alt=alt_row>
                 <form action="<@ofbizUrl>createShipmentPackageRouteSeg</@ofbizUrl>" name="createShipmentPackageRouteSegForm${shipmentPackageData_index}">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
-                <td>&nbsp;</td>
-                <td>
+                <@td>&nbsp;</@td>
+                <@td>
                     <div><span>${uiLabelMap.ProductAddRouteSegmentInfo}</span>
                     <select name="shipmentRouteSegmentId">
                         <#list shipmentRouteSegments as shipmentRouteSegment>
@@ -170,13 +170,13 @@ under the License.
                         </#list>
                     </select>
                     </div>
-                </td>
-                <td><span>Track ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode"/></td>
-                <td><span>Box ${uiLabelMap.CommonNbr}</span><input type="text" size="5" name="boxNumber"/></td>
-                <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentPackageData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a></td>
-                <td>&nbsp;</td>
+                </@td>
+                <@td><span>Track ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode"/></@td>
+                <@td><span>Box ${uiLabelMap.CommonNbr}</span><input type="text" size="5" name="boxNumber"/></@td>
+                <@td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentPackageData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a></@td>
+                <@td>&nbsp;</@td>
                 </form>
-            </tr>
+            </@tr>
             -->
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>
@@ -184,23 +184,23 @@ under the License.
         <#--
         <form action="<@ofbizUrl>createShipmentPackage</@ofbizUrl>" name="createShipmentPackageForm">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-            <tr>
-                <td><span>${uiLabelMap.ProductNewPackage}</span></td>
-                <td>&nbsp;</td>
-                <td><span>${uiLabelMap.ProductWeight}</span> <input type="text" size="5" name="weight"/></td>
-                <td><span>${uiLabelMap.ProductWeightUnit}</span>
+            <@tr>
+                <@td><span>${uiLabelMap.ProductNewPackage}</span></@td>
+                <@td>&nbsp;</@td>
+                <@td><span>${uiLabelMap.ProductWeight}</span> <input type="text" size="5" name="weight"/></@td>
+                <@td><span>${uiLabelMap.ProductWeightUnit}</span>
                     <select name="weightUomId">
                         <#list weightUoms as weightUomOption>
                             <option value="${weightUomOption.uomId}">${weightUomOption.get("description",locale)} [${weightUomOption.abbreviation}]</option>
                         </#list>
                     </select>
-                </td>
-                <td><a href="javascript:document.createShipmentPackageForm.submit();" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></td>
-                <td>&nbsp;</td>
-            </tr>
+                </@td>
+                <@td><a href="javascript:document.createShipmentPackageForm.submit();" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></@td>
+                <@td>&nbsp;</@td>
+            </@tr>
         </form>
         -->
-        </table>
+        </@table>
     </div>
 </div>
 <#else>

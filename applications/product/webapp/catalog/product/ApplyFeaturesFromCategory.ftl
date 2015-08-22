@@ -33,9 +33,9 @@ under the License.
     <#if productId?has_content>
       <#assign productString = "&amp;productId=" + productId>
     </#if>
-    <table cellspacing="0" class="basic-table">
-        <tr>
-        <td align="right">
+    <@table cellspacing="0" class="basic-table">
+        <@tr>
+        <@td align="right">
             <span>
             <b>
             <#if (viewIndex > 0)>
@@ -47,67 +47,62 @@ under the License.
             </#if>
             </b>
             </span>
-        </td>
-        </tr>
-    </table>
+        </@td>
+        </@tr>
+    </@table>
 </#if>
-<table cellspacing="0" class="basic-table">
+<@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
 <form method="post" action="<@ofbizUrl>ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">
   <input type="hidden" name="_useRowSubmit" value="Y" />
   <input type="hidden" name="_checkGlobalScope" value="Y" />
   <input type="hidden" name="productId" value="${productId}" />
-  <thead>
-  <tr class="header-row">
-    <th>${uiLabelMap.CommonId}</th>
-    <th>${uiLabelMap.CommonDescription}</th>
-    <th>${uiLabelMap.ProductFeatureType}</th>
-    <th>${uiLabelMap.ProductApplType}</th>
-    <th>${uiLabelMap.CommonFromDate}</th>
-    <th>${uiLabelMap.CommonThruDate}</th>
-    <th>${uiLabelMap.ProductAmount}</th>
-    <th>${uiLabelMap.CommonSequence}</th>
-    <th>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureId_tableRow_', 'selectAllForm');" /></th>
-  </tr>
-  </thead>
+  <@thead>
+  <@tr class="header-row">
+    <@th>${uiLabelMap.CommonId}</@th>
+    <@th>${uiLabelMap.CommonDescription}</@th>
+    <@th>${uiLabelMap.ProductFeatureType}</@th>
+    <@th>${uiLabelMap.ProductApplType}</@th>
+    <@th>${uiLabelMap.CommonFromDate}</@th>
+    <@th>${uiLabelMap.CommonThruDate}</@th>
+    <@th>${uiLabelMap.ProductAmount}</@th>
+    <@th>${uiLabelMap.CommonSequence}</@th>
+    <@th>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureId_tableRow_', 'selectAllForm');" /></@th>
+  </@tr>
+  </@thead>
 <#assign rowCount = 0>
-<#assign rowClass = "2">
 <#if (listSize > 0)>
 <#list productFeatures as productFeature>
   <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
-    <tr id="productFeatureId_tableRow_${rowCount}"  valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
+    <@tr id="productFeatureId_tableRow_${rowCount}"  valign="middle">
         <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
-        <td><a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">${productFeature.productFeatureId}</a></td>
-        <td>${productFeature.description!}</td>
-        <td><#if curProductFeatureType??>${curProductFeatureType.description!}<#else> [${productFeature.productFeatureTypeId}]</#if></td>
-        <td>
+        <@td><a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">${productFeature.productFeatureId}</a></@td>
+        <@td>${productFeature.description!}</@td>
+        <@td><#if curProductFeatureType??>${curProductFeatureType.description!}<#else> [${productFeature.productFeatureTypeId}]</#if></@td>
+        <@td>
           <select name="productFeatureApplTypeId_o_${rowCount}" size="1">
             <#list productFeatureApplTypes as productFeatureApplType>
               <option value="${productFeatureApplType.productFeatureApplTypeId}" <#if (selectedFeatureApplTypeId?has_content) && (productFeatureApplType.productFeatureApplTypeId == selectedFeatureApplTypeId)>selected="selected"</#if>>${productFeatureApplType.get("description", locale)}</option>
             </#list>
           </select>
-        </td>
-        <td>
+        </@td>
+        <@td>
             <@htmlTemplate.renderDateTimeField name="fromDate_o_${rowCount}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_o_${rowCount}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-        </td>
-        <td>
+        </@td>
+        <@td>
            <@htmlTemplate.renderDateTimeField name="thruDate_o_${rowCount}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate_o_${rowCount}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-        </td>
-        <td><input type="text" size="6" name="amount_o_${rowCount}" value="${productFeature.defaultAmount!}" /></td>
-        <td><input type="text" size="5" name="sequenceNum_o_${rowCount}" value="${productFeature.defaultSequenceNum!}" /></td>
-        <td align="right">
+        </@td>
+        <@td><input type="text" size="6" name="amount_o_${rowCount}" value="${productFeature.defaultAmount!}" /></@td>
+        <@td><input type="text" size="5" name="sequenceNum_o_${rowCount}" value="${productFeature.defaultSequenceNum!}" /></@td>
+        <@td align="right">
             <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureId_tableRow_${rowCount}');" />
-        </td>
-    </tr>
+        </@td>
+    </@tr>
     <#assign rowCount = rowCount + 1>
-    <#-- toggle the row color -->
-    <#if rowClass == "2">
-        <#assign rowClass = "1">
-    <#else>
-        <#assign rowClass = "2">
-    </#if>
 </#list>
-<tr><td colspan="9" align="center"><input type="submit" value="${uiLabelMap.CommonApply}" /></td></tr>
+<@tfoot>
+<@tr><@td colspan="9" align="center"><input type="submit" value="${uiLabelMap.CommonApply}" /></@td></@tr>
+</@tfoot>
 </#if>
 <input type="hidden" name="_rowCount" value="${rowCount!}"/>
 </form>
-</table>
+</@table>

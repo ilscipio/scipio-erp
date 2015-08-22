@@ -31,18 +31,18 @@ under the License.
     <form method="post" action='<@ofbizUrl>EditContactMech</@ofbizUrl>' name="createcontactmechform">
       <input type='hidden' name='facilityId' value='${facilityId}' />
       <input type='hidden' name='DONE_PAGE' value='${donePage!}' />
-      <table width="50%" class="basic-table" cellspacing="0">
-        <tr>
-          <td>${uiLabelMap.PartySelectContactType}</td>
-          <td>
+      <@table width="50%" class="basic-table" cellspacing="0">
+        <@tr>
+          <@td>${uiLabelMap.PartySelectContactType}</@td>
+          <@td>
             <select name="preContactMechTypeId">
               <#list mechMap.contactMechTypes as contactMechType>
                 <option value='${contactMechType.contactMechTypeId}'>${contactMechType.get("description",locale)}</option>
               </#list>
             </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a>
-          </td>
-        </tr>
-      </table>
+          </@td>
+        </@tr>
+      </@table>
     </form>
     </#if>
   </#if>
@@ -56,7 +56,19 @@ under the License.
       <#if contactMechPurposeType??>
         <div><span>(${uiLabelMap.PartyMsgContactHavePurpose}</span>"${contactMechPurposeType.get("description",locale)!}")</div>
       </#if>
-      <table width="90%" class="basic-table" cellspacing="0">
+      <#assign tableWidth = "90%">
+    <#else>
+      <h2>${title}</h2>
+      <div class="button-bar">
+        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='${styles.button_default!}'>${uiLabelMap.CommonGoBack}</a>
+        <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewContactMech}</a>
+      </div>
+      <#assign tableWidth = "">
+    </#if>
+
+  <@table type="fields" class="basic-table" cellspacing="0" width=tableWidth>
+      
+    <#if !mechMap.contactMech?has_content>
         <form method="post" action='<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
         <input type='hidden' name='DONE_PAGE' value='${donePage}' />
         <input type='hidden' name='contactMechTypeId' value='${mechMap.contactMechTypeId}' />
@@ -66,35 +78,28 @@ under the License.
 
         <#if paymentMethodId??><input type='hidden' name='paymentMethodId' value='${paymentMethodId}' /></#if>
 
-        <tr>
-          <td>${uiLabelMap.PartyContactPurposes}</td>
-          <td>
+        <@tr>
+          <@td>${uiLabelMap.PartyContactPurposes}</@td>
+          <@td>
             <select name='contactMechPurposeTypeId' class="required">
               <option></option>
               <#list mechMap.purposeTypes as contactMechPurposeType>
                 <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
                </#list>
             </select>
-          *</td>
-        </tr>
+          *</@td>
+        </@tr>
     <#else>
-      <h2>${title}</h2>
-      <div class="button-bar">
-        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='${styles.button_default!}'>${uiLabelMap.CommonGoBack}</a>
-        <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewContactMech}</a>
-      </div>
-      <table class="basic-table" cellspacing="0">
         <#if mechMap.purposeTypes?has_content>
-        <tr>
-          <td valign="top">${uiLabelMap.PartyContactPurposes}</td>
-          <td>
-            <table class="basic-table" cellspacing="0">
+        <@tr>
+          <@td valign="top">${uiLabelMap.PartyContactPurposes}</@td>
+          <@td>
+            <@table type="data-simple" autoAltRows=true class="basic-table" cellspacing="0">
             <#if mechMap.facilityContactMechPurposes?has_content>
-              <#assign alt_row = false>
               <#list mechMap.facilityContactMechPurposes as facilityContactMechPurpose>
                 <#assign contactMechPurposeType = facilityContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
-                <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                  <td>
+                <@tr valign="middle">
+                  <@td>
                       <#if contactMechPurposeType?has_content>
                         <b>${contactMechPurposeType.get("description",locale)}</b>
                       <#else>
@@ -103,22 +108,22 @@ under the License.
                       (${uiLabelMap.CommonSince}: ${facilityContactMechPurpose.fromDate})
                       <#if facilityContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpires}: ${facilityContactMechPurpose.thruDate.toString()}</#if>
                       <a href="javascript:document.getElementById('deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}').submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
-                  </td>
-                </tr>
-                <#-- toggle the row color -->
-                <#assign alt_row = !alt_row>
-                <form id="deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}" method="post" action="<@ofbizUrl>deleteFacilityContactMechPurpose</@ofbizUrl>">
-                  <input type="hidden" name="facilityId" value="${facilityId!}" />
-                  <input type="hidden" name="contactMechId" value="${contactMechId!}" />
-                  <input type="hidden" name="contactMechPurposeTypeId" value="${(facilityContactMechPurpose.contactMechPurposeTypeId)!}" />
-                  <input type="hidden" name="fromDate" value="${(facilityContactMechPurpose.fromDate)!}" />
-                  <input type="hidden" name="DONE_PAGE" value="${donePage!}" />
-                  <input type="hidden" name="useValues" value="true" />
-                </form>
+                  
+                    <form id="deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}" method="post" action="<@ofbizUrl>deleteFacilityContactMechPurpose</@ofbizUrl>">
+                      <input type="hidden" name="facilityId" value="${facilityId!}" />
+                      <input type="hidden" name="contactMechId" value="${contactMechId!}" />
+                      <input type="hidden" name="contactMechPurposeTypeId" value="${(facilityContactMechPurpose.contactMechPurposeTypeId)!}" />
+                      <input type="hidden" name="fromDate" value="${(facilityContactMechPurpose.fromDate)!}" />
+                      <input type="hidden" name="DONE_PAGE" value="${donePage!}" />
+                      <input type="hidden" name="useValues" value="true" />
+                    </form>
+                  </@td>
+                </@tr>
               </#list>
               </#if>
-              <tr>
-                <td>
+            <@tfoot>
+              <@tr>
+                <@td>
                   <form method="post" action='<@ofbizUrl>createFacilityContactMechPurpose?DONE_PAGE=${donePage}&amp;useValues=true</@ofbizUrl>' name='newpurposeform'>
                   <input type="hidden" name='facilityId' value='${facilityId}' />
                   <input type="hidden" name='contactMechId' value='${contactMechId!}' />
@@ -130,11 +135,12 @@ under the License.
                     </select>
                     &nbsp;<a href='javascript:document.newpurposeform.submit()' class='${styles.button_default!}'>${uiLabelMap.PartyAddPurpose}</a>
                   </form>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
+                </@td>
+              </@tr>
+              </@tfoot>
+            </@table>
+          </@td>
+        </@tr>
         </#if>
         <form method="post" action='<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
         <input type="hidden" name="contactMechId" value='${contactMechId}' />
@@ -143,52 +149,52 @@ under the License.
     </#if>
 
   <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId!>
-    <tr>
-      <td>${uiLabelMap.PartyToName}</td>
-      <td>
+    <@tr>
+      <@td>${uiLabelMap.PartyToName}</@td>
+      <@td>
         <input type="text" size="30" maxlength="60" name="toName" value="${(mechMap.postalAddress.toName)?default(request.getParameter('toName')!)}" />
-      </td>
-    </tr>
-    <tr>
-      <td>${uiLabelMap.PartyAttentionName}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td>${uiLabelMap.PartyAttentionName}</@td>
+      <@td>
         <input type="text" size="30" maxlength="60" name="attnName" value="${(mechMap.postalAddress.attnName)?default(request.getParameter('attnName')!)}" />
-      </td>
-    </tr>
-    <tr>
-      <td>${uiLabelMap.PartyAddressLine1}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td>${uiLabelMap.PartyAddressLine1}</@td>
+      <@td>
         <input type="text" class="required" size="30" maxlength="30" name="address1" value="${(mechMap.postalAddress.address1)?default(request.getParameter('address1')!)}" />
-      *</td>
-    </tr>
-    <tr>
-      <td>${uiLabelMap.PartyAddressLine2}</td>
-      <td>
+      *</@td>
+    </@tr>
+    <@tr>
+      <@td>${uiLabelMap.PartyAddressLine2}</@td>
+      <@td>
           <input type="text" size="30" maxlength="30" name="address2" value="${(mechMap.postalAddress.address2)?default(request.getParameter('address2')!)}" />
-      </td>
-    </tr>
-    <tr>
-      <td>${uiLabelMap.PartyCity}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td>${uiLabelMap.PartyCity}</@td>
+      <@td>
           <input type="text" class="required" size="30" maxlength="30" name="city" value="${(mechMap.postalAddress.city)?default(request.getParameter('city')!)}" />
-      *</td>
-    </tr>
-    <tr>
-      <td>${uiLabelMap.PartyState}</td>
-      <td>
+      *</@td>
+    </@tr>
+    <@tr>
+      <@td>${uiLabelMap.PartyState}</@td>
+      <@td>
         <select name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
         </select>
-      </td>
-    </tr>
-    <tr>
-      <td>${uiLabelMap.PartyZipCode}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td>${uiLabelMap.PartyZipCode}</@td>
+      <@td>
         <input type="text" class="required" size="12" maxlength="10" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')!)}" />
-      *</td>
-    </tr>
-    <tr>   
-      <td>${uiLabelMap.CommonCountry}</td>      
-      <td>     
+      *</@td>
+    </@tr>
+    <@tr>   
+      <@td>${uiLabelMap.CommonCountry}</@td>      
+      <@td>     
         <select name="countryGeoId" id="editcontactmechform_countryGeoId">
           ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
           <#if (mechMap.postalAddress??) && (mechMap.postalAddress.countryGeoId??)>
@@ -201,44 +207,44 @@ under the License.
             ${countryGeo.get("geoName",locale)}
           </option>
         </select>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
   <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId!>
-    <tr>
-      <td>${uiLabelMap.PartyPhoneNumber}</td>
-      <td>
+    <@tr>
+      <@td>${uiLabelMap.PartyPhoneNumber}</@td>
+      <@td>
         <input type="text" size="4" maxlength="10" name="countryCode" value="${(mechMap.telecomNumber.countryCode)?default(request.getParameter('countryCode')!)}" />
         -&nbsp;<input type="text" size="4" maxlength="10" name="areaCode" value="${(mechMap.telecomNumber.areaCode)?default(request.getParameter('areaCode')!)}" />
         -&nbsp;<input type="text" size="15" maxlength="15" name="contactNumber" value="${(mechMap.telecomNumber.contactNumber)?default(request.getParameter('contactNumber')!)}" />
         &nbsp;ext&nbsp;<input type="text" size="6" maxlength="10" name="extension" value="${(mechMap.facilityContactMech.extension)?default(request.getParameter('extension')!)}" />
-      </td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td>[${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]</td>
-    </tr>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td>&nbsp;</@td>
+      <@td>[${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]</@td>
+    </@tr>
   <#elseif "EMAIL_ADDRESS" = mechMap.contactMechTypeId!>
-    <tr>
-      <td>${uiLabelMap.PartyEmailAddress}</td>
-      <td>
+    <@tr>
+      <@td>${uiLabelMap.PartyEmailAddress}</@td>
+      <@td>
           <input type="text" class="required" size="60" maxlength="255" name="emailAddress" value="${(mechMap.contactMech.infoString)?default(request.getParameter('emailAddress')!)}" />
-      *</td>
-    </tr>
+      *</@td>
+    </@tr>
   <#else>
-    <tr>
-      <td>${mechMap.contactMechType.get("description",locale)}</td>
-      <td>
+    <@tr>
+      <@td>${mechMap.contactMechType.get("description",locale)}</@td>
+      <@td>
           <input type="text" class="required" size="60" maxlength="255" name="infoString" value="${(mechMap.contactMech.infoString)!}" />
-      *</td>
-    </tr>
+      *</@td>
+    </@tr>
   </#if>
-    <tr>
-      <td>&nbsp;</td>
-      <td>
+    <@tr>
+      <@td>&nbsp;</@td>
+      <@td>
         <a href="javascript:document.editcontactmechform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
   </form>
-  </table>
+  </@table>
   </#if>
 </#if>

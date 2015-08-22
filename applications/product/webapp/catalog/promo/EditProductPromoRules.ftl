@@ -23,32 +23,32 @@ under the License.
   </div>
   <#-- ======================= Rules ======================== -->
   <div class="screenlet-body">
-    <table cellspacing="0" class="basic-table">
-     <thead>
-      <tr class="header-row">
-        <th width="10%">${uiLabelMap.ProductRuleId}</th>
-        <th width="80%">${uiLabelMap.ProductRuleName}</th>
-        <th width="10%">&nbsp;</th>
-      </tr>
-      </thead>
+    <@table type="data" autoAltRows=false cellspacing="0" class="basic-table">
+     <@thead>
+      <@tr class="header-row">
+        <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
+        <@th width="80%">${uiLabelMap.ProductRuleName}</@th>
+        <@th width="10%">&nbsp;</@th>
+      </@tr>
+      </@thead>
   <#assign ruleClass = "2">
   <#list productPromoRules as productPromoRule>
     <#assign productPromoConds = productPromoRule.getRelated("ProductPromoCond", null, null, false)>
     <#assign productPromoActions = productPromoRule.getRelated("ProductPromoAction", null, null, false)>
       <#if productPromoRule_index != 0>
-        <tr><td colspan="3"><hr /></td></tr>
+        <@tr><@td colspan="3"><hr /></@td></@tr>
       </#if>
-      <tr valign="middle"<@dataRowClassStr class="row-level-one" alt=(ruleClass == "1") />>
-        <td><b> ${uiLabelMap.ProductRule} ${(productPromoRule.productPromoRuleId)!}</b></td>
-        <td>
+      <@tr valign="middle" class="row-level-one" alt=(ruleClass == "1")>
+        <@td><b> ${uiLabelMap.ProductRule} ${(productPromoRule.productPromoRuleId)!}</b></@td>
+        <@td>
           <form method="post" action="<@ofbizUrl>updateProductPromoRule</@ofbizUrl>">
             <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
             <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
             <input type="text" size="30" name="ruleName" value="${(productPromoRule.ruleName)!}" />
             <input type="submit" value="${uiLabelMap.CommonUpdate}" />
           </form>
-        </td>
-        <td align="center">&nbsp;
+        </@td>
+        <@td align="center">&nbsp;
     <#if (productPromoConds.size() == 0 && productPromoActions.size() == 0)>
           <form name="deleteProductPromoRule_${productPromoRule_index}" method="post" action="<@ofbizUrl>deleteProductPromoRule</@ofbizUrl>">
             <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
@@ -56,17 +56,17 @@ under the License.
             <a href="javascript:document.deleteProductPromoRule_${productPromoRule_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
           </form>
     </#if>
-        </td>
-      </tr>
-      <tr><td><hr /></td><td colspan="2"></td></tr>
-      <tr valign="top"<@dataRowClassStr class="row-level-one" alt=(ruleClass == "1") />>
-        <td align="right">${uiLabelMap.ProductConditionsForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
-        <td colspan="2">
-          <table cellspacing="0" class="basic-table">
+        </@td>
+      </@tr>
+      <@tr><@td><hr /></@td><@td colspan="2"></@td></@tr>
+      <@tr valign="top" class="row-level-one" alt=(ruleClass == "1")>
+        <@td align="right">${uiLabelMap.ProductConditionsForRule} ${(productPromoRule.productPromoRuleId)!} :</@td>
+        <@td colspan="2">
+          <@table cellspacing="0" class="basic-table">
     <#assign maxCondSeqId = 1>
     <#assign condClass = "2">
     <#list productPromoConds as productPromoCond>
-            <tr<@dataRowClassStr class="row-level-two" alt=(condClass == "1") />>
+            <@tr class="row-level-two" alt=(condClass == "1")>
               <!-- if cur seq id is a number and is greater than max, set new max for input box prefill below -->
       <#if (productPromoCond.productPromoCondSeqId)??>
         <#assign curCondSeqId = Static["java.lang.Integer"].valueOf(productPromoCond.getString("productPromoCondSeqId"))>
@@ -74,8 +74,8 @@ under the License.
           <#assign maxCondSeqId = curCondSeqId + 1>
         </#if>
       </#if>
-              <td></td>
-              <td>
+              <@td></@td>
+              <@td>
                 <b>${uiLabelMap.ProductCondition} ${(productPromoCond.productPromoCondSeqId)!}</b>
                 <form method="post" action="<@ofbizUrl>updateProductPromoCond</@ofbizUrl>">
                   <input type="hidden" name="productPromoId" value="${(productPromoCond.productPromoId)!}"/>
@@ -220,9 +220,9 @@ under the License.
                     <input type="submit" value="${uiLabelMap.ProductAddConditionProducts}" />
                   </form>
                 </div>
-              </td>
-              <td></td>
-            </tr>
+              </@td>
+              <@td></@td>
+            </@tr>
       <#-- toggle the row color -->
       <#if condClass == "2">
         <#assign condClass = "1">
@@ -230,8 +230,8 @@ under the License.
         <#assign condClass = "2">
       </#if>
     </#list>
-            <tr>
-              <td colspan="3">
+            <@tr>
+              <@td colspan="3">
                 <form method="post" action="<@ofbizUrl>createProductPromoCond</@ofbizUrl>">
                   <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                   <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
@@ -259,21 +259,21 @@ under the License.
                   </select>
                   <input type="submit" value="${uiLabelMap.ProductCreateCondition}" />
                 </form>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr><td><hr /></td><td colspan="2"></td></tr>
-      <tr valign="top"<@dataRowClassStr class="row-level-one" alt=(ruleClass == "1") />>
-        <td align="right">${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!} :</td>
-        <td colspan="2">
-          <table cellspacing="0" class="basic-table">
+              </@td>
+            </@tr>
+          </@table>
+        </@td>
+      </@tr>
+      <@tr><@td><hr /></@td><@td colspan="2"></@td></@tr>
+      <@tr valign="top" class="row-level-one" alt=(ruleClass == "1")>
+        <@td align="right">${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!} :</@td>
+        <@td colspan="2">
+          <@table cellspacing="0" class="basic-table">
     <#assign actionClass = "2">
     <#list productPromoActions as productPromoAction>
-            <tr<@dataRowClassStr class="row-level-two" alt=(actionClass == "1") />>
-              <td></td>
-              <td>
+            <@tr class="row-level-two" alt=(actionClass == "1")>
+              <@td></@td>
+              <@td>
                 <div>
                   <b> ${uiLabelMap.ProductAction} ${(productPromoAction.productPromoActionSeqId)!}</b>
                   <form method="post" action="<@ofbizUrl>updateProductPromoAction</@ofbizUrl>">
@@ -404,9 +404,9 @@ under the License.
                     <input type="submit" value="${uiLabelMap.ProductAddActionProducts}" />
                   </form>
                 </div>
-              </td>
-              <td></td>
-            </tr>
+              </@td>
+              <@td></@td>
+            </@tr>
       <#-- toggle the row color -->
       <#if actionClass == "2">
         <#assign actionClass = "1">
@@ -414,8 +414,8 @@ under the License.
         <#assign actionClass = "2">
       </#if>
     </#list>
-            <tr>
-              <td colspan="3">
+            <@tr>
+              <@td colspan="3">
                 <div>
                   <form method="post" action="<@ofbizUrl>createProductPromoAction</@ofbizUrl>">
                     <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
@@ -440,11 +440,11 @@ under the License.
                     <input type="submit" value="${uiLabelMap.ProductCreateAction}" />
                   </form>
                 </div>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
+              </@td>
+            </@tr>
+          </@table>
+        </@td>
+      </@tr>
     <#-- toggle the row color -->
     <#if ruleClass == "2">
       <#assign ruleClass = "1">
@@ -452,7 +452,7 @@ under the License.
       <#assign ruleClass = "2">
     </#if>
   </#list>
-    </table>
+    </@table>
   </div>
   <#-- This was removed in r697962, should have been only commented out as maybe in future will be used again (free shipping promo)
   <div class="tooltip"><b>${uiLabelMap.ProductNoteOnItemId} :</b> ${uiLabelMap.ProductItemIdGiftPurchaseFreeShipping}</div>

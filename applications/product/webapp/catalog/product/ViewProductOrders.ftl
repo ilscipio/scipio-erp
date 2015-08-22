@@ -60,40 +60,40 @@ under the License.
         </#list>
       </#if>
     </form>
-    <table class="basic-table hover-bar" cellspacing='0'>
-     <thead>
-      <tr class="header-row">
-        <th>${uiLabelMap.OrderOrderId}</th>
-        <th>${uiLabelMap.FormFieldTitle_itemStatusId}</th>
-        <th>${uiLabelMap.FormFieldTitle_orderItemSeqId}</th>
-        <th>${uiLabelMap.OrderDate}</th>
-        <th>${uiLabelMap.OrderUnitPrice}</th>
-        <th>${uiLabelMap.OrderQuantity}</th>
-        <th>${uiLabelMap.OrderOrderType}</th>
-      </tr>
-      </thead>
+    <@table class="basic-table hover-bar" cellspacing='0'>
+     <@thead>
+      <@tr class="header-row">
+        <@th>${uiLabelMap.OrderOrderId}</@th>
+        <@th>${uiLabelMap.FormFieldTitle_itemStatusId}</@th>
+        <@th>${uiLabelMap.FormFieldTitle_orderItemSeqId}</@th>
+        <@th>${uiLabelMap.OrderDate}</@th>
+        <@th>${uiLabelMap.OrderUnitPrice}</@th>
+        <@th>${uiLabelMap.OrderQuantity}</@th>
+        <@th>${uiLabelMap.OrderOrderType}</@th>
+      </@tr>
+      </@thead>
       <#if orderList?has_content && productId??>
         <#list orderList as order>
           <#assign orderItems = delegator.findByAnd("OrderItem", {"orderId" : order.orderId, "productId" : productId}, null, false)/>
           <#list orderItems as orderItem>
-            <tr>
-              <td><a href="/ordermgr/control/orderview?orderId=${orderItem.orderId}" class='${styles.button_default!}'>${orderItem.orderId}</a></td>
+            <@tr>
+              <@td><a href="/ordermgr/control/orderview?orderId=${orderItem.orderId}" class='${styles.button_default!}'>${orderItem.orderId}</a></@td>
               <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)/>
-              <td>${currentItemStatus.get("description",locale)?default(currentItemStatus.statusId)}</td>
-              <td>${orderItem.orderItemSeqId}</td>
-              <td>${order.orderDate}</td>
-              <td>${orderItem.unitPrice}</td>
-              <td>${orderItem.quantity}</td>
+              <@td>${currentItemStatus.get("description",locale)?default(currentItemStatus.statusId)}</@td>
+              <@td>${orderItem.orderItemSeqId}</@td>
+              <@td>${order.orderDate}</@td>
+              <@td>${orderItem.unitPrice}</@td>
+              <@td>${orderItem.quantity}</@td>
               <#assign currentOrderType = order.getRelatedOne("OrderType", false)/>
-              <td>${currentOrderType.get("description",locale)?default(currentOrderType.orderTypeId)}</td>
-            </tr>
+              <@td>${currentOrderType.get("description",locale)?default(currentOrderType.orderTypeId)}</@td>
+            </@tr>
           </#list>
         </#list>
       <#else>
-        <tr>
-          <td colspan='4'><@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg></td>
-        </tr>
+        <@tr>
+          <@td colspan='4'><@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg></@td>
+        </@tr>
       </#if>
-    </table>
+    </@table>
   </div>
 </div>

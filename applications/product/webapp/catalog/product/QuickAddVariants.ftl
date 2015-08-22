@@ -53,85 +53,79 @@ function clickAll(e) {
             <input type="hidden" name="productId" value="${productId}" />
             <input type="hidden" name="_useRowSubmit" value="Y" />
             <input type="hidden" name="_checkGlobalScope" value="Y" />
-        <table cellspacing="0" class="basic-table">
+      <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
         <#assign rowCount = 0>
-        <thead>
-        <tr class="header-row">
+        <@thead>
+        <@tr class="header-row">
             <#list featureTypes as featureType>
-                <th>${featureType}</th>
+                <@th>${featureType}</@th>
             </#list>
-            <th>${uiLabelMap.ProductNewProductCreate} !</th>
-            <th>${uiLabelMap.ProductSequenceNum}</th>
-            <th>${uiLabelMap.ProductExistingVariant} :</th>
-            <th align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:clickAll(this);" /></th>
-        </tr>
-        </thead>
+            <@th>${uiLabelMap.ProductNewProductCreate} !</@th>
+            <@th>${uiLabelMap.ProductSequenceNum}</@th>
+            <@th>${uiLabelMap.ProductExistingVariant} :</@th>
+            <@th align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:clickAll(this);" /></@th>
+        </@tr>
+        </@thead>
         <#assign defaultSequenceNum = 10>
-        <#assign rowClass = "2">
         <#list featureCombinationInfos as featureCombinationInfo>
             <#assign curProductFeatureAndAppls = featureCombinationInfo.curProductFeatureAndAppls>
             <#assign existingVariantProductIds = featureCombinationInfo.existingVariantProductIds>
             <#assign defaultVariantProductId = featureCombinationInfo.defaultVariantProductId>
-            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
+            <@tr valign="middle">
                 <#assign productFeatureIds = "">
                 <#list curProductFeatureAndAppls as productFeatureAndAppl>
-                <td>
+                <@td>
                     ${productFeatureAndAppl.description!}
                     <#assign productFeatureIds = productFeatureIds + "|" + productFeatureAndAppl.productFeatureId>
-                </td>
+                </@td>
                 </#list>
-                <td>
+                <@td>
                     <input type="hidden" name="productFeatureIds_o_${rowCount}" value="${productFeatureIds}"/>
                     <input type="text" size="20" maxlength="20" name="productVariantId_o_${rowCount}" value=""/>
-                </td>
-                <td>
+                </@td>
+                <@td>
                     <input type="text" size="5" maxlength="10" name="sequenceNum_o_${rowCount}" value="${defaultSequenceNum}"/>
-                </td>
-                <td>
+                </@td>
+                <@td>
                     <div>
                     <#list existingVariantProductIds as existingVariantProductId>
                         <a href="<@ofbizUrl>EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="${styles.button_default!}">${existingVariantProductId}</a>
                     </#list>
                     </div>
-                </td>
-                <td align="right">
+                </@td>
+                <@td align="right">
                   <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:setProductVariantId(this, '${defaultVariantProductId}', 'productVariantId_o_${rowCount}');" />
-                </td>
-            </tr>
+                </@td>
+            </@tr>
             <#assign defaultSequenceNum = defaultSequenceNum + 10>
             <#assign rowCount = rowCount + 1>
-            <#-- toggle the row color -->
-            <#if rowClass == "2">
-                <#assign rowClass = "1">
-            <#else>
-                <#assign rowClass = "2">
-            </#if>
         </#list>
-        <tr>
+        <@tfoot>
+        <@tr>
             <#assign columns = featureTypes.size() + 4>
-            <td colspan="${columns}" align="center">
+            <@td colspan="${columns}" align="center">
                 <input type="hidden" name="_rowCount" value="${rowCount}" />
                 <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonCreate}"/>
-            </td>
-        </tr>
-        </table>
+            </@td>
+        </@tr>
+        </@tfoot>
+      </@table>
     </form>
 <#else>
-    <b>${uiLabelMap.ProductNoSelectableFeaturesFound}</b>
+    <@resultMsg>${uiLabelMap.ProductNoSelectableFeaturesFound}</@resultMsg>
 </#if>
 <form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="post" name="addVariantsToVirtual">
-    <table cellspacing="0" class="basic-table">
-        <tr class="header-row">
-            <td><b>${uiLabelMap.ProductVariantAdd}:</b></td>
-        </tr>
-        <tr>
-            <td>
-                <br />
+    <@table type="fields" cellspacing="0" class="basic-table">
+        <@tr class="header-row">
+            <@td><b>${uiLabelMap.ProductVariantAdd}:</b></@td>
+        </@tr>
+        <@tr>
+            <@td>
                 <input type="hidden" name="productId" value="${productId}"/>
                 <span>${uiLabelMap.ProductVariantProductIds}:</span>
                 <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
                 <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductVariantAdd}"/>
-            </td>
-        </tr>
-    </table>
+            </@td>
+        </@tr>
+    </@table>
 </form>

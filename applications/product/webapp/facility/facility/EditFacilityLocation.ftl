@@ -32,28 +32,28 @@ under the License.
 <#if facilityId?? && !(facilityLocation??)>
     <form action="<@ofbizUrl>CreateFacilityLocation</@ofbizUrl>" method="post">
     <input type="hidden" name="facilityId" value="${facilityId}" />
-    <table class="basic-table" cellspacing="0">
+    <@table class="basic-table" cellspacing="0">
 <#elseif facilityLocation??>
     <form action="<@ofbizUrl>UpdateFacilityLocation</@ofbizUrl>" method="post">
     <input type="hidden" name="facilityId" value="${facilityId!}" />
     <input type="hidden" name="locationSeqId" value="${locationSeqId}" />
-    <table class="basic-table" cellspacing="0">
-    <tr>
-        <td>${uiLabelMap.ProductFacilityId}</td>
-        <td>${facilityId!}</td>
-    </tr>
-    <tr>
-        <td>${uiLabelMap.ProductLocationSeqId}</td>
-        <td>${locationSeqId}</td>
-    </tr>
+    <@table class="basic-table" cellspacing="0">
+    <@tr>
+        <@td>${uiLabelMap.ProductFacilityId}</@td>
+        <@td>${facilityId!}</@td>
+    </@tr>
+    <@tr>
+        <@td>${uiLabelMap.ProductLocationSeqId}</@td>
+        <@td>${locationSeqId}</@td>
+    </@tr>
 <#else>
     <@alert type="error">${uiLabelMap.ProductNotCreateLocationFacilityId}</@alert>
 </#if>
 
 <#if facilityId??>
-    <tr>
-        <td>${uiLabelMap.ProductType}</td>
-        <td>
+    <@tr>
+        <@td>${uiLabelMap.ProductType}</@td>
+        <@td>
             <select name="locationTypeEnumId">
                 <#if (facilityLocation.locationTypeEnumId)?has_content>
                     <#assign locationTypeEnum = facilityLocation.getRelatedOne("TypeEnumeration", true)!>
@@ -64,37 +64,37 @@ under the License.
                     <option value="${locationTypeEnum.enumId}">${locationTypeEnum.get("description",locale)}</option>
                 </#list>
             </select>
-        </td>
-    </tr>
-    <tr>
-        <td>${uiLabelMap.CommonArea}</td>
-        <td><input type="text" name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" /></td>
-    </tr>
-    <tr>
-        <td>${uiLabelMap.ProductAisle}</td>
-        <td><input type="text" name="aisleId" value="${(facilityLocation.aisleId)!}" size="19" maxlength="20" /></td>
-    </tr>
-    <tr>
-        <td>${uiLabelMap.ProductSection}</td>
-        <td><input type="text" name="sectionId" value="${(facilityLocation.sectionId)!}" size="19" maxlength="20" /></td>
-    </tr>
-    <tr>
-        <td>${uiLabelMap.ProductLevel}</td>
-        <td><input type="text" name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" /></td>
-    </tr>
-    <tr>
-        <td>${uiLabelMap.ProductPosition}</td>
-        <td><input type="text" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" /></td>
-    </tr>
-    <tr>
-        <td>&nbsp;</td>
+        </@td>
+    </@tr>
+    <@tr>
+        <@td>${uiLabelMap.CommonArea}</@td>
+        <@td><input type="text" name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" /></@td>
+    </@tr>
+    <@tr>
+        <@td>${uiLabelMap.ProductAisle}</@td>
+        <@td><input type="text" name="aisleId" value="${(facilityLocation.aisleId)!}" size="19" maxlength="20" /></@td>
+    </@tr>
+    <@tr>
+        <@td>${uiLabelMap.ProductSection}</@td>
+        <@td><input type="text" name="sectionId" value="${(facilityLocation.sectionId)!}" size="19" maxlength="20" /></@td>
+    </@tr>
+    <@tr>
+        <@td>${uiLabelMap.ProductLevel}</@td>
+        <@td><input type="text" name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" /></@td>
+    </@tr>
+    <@tr>
+        <@td>${uiLabelMap.ProductPosition}</@td>
+        <@td><input type="text" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" /></@td>
+    </@tr>
+    <@tr>
+        <@td>&nbsp;</@td>
         <#if locationSeqId??>
-          <td><input type="submit" value="${uiLabelMap.CommonUpdate}" /></td>
+          <@td><input type="submit" value="${uiLabelMap.CommonUpdate}" /></@td>
         <#else>
-          <td><input type="submit" value="${uiLabelMap.CommonSave}" /></td>
+          <@td><input type="submit" value="${uiLabelMap.CommonSave}" /></@td>
         </#if>
-    </tr>
-  </table>
+    </@tr>
+  </@table>
   </form>
   <#if locationSeqId??>
   <br />
@@ -104,18 +104,18 @@ under the License.
     </div>
     <div class="screenlet-body">
         <#-- ProductFacilityLocation stuff -->
-        <table class="basic-table hover-bar" cellspacing="0">
-        <thead>
-        <tr class="header-row">
-            <th>${uiLabelMap.ProductProduct}</th>
-            <th>${uiLabelMap.ProductMinimumStockAndMoveQuantity}</th>
-        </tr>
-        </thead>
+        <@table class="basic-table hover-bar" cellspacing="0">
+        <@thead>
+        <@tr class="header-row">
+            <@th>${uiLabelMap.ProductProduct}</@th>
+            <@th>${uiLabelMap.ProductMinimumStockAndMoveQuantity}</@th>
+        </@tr>
+        </@thead>
         <#list productFacilityLocations! as productFacilityLocation>
             <#assign product = productFacilityLocation.getRelatedOne("Product", false)!>
-            <tr>
-                <td><#if product??>${(product.internalName)!}</#if>[${productFacilityLocation.productId}]</td>
-                <td>
+            <@tr>
+                <@td><#if product??>${(product.internalName)!}</#if>[${productFacilityLocation.productId}]</@td>
+                <@td>
                     <form method="post" action="<@ofbizUrl>updateProductFacilityLocation</@ofbizUrl>" id="lineForm${productFacilityLocation_index}">
                         <input type="hidden" name="productId" value="${(productFacilityLocation.productId)!}"/>
                         <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)!}"/>
@@ -125,10 +125,10 @@ under the License.
                         <input type="submit" value="${uiLabelMap.CommonUpdate}"/>
                         <a href="javascript:document.getElementById('lineForm${productFacilityLocation_index}').action='<@ofbizUrl>deleteProductFacilityLocation</@ofbizUrl>';document.getElementById('lineForm${productFacilityLocation_index}').submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                     </form>
-                </td>
-            </tr>
+                </@td>
+            </@tr>
         </#list>
-        </table>
+        </@table>
     </div>
   </div>
   <div class="screenlet">

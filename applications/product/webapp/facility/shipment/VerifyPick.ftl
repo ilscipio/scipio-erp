@@ -51,11 +51,11 @@ under the License.
     <div class="screenlet-body">
       <form name="selectOrderForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>">
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-        <table cellspacing="0" class="basic-table">
-          <tr>
-            <td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></td>
-            <td width="1">&nbsp;</td>
-            <td width="25%">
+        <@table cellspacing="0" class="basic-table">
+          <@tr>
+            <@td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></@td>
+            <@td width="1">&nbsp;</@td>
+            <@td width="25%">
               <#if shipmentId?has_content>
                 <input type="text" name="orderId" size="20" maxlength="20" value=""/>
               <#else>
@@ -63,37 +63,37 @@ under the License.
               </#if>
               /
               <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
-            </td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">&nbsp;</td>
-            <td colspan="2">
+            </@td>
+            <@td>&nbsp;</@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2">&nbsp;</@td>
+            <@td colspan="2">
               <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}"/>
-            </td>
-          </tr>
-        </table>
+            </@td>
+          </@tr>
+        </@table>
       </form>
       <br />
       <!-- select picklist bin form -->
       <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-        <table cellspacing="0" class="basic-table">
-          <tr>
-            <td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
-            <td width="1">&nbsp;</td>
-            <td width="25%">
+        <@table cellspacing="0" class="basic-table">
+          <@tr>
+            <@td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></@td>
+            <@td width="1">&nbsp;</@td>
+            <@td width="25%">
               <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
-            </td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">&nbsp;</td>
-            <td colspan="1">
+            </@td>
+            <@td>&nbsp;</@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2">&nbsp;</@td>
+            <@td colspan="1">
               <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}"/>
-            </td>
-          </tr>
-        </table>
+            </@td>
+          </@tr>
+        </@table>
       </form>
       <form name="clearPickForm" method="post" action="<@ofbizUrl>cancelAllRows</@ofbizUrl>">
         <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -114,9 +114,9 @@ under the License.
         <#if orderItemShipGroup?has_content>
           <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
           <#assign carrier = orderItemShipGroup.carrierPartyId?default("N/A")>
-          <table cellpadding="4" cellspacing="4" class="basic-table">
-            <tr>
-              <td valign="top">
+          <@table cellpadding="4" cellspacing="4" class="basic-table">
+            <@tr>
+              <@td valign="top">
                 <span>${uiLabelMap.ProductShipToAddress}</span>
                 <br />
                 ${uiLabelMap.CommonTo}: ${postalAddress.toName?default("")}
@@ -135,9 +135,9 @@ under the License.
                 <br />
                 ${postalAddress.countryGeoId}
                 <br />
-              </td>
-              <td>&nbsp;</td>
-              <td valign="top">
+              </@td>
+              <@td>&nbsp;</@td>
+              <@td valign="top">
                 <span>${uiLabelMap.ProductCarrierShipmentMethod}</span>
                 <br />
                 <#if carrier == "USPS">
@@ -152,24 +152,24 @@ under the License.
                   &nbsp;
                 </#if>
                 ${orderItemShipGroup.shipmentMethodTypeId?default("??")}
-              </td>
-              <td>&nbsp;</td>
-              <td valign="top">
+              </@td>
+              <@td>&nbsp;</@td>
+              <@td valign="top">
                 <span>${uiLabelMap.OrderInstructions}</span>
                 <br />
                 ${orderItemShipGroup.shippingInstructions?default("(${uiLabelMap.CommonNone})")}
-              </td>
-            </tr>
-          </table>
+              </@td>
+            </@tr>
+          </@table>
         </#if>
         <hr />
         <form name="singlePickForm" method="post" action="<@ofbizUrl>processVerifyPick</@ofbizUrl>">
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
           <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-          <table cellpadding="2" cellspacing="0" class="basic-table">
-            <tr>
-              <td>
+          <@table cellpadding="2" cellspacing="0" class="basic-table">
+            <@tr>
+              <@td>
                 <div>
                   <span>${uiLabelMap.ProductProductNumber}</span>
                   <input type="text" name="productId" size="20" maxlength="20" value=""/>
@@ -177,9 +177,9 @@ under the License.
                   <input type="text" name="quantity" size="6" maxlength="6" value="1"/>
                   <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}"/>
                 </div>
-              </td>
-            </tr>
-          </table>
+              </@td>
+            </@tr>
+          </@table>
         </form>
         <br />
         <#assign orderItems = orderItems!>
@@ -188,19 +188,19 @@ under the License.
           <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-          <table class="basic-table" cellspacing='0'>
-           <thead>
-            <tr class="header-row">
-              <th>&nbsp;</th>
-              <th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</th>
-              <th>${uiLabelMap.ProductProductId}</th>
-              <th>${uiLabelMap.ProductInternalName}</th>
-              <th>${uiLabelMap.ProductCountryOfOrigin}</th>
-              <th align="right">${uiLabelMap.ProductOrderedQuantity}</th>
-              <th align="right">${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.CommonQuantity}</th>
-              <th align="center">${uiLabelMap.CommonQty}&nbsp;${uiLabelMap.CommonTo}&nbsp;${uiLabelMap.ProductVerify}</th>
-            </tr>
-            </thead>
+          <@table class="basic-table" cellspacing='0'>
+           <@thead>
+            <@tr class="header-row">
+              <@th>&nbsp;</@th>
+              <@th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@th>
+              <@th>${uiLabelMap.ProductProductId}</@th>
+              <@th>${uiLabelMap.ProductInternalName}</@th>
+              <@th>${uiLabelMap.ProductCountryOfOrigin}</@th>
+              <@th align="right">${uiLabelMap.ProductOrderedQuantity}</@th>
+              <@th align="right">${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.CommonQuantity}</@th>
+              <@th align="center">${uiLabelMap.CommonQty}&nbsp;${uiLabelMap.CommonTo}&nbsp;${uiLabelMap.ProductVerify}</@th>
+            </@tr>
+            </@thead>
             <#if orderItems?has_content>
               <#assign rowKey = 1>
               <#assign counter = 1>
@@ -226,19 +226,19 @@ under the License.
                 </#if>
                 <#assign orderItemQuantity = orderItemQuantity.subtract(verifiedQuantity)>
                 <#assign product = orderItem.getRelatedOne("Product", false)!/>
-                <tr>
+                <@tr>
                   <#if (orderItemQuantity.compareTo(readyToVerify) > 0) >
-                    <td><input type="checkbox" name="sel_${rowKey}" value="Y" checked=""/></td>
+                    <@td><input type="checkbox" name="sel_${rowKey}" value="Y" checked=""/></@td>
                     <#assign isShowVerifyItemButton = "true">
                   <#else>
-                    <td>&nbsp;</td>
+                    <@td>&nbsp;</@td>
                   </#if>
-                  <td>${orderItemSeqId!}</td>
-                  <td>${product.productId?default("N/A")}</td>
-                  <td>
+                  <@td>${orderItemSeqId!}</@td>
+                  <@td>${product.productId?default("N/A")}</@td>
+                  <@td>
                     <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(product.internalName)!}</a>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <select name="geo_${rowKey}">
                       <#if product.originGeoId?has_content>
                         <#assign originGeoId = product.originGeoId>
@@ -249,20 +249,20 @@ under the License.
                       <option value=""></option>
                       ${screens.render("component://common/widget/CommonScreens.xml#countries")}
                     </select>
-                  </td>
-                  <td align="right">${orderItemQuantity!}</td>
-                  <td align="right">${readyToVerify!}</td>
-                  <td align="center">
+                  </@td>
+                  <@td align="right">${orderItemQuantity!}</@td>
+                  <@td align="right">${readyToVerify!}</@td>
+                  <@td align="center">
                     <#if (orderItemQuantity.compareTo(readyToVerify) > 0)>
                       <#assign qtyToVerify = orderItemQuantity.subtract(readyToVerify) >
                       <input type="text" size="7" name="qty_${rowKey}" value="${qtyToVerify!}"/>
                     <#else>
                       0
                     </#if>
-                  </td>
+                  </@td>
                   <input type="hidden" name="prd_${rowKey}" value="${(orderItem.productId)!}"/>
                   <input type="hidden" name="ite_${rowKey}" value="${(orderItem.orderItemSeqId)!}"/>
-                </tr>
+                </@tr>
                 <#assign workOrderItemFulfillments = orderItem.getRelated("WorkOrderItemFulfillment", null, null, false)/>
                 <#if workOrderItemFulfillments?has_content>
                   <#assign workOrderItemFulfillment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(workOrderItemFulfillments)/>
@@ -273,24 +273,24 @@ under the License.
                       <#if workEffortTask?has_content>
                         <#assign workEffortInventoryAssigns = workEffortTask.getRelated("WorkEffortInventoryAssign", null, null, false)/>
                         <#if workEffortInventoryAssigns?has_content>
-                          <tr>
-                            <th colspan="8">
+                          <@tr>
+                            <@th colspan="8">
                               ${uiLabelMap.OrderMarketingPackageComposedBy}
-                            </th>
-                          </tr>
-                          <tr><td colspan="8"><hr /></td></tr>
+                            </@th>
+                          </@tr>
+                          <@tr><@td colspan="8"><hr /></@td></@tr>
                           <#list workEffortInventoryAssigns as workEffortInventoryAssign>
                             <#assign inventoryItem = workEffortInventoryAssign.getRelatedOne("InventoryItem", false)/>
                             <#assign product = inventoryItem.getRelatedOne("Product", false)/>
-                            <tr>
-                              <td colspan="2"></td>
-                              <td>${product.productId?default("N/A")}</td>
-                              <td>${product.internalName!}</td>
-                              <td></td>
-                              <td align="right">${workEffortInventoryAssign.quantity!}</td>
-                            </tr>
+                            <@tr>
+                              <@td colspan="2"></@td>
+                              <@td>${product.productId?default("N/A")}</@td>
+                              <@td>${product.internalName!}</@td>
+                              <@td></@td>
+                              <@td align="right">${workEffortInventoryAssign.quantity!}</@td>
+                            </@tr>
                           </#list>
-                          <tr><td colspan="8"><hr /></td></tr>
+                          <@tr><@td colspan="8"><hr /></@td></@tr>
                         </#if>
                       </#if>
                     </#if>
@@ -299,11 +299,11 @@ under the License.
                 <#assign rowKey = rowKey + 1>
               </#list>
             </#if>
-            <tr>
-              <td colspan="10">&nbsp;</td>
-            </tr>
-            <tr>
-              <td colspan="12" align="right">
+            <@tr>
+              <@td colspan="10">&nbsp;</@td>
+            </@tr>
+            <@tr>
+              <@td colspan="12" align="right">
                 <#if isShowVerifyItemButton == "true">
                   <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItems}"/>
                 </#if>
@@ -311,9 +311,9 @@ under the License.
                 <#if rowKey != counter>
                   <input type="button" value="${uiLabelMap.CommonCancel}" onclick="javascript:document.clearPickForm.submit();"/>
                 </#if>
-              </td>
-            </tr>
-          </table>
+              </@td>
+            </@tr>
+          </@table>
         </form>
         <br />
       </div>
@@ -334,27 +334,27 @@ under the License.
             <br class="clear"/>
           </div>
           <div class="screenlet-body">
-            <table class="basic-table" cellspacing='0'>
-             <thead>
-              <tr class="header-row">
-                <th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</th>
-                <th>${uiLabelMap.ProductProductId}</th>
-                <th>${uiLabelMap.ProductInventoryItem} ${uiLabelMap.CommonNbr}</th>
-                <th align="right">${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.CommonQuantity}</th>
-                <th>&nbsp;</th>
-              </tr>
-              </thead>
+            <@table class="basic-table" cellspacing='0'>
+             <@thead>
+              <@tr class="header-row">
+                <@th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@th>
+                <@th>${uiLabelMap.ProductProductId}</@th>
+                <@th>${uiLabelMap.ProductInventoryItem} ${uiLabelMap.CommonNbr}</@th>
+                <@th align="right">${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.CommonQuantity}</@th>
+                <@th>&nbsp;</@th>
+              </@tr>
+              </@thead>
               <#list pickRows as pickRow>
                 <#if (pickRow.getOrderId()!).equals(orderId)>
-                  <tr>
-                    <td>${pickRow.getOrderItemSeqId()!}</td>
-                    <td>${pickRow.getProductId()!}</td>
-                    <td>${pickRow.getInventoryItemId()!}</td>
-                    <td align="right">${pickRow.getReadyToVerifyQty()!}</td>
-                  </tr>
+                  <@tr>
+                    <@td>${pickRow.getOrderItemSeqId()!}</@td>
+                    <@td>${pickRow.getProductId()!}</@td>
+                    <@td>${pickRow.getInventoryItemId()!}</@td>
+                    <@td align="right">${pickRow.getReadyToVerifyQty()!}</@td>
+                  </@tr>
                 </#if>
               </#list>
-            </table>
+            </@table>
             <div align="right">
               <a href="javascript:document.completePickForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
             </div>

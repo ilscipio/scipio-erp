@@ -22,20 +22,20 @@ under the License.
     </div>
     <div class="screenlet-body">
         <a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductFindRule}</a>
-        <table cellspacing="0" class="basic-table">
-         <thead>
-          <tr class="header-row">
-            <th width="10%">${uiLabelMap.ProductRuleId}</th>
-            <th width="80%">${uiLabelMap.ProductRuleNameFromDateThruDate}</th>
-            <th width="10%">&nbsp;</th>
-          </tr>
-        </thead>
+        <@table cellspacing="0" class="basic-table">
+         <@thead>
+          <@tr class="header-row">
+            <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
+            <@th width="80%">${uiLabelMap.ProductRuleNameFromDateThruDate}</@th>
+            <@th width="10%">&nbsp;</@th>
+          </@tr>
+        </@thead>
         <#if productPriceRule??>
           <#assign productPriceConds = productPriceRule.getRelated("ProductPriceCond", null, null, false)>
           <#assign productPriceActions = productPriceRule.getRelated("ProductPriceAction", null, null, false)>
-          <tr valign="middle">
-            <td><b>${productPriceRule.productPriceRuleId}</b></td>
-            <td>
+          <@tr valign="middle">
+            <@td><b>${productPriceRule.productPriceRuleId}</b></@td>
+            <@td>
                 <form method="post" action="<@ofbizUrl>updateProductPriceRule</@ofbizUrl>" name="updateProductPriceRule">
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                     <input type="text" size="15" name="ruleName" value="${productPriceRule.ruleName}" />
@@ -52,36 +52,35 @@ under the License.
                     <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                     </div>
                 </form>
-            </td>
-            <td align="center">&nbsp;
+            </@td>
+            <@td align="center">&nbsp;
               <#if !productPriceConds?has_content && !productPriceActions?has_content>
                   <form method="post" action="<@ofbizUrl>deleteProductPriceRule</@ofbizUrl>" name="deleteProductPriceRule">
                       <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                       <input type="submit" value="${uiLabelMap.CommonDelete}" />
                   </form>
               </#if>
-            </td>
-          </tr>
-          <tr valign="top">
-            <td align="right">${uiLabelMap.ProductConditions}</td>
-            <td colspan="2">
-                <table cellspacing="0" class="basic-table">
-                <thead>
-                  <tr class="header-row">
-                    <th width="5%">${uiLabelMap.ProductSeqId}</th>
-                    <th width="85%">${uiLabelMap.ProductInputOperatorValue}</th>
-                    <th width="10%">&nbsp;</th>
-                  </tr>
-                  </thead>
+            </@td>
+          </@tr>
+          <@tr valign="top">
+            <@td align="right">${uiLabelMap.ProductConditions}</@td>
+            <@td colspan="2">
+                <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+                <@thead>
+                  <@tr class="header-row">
+                    <@th width="5%">${uiLabelMap.ProductSeqId}</@th>
+                    <@th width="85%">${uiLabelMap.ProductInputOperatorValue}</@th>
+                    <@th width="10%">&nbsp;</@th>
+                  </@tr>
+                  </@thead>
                   <#assign maxCondSeqId = 1>
-                  <#assign rowClass = "2">
                   <#list productPriceConds as productPriceCond>
-                      <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
+                      <@tr valign="middle">
                         <#-- if cur seq id is a number and is greater than max, set new max for input box prefill below -->
                         <#assign curCondSeqId = productPriceCond.productPriceCondSeqId?number>
                         <#if (curCondSeqId >= maxCondSeqId)><#assign maxCondSeqId = curCondSeqId + 1></#if>
-                        <td><b>${productPriceCond.productPriceCondSeqId}</b></td>
-                        <td>
+                        <@td><b>${productPriceCond.productPriceCondSeqId}</b></@td>
+                        <@td>
                             <form method="post" action="<@ofbizUrl>updateProductPriceCond</@ofbizUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}"/>
                                 <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}"/>
@@ -112,24 +111,19 @@ under the License.
                                 <input type="text" size="20" name="condValue" value="${productPriceCond.condValue!}" />
                                 <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                             </form>
-                        </td>
-                        <td align="center">
+                        </@td>
+                        <@td align="center">
                          <form name="deleteProductPriceCond_${productPriceCond_index}" method= "post" action= "<@ofbizUrl>deleteProductPriceCond</@ofbizUrl>">
                            <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}" />
                            <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}" />
                            <a href="javascript:document.deleteProductPriceCond_${productPriceCond_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                          </form>
-                        </td>
-                      </tr>
-                      <#-- toggle the row color -->
-                      <#if rowClass == "2">
-                        <#assign rowClass = "1">
-                      <#else>
-                        <#assign rowClass = "2">
-                      </#if>
+                        </@td>
+                      </@tr>
                   </#list>
-                  <tr>
-                    <td colspan="3">
+                  <@tfoot>
+                  <@tr>
+                    <@td colspan="3">
                         <form method="post" action="<@ofbizUrl>createProductPriceCond</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                             <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
@@ -146,25 +140,25 @@ under the License.
                             <input type="text" size="20" name="condValue" />
                             <input type="submit" value="${uiLabelMap.CommonCreate}" />
                         </form>
-                    </td>
-                  </tr>
-                </table>
-            </td>
-          </tr>
-          <tr valign="top">
-            <td align="right">${uiLabelMap.ProductActions}</td>
-            <td colspan="2">
-                <table cellspacing="0" class="basic-table">
-                  <tr class="header-row">
-                    <th width="5%">${uiLabelMap.ProductSeqId}</th>
-                    <th width="85%">${uiLabelMap.ProductActionTypeAmount}</th>
-                    <th width="10%">&nbsp;</th>
-                  </tr>
-                  <#assign rowClass = "2">
+                    </@td>
+                  </@tr>
+                  </@tfoot>
+                </@table>
+            </@td>
+          </@tr>
+          <@tr valign="top">
+            <@td align="right">${uiLabelMap.ProductActions}</@td>
+            <@td colspan="2">
+                <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+                  <@tr class="header-row">
+                    <@th width="5%">${uiLabelMap.ProductSeqId}</@th>
+                    <@th width="85%">${uiLabelMap.ProductActionTypeAmount}</@th>
+                    <@th width="10%">&nbsp;</@th>
+                  </@tr>
                   <#list productPriceActions as productPriceAction>
-                      <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                        <td><b>${productPriceAction.productPriceActionSeqId}</b></td>
-                        <td>
+                      <@tr valign="middle">
+                        <@td><b>${productPriceAction.productPriceActionSeqId}</b></@td>
+                        <@td>
                             <form method="post" action="<@ofbizUrl>updateProductPriceAction</@ofbizUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                                 <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
@@ -183,24 +177,19 @@ under the License.
                                 <input type="text" size="8" name="amount" value="${productPriceAction.amount!}" />
                                 <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                             </form>
-                        </td>
-                        <td align="center">
+                        </@td>
+                        <@td align="center">
                           <form name="deleteProductPriceAction_${productPriceAction_index}" method="post" action="<@ofbizUrl>deleteProductPriceAction</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                             <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
                             <a href="javascript:document.deleteProductPriceAction_${productPriceAction_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                           </form>
-                        </td>
-                      </tr>
-                      <#-- toggle the row color -->
-                      <#if rowClass == "2">
-                        <#assign rowClass = "1">
-                      <#else>
-                        <#assign rowClass = "2">
-                      </#if>
+                        </@td>
+                      </@tr>
                   </#list>
-                  <tr>
-                    <td colspan="3">
+                  <@tfoot>
+                  <@tr>
+                    <@td colspan="3">
                         <form method="post" action="<@ofbizUrl>createProductPriceAction</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                             <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
@@ -212,12 +201,13 @@ under the License.
                             <input type="text" size="8" name="amount" />
                             <input type="submit" value="${uiLabelMap.CommonCreate}" />
                         </form>
-                    </td>
-                  </tr>
-                </table>
-            </td>
-          </tr>
+                    </@td>
+                  </@tr>
+                  </@tfoot>
+                </@table>
+            </@td>
+          </@tr>
         </#if>
-        </table>
+        </@table>
     </div>
 </div>

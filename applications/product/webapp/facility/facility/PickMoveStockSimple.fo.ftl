@@ -87,7 +87,7 @@
               <fo:table-cell>
                 <fo:block>${targetProductFacilityLocation.moveQuantity!}</fo:block>
               </fo:table-cell>
-          <#-- </tr> -->
+          <#-- </@tr> -->
           </fo:table-row>
           <#assign rowCount = rowCount + 1>
           <#-- toggle the row color -->
@@ -134,7 +134,7 @@
                 <fo:block>${targetProductFacilityLocation.moveQuantity!}</fo:block>
               </fo:table-cell>
           </fo:table-row>
-          <#-- </tr> -->
+          <#-- </@tr> -->
           <#assign rowCount = rowCount + 1>
       </#list>
   </#if>

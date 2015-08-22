@@ -16,40 +16,28 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductInventorySummary}</h3>
-    </div>
-    <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
-          <thead>
-            <tr class="header-row">
-                <th>${uiLabelMap.ProductProductId}</th>
+<@section title="${uiLabelMap.ProductInventorySummary}">
+        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+          <@thead>
+            <@tr class="header-row">
+                <@th>${uiLabelMap.ProductProductId}</@th>
                     <#list featureTypeIds as featureTypeId>
                         <#assign featureType = delegator.findOne("ProductFeatureType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", featureTypeId), false)>
-                        <th>${featureType.description}&nbsp;</th>
+                        <@th>${featureType.description}&nbsp;</@th>
                     </#list>
-                <th>${uiLabelMap.ProductQoh}</th>
-                <th>${uiLabelMap.ProductAtp}</th>
-            </tr>
-            </thead>
-            <#assign rowClass = "2">
+                <@th>${uiLabelMap.ProductQoh}</@th>
+                <@th>${uiLabelMap.ProductAtp}</@th>
+            </@tr>
+            </@thead>
             <#list variantInventorySummaries as variantSummary>
-            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                <td><a href="<@ofbizUrl>EditProductInventoryItems?productId=${variantSummary.productId}</@ofbizUrl>" class="${styles.button_default!}">${variantSummary.productId}</a></td>
+            <@tr valign="middle">
+                <@td><a href="<@ofbizUrl>EditProductInventoryItems?productId=${variantSummary.productId}</@ofbizUrl>" class="${styles.button_default!}">${variantSummary.productId}</a></@td>
                     <#list featureTypeIds as featureTypeId>
-                        <td>${(variantSummary[featureTypeId].description)?default(featureTypeId)}</td>
+                        <@td>${(variantSummary[featureTypeId].description)?default(featureTypeId)}</@td>
                     </#list>
-                <td>${variantSummary.quantityOnHandTotal}</td>
-                <td>${variantSummary.availableToPromiseTotal}</td>
-            </tr>
-            <#-- toggle the row color -->
-            <#if rowClass == "2">
-                <#assign rowClass = "1">
-            <#else>
-                <#assign rowClass = "2">
-            </#if>
+                <@td>${variantSummary.quantityOnHandTotal}</@td>
+                <@td>${variantSummary.availableToPromiseTotal}</@td>
+            </@tr>
             </#list>
-        </table>
-    </div>
-</div>
+        </@table>
+</@section>

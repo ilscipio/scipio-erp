@@ -24,25 +24,25 @@ under the License.
         <br class="clear"/>
     </div>
     <div class="screenlet-body">
-        <table class="basic-table hover-bar">
-          <thead>
-            <tr class="header-row">
-                <th>${uiLabelMap.OrderOrderId}</th>
-                <th>${uiLabelMap.FormFieldTitle_orderPickSheetPrintedDate}</th>
-                <th>${uiLabelMap.ProductVerified}</th>
-            </tr>
-           </thead>
+        <@table class="basic-table hover-bar">
+          <@thead>
+            <@tr class="header-row">
+                <@th>${uiLabelMap.OrderOrderId}</@th>
+                <@th>${uiLabelMap.FormFieldTitle_orderPickSheetPrintedDate}</@th>
+                <@th>${uiLabelMap.ProductVerified}</@th>
+            </@tr>
+           </@thead>
             <#if orders?has_content>
                 <#list orders?sort_by("pickSheetPrintedDate") as order>
-                    <tr>
-                        <td><a href="/ordermgr/control/orderview?orderId=${order.orderId!}" class="${styles.button_default!}" target="_blank">${order.orderId!}</a></td>
-                        <td>${order.pickSheetPrintedDate!}</td>
-                        <td><#if "Y" == order.isVerified>${uiLabelMap.CommonY}</#if></td>
-                    </tr>
+                    <@tr>
+                        <@td><a href="/ordermgr/control/orderview?orderId=${order.orderId!}" class="${styles.button_default!}" target="_blank">${order.orderId!}</a></@td>
+                        <@td>${order.pickSheetPrintedDate!}</@td>
+                        <@td><#if "Y" == order.isVerified>${uiLabelMap.CommonY}</#if></@td>
+                    </@tr>
                 </#list>
             <#else>
-                <tr><td colspan="4"><@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg></td></tr>
+                <@tr><@td colspan="4"><@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg></@td></@tr>
             </#if>
-        </table>
+        </@table>
     </div>
 </div>

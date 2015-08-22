@@ -37,20 +37,20 @@ under the License.
     </div>
     <div class="screenlet-body">
         <#if products?has_content>
-        <table cellspacing="0" class="basic-table">
-            <tr>
-                <td>${uiLabelMap.ProductInternalName}</td>
-                <td>${uiLabelMap.ProductProductName}</td>
-                <td width="10%">&nbsp;</td>
-            </tr>
+        <@table cellspacing="0" class="basic-table">
+            <@tr>
+                <@td>${uiLabelMap.ProductInternalName}</@td>
+                <@td>${uiLabelMap.ProductProductName}</@td>
+                <@td width="10%">&nbsp;</@td>
+            </@tr>
             <#list products as product>
-            <tr>
-                <td>${product.internalName?default("-no internal name-")} [${product.productId}]</td>
-                <td>${product.productName?default("-no name-")} [${product.productId}]</td>
-                <td width="10%"><a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.ProductThisIsIt}]</a></td>
-            </tr>
+            <@tr>
+                <@td>${product.internalName?default("-no internal name-")} [${product.productId}]</@td>
+                <@td>${product.productName?default("-no name-")} [${product.productId}]</@td>
+                <@td width="10%"><a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.ProductThisIsIt}]</a></@td>
+            </@tr>
         </#list>
-        </table>
+        </@table>
         <#else>
             <h3>&nbsp;${uiLabelMap.ProductNoExistingProductsFound}.</h3>
         </#if>
@@ -59,15 +59,15 @@ under the License.
     <div class="screenlet-body">
         <form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
-            <table cellspacing="0" class="basic-table">
+            <@table cellspacing="0" class="basic-table">
                 <#list productFeatureAndTypeDatas! as productFeatureAndTypeData>
                 <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
                 <#assign productFeature = productFeatureAndTypeData.productFeature>
                 <#assign productFeatureTypeId = productFeatureType.productFeatureTypeId>
                 <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
-                <tr>
-                    <td width="15%">${productFeatureType.description}</td>
-                    <td>
+                <@tr>
+                    <@td width="15%">${productFeatureType.description}</@td>
+                    <@td>
                         <div>
                             ${productFeature.description}
                             <#if requestParameters["pftsel_" + productFeatureTypeId]??>
@@ -78,54 +78,54 @@ under the License.
                                 [${uiLabelMap.ProductStandard}]
                             </#if>
                         </div>
-                    </td>
-                </tr>
+                    </@td>
+                </@tr>
                 </#list>
-                <tr>
-                    <td width="15%">${uiLabelMap.ProductInternalName}:</td>
-                    <td>
+                <@tr>
+                    <@td width="15%">${uiLabelMap.ProductInternalName}:</@td>
+                    <@td>
                         <input type="hidden" name="internalName" value="${requestParameters.internalName!}"/>
                         <div>&nbsp;${requestParameters.internalName?default("&nbsp;")}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="15%">${uiLabelMap.ProductProductName}:</td>
-                    <td>
+                    </@td>
+                </@tr>
+                <@tr>
+                    <@td width="15%">${uiLabelMap.ProductProductName}:</@td>
+                    <@td>
                         <input type="hidden" name="productName" value="${requestParameters.productName!}"/>
                         <div>&nbsp;${requestParameters.productName?default("&nbsp;")}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="15%">${uiLabelMap.ProductShortDescription}:</td>
-                    <td>
+                    </@td>
+                </@tr>
+                <@tr>
+                    <@td width="15%">${uiLabelMap.ProductShortDescription}:</@td>
+                    <@td>
                         <input type="hidden" name="description" value="${requestParameters.description!}"/>
                         <div>&nbsp;${requestParameters.description?default("&nbsp;")}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="15%">${uiLabelMap.ProductDefaultPrice}:</td>
-                    <td>
+                    </@td>
+                </@tr>
+                <@tr>
+                    <@td width="15%">${uiLabelMap.ProductDefaultPrice}:</@td>
+                    <@td>
                         <input type="hidden" name="defaultPrice" value="${requestParameters.defaultPrice!}"/>
                         <input type="hidden" name="currencyUomId" value="${requestParameters.currencyUomId!}"/>
                         <div>&nbsp;${requestParameters.defaultPrice?default("&nbsp;")}&nbsp;${requestParameters.currencyUomId?default("&nbsp;")}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="15%">${uiLabelMap.ProductAverageCost}:</td>
-                    <td>
+                    </@td>
+                </@tr>
+                <@tr>
+                    <@td width="15%">${uiLabelMap.ProductAverageCost}:</@td>
+                    <@td>
                         <input type="hidden" name="averageCost" value="${requestParameters.averageCost!}"/>
                         <div>&nbsp;${requestParameters.averageCost?default("&nbsp;")}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
+                    </@td>
+                </@tr>
+                <@tr>
+                    <@td colspan="3">
                         <div>
                             ${uiLabelMap.ProductNewProductId}: <input type="text" name="productId" value=""/>
                             <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="smallSubmit"/>
                         </div>
-                    </td>
-                </tr>
-            </table>
+                    </@td>
+                </@tr>
+            </@table>
         </form>
     </div>
 </div>

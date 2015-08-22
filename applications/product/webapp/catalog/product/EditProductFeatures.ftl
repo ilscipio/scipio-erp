@@ -26,20 +26,19 @@ under the License.
       <input type="hidden" name="_useRowSubmit" value="Y"/>
       <input type="hidden" name="_checkGlobalScope" value="Y"/>
       <input type="hidden" name="productId" value="${productId}"/>
-      <table cellspacing="0" class="basic-table">
-       <thead>
-        <tr class="header-row">
-          <th>${uiLabelMap.CommonId}</th>
-          <th>${uiLabelMap.CommonDescription}</th>
-          <th>${uiLabelMap.ProductUomId}</th>
-          <th>${uiLabelMap.ProductType}</th>
-          <th>${uiLabelMap.ProductCategory}</th>
-          <th>${uiLabelMap.CommonFromDate}</th>
-          <th>${uiLabelMap.ProductThruDateAmountSequenceApplicationType}</th>
-          <th>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureId_tableRow_', 'selectAllForm');"/></th>
-        </tr>
-        </thead>
-  <#assign rowClass = "2">
+      <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+       <@thead>
+        <@tr class="header-row">
+          <@th>${uiLabelMap.CommonId}</@th>
+          <@th>${uiLabelMap.CommonDescription}</@th>
+          <@th>${uiLabelMap.ProductUomId}</@th>
+          <@th>${uiLabelMap.ProductType}</@th>
+          <@th>${uiLabelMap.ProductCategory}</@th>
+          <@th>${uiLabelMap.CommonFromDate}</@th>
+          <@th>${uiLabelMap.ProductThruDateAmountSequenceApplicationType}</@th>
+          <@th>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureId_tableRow_', 'selectAllForm');"/></@th>
+        </@tr>
+        </@thead>
   <#list productFeatureAndAppls as productFeatureAndAppl>
     <#if productFeatureAndAppl.uomId??>
         <#assign curProductFeatureUom = delegator.findOne("Uom",{"uomId",productFeatureAndAppl.uomId}, true)>
@@ -47,23 +46,24 @@ under the License.
     <#assign curProductFeatureType = productFeatureAndAppl.getRelatedOne("ProductFeatureType", true)>
     <#assign curProductFeatureApplType = productFeatureAndAppl.getRelatedOne("ProductFeatureApplType", true)>
     <#assign curProductFeatureCategory = (productFeatureAndAppl.getRelatedOne("ProductFeatureCategory", true)!)>
-        <tr id="productFeatureId_tableRow_${productFeatureAndAppl_index}" valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-          <td>
+        <@tr id="productFeatureId_tableRow_${productFeatureAndAppl_index}" valign="middle">
+          <@td>
           <input type="hidden" name="productId_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.productId)!}" />
           <input type="hidden" name="productFeatureId_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.productFeatureId)!}" />
           <input type="hidden" name="fromDate_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.fromDate)!}" />
           <a href="<@ofbizUrl>EditFeature?productFeatureId=${(productFeatureAndAppl.productFeatureId)!}</@ofbizUrl>" class="${styles.button_default!}">
-              ${(productFeatureAndAppl.productFeatureId)!}</a></td>
-          <td>${(productFeatureAndAppl.get("description",locale))!}</td>
-          <td><#if productFeatureAndAppl.uomId??>${curProductFeatureUom.abbreviation!}</#if></td>
-          <td>${(curProductFeatureType.get("description",locale))?default((productFeatureAndAppl.productFeatureTypeId)!)}</td>
-          <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)!}&amp;productId=${(productFeatureAndAppl.productId)!}</@ofbizUrl>" class="${styles.button_default!}">
+              ${(productFeatureAndAppl.productFeatureId)!}</a></@td>
+          <@td>${(productFeatureAndAppl.get("description",locale))!}</@td>
+          <@td><#if productFeatureAndAppl.uomId??>${curProductFeatureUom.abbreviation!}</#if></@td>
+          <@td>${(curProductFeatureType.get("description",locale))?default((productFeatureAndAppl.productFeatureTypeId)!)}</@td>
+          <@td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)!}&amp;productId=${(productFeatureAndAppl.productId)!}</@ofbizUrl>" class="${styles.button_default!}">
               ${(curProductFeatureCategory.description)!}
-              [${(productFeatureAndAppl.productFeatureCategoryId)!}]</a></td>
+              [${(productFeatureAndAppl.productFeatureCategoryId)!}]</a></@td>
     <#assign hasntStarted = false>
     <#if (productFeatureAndAppl.getTimestamp("fromDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productFeatureAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
-          <td <#if hasntStarted> style='color: red;'</#if>>${(productFeatureAndAppl.fromDate)!}</td>
-          <td>
+          <#assign colorStyle><#if hasntStarted> style='color: red;'</#if></#assign>
+          <@td style=colorStyle>${(productFeatureAndAppl.fromDate)!}</@td>
+          <@td>
     <#assign hasExpired = false>
     <#if (productFeatureAndAppl.getTimestamp("thruDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
             <#if hasExpired><#assign class="alert"></#if>
@@ -79,29 +79,24 @@ under the License.
               <option value='${(productFeatureApplType.productFeatureApplTypeId)!}'>${(productFeatureApplType.get("description",locale))!} </option>
     </#list>
             </select>
-          </td>
-          <td align="right">
+          </@td>
+          <@td align="right">
             <input type="checkbox" name="_rowSubmit_o_${productFeatureAndAppl_index}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureId_tableRow_${productFeatureAndAppl_index}');" />
-          </td>
-          <td>
+          </@td>
+          <@td>
             <a href="javascript:document.RemoveFeatureFromProduct_o_${productFeatureAndAppl_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
-          </td>
-        </tr>
-    <#-- toggle the row color -->
-    <#if rowClass == "2">
-      <#assign rowClass = "1">
-    <#else>
-      <#assign rowClass = "2">
-    </#if>
+          </@td>
+        </@tr>
   </#list>
-
-        <tr>
-          <td colspan="8" align="center">
+        <@tfoot>
+        <@tr>
+          <@td colspan="8" align="center">
             <input type="hidden" name="_rowCount" value="${productFeatureAndAppls.size()}"/>
             <input type="submit" value='${uiLabelMap.CommonUpdate}'/>
-          </td>
-        </tr>
-      </table>
+          </@td>
+        </@tr>
+        </@tfoot>
+      </@table>
     </form>
   <#list productFeatureAndAppls as productFeatureAndAppl>
     <form name= "RemoveFeatureFromProduct_o_${productFeatureAndAppl_index}" method= "post" action= "<@ofbizUrl>RemoveFeatureFromProduct</@ofbizUrl>">

@@ -67,10 +67,10 @@ under the License.
         }
     </script>
 
-    <table cellspacing="0" class="basic-table">
-        <tr>
-          <td><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);"/> <b>${uiLabelMap.ProductProduct}</b></td>
-          <td align="right">
+    <@table cellspacing="0" class="basic-table">
+        <@tr>
+          <@td><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);"/> <b>${uiLabelMap.ProductProduct}</b></@td>
+          <@td align="right">
             <b>
             <#if 0 < viewIndex?int>
               <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
@@ -103,38 +103,31 @@ under the License.
                 </#if>
             </#if>
             </b>
-          </td>
-        </tr>
-        <tr><td colspan="2"><hr /></td></tr>
-    </table>
+          </@td>
+        </@tr>
+        <@tr><@td colspan="2"><hr /></@td></@tr>
+    </@table>
 
     <form method="post" name="products">
       <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
-      <table cellspacing="0" class="basic-table">
+      <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
         <#assign listIndex = lowIndex>
-        <#assign rowClass = "2">
         <#list productIds as productId><#-- note that there is no boundary range because that is being done before the list is put in the content -->
           <#assign product = delegator.findOne("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", productId), false)>
-          <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-            <td>
+          <@tr valign="middle">
+            <@td>
               <input type="checkbox" name="selectResult" value="${productId}" onchange="checkProductToBagTextArea(this, '${productId}');"/>
               <a href="<@ofbizUrl>EditProduct?productId=${productId}</@ofbizUrl>" class="${styles.button_default!}">[${productId}] ${(product.internalName)!}</a>
-            </td>
-          </tr>
-          <#-- toggle the row color -->
-          <#if rowClass == "2">
-            <#assign rowClass = "1">
-          <#else>
-            <#assign rowClass = "2">
-          </#if>
+            </@td>
+          </@tr>
         </#list>
-      </table>
+      </@table>
     </form>
 
-    <table cellspacing="0" class="basic-table">
-        <tr><td colspan="2"><hr /></td></tr>
-        <tr>
-          <td align="right">
+    <@table cellspacing="0" class="basic-table">
+        <@tr><@td colspan="2"><hr /></@td></@tr>
+        <@tr>
+          <@td align="right">
             <b>
             <#if 0 < viewIndex?int>
               <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
@@ -167,9 +160,9 @@ under the License.
                 </#if>
             </#if>
             </b>
-          </td>
-        </tr>
-    </table>
+          </@td>
+        </@tr>
+    </@table>
     </#if>
   </div>
 </div>

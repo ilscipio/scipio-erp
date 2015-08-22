@@ -32,12 +32,12 @@ jQuery(document).ready(function(){
 });
 </script>
         
-<table>
+<@table>
     <#if partyRoles?has_content>
         <#assign alt_row = false>
         <#list partyRoles as partyRole>
-            <td>
-                <table>
+            <@td>
+                <@table>
                     <#assign userLoginApprovers  = delegator.findByAnd("UserLogin",Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", partyRole.partyId))/>
                     <#assign userLoginApprover = userLoginApprovers[0]>
                     <#assign userLoginAndPartyDetails = delegator.findOne("UserLoginAndPartyDetails", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", userLoginApprover.partyId, "userLoginId", userLoginApprover.userLoginId), false)!>
@@ -46,46 +46,46 @@ jQuery(document).ready(function(){
                         <#assign imageApproveSize = partyContentDetail.size()>
                         <#if userLoginAndPartyDetails.userLoginId == userLogin.userLoginId>
                             <#if userMap.checkUser == userLoginAndPartyDetails.userLoginId>
-                                <td>
+                                <@td>
                                     <div>
                                         <b>${userLoginAndPartyDetails.firstName!} ${userLoginAndPartyDetails.middleName!} ${userLoginAndPartyDetails.lastName!} (${imageApproveSize})</b>&nbsp;&nbsp;|&nbsp;&nbsp;
                                     </div>
-                                </td>
+                                </@td>
                             <#else>
-                                <td>
+                                <@td>
                                     <div>
                                         <b><a href="<@ofbizUrl>ImageApprove</@ofbizUrl>" class="text">${userLoginAndPartyDetails.firstName!} ${userLoginAndPartyDetails.middleName!} ${userLoginAndPartyDetails.lastName!} (${imageApproveSize})</a></b>&nbsp;&nbsp;|&nbsp;&nbsp;
                                     </div>
-                                </td>
+                                </@td>
                             </#if>
                         <#else>
                             <#if userMap.checkUser == userLoginAndPartyDetails.userLoginId>
-                                <td>
+                                <@td>
                                     <div>
                                         <b>${userLoginAndPartyDetails.firstName!} ${userLoginAndPartyDetails.middleName!} ${userLoginAndPartyDetails.lastName!} (${imageApproveSize})</b>&nbsp;&nbsp;|&nbsp;&nbsp;
                                     </div>
-                                </td>
+                                </@td>
                             <#else>
-                                <td>
+                                <@td>
                                     <div>
                                         <b><a href="<@ofbizUrl>ListPeopleApproved?createdByUserLogin=${userLoginAndPartyDetails.userLoginId}</@ofbizUrl>" class="text">${userLoginAndPartyDetails.firstName!} ${userLoginAndPartyDetails.middleName!} ${userLoginAndPartyDetails.lastName!} (${imageApproveSize})</a></b>&nbsp;&nbsp;|&nbsp;&nbsp;
                                     </div>
-                                </td>
+                                </@td>
                             </#if>
                         </#if>
                     </#if>
-                </table>
-            </td>
+                </@table>
+            </@td>
         </#list>
         <#if userMap.checkUser == "REJECTED">
-            <td>
+            <@td>
                 <div><b>Rejected</b></div>
-            </td>
+            </@td>
         <#else>
-            <td>
+            <@td>
                 <div><b><a href="<@ofbizUrl>ListPeopleRejected</@ofbizUrl>" class="text">Rejected</a></b></div>
-            </td>
+            </@td>
         </#if>
     </#if>
-</table>
+</@table>
 <br/>

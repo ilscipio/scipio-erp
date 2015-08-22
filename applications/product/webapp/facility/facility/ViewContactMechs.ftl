@@ -19,16 +19,16 @@ under the License.
 
 <div>
   <#if contactMeches?has_content>
-    <table class="basic-table" cellspacing="0">
+    <@table class="basic-table" cellspacing="0">
       <#list contactMeches as contactMechMap>
           <#assign contactMech = contactMechMap.contactMech>
           <#assign facilityContactMech = contactMechMap.facilityContactMech>
-          <tr><td colspan="3"><hr/></td></tr>
-          <tr>
-            <td  valign="top">
+          <@tr><@td colspan="3"><hr/></@td></@tr>
+          <@tr>
+            <@td  valign="top">
               ${contactMechMap.contactMechType.get("description",locale)}
-            </td>
-            <td valign="top">
+            </@td>
+            <@td valign="top">
               <#list contactMechMap.facilityContactMechPurposes as facilityContactMechPurpose>
                   <#assign contactMechPurposeType = facilityContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
                       <#if contactMechPurposeType?has_content>
@@ -87,8 +87,8 @@ under the License.
               </#if>
               <br />(${uiLabelMap.CommonUpdated}: ${facilityContactMech.fromDate.toString()})
               <#if facilityContactMech.thruDate?has_content><br /><b>${uiLabelMap.CommonUpdatedEffectiveThru}:&nbsp;${facilityContactMech.thruDate.toString()}</b></#if>
-            </td>
-            <td class="button-col">
+            </@td>
+            <@td class="button-col">
               &nbsp;
               <#if security.hasEntityPermission("FACILITY", "_UPDATE", session)>
                 <a href='<@ofbizUrl>EditContactMech?facilityId=${facilityId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>'>${uiLabelMap.CommonUpdate}</a>
@@ -100,10 +100,10 @@ under the License.
                 </form>
                 <a href="javascript:document.deleteContactForm_${contactMechMap_index}.submit()">${uiLabelMap.CommonExpire}</a>
               </#if>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
       </#list>
-    </table>
+    </@table>
   <#else>
     <div class="screenlet-body">${uiLabelMap.CommonNoContactInformationOnFile}.</div>
   </#if>

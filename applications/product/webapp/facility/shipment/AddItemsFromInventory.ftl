@@ -24,36 +24,36 @@ under the License.
     </ul>
   </div>
   <div class="screenlet-body">
-    <table cellspacing="0" cellpadding="2" class="basic-table hover-bar">
-     <thead>
-      <tr class="header-row">
-        <th>${uiLabelMap.CommonReturn} ${uiLabelMap.CommonDescription}</th>
-        <th>${uiLabelMap.ProductProduct}</th>
-        <th>${uiLabelMap.OrderReturnQty}</th>
-        <th>${uiLabelMap.ProductShipmentQty}</th>
-        <th>${uiLabelMap.ProductTotIssuedQuantity}</th>
-        <th></th>
-        <th>${uiLabelMap.CommonQty} ${uiLabelMap.CommonNot} ${uiLabelMap.ManufacturingIssuedQuantity}</th>
-        <th>${uiLabelMap.ProductInventoryItemId} ${uiLabelMap.CommonQty} ${uiLabelMap.CommonSubmit}</th>
-      </tr>
-      </thead>
+    <@table cellspacing="0" cellpadding="2" class="basic-table hover-bar">
+     <@thead>
+      <@tr class="header-row">
+        <@th>${uiLabelMap.CommonReturn} ${uiLabelMap.CommonDescription}</@th>
+        <@th>${uiLabelMap.ProductProduct}</@th>
+        <@th>${uiLabelMap.OrderReturnQty}</@th>
+        <@th>${uiLabelMap.ProductShipmentQty}</@th>
+        <@th>${uiLabelMap.ProductTotIssuedQuantity}</@th>
+        <@th></@th>
+        <@th>${uiLabelMap.CommonQty} ${uiLabelMap.CommonNot} ${uiLabelMap.ManufacturingIssuedQuantity}</@th>
+        <@th>${uiLabelMap.ProductInventoryItemId} ${uiLabelMap.CommonQty} ${uiLabelMap.CommonSubmit}</@th>
+      </@tr>
+      </@thead>
       <#list items as item>
-        <tr>
-          <td><a href="/ordermgr/control/returnMain?returnId=${item.returnId}" class="${styles.button_default!}">${item.returnId}</a> [${item.returnItemSeqId}]</td>
-          <td><a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="${styles.button_default!}">${item.productId}</a> ${item.internalName!}</td>
-          <td>${item.returnQuantity}</td>
-          <td>${item.shipmentItemQty}</td>
-          <td>${item.totalQtyIssued}</td>
-          <td>
+        <@tr>
+          <@td><a href="/ordermgr/control/returnMain?returnId=${item.returnId}" class="${styles.button_default!}">${item.returnId}</a> [${item.returnItemSeqId}]</@td>
+          <@td><a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="${styles.button_default!}">${item.productId}</a> ${item.internalName!}</@td>
+          <@td>${item.returnQuantity}</@td>
+          <@td>${item.shipmentItemQty}</@td>
+          <@td>${item.totalQtyIssued}</@td>
+          <@td>
             <#if item.issuedItems?has_content>
               <#list item.issuedItems as issuedItem>
                 <div><a href="/facility/control/EditInventoryItem?inventoryItemId=${issuedItem.inventoryItemId}" class="${styles.button_default!}">${issuedItem.inventoryItemId}</a> ${issuedItem.quantity}</div>
               </#list>
             </#if>
-          </td>
-          <td>${item.qtyStillNeedToBeIssued}</td>
+          </@td>
+          <@td>${item.qtyStillNeedToBeIssued}</@td>
           <#if (item.shipmentItemQty > item.totalQtyIssued)>
-            <td>
+            <@td>
               <div>
                 <form name="issueInventoryItemToShipment_${item_index}" action="<@ofbizUrl>issueInventoryItemToShipment</@ofbizUrl>" method="post">
                   <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -66,10 +66,10 @@ under the License.
                   <input type="submit" value="${uiLabelMap.CommonSubmit}" class="smallSubmit"/>
                 </form>
               </div>
-            </td>
+            </@td>
           </#if>
-        </tr>
+        </@tr>
       </#list>
-    </table>
+    </@table>
   </div>
 </div>

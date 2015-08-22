@@ -25,11 +25,11 @@ under the License.
         <br class="clear"/>
     </div>
     <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
-        <thead> 
-        <tr class="header-row">
-            <th valign="top">${uiLabelMap.ProductSegment}</th>
-            <th valign="top">
+        <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
+        <@thead> 
+        <@tr class="header-row">
+            <@th valign="top">${uiLabelMap.ProductSegment}</@th>
+            <@th valign="top">
                 <div>${uiLabelMap.ProductCarrierShipmentMethod}</div>
                 <div>${uiLabelMap.ProductOriginDestinationFacility}</div>
                 <div>${uiLabelMap.ProductOriginDestinationAddressId}</div>
@@ -37,24 +37,24 @@ under the License.
                 <div>${uiLabelMap.ProductShipmentThirdPartyAccountNumber}</div>
                 <div>${uiLabelMap.ProductShipmentThirdPartyPostalCode}</div>
                 <div>${uiLabelMap.ProductShipmentThirdCommonCountryCode}</div>
-            </th>
-            <th valign="top">
+            </@th>
+            <@th valign="top">
                 <div>${uiLabelMap.ProductShipmentFedexHomeDeliveryTypeDate}</div>
                 <div>${uiLabelMap.ProductCarrierStatus}</div>
                 <div>${uiLabelMap.ProductTrackingNumber}</div>
                 <div>${uiLabelMap.ProductEstimatedStartArrive}</div>
                 <div>${uiLabelMap.ProductActualStartArrive}</div>
-            </th>
-            <th valign="top">
+            </@th>
+            <@th valign="top">
                 <div>${uiLabelMap.ProductBillingWeightUom}</div>
                 <div>${uiLabelMap.ProductCurrencyUom}</div>
                 <div>${uiLabelMap.ProductActualTransport}</div>
                 <div>${uiLabelMap.ProductActualServices}</div>
                 <div>${uiLabelMap.ProductActualOther}</div>
                 <div>${uiLabelMap.ProductActualTotal}</div>
-            </th>
-        </tr>
-        </thead>
+            </@th>
+        </@tr>
+        </@thead>
     <#assign alt_row = false>
     <#list shipmentRouteSegmentDatas as shipmentRouteSegmentData>
         <#assign shipmentRouteSegment = shipmentRouteSegmentData.shipmentRouteSegment>
@@ -83,8 +83,8 @@ under the License.
         <form action="<@ofbizUrl>updateShipmentRouteSegment</@ofbizUrl>" method="post" name="updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
         <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
-        <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-            <td valign="top">
+        <@tr valign="middle" alt=alt_row>
+            <@td valign="top">
                 <div>
                     ${shipmentRouteSegment.shipmentRouteSegmentId}
                     <br />
@@ -94,8 +94,8 @@ under the License.
                     <br />
                     <a href="javascript:document.deleteShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                 </div>
-            </td>
-            <td valign="top">
+            </@td>
+            <@td valign="top">
                 <div>
                     <select name="carrierPartyId">
                         <#if shipmentRouteSegment.carrierPartyId?has_content>
@@ -169,8 +169,8 @@ under the License.
                         <input type="text" size="15" name="thirdPartyCountryGeoCode" value="${shipmentRouteSegment.thirdPartyCountryGeoCode!}"/>
                     </div>
                 </div>
-            </td>
-            <td valign="top">
+            </@td>
+            <@td valign="top">
                 <div>
                     <#if "UPS" == shipmentRouteSegment.carrierPartyId!>
                         <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
@@ -238,8 +238,8 @@ under the License.
                     <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.actualStartDate.toString())!}" size="25" maxlength="30" id="actualStartDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <@htmlTemplate.renderDateTimeField name="actualArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.actualArrivalDate.toString())!}" size="25" maxlength="30" id="actualArrivalDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 </div>
-            </td>
-            <td valign="top">
+            </@td>
+            <@td valign="top">
                 <input type="text" size="5" name="billingWeight" value="${shipmentRouteSegment.billingWeight!}"/>
                 <select name="billingWeightUomId">
                     <#if billingWeightUom?has_content>
@@ -272,8 +272,8 @@ under the License.
                 <input type="text" size="8" name="actualOtherCost" value="${shipmentRouteSegment.actualOtherCost!}"/>
                 <br />
                 <input type="text" size="8" name="actualCost" value="${shipmentRouteSegment.actualCost!}"/>
-            </td>
-        </tr>
+            </@td>
+        </@tr>
         </form>
         <form name="upsShipmentConfirm_${shipmentRouteSegmentData_index}" method="post" action="<@ofbizUrl>upsShipmentConfirm</@ofbizUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentRouteSegment.shipmentId}"/>
@@ -306,9 +306,9 @@ under the License.
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
         <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentPackageRouteSeg.shipmentRouteSegmentId}"/>
         <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
-        <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-            <td>&nbsp;</td>
-            <td valign="top">
+        <@tr valign="middle" alt=alt_row>
+            <@td>&nbsp;</@td>
+            <@td valign="top">
                 <div>
                     <span>${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}
                     <#if shipmentPackageRouteSeg.labelImage??>
@@ -316,20 +316,20 @@ under the License.
                     </#if>
                     <span>${uiLabelMap.ProductTrack} ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/>
                 </div>
-            </td>
-            <td valign="top">
+            </@td>
+            <@td valign="top">
                <div>
                    <span>${uiLabelMap.ProductBox} ${uiLabelMap.CommonNbr}</span>
                    <input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber!}"/>
                </div>
-            </td>
-            <td valign="top">
+            </@td>
+            <@td valign="top">
                 <div>
                     <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
                     <a href="javascript:document.deleteRouteSegmentShipmentPackage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                 </div>
-            </td>
-        </tr>
+            </@td>
+        </@tr>
         </form>
         <form name="viewShipmentPackageRouteSegLabelImage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}" method="post" action="<@ofbizUrl>viewShipmentPackageRouteSegLabelImage</@ofbizUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentPackageRouteSeg.shipmentId}"/>
@@ -343,12 +343,12 @@ under the License.
         </form>
     </#list>
         <#--
-        <tr>
+        <@tr>
             <form action="<@ofbizUrl>createRouteSegmentShipmentPackage</@ofbizUrl>" name="createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
-            <td>&nbsp;</td>
-            <td>
+            <@td>&nbsp;</@td>
+            <@td>
                 <div>${uiLabelMap.ProductAddPackageInfo} :
                 <select name="shipmentPackageSeqId">
                     <#list shipmentPackages as shipmentPackage>
@@ -356,18 +356,18 @@ under the License.
                     </#list>
                 </select>
                 </div>
-            </td>
-            <td><span>Track#:</span><input type="text" size="22" name="trackingCode"/></td>
-            <td><span>Box#:</span><input type="text" size="5" name="boxNumber"/></td>
-            <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a></td>
-            <td>&nbsp;</td>
+            </@td>
+            <@td><span>Track#:</span><input type="text" size="22" name="trackingCode"/></@td>
+            <@td><span>Box#:</span><input type="text" size="5" name="boxNumber"/></@td>
+            <@td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a></@td>
+            <@td>&nbsp;</@td>
             </form>
-        </tr>
+        </@tr>
         -->
         <#-- toggle the row color -->
         <#assign alt_row = !alt_row>
     </#list>
-    </table>
+    </@table>
     </div>
 </div>
 <div class="screenlet">
@@ -378,18 +378,18 @@ under the License.
         <br class="clear"/>
     </div>
     <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
+        <@table type="fields" cellspacing="0" class="basic-table">
             <form action="<@ofbizUrl>createShipmentRouteSegment</@ofbizUrl>" method="post" name="createShipmentRouteSegmentForm">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-            <tr>
-                <td valign="top">
+            <@tr>
+                <@td valign="top">
                     <div>
                         <span>${uiLabelMap.ProductNewSegment}</span>
                         <br />
                         <a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a>
                     </div>
-                </td>
-                <td valign="top">
+                </@td>
+                <@td valign="top">
                     <div>
                         <select name="carrierPartyId">
                                 <option value="">&nbsp;</option>
@@ -422,8 +422,8 @@ under the License.
                         <input type="text" size="15" name="originTelecomNumberId" value=""/>
                         <input type="text" size="15" name="destTelecomNumberId" value=""/>
                     </div>
-                </td>
-                <td valign="top">
+                </@td>
+                <@td valign="top">
                     <select name="carrierServiceStatusId">
                         <option value="">&nbsp;</option>
                         <#list carrierServiceStatusValidChangeToDetails! as carrierServiceStatusValidChangeToDetail>
@@ -438,8 +438,8 @@ under the License.
                     <br />
                     <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <@htmlTemplate.renderDateTimeField name="actualArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                </td>
-                <td valign="top">
+                </@td>
+                <@td valign="top">
                     <input type="text" size="5" name="billingWeight" value="${(shipmentRouteSegment.billingWeight)!}"/>
                     <select name="billingWeightUomId">
                         <option value="">&nbsp;</option>
@@ -462,10 +462,10 @@ under the License.
                     <input type="text" size="8" name="actualOtherCost"/>
                     <br />
                     <input type="text" size="8" name="actualCost"/>
-                </td>
-            </tr>
+                </@td>
+            </@tr>
             </form>
-        </table>
+        </@table>
     </div>
 </div>
 <#else>

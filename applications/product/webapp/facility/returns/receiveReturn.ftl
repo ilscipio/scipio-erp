@@ -29,30 +29,30 @@ under the License.
             <h3>${uiLabelMap.ProductReturnCompletelyReceived}</h3>
           </#if>
           <br />
-          <table cellspacing="0" class="basic-table">
-           <thead>
-            <tr class="header-row">
-              <th>${uiLabelMap.ProductReceipt}</th>
-              <th>${uiLabelMap.CommonDate}</th>
-              <th>${uiLabelMap.CommonReturn}</th>
-              <th>${uiLabelMap.ProductLine}</th>
-              <th>${uiLabelMap.ProductProductId}</th>
-              <th>${uiLabelMap.ProductPerUnitPrice}</th>
-              <th>${uiLabelMap.ProductReceived}</th>
-            </tr>
-            </thead>
+          <@table cellspacing="0" class="basic-table">
+           <@thead>
+            <@tr class="header-row">
+              <@th>${uiLabelMap.ProductReceipt}</@th>
+              <@th>${uiLabelMap.CommonDate}</@th>
+              <@th>${uiLabelMap.CommonReturn}</@th>
+              <@th>${uiLabelMap.ProductLine}</@th>
+              <@th>${uiLabelMap.ProductProductId}</@th>
+              <@th>${uiLabelMap.ProductPerUnitPrice}</@th>
+              <@th>${uiLabelMap.ProductReceived}</@th>
+            </@tr>
+            </@thead>
             <#list receivedItems as item>
-              <tr>
-                <td>${item.receiptId}</td>
-                <td>${item.getString("datetimeReceived").toString()}</td>
-                <td>${item.returnId}</td>
-                <td>${item.returnItemSeqId}</td>
-                <td>${item.productId?default("Not Found")}</td>
-                <td>${item.unitCost?default(0)?string("##0.00")}</td>
-                <td>${item.quantityAccepted?string.number}</td>
-              </tr>
+              <@tr>
+                <@td>${item.receiptId}</@td>
+                <@td>${item.getString("datetimeReceived").toString()}</@td>
+                <@td>${item.returnId}</@td>
+                <@td>${item.returnItemSeqId}</@td>
+                <@td>${item.productId?default("Not Found")}</@td>
+                <@td>${item.unitCost?default(0)?string("##0.00")}</@td>
+                <@td>${item.quantityAccepted?string.number}</@td>
+              </@tr>
             </#list>
-          </table>
+          </@table>
           <br />
         </#if>
 
@@ -65,24 +65,24 @@ under the License.
             <input type="hidden" name="_useRowSubmit" value="Y" />
             <#assign now = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()>
             <#assign rowCount = 0>
-            <table cellspacing="0" class="basic-table">
+            <@table cellspacing="0" class="basic-table">
               <#if !returnItems?? || returnItems?size == 0>
-                <tr>
-                  <td colspan="2">${uiLabelMap.ProductNoItemsToReceive}</td>
-                </tr>
+                <@tr>
+                  <@td colspan="2">${uiLabelMap.ProductNoItemsToReceive}</@td>
+                </@tr>
               <#else>
-                <tr>
-                  <td>
+                <@tr>
+                  <@td>
                     <h3>
                       ${uiLabelMap.ProductReceiveReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.button_default!}">#${returnHeader.returnId}</a>
                       <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>ViewShipment?shipmentId=${parameters.shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${parameters.shipmentId}</a></#if>
                     </h3>
-                  </td>
-                  <td align="right">
+                  </@td>
+                  <@td align="right">
                     ${uiLabelMap.ProductSelectAll}&nbsp;
                     <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');" />
-                  </td>
-                </tr>
+                  </@td>
+                </@tr>
 
                 <#list returnItems as returnItem>
                   <#assign defaultQuantity = returnItem.returnQuantity - receivedQuantities[returnItem.returnItemSeqId]?double>
@@ -98,47 +98,47 @@ under the License.
                   <input type="hidden" name="comments_o_${rowCount}" value="${uiLabelMap.OrderReturnedItemRaNumber} ${returnItem.returnId}" />
 
                   <#assign unitCost = Static["org.ofbiz.order.order.OrderReturnServices"].getReturnItemInitialCost(delegator, returnItem.returnId, returnItem.returnItemSeqId)/>
-                  <tr>
-                    <td colspan="2"><hr/></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <table cellspacing="0" class="basic-table">
-                        <tr>
+                  <@tr>
+                    <@td colspan="2"><hr/></@td>
+                  </@tr>
+                  <@tr>
+                    <@td>
+                      <@table cellspacing="0" class="basic-table">
+                        <@tr>
                           <#assign productId = "">
                           <#if orderItem.productId??>
                             <#assign product = orderItem.getRelatedOne("Product", false)>
                             <#assign productId = product.productId>
                             <#assign serializedInv = product.getRelated("InventoryItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("inventoryItemTypeId", "SERIALIZED_INV_ITEM"), null, false)>
                             <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}" />
-                            <td width="45%">
+                            <@td width="45%">
                               <div>
                                 ${returnItem.returnItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.button_default!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
                                 <#if serializedInv?has_content><font color='red'>**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
                               </div>
-                            </td>
+                            </@td>
                           <#elseif orderItem?has_content>
-                            <td width="45%">
+                            <@td width="45%">
                               <div>
                                 ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
                                 <input type="text" size="12" name="productId_o_${rowCount}" />
                                 <a href="/catalog/control/EditProduct?${StringUtil.wrapString(externalKeyParam)}" target="catalog" class="${styles.button_default!}">${uiLabelMap.ProductCreateProduct}</a>
                               </div>
-                            </td>
+                            </@td>
                           <#else>
-                            <td width="45%">
+                            <@td width="45%">
                               <div>
                                 ${returnItem.returnItemSeqId}:&nbsp;${returnItem.get("description",locale)!}
                               </div>
-                            </td>
+                            </@td>
                           </#if>
-                          <td>&nbsp;</td>
+                          <@td>&nbsp;</@td>
 
                           <#-- location(s) -->
-                          <td align="right">
+                          <@td align="right">
                             <div>${uiLabelMap.ProductLocation}</div>
-                          </td>
-                          <td align="right">
+                          </@td>
+                          <@td align="right">
                             <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!>
                             <#if facilityLocations?has_content>
                               <select name="locationSeqId_o_${rowCount}">
@@ -160,15 +160,15 @@ under the License.
                                 <@htmlTemplate.lookupField formName="selectAllForm" name="locationSeqId_o_${rowCount}" id="locationSeqId_o_${rowCount}" fieldFormName="${LookupFacilityLocationView}"/>
                               </span>
                             </#if>
-                          </td>
+                          </@td>
 
-                          <td align="right" nowrap="nowrap">${uiLabelMap.ProductQtyReceived}</td>
-                          <td align="right">
+                          <@td align="right" nowrap="nowrap">${uiLabelMap.ProductQtyReceived}</@td>
+                          <@td align="right">
                             <input type="text" name="quantityAccepted_o_${rowCount}" size="6" value="${defaultQuantity?string.number}" />
-                          </td>
-                        </tr>
-                        <tr>
-                           <td width='10%'>
+                          </@td>
+                        </@tr>
+                        <@tr>
+                           <@td width='10%'>
                               <select name="inventoryItemTypeId_o_${rowCount}" size="1" id="inventoryItemTypeId_o_${rowCount}" onchange="javascript:setInventoryItemStatus(this,${rowCount});">
                                  <#list inventoryItemTypes as nextInventoryItemType>
                                     <option value='${nextInventoryItemType.inventoryItemTypeId}'
@@ -178,64 +178,64 @@ under the License.
                                  >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
                                  </#list>
                               </select>
-                          </td>
-                          <td width="35%">
+                          </@td>
+                          <@td width="35%">
                             <span>${uiLabelMap.ProductInitialInventoryItemStatus}:</span>&nbsp;&nbsp;
                             <select name="statusId_o_${rowCount}" size='1' id = "statusId_o_${rowCount}">
                               <option value="INV_RETURNED">${uiLabelMap.ProductReturned}</option>
                               <option value="INV_AVAILABLE">${uiLabelMap.ProductAvailable}</option>
                               <option value="INV_NS_DEFECTIVE" <#if returnItem.returnReasonId?default("") == "RTN_DEFECTIVE_ITEM">Selected</#if>>${uiLabelMap.ProductDefective}</option>
                             </select>
-                          </td>
+                          </@td>
                           <#if serializedInv?has_content>
-                            <td align="right">${uiLabelMap.ProductExistingInventoryItem}</td>
-                            <td align="right">
+                            <@td align="right">${uiLabelMap.ProductExistingInventoryItem}</@td>
+                            <@td align="right">
                               <select name="inventoryItemId_o_${rowCount}">
                                 <#list serializedInv as inventoryItem>
                                   <option>${inventoryItem.inventoryItemId}</option>
                                 </#list>
                               </select>
-                            </td>
+                            </@td>
                           <#else>
-                            <td colspan="2">&nbsp;</td>
+                            <@td colspan="2">&nbsp;</@td>
                           </#if>
-                          <td align="right" nowrap="nowrap">${uiLabelMap.ProductPerUnitPrice}</td>
-                          <td align="right">
+                          <@td align="right" nowrap="nowrap">${uiLabelMap.ProductPerUnitPrice}</@td>
+                          <@td align="right">
                             <input type='text' name='unitCost_o_${rowCount}' size='6' value='${unitCost?default(0)?string("##0.00")}' />
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                    <td align="right">
+                          </@td>
+                        </@tr>
+                      </@table>
+                    </@td>
+                    <@td align="right">
                       <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');" />
-                    </td>
-                  </tr>
+                    </@td>
+                  </@tr>
                   <#assign rowCount = rowCount + 1>
                   </#if>
                 </#list>
-                <tr>
-                  <td colspan="2">
+                <@tr>
+                  <@td colspan="2">
                     <hr/>
-                  </td>
-                </tr>
+                  </@td>
+                </@tr>
                 <#if rowCount == 0>
-                  <tr>
-                    <td colspan="2">${uiLabelMap.ProductNoItemsReturn} #${returnHeader.returnId} ${uiLabelMap.ProductToReceive}.</td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" align="right">
+                  <@tr>
+                    <@td colspan="2">${uiLabelMap.ProductNoItemsReturn} #${returnHeader.returnId} ${uiLabelMap.ProductToReceive}.</@td>
+                  </@tr>
+                  <@tr>
+                    <@td colspan="2" align="right">
                       <a href="<@ofbizUrl>ReceiveReturn?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductReturnToReceiving}</a>
-                    </td>
-                  </tr>
+                    </@td>
+                  </@tr>
                 <#else>
-                  <tr>
-                    <td colspan="2" align="right">
+                  <@tr>
+                    <@td colspan="2" align="right">
                       <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveSelectedProduct}</a>
-                    </td>
-                  </tr>
+                    </@td>
+                  </@tr>
                 </#if>
               </#if>
-            </table>
+            </@table>
             <input type="hidden" name="_rowCount" value="${rowCount}" />
           </form>
           <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
@@ -245,23 +245,23 @@ under the License.
           <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveReturn</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
             <input type="hidden" name="initialSelected" value="Y" />
-            <table cellspacing="0" class="basic-table">
-              <tr><td colspan="4"><h3>${uiLabelMap.ProductReceiveReturn}</h3></td></tr>
-              <tr>
-                <td width="15%" align='right'>${uiLabelMap.ProductReturnNumber}</td>
-                <td>&nbsp;</td>
-                <td width="90%">
+            <@table cellspacing="0" class="basic-table">
+              <@tr><@td colspan="4"><h3>${uiLabelMap.ProductReceiveReturn}</h3></@td></@tr>
+              <@tr>
+                <@td width="15%" align='right'>${uiLabelMap.ProductReturnNumber}</@td>
+                <@td>&nbsp;</@td>
+                <@td width="90%">
                   <input type="text" name="returnId" size="20" maxlength="20" value="${requestParameters.returnId!}" />
-                </td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td colspan="2">&nbsp;</td>
-                <td colspan="2">
+                </@td>
+                <@td>&nbsp;</@td>
+              </@tr>
+              <@tr>
+                <@td colspan="2">&nbsp;</@td>
+                <@td colspan="2">
                   <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveProduct}</a>
-                </td>
-              </tr>
-            </table>
+                </@td>
+              </@tr>
+            </@table>
           </form>
         </#if>
     </div>

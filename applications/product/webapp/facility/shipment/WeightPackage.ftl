@@ -65,82 +65,82 @@ under the License.
         <#if !(orderId?has_content)>
           <form name="selectOrderForm" method="post" action="<@ofbizUrl>WeightPackageOnly</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
-            <table cellspacing="0" class="basic-table">
-              <tr>
-                <td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></td>
-                <td width="1">&nbsp;</td>
-                <td width="25%">
+            <@table cellspacing="0" class="basic-table">
+              <@tr>
+                <@td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></@td>
+                <@td width="1">&nbsp;</@td>
+                <@td width="25%">
                   <input type="text" name="orderId" size="20" maxlength="20" value="${primaryOrderId!}"/>
                   /
                   <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
-                </td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td colspan="2">&nbsp;</td>
-                <td colspan="2">
+                </@td>
+                <@td>&nbsp;</@td>
+              </@tr>
+              <@tr>
+                <@td colspan="2">&nbsp;</@td>
+                <@td colspan="2">
                   <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackOrder}</a>
                   <a href="javascript:document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductWeighPackageOnly}</a>
-                </td>
-              </tr>
-            </table>
+                </@td>
+              </@tr>
+            </@table>
           </form>
           <br />
           <!-- select picklist bin form -->
           <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>WeightPackageOnly</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
-            <table cellspacing="0" class="basic-table">
-              <tr>
-                <td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></td>
-                <td width="1">&nbsp;</td>
-                <td width="25%">
+            <@table cellspacing="0" class="basic-table">
+              <@tr>
+                <@td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></@td>
+                <@td width="1">&nbsp;</@td>
+                <@td width="25%">
                   <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
-                </td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td colspan="2">&nbsp;</td>
-                <td colspan="1">
+                </@td>
+                <@td>&nbsp;</@td>
+              </@tr>
+              <@tr>
+                <@td colspan="2">&nbsp;</@td>
+                <@td colspan="1">
                   <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackOrder}</a>
                   <a href="javascript:document.selectPicklistBinForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductWeighPackageOnly}</a>
-                </td>
-              </tr>
-            </table>
+                </@td>
+              </@tr>
+            </@table>
           </form>
         <#else>
           <#assign packedLines = weightPackageSession.getPackedLines(orderId)/>
           <#if !(shipmentPackages?has_content)>
             <#if packedLines?has_content>
-              <table class="basic-table" cellpadding="2" cellspacing='0'>
-                <tr>
-                  <th>
+              <@table class="basic-table" cellpadding="2" cellspacing='0'>
+                <@tr>
+                  <@th>
                     ${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
-                  </th>
-                  <th>
+                  </@th>
+                  <@th>
                     ${uiLabelMap.CommonDimension} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultDimensionUomId)?eval}):
-                  </th>
-                  <th>
+                  </@th>
+                  <@th>
                     ${uiLabelMap.ProductPackageInputBox}:
-                  </th>
-                </tr>
+                  </@th>
+                </@tr>
                 <#list packedLines as packedLine>
                   <form name="updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}" method="post" action="<@ofbizUrl>updatePackedLine</@ofbizUrl>">
                     <input type="hidden" name="orderId" value ="${orderId!}"/>
                     <input type="hidden" name = "facilityId" value = "${(facility.facilityId)!}"/>
                     <input type="hidden" name="weightPackageSeqId" value ="${packedLine.getWeightPackageSeqId()}"/>
-                    <tr>
-                      <td>
+                    <@tr>
+                      <@td>
                         <span>
                           ${uiLabelMap.ProductPackage} ${packedLine.getWeightPackageSeqId()}
                           <input type="text" size="7" name="packageWeight" value="${(packedLine.getPackageWeight())!}" />
                         </span>
-                      </td>
-                      <td>
+                      </@td>
+                      <@td>
                         <span>${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="${(packedLine.getPackageLength())!}" size="5"/></span>
                         <span>${uiLabelMap.ProductWidth}<input type="text" name="packageWidth" value="${(packedLine.getPackageWidth())!}" size="5"/></span>
                         <span>${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="${(packedLine.getPackageHeight())!}" size="5"/></span>
-                      </td>
-                      <td>
+                      </@td>
+                      <@td>
                         <select name="shipmentBoxTypeId">
                           <#if shipmentBoxTypes?has_content>
                             <#assign shipmentBoxTypeId = "${(packedLine.getShipmentBoxTypeId())!}"/>
@@ -155,13 +155,13 @@ under the License.
                             </#list>
                           </#if>
                         </select>
-                      </td>
-                      <td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></td>
-                      <td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
-                    </tr>
+                      </@td>
+                      <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></@td>
+                      <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
+                    </@tr>
                   </form>
                 </#list>
-              </table>
+              </@table>
               <div align="right">
                 <a href="javascript:document.completePackageForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
               </div>
@@ -178,7 +178,7 @@ under the License.
               </form>
             </#if>
             <#if (orderedQuantity > packedLines.size())>
-            <table class="basic-table" cellpadding="2" cellspacing='0'>
+            <@table class="basic-table" cellpadding="2" cellspacing='0'>
               <form name="weightPackageForm" method ="post" action="<@ofbizUrl>setPackageInfo</@ofbizUrl>">
                 <input type="hidden" name = "shipGroupSeqId" value = "${shipGroupSeqId!}"/>
                 <input type="hidden" name = "facilityId" value = "${(facility.facilityId)!}"/>
@@ -187,22 +187,22 @@ under the License.
                 <#if packedLines?has_content>
                   <hr/>
                 </#if>
-                <tr>
-                  <td>
+                <@tr>
+                  <@td>
                     <span>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
                       <br />
                       ${uiLabelMap.ProductPackage}
                       <input type="text" size="7" name="packageWeight" value=""/>
                     </span>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <span>${uiLabelMap.CommonDimension} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultDimensionUomId)?eval}):</span>
                     <br />
                     <span>${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="" size="5"/></span>
                     <span>${uiLabelMap.ProductWidth}<input type="text" name="packageWidth" value="" size="5"/></span>
                     <span>${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="" size="5"/></span>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <span>${uiLabelMap.ProductPackageInputBox}:</span>
                     <br />
                     <select name="shipmentBoxTypeId">
@@ -213,25 +213,25 @@ under the License.
                         </#list>
                       </#if>
                     </select>
-                  </td>
-                  <td align="right"><a href="javascript:document.weightPackageForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductNextPackage}</a></td>
-                </tr>
+                  </@td>
+                  <@td align="right"><a href="javascript:document.weightPackageForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductNextPackage}</a></@td>
+                </@tr>
               </form>
-            </table>
+            </@table>
             </#if>
           <#else>
-            <table class="basic-table" cellpadding="2" cellspacing='0'> 
-             <tr>
-                <th>
+            <@table class="basic-table" cellpadding="2" cellspacing='0'> 
+             <@tr>
+                <@th>
                  ${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
-                </th>
-                 <th>
+                </@th>
+                 <@th>
                   ${uiLabelMap.CommonDimension} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultDimensionUomId)?eval}):
-                </th>
-                <th>
+                </@th>
+                <@th>
                   ${uiLabelMap.ProductPackageInputBox}:
-               </th>
-              </tr>
+               </@th>
+              </@tr>
               <form name="completePackForm" method="post" action="<@ofbizUrl>shipNow</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
@@ -239,28 +239,28 @@ under the License.
                 <input type="hidden" name="shipmentId" value="${(shipment.shipmentId)!}"/>
                 <input type="hidden" name="invoiceId" value="${(invoice.invoiceId)!}"/> 
                 <#list shipmentPackages?sort_by("shipmentPackageSeqId") as shipmentPackage>
-                  <tr>
-                    <td>
+                  <@tr>
+                    <@td>
                       <span>
                         ${uiLabelMap.ProductPackage} ${(shipmentPackage_index + 1)}
                         <input type="text" size="7" readonly="readonly" name="packageWeight" value="${(shipmentPackage.weight)!}" />
                       </span>
-                    </td>
-                    <td>
+                    </@td>
+                    <@td>
                       <span>${uiLabelMap.CommonLength}<input type="text" readonly="readonly" name="packageLength" value="${(shipmentPackage.boxLength)!}" size="5"/></span>
                       <span>${uiLabelMap.ProductWidth}<input type="text" readonly="readonly" name="packageWidth" value="${(shipmentPackage.boxWidth)!}" size="5"/></span>
                       <span>${uiLabelMap.PartyHeight}<input type="text" readonly="readonly" name="packageHeight" value="${(shipmentPackage.boxHeight)!}" size="5"/></span>
-                    </td>
-                    <td>
+                    </@td>
+                    <@td>
                       <#if (shipmentPackage.shipmentBoxTypeId)?has_content>
                         <#assign shipmentBoxType = delegator.findOne("ShipmentBoxType", Static["org.ofbiz.base.util.UtilMisc"].toMap("shipmentBoxTypeId", shipmentPackage.shipmentBoxTypeId), true)>
                       </#if>
                       <input type="text" readonly="readonly" name="shipmentBoxTypeId" value="${(shipmentBoxType.description)!}" size="50"/>
-                    </td>
-                  </tr>
+                    </@td>
+                  </@tr>
                 </#list>
               </form>
-            </table>
+            </@table>
             <div align="right">
               <a href="javascript:document.completePackForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
             </div>

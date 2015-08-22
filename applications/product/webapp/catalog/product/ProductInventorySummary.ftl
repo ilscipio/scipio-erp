@@ -16,33 +16,30 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#if parameters.showAllFacilities??>
-<a href="EditProductInventoryItems?productId=${productId}" class="${styles.button_default!}">${uiLabelMap.ProductShowProductFacilities}</a>
-<#else>
-<a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="${styles.button_default!}">${uiLabelMap.ProductShowAllFacilities}</a>
-</#if>
-<div class="screenlet">
+<#assign menuHtml>
+  <#if parameters.showAllFacilities??>
+    <li><a href="EditProductInventoryItems?productId=${productId}" class="${styles.button_default!}">${uiLabelMap.ProductShowProductFacilities}</a></li>
+  <#else>
+    <li><a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="${styles.button_default!}">${uiLabelMap.ProductShowAllFacilities}</a></li>
+  </#if>
+</#assign>
+<@section title="${uiLabelMap.ProductInventorySummary}" menuHtml=menuHtml>
   <#if product??>
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductInventorySummary}</h3>
-    </div>
-    <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
-          <thead>
-            <tr class="header-row">
-                <th>${uiLabelMap.ProductFacility}</th>
-                <th>${uiLabelMap.ProductAtp}</th>
-                <th>${uiLabelMap.ProductQoh}</th>
+        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+          <@thead>
+            <@tr class="header-row">
+                <@th>${uiLabelMap.ProductFacility}</@th>
+                <@th>${uiLabelMap.ProductAtp}</@th>
+                <@th>${uiLabelMap.ProductQoh}</@th>
                 <#if isMarketingPackage == "true">
-                <th>${uiLabelMap.ProductMarketingPackageATP}</th>
-                <th>${uiLabelMap.ProductMarketingPackageQOH}</th>
+                <@th>${uiLabelMap.ProductMarketingPackageATP}</@th>
+                <@th>${uiLabelMap.ProductMarketingPackageQOH}</@th>
                 </#if>
-                <th>${uiLabelMap.ProductIncomingShipments}</th>
-                <th>${uiLabelMap.ProductIncomingProductionRuns}</th>
-                <th>${uiLabelMap.ProductOutgoingProductionRuns}</th>
-            </tr>
-            </thead>
-            <#assign rowClass = "2">
+                <@th>${uiLabelMap.ProductIncomingShipments}</@th>
+                <@th>${uiLabelMap.ProductIncomingProductionRuns}</@th>
+                <@th>${uiLabelMap.ProductOutgoingProductionRuns}</@th>
+            </@tr>
+            </@thead>
             <#list quantitySummaryByFacility.values() as quantitySummary>
                 <#if quantitySummary.facilityId??>
                     <#assign facilityId = quantitySummary.facilityId>
@@ -58,16 +55,16 @@ under the License.
                     <#assign incomingQuantityTotal = manufacturingInQuantitySummary.estimatedQuantityTotal!>
                     <#assign outgoingProductionRunList = manufacturingOutQuantitySummary.outgoingProductionRunList!>
                     <#assign outgoingQuantityTotal = manufacturingOutQuantitySummary.estimatedQuantityTotal!>
-                    <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                        <td>${(facility.facilityName)!} [${facilityId?default("[No Facility]")}]
-                        <a href="/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externLoginKey=${externalLoginKey}" class="${styles.button_default!}">${uiLabelMap.ProductInventoryReceive}</a></td>
-                        <td><#if totalAvailableToPromise??>${totalAvailableToPromise}<#else>&nbsp;</#if></td>
-                        <td><#if totalQuantityOnHand??>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
+                    <@tr valign="middle">
+                        <@td>${(facility.facilityName)!} [${facilityId?default("[No Facility]")}]
+                        <a href="/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externLoginKey=${externalLoginKey}" class="${styles.button_default!}">${uiLabelMap.ProductInventoryReceive}</a></@td>
+                        <@td><#if totalAvailableToPromise??>${totalAvailableToPromise}<#else>&nbsp;</#if></@td>
+                        <@td><#if totalQuantityOnHand??>${totalQuantityOnHand}<#else>&nbsp;</#if></@td>
                         <#if isMarketingPackage == "true">
-                        <td><#if mktgPkgATP??>${mktgPkgATP}<#else>&nbsp;</#if></td>
-                        <td><#if mktgPkgQOH??>${mktgPkgQOH}<#else>&nbsp;</#if></td>
+                        <@td><#if mktgPkgATP??>${mktgPkgATP}<#else>&nbsp;</#if></@td>
+                        <@td><#if mktgPkgQOH??>${mktgPkgQOH}<#else>&nbsp;</#if></@td>
                         </#if>
-                        <td>
+                        <@td>
                             <#if incomingShipmentAndItemList?has_content>
                                 <#list incomingShipmentAndItemList as incomingShipmentAndItem>
                                     <div>${incomingShipmentAndItem.shipmentId}:${incomingShipmentAndItem.shipmentItemSeqId}-${(incomingShipmentAndItem.estimatedArrivalDate.toString())!}-<#if incomingShipmentAndItem.quantity??>${incomingShipmentAndItem.quantity?string.number}<#else>[${uiLabelMap.ProductQuantityNotSet}]</#if></div>
@@ -75,8 +72,8 @@ under the License.
                             <#else>
                                 <div>&nbsp;</div>
                             </#if>
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                             <#if incomingProductionRunList?has_content>
                                 <#list incomingProductionRunList as incomingProductionRun>
                                     <div>${incomingProductionRun.workEffortId}-${(incomingProductionRun.estimatedCompletionDate.toString())!}-<#if incomingProductionRun.estimatedQuantity??>${incomingProductionRun.estimatedQuantity?string.number}<#else>[${uiLabelMap.ProductQuantityNotSet}]</#if></div>
@@ -85,8 +82,8 @@ under the License.
                             <#else>
                                 <div>&nbsp;</div>
                             </#if>
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                             <#if outgoingProductionRunList?has_content>
                                 <#list outgoingProductionRunList as outgoingProductionRun>
                                     <div>${outgoingProductionRun.workEffortParentId?default("")}:${outgoingProductionRun.workEffortId}-${(outgoingProductionRun.estimatedStartDate.toString())!}-<#if outgoingProductionRun.estimatedQuantity??>${outgoingProductionRun.estimatedQuantity?string.number}<#else>[${uiLabelMap.ProductQuantityNotSet}]</#if></div>
@@ -95,20 +92,14 @@ under the License.
                             <#else>
                                 <div>&nbsp;</div>
                             </#if>
-                        </td>
-                    </tr>
+                        </@td>
+                    </@tr>
 
                 </#if>
-                <#-- toggle the row color -->
-                <#if rowClass == "2">
-                    <#assign rowClass = "1">
-                <#else>
-                    <#assign rowClass = "2">
-                </#if>
             </#list>
-        </table>
+        </@table>
     </div>
   <#else>
     <@alert type="error">${uiLabelMap.ProductProductNotFound} ${productId!}!</@alert>
   </#if>
-</div>
+</@section>

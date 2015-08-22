@@ -67,13 +67,13 @@ function doPublish() {
             <#if (product.isVirtual)! == "Y">
                 <input type="hidden" name="isVirtual" value="Y"/>
             </#if>
-            <table cellspacing="0" class="basic-table">
-                <tr>
-                    <td><h2>${productId!}</h2></td>
-                    <td><input type="text" name="productName" size="40" maxlength="40" value="${product.productName!}"/></td>
-                    <td><input type="submit" value="${uiLabelMap.ProductUpdateName}"/></td>
-                </tr>
-            </table>
+            <@table cellspacing="0" class="basic-table">
+                <@tr>
+                    <@td><h2>${productId!}</h2></@td>
+                    <@td><input type="text" name="productName" size="40" maxlength="40" value="${product.productName!}"/></@td>
+                    <@td><input type="submit" value="${uiLabelMap.ProductUpdateName}"/></@td>
+                </@tr>
+            </@table>
         </form>
     </div>
 </div>
@@ -86,9 +86,9 @@ function doPublish() {
         <!-- ***************************************************** Selectable features section -->
         <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeatureTypeSelector">
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <table cellspacing="0" class="basic-table">
-                <tr>
-                    <td colspan="2"><span>${uiLabelMap.CommonType}</span>
+            <@table cellspacing="0" class="basic-table">
+                <@tr>
+                    <@td colspan="2"><span>${uiLabelMap.CommonType}</span>
                         <select name="productFeatureTypeId" onchange="javascript:document.selectableFeatureTypeSelector.submit();">
                             <option value="~~any~~">${uiLabelMap.ProductAnyFeatureType}</option>
                             <#list featureTypes as featureType>
@@ -100,71 +100,66 @@ function doPublish() {
                                 <option ${selected} value="${featureType.productFeatureTypeId!}">${featureType.get("description",locale)!}</option>
                             </#list>
                         </select>
-                    </td>
-                </tr>
-            </table>
+                    </@td>
+                </@tr>
+            </@table>
         </form>
         <br />
         <form action="<@ofbizUrl>updateProductQuickAdminSelFeat</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeature">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
-        <table cellspacing="0" class="basic-table">
-          <thead>
-            <tr class="header-row">
-                <th>${uiLabelMap.ProductProductId}</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-                <th>${uiLabelMap.ProductSRCH}</th>
-                <th>${uiLabelMap.ProductDL}</th>
-            </tr>
-          </thead>
+        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+          <@thead>
+            <@tr class="header-row">
+                <@th>${uiLabelMap.ProductProductId}</@th>
+                <@th>&nbsp;</@th>
+                <@th>&nbsp;</@th>
+                <@th>&nbsp;</@th>
+                <@th>${uiLabelMap.ProductSRCH}</@th>
+                <@th>${uiLabelMap.ProductDL}</@th>
+            </@tr>
+          </@thead>
         <#assign idx=0/>
-        <#assign rowClass = "2">
         <#list productAssocs as productAssoc>
             <#assign assocProduct = productAssoc.getRelatedOne("AssocProduct", false)/>
-            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                <td nowrap="nowrap">
+            <@tr valign="middle">
+                <@td nowrap="nowrap">
                 <input type="hidden" name="productId${idx}" value="${assocProduct.productId!}"/>
-                <a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.productId!}</a></td>
-                <td width="100%"><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName!}</a></td>
-                <td colspan="2">
+                <a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.productId!}</a></@td>
+                <@td width="100%"><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName!}</a></@td>
+                <@td colspan="2">
                     <input type="text" name="description${idx}" size="70" maxlength="100" value="${selFeatureDesc[assocProduct.productId]!}"/>
-                </td>
+                </@td>
                 <#assign checked=""/>
                 <#if ((assocProduct.smallImageUrl! != "") && (assocProduct.smallImageUrl! == product.smallImageUrl!) &&
                         (assocProduct.smallImageUrl! != "") && (assocProduct.smallImageUrl! == product.smallImageUrl!)) >
                     <#assign checked = "checked='checked'"/>
                 </#if>
-                <td><input type="radio" ${checked} name="useImages" value="${assocProduct.productId}"/></td>
+                <@td><input type="radio" ${checked} name="useImages" value="${assocProduct.productId}"/></@td>
                 <#assign fromDate = Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productAssoc.getTimestamp("fromDate").toString())/>
-                <td><a class="${styles.button_default!}" href="javascript:removeAssoc('${productAssoc.productIdTo}','${fromDate}');">x</a></td>
-            </tr>
+                <@td><a class="${styles.button_default!}" href="javascript:removeAssoc('${productAssoc.productIdTo}','${fromDate}');">x</a></@td>
+            </@tr>
             <#assign idx = idx + 1/>
-            <#-- toggle the row color -->
-            <#if rowClass == "2">
-                <#assign rowClass = "1">
-            <#else>
-                <#assign rowClass = "2">
-            </#if>
         </#list>
-            <tr>
-                <td colspan="2">&nbsp;</td>
-                <td>
-                    <table cellspacing="0" class="basic-table">
+            <@tfoot>
+            <@tr>
+                <@td colspan="2">&nbsp;</@td>
+                <@td>
+                    <@table cellspacing="0" class="basic-table">
                         <#list selectableFeatureTypes as selectableFeatureType>
-                        <tr><td><a class="${styles.button_default!}" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
-                            <a class="${styles.button_default!}" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)!}&amp;productId=${product.productId!}</@ofbizUrl>">${(selectableFeatureType.get("description",locale))!}</a></td></tr>
+                        <@tr><@td><a class="${styles.button_default!}" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
+                            <a class="${styles.button_default!}" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)!}&amp;productId=${product.productId!}</@ofbizUrl>">${(selectableFeatureType.get("description",locale))!}</a></@td></@tr>
                         </#list>
-                    </table>
-                </td>
-                <td align="right">
-                    <table cellspacing="0" class="basic-table">
-                        <tr><td align="right"><input name="applyToAll" type="submit" value="${uiLabelMap.ProductAddSelectableFeature}"/></td></tr>
-                    </table>
-                </td>
-            </tr>
-            </table>
+                    </@table>
+                </@td>
+                <@td align="right">
+                    <@table cellspacing="0" class="basic-table">
+                        <@tr><@td align="right"><input name="applyToAll" type="submit" value="${uiLabelMap.ProductAddSelectableFeature}"/></@td></@tr>
+                    </@table>
+                </@td>
+            </@tr>
+            </@tfoot>
+            </@table>
         </form>
     </div>
 </div>
@@ -177,29 +172,22 @@ function doPublish() {
     <div class="screenlet-body">
         <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method="post" style="margin: 0;" name="distFeature">
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <table cellspacing="0" class="basic-table">
-              <thead>
-                <tr class="header-row">
-                    <th>${uiLabelMap.ProductProductId}</th>
-                </tr>
-               </thead>
+            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+              <@thead>
+                <@tr class="header-row">
+                    <@th>${uiLabelMap.ProductProductId}</@th>
+                </@tr>
+               </@thead>
                 <#assign idx=0/>
-                <#assign rowClass = "2">
                 <#list distinguishingFeatures as distinguishingFeature>
-                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                    <td><a href="<@ofbizUrl>quickAdminRemoveProductFeature?productId=${productId}&amp;productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">x</a>&nbsp;
+                <@tr valign="middle">
+                    <@td><a href="<@ofbizUrl>quickAdminRemoveProductFeature?productId=${productId}&amp;productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">x</a>&nbsp;
                     ${distinguishingFeature.productFeatureId} ${productFeatureTypeLookup.get(distinguishingFeature.productFeatureId).get("description",locale)}: ${distinguishingFeature.get("description",locale)}
                     &nbsp;
-                    </td>
-                </tr>
-                <#-- toggle the row color -->
-                <#if rowClass == "2">
-                    <#assign rowClass = "1">
-                <#else>
-                    <#assign rowClass = "2">
-                </#if>
+                    </@td>
+                </@tr>
                 </#list>
-            </table>
+            </@table>
         </form>
     </div>
 </div>
@@ -217,71 +205,68 @@ function doPublish() {
             <input type="hidden" name="widthUomId" value="LEN_in"/>
             <input type="hidden" name="depthUomId" value="LEN_in"/>
             <input type="hidden" name="weightUomId" value="WT_oz"/>
-            <table cellspacing="0" class="basic-table">
-              <thead>
-                <tr class="header-row">
-                    <th>${uiLabelMap.ProductProductHeight}</th>
-                    <th>${uiLabelMap.ProductProductWidth}</th>
-                    <th>${uiLabelMap.ProductProductDepth}</th>
-                    <th>${uiLabelMap.ProductWeight}</th>
-                    <th>${uiLabelMap.ProductFlOz}</th>
-                    <th>${uiLabelMap.ProductML}</th>
-                    <th>${uiLabelMap.ProductNtWt}</th>
-                    <th>${uiLabelMap.ProductGrams}</th>
-                    <th>${uiLabelMap.ProductHZ}</th>
-                 <th>${uiLabelMap.ProductST}</th>
-                    <th>${uiLabelMap.ProductTD}</th>
-                </tr>
-                </thead>
+            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+              <@thead>
+                <@tr class="header-row">
+                    <@th>${uiLabelMap.ProductProductHeight}</@th>
+                    <@th>${uiLabelMap.ProductProductWidth}</@th>
+                    <@th>${uiLabelMap.ProductProductDepth}</@th>
+                    <@th>${uiLabelMap.ProductWeight}</@th>
+                    <@th>${uiLabelMap.ProductFlOz}</@th>
+                    <@th>${uiLabelMap.ProductML}</@th>
+                    <@th>${uiLabelMap.ProductNtWt}</@th>
+                    <@th>${uiLabelMap.ProductGrams}</@th>
+                    <@th>${uiLabelMap.ProductHZ}</@th>
+                 <@th>${uiLabelMap.ProductST}</@th>
+                    <@th>${uiLabelMap.ProductTD}</@th>
+                </@tr>
+                </@thead>
         <#if (product.isVirtual)! == "Y">
             <#assign idx=0/>
-            <#assign rowClass = "2">
             <#list assocProducts as assocProduct>
-                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                    <td><input type="text" name="productHeight${idx}" size="6" maxlength="20" value="${assocProduct.productHeight!}"/></td>
-                    <td><input type="text" name="productWidth${idx}" size="6" maxlength="20" value="${assocProduct.productWidth!}"/></td>
-                    <td><input type="text" name="productDepth${idx}" size="6" maxlength="20" value="${assocProduct.productDepth!}"/></td>
-                    <td><input type="text" name="weight${idx}" size="6" maxlength="20" value="${assocProduct.weight!}"/></td>
-                    <td><input type="text" name="~floz${idx}" size="6" maxlength="20" value="${featureFloz.get(assocProduct.productId)!}"/></td>
-                    <td><input type="text" name="~ml${idx}" size="6" maxlength="20" value="${featureMl.get(assocProduct.productId)!}"/></td>
-                    <td><input type="text" name="~ntwt${idx}" size="6" maxlength="20" value="${featureNtwt.get(assocProduct.productId)!}"/></td>
-                    <td><input type="text" name="~grams${idx}" size="6" maxlength="20" value="${featureGrams.get(assocProduct.productId)!}"/></td>
-                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureHazmat.get(assocProduct.productId)!)}</a></td>
-                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureSalesThru.get(assocProduct.productId)!)}</a></td>
-                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureThruDate.get(assocProduct.productId)!)}</a></td>
-                </tr>
+                <@tr valign="middle">
+                    <@td><input type="text" name="productHeight${idx}" size="6" maxlength="20" value="${assocProduct.productHeight!}"/></@td>
+                    <@td><input type="text" name="productWidth${idx}" size="6" maxlength="20" value="${assocProduct.productWidth!}"/></@td>
+                    <@td><input type="text" name="productDepth${idx}" size="6" maxlength="20" value="${assocProduct.productDepth!}"/></@td>
+                    <@td><input type="text" name="weight${idx}" size="6" maxlength="20" value="${assocProduct.weight!}"/></@td>
+                    <@td><input type="text" name="~floz${idx}" size="6" maxlength="20" value="${featureFloz.get(assocProduct.productId)!}"/></@td>
+                    <@td><input type="text" name="~ml${idx}" size="6" maxlength="20" value="${featureMl.get(assocProduct.productId)!}"/></@td>
+                    <@td><input type="text" name="~ntwt${idx}" size="6" maxlength="20" value="${featureNtwt.get(assocProduct.productId)!}"/></@td>
+                    <@td><input type="text" name="~grams${idx}" size="6" maxlength="20" value="${featureGrams.get(assocProduct.productId)!}"/></@td>
+                    <@td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureHazmat.get(assocProduct.productId)!)}</a></@td>
+                    <@td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureSalesThru.get(assocProduct.productId)!)}</a></@td>
+                    <@td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureThruDate.get(assocProduct.productId)!)}</a></@td>
+                </@tr>
                 <#assign idx = idx + 1/>
-                <#-- toggle the row color -->
-                <#if rowClass == "2">
-                    <#assign rowClass = "1">
-                <#else>
-                    <#assign rowClass = "2">
-                </#if>
             </#list>
-                <tr>
-                    <td colspan="10" align="right"><input name="applyToAll" type="submit" value="${uiLabelMap.ProductApplyToAll}"/>
-                    &nbsp;&nbsp;<input name="updateShipping" type="submit" value="${uiLabelMap.ProductUpdateShipping}"/></td>
-                </tr>
+              <@tfoot>
+                <@tr>
+                    <@td colspan="10" align="right"><input name="applyToAll" type="submit" value="${uiLabelMap.ProductApplyToAll}"/>
+                    &nbsp;&nbsp;<input name="updateShipping" type="submit" value="${uiLabelMap.ProductUpdateShipping}"/></@td>
+                </@tr>
+              </@tfoot>
         <#else>
-                <tr>
-                    <td><input type="text" name="productHeight" size="6" maxlength="20" value="${product.productHeight!}" /></td>
-                    <td><input type="text" name="productWidth" size="6" maxlength="20" value="${product.productWidth!}" /></td>
-                    <td><input type="text" name="productDepth" size="6" maxlength="20" value="${product.productDepth!}" /></td>
-                    <td><input type="text" name="weight" size="6" maxlength="20" value="${product.weight!}" /></td>
-                    <td><input type="text" name="~floz" size="6" maxlength="20" value="${floz!}" /></td>
-                    <td><input type="text" name="~ml" size="6" maxlength="20" value="${ml!}" /></td>
-                    <td><input type="text" name="~ntwt" size="6" maxlength="20" value="${ntwt!}" /></td>
-                    <td><input type="text" name="~grams" size="6" maxlength="20" value="${grams!}" /></td>
-                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductFeatures?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(hazmat!)}</a></td>
-                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(salesthru!)}</a></td>
-                    <td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(thrudate!)}</a></td>
-                </tr>
-                <tr>
-                    <td colspan="10" align="right"><input type="submit" value="${uiLabelMap.ProductUpdateShipping}" /></td>
-                </tr>
+                <@tr>
+                    <@td><input type="text" name="productHeight" size="6" maxlength="20" value="${product.productHeight!}" /></@td>
+                    <@td><input type="text" name="productWidth" size="6" maxlength="20" value="${product.productWidth!}" /></@td>
+                    <@td><input type="text" name="productDepth" size="6" maxlength="20" value="${product.productDepth!}" /></@td>
+                    <@td><input type="text" name="weight" size="6" maxlength="20" value="${product.weight!}" /></@td>
+                    <@td><input type="text" name="~floz" size="6" maxlength="20" value="${floz!}" /></@td>
+                    <@td><input type="text" name="~ml" size="6" maxlength="20" value="${ml!}" /></@td>
+                    <@td><input type="text" name="~ntwt" size="6" maxlength="20" value="${ntwt!}" /></@td>
+                    <@td><input type="text" name="~grams" size="6" maxlength="20" value="${grams!}" /></@td>
+                    <@td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductFeatures?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(hazmat!)}</a></@td>
+                    <@td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(salesthru!)}</a></@td>
+                    <@td><a class="${styles.button_default!}" href="<@ofbizUrl>EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(thrudate!)}</a></@td>
+                </@tr>
+              <@tfoot>
+                <@tr>
+                    <@td colspan="10" align="right"><input type="submit" value="${uiLabelMap.ProductUpdateShipping}" /></@td>
+                </@tr>
+              </@tfoot>
         </#if>
 
-            </table>
+            </@table>
         </form>
     <!--  **************************************************** end - Shipping dimensions section -->
     </div>
@@ -293,82 +278,70 @@ function doPublish() {
     <div class="screenlet-body">
         <!--  **************************************************** Standard Features section -->
         <#if addedFeatureTypeIds?has_content || standardFeatureAppls?has_content>
-        <table cellspacing="0" class="basic-table">
-        <tr>
-        <td>
+        <@table type="generic" cellspacing="0" class="basic-table">
+        <@tr>
+        <@td>
             <#if addedFeatureTypeIds?has_content>
             <form method="post" action="<@ofbizUrl>quickAdminApplyFeatureToProduct</@ofbizUrl>" name="addFeatureById">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="productFeatureApplTypeId" value="STANDARD_FEATURE"/>
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
-            <table cellspacing="0" class="basic-table">
-                <#assign rowClass = "2">
+            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
                 <#list addedFeatureTypeIds as addedFeatureTypeId>
-                    <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                        <td align="right">${addedFeatureTypes.get(addedFeatureTypeId).description}</td>
-                        <td>
+                    <@tr valign="middle">
+                        <@td align="right">${addedFeatureTypes.get(addedFeatureTypeId).description}</@td>
+                        <@td>
                             <select name="productFeatureId">
                                 <option value="~~any~~">${uiLabelMap.ProductAnyFeatureType}</option>
                             <#list featuresByType.get(addedFeatureTypeId) as feature>
                                 <option value="${feature.getString("productFeatureId")}">${feature.description}</option>
                             </#list>
                             </select>
-                        </td>
-                    </tr>
-                    <#-- toggle the row color -->
-                    <#if rowClass == "2">
-                        <#assign rowClass = "1">
-                    <#else>
-                        <#assign rowClass = "2">
-                    </#if>
+                        </@td>
+                    </@tr>
                 </#list>
-                <tr><td colspan="2" align="right"><input type="submit" value="${uiLabelMap.ProductAddFeatures}"/></td></tr>
-            </table>
+                <@tfoot>
+                <@tr><@td colspan="2" align="right"><input type="submit" value="${uiLabelMap.ProductAddFeatures}"/></@td></@tr>
+                </@tfoot>
+            </@table>
             </form>
             </#if>
-        </td>
-        <td width="20">&nbsp;</td>
-        <td valign="top">
+        </@td>
+        <@td width="20">&nbsp;</@td>
+        <@td valign="top">
             <#if standardFeatureAppls?has_content>
-            <table cellspacing="0" class="basic-table">
-                <#assign rowClass = "2">
+            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
                 <#list standardFeatureAppls as standardFeatureAppl>
                     <#assign featureId = standardFeatureAppl.productFeatureId/>
-                    <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                        <td colspan="2"><a href='<@ofbizUrl>quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId!}&amp;productFeatureId=${featureId!}&amp;fromDate=${(standardFeatureAppl.fromDate)!}</@ofbizUrl>' class="${styles.button_default!}">x</a>
+                    <@tr valign="middle">
+                        <@td colspan="2"><a href='<@ofbizUrl>quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId!}&amp;productFeatureId=${featureId!}&amp;fromDate=${(standardFeatureAppl.fromDate)!}</@ofbizUrl>' class="${styles.button_default!}">x</a>
                         ${productFeatureTypeLookup.get(featureId).description}: ${standardFeatureLookup.get(featureId).description}
-                        </td>
-                    </tr>
-                    <#-- toggle the row color -->
-                    <#if rowClass == "2">
-                        <#assign rowClass = "1">
-                    <#else>
-                        <#assign rowClass = "2">
-                    </#if>
+                        </@td>
+                    </@tr>
                 </#list>
-            </table>
+            </@table>
             </#if>
-        </td>
-        </tr>
-        </table>
-        <br />
+        </@td>
+        </@tr>
+        </@table>
+
         </#if>
         <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">
         <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
         <input type="hidden" name="productId" value="${product.productId!}"/>
-        <table cellspacing="0" class="basic-table">
-            <tr>
-                <td align="right">${uiLabelMap.ProductFeatureTypes}</td>
-                <td>
+        <@table type="fields" cellspacing="0" class="basic-table">
+            <@tr>
+                <@td align="right">${uiLabelMap.ProductFeatureTypes}</@td>
+                <@td>
                     <select multiple="multiple" name="addFeatureTypeId">
                         <#list featureTypes as featureType>
                             <option value="${featureType.productFeatureTypeId!}">${featureType.get("description",locale)!}</option>
                         </#list>
                     </select>
-                </td>
-                <td><input type="submit" value="${uiLabelMap.ProductAddFeatureType}"/></td>
-            </tr>
-        </table>
+                </@td>
+                <@td><input type="submit" value="${uiLabelMap.ProductAddFeatureType}"/></@td>
+            </@tr>
+        </@table>
         </form>
         <!--  **************************************************** end - Standard Features section -->
     </div>
@@ -382,36 +355,35 @@ function doPublish() {
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>">
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <table cellspacing="0" class="basic-table">
-              <tr>
-              <td>
-                  <table cellspacing="0" class="basic-table">
-                      <tr>
-                          <td>
+            <@table type="fields" cellspacing="0" class="basic-table">
+              <@tr>
+              <@td>
+                  <@table cellspacing="0" class="basic-table">
+                      <@tr>
+                          <@td>
                               <select multiple="multiple" name="categoryId">
                                   <#list allCategories as category>
                                       <option value="${category.productCategoryId!}">${category.description!} ${category.productCategoryId}</option>
                                   </#list>
                               </select>&nbsp;
-                          </td>
-                      </tr>
-                  </table>
-              </td>
-              </tr>
-              <tr>
-                  <td colspan="2"><input type="submit" value="${uiLabelMap.ProductUpdateCategories}"/></td>
-              </tr>
-            </table>
+                          </@td>
+                      </@tr>
+                  </@table>
+              </@td>
+              </@tr>
+              <@tr>
+                  <@td colspan="2"><input type="submit" value="${uiLabelMap.ProductUpdateCategories}"/></@td>
+              </@tr>
+            </@table>
         </form>
-        <table>
-          <tr>
-            <td valign="top">
-                <table cellspacing="0" class="basic-table">
-                    <#assign rowClass = "2">
+        <@table>
+          <@tr>
+            <@td valign="top">
+                <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
                     <#list productCategoryMembers as prodCatMemb>
                         <#assign prodCat = prodCatMemb.getRelatedOne("ProductCategory", false)/>
-                        <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                            <td colspan="2">
+                        <@tr valign="middle">
+                            <@td colspan="2">
                               <form name="quickAdminRemoveProductFromCategory_${prodCatMemb_index}" action="<@ofbizUrl>quickAdminRemoveProductFromCategory</@ofbizUrl>" method="post">
                                 <input type="hidden" name="productId" value="${prodCatMemb.productId!}" />
                                 <input type="hidden" name="productCategoryId" value="${prodCatMemb.productCategoryId}" />
@@ -419,19 +391,13 @@ function doPublish() {
                                 <a href="javascript:document.quickAdminRemoveProductFromCategory_${prodCatMemb_index}.submit();" class="${styles.button_default!}">x</a>
                                 ${prodCat.description!} ${prodCat.productCategoryId}
                               </form>
-                            </td>
-                        </tr>
-                        <#-- toggle the row color -->
-                        <#if rowClass == "2">
-                            <#assign rowClass = "1">
-                        <#else>
-                            <#assign rowClass = "2">
-                        </#if>
+                            </@td>
+                        </@tr>
                     </#list>
-                </table>
-            </td>
-          </tr>
-        </table>
+                </@table>
+            </@td>
+          </@tr>
+        </@table>
         <!--  **************************************************** end - Categories section -->
     </div>
 </div>
@@ -445,27 +411,27 @@ function doPublish() {
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>" name="publish">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <input type="hidden" name="categoryId" value="${allCategoryId!}"/>
-        <table cellspacing="0" class="basic-table">
-            <tr>
-                <td>
+        <@table cellspacing="0" class="basic-table">
+            <@tr>
+                <@td>
                     <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <input type="button" value="${uiLabelMap.ProductPublishAndView}" onclick="doPublish();"/>
-                </td>
-            </tr>
-        </table>
+                </@td>
+            </@tr>
+        </@table>
         </form>
     <#else>
         <form action="<@ofbizUrl>quickAdminUnPublish</@ofbizUrl>" name="unpublish">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <input type="hidden" name="productCategoryId" value="${allCategoryId!}"/>
-        <table cellspacing="0" class="basic-table">
-            <tr>
-                <td>
+        <@table cellspacing="0" class="basic-table">
+            <@tr>
+                <@td>
                     <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <input type="submit" value="${uiLabelMap.ProductRemoveFromSite}"/>
-                </td>
-            </tr>
-        </table>
+                </@td>
+            </@tr>
+        </@table>
         </form>
     </#if>
     <!--  **************************************************** end - publish section -->

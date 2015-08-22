@@ -26,17 +26,17 @@ under the License.
   </div>
   <form method="post" name="selectFactors" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>">
     <input type="hidden" name="facilityId" value="${facilityId}"/>
-    <table class="basic-table" cellspacing='0'>
-      <tr>
-        <td class='label'>${uiLabelMap.FacilityGroupByShippingMethod}</td>
-        <td><input type="checkbox" name="groupByShippingMethod" value="Y" <#if "${requestParameters.groupByShippingMethod!}" == "Y">checked="checked"</#if>/></td>
-        <td class='label'>${uiLabelMap.FacilityGroupByWarehouseArea}</td>
-        <td><input type="checkbox" name="groupByWarehouseArea" value="Y" <#if "${requestParameters.groupByWarehouseArea!}" == "Y">checked="checked"</#if>/></td>
-        <td class='label'>${uiLabelMap.FacilityGroupByNoOfOrderItems}</td>
-        <td><input type="checkbox" name="groupByNoOfOrderItems" value="Y" <#if "${requestParameters.groupByNoOfOrderItems!}" == "Y">checked="checked"</#if>/></td>
-      </tr>
-      <tr><td>&nbsp;</td></tr>
-    </table>
+    <@table class="basic-table" cellspacing='0'>
+      <@tr>
+        <@td class='label'>${uiLabelMap.FacilityGroupByShippingMethod}</@td>
+        <@td><input type="checkbox" name="groupByShippingMethod" value="Y" <#if "${requestParameters.groupByShippingMethod!}" == "Y">checked="checked"</#if>/></@td>
+        <@td class='label'>${uiLabelMap.FacilityGroupByWarehouseArea}</@td>
+        <@td><input type="checkbox" name="groupByWarehouseArea" value="Y" <#if "${requestParameters.groupByWarehouseArea!}" == "Y">checked="checked"</#if>/></@td>
+        <@td class='label'>${uiLabelMap.FacilityGroupByNoOfOrderItems}</@td>
+        <@td><input type="checkbox" name="groupByNoOfOrderItems" value="Y" <#if "${requestParameters.groupByNoOfOrderItems!}" == "Y">checked="checked"</#if>/></@td>
+      </@tr>
+      <@tr><@td>&nbsp;</@td></@tr>
+    </@table>
     <div align ='right'>
       <span>${uiLabelMap.FacilityGroupFirst}</span>
       <input type="text" size="4" name="maxNumberOfOrders" value="50"/>
@@ -53,35 +53,35 @@ under the License.
     <div align ='right'>
       <a class="${styles.button_default!}" href="<@ofbizUrl>ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}</@ofbizUrl>">${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}</a>
     </div>
-    <table cellspacing="0" class="basic-table">
+    <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
       <#if pickMoveInfoList?has_content || rushOrderInfo?has_content>
-       <thead>
-        <tr class="header-row">
+       <@thead>
+        <@tr class="header-row">
           <#if !((requestParameters.groupByShippingMethod?? && requestParameters.groupByShippingMethod == "Y") || (requestParameters.groupByWarehouseArea?? && requestParameters.groupByWarehouseArea == "Y") || (requestParameters.groupByNoOfOrderItems?? && requestParameters.groupByNoOfOrderItems == "Y"))>
-            <th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</th>
+            <@th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
           <#else>
-            <th>${uiLabelMap.ProductShipmentMethod}</th>
-            <th>${uiLabelMap.ProductWarehouseArea}</th>
-            <th>${uiLabelMap.ProductNumberOfOrderItems}</th>
+            <@th>${uiLabelMap.ProductShipmentMethod}</@th>
+            <@th>${uiLabelMap.ProductWarehouseArea}</@th>
+            <@th>${uiLabelMap.ProductNumberOfOrderItems}</@th>
           </#if>
-          <th>${uiLabelMap.ProductReadyToPick}</th>
-          <th>${uiLabelMap.ProductNeedStockMove}</th>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
-        </tr>
-        </thead>
+          <@th>${uiLabelMap.ProductReadyToPick}</@th>
+          <@th>${uiLabelMap.ProductNeedStockMove}</@th>
+          <@th>&nbsp;</@th>
+          <@th>&nbsp;</@th>
+          <@th>&nbsp;</@th>
+        </@tr>
+        </@thead>
       </#if>
       <#if rushOrderInfo?has_content>
         <#assign orderReadyToPickInfoList = rushOrderInfo.orderReadyToPickInfoList!>
         <#assign orderNeedsStockMoveInfoList = rushOrderInfo.orderNeedsStockMoveInfoList!>
         <#assign orderReadyToPickInfoListSize = (orderReadyToPickInfoList.size())?default(0)>
         <#assign orderNeedsStockMoveInfoListSize = (orderNeedsStockMoveInfoList.size())?default(0)>
-        <tr>
-          <td>[Rush Orders, all Methods]</td>
-          <td>${orderReadyToPickInfoListSize}</td>
-          <td>${orderNeedsStockMoveInfoListSize}</td>
-          <td>
+        <@tr>
+          <@td>[Rush Orders, all Methods]</@td>
+          <@td>${orderReadyToPickInfoListSize}</@td>
+          <@td>${orderNeedsStockMoveInfoListSize}</@td>
+          <@td>
             <#if orderReadyToPickInfoList?has_content>
               <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
                 <input type="hidden" name="facilityId" value="${facilityId}"/>
@@ -93,8 +93,8 @@ under the License.
             <#else>
               &nbsp;
             </#if>
-          </td>
-        </tr>
+          </@td>
+        </@tr>
       </#if>
       <#if pickMoveInfoList?has_content>
         <#assign orderReadyToPickInfoListSizeTotal = 0>
@@ -111,48 +111,55 @@ under the License.
           <#assign orderNeedsStockMoveInfoListSize = (orderNeedsStockMoveInfoList.size())?default(0)>
           <#assign orderReadyToPickInfoListSizeTotal = orderReadyToPickInfoListSizeTotal + orderReadyToPickInfoListSize>
           <#assign orderNeedsStockMoveInfoListSizeTotal = orderNeedsStockMoveInfoListSizeTotal + orderNeedsStockMoveInfoListSize>
-          <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                <td>
+          <@tr valign="middle" alt=alt_row>
+                
+              <#assign viewGroupDetailForm>
                     <form name="viewGroupDetail_${pickMoveInfo_index}" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>" method="post">
                       <input type ="hidden" name="viewDetail" value= "${groupName!}"/>
                       <input type="hidden" name="groupByShippingMethod" value="${requestParameters.groupByShippingMethod!}"/>
                       <input type="hidden" name="groupByWarehouseArea" value="${requestParameters.groupByWarehouseArea!}"/>
                       <input type="hidden" name="groupByNoOfOrderItems" value="${requestParameters.groupByNoOfOrderItems!}"/>
                       <input type="hidden" name="facilityId" value="${facilityId!}"/>
-                    </form>
+                    </form>  
+              </#assign>  
               <#if ((requestParameters.groupByShippingMethod?? && requestParameters.groupByShippingMethod == "Y") || (requestParameters.groupByWarehouseArea?? && requestParameters.groupByWarehouseArea == "Y") || (requestParameters.groupByNoOfOrderItems?? && requestParameters.groupByNoOfOrderItems == "Y"))>
+                <@td>
+                  ${viewGroupDetailForm}
                   <#if groupName1?has_content>
                     <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName1}</a>
                   </#if>
-                </td>
-                <td>
+                </@td>
+                <@td>
                   <#if groupName2?has_content>
                     <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName2}</a>
                   </#if>
-                </td>
-                <td>
+                </@td>
+                <@td>
                   <#if groupName3?has_content>
-                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName3}</a></td>
+                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName3}</a>
                   </#if>
+                </@td>
               <#else>
+                <@td>
+                  ${viewGroupDetailForm}
                   <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName!}</a>
+                </@td>
               </#if>
-                </td>
-            <td>
+            <@td>
               <#if !((requestParameters.groupByShippingMethod?? && requestParameters.groupByShippingMethod == "Y") || (requestParameters.groupByWarehouseArea?? && requestParameters.groupByWarehouseArea == "Y") || (requestParameters.groupByNoOfOrderItems?? && requestParameters.groupByNoOfOrderItems == "Y"))>
                 <#if orderReadyToPickInfoListSize == 0 >${uiLabelMap.CommonN}<#else>${uiLabelMap.CommonY}</#if>
               <#else>
                 ${orderReadyToPickInfoListSize}
               </#if>
-            </td>
-            <td>
+            </@td>
+            <@td>
               <#if !((requestParameters.groupByShippingMethod?? && requestParameters.groupByShippingMethod == "Y") || (requestParameters.groupByWarehouseArea?? && requestParameters.groupByWarehouseArea == "Y") || (requestParameters.groupByNoOfOrderItems?? && requestParameters.groupByNoOfOrderItems == "Y"))>
                 <#if orderNeedsStockMoveInfoListSize == 0>${uiLabelMap.CommonN}<#else>${uiLabelMap.CommonY}</#if>
               <#else>
                 ${orderNeedsStockMoveInfoListSize}
               </#if>
-            </td>
-            <td>
+            </@td>
+            <@td>
               <#if orderReadyToPickInfoList?has_content>
                 <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
@@ -173,8 +180,8 @@ under the License.
               <#else>
                 &nbsp;
               </#if>
-            </td>
-            <td>
+            </@td>
+            <@td>
               <#if orderReadyToPickInfoList?has_content>
                 <form method="post" action="<@ofbizUrl>printPickSheets</@ofbizUrl>" target="_blank">
                   <input type="hidden" name="printGroupName" value="${groupName!}"/>
@@ -194,19 +201,19 @@ under the License.
               <#else>
                 &nbsp;
               </#if>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
           <#-- toggle the row color -->
           <#assign alt_row = !alt_row>
         </#list>
         <#if ((requestParameters.groupByShippingMethod?? && requestParameters.groupByShippingMethod == "Y") || (requestParameters.groupByWarehouseArea?? && requestParameters.groupByWarehouseArea == "Y") || (requestParameters.groupByNoOfOrderItems?? && requestParameters.groupByNoOfOrderItems == "Y"))>
-          <tr<@dataRowClassStr alt=alt_row />>
-            <th>${uiLabelMap.CommonAllMethods}</th>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <th>${orderReadyToPickInfoListSizeTotal}</th>
-            <th>${orderNeedsStockMoveInfoListSizeTotal}</th>
-            <td>
+          <@tr alt=alt_row>
+            <@th>${uiLabelMap.CommonAllMethods}</@th>
+            <@td>&nbsp;</@td>
+            <@td>&nbsp;</@td>
+            <@th>${orderReadyToPickInfoListSizeTotal}</@th>
+            <@th>${orderNeedsStockMoveInfoListSizeTotal}</@th>
+            <@td>
               <#if (orderReadyToPickInfoListSizeTotal > 0)>
                 <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
@@ -217,8 +224,8 @@ under the License.
               <#else>
                 &nbsp;
               </#if>
-            </td>
-            <td>
+            </@td>
+            <@td>
               <#if (orderReadyToPickInfoListSizeTotal > 0)>
                 <form method="post" action="<@ofbizUrl>printPickSheets</@ofbizUrl>" target="_blank">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
@@ -229,13 +236,13 @@ under the License.
               <#else>
                 &nbsp;
               </#if>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
         </#if>
       <#else>
-        <tr><td colspan="4"><@resultMsg>${uiLabelMap.ProductNoOrdersFoundReadyToPickOrNeedStockMoves}.</@resultMsg></td></tr>
+        <@tr><@td colspan="4"><@resultMsg>${uiLabelMap.ProductNoOrdersFoundReadyToPickOrNeedStockMoves}.</@resultMsg></@td></@tr>
       </#if>
-    </table>
+    </@table>
   </div>
 </div>
 <#assign viewDetail = requestParameters.viewDetail!>
@@ -257,20 +264,19 @@ under the License.
       <br class="clear"/>
     </div>
     <div class="screenlet-body">
-      <table cellspacing="0" class="basic-table">
-      <thead>
-        <tr class="header-row">
-          <th>${uiLabelMap.ProductOrderId}</th>
-          <th>${uiLabelMap.FormFieldTitle_orderDate}</th>
-          <th>${uiLabelMap.ProductChannel}</th>
-          <th>${uiLabelMap.ProductOrderItem}</th>
-          <th>${uiLabelMap.ProductProductDescription}</th>
-          <th>${uiLabelMap.ProductOrderShipGroupId}</th>
-          <th>${uiLabelMap.ProductQuantity}</th>
-          <th>${uiLabelMap.ProductQuantityNotAvailable}</th>
-        </tr>
-       </thead>
-        <#assign alt_row = false>
+      <@table type="data-simple" autoAltRows=true cellspacing="0" class="basic-table">
+      <@thead>
+        <@tr class="header-row">
+          <@th>${uiLabelMap.ProductOrderId}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_orderDate}</@th>
+          <@th>${uiLabelMap.ProductChannel}</@th>
+          <@th>${uiLabelMap.ProductOrderItem}</@th>
+          <@th>${uiLabelMap.ProductProductDescription}</@th>
+          <@th>${uiLabelMap.ProductOrderShipGroupId}</@th>
+          <@th>${uiLabelMap.ProductQuantity}</@th>
+          <@th>${uiLabelMap.ProductQuantityNotAvailable}</@th>
+        </@tr>
+       </@thead>
         <#list toPickList as toPick>
           <#assign oiasgal = toPick.orderItemShipGrpInvResList>
           <#assign header = toPick.orderHeader>
@@ -278,26 +284,24 @@ under the License.
           <#list oiasgal as oiasga>
             <#assign orderProduct = oiasga.getRelatedOne("OrderItem", false).getRelatedOne("Product", false)!>
             <#assign product = oiasga.getRelatedOne("InventoryItem", false).getRelatedOne("Product", false)!>
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-              <td><a href="/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${oiasga.orderId}</a></td>
-              <td>${header.orderDate?string}</td>
-              <td>${(channel.description)!}</td>
-              <td>${oiasga.orderItemSeqId}</td>
-              <td>
+            <@tr valign="middle">
+              <@td><a href="/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${oiasga.orderId}</a></@td>
+              <@td>${header.orderDate?string}</@td>
+              <@td>${(channel.description)!}</@td>
+              <@td>${oiasga.orderItemSeqId}</@td>
+              <@td>
                 <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(orderProduct.internalName)!}</a>
                 <#if orderProduct.productId != product.productId>
                   &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(product.internalName)!}</a>]
                 </#if>
-              </td>
-              <td>${oiasga.shipGroupSeqId}</td>
-              <td>${oiasga.quantity}</td>
-              <td>${oiasga.quantityNotAvailable!}</td>
-            </tr>
+              </@td>
+              <@td>${oiasga.shipGroupSeqId}</@td>
+              <@td>${oiasga.quantity}</@td>
+              <@td>${oiasga.quantityNotAvailable!}</@td>
+            </@tr>
           </#list>
-          <#-- toggle the row color -->
-          <#assign alt_row = !alt_row>
         </#list>
-      </table>
+      </@table>
     </div>
   </div>
 </#if>

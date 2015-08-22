@@ -16,11 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductAlternateKeyWordThesaurus}</h3>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.ProductAlternateKeyWordThesaurus}">
         <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
             <div>
                 <span>${uiLabelMap.ProductKeyword}</span><input type="text" name="enteredKeyword" size="10"/>
@@ -39,21 +35,20 @@ under the License.
               <a href="<@ofbizUrl>editKeywordThesaurus?firstLetter=${letter}</@ofbizUrl>" class="${styles.button_default!}"><#if highlight>[</#if>${letter}<#if highlight>]</#if></a>
             </#list>
         </div>
-        <br />
+        
         <#assign lastkeyword = "">
         <#if keywordThesauruses?has_content>
-        <table cellspacing="0" class="basic-table">
-            <#assign rowClass = "2">
+        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
             <#list keywordThesauruses as keyword>
               <#assign relationship = keyword.getRelatedOne("RelationshipEnumeration", true)>
               <#if keyword.enteredKeyword == lastkeyword><#assign sameRow=true><#else><#assign lastkeyword=keyword.enteredKeyword><#assign sameRow=false></#if>
               <#if sameRow == false>
                 <#if (keyword_index > 0)>
-                  </td>
-                </tr>
+                  <@td closeOnly=true />
+                <@tr closeOnly=true />
                 </#if>
-                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                  <td>
+                <@tr valign="middle" openOnly=true />
+                  <@td openOnly=true />
                     <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
                       <div>
                         ${keyword.enteredKeyword}
@@ -70,8 +65,8 @@ under the License.
                         <input type="submit" value="${uiLabelMap.CommonAdd}" />
                       </div>
                     </form>
-                  </td>
-                  <td>
+                  <@td closeOnly=true />
+                  <@td openOnly=true />
               </#if>
               <div>
                 <form method="post" action="<@ofbizUrl>deleteKeywordThesaurus</@ofbizUrl>" name="deleteKeywordThesaurus">
@@ -81,16 +76,9 @@ under the License.
                 </form>
                 ${keyword.alternateKeyword}&nbsp;(${uiLabelMap.ProductRelationship}:${(relationship.get("description",locale))?default(keyword.relationshipEnumId!)})
               </div>
-              <#-- toggle the row color -->
-              <#if rowClass == "2">
-                  <#assign rowClass = "1">
-              <#else>
-                  <#assign rowClass = "2">
-              </#if>
             </#list>
-              </td>
-            </tr>
-        </table>
+              <@td closeOnly=true />
+            <@tr closeOnly=true />
+        </@table>
         </#if>
-    </div>
-</div>
+</@section>

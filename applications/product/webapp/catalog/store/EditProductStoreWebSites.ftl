@@ -16,53 +16,39 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.PageTitleEditProductStoreWebSites}</h3>
-    </div>
-    <div class="screenlet-body">
-      <a href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewProductStoreWebSite}</a>
-        <table cellspacing="0" class="basic-table">
-          <thead>
-            <tr class="header-row">
-              <th>${uiLabelMap.ProductWebSiteId}</th>
-              <th>${uiLabelMap.ProductHost}</th>
-              <th>${uiLabelMap.ProductPort}</th>
-              <th>&nbsp;</th>
-            </tr>
-           </thead>
+<#assign menuHtml>
+  <li><a href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewProductStoreWebSite}</a></li>
+</#assign>
+<@section title="${uiLabelMap.PageTitleEditProductStoreWebSites}" menuHtml=menuHtml>
+        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+          <@thead>
+            <@tr class="header-row">
+              <@th>${uiLabelMap.ProductWebSiteId}</@th>
+              <@th>${uiLabelMap.ProductHost}</@th>
+              <@th>${uiLabelMap.ProductPort}</@th>
+              <@th>&nbsp;</@th>
+            </@tr>
+           </@thead>
             <#if storeWebSites?has_content>
-              <#assign rowClass = "2">
               <#list storeWebSites as webSite>
-                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                  <td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${webSite.siteName!} [${webSite.webSiteId}]</a></td>
-                  <td>${webSite.httpHost?default('&nbsp;')}</td>
-                  <td>${webSite.httpPort?default('&nbsp;')}</td>
-                  <td align="center">
+                <@tr valign="middle">
+                  <@td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
+                  <@td>${webSite.httpHost?default('&nbsp;')}</@td>
+                  <@td>${webSite.httpPort?default('&nbsp;')}</@td>
+                  <@td align="center">
                     <a href="javascript:document.storeUpdateWebSite_${webSite_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                     <form name="storeUpdateWebSite_${webSite_index}" method="post" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>">
                         <input type="hidden" name="viewProductStoreId" value="${productStoreId}"/>
                         <input type="hidden" name="productStoreId" value=""/>
                         <input type="hidden" name="webSiteId" value="${webSite.webSiteId}"/>
                     </form>                      
-                  </td>
-                </tr>
-                <#-- toggle the row color -->
-                <#if rowClass == "2">
-                    <#assign rowClass = "1">
-                <#else>
-                    <#assign rowClass = "2">
-                </#if>
+                  </@td>
+                </@tr>
               </#list>
             </#if>
-        </table>
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductSetStoreOnWebSite}</h3>
-    </div>
-    <div class="screenlet-body">
+        </@table>
+</@section>
+<@section title="${uiLabelMap.ProductSetStoreOnWebSite}">
         <form name="addWebSite" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>" method="post">
             <input type="hidden" name="viewProductStoreId" value="${productStoreId}" />
             <input type="hidden" name="productStoreId" value="${productStoreId}" />
@@ -71,7 +57,6 @@ under the License.
                 <option value="${webSite.webSiteId}">${webSite.siteName!} [${webSite.webSiteId}]</option>
               </#list>
             </select>
-            <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonUpdate}" />
+            <input type="submit" class="${styles.button_default!}" value="${uiLabelMap.CommonUpdate}" />
         </form>
-    </div>
-</div>
+</@section>

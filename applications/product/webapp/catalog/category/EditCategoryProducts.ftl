@@ -42,32 +42,31 @@ under the License.
     </div>
     <div class="screenlet-body">
         <#if (listSize == 0)>
-           <table cellspacing="0" class="basic-table">
-           <thead>
-              <tr class="header-row">
-                 <th>${uiLabelMap.ProductProductNameId}</th>
-                 <th>${uiLabelMap.CommonFromDateTime}</th>
-                 <th align="center">${uiLabelMap.ProductThruDateTimeSequenceQuantity} ${uiLabelMap.CommonComments}</th>
-                 <th>&nbsp;</th>
-              </tr>
-           </thead>
-           </table>
+           <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+           <@thead>
+              <@tr class="header-row">
+                 <@th>${uiLabelMap.ProductProductNameId}</@th>
+                 <@th>${uiLabelMap.CommonFromDateTime}</@th>
+                 <@th align="center">${uiLabelMap.ProductThruDateTimeSequenceQuantity} ${uiLabelMap.CommonComments}</@th>
+                 <@th>&nbsp;</@th>
+              </@tr>
+           </@thead>
+           </@table>
         <#else>
            <form method="post" action="<@ofbizUrl>updateCategoryProductMember</@ofbizUrl>" name="updateCategoryProductForm">
               <input type="hidden" name="VIEW_SIZE" value="${viewSize}"/>
               <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
               <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
               <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-              <table cellspacing="0" class="basic-table">
-                <thead>
-                 <tr class="header-row">
-                    <th>${uiLabelMap.ProductProductNameId}</th>
-                    <th>${uiLabelMap.CommonFromDateTime}</th>
-                    <th align="center">${uiLabelMap.ProductThruDateTimeSequenceQuantity} ${uiLabelMap.CommonComments}</th>
-                    <th>&nbsp;</th>
-                 </tr>
-                </thead>
-              <#assign rowClass = "2">
+              <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+                <@thead>
+                 <@tr class="header-row">
+                    <@th>${uiLabelMap.ProductProductNameId}</@th>
+                    <@th>${uiLabelMap.CommonFromDateTime}</@th>
+                    <@th align="center">${uiLabelMap.ProductThruDateTimeSequenceQuantity} ${uiLabelMap.CommonComments}</@th>
+                    <@th>&nbsp;</@th>
+                 </@tr>
+                </@thead>
               <#assign rowCount = 0>
               <#list productCategoryMembers as productCategoryMember>
                 <#assign suffix = "_o_" + productCategoryMember_index>
@@ -76,15 +75,16 @@ under the License.
                 <#if productCategoryMember.fromDate?? && nowTimestamp.before(productCategoryMember.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
                 <#assign hasExpired = false>
                 <#if productCategoryMember.thruDate?? && nowTimestamp.after(productCategoryMember.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
-                  <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                    <td>
+                  <@tr valign="middle">
+                    <@td>
                       <#if (product.smallImageUrl)??>
                          <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>"><img alt="Small Image" src="<@ofbizContentUrl>${product.smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" align="middle" /></a>
                       </#if>
                       <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if product??>${(product.internalName)!}</#if> [${(productCategoryMember.productId)!}]</a>
-                    </td>
-                    <td <#if hasntStarted> style="color: red;"</#if>>${(productCategoryMember.fromDate)!}</td>
-                    <td align="center">
+                    </@td>
+                    <#assign colorStyle><#if hasntStarted> style="color: red;"</#if></#assign>
+                    <@td style=colorStyle>${(productCategoryMember.fromDate)!}</@td>
+                    <@td align="center">
                         <input type="hidden" name="productId${suffix}" value="${(productCategoryMember.productId)!}" />
                         <input type="hidden" name="productCategoryId${suffix}" value="${(productCategoryMember.productCategoryId)!}" />
                         <input type="hidden" name="fromDate${suffix}" value="${(productCategoryMember.fromDate)!}" />
@@ -94,26 +94,20 @@ under the License.
                         <input type="text" size="5" name="quantity${suffix}" value="${(productCategoryMember.quantity)!}" />
                         <br />
                         <textarea name="comments${suffix}" rows="2" cols="40">${(productCategoryMember.comments)!}</textarea>
-                    </td>
-                    <td align="center">
+                    </@td>
+                    <@td align="center">
                       <a href="javascript:document.deleteProductFromCategory_o_${rowCount}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
-                    </td>
-                  </tr>
-                  <#-- toggle the row color -->
-                  <#if rowClass == "2">
-                      <#assign rowClass = "1">
-                  <#else>
-                      <#assign rowClass = "2">
-                  </#if>
-                  <tr valign="middle">
-                      <td colspan="4" align="center">
+                    </@td>
+                  </@tr>
+                  <@tr valign="middle" useLastAlt=true>
+                      <@td colspan="4" align="center">
                           <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
                           <input type="hidden" value="${productCategoryMembers.size()}" name="_rowCount" />
-                      </td>
-                  </tr>
+                      </@td>
+                  </@tr>
                   <#assign rowCount = rowCount + 1>
               </#list>
-              </table>
+              </@table>
            </form>
            <#assign rowCount = 0>
            <#list productCategoryMembers as productCategoryMember>
@@ -153,8 +147,8 @@ under the License.
         <h3>${uiLabelMap.ProductAddProductCategoryMember}:</h3>
     </div>
     <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
-            <tr><td>
+        <@table type="fields" cellspacing="0" class="basic-table">
+            <@tr><@td>
                 <form method="post" action="<@ofbizUrl>addCategoryProductMember</@ofbizUrl>" style="margin: 0;" name="addProductCategoryMemberForm">
                     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
                     <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
@@ -170,8 +164,8 @@ under the License.
                           <input type="submit" value="${uiLabelMap.CommonAdd}" />
                     </div>
                 </form>
-            </td></tr>
-        </table>
+            </@td></@tr>
+        </@table>
     </div>
 </div>
 <div class="screenlet">
@@ -179,8 +173,8 @@ under the License.
         <h3>${uiLabelMap.ProductCopyProductCategoryMembersToAnotherCategory}:</h3>
     </div>
     <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
-            <tr><td>
+        <@table cellspacing="0" class="basic-table">
+            <@tr><@td>
                 <form method="post" action="<@ofbizUrl>copyCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="copyCategoryProductMembersForm">
                     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
                     <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
@@ -199,8 +193,8 @@ under the License.
                         <input type="submit" value="${uiLabelMap.CommonCopy}" />
                     </div>
                 </form>
-            </td></tr>
-        </table>
+            </@td></@tr>
+        </@table>
     </div>
 </div>
 <div class="screenlet">
@@ -208,8 +202,8 @@ under the License.
         <h3>${uiLabelMap.ProductExpireAllProductMembers}:</h3>
     </div>
     <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
-            <tr><td>
+        <@table cellspacing="0" class="basic-table">
+            <@tr><@td>
                 <form method="post" action="<@ofbizUrl>expireAllCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="expireAllCategoryProductMembersForm">
                     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
                     <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
@@ -219,8 +213,8 @@ under the License.
                         &nbsp;&nbsp;<input type="submit" value="${uiLabelMap.CommonExpireAll}" />
                     </div>
                 </form>
-            </td></tr>
-        </table>
+            </@td></@tr>
+        </@table>
     </div>
 </div>
 <div class="screenlet">
@@ -228,8 +222,8 @@ under the License.
         <h3>${uiLabelMap.ProductRemoveExpiredProductMembers}:</h3>
     </div>
     <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
-            <tr><td>
+        <@table cellspacing="0" class="basic-table">
+            <@tr><@td>
                 <form method="post" action="<@ofbizUrl>removeExpiredCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="removeExpiredCategoryProductMembersForm">
                     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
                     <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
@@ -239,7 +233,7 @@ under the License.
                         &nbsp;&nbsp;<input type="submit" value="${uiLabelMap.CommonRemoveExpired}" />
                     </div>
                 </form>
-            </td></tr>
-        </table>
+            </@td></@tr>
+        </@table>
     </div>
 </div>

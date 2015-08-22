@@ -22,26 +22,26 @@ under the License.
             <h3>${uiLabelMap.PageTitleEditProductPromoStores}</h3>
         </div>
         <div class="screenlet-body">
-            <table cellspacing="0" class="basic-table">
-             <thead>
-                <tr class="header-row">
-                    <th>${uiLabelMap.ProductStoreNameId}</th>
-                    <th>${uiLabelMap.CommonFromDateTime}</th>
-                    <th align="center">${uiLabelMap.ProductThruDateTimeSequence}</th>
-                    <th>&nbsp;</th>
-                </tr>
-             </thead>
+            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+             <@thead>
+                <@tr class="header-row">
+                    <@th>${uiLabelMap.ProductStoreNameId}</@th>
+                    <@th>${uiLabelMap.CommonFromDateTime}</@th>
+                    <@th align="center">${uiLabelMap.ProductThruDateTimeSequence}</@th>
+                    <@th>&nbsp;</@th>
+                </@tr>
+             </@thead>
                 <#assign line = 0>
-                <#assign rowClass = "2">
                 <#list productStorePromoAppls as productStorePromoAppl>
                 <#assign line = line + 1>
                 <#assign productStore = productStorePromoAppl.getRelatedOne("ProductStore", false)>
-                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                    <td><a href="<@ofbizUrl>EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="${styles.button_default!}"><#if productStore??>${(productStore.storeName)!}</#if>[${productStorePromoAppl.productStoreId}]</a></td>
+                <@tr valign="middle">
+                    <@td><a href="<@ofbizUrl>EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="${styles.button_default!}"><#if productStore??>${(productStore.storeName)!}</#if>[${productStorePromoAppl.productStoreId}]</a></@td>
                     <#assign hasntStarted = false>
                     <#if (productStorePromoAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
-                    <td <#if hasntStarted>style="color: red;"</#if>>${productStorePromoAppl.fromDate!}</td>
-                    <td align="center">
+                    <#assign colorStyle><#if hasntStarted>style="color: red;"</#if></#assign>
+                    <@td style=colorStyle>${productStorePromoAppl.fromDate!}</@td>
+                    <@td align="center">
                         <#assign hasExpired = false>
                         <#if (productStorePromoAppl.getTimestamp("thruDate"))?? && nowTimestamp.after(productStorePromoAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                         <form method="post" action="<@ofbizUrl>promo_updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
@@ -53,24 +53,18 @@ under the License.
                             <input type="text" size="5" name="sequenceNum" value="${(productStorePromoAppl.sequenceNum)!}" />
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                         </form>
-                    </td>
-                    <td align="center">
+                    </@td>
+                    <@td align="center">
                        <form method="post" action="<@ofbizUrl>promo_deleteProductStorePromoAppl</@ofbizUrl>">
                            <input type="hidden" name="productStoreId" value="${productStorePromoAppl.productStoreId}" />
                            <input type="hidden" name="productPromoId" value="${productStorePromoAppl.productPromoId}" />
                            <input type="hidden" name="fromDate" value="${productStorePromoAppl.fromDate}" />
                            <input type="submit" value="${uiLabelMap.CommonDelete}" />
                        </form>
-                    </td>
-                </tr>
-                <#-- toggle the row color -->
-                <#if rowClass == "2">
-                    <#assign rowClass = "1">
-                <#else>
-                    <#assign rowClass = "2">
-                </#if>
+                    </@td>
+                </@tr>
                 </#list>
-            </table>
+            </@table>
         </div>
     </div>
     <div class="screenlet">

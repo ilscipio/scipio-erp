@@ -22,53 +22,53 @@ under the License.
     </div>
     <div class="screenlet-body">
         <form action="<@ofbizUrl>updateCategoryContent</@ofbizUrl>" method="post" style="margin: 0;" name="categoryForm">
-            <table cellspacing="0" class="basic-table">
-                <tr>
-                    <td width="26%" align="right"><input type="hidden" name="productCategoryId" value="${productCategoryId!}" />${uiLabelMap.ProductProductCategoryType}</td>
-                    <td>&nbsp;</td>
-                    <td width="74%">
+            <@table cellspacing="0" class="basic-table">
+                <@tr>
+                    <@td width="26%" align="right"><input type="hidden" name="productCategoryId" value="${productCategoryId!}" />${uiLabelMap.ProductProductCategoryType}</@td>
+                    <@td>&nbsp;</@td>
+                    <@td width="74%">
                         <select name="productCategoryTypeId" size="1">
                         <option value="">&nbsp;</option>
                         <#list productCategoryTypes as productCategoryTypeData>
                             <option <#if productCategory?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected="selected"</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
                         </#list>
                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="26%" align="right">${uiLabelMap.ProductName}</td>
-                    <td>&nbsp;</td>
-                    <td width="74%"><input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/></td>
-                </tr>
-                <tr>
-                    <td width="26%" align="right">${uiLabelMap.ProductCategoryDescription}</td>
-                    <td>&nbsp;</td>
-                    <td width="74%" colspan="4" valign="top">
+                    </@td>
+                </@tr>
+                <@tr>
+                    <@td width="26%" align="right">${uiLabelMap.ProductName}</@td>
+                    <@td>&nbsp;</@td>
+                    <@td width="74%"><input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/></@td>
+                </@tr>
+                <@tr>
+                    <@td width="26%" align="right">${uiLabelMap.ProductCategoryDescription}</@td>
+                    <@td>&nbsp;</@td>
+                    <@td width="74%" colspan="4" valign="top">
                         <textarea name="description" cols="60" rows="2">${(productCategory.description)!}</textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="26%" align="right" valign="top">${uiLabelMap.ProductLongDescription}</td>
-                    <td>&nbsp;</td>
-                    <td width="74%" colspan="4" valign="top">
+                    </@td>
+                </@tr>
+                <@tr>
+                    <@td width="26%" align="right" valign="top">${uiLabelMap.ProductLongDescription}</@td>
+                    <@td>&nbsp;</@td>
+                    <@td width="74%" colspan="4" valign="top">
                         <textarea name="longDescription" cols="60" rows="7">${(productCategory.longDescription)!}</textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="26%" align="right">${uiLabelMap.ProductDetailScreen}</td>
-                    <td>&nbsp;</td>
-                    <td width="74%">
+                    </@td>
+                </@tr>
+                <@tr>
+                    <@td width="26%" align="right">${uiLabelMap.ProductDetailScreen}</@td>
+                    <@td>&nbsp;</@td>
+                    <@td width="74%">
                         <input type="text" <#if productCategory?has_content>value="${productCategory.detailScreen!}"</#if> name="detailScreen" size="60" maxlength="250" />
                         <br />
                         <span class="tooltip">${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">&nbsp;</td>
-                    <td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" /></td>
-                    <td colspan="3">&nbsp;</td>
-                </tr>
-            </table>
+                    </@td>
+                </@tr>
+                <@tr>
+                    <@td colspan="2">&nbsp;</@td>
+                    <@td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" /></@td>
+                    <@td colspan="3">&nbsp;</@td>
+                </@tr>
+            </@table>
         </form>
     </div>
 </div>

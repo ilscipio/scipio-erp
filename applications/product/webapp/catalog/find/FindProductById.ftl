@@ -32,41 +32,34 @@ under the License.
           <br />
           <h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>
         <#else/>
-          <table cellspacing="0" class="basic-table">
-            <#assign rowClass = "1">
+          <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
             <#if idProduct?has_content>
-            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                <td>
+            <@tr valign="middle">
+                <@td>
                     ${idProduct.productId}
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td>
+                </@td>
+                <@td>&nbsp;&nbsp;</@td>
+                <@td>
                     <a href="<@ofbizUrl>EditProduct?productId=${idProduct.productId}</@ofbizUrl>" class="${styles.button_default!}">${(idProduct.internalName)!}</a>
                     (${uiLabelMap.ProductSearchResultsFound})
-                </td>
-            </tr>
+                </@td>
+            </@tr>
             </#if>
             <#list goodIdentifications as goodIdentification>
-                <#-- toggle the row color -->
-                <#if rowClass == "2">
-                  <#assign rowClass = "1">
-                <#else>
-                  <#assign rowClass = "2">
-                </#if>
                 <#assign product = goodIdentification.getRelatedOne("Product", true)/>
                 <#assign goodIdentificationType = goodIdentification.getRelatedOne("GoodIdentificationType", true)/>
-                <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                    <td>
+                <@tr valign="middle">
+                    <@td>
                         ${product.productId}
-                    </td>
-                    <td>&nbsp;&nbsp;</td>
-                    <td>
+                    </@td>
+                    <@td>&nbsp;&nbsp;</@td>
+                    <@td>
                         <a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">${(product.internalName)!}</a>
                         (${uiLabelMap.ProductSearchResultsFound} ${goodIdentificationType.get("description",locale)?default(goodIdentification.goodIdentificationTypeId)}.)
-                    </td>
-                </tr>
+                    </@td>
+                </@tr>
             </#list>
-          </table>
+          </@table>
         </#if>
     </div>
 </div>

@@ -19,13 +19,13 @@ under the License.
 
 <form method="post" action="<@ofbizUrl>SearchInventoryItemsByLabels</@ofbizUrl>">
   <input type="hidden" name="facilityId" value="${facility.facilityId}"/>
-  <table>
+  <@table>
   <#assign index = 0>
   <#list labelTypes as labelType>
     <#assign index = index + 1>
     <#assign labels = labelType.getRelated("InventoryItemLabel", null, Static["org.ofbiz.base.util.UtilMisc"].toList("inventoryItemLabelId"), false)>
-    <tr>
-      <td>
+    <@tr>
+      <@td>
           <div>
           <span>${labelType.description!} [${labelType.inventoryItemLabelTypeId}]</span>
           &nbsp;
@@ -36,14 +36,14 @@ under the License.
             </#list>
           </select>
           </div>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
   </#list>
-  <tr>
-    <td>
+  <@tr>
+    <@td>
       <input type="submit" value="${uiLabelMap.CommonSubmit}"/>
-    </td>
-  </tr>
-  </table>
+    </@td>
+  </@tr>
+  </@table>
   <input type="hidden" name="numberOfFields" value="${index}"/>
 </form>

@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 <form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="post" name="quickCreateVirtualWithVariants">
-<table cellspacing="0" class="basic-table">
-    <thead>
-    <tr class="header-row">
-        <th>${uiLabelMap.ProductQuickCreateVirtualFromVariants}</th>
-    </tr>
-    </thead>
-    <tr>
-        <td>
+<@table cellspacing="0" class="basic-table">
+    <@thead>
+    <@tr class="header-row">
+        <@th>${uiLabelMap.ProductQuickCreateVirtualFromVariants}</@th>
+    </@tr>
+    </@thead>
+    <@tr>
+        <@td>
             <br />
             <span>${uiLabelMap.ProductVariantProductIds}:</span>
             <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
@@ -36,7 +36,7 @@ under the License.
                 </#list>
             </select>
             <input type="submit" value="${uiLabelMap.ProductCreateVirtualProduct}"/>
-        </td>
-    </tr>
-</table>
+        </@td>
+    </@tr>
+</@table>
 </form>

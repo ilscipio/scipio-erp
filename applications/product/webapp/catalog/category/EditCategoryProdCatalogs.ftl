@@ -20,31 +20,31 @@ under the License.
 <#if productCategoryId?? && productCategory??>
 <@section title="${uiLabelMap.PageTitleEditCategoryProductCatalogs}">
 
-            <table cellspacing="0" class="basic-table">
-            <thead>
-            <tr class="header-row">
-                <th>${uiLabelMap.ProductCatalogNameId}</th>
-                <th>${uiLabelMap.CommonType}</th>
-                <th>${uiLabelMap.CommonFromDateTime}</th>
-                <th align="center">${uiLabelMap.ProductThruDateTimeSequence}</th>
-                <th>&nbsp;</th>
-            </tr>
-            </thead>
+        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+            <@thead>
+            <@tr class="header-row">
+                <@th>${uiLabelMap.ProductCatalogNameId}</@th>
+                <@th>${uiLabelMap.CommonType}</@th>
+                <@th>${uiLabelMap.CommonFromDateTime}</@th>
+                <@th align="center">${uiLabelMap.ProductThruDateTimeSequence}</@th>
+                <@th>&nbsp;</@th>
+            </@tr>
+            </@thead>
             <#assign line = 0>
-            <#assign rowClass = "2">
             <#list prodCatalogCategories as prodCatalogCategory>
             <#assign line = line + 1>
             <#assign prodCatalog = prodCatalogCategory.getRelatedOne("ProdCatalog", false)>
             <#assign curProdCatalogCategoryType = prodCatalogCategory.getRelatedOne("ProdCatalogCategoryType", true)>
-            <tr valign="middle"<@dataRowClassStr alt=(rowClass == "1") />>
-                <td><a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if prodCatalog??>${(prodCatalog.catalogName)!}</#if> [${(prodCatalogCategory.prodCatalogId)!}]</a></td>
-                <td>
+            <@tr valign="middle">
+                <@td><a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if prodCatalog??>${(prodCatalog.catalogName)!}</#if> [${(prodCatalogCategory.prodCatalogId)!}]</a></@td>
+                <@td>
                     ${(curProdCatalogCategoryType.get("description",locale))?default(prodCatalogCategory.prodCatalogCategoryTypeId)}
-                </td>
+                </@td>
                 <#assign hasntStarted = false>
                 <#if (prodCatalogCategory.getTimestamp("fromDate"))?? && nowTimestamp.before(prodCatalogCategory.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
-                <td <#if hasntStarted> style="color: red;"</#if>>${(prodCatalogCategory.fromDate)!}</td>
-                <td align="center">
+                <#assign colorStyle><#if hasntStarted> style="color: red;"</#if></#assign>
+                <@td style=colorStyle>${(prodCatalogCategory.fromDate)!}</@td>
+                <@td align="center">
                     <form method="post" action="<@ofbizUrl>category_updateProductCategoryToProdCatalog</@ofbizUrl>" name="lineForm_update${line}">
                         <#assign hasExpired = false>
                         <#if (prodCatalogCategory.getTimestamp("thruDate"))?? && nowTimestamp.after(prodCatalogCategory.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
@@ -69,8 +69,8 @@ under the License.
                         </select> -->
                         <input type="submit" value="${uiLabelMap.CommonUpdate}"/>
                     </form>
-                </td>
-                <td align="center">
+                </@td>
+                <@td align="center">
                   <form method="post" action="<@ofbizUrl>category_removeProductCategoryFromProdCatalog</@ofbizUrl>" name="lineForm_delete${line}">
                     <input type="hidden" name="prodCatalogId" value="${(prodCatalogCategory.prodCatalogId)!}"/>
                     <input type="hidden" name="productCategoryId" value="${(prodCatalogCategory.productCategoryId)!}"/>
@@ -78,24 +78,14 @@ under the License.
                     <input type="hidden" name="fromDate" value="${(prodCatalogCategory.fromDate)!}"/>
                     <a href="javascript:document.lineForm_delete${line}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                   </form>
-                </td>
-            </tr>
-            <#-- toggle the row color -->
-            <#if rowClass == "2">
-                <#assign rowClass = "1">
-            <#else>
-                <#assign rowClass = "2">
-            </#if>
+                </@td>
+            </@tr>
             </#list>
-            </table>
-            <br />
+        </@table>
 
-<@row>
-    <@cell>
-            <h3>${uiLabelMap.ProductAddCatalogProductCategory}</h3>
-
-            <table cellspacing="0" class="basic-table">
-                <tr><td>
+    <@section title="${uiLabelMap.ProductAddCatalogProductCategory}">
+            <@table type="fields" cellspacing="0" class="basic-table">
+                <@tr><@td>
                     <form method="post" action="<@ofbizUrl>category_addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
                         <input type="hidden" name="productCategoryId" value="${productCategoryId!}"/>
                         <select name="prodCatalogId">
@@ -111,9 +101,8 @@ under the License.
                         <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         <input type="submit" value="${uiLabelMap.CommonAdd}"/>
                     </form>
-                </td></tr>
-            </table>
-    </@cell>
-</@row>
+                </@td></@tr>
+            </@table>
+    </@section>
 </@section>
 </#if>

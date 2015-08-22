@@ -19,23 +19,23 @@ under the License.
 <form name="addscarr" method="post" action="<@ofbizUrl>prepareCreateShipMeth</@ofbizUrl>">
     <input type="hidden" name="newShipMethod" value="Y"/>
     <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
-    <table cellspacing="0" class="basic-table">
-        <tr>
-          <td align="right">${uiLabelMap.ProductCarrierShipmentMethod}</td>
-          <td>
+    <@table cellspacing="0" class="basic-table">
+        <@tr>
+          <@td align="right">${uiLabelMap.ProductCarrierShipmentMethod}</@td>
+          <@td>
             <select name="carrierShipmentString">
               <option>${uiLabelMap.ProductSelectOne}</option>
               <#list carrierShipmentMethods as shipmentMethod>
                 <option value="${shipmentMethod.partyId}|${shipmentMethod.roleTypeId}|${shipmentMethod.shipmentMethodTypeId}">${shipmentMethod.shipmentMethodTypeId} (${shipmentMethod.partyId}/${shipmentMethod.roleTypeId})</option>
               </#list>
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td></@td>
+          <@td>
             <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}"/>
-          </td>
-        </tr>
-    </table>
+          </@td>
+        </@tr>
+    </@table>
 </form>

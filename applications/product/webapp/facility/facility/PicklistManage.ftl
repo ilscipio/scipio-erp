@@ -149,33 +149,33 @@ under the License.
             </div>
             <#if picklistBinInfo.picklistItemInfoList?has_content>
               <div style="margin-left: 30px;">
-                <table class="basic-table" cellspacing="0">
-                 <thead>
-                  <tr class="header-row">
-                    <th>${uiLabelMap.ProductOrderId}</th>
-                    <th>${uiLabelMap.ProductOrderShipGroupId}</th>
-                    <th>${uiLabelMap.ProductOrderItem}</th>
-                    <th>${uiLabelMap.ProductProduct}</th>
-                    <th>${uiLabelMap.ProductInventoryItem}</th>
-                    <th>${uiLabelMap.ProductLocation}</th>
-                    <th>${uiLabelMap.ProductQuantity}</th>
-                    <th>&nbsp;</th>
-                  </tr>
-                  </thead>
+                <@table type="data" autoAltRows=true class="basic-table" cellspacing="0">
+                 <@thead>
+                  <@tr class="header-row">
+                    <@th>${uiLabelMap.ProductOrderId}</@th>
+                    <@th>${uiLabelMap.ProductOrderShipGroupId}</@th>
+                    <@th>${uiLabelMap.ProductOrderItem}</@th>
+                    <@th>${uiLabelMap.ProductProduct}</@th>
+                    <@th>${uiLabelMap.ProductInventoryItem}</@th>
+                    <@th>${uiLabelMap.ProductLocation}</@th>
+                    <@th>${uiLabelMap.ProductQuantity}</@th>
+                    <@th>&nbsp;</@th>
+                  </@tr>
+                  </@thead>
                   <#assign alt_row = false>
                   <#list picklistBinInfo.picklistItemInfoList! as picklistItemInfo>
                     <#assign picklistItem = picklistItemInfo.picklistItem>
                     <#assign inventoryItemAndLocation = picklistItemInfo.inventoryItemAndLocation>
-                    <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                      <td>${picklistItem.orderId}</td>
-                      <td>${picklistItem.shipGroupSeqId}</td>
-                      <td>${picklistItem.orderItemSeqId}</td>
-                      <td>${picklistItemInfo.orderItem.productId}<#if picklistItemInfo.orderItem.productId != inventoryItemAndLocation.productId>&nbsp;[${inventoryItemAndLocation.productId}]</#if></td>
-                      <td>${inventoryItemAndLocation.inventoryItemId}</td>
-                      <td>${inventoryItemAndLocation.areaId!}-${inventoryItemAndLocation.aisleId!}-${inventoryItemAndLocation.sectionId!}-${inventoryItemAndLocation.levelId!}-${inventoryItemAndLocation.positionId!}</td>
-                      <td>${picklistItem.quantity}</td>
+                    <@tr valign="middle">
+                      <@td>${picklistItem.orderId}</@td>
+                      <@td>${picklistItem.shipGroupSeqId}</@td>
+                      <@td>${picklistItem.orderItemSeqId}</@td>
+                      <@td>${picklistItemInfo.orderItem.productId}<#if picklistItemInfo.orderItem.productId != inventoryItemAndLocation.productId>&nbsp;[${inventoryItemAndLocation.productId}]</#if></@td>
+                      <@td>${inventoryItemAndLocation.inventoryItemId}</@td>
+                      <@td>${inventoryItemAndLocation.areaId!}-${inventoryItemAndLocation.aisleId!}-${inventoryItemAndLocation.sectionId!}-${inventoryItemAndLocation.levelId!}-${inventoryItemAndLocation.positionId!}</@td>
+                      <@td>${picklistItem.quantity}</@td>
                       <#if !picklistItemInfo.itemIssuanceList?has_content>
-                        <td>
+                        <@td>
                           <form name="deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@ofbizUrl>deletePicklistItem</@ofbizUrl>">
                             <input type="hidden" name="picklistBinId" value="${picklistItemInfo.picklistItem.picklistBinId}"/>
                             <input type="hidden" name="orderId" value= "${picklistItemInfo.picklistItem.orderId}"/>
@@ -185,9 +185,9 @@ under the License.
                             <input type="hidden" name="facilityId" value="${facilityId!}"/>
                             <a href='javascript:document.deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()' class='${styles.button_default!}'>&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a>
                           </form>
-                        </td>
+                        </@td>
                       </#if>
-                      <td>
+                      <@td>
                         <#-- picklistItem.orderItemShipGrpInvRes (do we want to display any of this info?) -->
                         <#-- picklistItemInfo.itemIssuanceList -->
                         <#list picklistItemInfo.itemIssuanceList! as itemIssuance>
@@ -195,43 +195,40 @@ under the License.
                           <b>${uiLabelMap.ProductQuantity}:</b> ${itemIssuance.quantity}
                           <b>${uiLabelMap.CommonDate}: </b> ${itemIssuance.issuedDateTime}
                         </#list>
-                      </td>
-                    </tr>
-                    <#-- toggle the row color -->
-                    <#assign alt_row = !alt_row>
+                      </@td>
+                    </@tr>
                   </#list>
-                </table>
+                </@table>
               </div>
               <#if picklistBinInfo.productStore.managedByLot?? && picklistBinInfo.productStore.managedByLot = "Y">
                 <div style="margin-left: 30px;">
-                  <table class="basic-table" cellspacing="0">
-                    <thead>
-                    <tr class="header-row">                   
-                          <th>${uiLabelMap.ProductOrderId}</th>
-                          <th>${uiLabelMap.ProductOrderShipGroupId}</th>
-                          <th>${uiLabelMap.ProductOrderItem}</th>
-                          <th>${uiLabelMap.ProductProduct}</th>
-                          <th>${uiLabelMap.ProductInventoryItem}</th>
-                          <th>${uiLabelMap.ProductLotId}</th>
-                          <th>${uiLabelMap.ProductQuantity}</th>
-                          <th>&nbsp;</th>
-                      </tr>
-                      </thead>
-                      <#assign alt_row = false>
+                  <@table type="data" autoAltRows=true class="basic-table" cellspacing="0">
+                    <@thead>
+                    <@tr class="header-row">                   
+                          <@th>${uiLabelMap.ProductOrderId}</@th>
+                          <@th>${uiLabelMap.ProductOrderShipGroupId}</@th>
+                          <@th>${uiLabelMap.ProductOrderItem}</@th>
+                          <@th>${uiLabelMap.ProductProduct}</@th>
+                          <@th>${uiLabelMap.ProductInventoryItem}</@th>
+                          <@th>${uiLabelMap.ProductLotId}</@th>
+                          <@th>${uiLabelMap.ProductQuantity}</@th>
+                          <@th>&nbsp;</@th>
+                      </@tr>
+                      </@thead>
                       <#list picklistBinInfo.picklistItemInfoList! as picklistItemInfo>
                         <#assign picklistItem = picklistItemInfo.picklistItem>
                         <#assign inventoryItemAndLocation = picklistItemInfo.inventoryItemAndLocation>
                         <#if !picklistItemInfo.product.lotIdFilledIn?has_content || picklistItemInfo.product.lotIdFilledIn != "Forbidden">
                           <form name="editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@ofbizUrl>editPicklistItem</@ofbizUrl>">
-                            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-                              <td>${picklistItem.orderId}</td>
-                              <td>${picklistItem.shipGroupSeqId}</td>
-                              <td>${picklistItem.orderItemSeqId}</td>
-                              <td>${picklistItemInfo.orderItem.productId}<#if picklistItemInfo.orderItem.productId != inventoryItemAndLocation.productId>&nbsp;[${inventoryItemAndLocation.productId}]</#if></td>
-                              <td>${inventoryItemAndLocation.inventoryItemId}</td>
-                              <td><input type="text" name="lotId" <#if inventoryItemAndLocation.lotId?has_content>value="${inventoryItemAndLocation.lotId}"</#if> /></td>
-                              <td><input type="text" name="quantity" value="${picklistItem.quantity}" /></td>
-                              <td>
+                            <@tr valign="middle">
+                              <@td>${picklistItem.orderId}</@td>
+                              <@td>${picklistItem.shipGroupSeqId}</@td>
+                              <@td>${picklistItem.orderItemSeqId}</@td>
+                              <@td>${picklistItemInfo.orderItem.productId}<#if picklistItemInfo.orderItem.productId != inventoryItemAndLocation.productId>&nbsp;[${inventoryItemAndLocation.productId}]</#if></@td>
+                              <@td>${inventoryItemAndLocation.inventoryItemId}</@td>
+                              <@td><input type="text" name="lotId" <#if inventoryItemAndLocation.lotId?has_content>value="${inventoryItemAndLocation.lotId}"</#if> /></@td>
+                              <@td><input type="text" name="quantity" value="${picklistItem.quantity}" /></@td>
+                              <@td>
                                 <input type="hidden" name="picklistBinId" value="${picklistItemInfo.picklistItem.picklistBinId}"/>
                                 <input type="hidden" name="orderId" value= "${picklistItemInfo.picklistItem.orderId}"/>
                                 <input type="hidden" name="orderItemSeqId" value="${picklistItemInfo.picklistItem.orderItemSeqId}"/>
@@ -243,14 +240,12 @@ under the License.
                                   <input type="hidden" name="oldLotId" value="${inventoryItemAndLocation.lotId}" />
                                 </#if>
                                 <a href='javascript:document.editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()' class='${styles.button_default!}'>&nbsp;${uiLabelMap.CommonEdit}&nbsp;</a>
-                              </td>
-                            </tr>
+                              </@td>
+                            </@tr>
                           </form>
-                          <#-- toggle the row color -->
-                          <#assign alt_row = !alt_row>
                         </#if>
                       </#list>
-                  </table>
+                  </@table>
                 </div>
               </#if>
             </#if>

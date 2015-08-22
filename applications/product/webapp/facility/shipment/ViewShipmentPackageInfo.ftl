@@ -40,7 +40,7 @@ under the License.
             <@td><span>${uiLabelMap.ProductWeightUnit}</span> <#if weightUom?has_content>${weightUom.get("description",locale)}<#else>${shipmentPackage.weightUomId!}</#if></@td>
           </@tr>
           <#list shipmentPackageContents as shipmentPackageContent>
-            <@tr valign="middle" useLastAlt=true>
+            <@tr valign="middle" groupLast=true>
               <@td>&nbsp;</@td>
               <@td><span>${uiLabelMap.ProductItem}</span> ${shipmentPackageContent.shipmentItemSeqId}</@td>
               <@td><span>${uiLabelMap.ProductQuantity}</span> ${shipmentPackageContent.quantity!}</@td>
@@ -48,7 +48,7 @@ under the License.
             </@tr>
           </#list>
           <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
-            <@tr valign="middle" useLastAlt=true>
+            <@tr valign="middle" groupLast=true>
               <@td>&nbsp;</@td>
               <@td><span>${uiLabelMap.ProductRouteSegment}</span> ${shipmentPackageRouteSeg.shipmentRouteSegmentId}</@td>
               <@td><span>${uiLabelMap.ProductTracking}</span> ${shipmentPackageRouteSeg.trackingCode!}</@td>

@@ -264,7 +264,7 @@ under the License.
       <br class="clear"/>
     </div>
     <div class="screenlet-body">
-      <@table type="data-simple" autoAltRows=true cellspacing="0" class="basic-table">
+      <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
       <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.ProductOrderId}</@th>

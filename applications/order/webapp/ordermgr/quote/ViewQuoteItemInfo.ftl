@@ -97,7 +97,7 @@ under the License.
                 </@tr>
                 <#list quoteTerms as quoteTerm>
                 <#assign termDescription = delegator.findOne("TermType",{"termTypeId":quoteTerm.termTypeId}, false)>
-                <@tr useLastAlt=true>
+                <@tr groupLast=true>
                     <@td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${termDescription.description!}</@td>
                     <@td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.termValue!}</@td>
                     <@td valign="top"><#if quoteTerm.termDays??>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.termDays!}</#if></@td>
@@ -111,7 +111,7 @@ under the License.
                 <#-- now show adjustment details per line item -->
                 <#list quoteItemAdjustments as quoteItemAdjustment>
                     <#assign adjustmentType = quoteItemAdjustment.getRelatedOne("OrderAdjustmentType", false)>
-                    <@tr useLastAlt=true>
+                    <@tr groupLast=true>
                         <@td align="right" colspan="4"><span>${adjustmentType.get("description",locale)!}</span></@td>
                         <@td align="right"><@ofbizCurrency amount=quoteItemAdjustment.amount isoCode=quote.currencyUomId/></@td>
                         <@td>&nbsp;</@td>

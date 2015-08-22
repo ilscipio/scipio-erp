@@ -102,7 +102,7 @@ under the License.
                 </@td>
             </@tr>
             <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
-            <@tr valign="middle" useLastAlt=true>
+            <@tr valign="middle" groupLast=true>
                 <@td>&nbsp;</@td>
                 <@td><span>${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}</@td>
                 <@td><span>${uiLabelMap.ProductTracking}</span> ${shipmentPackageRouteSeg.trackingCode!}</@td>

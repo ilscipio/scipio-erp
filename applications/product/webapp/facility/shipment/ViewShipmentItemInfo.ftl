@@ -43,7 +43,7 @@ under the License.
                 <@td colspan="2">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</@td>
             </@tr>
             <#list orderShipments as orderShipment>
-                <@tr valign="middle" useLastAlt=true>
+                <@tr valign="middle" groupLast=true>
                     <@td>&nbsp;</@td>
                     <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${orderShipment.orderId!}</a>${orderShipment.orderItemSeqId!}</@td>
                     <@td>&nbsp;</@td>
@@ -53,7 +53,7 @@ under the License.
                 </@tr>
             </#list>
             <#list itemIssuances as itemIssuance>
-                <@tr valign="middle" useLastAlt=true>
+                <@tr valign="middle" groupLast=true>
                     <@td>&nbsp;</@td>
                     <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${itemIssuance.orderId!}</a>${itemIssuance.orderItemSeqId!}</@td>
                     <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" class="${styles.button_default!}">${itemIssuance.inventoryItemId!}</a></@td>
@@ -63,7 +63,7 @@ under the License.
                 </@tr>
             </#list>
             <#list shipmentPackageContents as shipmentPackageContent>
-                <@tr valign="middle" useLastAlt=true>
+                <@tr valign="middle" groupLast=true>
                     <@td>&nbsp;</@td>
                     <@td colspan="2"><span>${uiLabelMap.ProductPackage}</span> ${shipmentPackageContent.shipmentPackageSeqId}</@td>
                     <@td>${shipmentPackageContent.quantity!}</@td>

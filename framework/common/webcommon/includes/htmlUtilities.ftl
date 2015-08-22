@@ -1080,10 +1080,10 @@ Helps define table. Required wrapper for all table sub-elem macros.
     </@table>
                     
    * General Attributes *
-    type            = [generic, data-simple, data-complex, summary, fields], default generic
+    type            = [generic, data-list, data-complex, summary, fields], default generic
                       TODO: WARN: these are WIP types, may not be enough
                       generic: generic html table (free-form, complex), no features enabled by default
-                      data-simple: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
+                      data-list: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
                       data-complex: record-containing table, complex structure (more than one row per record, separators, etc.)
                       data: DEPRECATED: typical record-containing table
                       summary: usually table with one or a few set row of summary totals
@@ -1105,12 +1105,11 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
   <#local prevSectionInfo = catoCurrentTableSectionInfo!>
-  <#local prevRowAlt = catoCurrentTableRowAlt!>
-  <#local prevLastRowAlt = catoCurrentTableLastRowAlt!>
+  <#local prevRowAlt = catoCurrentTableRowAlt!"">
+  <#local prevLastRowAlt = catoCurrentTableLastRowAlt!"">
   <#if !autoAltRows?is_boolean>
     <#-- don't enable for all data tables by default for now, too many complex ones...
-    <#local autoAltRows = (type == "data") || inheritAltRows>
-    -->
+    <#local autoAltRows = (type == "data") || inheritAltRows>-->
     <#local autoAltRows = inheritAltRows>
   </#if>
   <#if class?is_boolean>
@@ -1119,6 +1118,8 @@ Helps define table. Required wrapper for all table sub-elem macros.
         <#assign catoDefaultTableStyles = {
           "generic": styles.table_default!,
           "data": styles.table_data!,
+          "data-list": styles.table_data_list!,
+          "data-complex": styles.table_data_complex!,
           "summary": styles.table_summary!,
           "fields": styles.table_fields!
         }>
@@ -1137,15 +1138,17 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#if firstRowAlt?is_boolean>
     <#global catoCurrentTableRowAlt = firstRowAlt>
   <#elseif inheritAltRows>
-    <#global catoCurrentTableRowAlt = prevRowAlt> 
+    <#if prevRowAlt?is_boolean>
+      <#global catoCurrentTableRowAlt = prevRowAlt> 
+    <#else>
+      <#global catoCurrentTableRowAlt = false> 
+    </#if>
   <#else>
+    <#-- note: this var should always be a boolean -->
     <#global catoCurrentTableRowAlt = false> 
   </#if>
-  <#if prevRowAlt?is_boolean>
-    <#global catoCurrentTableLastRowAlt = prevRowAlt>
-  <#else>
-    <#global catoCurrentTableLastRowAlt = catoCurrentTableRowAlt>
-  </#if>
+  <#-- note: this var may be empty string (none) -->
+  <#global catoCurrentTableLastRowAlt = prevRowAlt>
   <#local style = "">
   <#if scrollable>
   <#-- TODO: change this to something more foundation-like.
@@ -1217,33 +1220,33 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     class           = manual classes to add
     useAlt          = boolean, if specified, can manually enable/disable whether alternate row code runs per-row
     alt             = boolean, if specified, override the automatic auto-alt styling to specific value true or false (manual mode)
-    useLastAlt      = boolean, if specified, sets alt to same as last (row, or parent table row if first row)
-    useParentAlt    = boolean, nested tables only, if specified, use parent table row alt
+    groupLast       = boolean, if specified, considers row logically grouped with last row;
+                      sets alt to exact same as last row
+    groupParent     = boolean, nested tables only, if specified, considers row logically grouped with parent row;
+                      sets alt to exact same as parent row
     selected        = boolean, if specified and true marked as selected
     wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (can omit nested)
     [attribs...]    = legacy <tr attributes and values
 -->
-<#macro tr class="" id="" wrapIf=true useAlt="" alt="" useLastAlt="" useParentAlt="" selected="" openOnly=false closeOnly=false attribs...>
+<#macro tr class="" id="" wrapIf=true useAlt="" alt="" groupLast="" groupParent="" selected="" openOnly=false closeOnly=false attribs...>
 <#if wrapIf>
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
   <#local isRegAltRow = ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
   <#local str = class>
   <#if !(useAlt?is_boolean && useAlt == false)>
     <#if !alt?is_boolean>
-      <#if useLastAlt?is_boolean && useLastAlt == true>
-        <#local alt = catoCurrentTableLastRowAlt!false>
-      <#elseif useParentAlt?is_boolean && useParentAlt == true>
-        <#local alt = (catoCurrentTableInfo.parentRowAlt)!false>
-        <#if !alt?is_boolean><#local alt = false></#if>
+      <#if groupLast?is_boolean && groupLast == true>
+        <#local alt = catoCurrentTableLastRowAlt!""> <#-- may be empty string (none) -->
+      <#elseif groupParent?is_boolean && groupParent == true>
+        <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
       <#elseif (isRegAltRow && ((catoCurrentTableInfo.autoAltRows)!)==true)>
         <#if ((catoCurrentTableInfo.inheritAltRows)!)==true>
-          <#local alt = (catoCurrentTableInfo.parentRowAlt)!false>
-          <#if !alt?is_boolean><#local alt = false></#if>
+          <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
         <#else>
-          <#local alt = catoCurrentTableRowAlt!false>
+          <#local alt = catoCurrentTableRowAlt!false> <#-- always boolean -->
         </#if>
       <#elseif useAlt?is_boolean && useAlt == true>
-        <#-- force-enabled -->
+        <#-- forced -->
         <#local alt = catoCurrentTableRowAlt!false>
       </#if>
     </#if>
@@ -1262,9 +1265,12 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   </tr>
   <#if !(useAlt?is_boolean && useAlt == false)>
     <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
-      <#global catoCurrentTableLastRowAlt = alt>
       <#global catoCurrentTableRowAlt = !alt>
     </#if>
+  </#if>
+  <#if isRegAltRow>
+    <#-- note: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
+    <#global catoCurrentTableLastRowAlt = alt>
   </#if>
 </#if>
 <#else>

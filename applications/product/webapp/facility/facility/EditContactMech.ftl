@@ -94,7 +94,7 @@ under the License.
         <@tr>
           <@td valign="top">${uiLabelMap.PartyContactPurposes}</@td>
           <@td>
-            <@table type="data-simple" autoAltRows=true class="basic-table" cellspacing="0">
+            <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
             <#if mechMap.facilityContactMechPurposes?has_content>
               <#list mechMap.facilityContactMechPurposes as facilityContactMechPurpose>
                 <#assign contactMechPurposeType = facilityContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>

@@ -186,7 +186,7 @@ under the License.
                         <#if availableQuantity < 0>
                             <#assign availableQuantity = 0>
                         </#if>
-                        <@tr id="orderItemData_tableRow_${rowCount}" useLastAlt=true>
+                        <@tr id="orderItemData_tableRow_${rowCount}" groupLast=true>
                             <@td>&nbsp;</@td>
                             <@td>&nbsp;</@td>
                             <@td>

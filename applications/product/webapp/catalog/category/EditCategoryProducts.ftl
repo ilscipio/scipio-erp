@@ -99,7 +99,7 @@ under the License.
                       <a href="javascript:document.deleteProductFromCategory_o_${rowCount}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                     </@td>
                   </@tr>
-                  <@tr valign="middle" useLastAlt=true>
+                  <@tr valign="middle" groupLast=true>
                       <@td colspan="4" align="center">
                           <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
                           <input type="hidden" value="${productCategoryMembers.size()}" name="_rowCount" />

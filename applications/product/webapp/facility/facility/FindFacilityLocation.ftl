@@ -74,7 +74,7 @@ under the License.
     <#if foundLocations??>
       <#assign title>${uiLabelMap.CommonFound}:&nbsp;${foundLocations.size()}&nbsp;${uiLabelMap.ProductLocationsFor}&nbsp;<#if facility??>${(facility.facilityName)!}</#if> [ID:${facilityId!}]</#assign>
       <@section title=title>
-        <@table type="data-simple" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+        <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
         <@thead>
         <@tr class="header-row-2">
             <@th>${uiLabelMap.ProductFacility}</@th>

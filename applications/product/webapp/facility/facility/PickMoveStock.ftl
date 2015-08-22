@@ -45,7 +45,7 @@ under the License.
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <input type="hidden" name="_useRowSubmit" value="Y" />
               <#assign rowCount = 0>
-              <@table type="data-simple" autoAltRows=true cellspacing="0" class="basic-table hover-bar">
+              <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table hover-bar">
                <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductProductId}</@th>

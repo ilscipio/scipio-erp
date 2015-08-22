@@ -173,7 +173,7 @@ function lookupShipments() {
     </div>
     <div class="screenlet-body">
       <#if shipmentList?has_content>  
-        <@table type="data-simple" autoAltRows=true cellspacing="0" cellpadding="2" class="basic-table hover-bar">
+        <@table type="data-list" autoAltRows=true cellspacing="0" cellpadding="2" class="basic-table hover-bar">
         <@tr class="header-row">
          <@thead>
           <@th width="5%">${uiLabelMap.ProductShipmentId}</@th>

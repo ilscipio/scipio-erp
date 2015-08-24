@@ -200,7 +200,9 @@ this is one such mechanism (other option: layoutSettings? TODO? any way is messy
                     
 Ideally this shouldn't needed and getOfbizUrl should just work, but URLs are generated
 dynamic using controller request defs and can't predict URL patterns unless rewrite
-@ofbizUrl in JS.                    
+@ofbizUrl in JS.  
+
+FIXME: #global FTL variable may not be reliable, may need to use request attrib...                  
                     
    * Parameters *
     url             = controller request uri
@@ -221,6 +223,87 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     <#global requiredScriptOfbizUrls = requiredScriptOfbizUrls + [uri]>
   </#if>
 </#macro>
+
+<#-- 
+*************
+* getCurrentSectionLevel function
+************
+Gets current @section level. 
+
+Currently must be a function because global var is not always set and request attrib is messy. 
+
+   * Parameters *
+    defaultVal      = default number to return if no section level define, or boolean:
+                      true: return cato default number value, false: return nothing (empty string)
+                      template code should leave this to true.
+-->
+<#function getCurrentSectionLevel defaultVal=true>
+  <#local sLevel = (request.getAttribute("catoCurrentSectionLevel"))!"">
+  <#if !sLevel?has_content>
+    <#if defaultVal?is_boolean>
+      <#if defaultVal>
+        <#local sLevel = 1>
+      </#if>
+    <#else>
+      <#local sLevel = defaultVal>
+    </#if>
+  </#if>
+  <#return sLevel>
+</#function> 
+
+<#-- 
+*************
+* setCurrentSectionLevel function
+************
+Set current @section level manually. For advanced markup, bypassing @section.
+-->
+<#function setCurrentSectionLevel sLevel>
+  <#-- set as request attrib so survives template environments and screens.render -->
+  <#local dummy = request.setAttribute("catoCurrentSectionLevel", sLevel)!>
+  <#global catoCurrentSectionLevel = sLevel>
+  <#return "">
+</#function>
+
+<#-- 
+*************
+* getCurrentHeadingLevel function
+************
+Gets current heading level. 
+
+Currently must be a function because global var is not always set and request attrib is messy. 
+
+   * Parameters *
+    defaultVal      = default number to return if no section level define, or boolean:
+                      true: return cato default number value, false: return nothing (empty string)
+                      template code should leave this to true.
+-->
+<#function getCurrentHeadingLevel defaultVal=true>
+  <#local hLevel = (request.getAttribute("catoCurrentHeadingLevel"))!"">
+  <#if !hLevel?has_content>
+    <#if defaultVal?is_boolean>
+      <#if defaultVal>
+        <#local hLevel = 2>
+      </#if>
+    <#else>
+      <#local hLevel = defaultVal>
+    </#if>
+  </#if>
+  <#return hLevel>
+</#function> 
+
+<#-- 
+*************
+* setCurrentHeadingLevel function
+************
+Set current heading level manually. For advanced markup, bypassing @section (but a parent
+@section will restore heading upon closing).
+-->
+<#function setCurrentHeadingLevel hLevel>
+  <#-- set as request attrib so survives template environments and screens.render -->
+  <#local dummy = request.setAttribute("catoCurrentHeadingLevel", hLevel)!>
+  <#global catoCurrentHeadingLevel = hLevel>
+  <#return "">
+</#function>
 
 <#-- 
 ******************
@@ -645,6 +728,12 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 *************
 * Section Macro
 ************
+Creates a logical section with optional title and menu. Automatically handles heading sizes
+and keeps track of section nesting for whole request, even across screens.render calls.
+
+Note: use getCurrentHeadingLevel and getCurrentSectionLevel functions if need to get current
+levels manually, but most often should let @section menu handle them.
+
     Usage example:  
     <@section attr="">
         Inner Content
@@ -654,11 +743,11 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     class               = css classes
     id                  = set id
     title               = section title
-    titleClass          = section title class (rarely needed, usually headerLevel enough)
+    titleClass          = section title class (rarely needed, usually headingLevel enough)
     padded              = 
-    autoHeaderLevel     = auto increase header level when title present (enabled by default)
-    headerLevel         = force this header level for title. if autoHeaderLevel true, also influences nested elems (even if no title here, but if no title won't consume a size).
-    defaultHeaderLevel  = default header level (same as headerLevel if autoHeaderLevel false)
+    autoHeadingLevel    = auto increase heading level when title present (enabled by default)
+    headingLevel        = force this heading level for title. if autoHeadingLevel true, also influences nested elems (even if no title here, but if no title won't consume a size).
+    defaultHeadingLevel = default heading level (same as headingLevel if autoHeadingLevel false)
     menuHtml            = optional HTML menu data, li elements only (ul auto added)
     menuClass           = menu class, default is buttons class. "none" prevents class.
     menuRole            = "nav-menu" (default), "paginate-menu"
@@ -666,7 +755,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section id="" title="" classes="" padded=false autoHeaderLevel=true headerLevel="" defaultHeaderLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
+<#macro section id="" title="" classes="" padded=false autoHeadingLevel=true headingLevel="" defaultHeadingLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
     <#if id?has_content>
         <#local contentId = id + "_content">
         <#local menuId = id + "_menu">
@@ -674,9 +763,9 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
         <#local contentId = "">
         <#local menuId = "">
     </#if>
-    <#-- note: autoHeaderLevel logic now implemented in renderScreenletBegin -->
+    <#-- note: autoHeadingLevel logic now implemented in renderScreenletBegin -->
     <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu 
-        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeaderLevel=autoHeaderLevel headerLevel=headerLevel defaultHeaderLevel=defaultHeaderLevel titleStyle=titleClass/>
+        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass/>
         <#nested />
     <@renderScreenletEnd />
 </#macro>
@@ -812,6 +901,32 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst />
 </#macro>
 
+
+<#-- 
+*************
+* heading
+************
+    Usage example:  
+    <@heading>My Title</@heading>         
+                    
+   * General Attributes *
+    level          = specific level (1-6). If not specified, current heading level returned by
+                     getCurrentHeadingLevel() function is used. 
+                     note: does not consume a level.
+    class          = heading classes
+    id             = heading id
+-->
+<#macro heading level="" class="" id="">
+  <#if !level?has_content>
+    <#local level = getCurrentHeadingLevel()>
+  </#if>
+  <#if (level < 1)>
+    <#local level = 1>
+  <#elseif (level > 6)>
+    <#local level = 6>
+  </#if>
+  <h${level}<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if>><#nested></h${level}>
+</#macro>
 
 <#-- 
 *************

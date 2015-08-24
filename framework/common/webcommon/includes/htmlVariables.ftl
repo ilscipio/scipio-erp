@@ -57,7 +57,6 @@ under the License.
     
 <#-- Data and Tables -->  
     "table_default" : "",
-    "table_data" : "basic-table",
     "table_data_list" : "basic-table",
     "table_data_complex" : "basic-table",
     "table_summary" : "basic-table",

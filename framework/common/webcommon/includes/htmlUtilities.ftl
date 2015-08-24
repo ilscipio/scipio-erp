@@ -1180,7 +1180,7 @@ Creates a very basic wrapper for code blocks
 Helps define table. Required wrapper for all table sub-elem macros.
 
     Usage example:  
-    <@table type="data" class="basic-table" id="my-table">
+    <@table type="data-list" class="basic-table" id="my-table">
       <@thead>
         <@tr>
           <@tc width="15%">col 1</@tc>
@@ -1189,8 +1189,8 @@ Helps define table. Required wrapper for all table sub-elem macros.
       </@thead>
       <@tbody>
         <@tr class="my-row-class" valign="middle">
-          <@tc>val 1</@tc>
-          <@tc>val 2</@tc>
+          <@tc>data value 1</@tc>
+          <@tc>data value 2</@tc>
         </@tr>
       </@tbody>
     </@table>
@@ -1203,8 +1203,6 @@ Helps define table. Required wrapper for all table sub-elem macros.
                                  similar to a form widget "list" or "multi" table; intended to resemble these, to unify them.
                       data-complex: record-containing table, but with complex structure (more than one row per record, separators, etc.)
                                     there is no form widget equivalent of these and usually need some custom alt-row work.
-                      data: DEPRECATED: typical record-containing table
-                                        should be changed to data-list or data-complex.
                       summary: usually table with one or a few set rows of summary totals
                                e.g. order grand totals.
                       fields: label-value pairs for display
@@ -1215,7 +1213,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
                       if specified as string replaces defaults (class="" prevents class)
     addClass        = extra classes that don't influence defaults
     id              = table id
-    autoAltRows     = default false for now (temporarily false for type="data" as well, too many complex)
+    autoAltRows     = default false for now (temporarily false for type="data-list" as well, tbd)
     firstRowAlt     = default false
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
@@ -1231,8 +1229,8 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#local prevRowAlt = catoCurrentTableRowAlt!"">
   <#local prevLastRowAlt = catoCurrentTableLastRowAlt!"">
   <#if !autoAltRows?is_boolean>
-    <#-- don't enable for all data tables by default for now, too many complex ones...
-    <#local autoAltRows = (type == "data") || inheritAltRows>-->
+    <#-- don't enable for all data-list tables by default for now, not sure wanted...
+    <#local autoAltRows = (type == "data-list") || inheritAltRows>-->
     <#local autoAltRows = inheritAltRows>
   </#if>
   <#if class?is_boolean>
@@ -1240,7 +1238,6 @@ Helps define table. Required wrapper for all table sub-elem macros.
       <#if !catoDefaultTableStyles?has_content>
         <#assign catoDefaultTableStyles = {
           "generic": styles.table_default!,
-          "data": styles.table_data!,
           "data-list": styles.table_data_list!,
           "data-complex": styles.table_data_complex!,
           "summary": styles.table_summary!,

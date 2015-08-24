@@ -209,7 +209,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     </#if>
     <#-- set as request attrib so survives template environments and screens.render -->
     <#local dummy = request.setAttribute("catoCurrentSectionLevel", sLevel+1)!>
-    <#global catoCurrentHeaderLevel = sLevel>
+    <#global catoCurrentSectionLevel = sLevel>
 <#-- level logic end -->
 
 <#-- title-style parsing begin -->
@@ -400,7 +400,7 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 <#-- level logic begin -->
     <#local sLevel = request.getAttribute("catoCurrentSectionLevel") - 1>
     <#local dummy = request.setAttribute("catoCurrentSectionLevel", sLevel)!>
-    <#global catoCurrentHeaderLevel = sLevel>
+    <#global catoCurrentSectionLevel = sLevel>
 <#-- level logic end -->
 <#-- auto-header-level logic begin -->
     <#local headerValues = renderScreenletHeaderStack?last>

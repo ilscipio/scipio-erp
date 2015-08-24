@@ -1225,8 +1225,13 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
                     
    * General Attributes *
     class           = manual classes to add
+    id              = row id
+    metaRow         = if true, indicates this is a special info/status row (e.g. "No Records Found" message), not an actual content row.
+                      meta rows are treated differently by default as are thead and tfoot rows.
     useAlt          = boolean, if specified, can manually enable/disable whether alternate row code runs per-row
     alt             = boolean, if specified, override the automatic auto-alt styling to specific value true or false (manual mode)
+                      note: at current time, alt on non-body rows (except foot rows if enabled in @table) does not affect
+                            next row's alt (unless groupLast used explicit on next) logic
     groupLast       = boolean, if specified, considers row logically grouped with last row;
                       sets alt to exact same as last row
     groupParent     = boolean, nested tables only, if specified, considers row logically grouped with parent row;
@@ -1235,10 +1240,10 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (can omit nested)
     [attribs...]    = legacy <tr attributes and values
 -->
-<#macro tr class="" id="" wrapIf=true useAlt="" alt="" groupLast="" groupParent="" selected="" openOnly=false closeOnly=false attribs...>
+<#macro tr class="" id="" metaRow=false useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs...>
 <#if wrapIf>
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
-  <#local isRegAltRow = ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
+  <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
   <#local str = class>
   <#if !(useAlt?is_boolean && useAlt == false)>
     <#if !alt?is_boolean>
@@ -1271,6 +1276,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 <#if !openOnly>
   </tr>
   <#if !(useAlt?is_boolean && useAlt == false)>
+    <#-- note: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
     <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
       <#global catoCurrentTableRowAlt = !alt>
     </#if>

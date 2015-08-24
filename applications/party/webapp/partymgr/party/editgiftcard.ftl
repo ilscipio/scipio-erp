@@ -35,7 +35,7 @@ under the License.
           <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
           <a href="javascript:document.editgiftcardform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
         </div>
-        <@table type="data" class="basic-table" cellspacing="0">
+        <@table type="fields" class="basic-table" cellspacing="0">
         <@tbody>
         <@tr>
           <@td>${uiLabelMap.AccountingCardNumber}</@td>

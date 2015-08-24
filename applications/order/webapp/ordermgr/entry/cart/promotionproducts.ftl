@@ -37,7 +37,7 @@ under the License.
             </@table>
         </#if>
 
-        <@table type="data" autoAltRows=false width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+        <@table type="data-list" autoAltRows=false width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <@tr>
             <@td>${uiLabelMap.CommonQualifier}</@td>
             <@td>${uiLabelMap.CommonBenefit}</@td>

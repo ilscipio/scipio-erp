@@ -43,7 +43,7 @@ under the License.
       <@table type="fields" autoAltRows=false width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
         <@tr>
           <@td>
-            <@table type="data" autoAltRows=false width="100%" cellpadding="2" cellspacing="2" border="0">
+            <@table type="data-list" autoAltRows=false width="100%" cellpadding="2" cellspacing="2" border="0">
             <@thead>
               <@tr class="header-row">
                 <@th nowrap="nowrap">WebSite</@th>
@@ -82,7 +82,7 @@ under the License.
                   </@tr>
                 </#list>
               <#else>
-                <@tr>
+                <@tr metaRow=true>
                   <@td colspan="8"><@resultMsg>No settings found.</@resultMsg></@td>
                 </@tr>
               </#if>

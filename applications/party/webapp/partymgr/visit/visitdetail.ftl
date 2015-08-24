@@ -92,7 +92,7 @@ under the License.
           <#assign paginated = true>
         </#if>
       </#if>
-      <@table type="data" class="basic-table hover-bar" cellspacing="0">
+      <@table type="data-list" class="basic-table hover-bar" cellspacing="0">
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyContentId}</@th>
@@ -127,7 +127,7 @@ under the License.
         </#list>
         <#else>
           <@tr>
-            <@td colspan="6"><@resultMsg>${uiLabelMap.PartyNoServerHitsFound}</@resultMsg></@td>
+            <@td colspan="6" metaRow=true><@resultMsg>${uiLabelMap.PartyNoServerHitsFound}</@resultMsg></@td>
           </@tr>
         </#if>
         </@tbody>

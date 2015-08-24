@@ -18,7 +18,7 @@ under the License.
 -->
 <#if showPromoText?? && showPromoText>
       <@section title="${uiLabelMap.OrderSpecialOffers}">
-        <@table type="data" class="basic-table">
+        <@table type="data-list" class="basic-table">
           <#-- show promotions text -->
           <#list productPromos as productPromo>
             <@tr>
@@ -26,8 +26,6 @@ under the License.
                 <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="linktext">${uiLabelMap.CommonDetails}</a> ${StringUtil.wrapString(productPromo.promoText!)}
               </@td>
             </@tr>
-            <#if productPromo_has_next>
-            </#if>
           </#list>
         </@table>
         

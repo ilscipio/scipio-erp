@@ -49,7 +49,7 @@ under the License.
       <@paginateVisits />
     </#if>
     
-      <@table type="data" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+      <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
        <@thead>
         <@tr class="header-row">
           <@th><a href="<@ofbizUrl>showvisits?sort=visitId&amp;showAll=${showAll}<#if partyId?has_content>&amp;partyId=${partyId}</#if></@ofbizUrl>">${uiLabelMap.PartyVisitId}</a></@th>

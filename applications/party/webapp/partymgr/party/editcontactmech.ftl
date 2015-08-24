@@ -52,7 +52,7 @@ under the License.
     <h2>${uiLabelMap.PartyEditContactInformation}</h2>
     <div id="mech-purpose-types">
   </#if>
-    <@table type="data" class="basic-table" cellspacing="0">
+    <@table type="data-list" class="basic-table" cellspacing="0">
     <@tbody>
     <#-- FIXME: form inside table -->
   <#if !mechMap.contactMech?has_content>
@@ -69,7 +69,7 @@ under the License.
         <@tr>
           <@td>${uiLabelMap.PartyContactPurposes}</@td>
           <@td>
-            <@table type="data" class="basic-table" cellspacing="0">
+            <@table type="data-list" class="basic-table" cellspacing="0">
             <@tbody>
               <#if mechMap.partyContactMechPurposes?has_content>
                 <#list mechMap.partyContactMechPurposes as partyContactMechPurpose>
@@ -98,24 +98,26 @@ under the License.
                   </@tr>
                 </#list>
               </#if>
+              </@tbody>
+              <@tfoot>
               <@tr>
+                  <@td class="button-col">
                 <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose</@ofbizUrl>" name="newpurposeform">
                   <input type="hidden" name="partyId" value="${partyId}" />
                   <input type="hidden" name="DONE_PAGE" value="${donePage}" />
                   <input type="hidden" name="useValues" value="true" />
                   <input type="hidden" name="contactMechId" value="${contactMechId!}" />
-                  <@td class="button-col">
                     <select name="contactMechPurposeTypeId">
                       <option></option>
                       <#list mechMap.purposeTypes as contactMechPurposeType>
                         <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>
                       </#list>
                     </select>
-                  </@td>
                 </form>
+                  </@td>
                 <@td><a href="javascript:document.newpurposeform.submit()" class="${styles.button_default!}">${uiLabelMap.PartyAddPurpose}</a></@td>
               </@tr>
-            </@tbody>
+            </@tfoot>
             </@table>
           </@td>
         </@tr>

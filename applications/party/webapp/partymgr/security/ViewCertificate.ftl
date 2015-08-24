@@ -31,7 +31,7 @@ under the License.
     </#if>
 </@section>
 <@section title="${uiLabelMap.PartyCertSaveToKeyStore}">
-    <@table type="data" cellspacing="0">
+    <@table type="data-list" cellspacing="0">
     <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.PartyCertComponent}</@th>

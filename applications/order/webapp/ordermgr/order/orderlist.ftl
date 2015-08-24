@@ -145,7 +145,7 @@ under the License.
           <@paginateOrders />
         </#if>
         
-        <@table type="data" autoAltRows=true cellspacing='0'>
+        <@table type="data-list" autoAltRows=true cellspacing="0">
           <@thead>
           <@tr>
             <@th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
@@ -227,7 +227,7 @@ under the License.
             </@tr>
           </#list>
           <#if !orderHeaderList?has_content>
-            <@tr><@td colspan="9"><@resultMsg>${uiLabelMap.OrderNoOrderFound}</@resultMsg></@td></@tr>
+            <@tr metaRow=true><@td colspan="9"><@resultMsg>${uiLabelMap.OrderNoOrderFound}</@resultMsg></@td></@tr>
           </#if>
         </@table>
         

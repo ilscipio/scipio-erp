@@ -138,7 +138,7 @@ under the License.
         style="position: relative; margin-top: ${height}px;"
       </#if>
       class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
-      <@table type="data" class="" autoAltRows=false useIf=(numCol?int > 1)>
+      <@table type="data-list" class="" autoAltRows=false wrapIf=(numCol?int > 1)>
         <#list productCategoryMembers as productCategoryMember>
           <#if (numCol?int == 1)>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)}
@@ -146,7 +146,7 @@ under the License.
             ${setRequestAttribute("listIndex", productCategoryMember_index)}
             ${screens.render(productsummaryScreen)}
           <#else>
-              <@tr useIf=(tabCol?int = 1)>
+              <@tr wrapIf=(tabCol?int = 1)>
                   <@td>
                       ${setRequestAttribute("optProductId", productCategoryMember.productId)}
                       ${setRequestAttribute("productCategoryMember", productCategoryMember)}
@@ -166,5 +166,5 @@ under the License.
     </#if>
 <#else>
     <hr />
-    <div>${uiLabelMap.ProductNoProductsInThisCategory}</div>
+    <@resultMsg>${uiLabelMap.ProductNoProductsInThisCategory}</@resultMsg>
 </#if>

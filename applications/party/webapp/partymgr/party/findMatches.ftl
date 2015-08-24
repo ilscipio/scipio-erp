@@ -54,7 +54,7 @@ under the License.
       
           <#if match?has_content>
             <#if matches?has_content>
-              <@table type="data" cellspacing="0" class="basic-table">
+              <@table type="data-list" cellspacing="0" class="basic-table">
                 <@thead>
                 <@tr>
                   <@td colspan="7">${uiLabelMap.PartyAddressMatching} ${lastName} / ${firstName} @ ${addressString}</@td>

@@ -35,7 +35,7 @@ under the License.
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
-        <@table type="data" class="basic-table" cellspacing="0">
+        <@table type="generic" class="basic-table" cellspacing="0">
         <@tbody>
         ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
         <@tr>
@@ -46,7 +46,7 @@ under the License.
             <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.button_default!}">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
-            <@table type="data" cellspacing="0">
+            <@table type="data-complex" cellspacing="0">
             <@tbody>
             <#assign hasCurrent = false>
             <#if curPostalAddress?has_content>

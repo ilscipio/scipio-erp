@@ -22,7 +22,7 @@ under the License.
   </#assign>
   <@section id="partyVisits" title="${uiLabelMap.PartyVisits}" menuHtml=menuHtml>
       <#if visits?has_content>
-        <@table type="data" class="basic-table" cellspacing="0">
+        <@table type="data-list" class="basic-table" cellspacing="0">
          <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.PartyVisitId}</@th>

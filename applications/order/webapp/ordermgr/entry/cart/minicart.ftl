@@ -37,7 +37,7 @@ under the License.
               <li><a href="<@ofbizUrl>googleCheckout</@ofbizUrl>" class="button">${uiLabelMap.EcommerceCartToGoogleCheckout}</a></li>
             </ul>
           </#if>
-          <@table type="data" class="">
+          <@table type="data-complex" class="">
             <@thead>
               <@tr>
                 <@th>${uiLabelMap.OrderQty}</@th>

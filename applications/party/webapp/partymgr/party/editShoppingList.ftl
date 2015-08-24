@@ -129,7 +129,7 @@ under the License.
       <li><a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes</@ofbizUrl>">${uiLabelMap.PartyAddChildListsToCart}</a></li>
 </#assign>
 <@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuHtml=menuHtml>
-    <@table type="data" autoAltRows=true class="basic-table" cellspacing="0">
+    <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.PartyListName}</@th>
@@ -175,7 +175,7 @@ under the License.
           <@paginateShoppingListItems />
         </#if>
         
-      <@table type="data" autoAltRows=true class="basic-table" cellspacing="0">
+      <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyProduct}</@th>

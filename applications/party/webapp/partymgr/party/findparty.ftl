@@ -172,7 +172,7 @@ under the License.
       <@paginateParties />
     </#if>
     
-    <@table type="data" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
      <@thead>
       <@tr class="header-row-2">
         <@th>${uiLabelMap.PartyPartyId}</@th>

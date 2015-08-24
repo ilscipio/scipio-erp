@@ -21,7 +21,7 @@ under the License.
         <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="${styles.button_default!}">${uiLabelMap.OrderAddAllToCart}</a>
             </#if>
 
-        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+        <@table type="data-complex" autoAltRows=true cellspacing="0" class="basic-table">
           <@thead>
             <@tr valign="bottom" class="header-row">
                 <@th width="15%">${uiLabelMap.ProductItem}</@th>

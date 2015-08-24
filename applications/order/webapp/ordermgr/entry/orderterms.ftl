@@ -25,7 +25,7 @@ under the License.
         <@row>
             <@cell class="${styles.grid_large!}6">
                         <#if orderTerms?has_content && parameters.createNew?default('') != 'Y'>
-                            <@table type="data" autoAltRows=true class="basic-table hover-bar">
+                            <@table type="data-list" autoAltRows=true class="basic-table hover-bar">
                   <@thead>
                                 <@tr class="header-row">
                         <@th>${uiLabelMap.OrderOrderTermType}</@th>
@@ -36,6 +36,7 @@ under the License.
                         <@th>&nbsp;</@th>
                                 </@tr>
                    </@thead>
+                                <@tbody>
                                 <#list orderTerms as orderTerm>
                                     <@tr>
                                         <@td nowrap="nowrap">${orderTerm.getRelatedOne('TermType', false).get('description', locale)}</@td>
@@ -49,11 +50,14 @@ under the License.
                                         </@td>
                                     </@tr>
                                 </#list>
+                                </@tbody>
+                                <@tfoot>
                                 <@tr>
                                     <@td colspan="5">
                             <a href="<@ofbizUrl>setOrderTerm?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a>
                                     </@td>
                                 </@tr>
+                                </@tfoot>
                             </@table>
                         <#else>
                             <form method="post" action="<@ofbizUrl>addOrderTerm</@ofbizUrl>" name="termform">

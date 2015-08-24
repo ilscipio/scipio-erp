@@ -1084,10 +1084,17 @@ Helps define table. Required wrapper for all table sub-elem macros.
                       TODO: WARN: these are WIP types, may not be enough
                       generic: generic html table (free-form, complex), no features enabled by default
                       data-list: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
-                      data-complex: record-containing table, complex structure (more than one row per record, separators, etc.)
+                                 similar to a form widget "list" or "multi" table; intended to resemble these, to unify them.
+                      data-complex: record-containing table, but with complex structure (more than one row per record, separators, etc.)
+                                    there is no form widget equivalent of these and usually need some custom alt-row work.
                       data: DEPRECATED: typical record-containing table
-                      summary: usually table with one or a few set row of summary totals
-                      fields: label-value pairs for display (note: prefer @field for input forms or @row/@cell instead?)
+                                        should be changed to data-list or data-complex.
+                      summary: usually table with one or a few set rows of summary totals
+                               e.g. order grand totals.
+                      fields: label-value pairs for display
+                              this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
+                              legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
+                              ultimately belong as @field and @row/@cell.
     class           = manual classes to add, as string, default "basic-table" for data, 
                       if specified as string replaces defaults (class="" prevents class)
     addClass        = extra classes that don't influence defaults

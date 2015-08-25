@@ -948,8 +948,9 @@ levels manually, but most often should let @section menu handle them.
     type           = (info|success|warning|secondary|alert|error)
     addClass       = additional classes for nested container
 -->
-<#macro alert type="" addClass="">
-<div class="${styles.grid_row!}">
+<#macro alert type="" addClass="" id="">
+<#if type="error"><#local type = "alert"></#if>
+<div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
         <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
         <div data-alert class="${styles.alert_wrap!} ${styles.alert_prefix_type!}${type}">
            <div class="${styles.grid_row!}">
@@ -977,9 +978,9 @@ Other messages such as for missing params/record IDs are usually errors.
    * General Attributes *
     addClass       = additional classes for nested container
 -->
-<#macro resultMsg addClass="">
+<#macro resultMsg addClass="" id="">
   <#local class = ("result-msg " + addClass)?trim>
-  <p<#if class?has_content> class="${class}"</#if>><#nested></p>
+  <p<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if>><#nested></p>
 </#macro>
 
 <#--

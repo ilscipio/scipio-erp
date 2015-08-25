@@ -917,10 +917,11 @@ levels manually, but most often should let @section menu handle them.
     relLevel       = for level, uses level of current heading returned by getCurrentHeadingLevel()
                      plus this number of levels. default: 0 (current level)
     class          = heading classes
+    addClass       = additional classes, never substitutes default
     id             = heading id
     [attribs...]   = legacy h1-h6 attributes
 -->
-<#macro heading level="" relLevel="" class="" id="" attribs...>
+<#macro heading level="" relLevel="" class="" addClass="" id="" attribs...>
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
   </#if>
@@ -932,7 +933,7 @@ levels manually, but most often should let @section menu handle them.
   <#elseif (level > 6)>
     <#local level = 6>
   </#if>
-  <h${level}<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></h${level}>
+  <h${level}<#if class?has_content || addClass?has_content> class="${(class + " " + addClass)?trim}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></h${level}>
 </#macro>
 
 <#-- 

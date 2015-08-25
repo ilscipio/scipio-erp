@@ -104,6 +104,8 @@ not "current" context (too intrusive in current renderer design). still relies o
         <h5${idText}>${text}</h5>
       <#elseif style=="h6">
         <h6${idText}>${text}</h6>
+      <#elseif style?matches(r"heading\+\d")>
+        <@heading relLevel=style?substring("heading+"?length)?number>${text}</@heading>
       <#elseif style=="heading">
         <@heading>${text}</@heading>
       <#elseif style=="p">

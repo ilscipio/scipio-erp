@@ -913,13 +913,18 @@ levels manually, but most often should let @section menu handle them.
     level          = specific level (1-6). If not specified, current heading level returned by
                      getCurrentHeadingLevel() function is used. 
                      note: does not consume a level.
+    relLevel       = for level, uses level of current heading returned by getCurrentHeadingLevel()
+                     plus this number of levels. default: 0 (current level)
     class          = heading classes
     id             = heading id
     [attribs...]   = legacy h1-h6 attributes
 -->
-<#macro heading level="" class="" id="" attribs...>
+<#macro heading level="" relLevel="" class="" id="" attribs...>
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
+  </#if>
+  <#if relLevel?has_content>
+    <#local level = level + relLevel>
   </#if>
   <#if (level < 1)>
     <#local level = 1>

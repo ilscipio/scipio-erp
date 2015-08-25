@@ -1213,14 +1213,14 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <@table type="data-list" class="basic-table" id="my-table">
       <@thead>
         <@tr>
-          <@tc width="15%">col 1</@tc>
-          <@tc width="85%">col 2</@tc>
+          <@th width="15%">col 1</@th>
+          <@th width="85%">col 2</@th>
         </@tr>
       </@thead>
       <@tbody>
         <@tr class="my-row-class" valign="middle">
-          <@tc>data value 1</@tc>
-          <@tc>data value 2</@tc>
+          <@td>data value 1</@td>
+          <@td>data value 2</@td>
         </@tr>
       </@tbody>
     </@table>
@@ -1455,7 +1455,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 *************
 * Table cell
 ************
-Helps define table cells. tc automatically knows whether th or td via @thead and @tbody, but th and td can be used too for legacy for now...
+Helps define table cells.
                     
    * General Attributes *
     class           = manual classes to add
@@ -1463,15 +1463,6 @@ Helps define table cells. tc automatically knows whether th or td via @thead and
     wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (can omit nested)
     [attribs...]    = legacy <th and <td attributes and values
 -->
-<#macro tc class="" id="" wrapIf=true openOnly=false closeOnly=false attribs...>
-<#if wrapIf>
-  <#local elem = (catoCurrentTableSectionInfo.cellElem)!"td">
-  <#if !closeOnly><${elem}<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>></#if><#nested><#if !openOnly></${elem}></#if>
-<#else>
-<#nested>
-</#if>
-</#macro>
-
 <#macro th class="" id="" wrapIf=true openOnly=false closeOnly=false attribs...>
 <#if wrapIf>
   <#if !closeOnly><th<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>></#if><#nested><#if !openOnly></th></#if>

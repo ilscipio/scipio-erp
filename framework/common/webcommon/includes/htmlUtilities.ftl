@@ -1224,7 +1224,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
                     
    * General Attributes *
     type            = [generic, data-list, data-complex, summary, fields], default generic
-                      TODO: WARN: these are WIP types, may not be enough
+                      DEV NOTE: TODO: WARN: these are WIP types, may not be enough (important part is to label things for easy search)
                       generic: generic html table (free-form, complex), no features enabled by default
                       data-list: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
                                  similar to a form widget "list" or "multi" table; intended to resemble these, to unify them.
@@ -1232,7 +1232,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
                                     there is no form widget equivalent of these and usually need some custom alt-row work.
                       summary: usually table with one or a few set rows of summary totals
                                e.g. order grand totals.
-                      fields: label-value pairs for display
+                      fields: label-value pairs for display, side-by-side, usually no header, roughly
                               this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
                               legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
                               ultimately belong as @field and @row/@cell.
@@ -1244,11 +1244,11 @@ Helps define table. Required wrapper for all table sub-elem macros.
     firstRowAlt     = default false
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
-    cellspacing     = cellspacing, default 0, set to "" to remove
+    cellspacing     = cellspacing, default 0 for most types except generic, set to "" to prevent setting.
     wrapIf          = advanced structure control, for esoteric cases
     [attribs...]    = legacy <table attributes and values
 -->
-<#macro table type="generic" class=true addClass="" id="" wrapIf=true cellspacing=0 scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs...>
+<#macro table type="generic" class=true addClass="" id="" wrapIf=true cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs...>
 <#if wrapIf>
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
@@ -1279,6 +1279,23 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#if addClass?is_string && addClass?has_content>
     <#local class = class + " " + addClass>
   </#if>
+  <#if cellspacing?is_boolean>
+    <#if cellspacing>
+      <#if !catoDefaultTableCellspacings?has_content>
+        <#-- TODO: set in styles? -->
+        <#assign catoDefaultTableCellspacings = {
+          "data-list": 0,
+          "data-complex": 0,
+          "summary": 0,
+          "fields": 0
+        }>
+      </#if>
+      <#local cellspacing = catoDefaultTableCellspacings[type]!"">
+    <#else>
+      <#local cellspacing = "">
+    </#if>
+  </#if>
+  
   <#global catoCurrentTableInfo = {"type": type, "autoAltRows": autoAltRows,
     "inheritAltRows": inheritAltRows, "parentRowAlt": prevRowAlt, "useFootAltRows": useFootAltRows}>
   <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>

@@ -741,6 +741,8 @@ levels manually, but most often should let @section menu handle them.
                     
    * General Attributes *
     class               = css classes
+    classes             = css classes FIXME: class or classes should be removed
+    addClass            = additional classes, never replaces default
     id                  = set id
     title               = section title
     titleClass          = section title class (rarely needed, usually headingLevel enough)
@@ -756,7 +758,7 @@ levels manually, but most often should let @section menu handle them.
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section id="" title="" classes="" padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
+<#macro section id="" title="" classes="" class="" addClass="" padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
     <#if id?has_content>
         <#local contentId = id + "_content">
         <#local menuId = id + "_menu">
@@ -764,8 +766,9 @@ levels manually, but most often should let @section menu handle them.
         <#local contentId = "">
         <#local menuId = "">
     </#if>
+    <#local class = (classes + " " + class + " " + addClass)?trim>
     <#-- note: autoHeadingLevel logic now implemented in renderScreenletBegin -->
-    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu 
+    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=class padded=padded menuString=menuHtml fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu 
         forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass/>
         <#nested />
     <@renderScreenletEnd />

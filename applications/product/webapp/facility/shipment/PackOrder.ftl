@@ -39,14 +39,7 @@ under the License.
         <#assign showInput = "Y">
     </#if>
 
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <ul>
-                <li class="h3">${uiLabelMap.ProductPackOrder}&nbsp;in&nbsp;${facility.facilityName!} [${facilityId!}]</li>
-            </ul>
-            <br class="clear"/>
-        </div>
-        <div class="screenlet-body">
+    <@section title="${uiLabelMap.ProductPackOrder}&nbsp;in&nbsp;${facility.facilityName!} [${facilityId!}]">
             <#if invoiceIds?has_content>
                 <div>
                 ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
@@ -66,12 +59,11 @@ under the License.
                 </div>
                 </#if>
             </#if>
-            <br />
 
-            <!-- select order form -->
+            <#-- select order form -->
             <form name="selectOrderForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>">
               <input type="hidden" name="facilityId" value="${facilityId!}" />
-              <@table cellspacing="0" class="basic-table">
+              <@table type="fields" cellspacing="0" class="basic-table">
                 <@tr>
                   <@td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></@td>
                   <@td width="1">&nbsp;</@td>
@@ -93,12 +85,11 @@ under the License.
                 </@tr>
               </@table>
             </form>
-            <br />
 
             <!-- select picklist bin form -->
             <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>" style="margin: 0;">
               <input type="hidden" name="facilityId" value="${facilityId!}" />
-              <@table cellspacing="0" class="basic-table">
+              <@table type="fields" cellspacing="0" class="basic-table">
                 <@tr>
                   <@td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></@td>
                   <@td width="1">&nbsp;</@td>
@@ -137,24 +128,17 @@ under the License.
                 <input type="hidden" name="inventoryItemId"/>
                 <input type="hidden" name="packageSeqId"/>
             </form>
-        </div>
-    </div>
+    </@section>
 
     <#if showInput != "N" && ((orderHeader?exists && orderHeader?has_content))>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <ul>
-                <li class="h3">${uiLabelMap.ProductOrderId} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/orderview?orderId=${orderId}">${orderId}</a> / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</li>
-            </ul>
-            <br class="clear"/>
-        </div>
-        <div class="screenlet-body">
+    <#assign sectionTitle>${uiLabelMap.ProductOrderId} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/orderview?orderId=${orderId}">${orderId}</a> / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</#assign>
+    <@section title=sectionTitle>
               <#if orderItemShipGroup?has_content>
                 <#if (orderItemShipGroup.contactMechId)?has_content>
                   <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
                 </#if>
                 <#assign carrier = orderItemShipGroup.carrierPartyId?default("N/A")>
-                <@table cellpadding="4" cellspacing="4" class="basic-table">
+                <@table type="fields" cellpadding="4" cellspacing="4" class="basic-table">
                   <@tr>
                     <@td valign="top">
                       <#if postalAddress?exists >
@@ -213,7 +197,7 @@ under the License.
                 </@table>
               </#if>
 
-              <!-- manual per item form -->
+              <#-- manual per item form -->
               <#if showInput != "N">
                 <hr />
                 <form name="singlePackForm" method="post" action="<@ofbizUrl>ProcessPackOrder</@ofbizUrl>">
@@ -222,7 +206,7 @@ under the License.
                   <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId}"/>
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <input type="hidden" name="hideGrid" value="${hideGrid}"/>
-                  <@table cellpadding="2" cellspacing="0" class="basic-table">
+                  <@table type="field" cellpadding="2" cellspacing="0" class="basic-table">
                     <@tr>
                       <@td>
                         <div>
@@ -243,7 +227,7 @@ under the License.
                 </form>
               </#if>
 
-              <!-- auto grid form -->
+              <#-- auto grid form -->
               <#assign itemInfos = packingSession.getItemInfos()!>
               <#if showInput != "N" && hideGrid != "Y" && itemInfos?has_content>
                 <br />
@@ -254,7 +238,7 @@ under the License.
                   <input type="hidden" name="originFacilityId" value="${facilityId!}" />
                   <input type="hidden" name="hideGrid" value="${hideGrid}"/>
 
-                  <@table class="basic-table" cellspacing='0'>
+                  <@table type="data-list" class="basic-table" cellspacing="0">
                    <@thead>
                     <@tr class="header-row">
                       <@th>&nbsp;</@th>
@@ -340,6 +324,7 @@ under the License.
                         <#assign rowKey = rowKey + 1>
                       </#list>
                     </#if>
+                    <@tfoot>
                     <@tr><@td colspan="10">&nbsp;</@td></@tr>
                     <@tr>
                       <@td colspan="12" align="right">
@@ -348,12 +333,13 @@ under the License.
                         <input type="button" value="${uiLabelMap.CommonClear} (${uiLabelMap.CommonAll})" onclick="javascript:document.clearPackForm.submit();"/>
                       </@td>
                     </@tr>
+                    </@tfoot>
                   </@table>
                 </form>
                 <br />
               </#if>
 
-              <!-- complete form -->
+              <#-- complete form -->
               <#if showInput != "N">
                 <form name="completePackForm" method="post" action="<@ofbizUrl>CompletePack</@ofbizUrl>">
                   <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -363,7 +349,7 @@ under the License.
                   <input type="hidden" name="weightUomId" value="${defaultWeightUomId}"/>
                   <input type="hidden" name="showInput" value="N"/>
                   <hr/>
-                  <@table class="basic-table" cellpadding="2" cellspacing='0'>
+                  <@table type="fields" class="basic-table" cellpadding="2" cellspacing="0">
                     <@tr>
                         <#assign packageSeqIds = packingSession.getPackageSeqIds()/>
                         <#if packageSeqIds?has_content>
@@ -428,22 +414,14 @@ under the License.
                   <br />
                 </form>
               </#if>
-        </div>
-    </div>
+    </@section>
 
-    <!-- display items in packages, per packed package and in order -->
+    <#-- display items in packages, per packed package and in order -->
     <#assign linesByPackageResultMap = packingSession.getPackingSessionLinesByPackage()!>
     <#assign packageMap = linesByPackageResultMap.get("packageMap")!>
     <#assign sortedKeys = linesByPackageResultMap.get("sortedKeys")!>
     <#if ((packageMap?has_content) && (sortedKeys?has_content))>
-      <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <ul>
-                <li class="h3">${uiLabelMap.ProductPackages} : ${sortedKeys.size()!}</li>
-            </ul>
-            <br class="clear"/>
-        </div>
-          <div class="screenlet-body">
+      <@section title="${uiLabelMap.ProductPackages} : ${sortedKeys.size()!}">
             <#list sortedKeys as key>
               <#assign packedLines = packageMap.get(key)>
               <#if packedLines?has_content>
@@ -451,7 +429,7 @@ under the License.
                 <#assign packedLine = packedLines.get(0)!>
                 <span  style="font-size:1.2em">${uiLabelMap.ProductPackage}&nbsp;${packedLine.getPackageSeq()!}</span>
                 <br />
-                <@table class="basic-table" cellspacing='0'>
+                <@table type="data-list" class="basic-table" cellspacing="0">
                   <@tr class="header-row">
                     <@td>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@td>
                     <@td>${uiLabelMap.ProductProductId}</@td>
@@ -480,22 +458,14 @@ under the License.
                 </@table>
               </#if>
             </#list>
-          </div>
-      </div>
+      </@section>
     </#if>
 
-    <!-- packed items display -->
+    <#-- packed items display -->
     <#assign packedLines = packingSession.getLines()!>
     <#if packedLines?has_content>
-      <div class="screenlet">
-          <div class="screenlet-title-bar">
-              <ul>
-                  <li class="h3">${uiLabelMap.ProductItems} (${uiLabelMap.ProductPackages}): ${packedLines.size()!}</li>
-              </ul>
-              <br class="clear"/>
-          </div>
-          <div class="screenlet-body">
-            <@table class="basic-table" cellspacing='0'>
+      <@section title="${uiLabelMap.ProductItems} (${uiLabelMap.ProductPackages}): ${packedLines.size()!}">
+            <@table type="data-list" class="basic-table" cellspacing="0">
               <@tr class="header-row">
                   <@td>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@td>
                   <@td>${uiLabelMap.ProductProductId}</@td>
@@ -522,8 +492,7 @@ under the License.
                   </@tr>
               </#list>
             </@table>
-          </div>
-      </div>
+      </@section>
     </#if>
   </#if>
 

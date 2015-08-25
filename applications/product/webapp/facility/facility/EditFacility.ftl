@@ -20,7 +20,7 @@ under the License.
 <#if facility?? && facilityId?has_content>
   <form action="<@ofbizUrl>UpdateFacility</@ofbizUrl>" name="EditFacilityForm" method="post" class="basic-form">
   <input type="hidden" name="facilityId" value="${facilityId!}" />
-  <@table class="basic-table" cellspacing='0'>
+  <@table class="basic-table" cellspacing="0">
   <@tr>
     <@td>${uiLabelMap.ProductFacilityId}</@td>
     <@td>
@@ -32,7 +32,7 @@ under the License.
   <#if facilityId??>
     <h3>${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityId!}".</h3>
   </#if>
-  <@table class="basic-table" cellspacing='0'>
+  <@table class="basic-table" cellspacing="0">
 </#if>
   <@tr>
     <@td>${uiLabelMap.ProductFacilityTypeId}</@td>

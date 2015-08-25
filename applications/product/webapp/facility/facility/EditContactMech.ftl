@@ -26,7 +26,7 @@ under the License.
     <#if !preContactMechTypeId?has_content>
     <h2>${title}</h2>
     <div class="button-bar">
-      <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='${styles.button_default!}'>${uiLabelMap.CommonGoBack}</a>
+      <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
     </div>
     <form method="post" action='<@ofbizUrl>EditContactMech</@ofbizUrl>' name="createcontactmechform">
       <input type='hidden' name='facilityId' value='${facilityId}' />
@@ -51,7 +51,7 @@ under the License.
     <#if !mechMap.contactMech?has_content>
       <h2>${title}</h2>
       <div class="button-bar">
-        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='${styles.button_default!}'>${uiLabelMap.CommonGoBack}</a>
+        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
       </div>
       <#if contactMechPurposeType??>
         <div><span>(${uiLabelMap.PartyMsgContactHavePurpose}</span>"${contactMechPurposeType.get("description",locale)!}")</div>
@@ -60,7 +60,7 @@ under the License.
     <#else>
       <h2>${title}</h2>
       <div class="button-bar">
-        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='${styles.button_default!}'>${uiLabelMap.CommonGoBack}</a>
+        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
         <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewContactMech}</a>
       </div>
       <#assign tableWidth = "">
@@ -133,7 +133,7 @@ under the License.
                         <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
                       </#list>
                     </select>
-                    &nbsp;<a href='javascript:document.newpurposeform.submit()' class='${styles.button_default!}'>${uiLabelMap.PartyAddPurpose}</a>
+                    &nbsp;<a href='javascript:document.newpurposeform.submit()' class="${styles.button_default!}">${uiLabelMap.PartyAddPurpose}</a>
                   </form>
                 </@td>
               </@tr>

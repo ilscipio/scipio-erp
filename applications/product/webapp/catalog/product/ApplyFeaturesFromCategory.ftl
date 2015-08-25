@@ -51,7 +51,7 @@ under the License.
         </@tr>
     </@table>
 </#if>
-<@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+<@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
 <form method="post" action="<@ofbizUrl>ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">
   <input type="hidden" name="_useRowSubmit" value="Y" />
   <input type="hidden" name="_checkGlobalScope" value="Y" />

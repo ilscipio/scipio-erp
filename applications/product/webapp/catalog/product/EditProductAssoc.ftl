@@ -16,11 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.PageTitleEditProductAssociations}</h3>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleEditProductAssociations}">
         <form action="<@ofbizUrl>UpdateProductAssoc</@ofbizUrl>" method="post" style="margin: 0;" name="editProductAssocForm">
         <input type="hidden" name="productId" value="${productId!}" />
 
@@ -181,15 +177,10 @@ under the License.
         </@tr>
         </@table>
         </form>
-    </div>
-</div>
+</@section>
 <#if productId?? && product??>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductAssociationsFromProduct}</h3>
-    </div>
-    <div class="screenlet-body">
-        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+<@section title="${uiLabelMap.ProductAssociationsFromProduct}">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
          <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductProductId}</@th>
@@ -203,6 +194,7 @@ under the License.
                 <@th>&nbsp;</@th>
             </@tr>
           </@thead>
+          <@tbody>
             <#list assocFromProducts as assocFromProduct>
             <#assign listToProduct = assocFromProduct.getRelatedOne("AssocProduct", true)>
             <#assign curProductAssocType = assocFromProduct.getRelatedOne("ProductAssocType", true)>
@@ -228,15 +220,11 @@ under the License.
                 </@td>
             </@tr>
             </#list>
+          </@tbody>
         </@table>
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductAssociationsToProduct}</h3>
-    </div>
-    <div class="screenlet-body">
-        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+</@section>
+<@section title="${uiLabelMap.ProductAssociationsToProduct}">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
           <@thead>
             <@tr class="header-row">
             <@th>${uiLabelMap.ProductProductId}</@th>
@@ -246,7 +234,8 @@ under the License.
             <@th>${uiLabelMap.ProductAssociationType}</@th>
             <@th>&nbsp;</b></@th>
             </@tr>
-            </@thead>
+          </@thead>
+          <@tbody>  
             <#list assocToProducts as assocToProduct>
             <#assign listToProduct = assocToProduct.getRelatedOne("MainProduct", true)>
             <#assign curProductAssocType = assocToProduct.getRelatedOne("ProductAssocType", true)>
@@ -262,9 +251,9 @@ under the License.
                 </@td>
             </@tr>
             </#list>
+          </@tbody>
         </@table>
-    </div>
-</div>
+</@section>
 </#if>
 <br />
 <span class="tooltip">${uiLabelMap.CommonNote} : ${uiLabelMap.ProductHighlightedExplanation}</span>

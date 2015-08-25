@@ -16,11 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.ProductAdvancedSearchInCategory}</h3>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.ProductAdvancedSearchInCategory}">
     <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="margin: 0;">
       <input type="hidden" name="VIEW_SIZE" value="25"/>
       <input type="hidden" name="PAGING" value="Y"/>
@@ -28,10 +24,10 @@ under the License.
       <#if searchCategory?has_content>
           <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}"/>
       </#if>
-      <@table cellspacing="0" class="basic-table">
+      <@table type="fields" cellspacing="0" class="basic-table">
         <#if searchCategory?has_content>
             <@tr>
-              <@td  align="right" valign="middle">
+              <@td align="right" valign="middle">
                 ${uiLabelMap.ProductCategory}:
               </@td>
               <@td valign="middle">
@@ -44,7 +40,7 @@ under the License.
             </@tr>
         <#else>
             <@tr>
-               <@td  align="right" valign="top">
+               <@td align="right" valign="top">
                  ${uiLabelMap.ProductCatalog}:
                </@td>
                <@td valign="middle">
@@ -63,7 +59,7 @@ under the License.
                </@td>
             </@tr>
             <@tr>
-              <@td  align="right" valign="top">
+              <@td align="right" valign="top">
                 ${uiLabelMap.ProductCategory}:
               </@td>
               <@td valign="middle">
@@ -80,7 +76,7 @@ under the License.
             </@tr>
         </#if>
         <@tr>
-          <@td  align="right" valign="top">
+          <@td align="right" valign="top">
             ${uiLabelMap.ProductProductName}:
           </@td>
           <@td valign="middle">
@@ -90,7 +86,7 @@ under the License.
           </@td>
         </@tr>
         <@tr>
-          <@td  align="right" valign="top">
+          <@td align="right" valign="top">
             ${uiLabelMap.ProductInternalName}:
           </@td>
           <@td valign="middle">
@@ -100,7 +96,7 @@ under the License.
           </@td>
         </@tr>
         <@tr>
-          <@td  align="right" valign="top">
+          <@td align="right" valign="top">
             ${uiLabelMap.ProductKeywords}:
           </@td>
           <@td valign="middle">
@@ -112,7 +108,7 @@ under the License.
           </@td>
         </@tr>
         <@tr>
-          <@td  align="right" valign="top">
+          <@td align="right" valign="top">
             ${uiLabelMap.ProductFeatureCategory} ${uiLabelMap.CommonIds}:
           </@td>
           <@td valign="middle">
@@ -137,7 +133,7 @@ under the License.
           </@td>
         </@tr>
         <@tr>
-          <@td  align="right" valign="top">
+          <@td align="right" valign="top">
             ${uiLabelMap.ProductFeatureGroup} ${uiLabelMap.CommonIds}:
           </@td>
           <@td valign="middle">
@@ -163,7 +159,7 @@ under the License.
         </@tr>
 
         <@tr>
-          <@td  align="right" valign="top">
+          <@td align="right" valign="top">
             ${uiLabelMap.ProductFeatures} ${uiLabelMap.CommonIds}:
           </@td>
           <@td valign="middle">
@@ -188,7 +184,7 @@ under the License.
           </@td>
         </@tr>
         <@tr>
-          <@td  align="right" valign="top">
+          <@td align="right" valign="top">
             ${uiLabelMap.ProductListPriceRange}:
           </@td>
           <@td valign="middle">
@@ -203,7 +199,7 @@ under the License.
           <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
           <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
           <@tr>
-            <@td  align="right" valign="middle">
+            <@td align="right" valign="middle">
               ${(productFeatureType.get("description",locale))!}:
             </@td>
             <@td valign="middle">
@@ -219,7 +215,7 @@ under the License.
           </@tr>
         </#list>
         <@tr>
-          <@td  align="right" valign="middle">
+          <@td align="right" valign="middle">
             ${uiLabelMap.ProductSupplier}:
           </@td>
           <@td valign="middle">
@@ -234,7 +230,7 @@ under the License.
           </@td>
         </@tr>
         <@tr>
-          <@td  align="right" valign="middle">
+          <@td align="right" valign="middle">
             ${uiLabelMap.CommonSortedBy}:
           </@td>
           <@td valign="middle">
@@ -258,7 +254,7 @@ under the License.
           </@td>
         </@tr>
         <@tr>
-          <@td  align="right" valign="middle">
+          <@td align="right" valign="middle">
             ${uiLabelMap.ProductPrioritizeProductsInCategory}:
           </@td>
           <@td valign="middle">
@@ -313,5 +309,4 @@ under the License.
         </@tr>
       </@table>
     </form>
-  </div>
-</div>
+</@section>

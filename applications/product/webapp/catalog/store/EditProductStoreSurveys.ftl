@@ -16,12 +16,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.PageTitleEditProductStoreSurveys}</h3>
-    </div>
-    <div class="screenlet-body">
-        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+<#assign sectionTitle>${uiLabelMap.PageTitleEditProductStoreSurveys}</#assign>
+<@section title=sectionTitle>
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
           <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.CommonType}</@th>
@@ -55,13 +52,9 @@ under the License.
               </@tr>
             </#list>
         </@table>
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.PageTitleAddProductStoreSurveys}</h3>
-    </div>
-    <div class="screenlet-body">
+</@section>
+<#assign sectionTitle>${uiLabelMap.PageTitleAddProductStoreSurveys}</#assign>
+<@section title=sectionTitle>
         <form name="addSurvey" action="<@ofbizUrl>createProductStoreSurveyAppl</@ofbizUrl>" method="post">
             <input type="hidden" name="productStoreId" value="${productStoreId}" />
             <@table type="fields" cellspacing="0" class="basic-table">
@@ -139,5 +132,4 @@ under the License.
               </@tr>
             </@table>
         </form>
-    </div>
-</div>
+</@section>

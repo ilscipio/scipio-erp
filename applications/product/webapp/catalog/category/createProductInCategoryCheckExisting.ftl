@@ -17,12 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#assign menuHtml>
 <#if productCategoryId?has_content>
-    <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.ProductBackToEditCategory}]</a>
+    <li><a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.ProductBackToEditCategory}]</a></li>
 </#if>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>
+</#assign>
+<#assign sectionTitle>
             <b>${uiLabelMap.ProductCheckingForExistingProductInCategory} <#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [${uiLabelMap.CommonId}:${productCategoryId!}]</b>
             <#if productFeatureAndTypeDatas?has_content>
             ${uiLabelMap.CommonWhere}
@@ -30,41 +30,42 @@ under the License.
                     <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
                     <#assign productFeature = productFeatureAndTypeData.productFeature>
                     ${productFeatureType.description} = ${productFeature.description}
-                    <#if productFeatureAndTypeData_has_next>,${uiLabelMap.CommonAnd} </#if>
+                    <#if productFeatureAndTypeData_has_next>, ${uiLabelMap.CommonAnd} </#if>
                 </#list>
             </#if>
-        </h3>
-    </div>
-    <div class="screenlet-body">
+</#assign>
+<@section title=sectionTitle menuHtml=menuHtml>
         <#if products?has_content>
-        <@table cellspacing="0" class="basic-table">
+        <@table type="data-list" cellspacing="0" class="basic-table">
+          <@thead>
             <@tr>
                 <@td>${uiLabelMap.ProductInternalName}</@td>
                 <@td>${uiLabelMap.ProductProductName}</@td>
                 <@td width="10%">&nbsp;</@td>
             </@tr>
-            <#list products as product>
+          </@thead>
+          <@tbody>
+          <#list products as product>
             <@tr>
                 <@td>${product.internalName?default("-no internal name-")} [${product.productId}]</@td>
                 <@td>${product.productName?default("-no name-")} [${product.productId}]</@td>
                 <@td width="10%"><a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.ProductThisIsIt}]</a></@td>
             </@tr>
-        </#list>
+          </#list>
+          </@tbody>
         </@table>
         <#else>
-            <h3>&nbsp;${uiLabelMap.ProductNoExistingProductsFound}.</h3>
+            <@resultMsg>${uiLabelMap.ProductNoExistingProductsFound}.</@resultMsg>
         </#if>
-    </div>
-    <br />
-    <div class="screenlet-body">
+
         <form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
-            <@table cellspacing="0" class="basic-table">
+            <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
+            <@table type="fields" cellspacing="0" class="basic-table">
                 <#list productFeatureAndTypeDatas! as productFeatureAndTypeData>
                 <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
                 <#assign productFeature = productFeatureAndTypeData.productFeature>
                 <#assign productFeatureTypeId = productFeatureType.productFeatureTypeId>
-                <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
                 <@tr>
                     <@td width="15%">${productFeatureType.description}</@td>
                     <@td>
@@ -127,5 +128,4 @@ under the License.
                 </@tr>
             </@table>
         </form>
-    </div>
-</div>
+</@section>

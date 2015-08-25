@@ -56,11 +56,8 @@ function doPublish() {
 }
 
 </script>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.PageTitleEditProductQuickAdmin}</h3>
-    </div>
-    <div class="screenlet-body">
+<#assign sectionTitle>${uiLabelMap.PageTitleEditProductQuickAdmin}</#assign>
+<@section title=sectionTitle>
         <!-- Name update section -->
         <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method="post" style="margin: 0;" name="editProduct">
             <input type="hidden" name="productId" value="${productId!}"/>
@@ -75,14 +72,10 @@ function doPublish() {
                 </@tr>
             </@table>
         </form>
-    </div>
-</div>
+</@section>
 <#if (product.isVirtual)! == "Y">
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductSelectableFeatures}</h3>
-    </div>
-    <div class="screenlet-body">
+<#assign sectionTitle>${uiLabelMap.ProductSelectableFeatures}</#assign>
+<@section title=sectionTitle>
         <!-- ***************************************************** Selectable features section -->
         <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeatureTypeSelector">
             <input type="hidden" name="productId" value="${product.productId!}"/>
@@ -108,7 +101,7 @@ function doPublish() {
         <form action="<@ofbizUrl>updateProductQuickAdminSelFeat</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeature">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
-        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductProductId}</@th>
@@ -161,18 +154,14 @@ function doPublish() {
             </@tfoot>
             </@table>
         </form>
-    </div>
-</div>
+</@section>
 </#if>
 <#if (product.isVariant)! == "Y">
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductDistinguishingFeatures}</h3>
-    </div>
-    <div class="screenlet-body">
+<#assign sectionTitle>${uiLabelMap.ProductDistinguishingFeatures}</#assign>
+<@section title=sectionTitle>
         <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method="post" style="margin: 0;" name="distFeature">
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+            <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
               <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductProductId}</@th>
@@ -189,15 +178,11 @@ function doPublish() {
                 </#list>
             </@table>
         </form>
-    </div>
-</div>
+</@section>
 </#if>
 <!-- ***************************************************** end Selectable features section -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductShippingDimensionsAndWeights}</h3>
-    </div>
-    <div class="screenlet-body">
+<#assign sectionTitle>${uiLabelMap.ProductShippingDimensionsAndWeights}</#assign>
+<@section title=sectionTitle>
         <!-- ***************************************************** Shipping dimensions section -->
         <form action="<@ofbizUrl>updateProductQuickAdminShipping</@ofbizUrl>" method="post" name="updateShipping">
             <input type="hidden" name="productId" value="${product.productId!}"/>
@@ -205,7 +190,7 @@ function doPublish() {
             <input type="hidden" name="widthUomId" value="LEN_in"/>
             <input type="hidden" name="depthUomId" value="LEN_in"/>
             <input type="hidden" name="weightUomId" value="WT_oz"/>
-            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+            <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
               <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductProductHeight}</@th>
@@ -269,13 +254,9 @@ function doPublish() {
             </@table>
         </form>
     <!--  **************************************************** end - Shipping dimensions section -->
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductStandardFeatures}</h3>
-    </div>
-    <div class="screenlet-body">
+</@section>
+<#assign sectionTitle>${uiLabelMap.ProductStandardFeatures}</#assign>
+<@section title=sectionTitle>
         <!--  **************************************************** Standard Features section -->
         <#if addedFeatureTypeIds?has_content || standardFeatureAppls?has_content>
         <@table type="generic" cellspacing="0" class="basic-table">
@@ -286,7 +267,7 @@ function doPublish() {
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="productFeatureApplTypeId" value="STANDARD_FEATURE"/>
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
-            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+            <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
                 <#list addedFeatureTypeIds as addedFeatureTypeId>
                     <@tr valign="middle">
                         <@td align="right">${addedFeatureTypes.get(addedFeatureTypeId).description}</@td>
@@ -310,7 +291,7 @@ function doPublish() {
         <@td width="20">&nbsp;</@td>
         <@td valign="top">
             <#if standardFeatureAppls?has_content>
-            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+            <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
                 <#list standardFeatureAppls as standardFeatureAppl>
                     <#assign featureId = standardFeatureAppl.productFeatureId/>
                     <@tr valign="middle">
@@ -344,13 +325,9 @@ function doPublish() {
         </@table>
         </form>
         <!--  **************************************************** end - Standard Features section -->
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductCategories}</h3>
-    </div>
-    <div class="screenlet-body">
+</@section>
+<#assign sectionTitle>${uiLabelMap.ProductCategories}</#assign>
+<@section title=sectionTitle>
         <!--  **************************************************** Categories section -->
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>">
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
@@ -379,7 +356,7 @@ function doPublish() {
         <@table>
           <@tr>
             <@td valign="top">
-                <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+                <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
                     <#list productCategoryMembers as prodCatMemb>
                         <#assign prodCat = prodCatMemb.getRelatedOne("ProductCategory", false)/>
                         <@tr valign="middle">
@@ -399,13 +376,9 @@ function doPublish() {
           </@tr>
         </@table>
         <!--  **************************************************** end - Categories section -->
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductPublishAndView}</h3>
-    </div>
-    <div class="screenlet-body">
+</@section>
+<#assign sectionTitle>${uiLabelMap.ProductPublishAndView}</#assign>
+<@section title=sectionTitle>
     <!--  **************************************************** publish section -->
     <#if (showPublish == "true")>
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>" name="publish">
@@ -435,8 +408,7 @@ function doPublish() {
         </form>
     </#if>
     <!--  **************************************************** end - publish section -->
-    </div>
-</div>
+</@section>
   <#else>
     <@alert type="error">${uiLabelMap.ProductProductNotFound} ${productId!}</@alert>
   </#if>

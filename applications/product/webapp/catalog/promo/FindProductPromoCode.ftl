@@ -17,11 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoId??>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.ProductPromotionUploadSetOfPromotionCodes}</h3>
-        </div>
-        <div class="screenlet-body">
+    <#assign sectionTitle>${uiLabelMap.ProductPromotionUploadSetOfPromotionCodes}</#assign>
+    <@section title=sectionTitle>
             <form method="post" action="<@ofbizUrl>createBulkProductPromoCode</@ofbizUrl>" enctype="multipart/form-data">
                 <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                 <span>${uiLabelMap.ProductPromoUserEntered}:</span>
@@ -42,14 +39,10 @@ under the License.
                   <input type="submit" value="${uiLabelMap.CommonUpload}" />
                 </div>
             </form>
-        </div>
-    </div>
-    <br />
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.ProductPromotionAddSetOfPromotionCodes}</h3>
-        </div>
-        <div class="screenlet-body">
+    </@section>
+
+    <#assign sectionTitle>${uiLabelMap.ProductPromotionAddSetOfPromotionCodes}</#assign>
+    <@section title=sectionTitle>
             <form method="post" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>">
                 <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                 <span>${uiLabelMap.CommonQuantity}:</span><input type="text" size="5" name="quantity" />
@@ -77,6 +70,5 @@ under the License.
                 <span>${uiLabelMap.ProductPromotionPerCustomer}</span><input type="text" size="5" name="useLimitPerCustomer" />
                 <input type="submit" value="${uiLabelMap.CommonAdd}" />
             </form>
-        </div>
-    </div>
+    </@section>
 </#if>

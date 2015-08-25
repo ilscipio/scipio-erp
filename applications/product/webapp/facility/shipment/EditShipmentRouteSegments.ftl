@@ -17,14 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if shipment??>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.PageTitleEditShipmentRouteSegments}</li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleEditShipmentRouteSegments}">
         <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
         <@thead> 
         <@tr class="header-row">
@@ -368,16 +361,9 @@ under the License.
         <#assign alt_row = !alt_row>
     </#list>
     </@table>
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.PageTitleAddShipmentRouteSegment}</li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+</@section>
+
+<@section title="${uiLabelMap.PageTitleAddShipmentRouteSegment}">
         <@table type="fields" cellspacing="0" class="basic-table">
             <form action="<@ofbizUrl>createShipmentRouteSegment</@ofbizUrl>" method="post" name="createShipmentRouteSegmentForm">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -466,12 +452,9 @@ under the License.
             </@tr>
             </form>
         </@table>
-    </div>
-</div>
+</@section>
 <#else>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
+<@section>
         <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</@alert>
-    </div>
-</div>
+</@section>
 </#if>

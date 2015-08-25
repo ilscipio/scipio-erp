@@ -17,12 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoId?? && productPromo??>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.PageTitleEditProductPromoStores}</h3>
-        </div>
-        <div class="screenlet-body">
-            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+    <#assign sectionTitle>${uiLabelMap.PageTitleEditProductPromoStores}</#assign>
+    <@section title=sectionTitle>
+            <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
              <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductStoreNameId}</@th>
@@ -31,6 +28,7 @@ under the License.
                     <@th>&nbsp;</@th>
                 </@tr>
              </@thead>
+             <@tbody>
                 <#assign line = 0>
                 <#list productStorePromoAppls as productStorePromoAppl>
                 <#assign line = line + 1>
@@ -64,14 +62,11 @@ under the License.
                     </@td>
                 </@tr>
                 </#list>
+              </@tbody>
             </@table>
-        </div>
-    </div>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.ProductAddStorePromo}</h3>
-        </div>
-        <div class="screenlet-body">
+    </@section>
+    <#assign sectionTitle>${uiLabelMap.ProductAddStorePromo}</#assign>
+    <@section title=sectionTitle>
             <form method="post" action="<@ofbizUrl>promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog">
                 <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                 <input type="hidden" name="tryEntity" value="true"/>
@@ -83,6 +78,5 @@ under the License.
                 <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 <input type="submit" value="${uiLabelMap.CommonAdd}"/>
             </form>
-        </div>
-    </div>
+    </@section>
 </#if>

@@ -29,22 +29,17 @@ function lookupShipments() {
 }
 // -->
 </script>
-<div id="findOrders" class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.ProductFindShipmentTitle}</li>
+<#assign menuHtml>
             <#if requestParameters.facilityId?has_content>
-                <li><a href="<@ofbizUrl>quickShipOrder?facilityId=${requestParameters.facilityId}</@ofbizUrl>">${uiLabelMap.ProductQuickShipOrder}</a></li>
+                <li><a href="<@ofbizUrl>quickShipOrder?facilityId=${requestParameters.facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductQuickShipOrder}</a></li>
             </#if>
-            <li><a href="<@ofbizUrl>EditShipment</@ofbizUrl>">${uiLabelMap.ProductNewShipment}</a></li>
-            <li><a href="javascript:lookupShipments();">${uiLabelMap.ProductFindShipment}</a></li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+            <li><a href="<@ofbizUrl>EditShipment</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewShipment}</a></li>
+            <li><a href="javascript:lookupShipments();" class="${styles.button_default!}">${uiLabelMap.ProductFindShipment}</a></li>
+</#assign>
+<@section id="findOrders" title="${uiLabelMap.ProductFindShipmentTitle}" menuHtml=menuHtml>
         <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
-            <@table cellspacing="0" cellpadding="2" class="basic-table">
+            <@table type="fields" cellspacing="0" cellpadding="2" class="basic-table">
               <@tr>
                 <@td width="25%" align="right">${uiLabelMap.ProductShipmentId}</@td>
                 <@td width="5%">&nbsp;</@td>
@@ -130,7 +125,7 @@ function lookupShipments() {
                 <@td width="25%" align="right">${uiLabelMap.ProductDateFilter}</@td>
                 <@td width="5%">&nbsp;</@td>
                 <@td>
-                  <@table cellspacing="0" class="basic-table">
+                  <@table type="fields" cellspacing="0" class="basic-table">
                     <@tr>
                       <@td>
                         <@htmlTemplate.renderDateTimeField name="minDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
@@ -148,30 +143,17 @@ function lookupShipments() {
               </@tr>
             </@table>
         </form>
-    </div>
-</div>
+</@section>
 <#if shipmentList??>
-<div id="findOrders_2" class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.ProductShipmentsFound}</li>
+
+<#assign menuHtml>
             <#if 0 < shipmentList?size>
-                <#if (shipmentList?size > highIndex)>
-                    <li><a class="nav-next" href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y</@ofbizUrl>">${uiLabelMap.CommonNext}</a></li>
-                <#else>
-                    <li class="disabled">${uiLabelMap.CommonNext}</li>
-                </#if>
-                <li>${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${shipmentList?size}</li>
-                <#if (viewIndex > 1)>
-                    <li><a class="nav-previous" href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y</@ofbizUrl>">${uiLabelMap.CommonPrevious}</a></li>
-                <#else>
-                    <li class="disabled">${uiLabelMap.CommonPrevious}</li>
-                </#if>
+                <li><a class="nav-next" href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y</@ofbizUrl>" class="${styles.button_default!}<#if !(shipmentList?size > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
+                <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${shipmentList?size}</span></li>
+                <li><a class="nav-previous" href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y</@ofbizUrl>" class="${styles.button_default!}<#if (viewIndex > 1)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
             </#if>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+</#assign>
+<@section id="findOrders_2" title="${uiLabelMap.ProductShipmentsFound}" menuHtml=menuHtml>
       <#if shipmentList?has_content>  
         <@table type="data-list" autoAltRows=true cellspacing="0" cellpadding="2" class="basic-table hover-bar">
         <@tr class="header-row">
@@ -206,6 +188,5 @@ function lookupShipments() {
       <#else>
         <@resultMsg>${uiLabelMap.ProductNoShipmentsFound}.</@resultMsg>
       </#if>  
-    </div>
-</div>
+</@section>
 </#if>

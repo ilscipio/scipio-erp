@@ -17,14 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if shipment??>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.PageTitleAddItemsFromOrder}</li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleAddItemsFromOrder}">
         <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <div>
@@ -37,42 +30,35 @@ under the License.
                 <input type="submit" value="${uiLabelMap.CommonSelect}" class="smallSubmit"/>
             </div>
         </form>
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.ProductAddItemsShipment}: [${shipmentId!}]; ${uiLabelMap.ProductFromAnOrder}: [${orderId!}], ${uiLabelMap.ProductOrderShipGroupId}: [${shipGroupSeqId!}]</li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+</@section>
+
+<@section title="${uiLabelMap.ProductAddItemsShipment}: [${shipmentId!}]; ${uiLabelMap.ProductFromAnOrder}: [${orderId!}], ${uiLabelMap.ProductOrderShipGroupId}: [${shipGroupSeqId!}]">
     <#if orderId?has_content && !orderHeader??>
         <@alert type="error"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</@alert>
     </#if>
     <#if orderHeader??>
         <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId! != "SALES_SHIPMENT">
-            <h3 style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotSalesShipment}.</h3>
+            <@heading style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotSalesShipment}.</@heading>
         <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER" && shipment.shipmentTypeId! != "PURCHASE_SHIPMENT" && shipment.shipmentTypeId! != "DROP_SHIPMENT">
-            <h3 style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotPurchaseShipment}.</h3>
+            <@heading style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotPurchaseShipment}.</@heading>
         <#else>
-            <h3>${uiLabelMap.ProductNoteOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}.</h3>
-            <h3>${uiLabelMap.ProductShipmentType}: ${shipment.shipmentTypeId!}.</h3>
+            <@heading>${uiLabelMap.ProductNoteOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}.</@heading>
+            <@heading>${uiLabelMap.ProductShipmentType}: ${shipment.shipmentTypeId!}.</@heading>
         </#if>
         <#if shipment.shipmentTypeId! == "SALES_SHIPMENT">
-            <h3>${uiLabelMap.ProductOriginFacilityIs}: <#if originFacility??>${originFacility.facilityName!} [${originFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></h3>
+            <@heading>${uiLabelMap.ProductOriginFacilityIs}: <#if originFacility??>${originFacility.facilityName!} [${originFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></@heading>
         <#elseif shipment.shipmentTypeId! == "PURCHASE_SHIPMENT">
-            <h3>${uiLabelMap.ProductDestinationFacilityIs}: <#if destinationFacility??>${destinationFacility.facilityName!} [${destinationFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></h3>
+            <@heading>${uiLabelMap.ProductDestinationFacilityIs}: <#if destinationFacility??>${destinationFacility.facilityName!} [${destinationFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></@heading>
         </#if>
         <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
-            <h3>${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}.</h3>
+            <@heading>${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}.</@heading>
         <#elseif "ORDER_COMPLETED" == orderHeader.statusId>
-            <h3>${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}, ${uiLabelMap.ProductNoItemsLeft}.</h3>
+            <@heading>${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}, ${uiLabelMap.ProductNoItemsLeft}.</@heading>
         <#else>
-            <h3 style="color: red;">${uiLabelMap.ProductWarningOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}; ${uiLabelMap.ProductApprovedBeforeShipping}.</h3>
+            <@heading style="color: red;">${uiLabelMap.ProductWarningOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}; ${uiLabelMap.ProductApprovedBeforeShipping}.</@heading>
         </#if>
     </#if>
-    <br />
+
     <#if orderItemDatas??>
         <#assign rowCount = 0>
         <#if isSalesOrder>
@@ -229,12 +215,10 @@ under the License.
         </form>
         <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
     </#if>
-    </div>
-</div>
+</@section>
+
 <#else>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
+<@section>
         <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId!}]</@alert>
-    </div>
-</div>
+</@section>
 </#if>

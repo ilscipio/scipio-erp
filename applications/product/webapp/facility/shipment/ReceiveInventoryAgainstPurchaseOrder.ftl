@@ -16,7 +16,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#if shipment??>
 
     <#-- JS to populate the quantity_o_# field required by the chained issueOrderItemToShipment service -->
     <script type="text/javascript">
@@ -32,16 +31,11 @@ under the License.
     </script>
 
     <#assign productId = parameters.productId!/>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrder}</li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
-    
-    <#if ! isPurchaseShipment>
+
+<@section title="${uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrder}">
+
+<#if shipment??>
+    <#if !isPurchaseShipment>
         <div class="errorMessage">
             <#assign uiLabelWithVar=uiLabelMap.ProductErrorShipmentNotPurchaseShipment?interpret><@uiLabelWithVar/>
         </div>
@@ -240,8 +234,8 @@ under the License.
             </script>
         </#if>
     </#if>
-    </div>
-</div>
 <#elseif parameters.shipmentId?has_content>
   <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId!}]</@alert>
 </#if>
+
+</@section>

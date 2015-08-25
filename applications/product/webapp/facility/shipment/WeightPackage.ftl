@@ -19,14 +19,7 @@ under the License.
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
   <#if !(showWarningForm)>
-    <div class="screenlet">
-      <div class="screenlet-title-bar">
-        <ul>
-          <li class="h3">${uiLabelMap.ProductWeighPackageOnly}&nbsp;in&nbsp;${facility.facilityName!} [${(facility.facilityId)!}]</li>
-        </ul>
-        <br class="clear"/>
-      </div>
-      <div class="screenlet-body">
+    <@section title="${uiLabelMap.ProductWeighPackageOnly} ${uiLabelMap.CommonIn} ${facility.facilityName!} [${(facility.facilityId)!}]">
         <#if invoiceIds?has_content>
           <div>
             ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
@@ -38,7 +31,7 @@ under the License.
               <ul>
                 <#list invoiceIds as invoiceId>
                   <li>
-                    ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="${styles.button_default!}">${invoiceId}</a>
+                    ${uiLabelMap.CommonNbr} <a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="${styles.button_default!}">${invoiceId}</a>
                     (<a href="/accounting/control/invoice.pdf?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="${styles.button_default!}">PDF</a>)
                   </li>
                 </#list>
@@ -61,11 +54,11 @@ under the License.
             </form>
           </#list>
         </#if>
-        <br />
+     
         <#if !(orderId?has_content)>
           <form name="selectOrderForm" method="post" action="<@ofbizUrl>WeightPackageOnly</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
-            <@table cellspacing="0" class="basic-table">
+            <@table type="fields" cellspacing="0" class="basic-table">
               <@tr>
                 <@td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></@td>
                 <@td width="1">&nbsp;</@td>
@@ -85,11 +78,11 @@ under the License.
               </@tr>
             </@table>
           </form>
-          <br />
-          <!-- select picklist bin form -->
+         
+          <#-- select picklist bin form -->
           <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>WeightPackageOnly</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
-            <@table cellspacing="0" class="basic-table">
+            <@table type="fields" cellspacing="0" class="basic-table">
               <@tr>
                 <@td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></@td>
                 <@td width="1">&nbsp;</@td>
@@ -111,7 +104,8 @@ under the License.
           <#assign packedLines = weightPackageSession.getPackedLines(orderId)/>
           <#if !(shipmentPackages?has_content)>
             <#if packedLines?has_content>
-              <@table class="basic-table" cellpadding="2" cellspacing='0'>
+              <@table type="data-list" class="basic-table" cellpadding="2" cellspacing="0">
+                <@thead>
                 <@tr>
                   <@th>
                     ${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
@@ -123,6 +117,8 @@ under the License.
                     ${uiLabelMap.ProductPackageInputBox}:
                   </@th>
                 </@tr>
+                </@thead>
+                <@tbody>
                 <#list packedLines as packedLine>
                   <form name="updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}" method="post" action="<@ofbizUrl>updatePackedLine</@ofbizUrl>">
                     <input type="hidden" name="orderId" value ="${orderId!}"/>
@@ -157,10 +153,11 @@ under the License.
                         </select>
                       </@td>
                       <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></@td>
-                      <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
+                      <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></@td>
                     </@tr>
                   </form>
                 </#list>
+                </@tbody>
               </@table>
               <div align="right">
                 <a href="javascript:document.completePackageForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
@@ -178,7 +175,7 @@ under the License.
               </form>
             </#if>
             <#if (orderedQuantity > packedLines.size())>
-            <@table class="basic-table" cellpadding="2" cellspacing='0'>
+            <@table type="fields" class="basic-table" cellpadding="2" cellspacing="0">
               <form name="weightPackageForm" method ="post" action="<@ofbizUrl>setPackageInfo</@ofbizUrl>">
                 <input type="hidden" name = "shipGroupSeqId" value = "${shipGroupSeqId!}"/>
                 <input type="hidden" name = "facilityId" value = "${(facility.facilityId)!}"/>
@@ -220,7 +217,8 @@ under the License.
             </@table>
             </#if>
           <#else>
-            <@table class="basic-table" cellpadding="2" cellspacing='0'> 
+            <@table type="data-list" class="basic-table" cellpadding="2" cellspacing="0"> 
+             <@thead>
              <@tr>
                 <@th>
                  ${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
@@ -232,6 +230,8 @@ under the License.
                   ${uiLabelMap.ProductPackageInputBox}:
                </@th>
               </@tr>
+             </@thead>
+             <@tbody>
               <form name="completePackForm" method="post" action="<@ofbizUrl>shipNow</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
@@ -260,23 +260,16 @@ under the License.
                   </@tr>
                 </#list>
               </form>
+              </@tbody>
             </@table>
             <div align="right">
               <a href="javascript:document.completePackForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
             </div>
           </#if>
         </#if>
-      </div>
-    </div>
+    </@section>
   <#else>
-    <div class="screenlet">
-      <div class="screenlet-title-bar">
-        <ul>
-          <li class="h3">${uiLabelMap.WebtoolsWarningLogLevel}:</li>
-        </ul>
-        <br class="clear"/>
-      </div>
-      <div class="screenlet-body">
+    <@section title="${uiLabelMap.WebtoolsWarningLogLevel}">
         <div>
           <h3>${uiLabelMap.FacilityWarningMessageThereIsMuchDifferenceInShippingCharges}&nbsp;[${uiLabelMap.FacilityEstimatedShippingCharges} = <@ofbizCurrency amount=estimatedShippingCost! isoCode=shipment.currencyUomId!/>, ${uiLabelMap.FacilityActualShippingCharges} = <@ofbizCurrency amount=newEstimatedShippingCost! isoCode=shipment.currencyUomId!/>]</h3>
         </div>
@@ -296,7 +289,6 @@ under the License.
           &nbsp;
           <a href="javascript:document.holdShipmentForm.submit()" class="${styles.button_default!}">${uiLabelMap.FacilityHoldShipment}</a>
         </div>
-      </div>
-    </div>
+    </@section>
   </#if>
 </#if>

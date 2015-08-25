@@ -17,16 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.FacilitySelectOptionsToGroupBy}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
+<@section title="${uiLabelMap.FacilitySelectOptionsToGroupBy}">
   <form method="post" name="selectFactors" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>">
     <input type="hidden" name="facilityId" value="${facilityId}"/>
-    <@table class="basic-table" cellspacing='0'>
+    <@table type="fields" class="basic-table" cellspacing="0">
       <@tr>
         <@td class='label'>${uiLabelMap.FacilityGroupByShippingMethod}</@td>
         <@td><input type="checkbox" name="groupByShippingMethod" value="Y" <#if "${requestParameters.groupByShippingMethod!}" == "Y">checked="checked"</#if>/></@td>
@@ -43,16 +37,13 @@ under the License.
       <input type="submit" value="Submit" class="${styles.button_default!}" align='right'/>
     </div>
   </form>
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductFindOrdersToPick}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
-    <div align ='right'>
-      <a class="${styles.button_default!}" href="<@ofbizUrl>ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}</@ofbizUrl>">${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}</a>
-    </div>
+</@section>  
+  
+<#assign menuHtml>
+  <li><a class="${styles.button_default!}" href="<@ofbizUrl>ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}</@ofbizUrl>">${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}</a></li>
+</#assign>
+<@section title="${uiLabelMap.ProductFindOrdersToPick}" menuHtml=menuHtml>
+  <#if pickMoveInfoList?has_content>
     <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
       <#if pickMoveInfoList?has_content || rushOrderInfo?has_content>
        <@thead>
@@ -96,7 +87,7 @@ under the License.
           </@td>
         </@tr>
       </#if>
-      <#if pickMoveInfoList?has_content>
+      
         <#assign orderReadyToPickInfoListSizeTotal = 0>
         <#assign orderNeedsStockMoveInfoListSizeTotal = 0>
         <#assign alt_row = false>
@@ -239,12 +230,12 @@ under the License.
             </@td>
           </@tr>
         </#if>
-      <#else>
-        <@tr><@td colspan="4"><@resultMsg>${uiLabelMap.ProductNoOrdersFoundReadyToPickOrNeedStockMoves}.</@resultMsg></@td></@tr>
-      </#if>
     </@table>
-  </div>
-</div>
+  <#else>
+    <@resultMsg>${uiLabelMap.ProductNoOrdersFoundReadyToPickOrNeedStockMoves}.</@resultMsg>
+  </#if>
+</@section>
+
 <#assign viewDetail = requestParameters.viewDetail!>
 <#if viewDetail?has_content>
   <#list pickMoveInfoList as pickMoveInfo>
@@ -256,14 +247,7 @@ under the License.
 </#if>
 
 <#if toPickList?has_content>
-  <div class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.ProductPickingDetail}</li>
-      </ul>
-      <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+  <@section title="${uiLabelMap.ProductPickingDetail}">
       <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
       <@thead>
         <@tr class="header-row">
@@ -302,6 +286,5 @@ under the License.
           </#list>
         </#list>
       </@table>
-    </div>
-  </div>
+  </@section>
 </#if>

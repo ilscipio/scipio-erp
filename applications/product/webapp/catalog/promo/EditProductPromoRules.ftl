@@ -17,13 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoId?? && productPromo??>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.PageTitleEditProductPromoRules}</h3>
-  </div>
+<@section title="${uiLabelMap.PageTitleEditProductPromoRules}">
   <#-- ======================= Rules ======================== -->
-  <div class="screenlet-body">
-    <@table type="data" autoAltRows=false cellspacing="0" class="basic-table">
+    <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
      <@thead>
       <@tr class="header-row">
         <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
@@ -62,7 +58,7 @@ under the License.
       <@tr valign="top" class="row-level-one" alt=(ruleClass == "1")>
         <@td align="right">${uiLabelMap.ProductConditionsForRule} ${(productPromoRule.productPromoRuleId)!} :</@td>
         <@td colspan="2">
-          <@table cellspacing="0" class="basic-table">
+          <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
     <#assign maxCondSeqId = 1>
     <#assign condClass = "2">
     <#list productPromoConds as productPromoCond>
@@ -268,7 +264,7 @@ under the License.
       <@tr valign="top" class="row-level-one" alt=(ruleClass == "1")>
         <@td align="right">${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!} :</@td>
         <@td colspan="2">
-          <@table cellspacing="0" class="basic-table">
+          <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
     <#assign actionClass = "2">
     <#list productPromoActions as productPromoAction>
             <@tr class="row-level-two" alt=(actionClass == "1")>
@@ -453,30 +449,24 @@ under the License.
     </#if>
   </#list>
     </@table>
-  </div>
+  
   <#-- This was removed in r697962, should have been only commented out as maybe in future will be used again (free shipping promo)
   <div class="tooltip"><b>${uiLabelMap.ProductNoteOnItemId} :</b> ${uiLabelMap.ProductItemIdGiftPurchaseFreeShipping}</div>
   <div class="tooltip"><b>${uiLabelMap.ProductNoteOnPartyId} :</b> ${uiLabelMap.ProductPartyFreeShipping}</div>
   -->
-</div>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.ProductAddPromoRule}</h3>
-  </div>
-  <div class="screenlet-body">
+</@section>
+
+<#assign sectionTitle>${uiLabelMap.ProductAddPromoRule}</#assign>
+<@section title=sectionTitle>
     <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>">
       <input type="hidden" name="productPromoId" value="${productPromoId!}" />
       <span>${uiLabelMap.ProductName}</span><input type="text" size="30" name="ruleName" />
       <input type="submit" value="${uiLabelMap.CommonAdd}" />
     </form>
-  </div>
-</div>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.ProductPromotion} ${uiLabelMap.ProductCategories}</h3>
-  </div>
+</@section>
+<#assign sectionTitle>${uiLabelMap.ProductPromotion} ${uiLabelMap.ProductCategories}</#assign>
+<@section title=sectionTitle>
   <#-- ======================= Categories ======================== -->
-  <div class="screenlet-body">
   <#list promoProductPromoCategories as promoProductPromoCategory>
     <#assign promoProductCategory = promoProductPromoCategory.getRelatedOne("ProductCategory", true)>
     <#assign promoApplEnumeration = promoProductPromoCategory.getRelatedOne("ApplEnumeration", true)>
@@ -516,14 +506,10 @@ under the License.
         <input type="submit" value="${uiLabelMap.CommonAdd}" />
       </form>
     </div>
-  </div>
-</div>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.ProductPromotionProducts}</h3>
-  </div>
+</@section>
+<#assign sectionTitle>${uiLabelMap.ProductPromotionProducts}</#assign>
+<@section title=sectionTitle>
   <#-- ======================= Products ======================== -->
-  <div class="screenlet-body">
   <#list promoProductPromoProducts as promoProductPromoProduct>
     <#assign promoProduct = promoProductPromoProduct.getRelatedOne("Product", true)!>
     <#assign promoApplEnumeration = promoProductPromoProduct.getRelatedOne("ApplEnumeration", true)>
@@ -555,6 +541,5 @@ under the License.
         <input type="submit" value="${uiLabelMap.CommonAdd}" />
       </form>
     </div>
-  </div>
-</div>
+</@section>
 </#if>

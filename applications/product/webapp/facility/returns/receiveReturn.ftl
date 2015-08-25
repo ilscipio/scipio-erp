@@ -16,20 +16,20 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductReceiveReturn} ${uiLabelMap.CommonInto} <#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId}:${facility.facilityId!}]</h3>
-    </div>
-    <div class="screenlet-body">
-        <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacility}</a>
+<#assign sectionTitle>${uiLabelMap.ProductReceiveReturn} ${uiLabelMap.CommonInto} <#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId}:${facility.facilityId!}]</#assign>
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacility}</a></li>
+</#assign>
+<@section title=sectionTitle menuHtml=menuHtml>
+        
         <#-- Receiving Results -->
         <#if receivedItems?has_content>
-          <h3>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.button_default!}">${returnHeader.returnId}</a></h3>
+          <p>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.button_default!}">${returnHeader.returnId}</a></p>
           <#if "RETURN_RECEIVED" == returnHeader.getString("statusId")>
-            <h3>${uiLabelMap.ProductReturnCompletelyReceived}</h3>
+            <@resultMsg>${uiLabelMap.ProductReturnCompletelyReceived}</@resultMsg>
           </#if>
-          <br />
-          <@table cellspacing="0" class="basic-table">
+         
+          <@table type="data-list" cellspacing="0" class="basic-table">
            <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.ProductReceipt}</@th>
@@ -53,7 +53,6 @@ under the License.
               </@tr>
             </#list>
           </@table>
-          <br />
         </#if>
 
         <#-- Multi-Item Return Receiving -->
@@ -65,10 +64,10 @@ under the License.
             <input type="hidden" name="_useRowSubmit" value="Y" />
             <#assign now = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()>
             <#assign rowCount = 0>
-            <@table cellspacing="0" class="basic-table">
+            <@table type="data-complex" cellspacing="0" class="basic-table">
               <#if !returnItems?? || returnItems?size == 0>
                 <@tr>
-                  <@td colspan="2">${uiLabelMap.ProductNoItemsToReceive}</@td>
+                  <@td colspan="2"><@resultMsg>${uiLabelMap.ProductNoItemsToReceive}</@resultMsg></@td>
                 </@tr>
               <#else>
                 <@tr>
@@ -245,7 +244,7 @@ under the License.
           <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveReturn</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
             <input type="hidden" name="initialSelected" value="Y" />
-            <@table cellspacing="0" class="basic-table">
+            <@table type="fields" cellspacing="0" class="basic-table">
               <@tr><@td colspan="4"><h3>${uiLabelMap.ProductReceiveReturn}</h3></@td></@tr>
               <@tr>
                 <@td width="15%" align='right'>${uiLabelMap.ProductReturnNumber}</@td>
@@ -264,8 +263,7 @@ under the License.
             </@table>
           </form>
         </#if>
-    </div>
-</div>
+</@section>
 <script language="JavaScript" type="text/javascript">
     function setInventoryItemStatus(selection,index) {
         var statusId = "statusId_o_" + index;

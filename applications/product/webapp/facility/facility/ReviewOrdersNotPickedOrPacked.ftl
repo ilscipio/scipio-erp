@@ -16,14 +16,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.OrderOrderList}</li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+
+<@section title="${uiLabelMap.OrderOrderList}">
+      <#if orders?has_content>
         <@table class="basic-table hover-bar">
           <@thead>
             <@tr class="header-row">
@@ -32,7 +27,7 @@ under the License.
                 <@th>${uiLabelMap.ProductVerified}</@th>
             </@tr>
            </@thead>
-            <#if orders?has_content>
+           <@tbody>
                 <#list orders?sort_by("pickSheetPrintedDate") as order>
                     <@tr>
                         <@td><a href="/ordermgr/control/orderview?orderId=${order.orderId!}" class="${styles.button_default!}" target="_blank">${order.orderId!}</a></@td>
@@ -40,9 +35,9 @@ under the License.
                         <@td><#if "Y" == order.isVerified>${uiLabelMap.CommonY}</#if></@td>
                     </@tr>
                 </#list>
-            <#else>
-                <@tr><@td colspan="4"><@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg></@td></@tr>
-            </#if>
+           </@tbody>
         </@table>
-    </div>
-</div>
+      <#else>
+        <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
+      </#if>
+</@section>

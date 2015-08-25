@@ -22,34 +22,42 @@ function insertImageName(type,nameValue) {
 };
 </script>
 <#if fileType?has_content>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.ProductResultOfImageUpload}</h3>
-        </div>
-        <div class="screenlet-body">
+    <@section title="${uiLabelMap.ProductResultOfImageUpload}">
             <#if !(clientFileName?has_content)>
                 <div>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
             <#else>
                 <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
                 <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
                 <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
-                <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>">${imageUrl!}</a></b></div>
+                <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.button_default!}">${imageUrl!}</a></b></div>
             </#if>
-        </div>
-    </div>
+    </@section>
 </#if>
-<div class="screenlet">
+
 <#if ! productCategory?has_content>
     <#if productCategoryId?has_content>
-        <div class="screenlet-title-bar">
-          <ul>
-            <li class="h3">${uiLabelMap.ProductCouldNotFindProductCategoryWithId} "${productCategoryId}".</li>
-          </ul>
-          <br class="clear" />
-        </div>
-        <div class="screenlet-body">
-            <form action="<@ofbizUrl>createProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
-                <@table cellspacing="0" class="basic-table">
+        <#assign sectionTitle>${uiLabelMap.ProductCouldNotFindProductCategoryWithId} "${productCategoryId}".</#assign>
+        <#assign formAction><@ofbizUrl>createProductCategory</@ofbizUrl></#assign>
+    <#else>
+        <#assign sectionTitle>${uiLabelMap.PageTitleCreateProductCategory}</#assign>
+        <#assign formAction><@ofbizUrl>createProductCategory</@ofbizUrl></#assign>
+    </#if>
+<#else>
+    <#assign sectionTitle>${uiLabelMap.PageTitleEditProductCategories}</#assign>
+    <#assign formAction><@ofbizUrl>updateProductCategory</@ofbizUrl></#assign>    
+</#if>
+
+<@section title=sectionTitle>
+
+        <form action="${formAction}" method="post" name="productCategoryForm">
+          <#if productCategory?has_content>
+            <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
+          </#if>
+
+            <@table type="fields" cellspacing="0" class="basic-table">
+
+<#if ! productCategory?has_content>
+    <#if productCategoryId?has_content>
                     <@tr>
                         <@td align="right">${uiLabelMap.ProductProductCategoryId}</@td>
                         <@td>&nbsp;</@td>
@@ -58,15 +66,6 @@ function insertImageName(type,nameValue) {
                         </@td>
                     </@tr>
     <#else>
-        <div class="screenlet-title-bar">
-          <ul>
-            <li class="h3">${uiLabelMap.PageTitleCreateProductCategory}</li>
-          </ul>
-          <br class="clear" />
-        </div>
-        <div class="screenlet-body">
-            <form action="<@ofbizUrl>createProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
-                <@table cellspacing="0" class="basic-table">
                     <@tr>
                         <@td align="right">${uiLabelMap.ProductProductCategoryId}</@td>
                         <@td>&nbsp;</@td>
@@ -76,13 +75,6 @@ function insertImageName(type,nameValue) {
                     </@tr>
     </#if>
 <#else>
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.PageTitleEditProductCategories}</h3>
-    </div>
-    <div class="screenlet-body">
-        <form action="<@ofbizUrl>updateProductCategory</@ofbizUrl>" method="post" style="margin: 0;" name="productCategoryForm">
-            <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
-            <@table cellspacing="0" class="basic-table">
                 <@tr>
                     <@td align="right">${uiLabelMap.ProductProductCategoryId}</@td>
                     <@td>&nbsp;</@td>
@@ -91,6 +83,8 @@ function insertImageName(type,nameValue) {
                     </@td>
                 </@tr>
 </#if>
+
+
                 <@tr>
                     <@td width="26%" align="right">${uiLabelMap.ProductProductCategoryType}</@td>
                     <@td>&nbsp;</@td>
@@ -122,7 +116,7 @@ function insertImageName(type,nameValue) {
                     <@td width="20%" align="right" valign="top">
                         ${uiLabelMap.ProductCategoryImageUrl}
                         <#if (productCategory.categoryImageUrl)??>
-                            <a href="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Category Image" src="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
+                            <a href="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Category Image" src="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
                         </#if>
                     </@td>
                     <@td>&nbsp;</@td>
@@ -142,7 +136,7 @@ function insertImageName(type,nameValue) {
                     <@td width="20%" align="right" valign="top">
                         ${uiLabelMap.ProductLinkOneImageUrl}
                         <#if (productCategory.linkOneImageUrl)??>
-                            <a href="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
+                            <a href="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
                         </#if>
                     </@td>
                     <@td>&nbsp;</@td>
@@ -162,7 +156,7 @@ function insertImageName(type,nameValue) {
                     <@td width="20%" align="right" valign="top">
                         ${uiLabelMap.ProductLinkTwoImageUrl}
                         <#if (productCategory.linkTwoImageUrl)??>
-                            <a href="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
+                            <a href="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
                         </#if>
                     </@td>
                     <@td>&nbsp;</@td>
@@ -199,8 +193,8 @@ function insertImageName(type,nameValue) {
                 </@tr>
             </@table>
         </form>
-    </div>
-</div>
+</@section>
+
 <#if productCategoryId?has_content>
     <script language="JavaScript" type="text/javascript">
         function setUploadUrl(newUrl) {
@@ -208,13 +202,9 @@ function insertImageName(type,nameValue) {
         eval(toExec);
         };
     </script>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.ProductCategoryUploadImage}</h3>
-        </div>
-        <div class="screenlet-body">
+    <@section title="${uiLabelMap.ProductCategoryUploadImage}">
             <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId!}&amp;upload_file_type=category</@ofbizUrl>" name="imageUploadForm">
-                <@table cellspacing="0" class="basic-table">
+                <@table type="fields" cellspacing="0" class="basic-table">
                     <@tr><@td>
                         <input type="file" size="50" name="fname"/>
                         <br />
@@ -227,15 +217,10 @@ function insertImageName(type,nameValue) {
                     </@td></@tr>
                 </@table>
             </form>
-        </div>
-    </div>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.ProductDuplicateProductCategory}</h3>
-        </div>
-        <div class="screenlet-body">
+    </@section>
+    <@section title="${uiLabelMap.ProductDuplicateProductCategory}">
             <form action="<@ofbizUrl>DuplicateProductCategory</@ofbizUrl>" method="post" style="margin: 0;">
-                <@table cellspacing="0" class="basic-table">
+                <@table type="fields" cellspacing="0" class="basic-table">
                     <@tr><@td>
                         ${uiLabelMap.ProductDuplicateProductCategorySelected}:
                         <input type="hidden" name="oldProductCategoryId" value="${productCategoryId}"/>
@@ -256,6 +241,5 @@ function insertImageName(type,nameValue) {
                     </@td></@tr>
                 </@table>
             </form>
-        </div>
-    </div>
+    </@section>
 </#if>

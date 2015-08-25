@@ -16,13 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductGlobalPriceRule}</h3>
-    </div>
-    <div class="screenlet-body">
-        <a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductFindRule}</a>
-        <@table cellspacing="0" class="basic-table">
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductFindRule}</a></li>
+</#assign>
+<@section title="${uiLabelMap.ProductGlobalPriceRule}" menuHtml=menuHtml>
+        <@table type="fields" cellspacing="0" class="basic-table">
          <@thead>
           <@tr class="header-row">
             <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
@@ -65,7 +63,7 @@ under the License.
           <@tr valign="top">
             <@td align="right">${uiLabelMap.ProductConditions}</@td>
             <@td colspan="2">
-                <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+                <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
                 <@thead>
                   <@tr class="header-row">
                     <@th width="5%">${uiLabelMap.ProductSeqId}</@th>
@@ -149,7 +147,7 @@ under the License.
           <@tr valign="top">
             <@td align="right">${uiLabelMap.ProductActions}</@td>
             <@td colspan="2">
-                <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+                <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
                   <@tr class="header-row">
                     <@th width="5%">${uiLabelMap.ProductSeqId}</@th>
                     <@th width="85%">${uiLabelMap.ProductActionTypeAmount}</@th>
@@ -209,5 +207,4 @@ under the License.
           </@tr>
         </#if>
         </@table>
-    </div>
-</div>
+</@section>

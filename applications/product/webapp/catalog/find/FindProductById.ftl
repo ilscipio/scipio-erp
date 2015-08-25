@@ -17,22 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-      <div class="h3">${uiLabelMap.ProductFindProductWithIdValue}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.ProductFindProductWithIdValue}">
         <form name="idsearchform" method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>" style="margin: 0;">
           <span>${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}:</span> <input type="text" name="idValue" size="20" maxlength="50" value="${idValue!}" />&nbsp;<a href="javascript:document.idsearchform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a>
         </form>
         <br />
-        <h2>${uiLabelMap.ProductSearchResultsWithIdValue}: ${idValue!}</h2>
+        
+        <p>${uiLabelMap.ProductSearchResultsWithIdValue}: ${idValue!}</p>
         <#if !goodIdentifications?has_content && !idProduct?has_content>
-          <br />
-          <h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>
+          <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
         <#else/>
-          <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+          <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
             <#if idProduct?has_content>
             <@tr valign="middle">
                 <@td>
@@ -61,5 +56,4 @@ under the License.
             </#list>
           </@table>
         </#if>
-    </div>
-</div>
+</@section>

@@ -16,11 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.ProductSearchProducts}, ${uiLabelMap.ProductSearchFor}:</h3>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.ProductSearchProducts}, ${uiLabelMap.ProductSearchFor}">
     <#list searchConstraintStrings as searchConstraintString>
       <div>&nbsp;<a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N&amp;SEARCH_CATEGORY_ID=${parameters.SEARCH_CATEGORY_ID!}</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
@@ -28,7 +24,7 @@ under the License.
     <div><a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !productIds?has_content>
-      <br /><h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>
+      <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
     </#if>
 
     <#if productIds?has_content>
@@ -66,8 +62,9 @@ under the License.
             e.checked = !e.checked;
         }
     </script>
-
-    <@table cellspacing="0" class="basic-table">
+    
+  <#macro keywordSearchNav>
+    <@table type="generic" cellspacing="0" class="basic-table">
         <@tr>
           <@td><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);"/> <b>${uiLabelMap.ProductProduct}</b></@td>
           <@td align="right">
@@ -107,10 +104,13 @@ under the License.
         </@tr>
         <@tr><@td colspan="2"><hr /></@td></@tr>
     </@table>
+  </#macro>
+  
+    <@keywordSearchNav />
 
     <form method="post" name="products">
       <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
-      <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+      <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
         <#assign listIndex = lowIndex>
         <#list productIds as productId><#-- note that there is no boundary range because that is being done before the list is put in the content -->
           <#assign product = delegator.findOne("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", productId), false)>
@@ -124,45 +124,6 @@ under the License.
       </@table>
     </form>
 
-    <@table cellspacing="0" class="basic-table">
-        <@tr><@td colspan="2"><hr /></@td></@tr>
-        <@tr>
-          <@td align="right">
-            <b>
-            <#if 0 < viewIndex?int>
-              <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
-                <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
-              <#else>
-                <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a>
-              </#if>
-            </#if>
-            <#if 0 < listSize?int>
-              ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
-            </#if>
-            <#if highIndex?int < listSize?int>
-                <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
-              |     <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
-                <#else>
-                    <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
-                </#if>
-            </#if>
-            <#if paging == "Y">
-              <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
-                <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=99999/~clearSearch=N/~PAGING=N/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPagingOff}</a>
-              <#else>
-                <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=99999/~clearSearch=N/~PAGING=N/~noConditionFind=${noConditionFind}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPagingOff}</a>
-              </#if>
-            <#else>
-                <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
-                    <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=${previousViewSize}/~clearSearch=N/~PAGING=Y/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPagingOn}</a>
-                <#else>
-                    <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=${previousViewSize}/~clearSearch=N/~PAGING=Y/~noConditionFind=${noConditionFind}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPagingOn}</a>
-                </#if>
-            </#if>
-            </b>
-          </@td>
-        </@tr>
-    </@table>
+    <@keywordSearchNav />
     </#if>
-  </div>
-</div>
+</@section>

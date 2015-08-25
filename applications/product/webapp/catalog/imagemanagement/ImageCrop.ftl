@@ -37,7 +37,7 @@ var productId = jQuery('#ImageCropping_productId').val();
 if (imageName != "") {
     jQuery('#ImageCropping tr').append("<@td class='label'><span>${uiLabelMap.CommonPreview}</span></@td><@td><div style='width:100px;height:100px;overflow:hidden;'><img src='"+imageUrl+"' id='preview' /></div></@td>");
     jQuery('#ImageCropping tbody').append("<@tr><@td><input type='submit' value='${uiLabelMap.CommonSubmit}' name='submitButton' class='smallSubmit'/></@td></@tr>");
-    jQuery('#ImageCropping tbody').append("<@tr><@td><a class='${styles.button_default!}' title=' ' href='/catalog/control/ListImageManage?productId="+productId+"'>${uiLabelMap.CommonCancel}</a></@td></@tr>");
+    jQuery('#ImageCropping tbody').append("<@tr><@td><a class="${styles.button_default!}" title=' ' href='/catalog/control/ListImageManage?productId="+productId+"'>${uiLabelMap.CommonCancel}</a></@td></@tr>");
 }
 
 function showPreview(coords){

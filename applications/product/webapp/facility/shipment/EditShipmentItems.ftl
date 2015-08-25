@@ -18,14 +18,7 @@ under the License.
 -->
 
 <#if shipment??>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.PageTitleEditShipmentItems}</li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleEditShipmentItems}">
         <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
           <@thead>
             <@tr class="header-row">
@@ -142,12 +135,9 @@ under the License.
             </form>
         </@tr>
         </@table>
-    </div>
-</div>
+</@section>
 <#else>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
+<@section>
         <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</@alert>
-    </div>
-</div>
+</@section>
 </#if>

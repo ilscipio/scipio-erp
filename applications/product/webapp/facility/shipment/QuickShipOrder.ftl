@@ -179,7 +179,7 @@ function setWeight(weight) {
       <input type="hidden" name="facilityId" value="${facilityId!}" />
       <input type="hidden" name="originFacilityId" value="${facilityId!}" />
       <input type="hidden" name="setPackedOnly" value="Y" />
-      <@table border='0' cellpadding='2' cellspacing='0'>
+      <@table border='0' cellpadding='2' cellspacing="0">
         <@tr>
           <@td width="25%" align='right'><span>${uiLabelMap.ProductOrderNumber}</span></@td>
           <@td width="1">&nbsp;</@td>

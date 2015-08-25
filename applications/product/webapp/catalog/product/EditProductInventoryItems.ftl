@@ -17,23 +17,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign externalKeyParam = "&amp;externalLoginKey=" + requestAttributes.externalLoginKey!>
-<div class="screenlet">
-  <#if product??>
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductInventoryItems} ${uiLabelMap.CommonFor} <#if product??>${(product.internalName)!} </#if> [${uiLabelMap.CommonId}:${productId!}]</h3>
-    </div>
-    <div class="screenlet-body">
+<#assign sectionTitle>${uiLabelMap.ProductInventoryItems} ${uiLabelMap.CommonFor} <#if product??>${(product.internalName)!} </#if> [${uiLabelMap.CommonId}:${productId!}]</#assign>
+<#assign menuHtml>
         <#if productId?has_content>
-            <a href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewInventoryItemProduct}</a>
+            <li><a href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewInventoryItemProduct}</a></li>
             <#if showEmpty>
-                <a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductHideEmptyItems}</a>
+                <li><a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductHideEmptyItems}</a></li>
             <#else>
-                <a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}&amp;showEmpty=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductShowEmptyItems}</a>
+                <li><a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}&amp;showEmpty=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductShowEmptyItems}</a></li>
             </#if>
         </#if>
-
+</#assign>
+<@section title=sectionTitle menuHtml=menuHtml>
+  <#if product??>
         <#if productId??>
-            <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+            <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
             <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductItemId}</@th>
@@ -81,13 +79,13 @@ under the License.
                                 <@td style="color: red;">${uiLabelMap.ProductErrorFacility} (${inventoryItem.facilityId})
                                     ${uiLabelMap.ProductAndContainer} (${inventoryItem.containerId}) ${uiLabelMap.CommonSpecified}</@td>
                             <#elseif inventoryItem.facilityId??>
-                                <@td>${uiLabelMap.ProductFacilityLetter}:&nbsp;<a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${StringUtil.wrapString(externalKeyParam)}" class="linktext">${inventoryItem.facilityId}</a></@td>
+                                <@td>${uiLabelMap.ProductFacilityLetter}:&nbsp;<a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${inventoryItem.facilityId}</a></@td>
                             <#elseif (inventoryItem.containerId)??>
-                                <@td>${uiLabelMap.ProductContainerLetter}:&nbsp;<a href="<@ofbizUrl>EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="linktext">${inventoryItem.containerId}</a></@td>
+                                <@td>${uiLabelMap.ProductContainerLetter}:&nbsp;<a href="<@ofbizUrl>EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="${styles.button_default!}">${inventoryItem.containerId}</a></@td>
                             <#else>
                                 <@td>&nbsp;</@td>
                             </#if>
-                            <@td><a href="/facility/control/EditFacilityLocation?facilityId=${(inventoryItem.facilityId)!}&amp;locationSeqId=${(inventoryItem.locationSeqId)!}${StringUtil.wrapString(externalKeyParam)}" class="linktext"><#if facilityLocation??>${facilityLocation.areaId!}:${facilityLocation.aisleId!}:${facilityLocation.sectionId!}:${facilityLocation.levelId!}:${facilityLocation.positionId!}</#if><#if facilityLocationTypeEnum?has_content> (${facilityLocationTypeEnum.get("description",locale)})</#if> [${(inventoryItem.locationSeqId)!}]</a></@td>
+                            <@td><a href="/facility/control/EditFacilityLocation?facilityId=${(inventoryItem.facilityId)!}&amp;locationSeqId=${(inventoryItem.locationSeqId)!}${StringUtil.wrapString(externalKeyParam)}"><#if facilityLocation??>${facilityLocation.areaId!}:${facilityLocation.aisleId!}:${facilityLocation.sectionId!}:${facilityLocation.levelId!}:${facilityLocation.positionId!}</#if><#if facilityLocationTypeEnum?has_content> (${facilityLocationTypeEnum.get("description",locale)})</#if> [${(inventoryItem.locationSeqId)!}]</a></@td>
                             <@td>&nbsp;${(inventoryItem.lotId)!}</@td>
                             <@td>&nbsp;${(inventoryItem.binNumber)!}</@td>
                             <@td align="right"><@ofbizCurrency amount=inventoryItem.unitCost isoCode=inventoryItem.currencyUomId/></@td>
@@ -116,8 +114,7 @@ under the License.
             </#list>
           </@table>
         </#if>
-    </div>
   <#else>
     <@alert type="error">${uiLabelMap.ProductProductNotFound} ${productId!}!</@alert>
   </#if>
-</div>
+</@section>

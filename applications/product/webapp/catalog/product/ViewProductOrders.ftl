@@ -25,28 +25,14 @@ under the License.
     }
 </script>
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.OrderOrderFound}</li>
+<#assign menuHtml>
       <#if (orderList?has_content && 0 < orderList?size)>
-        <#if (orderListSize > highIndex)>
-          <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')">${uiLabelMap.CommonNext}</a></li>
-        <#else>
-          <li><span class="disabled">${uiLabelMap.CommonNext}</span></li>
-        </#if>
-        <#if (orderListSize > 0)>
-          <li><span>${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${orderListSize}</span></li>
-        </#if>
-        <#if (viewIndex > 1)>
-          <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')">${uiLabelMap.CommonPrevious}</a></li>
-        <#else>
-          <li><span class="disabled">${uiLabelMap.CommonPrevious}</span></li>
-        </#if>
+          <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" class="${styles.button_default!}<#if !(orderListSize > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
+          <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${orderListSize}</span></li>
+          <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" class="${styles.button_default!}<#if !(viewIndex > 1)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
       </#if>
-    </ul>
-  </div>
-  <div class="screenlet-body">
+</#assign>
+<@section title="${uiLabelMap.OrderOrderFound}" menuHtml=menuHtml>
     <form name="paginationForm" method="post" action="<@ofbizUrl>viewProductOrder</@ofbizUrl>">
       <input type="hidden" name="viewSize"/>
       <input type="hidden" name="viewIndex"/>
@@ -60,7 +46,8 @@ under the License.
         </#list>
       </#if>
     </form>
-    <@table class="basic-table hover-bar" cellspacing='0'>
+  <#if orderList?has_content && productId??>
+    <@table type="data-list" class="basic-table hover-bar" cellspacing="0">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.OrderOrderId}</@th>
@@ -72,12 +59,11 @@ under the License.
         <@th>${uiLabelMap.OrderOrderType}</@th>
       </@tr>
       </@thead>
-      <#if orderList?has_content && productId??>
         <#list orderList as order>
           <#assign orderItems = delegator.findByAnd("OrderItem", {"orderId" : order.orderId, "productId" : productId}, null, false)/>
           <#list orderItems as orderItem>
             <@tr>
-              <@td><a href="/ordermgr/control/orderview?orderId=${orderItem.orderId}" class='${styles.button_default!}'>${orderItem.orderId}</a></@td>
+              <@td><a href="/ordermgr/control/orderview?orderId=${orderItem.orderId}" class="${styles.button_default!}">${orderItem.orderId}</a></@td>
               <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)/>
               <@td>${currentItemStatus.get("description",locale)?default(currentItemStatus.statusId)}</@td>
               <@td>${orderItem.orderItemSeqId}</@td>
@@ -89,11 +75,9 @@ under the License.
             </@tr>
           </#list>
         </#list>
-      <#else>
-        <@tr>
-          <@td colspan='4'><@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg></@td>
-        </@tr>
-      </#if>
     </@table>
-  </div>
-</div>
+  <#else>
+    <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
+  </#if>
+    
+</@section>

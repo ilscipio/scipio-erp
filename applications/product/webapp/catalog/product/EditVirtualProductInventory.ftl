@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.ProductInventorySummary}">
-        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductProductId}</@th>

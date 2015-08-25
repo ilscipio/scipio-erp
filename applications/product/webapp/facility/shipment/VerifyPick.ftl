@@ -19,13 +19,7 @@ under the License.
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
   <#assign showInput = "Y">
-  <div class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}&nbsp;${uiLabelMap.CommonIn}&nbsp;${facility.facilityName!} [${facility.facilityId!}]</li>
-      </ul>
-      <br class="clear"/>
-    </div>
+  <@section title="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}&nbsp;${uiLabelMap.CommonIn}&nbsp;${facility.facilityName!} [${facility.facilityId!}]">
     <#if (shipmentId?has_content) || (isOrderStatusApproved == false)>
       <#assign showInput = "N">
     </#if>
@@ -36,7 +30,7 @@ under the License.
       <#if invoiceIds?? && invoiceIds?has_content>
         <div>
           <span>${uiLabelMap.AccountingInvoices}:</span>
-          <ul>
+          <ul class="${styles.button_group!}">
             <#list invoiceIds as invoiceId>
               <li>
                 ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="${styles.button_default!}">${invoiceId}</a>
@@ -47,11 +41,10 @@ under the License.
         </div>
       </#if>
     </#if>
-    <br />
-    <div class="screenlet-body">
+
       <form name="selectOrderForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>">
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-        <@table cellspacing="0" class="basic-table">
+        <@table type="fields" cellspacing="0" class="basic-table">
           <@tr>
             <@td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></@td>
             <@td width="1">&nbsp;</@td>
@@ -75,10 +68,10 @@ under the License.
         </@table>
       </form>
       <br />
-      <!-- select picklist bin form -->
+      <#-- select picklist bin form -->
       <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-        <@table cellspacing="0" class="basic-table">
+        <@table type="fields" cellspacing="0" class="basic-table">
           <@tr>
             <@td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></@td>
             <@td width="1">&nbsp;</@td>
@@ -100,21 +93,14 @@ under the License.
         <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
       </form>
-    </div>
-  </div>
+  </@section>
   <#if showInput != "N" && orderHeader?? && orderHeader?has_content>
-    <div class="screenlet">
-      <div class="screenlet-title-bar">
-        <ul>
-          <li class="h3">${uiLabelMap.ProductOrderId} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/orderview?orderId=${orderId}">${orderId}</a> / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</li>
-        </ul>
-        <br class="clear"/>
-      </div>
-      <div class="screenlet-body">
+    <#assign sectionTitle>${uiLabelMap.ProductOrderId} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/orderview?orderId=${orderId}">${orderId}</a> / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</#assign>
+    <@section title=sectionTitle>
         <#if orderItemShipGroup?has_content>
           <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
           <#assign carrier = orderItemShipGroup.carrierPartyId?default("N/A")>
-          <@table cellpadding="4" cellspacing="4" class="basic-table">
+          <@table type="fields" cellpadding="4" cellspacing="4" class="basic-table">
             <@tr>
               <@td valign="top">
                 <span>${uiLabelMap.ProductShipToAddress}</span>
@@ -167,7 +153,7 @@ under the License.
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
           <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-          <@table cellpadding="2" cellspacing="0" class="basic-table">
+          <@table type="fields" cellpadding="2" cellspacing="0" class="basic-table">
             <@tr>
               <@td>
                 <div>
@@ -188,7 +174,7 @@ under the License.
           <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-          <@table class="basic-table" cellspacing='0'>
+          <@table type="data-complex" class="basic-table" cellspacing="0">
            <@thead>
             <@tr class="header-row">
               <@th>&nbsp;</@th>
@@ -315,9 +301,7 @@ under the License.
             </@tr>
           </@table>
         </form>
-        <br />
-      </div>
-    </div>
+    </@section>
     <#assign orderId = orderId! >
     <#assign pickRows = verifyPickSession.getPickRows(orderId)!>
     <form name="completePickForm" method="post" action="<@ofbizUrl>completeVerifiedPick</@ofbizUrl>">
@@ -326,15 +310,8 @@ under the License.
       <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
       <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
       <#if pickRows?has_content>
-        <div class="screenlet">
-          <div class="screenlet-title-bar">
-            <ul>
-              <li class="h3">${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.OrderItems} : ${pickRows.size()!}</li>
-            </ul>
-            <br class="clear"/>
-          </div>
-          <div class="screenlet-body">
-            <@table class="basic-table" cellspacing='0'>
+        <@section title="${uiLabelMap.ProductVerified}&nbsp;${uiLabelMap.OrderItems} : ${pickRows.size()!}">
+            <@table type="data-list" class="basic-table" cellspacing="0">
              <@thead>
               <@tr class="header-row">
                 <@th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@th>
@@ -358,8 +335,7 @@ under the License.
             <div align="right">
               <a href="javascript:document.completePickForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
             </div>
-          </div>
-        </div>
+        </@section>
       </#if>
     </form>
   </#if>

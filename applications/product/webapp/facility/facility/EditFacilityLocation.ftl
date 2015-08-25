@@ -16,28 +16,35 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<h2>${title}</h2>
+<#assign menuHtml>
 <#if facilityId?? && locationSeqId??>
-  <div class="button-bar">
-    <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacility}</a>
-    <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacilityLocation}</a>
-    <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewInventoryItem}</a>
+    <li><a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacility}</a></li>
+    <li><a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacilityLocation}</a></li>
+    <li><a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewInventoryItem}</a></li>
     <#assign latestGeoPoint= Static["org.ofbiz.common.geo.GeoWorker"].findLatestGeoPoint(delegator, "FacilityLocationAndGeoPoint", "facilityId", facilityId, "locationSeqId", locationSeqId)!/>
     <#if latestGeoPoint?has_content>
-      <a href="<@ofbizUrl>FacilityLocationGeoLocation?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGeoLocation}</a>
+      <li><a href="<@ofbizUrl>FacilityLocationGeoLocation?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGeoLocation}</a></li>
     </#if>
-  </div>
 </#if>
+</#assign>
+<@section menuHtml=menuHtml>
 
 <#if facilityId?? && !(facilityLocation??)>
     <form action="<@ofbizUrl>CreateFacilityLocation</@ofbizUrl>" method="post">
     <input type="hidden" name="facilityId" value="${facilityId}" />
-    <@table class="basic-table" cellspacing="0">
 <#elseif facilityLocation??>
     <form action="<@ofbizUrl>UpdateFacilityLocation</@ofbizUrl>" method="post">
     <input type="hidden" name="facilityId" value="${facilityId!}" />
     <input type="hidden" name="locationSeqId" value="${locationSeqId}" />
-    <@table class="basic-table" cellspacing="0">
+<#else>
+    <@alert type="error">${uiLabelMap.ProductNotCreateLocationFacilityId}</@alert>
+</#if>
+
+<#if facilityId?? || facilityLocation??>
+
+  <@table type="fields" class="basic-table" cellspacing="0">
+
+<#if facilityLocation??>
     <@tr>
         <@td>${uiLabelMap.ProductFacilityId}</@td>
         <@td>${facilityId!}</@td>
@@ -46,11 +53,8 @@ under the License.
         <@td>${uiLabelMap.ProductLocationSeqId}</@td>
         <@td>${locationSeqId}</@td>
     </@tr>
-<#else>
-    <@alert type="error">${uiLabelMap.ProductNotCreateLocationFacilityId}</@alert>
 </#if>
 
-<#if facilityId??>
     <@tr>
         <@td>${uiLabelMap.ProductType}</@td>
         <@td>
@@ -96,13 +100,11 @@ under the License.
     </@tr>
   </@table>
   </form>
+  
   <#if locationSeqId??>
-  <br />
-  <div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductLocationProduct}</h3>
-    </div>
-    <div class="screenlet-body">
+
+  <#assign sectionTitle>${uiLabelMap.ProductLocationProduct}</#assign>
+  <@section title=sectionTitle>
         <#-- ProductFacilityLocation stuff -->
         <@table class="basic-table hover-bar" cellspacing="0">
         <@thead>
@@ -129,13 +131,9 @@ under the License.
             </@tr>
         </#list>
         </@table>
-    </div>
-  </div>
-  <div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductAddProduct}</h3>
-    </div>
-    <div class="screenlet-body">
+  </@section>
+  <#assign sectionTitle>${uiLabelMap.ProductAddProduct}</#assign>
+  <@section title=sectionTitle>
         <form method="post" action="<@ofbizUrl>createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <input type="hidden" name="locationSeqId" value="${locationSeqId!}" />
@@ -145,8 +143,10 @@ under the License.
             <span>${uiLabelMap.ProductMoveQuantity}</span><input type="text" size="10" name="moveQuantity" />
             <input type="submit" value="${uiLabelMap.CommonAdd}" />
         </form>
-    </div>
-  </div>
+  </@section>
+  
   </#if>
+  
 </#if>
 
+</@section>

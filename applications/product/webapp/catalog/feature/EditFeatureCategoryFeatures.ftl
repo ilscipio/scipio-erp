@@ -16,15 +16,10 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductEditFeaturesForFeatureCategory} "${(curProductFeatureCategory.description)!}"</h3>
-    </div>
-    <div class="screenlet-body">
-        <div class="button-bar">
-          <a href="<@ofbizUrl>CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductCreateNewFeature}</a>
-        </div>
-        <br/>
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductCreateNewFeature}</a></li>
+</#assign>
+<@section title="${uiLabelMap.ProductEditFeaturesForFeatureCategory} \"${(curProductFeatureCategory.description)!}\"" menuHtml=menuHtml>
         <form action="<@ofbizUrl>QuickAddProductFeatures</@ofbizUrl>" method="post">
           <div>
             ${uiLabelMap.CommonAdd}
@@ -34,42 +29,29 @@ under the License.
           </div>
           <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
         </form>
-        <br />
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductProductFeatureMaintenance}</h3>
-    </div>
-    <div class="screenlet-body">
+</@section>
+
+<@section title="${uiLabelMap.ProductProductFeatureMaintenance}">
+        <#macro productFeatureMaintNav>
+          <#if productId?has_content>
+            <#local productString = "&amp;productId=" + productId>
+          </#if>
+          <ul class="button-group">
+            <li><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="${styles.button_default!}<#if (viewIndex <= 0)> disabled</#if>">[${uiLabelMap.CommonPrevious}]</a></li>
+            <li>${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</li>
+            <li><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}</@ofbizUrl>" class="${styles.button_default!}<#if (listSize <= highIndex)> disabled</#if>">[${uiLabelMap.CommonNext}]</a></li>
+          </ul>
+        </#macro>
+        
         <#if (listSize > 0)>
-            <#if productId?has_content>
-              <#assign productString = "&amp;productId=" + productId>
-            </#if>
-            <@table border="0" width="100%" cellpadding="2">
-                <@tr>
-                <@td align="right">
-                    <span>
-                    <b>
-                    <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonPrevious}]</a> |
-                    </#if>
-                    ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
-                    <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonNext}]</a>
-                    </#if>
-                    </b>
-                    </span>
-                </@td>
-                </@tr>
-            </@table>
+          <@productFeatureMaintNav />
         </#if>
-        <br />
+         
         <form method='post' action='<@ofbizUrl>UpdateProductFeatureInCategory</@ofbizUrl>' name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
-        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
            <@thead>
               <@tr class="header-row">
                 <@th>${uiLabelMap.CommonId}</@th>
@@ -86,6 +68,7 @@ under the License.
              </@tr>
            </@thead>
         <#if (listSize > 0)>
+            <@tbody>
             <#assign rowCount = 0>
             <#list productFeatures as productFeature>
             <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
@@ -122,6 +105,7 @@ under the License.
             </@tr>
             <#assign rowCount = rowCount + 1>
             </#list>
+            </@tbody>
             <@tfoot>
             <@tr><@td colspan="11" align="center">
             <input type="hidden" name="_rowCount" value="${rowCount}" />
@@ -131,5 +115,8 @@ under the License.
         </#if>
         </@table>
         </form>
-    </div>
-</div>
+        
+        <#if (listSize > 0)>
+          <@productFeatureMaintNav />
+        </#if>
+</@section>

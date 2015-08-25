@@ -17,18 +17,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoCode??>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.ProductPromoCodeEmails}</h3>
-        </div>
-        <div class="screenlet-body">
+    <#assign sectionTitle>${uiLabelMap.ProductPromoCodeEmails}</#assign>
+    <@section title=sectionTitle>
             <#list productPromoCodeEmails as productPromoCodeEmail>
               <div>
                 <form name="deleteProductPromoCodeEmail_${productPromoCodeEmail_index}" method="post" action="<@ofbizUrl>deleteProductPromoCodeEmail</@ofbizUrl>">
                   <input type="hidden" name="productPromoCodeId" value="${productPromoCodeEmail.productPromoCodeId}"/>                
                   <input type="hidden" name="emailAddress" value="${productPromoCodeEmail.emailAddress}"/>                
                   <input type="hidden" name="productPromoId" value="${productPromoId}"/>                
-                  <a href='javascript:document.deleteProductPromoCodeEmail_${productPromoCodeEmail_index}.submit()' class='${styles.button_default!}'>${uiLabelMap.CommonRemove}</a>&nbsp;${productPromoCodeEmail.emailAddress}
+                  <a href="javascript:document.deleteProductPromoCodeEmail_${productPromoCodeEmail_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>&nbsp;${productPromoCodeEmail.emailAddress}
                 </form>
               </div>                
             </#list>
@@ -49,13 +46,9 @@ under the License.
                     <input type="submit" value="${uiLabelMap.CommonUpload}" />
                 </form>
             </div>
-        </div>
-    </div>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.ProductPromoCodeParties}</h3>
-        </div>
-        <div class="screenlet-body">
+    </@section>
+    <#assign sectionTitle>${uiLabelMap.ProductPromoCodeParties}</#assign>
+    <@section title=sectionTitle>
             <#list productPromoCodeParties as productPromoCodeParty>
                 <div><a href="<@ofbizUrl>deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&amp;partyId=${productPromoCodeParty.partyId}&amp;productPromoId=${productPromoId}</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${productPromoCodeParty.partyId}</div>
             </#list>
@@ -67,6 +60,5 @@ under the License.
                     <input type="submit" value="${uiLabelMap.CommonAdd}" />
                 </form>
             </div>
-        </div>
-    </div>
+    </@section>
 </#if>

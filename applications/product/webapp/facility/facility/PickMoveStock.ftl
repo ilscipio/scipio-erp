@@ -30,15 +30,10 @@ under the License.
     }
 </script>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.ProductStockMovesNeeded}</li>
-            <li><a href="<@ofbizUrl>PickMoveStockSimple?facilityId=${facilityId!}</@ofbizUrl>">${uiLabelMap.CommonPrint}</a></li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>PickMoveStockSimple?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrint}</a></li>
+</#assign>
+<@section title="${uiLabelMap.ProductStockMovesNeeded}" menuHtml=menuHtml>
         <#if moveByOisgirInfoList?has_content || moveByPflInfoList?has_content>
           <form method="post" action="<@ofbizUrl>processPhysicalStockMove</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
               <#-- general request fields -->
@@ -140,23 +135,18 @@ under the License.
             
             <input type="hidden" name="_rowCount" value="${rowCount}" />
         </form>
-        
       <#else>
         <@resultMsg>${uiLabelMap.ProductNoStockMovesNeeded}.</@resultMsg>
       </#if>
+      
       <#assign messageCount = 0>
       <#list pflWarningMessageList! as pflWarningMessage>
         <#assign messageCount = messageCount + 1>
         <@alert type="warning">${messageCount}:${pflWarningMessage}.</@alert>
       </#list>
-    </div>
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.ProductQuickStockMove}</li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+</@section>      
+      
+<@section title="${uiLabelMap.ProductQuickStockMove}">
         <form method="post" action="<@ofbizUrl>processQuickStockMove</@ofbizUrl>" name='quickStockMove'>
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <@table cellspacing="0" class="basic-table hover-bar">
@@ -189,5 +179,4 @@ under the License.
                 </@tr>
             </@table>
         </form>
-    </div>
-</div>
+</@section>

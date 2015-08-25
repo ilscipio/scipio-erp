@@ -17,13 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.ProductLoadingCatalogCaches}...</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.ProductLoadingCatalogCaches}...">
         <#list messageList as message>
-            <div>${message}</div>
+            <p>${message}</p>
         </#list>
-    </div>
-</div>
+</@section>

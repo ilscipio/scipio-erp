@@ -24,34 +24,21 @@ under the License.
     }
 </script>
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductPicklistManage}</li>
+<#assign menuHtml>
       <#if (picklistInfoList?has_content && 0 < picklistInfoList?size)>
-        <#if (picklistCount > highIndex)>
-          <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')">${uiLabelMap.CommonNext}</a></li>
-        <#else>
-          <li><span class="disabled">${uiLabelMap.CommonNext}</span></li>
-        </#if>
-        <#if (picklistCount > 0)>
-          <li><span>${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${picklistCount}</span></li>
-        </#if>
-        <#if (viewIndex > 0)>
-          <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')">${uiLabelMap.CommonPrevious}</a></li>
-        <#else>
-          <li><span class="disabled">${uiLabelMap.CommonPrevious}</span></li>
-        </#if>
+          <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" class="${styles.button_default!}<#if !(picklistCount > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
+          <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${picklistCount}</span></li>
+          <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" class="${styles.button_default!}<#if !(viewIndex > 0)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
       </#if>
-    </ul>
-    <br class="clear"/>
-  </div>
+</#assign>
+<@section title="${uiLabelMap.ProductPicklistManage}" menuHtml=menuHtml>
+
   <form name="paginationForm" method="post" action="<@ofbizUrl>PicklistManage</@ofbizUrl>">
     <input type="hidden" name="viewSize" value="${viewSize}"/>
     <input type="hidden" name="viewIndex" value="${viewIndex}"/>
     <input type="hidden" name="facilityId" value="${facilityId}"/>
   </form>
-  <div class="screenlet-body">
+  
     <#if picklistInfoList?has_content>
       <#list picklistInfoList as picklistInfo>
         <#assign picklist = picklistInfo.picklist>
@@ -149,7 +136,7 @@ under the License.
             </div>
             <#if picklistBinInfo.picklistItemInfoList?has_content>
               <div style="margin-left: 30px;">
-                <@table type="data" autoAltRows=true class="basic-table" cellspacing="0">
+                <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
                  <@thead>
                   <@tr class="header-row">
                     <@th>${uiLabelMap.ProductOrderId}</@th>
@@ -183,7 +170,7 @@ under the License.
                             <input type="hidden" name="shipGroupSeqId" value="${picklistItemInfo.picklistItem.shipGroupSeqId}"/>
                             <input type="hidden" name="inventoryItemId" value="${picklistItemInfo.picklistItem.inventoryItemId}"/>
                             <input type="hidden" name="facilityId" value="${facilityId!}"/>
-                            <a href='javascript:document.deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()' class='${styles.button_default!}'>&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a>
+                            <a href="javascript:document.deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()" class="${styles.button_default!}">&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a>
                           </form>
                         </@td>
                       </#if>
@@ -202,7 +189,7 @@ under the License.
               </div>
               <#if picklistBinInfo.productStore.managedByLot?? && picklistBinInfo.productStore.managedByLot = "Y">
                 <div style="margin-left: 30px;">
-                  <@table type="data" autoAltRows=true class="basic-table" cellspacing="0">
+                  <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
                     <@thead>
                     <@tr class="header-row">                   
                           <@th>${uiLabelMap.ProductOrderId}</@th>
@@ -239,7 +226,7 @@ under the License.
                                 <#if inventoryItemAndLocation.lotId?has_content>
                                   <input type="hidden" name="oldLotId" value="${inventoryItemAndLocation.lotId}" />
                                 </#if>
-                                <a href='javascript:document.editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()' class='${styles.button_default!}'>&nbsp;${uiLabelMap.CommonEdit}&nbsp;</a>
+                                <a href="javascript:document.editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()" class="${styles.button_default!}">&nbsp;${uiLabelMap.CommonEdit}&nbsp;</a>
                               </@td>
                             </@tr>
                           </form>
@@ -255,8 +242,7 @@ under the License.
           <hr />
         </#if>
       </#list>
-    <#else/>
-      <h3>${uiLabelMap.ProductNoPicksStarted}.</h3>
+    <#else>
+      <@resultMsg>${uiLabelMap.ProductNoPicksStarted}.</@resultMsg>
     </#if>
-  </div>
-</div>
+</@section>

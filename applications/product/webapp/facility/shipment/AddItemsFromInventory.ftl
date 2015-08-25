@@ -17,14 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductIssueInventoryItemsToShipment}: [${shipmentId!}]</li>
-    </ul>
-  </div>
-  <div class="screenlet-body">
-    <@table cellspacing="0" cellpadding="2" class="basic-table hover-bar">
+<@section title="${uiLabelMap.ProductIssueInventoryItemsToShipment}: [${shipmentId!}]">
+    <@table type="data-list" cellspacing="0" cellpadding="2" class="basic-table hover-bar">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonReturn} ${uiLabelMap.CommonDescription}</@th>
@@ -71,5 +65,4 @@ under the License.
         </@tr>
       </#list>
     </@table>
-  </div>
-</div>
+</@section>

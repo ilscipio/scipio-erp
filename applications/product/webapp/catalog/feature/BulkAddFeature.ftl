@@ -16,16 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductAddProductFeatureInBulk} ${uiLabelMap.CommonFor} ${featureCategory.description}</h3>
-    </div>
-    <div class="screenlet-body">
-        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
-          <form method='post' action='<@ofbizUrl>BulkAddProductFeatures</@ofbizUrl>' name="selectAllForm">
+<@section title="${uiLabelMap.ProductAddProductFeatureInBulk} ${uiLabelMap.CommonFor} ${featureCategory.description}">
+        <form method='post' action='<@ofbizUrl>BulkAddProductFeatures</@ofbizUrl>' name="selectAllForm">
           <input type="hidden" name="_useRowSubmit" value="Y" />
           <input type="hidden" name="_checkGlobalScope" value="N" />
           <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.CommonDescription}</@th>
@@ -35,6 +31,7 @@ under the License.
             <@th align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="Y" checked="checked" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureTypeId_tableRow_', 'selectAllForm');" /></@th>
           </@tr>
           </@thead>
+        <@tbody>
         <#list 0..featureNum-1 as feature>
           <@tr id="productFeatureTypeId_tableRow_${feature_index}" valign="middle">
               <@td><input type="text" size='15' name="description_o_${feature_index}" /></@td>
@@ -50,14 +47,15 @@ under the License.
               <@td align="right"><input type="checkbox" name="_rowSubmit_o_${feature_index}" value="Y" checked="checked" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureTypeId_tableRow_${feature_index}');" /></@td>
           </@tr>
         </#list>
+        </@tbody>
         <@tfoot>
         <@tr><@td colspan="11" align="center">
             <input type="hidden" name="_rowCount" value="${featureNum}" />
-            <input type="submit" value='${uiLabelMap.CommonCreate}'/></@td></@tr>
+            <input type="submit" value='${uiLabelMap.CommonCreate}'/>
+        </@td></@tr>
         </@tfoot>
-        </form>
         </@table>
-    </div>
-</div>
+        </form>
+</@section>
 
 

@@ -26,22 +26,22 @@ function insertImageName(size,nameValue) {
 </script>
 
 <#if fileType?has_content>
-    <h3>${uiLabelMap.ProductResultOfImageUpload}</h3>
+<@section title="${uiLabelMap.ProductResultOfImageUpload}">
     <#if !(clientFileName?has_content)>
         <div>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
     <#else>
         <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
         <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
         <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
-        <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>">${imageUrl!}</a></b></div>
+        <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.button_default!}">${imageUrl!}</a></b></div>
     </#if>
-<br />
+</@section>
 </#if>
 
 <#if !(configItem??)>
     <@alert type="error">${uiLabelMap.ProductCouldNotFindProductConfigItem} "${configItemId}".</@alert>
 <#else>
-    <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+    <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
        <@thead>
         <@tr class="header-row">
             <@th>${uiLabelMap.ProductContent}</@th>
@@ -52,6 +52,7 @@ function insertImageName(size,nameValue) {
             <@th>&nbsp;</@th>
         </@tr>
         </@thead>
+        <@tbody>
         <#list productContentList as entry>
         <#assign productContent=entry.productContent/>
         <#assign productContentType=productContent.getRelatedOne("ProdConfItemContentType", true)/>
@@ -64,31 +65,19 @@ function insertImageName(size,nameValue) {
             <@td><a href="/content/control/EditContent?contentId=${productContent.contentId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}" class="${styles.button_default!}">${uiLabelMap.ProductEditContent} ${entry.content.contentId}</@td>
          </@tr>
          </#list>
+         </@tbody>
     </@table>
 
     <#if configItemId?has_content && configItem?has_content>
-        <div class="screenlet">
-            <div class="screenlet-title-bar">
-                <h3>${uiLabelMap.ProductCreateNewProductConfigItemContent}</h3>
-            </div>
-            <div class="screenlet-body">
+        <@section title="${uiLabelMap.ProductCreateNewProductConfigItemContent}">
                 ${prepareAddProductContentWrapper.renderFormString(context)}
-            </div>
-        </div>
-        <div class="screenlet">
-            <div class="screenlet-title-bar">
-                <h3>${uiLabelMap.ProductAddContentProductConfigItem}</h3>
-            </div>
-            <div class="screenlet-body">
+        </@section>
+        
+        <@section title="${uiLabelMap.ProductAddContentProductConfigItem}">
                 ${addProductContentWrapper.renderFormString(context)}
-            </div>
-        </div>
+        </@section>
     </#if>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.ProductOverrideSimpleFields}</h3>
-        </div>
-        <div class="screenlet-body">
+    <@section title="${uiLabelMap.ProductOverrideSimpleFields}">
             <form action="<@ofbizUrl>updateProductConfigItemContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
                 <input type="hidden" name="configItemId" value="${configItemId!}" />
                 <@table cellspacing="0" class="basic-table">
@@ -110,7 +99,7 @@ function insertImageName(size,nameValue) {
                     <@td width="20%" align="right" valign="top">
                         ${uiLabelMap.ProductSmallImage}
                         <#if (configItem.imageUrl)??>
-                            <a href="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Image" src="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" class="cssImgSmall" /></a>
+                            <a href="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Image" src="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" class="cssImgSmall" /></a>
                         </#if>
                     </@td>
                     <@td>&nbsp;</@td>
@@ -133,17 +122,12 @@ function insertImageName(size,nameValue) {
                 </@tr>
                 </@table>
             </form>
-        </div>
-    </div>
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>${uiLabelMap.ProductUploadImage}</h3>
-        </div>
-        <div class="screenlet-body">
+    </@section>
+    
+    <@section title="${uiLabelMap.ProductUploadImage}">
             <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductConfigItemImage?configItemId=${configItemId}&amp;upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
                 <input type="file" size="50" name="fname" />
                 <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}" />
             </form>
-        </div>
-    </div>
+    </@section>
 </#if>

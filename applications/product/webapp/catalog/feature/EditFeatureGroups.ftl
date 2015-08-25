@@ -16,12 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.PageTitleEditProductFeatureGroups}</h3>
-    </div>
-    <div class="screenlet-body">
-        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+<@section title="${uiLabelMap.PageTitleEditProductFeatureGroups}">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
          <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.CommonId}</@th>
@@ -30,6 +26,7 @@ under the License.
             <@th>&nbsp;</@th>
           </@tr>
           </@thead>
+          <@tbody>
           <#list productFeatureGroups as productFeatureGroup>
             <@tr valign="middle">
                 <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${productFeatureGroup.productFeatureGroupId}</a></@td>
@@ -43,14 +40,11 @@ under the License.
                 <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.ProductFeatureGroupAppls}</a></@td>
             </@tr>
           </#list>
+          </@tbody>
         </@table>
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3>${uiLabelMap.ProductCreateProductFeatureGroup}</h3>
-    </div>
-    <div class="screenlet-body">
+</@section>
+
+<@section title="${uiLabelMap.ProductCreateProductFeatureGroup}">
         <form method="post" action="<@ofbizUrl>CreateProductFeatureGroup</@ofbizUrl>">
           <br />
           <@table type="fields" cellspacing="0" class="basic-table">
@@ -63,6 +57,4 @@ under the License.
             </@tr>
           </@table>
         </form>
-        <br />
-    </div>
-</div>
+</@section>

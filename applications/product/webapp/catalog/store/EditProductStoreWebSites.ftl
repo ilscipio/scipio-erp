@@ -20,7 +20,7 @@ under the License.
   <li><a href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewProductStoreWebSite}</a></li>
 </#assign>
 <@section title="${uiLabelMap.PageTitleEditProductStoreWebSites}" menuHtml=menuHtml>
-        <@table type="data" autoAltRows=true cellspacing="0" class="basic-table">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
           <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.ProductWebSiteId}</@th>

@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if shipmentPackageDatas?has_content>
-<div class="screenlet">
-    <div class="screenlet-body">
+<@section>
       <@table type="data-complex" autoAltRows=true cellspacing="0" cellpadding="2" class="basic-table">
        <@thead>
         <@tr class="header-row">
@@ -57,6 +56,5 @@ under the License.
           </#list>
         </#list>
       </@table>
-    </div>
-</div>
+</@section>
 </#if>

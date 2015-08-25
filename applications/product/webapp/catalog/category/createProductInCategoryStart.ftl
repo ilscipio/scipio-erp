@@ -19,17 +19,15 @@ under the License.
 
 <#assign productFeaturesByTypeMap = Static["org.ofbiz.product.feature.ParametricSearch"].makeCategoryFeatureLists(productCategoryId, delegator)>
 
+<#assign menuHtml>
 <#if productCategoryId?has_content>
-    <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.ProductBackToEditCategory}]</a>
+    <li><a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.ProductBackToEditCategory}]</a></li>
 </#if>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <h3><b>&nbsp;</b></h3>
-    </div>
-    <div class="screenlet-body">
-        <form name="createProductInCategoryCheckExistingForm" method="post" action="<@ofbizUrl>CreateProductInCategoryCheckExisting</@ofbizUrl>" style="margin: 0;">
+</#assign>
+<@section menuHtml=menuHtml>
+        <form name="createProductInCategoryCheckExistingForm" method="post" action="<@ofbizUrl>CreateProductInCategoryCheckExisting</@ofbizUrl>">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
-            <@table cellspacing="0" class="basic-table">
+            <@table type="fields" cellspacing="0" class="basic-table">
             <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
                 <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
                 <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
@@ -87,5 +85,4 @@ under the License.
                 </@tr>
             </@table>
         </form>
-    </div>
-</div>
+</@section>

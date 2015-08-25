@@ -104,9 +104,9 @@ not "current" context (too intrusive in current renderer design). still relies o
         <h5${idText}>${text}</h5>
       <#elseif style=="h6">
         <h6${idText}>${text}</h6>
-      <#elseif style?matches(r"heading\+\d")>
-        <@heading relLevel=style?substring("heading+"?length)?number>${text}</@heading>
-      <#elseif style=="heading">
+      <#elseif style?matches(r"h\+\d")>
+        <@heading relLevel=style?substring("h+"?length)?number>${text}</@heading>
+      <#elseif style=="h">
         <@heading>${text}</@heading>
       <#elseif style=="p">
         <p${idText}>${text}</p>
@@ -249,7 +249,7 @@ not "current" context (too intrusive in current renderer design). still relies o
       </#if>
     
       <#local res = titleElemType?matches(r'h(\d+)')>
-      <#local res2 = titleElemType?matches(r'heading\+(\d)')>
+      <#local res2 = titleElemType?matches(r'h\+(\d)')>
       <#if res>
         <#-- overrides headingLevel (so style from screen affects heading calc) -->
         <#local headingLevel = res?groups[1]?number>
@@ -263,7 +263,7 @@ not "current" context (too intrusive in current renderer design). still relies o
         </#if>
         <#local titleElemType = "">
         <#local relHeadingLevel = res2?groups[1]?number>
-      <#elseif "h" == titleElemType || "heading" == titleElemType> <#-- h same as default, just support to help notation -->
+      <#elseif "h" == titleElemType> <#-- h same as default, just support to help notation -->
         <#if (titleStyleParts?size <= 1)>
           <#local titleClass = "">
         </#if>

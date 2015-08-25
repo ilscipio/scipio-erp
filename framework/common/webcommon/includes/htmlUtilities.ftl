@@ -747,6 +747,7 @@ levels manually, but most often should let @section menu handle them.
     padded              = 
     autoHeadingLevel    = auto increase heading level when title present (enabled by default)
     headingLevel        = force this heading level for title. if autoHeadingLevel true, also influences nested elems (even if no title here, but if no title won't consume a size).
+    relHeadingLevel     = increase heading level by this number
     defaultHeadingLevel = default heading level (same as headingLevel if autoHeadingLevel false)
     menuHtml            = optional HTML menu data, li elements only (ul auto added)
     menuClass           = menu class, default is buttons class. "none" prevents class.
@@ -755,7 +756,7 @@ levels manually, but most often should let @section menu handle them.
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section id="" title="" classes="" padded=false autoHeadingLevel=true headingLevel="" defaultHeadingLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
+<#macro section id="" title="" classes="" padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
     <#if id?has_content>
         <#local contentId = id + "_content">
         <#local menuId = id + "_menu">
@@ -765,7 +766,7 @@ levels manually, but most often should let @section menu handle them.
     </#if>
     <#-- note: autoHeadingLevel logic now implemented in renderScreenletBegin -->
     <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuString=menuHtml fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu 
-        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass/>
+        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass/>
         <#nested />
     <@renderScreenletEnd />
 </#macro>

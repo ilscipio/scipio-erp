@@ -203,7 +203,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#-- Cato:
      fromWidgets: hint of whether called by renderer or ftl macros
      hasContent: hint to say there will be content, workaround for styling -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" autoHeadingLevel=true headingLevel="" defaultHeadingLevel=2>
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2>
 
 <#-- level logic begin -->
     <#-- note: request obj only available because of macro renderer initial context mod -->
@@ -249,6 +249,7 @@ not "current" context (too intrusive in current renderer design). still relies o
       </#if>
     
       <#local res = titleElemType?matches(r'h(\d+)')>
+      <#local res2 = titleElemType?matches(r'heading\+(\d)')>
       <#if res>
         <#-- overrides headingLevel (so style from screen affects heading calc) -->
         <#local headingLevel = res?groups[1]?number>
@@ -256,7 +257,13 @@ not "current" context (too intrusive in current renderer design). still relies o
           <#local titleClass = "">
         </#if>
         <#local titleElemType = "">
-      <#elseif "h" == titleElemType> <#-- h same as default, just support to help notation -->
+      <#elseif res2>
+        <#if (titleStyleParts?size <= 1)>
+          <#local titleClass = "">
+        </#if>
+        <#local titleElemType = "">
+        <#local relHeadingLevel = res2?groups[1]?number>
+      <#elseif "h" == titleElemType || "heading" == titleElemType> <#-- h same as default, just support to help notation -->
         <#if (titleStyleParts?size <= 1)>
           <#local titleClass = "">
         </#if>
@@ -287,6 +294,9 @@ not "current" context (too intrusive in current renderer design). still relies o
         <#else>
             <#local hLevel = defaultHeadingLevel>
         </#if>
+        <#if relHeadingLevel?has_content>
+          <#local hLevel = hLevel + relHeadingLevel>
+        </#if>
         <#if title?has_content>
             <#local dummy = setCurrentHeadingLevel(hLevel + 1)>
             <#local updatedHeadingLevel = true>
@@ -301,6 +311,9 @@ not "current" context (too intrusive in current renderer design). still relies o
             <#local explicitHeadingLevel = true>
         <#else>
             <#local hLevel = defaultHeadingLevel>
+        </#if>
+        <#if relHeadingLevel?has_content>
+          <#local hLevel = hLevel + relHeadingLevel>
         </#if>
     </#if>
     <#-- FIXME: this is highly suboptimal way to preserve info, but need a stack to record

@@ -952,17 +952,17 @@ levels manually, but most often should let @section menu handle them.
 <#macro alert type="" addClass="" id="">
 <#if type="error"><#local type = "alert"></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
-        <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
-        <div data-alert class="${styles.alert_wrap!} ${styles.alert_prefix_type!}${type}">
+   <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
+       <div data-alert class="${styles.alert_wrap!} ${styles.alert_prefix_type!}${type}">
            <div class="${styles.grid_row!}">
               <div class="${styles.grid_large!}12 ${styles.grid_cell!}<#if addClass?has_content> ${addClass}</#if>">
                   <#nested>
                   <a href="#" class="close">&times;</a>
-                </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                  </div>
+              </div>
+           </div>
+       </div>
+   </div>
 </#macro>
 
 <#-- 
@@ -982,6 +982,25 @@ Other messages such as for missing params/record IDs are usually errors.
 <#macro resultMsg addClass="" id="">
   <#local class = ("result-msg " + addClass)?trim>
   <p<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if>><#nested></p>
+</#macro>
+
+<#-- 
+*************
+* error result message
+************
+Common error result message.
+Abstracts/centralizes method used to display error, since of no consequence to most
+templates: currently @alert.
+
+    Usage example:  
+    <@errorMsg type="permission">${uiLabelMap.CommonNoPermission}.</@errorMsg>            
+                    
+   * General Attributes *
+    type           = [permission|security|error], default error
+    addClass       = additional classes for nested container
+-->
+<#macro errorMsg type="error" addClass="" id="">
+  <@alert type="error" addClass=addClass id=id><#nested></@alert>
 </#macro>
 
 <#--

@@ -34,13 +34,13 @@ your template file:
 
 <#macro DateRange formName="" fromDate="" toDate="">
   <tr>
-    <td class=>${uiLabelMap.CommonFrom}</td>
+    <td>${uiLabelMap.CommonFrom}</td>
     <td>
       <@DateField formName=formName fieldName="date1" fieldValue=fromDate/>
     </td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.CommonTo}</td>
+    <td>${uiLabelMap.CommonTo}</td>
     <td>
       <@DateField formName=formName fieldName="date2" fieldValue=toDate/>
     </td>
@@ -49,7 +49,7 @@ your template file:
 
 <#macro DayInMonth occurrence=0 day=firstDayOfWeek>
   <tr>
-    <td class=>${uiLabelMap.TemporalExpressionOccurrence}</td>
+    <td>${uiLabelMap.TemporalExpressionOccurrence}</td>
     <td>
       <select name="integer2">
         <#list 1..5 as i>
@@ -62,53 +62,53 @@ your template file:
     </td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.CommonDay}</td>
+    <td>${uiLabelMap.CommonDay}</td>
     <td><@DayOfWeekField fieldName="integer1" fieldValue=day/></td>
   </tr>
 </#macro>
 
 <#macro DayOfMonthRange fromDay=1 toDay=31>
   <tr>
-    <td class=>${uiLabelMap.CommonFrom}</td>
+    <td>${uiLabelMap.CommonFrom}</td>
     <td><@DayOfMonthField fieldName="integer1" fieldValue=fromDay/></td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.CommonTo}</td>
+    <td>${uiLabelMap.CommonTo}</td>
     <td><@DayOfMonthField fieldName="integer2" fieldValue=toDay/></td>
   </tr>
 </#macro>
 
 <#macro HourOfDayRange fromHour=1 toHour=23>
   <tr>
-    <td class=>${uiLabelMap.CommonFrom}</td>
+    <td>${uiLabelMap.CommonFrom}</td>
     <td><@HourOfDayField fieldName="integer1" fieldValue=fromHour/></td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.CommonTo}</td>
+    <td>${uiLabelMap.CommonTo}</td>
     <td><@HourOfDayField fieldName="integer2" fieldValue=toHour/></td>
   </tr>
 </#macro>
 
 <#macro DayOfWeekRange fromDay=firstDayOfWeek toDay=lastDayOfWeek>
   <tr>
-    <td class=>${uiLabelMap.CommonFrom}</td>
+    <td>${uiLabelMap.CommonFrom}</td>
     <td><@DayOfWeekField fieldName="integer1" fieldValue=fromDay/></td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.CommonTo}</td>
+    <td>${uiLabelMap.CommonTo}</td>
     <td><@DayOfWeekField fieldName="integer2" fieldValue=toDay/></td>
   </tr>
 </#macro>
 
 <#macro Frequency formName="" fromDate="" freqType=-1 freqValue=0>
   <tr>
-    <td class=>${uiLabelMap.CommonFrom}</td>
+    <td>${uiLabelMap.CommonFrom}</td>
     <td>
       <@DateField formName=formName fieldName="date1" fieldValue=fromDate/>
     </td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.TemporalExpressionFreqType}</td>
+    <td>${uiLabelMap.TemporalExpressionFreqType}</td>
     <td>
       <select name="integer1">
         <#list frequencyTypeList as freqTypeItem>
@@ -118,7 +118,7 @@ your template file:
     </td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.TemporalExpressionFreqCount}</td>
+    <td>${uiLabelMap.TemporalExpressionFreqCount}</td>
     <td>
       <select name="integer2">
         <#list 1..50 as i>
@@ -131,37 +131,37 @@ your template file:
 
 <#macro MinuteRange fromMinute=1 toMinute=59>
   <tr>
-    <td class=>${uiLabelMap.CommonFrom}</td>
+    <td>${uiLabelMap.CommonFrom}</td>
     <td><@MinuteField fieldName="integer1" fieldValue=fromMinute/></td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.CommonTo}</td>
+    <td>${uiLabelMap.CommonTo}</td>
     <td><@MinuteField fieldName="integer2" fieldValue=toMinute/></td>
   </tr>
 </#macro>
 
 <#macro MonthRange fromMonth=0 toMonth=11>
   <tr>
-    <td class=>${uiLabelMap.CommonFrom}</td>
+    <td>${uiLabelMap.CommonFrom}</td>
     <td><@MonthField fieldName="integer1" fieldValue=fromMonth/></td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.CommonTo}</td>
+    <td>${uiLabelMap.CommonTo}</td>
     <td><@MonthField fieldName="integer2" fieldValue=toMonth/></td>
   </tr>
 </#macro>
 
 <#macro TimeOfDayRange fromTime="" toTime="" freqType=11 freqValue=1>
   <tr>
-    <td class=>${uiLabelMap.CommonFrom}</td>
+    <td>${uiLabelMap.CommonFrom}</td>
     <td><input type="text" name="string1" value="${fromTime}" maxlength="8" size="8"/><span class="tooltip">${uiLabelMap.TemporalExpressionTimeFormat}</span></td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.CommonTo}</td>
+    <td>${uiLabelMap.CommonTo}</td>
     <td><input type="text" name="string2" value="${toTime}" maxlength="8" size="8"/><span class="tooltip">${uiLabelMap.TemporalExpressionTimeFormat}</span></td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.TemporalExpressionFreqType}</td>
+    <td>${uiLabelMap.TemporalExpressionFreqType}</td>
     <td>
       <select name="integer1">
         <option value="13"<#if freqType == 13> selected="selected"</#if>>${uiLabelMap.CommonSecond}</option>
@@ -171,7 +171,7 @@ your template file:
     </td>
   </tr>
   <tr>
-    <td class=>${uiLabelMap.TemporalExpressionFreqCount}</td>
+    <td>${uiLabelMap.TemporalExpressionFreqCount}</td>
     <td><input type="text" name="integer2" value="${freqValue}" maxlength="8" size="8"/></td>
   </tr>
 </#macro>

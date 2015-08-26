@@ -22,14 +22,14 @@ under the License.
         document.UpdateLabelForm.submit();
     }
 </script>
-<div class="screenlet-body">
+<@section>
     <form method="post" action="<@ofbizUrl>SaveLabelsToXmlFile</@ofbizUrl>" name="UpdateLabelForm">
         <table class="basic-table" cellspacing="3">
             <tr>
                 <td colspan="2">&nbsp;</td>
             </tr>
             <tr>
-                <td class=>${uiLabelMap.WebtoolsLabelManagerKey}</td>
+                <td>${uiLabelMap.WebtoolsLabelManagerKey}</td>
                 <td>
                     <#if parameters.sourceKey??>
                         ${parameters.sourceKey}
@@ -42,13 +42,13 @@ under the License.
                 </td>
             </tr>
             <tr>
-                <td class=>${uiLabelMap.WebtoolsLabelManagerKeyComment}</td>
+                <td>${uiLabelMap.WebtoolsLabelManagerKeyComment}</td>
                 <td>
                     <input type="text" name="keyComment" size="70" value="${parameters.sourceKeyComment!}" />
                 </td>
             </tr>
             <tr>
-                <td class=>${uiLabelMap.WebtoolsLabelManagerFileName}</td>
+                <td>${uiLabelMap.WebtoolsLabelManagerFileName}</td>
                 <td>
                     <#if parameters.sourceFileName??>
                         ${parameters.sourceFileName}
@@ -102,7 +102,7 @@ under the License.
                                 ${locale.getDisplayName(locale)}
                             </td>
                         <#else>
-                            <td class=>${localeFound}</td>
+                            <td>${localeFound}</td>
                         </#if>
                         <td>
                             <input type="hidden" name="localeNames" value="${localeFound}" />
@@ -126,4 +126,4 @@ under the License.
             </tr>
         </table>
     </form>
-</div>
+</@section>

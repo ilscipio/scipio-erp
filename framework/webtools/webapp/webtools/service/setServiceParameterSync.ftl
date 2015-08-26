@@ -25,7 +25,7 @@ under the License.
 
     <#list serviceParameters as serviceParameter>
       <tr>
-        <td class=>${serviceParameter.name} (${serviceParameter.type}) <#if serviceParameter.optional == "N"><small>${uiLabelMap.CommonRequired}</small></#if></td>
+        <td>${serviceParameter.name} (${serviceParameter.type}) <#if serviceParameter.optional == "N"><small>${uiLabelMap.CommonRequired}</small></#if></td>
         <td>
           <input type="text" size="20" name="${serviceParameter.name}" value="<#if serviceParameter.value??>${serviceParameter.value?string}</#if>"<#if serviceParameter.optional == "N"> required</#if>/>
           <#if serviceParameter.optional == "N"><span class="tooltip">${uiLabelMap.CommonRequired}</span></#if>

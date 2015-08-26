@@ -114,7 +114,7 @@ function ShowTab(lname) {
                     <input type="hidden" name="UPDATE_MODE" value="UPDATE"/>
                     <#list newFieldPkList as field>
                       <tr<@dataRowClassStr alt=alt_row />>
-                        <td class=>${field.name}</td>
+                        <td>${field.name}</td>
                         <td>
                           <input type="hidden" name="${field.name}" value="${field.value}"/>
                           ${field.value}
@@ -134,7 +134,7 @@ function ShowTab(lname) {
                     <input type="hidden" name="UPDATE_MODE" value="CREATE"/>
                     <#list newFieldPkList as field>
                       <tr<@dataRowClassStr alt=alt_row />>
-                        <td class=>${field.name}</td>
+                        <td>${field.name}</td>
                         <td>
                           <#if field.fieldType == 'DateTime'>
                             DateTime(YYYY-MM-DD HH:mm:SS.sss):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
@@ -174,7 +174,7 @@ function ShowTab(lname) {
                   <#assign alt_row = false>
                   <#list newFieldNoPkList as field>
                     <tr<@dataRowClassStr alt=alt_row />>
-                      <td class=>${field.name}</td>
+                      <td>${field.name}</td>
                       <td>
                         <#if field.fieldType == 'DateTime'>
                           DateTime(YYYY-MM-DD HH:mm:SS.sss):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>

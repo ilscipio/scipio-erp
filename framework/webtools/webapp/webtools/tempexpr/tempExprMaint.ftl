@@ -27,21 +27,21 @@ under the License.
   </#if>
   <table class="basic-table" cellspacing="0">
     <tr>
-      <td class=>${uiLabelMap.TemporalExpressionId}</td>
+      <td>${uiLabelMap.TemporalExpressionId}</td>
       <td>${temporalExpression.tempExprId}</td>
     </tr>
     <tr>
-      <td class=>${uiLabelMap.TemporalExpressionType}</td>
+      <td>${uiLabelMap.TemporalExpressionType}</td>
       <td>${uiLabelMap.get("TemporalExpression_" + temporalExpression.tempExprTypeId)}</td>
     </tr>
   <#if !"INTERSECTION.UNION.DIFFERENCE.SUBSTITUTION"?contains(temporalExpression.tempExprTypeId)>
     <tr>
-      <td class=>${uiLabelMap.CommonDescription}</td>
+      <td>${uiLabelMap.CommonDescription}</td>
       <td><input type="text" name="description" value="${temporalExpression.description!}" maxlength="60" size="20"/></td>
     </tr>
   <#else>
     <tr>
-      <td class=>${uiLabelMap.CommonDescription}</td>
+      <td>${uiLabelMap.CommonDescription}</td>
       <td>${temporalExpression.get("description",locale)!}</td>
     </tr>
   </#if>
@@ -69,7 +69,7 @@ under the License.
       <#assign candidateIdList = Static["org.ofbiz.service.calendar.ExpressionUiHelper"].getCandidateIncludeIds(delegator, temporalExpression.tempExprId)/>
       <#if "INTERSECTION.UNION"?contains(temporalExpression.tempExprTypeId)>
         <tr>
-          <td class=>${uiLabelMap.TemporalExpressionInclude}</td>
+          <td>${uiLabelMap.TemporalExpressionInclude}</td>
           <td><@CreateExprAssocForm formName="includeExpression"/></td>
         </tr>
       <#else>
@@ -87,19 +87,19 @@ under the License.
         </#if>
         <#if !hasInclude>
           <tr>
-            <td class=>${uiLabelMap.TemporalExpressionInclude}</td>
+            <td>${uiLabelMap.TemporalExpressionInclude}</td>
             <td><@CreateExprAssocForm formName="includeExpression" exprAssocType="INCLUDE"/></td>
           </tr>
         </#if>
         <#if !hasExclude>
           <tr>
-            <td class=>${uiLabelMap.TemporalExpressionExclude}</td>
+            <td>${uiLabelMap.TemporalExpressionExclude}</td>
             <td><@CreateExprAssocForm formName="excludeExpression" exprAssocType="EXCLUDE"/></td>
           </tr>
         </#if>
         <#if !hasSubstitution && temporalExpression.tempExprTypeId == "SUBSTITUTION">
           <tr>
-            <td class=>${uiLabelMap.TemporalExpression_SUBSTITUTION}</td>
+            <td>${uiLabelMap.TemporalExpression_SUBSTITUTION}</td>
             <td><@CreateExprAssocForm formName="substitutionExpression" exprAssocType="SUBSTITUTION"/></td>
           </tr>
         </#if>
@@ -152,11 +152,11 @@ under the License.
       <#assign headingText = uiLabelMap[mapExpression]/>
       <tr><td colspan="2" class="h2">${headingText}</td></tr>
       <tr>
-        <td class=>${uiLabelMap.TemporalExpressionId}</td>
+        <td>${uiLabelMap.TemporalExpressionId}</td>
         <td><input name="tempExprId" type="text" maxlength="20" size="20"/><span class="tooltip">${uiLabelMap.CommonAutoAssignedId}</span></td>
       </tr>
       <tr>
-        <td class=>${uiLabelMap.CommonDescription}</td>
+        <td>${uiLabelMap.CommonDescription}</td>
         <td><input name="description" type="text" maxlength="60" size="20"/></td>
       </tr>
       <@formContents/>

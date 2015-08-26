@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet-body">
+<@section>
   <#if parameters.searchLabels??>
   <table class="basic-table hover-bar">
    <thead>
@@ -47,4 +47,4 @@ under the License.
     </#list>
   </table>
   </#if>
-</div>
+</@section>

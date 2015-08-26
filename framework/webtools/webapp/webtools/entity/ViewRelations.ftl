@@ -16,22 +16,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.WebtoolsRelations}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>" class="smallSubmit">${uiLabelMap.WebtoolsBackToFindScreen}</a></li>
+</#assign>
+<@section title="${uiLabelMap.WebtoolsRelations}">
     <#if hasViewPermission>
-        <br />
-        <h2>${uiLabelMap.WebtoolsForEntity}: ${entityName}</h2>
-        <br />
-        <div class="button-bar">
-            <a href="<@ofbizUrl>FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>" class="smallSubmit">${uiLabelMap.WebtoolsBackToFindScreen}</a>
-        </div>
-        <br />
+        <@heading>${uiLabelMap.WebtoolsForEntity}: ${entityName}</@heading>
+
         <table class="basic-table hover-bar" cellspacing="0">
           <thead>
             <tr class="header-row">
@@ -61,5 +52,4 @@ under the License.
     <#else>
         <@alert type="error">${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}.</@alert>
     </#if>
-  </div>
-</div>
+</@section>

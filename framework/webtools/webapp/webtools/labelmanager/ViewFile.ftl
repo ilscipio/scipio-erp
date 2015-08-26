@@ -16,14 +16,14 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet-body">
+<@section>
     <table class="basic-table" cellspacing="3">
         <tr>
-            <td class=>${uiLabelMap.WebtoolsLabelManagerKey}</td>
+            <td>${uiLabelMap.WebtoolsLabelManagerKey}</td>
             <td>${parameters.sourceKey!}</td>
         </tr>
         <tr>
-            <td class=>${uiLabelMap.WebtoolsLabelManagerFileName}</td>
+            <td>${uiLabelMap.WebtoolsLabelManagerFileName}</td>
             <td>${parameters.fileName!}</td>
         </tr>
         <tr>
@@ -33,4 +33,4 @@ under the License.
     <textarea rows="${rows}}" cols="150" disabled="disabled">
 ${fileString}
     </textarea>
-</div>
+</@section>

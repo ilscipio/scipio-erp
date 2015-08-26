@@ -922,9 +922,10 @@ levels manually, but most often should let @section menu handle them.
     class          = heading classes
     addClass       = additional classes, never substitutes default
     id             = heading id
-    [attribs...]   = legacy h1-h6 attributes
+    attribs              = hash of other legacy h1-h6 attributes (mainly for those with dash in name)
+    [inlineAttribs...]   = other legacy h1-h6 attributes, inlined
 -->
-<#macro heading level="" relLevel="" class="" addClass="" id="" attribs...>
+<#macro heading level="" relLevel="" class="" addClass="" id="" attribs={} inlineAttribs...>
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
   </#if>
@@ -936,7 +937,7 @@ levels manually, but most often should let @section menu handle them.
   <#elseif (level > 6)>
     <#local level = 6>
   </#if>
-  <h${level}<#if class?has_content || addClass?has_content> class="${(class + " " + addClass)?trim}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#nested></h${level}>
+  <h${level}<#if class?has_content || addClass?has_content> class="${(class + " " + addClass)?trim}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>><#nested></h${level}>
 </#macro>
 
 <#-- 
@@ -1197,9 +1198,15 @@ Creates a very basic wrapper for code blocks
     </code></pre>
 </#macro>
 
-<#macro elemAttribStr attribs>
+<#macro elemAttribStr attribs includeEmpty=false emptyValToken="">
   <#if attribs?is_hash_ex>
-    <#t><#list attribs?keys as name> ${name}="${attribs[name]?string}"</#list>
+    <#if includeEmpty>
+      <#t><#list attribs?keys as name> ${name}="${attribs[name]?string}"</#list>
+    <#elseif emptyValToken?has_content>
+      <#t><#list attribs?keys as name><#if attribs[name]?has_content || emptyValToken?string == attribs[name]?string> ${name}="${attribs[name]?string}"</#if></#list>
+    <#else>
+      <#t><#list attribs?keys as name><#if attribs[name]?has_content> ${name}="${attribs[name]?string}"</#if></#list>
+    </#if>
   </#if>
 </#macro>
 
@@ -1249,9 +1256,10 @@ Helps define table. Required wrapper for all table sub-elem macros.
     useFootAltRoots = whether use alt row logic in foot or not
     cellspacing     = cellspacing, default 0 for most types except generic, set to "" to prevent setting.
     wrapIf          = advanced structure control, for esoteric cases
-    [attribs...]    = legacy <table attributes and values
+    attribs               = hash of other legacy <table attributes (mainly for those with dash in name)
+    [inlineAttribs...]    = other legacy <table attributes and values, inlined
 -->
-<#macro table type="generic" class=true addClass="" id="" wrapIf=true cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs...>
+<#macro table type="generic" class=true addClass="" id="" wrapIf=true cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs={} inlineAttribs...>
 <#if wrapIf>
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
@@ -1323,7 +1331,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <div class="scrollable-table-container">
   </#if>
   <table<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#rt>
-    <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+    <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
     <#nested>
   </table>
   <#if scrollable>
@@ -1338,11 +1346,11 @@ Helps define table. Required wrapper for all table sub-elem macros.
 </#if>
 </#macro>
 
-<#macro thead class="" id="" wrapIf=true attribs...>
+<#macro thead class="" id="" wrapIf=true attribs={} inlineAttribs...>
 <#if wrapIf>
   <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
   <#global catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
-  <thead<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+  <thead<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
     <#nested>
   </thead>
   <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
@@ -1351,11 +1359,11 @@ Helps define table. Required wrapper for all table sub-elem macros.
 </#if>
 </#macro>
 
-<#macro tbody class="" id="" wrapIf=true attribs...>
+<#macro tbody class="" id="" wrapIf=true attribs={} inlineAttribs...>
 <#if wrapIf>
   <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
   <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
-  <tbody<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+  <tbody<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
     <#nested>
   </tbody>
   <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
@@ -1364,11 +1372,11 @@ Helps define table. Required wrapper for all table sub-elem macros.
 </#if>  
 </#macro>
 
-<#macro tfoot class="" id="" wrapIf=true attribs...>
+<#macro tfoot class="" id="" wrapIf=true attribs={} inlineAttribs...>
 <#if wrapIf>
   <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
   <#global catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
-  <tfoot<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+  <tfoot<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
     <#nested>
   </tfoot>
   <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
@@ -1398,9 +1406,10 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
                       sets alt to exact same as parent row
     selected        = boolean, if specified and true marked as selected
     wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (can omit nested)
-    [attribs...]    = legacy <tr attributes and values
+    attribs               = hash of other legacy <tr attributes (mainly for those with dash in name)
+    [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
-<#macro tr class="" id="" metaRow=false useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs...>
+<#macro tr class="" id="" metaRow=false useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#if wrapIf>
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
   <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
@@ -1430,7 +1439,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#if selected?is_boolean && selected == true>
     <#local str = (str + " " + styles.row_selected!)?trim>
   </#if>
-  <tr<#if str?has_content> class="${str}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+  <tr<#if str?has_content> class="${str}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
 </#if>    
     <#nested>
 <#if !openOnly>
@@ -1461,19 +1470,20 @@ Helps define table cells.
     class           = manual classes to add
     id              = cell id
     wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (can omit nested)
-    [attribs...]    = legacy <th and <td attributes and values
+    attribs               = hash of other legacy <th and <td attributes (mainly for those with dash in name)
+    [inlineAttribs...]    = other legacy <th and <td attributes and values
 -->
-<#macro th class="" id="" wrapIf=true openOnly=false closeOnly=false attribs...>
+<#macro th class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#if wrapIf>
-  <#if !closeOnly><th<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>></#if><#nested><#if !openOnly></th></#if>
+  <#if !closeOnly><th<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if !openOnly></th></#if>
 <#else>
 <#nested>
 </#if>
 </#macro>
 
-<#macro td class="" id="" wrapIf=true openOnly=false closeOnly=false attribs...>
+<#macro td class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#if wrapIf>
-  <#if !closeOnly><td<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>></#if><#nested><#if !openOnly></td></#if>
+  <#if !closeOnly><td<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if !openOnly></td></#if>
 <#else>
 <#nested>
 </#if>

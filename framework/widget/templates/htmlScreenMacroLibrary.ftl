@@ -318,13 +318,7 @@ not "current" context (too intrusive in current renderer design). still relies o
           <#local hLevel = hLevel + relHeadingLevel>
         </#if>
     </#if>
-    <#-- FIXME: this is highly suboptimal way to preserve info, but need a stack to record
-         values we had, for the end macro, because the way the macros are split... -->
-    <#if renderScreenletValuesStack?has_content && (renderScreenletValuesStack?size > 0)>
-      <#global renderScreenletValuesStack = renderScreenletValuesStack + [{"autoHeadingLevel":autoHeadingLevel, "updatedHeadingLevel":updatedHeadingLevel, "prevHeadingLevel":prevHeadingLevel, "prevSectionLevel":prevSectionLevel}]>
-    <#else>
-      <#global renderScreenletValuesStack = [{"autoHeadingLevel":autoHeadingLevel, "updatedHeadingLevel":updatedHeadingLevel, "prevHeadingLevel":prevHeadingLevel, "prevSectionLevel":prevSectionLevel}]>
-    </#if>
+    <#global renderScreenletValuesStack = pushStack(renderScreenletValuesStack!, {"autoHeadingLevel":autoHeadingLevel, "updatedHeadingLevel":updatedHeadingLevel, "prevHeadingLevel":prevHeadingLevel, "prevSectionLevel":prevSectionLevel})>
 <#-- auto-heading-level logic end -->
 
 <#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
@@ -410,9 +404,9 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
 
 <#macro renderScreenletEnd>
 <#-- auto-heading-level logic begin -->
-    <#local stackValues = renderScreenletValuesStack?last>
-    <#local stackSize = renderScreenletValuesStack?size>
-
+    <#local stackValues = readStack(renderScreenletValuesStack!)>
+    <#global renderScreenletValuesStack = popStack(renderScreenletValuesStack!)>
+    
     <#local autoHeadingLevel = stackValues.autoHeadingLevel>
     <#local updatedHeadingLevel = stackValues.updatedHeadingLevel>
     <#local prevHeadingLevel = stackValues.prevHeadingLevel>
@@ -426,12 +420,6 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
         <#local dummy = setCurrentHeadingLevel(prevHeadingLevel)>
     </#if>
     
-    <#-- FIXME: this is highly suboptimal way to use stack... -->
-    <#if (stackSize > 1)>
-      <#global renderScreenletValuesStack = renderScreenletValuesStack?chunk(stackSize - 1)?first>
-    <#else>
-      <#global renderScreenletValuesStack = []>
-    </#if>
 <#-- auto-heading-level logic end -->
     <#lt></div></div></div></div>
 </#macro>

@@ -98,21 +98,17 @@ under the License.
                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                     <input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
                     <@td>&nbsp;</@td>
-                    <@td colspan="2">
-                        <div><span>${uiLabelMap.ProductAddToPackage}</span>
+                    <@td colspan="2"><span>${uiLabelMap.ProductAddToPackage}</span>
                         <select name="shipmentPackageSeqId">
                             <#list shipmentPackages as shipmentPackage>
                                 <option>${shipmentPackage.shipmentPackageSeqId}</option>
                             </#list>
                             <option value="New">${uiLabelMap.CommonNew}</option><!-- Warning: the "New" value cannot be translated because it is used in secas -->
                         </select>
-                        </div>
                     </@td>
                     <@td>
-                        <div>
                             <input type="text" name="quantity" size="5" value="${totalQuantityToPackage}"/>
                             <a href="javascript:document.createShipmentPackageContentForm${shipmentItemData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a>
-                        </div>
                     </@td>
                     <@td colspan="2">&nbsp;</@td>
                     <@td>&nbsp;</@td>

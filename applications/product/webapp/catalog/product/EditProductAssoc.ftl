@@ -73,10 +73,8 @@ under the License.
                 <@td align="right">${uiLabelMap.CommonFromDate}</@td>
                 <@td>&nbsp;</@td>
                 <@td>
-                    <div>
                         <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         ${uiLabelMap.CommonSetNowEmpty}
-                    </div>
                 </@td>
                 </@tr>
             <#else>

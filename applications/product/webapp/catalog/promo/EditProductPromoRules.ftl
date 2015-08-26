@@ -412,7 +412,6 @@ under the License.
     </#list>
             <@tr>
               <@td colspan="3">
-                <div>
                   <form method="post" action="<@ofbizUrl>createProductPromoAction</@ofbizUrl>">
                     <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                     <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
@@ -435,7 +434,6 @@ under the License.
                     </select>
                     <input type="submit" value="${uiLabelMap.ProductCreateAction}" />
                   </form>
-                </div>
               </@td>
             </@tr>
           </@table>

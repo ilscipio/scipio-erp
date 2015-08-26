@@ -111,31 +111,24 @@ under the License.
                             <#assign serializedInv = product.getRelated("InventoryItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("inventoryItemTypeId", "SERIALIZED_INV_ITEM"), null, false)>
                             <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}" />
                             <@td width="45%">
-                              <div>
                                 ${returnItem.returnItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.button_default!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
                                 <#if serializedInv?has_content><font color='red'>**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
-                              </div>
                             </@td>
                           <#elseif orderItem?has_content>
                             <@td width="45%">
-                              <div>
                                 ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
                                 <input type="text" size="12" name="productId_o_${rowCount}" />
                                 <a href="/catalog/control/EditProduct?${StringUtil.wrapString(externalKeyParam)}" target="catalog" class="${styles.button_default!}">${uiLabelMap.ProductCreateProduct}</a>
-                              </div>
                             </@td>
                           <#else>
                             <@td width="45%">
-                              <div>
                                 ${returnItem.returnItemSeqId}:&nbsp;${returnItem.get("description",locale)!}
-                              </div>
                             </@td>
                           </#if>
                           <@td>&nbsp;</@td>
 
                           <#-- location(s) -->
-                          <@td align="right">
-                            <div>${uiLabelMap.ProductLocation}</div>
+                          <@td align="right">${uiLabelMap.ProductLocation}
                           </@td>
                           <@td align="right">
                             <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!>

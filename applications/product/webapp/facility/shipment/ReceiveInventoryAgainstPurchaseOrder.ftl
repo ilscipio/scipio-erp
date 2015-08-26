@@ -107,8 +107,7 @@ under the License.
                         <#if itemsAvailableToReceive>
                             <@th>${uiLabelMap.CommonReceive}</@th>
                             <@th>${uiLabelMap.ProductInventoryItemType}</@th>
-                            <@th colspan="2" align="right">
-                                <div>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'orderItemData_tableRow_', 'selectAllForm');" /></div>
+                            <@th colspan="2" align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'orderItemData_tableRow_', 'selectAllForm');" />
                             </@th>
                         </#if>
                     </@tr>
@@ -124,13 +123,11 @@ under the License.
                         <@tr id="orderItemData_tableRow_${rowCount}" valign="middle">
                             <@td>${(product.internalName)!} [${orderItem.productId?default("N/A")}]</@td>
                             <@td>
-                                <div>
                                     <#assign upcaLookup = Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", product.productId, "goodIdentificationTypeId", "UPCA")/>
                                     <#assign upca = delegator.findOne("GoodIdentification", upcaLookup, true)!/>
                                     <#if upca?has_content>
                                         ${upca.idValue!}
                                     </#if>
-                                </div>
                             </@td>
                             <@td>${orderItem.quantity}</@td>
                             <@td>${orderItem.cancelQuantity?default(0)}</@td>
@@ -142,13 +139,11 @@ under the License.
                             <@td>${totalQuantityReceived}</@td>
                             <@td>${orderItem.quantity - orderItem.cancelQuantity?default(0) - totalQuantityReceived}</@td>
                             <@td>
-                                <div>
                                     <#if fulfilledReservations?has_content>
                                         <#list fulfilledReservations?sort_by("orderId") as fulfilledReservation>
                                             ${fulfilledReservation.orderId}<br />
                                         </#list>
                                     </#if>
-                                </div>
                             </@td>
                             <#if availableToReceive &gt; 0 >
                                 <@td>

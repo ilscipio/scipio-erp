@@ -23,33 +23,26 @@ under the License.
         <@tr>
           <@td align="right" valign="middle">${uiLabelMap.WorkEffortKeywords}</@td>
           <@td valign="middle">
-            <div>
               <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
               ${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if>/>
               ${uiLabelMap.CommonAll}<input type="radio" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked="checked"</#if>/>
-            </div>
           </@td>
         </@tr>
         <@tr>
           <@td align="right" valign="middle">${uiLabelMap.WorkEffortReviews}</@td>
           <@td valign="middle">
-            <div>
               <input type="text" name="SEARCH_STRING_REVIEW_TEXT" size="40" value="${requestParameters.SEARCH_STRING_REVIEW_TEXT!}"/>&nbsp;
-            </div>
           </@td>
         </@tr>
         <@tr>
           <@td align="right" valign="middle">${uiLabelMap.FormFieldTitle_workEffortId}</@td>
           <@td valign="middle">
-            <div>
               <@htmlTemplate.lookupField value="${requestParameters.SEARCH_WORK_EFFORT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_WORK_EFFORT_ID" id="SEARCH_WORK_EFFORT_ID" fieldFormName="LookupWorkEffort"/>
-            </div>
           </@td>
         </@tr>
         <@tr>
           <@td align="right" valign="middle" nowrap="nowrap">${uiLabelMap.FormFieldTitle_workEffortAssocTypeId}</@td>
           <@td valign="middle" nowrap="nowrap">
-            <div>
               <select name="workEffortAssocTypeId">
                 <option value="">- ${uiLabelMap.WorkEffortAnyAssocType} -</option>
                   <#list workEffortAssocTypes as workEffortAssocType>
@@ -59,44 +52,35 @@ under the License.
                   ${uiLabelMap.WorkEffortIncludeAllSubWorkEfforts}?
                   ${uiLabelMap.CommonYes}<input type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="Y" checked="checked"/>
                   ${uiLabelMap.CommonNo}<input type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="N"/>
-            </div>
           </@td>
         </@tr>
         <@tr>
           <@td align="right" valign="middle">${uiLabelMap.PartyPartyId}</@td>
           <@td valign="middle">
-            <div>
               <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
-            </div>
           </@td>
         </@tr>
         <@tr>
           <@td align="right" valign="middle">${uiLabelMap.PartyRoleTypeId}</@td>
           <@td valign="middle">
-            <div>
               <select name="partyRoleTypeId">
                 <option value="">- ${uiLabelMap.CommonAnyRoleType} -</option>
                 <#list roleTypes as roleType>
                    <option value="${roleType.roleTypeId}">${roleType.description}</option>
                  </#list>
               </select>
-            </div>
           </@td>
         </@tr>
         <@tr>
           <@td align="right" valign="middle">${uiLabelMap.WorkEffortProductId1}</@td>
           <@td valign="middle">
-            <div>
               <@htmlTemplate.lookupField value="${requestParameters.productId_1!}" formName="advToKeyWordSearchForm" name="productId_1" id="productId_1" fieldFormName="LookupProduct"/>
-            </div>
           </@td>
         </@tr>
         <@tr>
           <@td align="right" valign="middle">${uiLabelMap.WorkEffortProductId2}</@td>
           <@td valign="middle">
-            <div>
               <@htmlTemplate.lookupField value="${requestParameters.productId_2!}" formName="advToKeyWordSearchForm" name="productId_2" id="productId_2" fieldFormName="LookupProduct"/>
-            </div>
           </@td>
         </@tr>
         <@tr>
@@ -121,14 +105,12 @@ under the License.
         <@tr>
           <@td align="right" valign="middle">${uiLabelMap.CommonSortedBy}</@td>
           <@td valign="middle">
-            <div>
               <select name="sortOrder">
                 <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
                 <option value="SortWorkEffortField:workEffortName">${uiLabelMap.WorkEffortName}</option>
               </select>
               ${uiLabelMap.ProductLowToHigh}<input type="radio" name="sortAscending" value="Y" checked="checked"/>
               ${uiLabelMap.ProductHighToLow}<input type="radio" name="sortAscending" value="N"/>
-            </div>
           </@td>
         </@tr>
         <#if searchConstraintStrings?has_content>
@@ -148,9 +130,7 @@ under the License.
         </#if>
         <@tr>
           <@td colspan="2" align="center">
-            <div>
               <a href="javascript:document.advToKeyWordSearchForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a>
-            </div>
           </@td>
         </@tr>
       </@table>

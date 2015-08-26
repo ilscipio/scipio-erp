@@ -48,7 +48,6 @@ under the License.
           <@td>${item.qtyStillNeedToBeIssued}</@td>
           <#if (item.shipmentItemQty > item.totalQtyIssued)>
             <@td>
-              <div>
                 <form name="issueInventoryItemToShipment_${item_index}" action="<@ofbizUrl>issueInventoryItemToShipment</@ofbizUrl>" method="post">
                   <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                   <input type="hidden" name="shipmentItemSeqId" value="${item.shipmentItemSeqId}"/>
@@ -59,7 +58,6 @@ under the License.
                   <input type="text" size="5" name="quantity"/>
                   <input type="submit" value="${uiLabelMap.CommonSubmit}" class="smallSubmit"/>
                 </form>
-              </div>
             </@td>
           </#if>
         </@tr>

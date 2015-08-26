@@ -63,7 +63,6 @@ under the License.
                             <@td><a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${(inventoryItem.inventoryItemId)!}</a></@td>
                             <@td>&nbsp;${(curInventoryItemType.get("description",locale))!}</@td>
                             <@td>
-                                <div>
                                     <#if curStatusItem?has_content>
                                         ${(curStatusItem.get("description",locale))!}
                                     <#elseif inventoryItem.statusId?has_content>
@@ -71,7 +70,6 @@ under the License.
                                     <#else>
                                         ${uiLabelMap.CommonNotSet}&nbsp;
                                     </#if>
-                                </div>
                             </@td>
                             <@td>&nbsp;${(inventoryItem.datetimeReceived)!}</@td>
                             <@td>&nbsp;${(inventoryItem.expireDate)!}</@td>
@@ -98,9 +96,8 @@ under the License.
                             </@td>
                             <@td align="right">${(inventoryItemDetailFirst.quantityOnHandDiff)!}</@td>
                             <#if inventoryItem.inventoryItemTypeId! == "NON_SERIAL_INV_ITEM">
-                                <@td align="right">
-                                    <div>${(inventoryItem.availableToPromiseTotal)?default("NA")}
-                                    / ${(inventoryItem.quantityOnHandTotal)?default("NA")}</div>
+                                <@td align="right">${(inventoryItem.availableToPromiseTotal)?default("NA")}
+                                    / ${(inventoryItem.quantityOnHandTotal)?default("NA")}
                                 </@td>
                             <#elseif inventoryItem.inventoryItemTypeId! == "SERIALIZED_INV_ITEM">
                                 <@td align="right">&nbsp;${(inventoryItem.serialNumber)!}</@td>

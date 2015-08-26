@@ -105,14 +105,12 @@ under the License.
           </@tr>
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.CommonCreated}</@td>
-            <@td width="80%">
-              <div>${uiLabelMap.CommonBy} [${shipment.createdByUserLogin!}] ${uiLabelMap.CommonOn} ${(shipment.createdDate.toString())!}</div>
+            <@td width="80%">${uiLabelMap.CommonBy} [${shipment.createdByUserLogin!}] ${uiLabelMap.CommonOn} ${(shipment.createdDate.toString())!}
             </@td>
           </@tr>
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.CommonLastUpdated}</@td>
-            <@td width="80%">
-              <div>${uiLabelMap.CommonBy} [${shipment.lastModifiedByUserLogin!}] ${uiLabelMap.CommonOn} ${(shipment.lastModifiedDate.toString())!}</div>
+            <@td width="80%">${uiLabelMap.CommonBy} [${shipment.lastModifiedByUserLogin!}] ${uiLabelMap.CommonOn} ${(shipment.lastModifiedDate.toString())!}
             </@td>
           </@tr>
         </@table>

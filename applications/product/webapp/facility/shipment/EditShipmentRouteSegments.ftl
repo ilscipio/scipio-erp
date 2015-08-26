@@ -78,7 +78,6 @@ under the License.
         <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
         <@tr valign="middle" alt=alt_row>
             <@td valign="top">
-                <div>
                     ${shipmentRouteSegment.shipmentRouteSegmentId}
                     <br />
                     <a href="javascript:document.updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
@@ -86,7 +85,6 @@ under the License.
                     <a href="javascript:document.duplicateShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDuplicate}</a>
                     <br />
                     <a href="javascript:document.deleteShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
-                </div>
             </@td>
             <@td valign="top">
                 <div>
@@ -164,7 +162,6 @@ under the License.
                 </div>
             </@td>
             <@td valign="top">
-                <div>
                     <#if "UPS" == shipmentRouteSegment.carrierPartyId!>
                         <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
                             <a href="javascript:document.upsShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.ProductConfirmShipmentUps}</a>
@@ -230,7 +227,6 @@ under the License.
                     <br />
                     <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.actualStartDate.toString())!}" size="25" maxlength="30" id="actualStartDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     <@htmlTemplate.renderDateTimeField name="actualArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.actualArrivalDate.toString())!}" size="25" maxlength="30" id="actualArrivalDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                </div>
             </@td>
             <@td valign="top">
                 <input type="text" size="5" name="billingWeight" value="${shipmentRouteSegment.billingWeight!}"/>
@@ -302,25 +298,19 @@ under the License.
         <@tr valign="middle" alt=alt_row>
             <@td>&nbsp;</@td>
             <@td valign="top">
-                <div>
                     <span>${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}
                     <#if shipmentPackageRouteSeg.labelImage??>
                         <a href="javascript:document.viewShipmentPackageRouteSegLabelImage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.ProductViewLabelImage}</a>
                     </#if>
                     <span>${uiLabelMap.ProductTrack} ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/>
-                </div>
             </@td>
             <@td valign="top">
-               <div>
                    <span>${uiLabelMap.ProductBox} ${uiLabelMap.CommonNbr}</span>
                    <input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber!}"/>
-               </div>
             </@td>
             <@td valign="top">
-                <div>
                     <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
                     <a href="javascript:document.deleteRouteSegmentShipmentPackage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
-                </div>
             </@td>
         </@tr>
         </form>
@@ -341,14 +331,12 @@ under the License.
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
             <@td>&nbsp;</@td>
-            <@td>
-                <div>${uiLabelMap.ProductAddPackageInfo} :
+            <@td>${uiLabelMap.ProductAddPackageInfo} :
                 <select name="shipmentPackageSeqId">
                     <#list shipmentPackages as shipmentPackage>
                         <option>${shipmentPackage.shipmentPackageSeqId}</option>
                     </#list>
                 </select>
-                </div>
             </@td>
             <@td><span>Track#:</span><input type="text" size="22" name="trackingCode"/></@td>
             <@td><span>Box#:</span><input type="text" size="5" name="boxNumber"/></@td>
@@ -369,14 +357,11 @@ under the License.
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <@tr>
                 <@td valign="top">
-                    <div>
                         <span>${uiLabelMap.ProductNewSegment}</span>
                         <br />
                         <a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a>
-                    </div>
                 </@td>
                 <@td valign="top">
-                    <div>
                         <select name="carrierPartyId">
                                 <option value="">&nbsp;</option>
                             <#list carrierPartyDatas as carrierPartyData>
@@ -407,7 +392,6 @@ under the License.
                         <br />
                         <input type="text" size="15" name="originTelecomNumberId" value=""/>
                         <input type="text" size="15" name="destTelecomNumberId" value=""/>
-                    </div>
                 </@td>
                 <@td valign="top">
                     <select name="carrierServiceStatusId">

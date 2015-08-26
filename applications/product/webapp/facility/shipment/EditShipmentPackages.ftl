@@ -82,11 +82,9 @@ under the License.
                 <@td>&nbsp;</@td>
                 <@td><span>${uiLabelMap.ProductItem}</span> ${shipmentPackageContent.shipmentItemSeqId}</@td>
                 <@td colspan="2">
-                    <div>
                         <span>${uiLabelMap.ProductQuantity}</span>
                         ${shipmentPackageContent.quantity!}
                         <a href="javascript:document.deleteShipmentPackageContent${shipmentPackageData_index}${shipmentPackageContent_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
-                    </div>
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td>&nbsp;</@td>
@@ -103,21 +101,17 @@ under the License.
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
                 <@td>&nbsp;</@td>
                 <@td>
-                    <div>
                         <span>${uiLabelMap.ProductAddFromItem}</span>
                         <select name="shipmentItemSeqId">
                             <#list shipmentItems as shipmentItem>
                                 <option>${shipmentItem.shipmentItemSeqId}</option>
                             </#list>
                         </select>
-                    </div>
                 </@td>
                 <@td colspan="2">
-                    <div>
                         <span>${uiLabelMap.ProductQuantity}</span>
                         <input type="text" name="quantity" size="5" value="0"/>
                         <a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a>
-                    </div>
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td>&nbsp;</@td>
@@ -133,12 +127,10 @@ under the License.
                 <@td><span>${uiLabelMap.ProductRouteSegment}</span> ${shipmentPackageRouteSeg.shipmentRouteSegmentId}</@td>
                 <@td><span>${uiLabelMap.ProductTrack}</span> <input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/></@td>
                 <@td colspan="2">
-                    <div>
                         <span>${uiLabelMap.ProductBox}</span>
                         <input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber!}"/>
                         <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
                         <a href="javascript:document.deleteShipmentPackageRouteSeg${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
-                    </div>
                 </@td>
                 <@td>&nbsp;</@td>
             </@tr>
@@ -155,14 +147,12 @@ under the License.
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
                 <@td>&nbsp;</@td>
-                <@td>
-                    <div><span>${uiLabelMap.ProductAddRouteSegmentInfo}</span>
+                <@td><span>${uiLabelMap.ProductAddRouteSegmentInfo}</span>
                     <select name="shipmentRouteSegmentId">
                         <#list shipmentRouteSegments as shipmentRouteSegment>
                             <option>${shipmentRouteSegment.shipmentRouteSegmentId}</option>
                         </#list>
                     </select>
-                    </div>
                 </@td>
                 <@td><span>Track ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode"/></@td>
                 <@td><span>Box ${uiLabelMap.CommonNbr}</span><input type="text" size="5" name="boxNumber"/></@td>

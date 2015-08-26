@@ -209,13 +209,11 @@ under the License.
                   <@table type="field" cellpadding="2" cellspacing="0" class="basic-table">
                     <@tr>
                       <@td>
-                        <div>
                             <span>${uiLabelMap.ProductProductNumber}</span>
                             <input type="text" name="productId" size="20" maxlength="20" value=""/>
                             @
                             <input type="text" name="quantity" size="6" maxlength="6" value="1"/>
                             <a href="javascript:document.singlePackForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackItem}</a>
-                        </div>
                       </@td>
                       <@td>
                           <span>${uiLabelMap.ProductCurrentPackageSequence}</span>
@@ -401,13 +399,11 @@ under the License.
                         <textarea name="handlingInstructions" rows="2" cols="30">${packingSession.getHandlingInstructions()!}</textarea>
                       </@td>
                       <@td align="right">
-                        <div>
                           <#assign buttonName = "${uiLabelMap.ProductComplete}">
                           <#if forceComplete?default("false") == "true">
                             <#assign buttonName = "${uiLabelMap.ProductCompleteForce}">
                           </#if>
                           <input type="button" value="${buttonName}" onclick="javascript:document.completePackForm.submit();"/>
-                        </div>
                       </@td>
                     </@tr>
                   </@table>

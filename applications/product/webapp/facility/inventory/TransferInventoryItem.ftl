@@ -143,7 +143,6 @@ under the License.
                 <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductToFacilityContainer}</span></@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">
-                    <div>
                         <select name="facilityIdTo">
                             <#list facilities as nextFacility>
                             <option value="${(nextFacility.facilityId)!}">${(nextFacility.facilityName)!} [${(nextFacility.facilityId)!}]</option>
@@ -153,7 +152,6 @@ under the License.
                         <br />
                         <input type="text" name="containerIdTo" value="${(inventoryTransfer.containerIdTo)!}" size="20" maxlength="20" />
                         <span class="tooltip">${uiLabelMap.ProductOrEnterContainerId}</span>
-                    </div>
                 </@td>
             </@tr>
             <@tr>

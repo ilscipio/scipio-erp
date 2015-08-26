@@ -87,11 +87,9 @@ function clickAll(e) {
                     <input type="text" size="5" maxlength="10" name="sequenceNum_o_${rowCount}" value="${defaultSequenceNum}"/>
                 </@td>
                 <@td>
-                    <div>
                     <#list existingVariantProductIds as existingVariantProductId>
                         <a href="<@ofbizUrl>EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="${styles.button_default!}">${existingVariantProductId}</a>
                     </#list>
-                    </div>
                 </@td>
                 <@td align="right">
                   <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:setProductVariantId(this, '${defaultVariantProductId}', 'productVariantId_o_${rowCount}');" />

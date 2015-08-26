@@ -98,8 +98,8 @@ under the License.
                 <#assign totalQuantityReserved = orderItemData.totalQuantityReserved!>
                 <#assign totalQuantityIssuedAndReserved = orderItemData.totalQuantityIssuedAndReserved!>
                 <@tr id="orderItemData_tableRow_${rowCount}" valign="middle">
-                    <@td><div>${orderItemAndShipGroupAssoc.orderId} / ${orderItemAndShipGroupAssoc.shipGroupSeqId} / ${orderItemAndShipGroupAssoc.orderItemSeqId}</div></@td>
-                    <@td><div>${(product.internalName)!} [${orderItemAndShipGroupAssoc.productId?default("N/A")}]</div></@td>
+                    <@td>${orderItemAndShipGroupAssoc.orderId} / ${orderItemAndShipGroupAssoc.shipGroupSeqId} / ${orderItemAndShipGroupAssoc.orderItemSeqId}</@td>
+                    <@td>${(product.internalName)!} [${orderItemAndShipGroupAssoc.productId?default("N/A")}]</@td>
                     <@td>
                         <#if itemIssuances?has_content>
                             <#list itemIssuances as itemIssuance>
@@ -110,7 +110,6 @@ under the License.
                         </#if>
                     </@td>
                     <@td>
-                        <div>
                             <#if isSalesOrder>
                                 <#if (totalQuantityIssuedAndReserved != orderItemAndShipGroupAssoc.quantity)>
                                 <span style="color: red;">
@@ -136,7 +135,6 @@ under the License.
                                     </b>
                                 </span>
                             </#if>
-                        </div>
                     </@td>
                     <#if isSalesOrder>
                         <@td>&nbsp;</@td>
@@ -176,14 +174,12 @@ under the License.
                             <@td>&nbsp;</@td>
                             <@td>&nbsp;</@td>
                             <@td>
-                                <div>
                                     ${orderItemShipGrpInvRes.inventoryItemId}
                                     <#if inventoryItem.facilityId?has_content>
                                         <span<#if originFacility?? && originFacility.facilityId != inventoryItem.facilityId> style="color: red;"</#if>>[${(inventoryItemFacility.facilityName)?default(inventoryItem.facilityId)}]</span>
                                     <#else>
                                         <span style="color: red;">[${uiLabelMap.ProductNoFacility}]</span>
                                     </#if>
-                                </div>
                             </@td>
                             <@td>&nbsp;</@td>
                             <@td>${orderItemShipGrpInvRes.quantity}</@td>

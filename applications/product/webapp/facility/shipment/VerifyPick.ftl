@@ -156,13 +156,11 @@ under the License.
           <@table type="fields" cellpadding="2" cellspacing="0" class="basic-table">
             <@tr>
               <@td>
-                <div>
                   <span>${uiLabelMap.ProductProductNumber}</span>
                   <input type="text" name="productId" size="20" maxlength="20" value=""/>
                   @
                   <input type="text" name="quantity" size="6" maxlength="6" value="1"/>
                   <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}"/>
-                </div>
               </@td>
             </@tr>
           </@table>

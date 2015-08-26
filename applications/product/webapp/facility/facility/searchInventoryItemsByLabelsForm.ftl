@@ -26,7 +26,6 @@ under the License.
     <#assign labels = labelType.getRelated("InventoryItemLabel", null, Static["org.ofbiz.base.util.UtilMisc"].toList("inventoryItemLabelId"), false)>
     <@tr>
       <@td>
-          <div>
           <span>${labelType.description!} [${labelType.inventoryItemLabelTypeId}]</span>
           &nbsp;
           <select name="inventoryItemLabelId_${index}">
@@ -35,7 +34,6 @@ under the License.
             <option value="${label.inventoryItemLabelId}" <#if parameters["inventoryItemLabelId_" + index]?has_content && parameters["inventoryItemLabelId_" + index] == label.inventoryItemLabelId>selected="selected"</#if>>${label.description!} [${label.inventoryItemLabelId}]</option>
             </#list>
           </select>
-          </div>
       </@td>
     </@tr>
   </#list>

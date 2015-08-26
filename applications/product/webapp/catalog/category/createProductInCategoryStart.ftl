@@ -35,7 +35,6 @@ under the License.
                 <@tr>
                     <@td width="15%">${productFeatureType.description}:</@td>
                     <@td>
-                        <div>
                             <select name="pft_${productFeatureTypeId}">
                                 <option value="">- ${uiLabelMap.CommonNone} -</option>
                                 <#list productFeatures as productFeature>
@@ -43,7 +42,6 @@ under the License.
                                 </#list>
                             </select>
                             <input type="checkbox" name="pftsel_${productFeatureTypeId}"/>${uiLabelMap.ProductSelectable}
-                        </div>
                     </@td>
                 </@tr>
                 </#list>

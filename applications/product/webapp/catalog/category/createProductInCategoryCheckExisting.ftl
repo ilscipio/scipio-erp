@@ -69,7 +69,6 @@ under the License.
                 <@tr>
                     <@td width="15%">${productFeatureType.description}</@td>
                     <@td>
-                        <div>
                             ${productFeature.description}
                             <#if requestParameters["pftsel_" + productFeatureTypeId]??>
                                 <input type="hidden" name="pftsel_${productFeatureTypeId}" value="Y"/>
@@ -78,7 +77,6 @@ under the License.
                                 <input type="hidden" name="pftsel_${productFeatureTypeId}" value="N"/>
                                 [${uiLabelMap.ProductStandard}]
                             </#if>
-                        </div>
                     </@td>
                 </@tr>
                 </#list>
@@ -120,10 +118,8 @@ under the License.
                 </@tr>
                 <@tr>
                     <@td colspan="3">
-                        <div>
                             ${uiLabelMap.ProductNewProductId}: <input type="text" name="productId" value=""/>
                             <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="smallSubmit"/>
-                        </div>
                     </@td>
                 </@tr>
             </@table>

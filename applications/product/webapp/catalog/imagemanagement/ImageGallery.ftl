@@ -17,19 +17,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@table cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
+<@table type="generic" cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
+  <#-- FIXME: this whole table -->
     <#assign imageIndex = 0>
     <#if productImageList?has_content>
         <#if product?has_content>
-            <h2>${product.productId}</h2>
+            <@heading>${product.productId}</@heading>
         </#if>
         <#-- <#assign productName = productTextData >
         <#assign seoUrl = productName.replaceAll(" ", "-") > -->
-        <#assign alt_row = false>
         <#list productImageList as productImage>
-            <#if imageIndex < 5>
+            <#if (imageIndex < 5)>
                 <@td style="vertical-align:bottom">
-                    <@table>
+                    <@table type="fields" cellspacing="" class="">
                         <@tbody>
                             <@tr valign="middle">
                                 <#-- <@td align="center"><a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a></@td> -->
@@ -39,7 +39,6 @@ under the License.
                                 <#-- <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productContentAndInfo.contentId}&amp;dataResourceId=${productContentAndInfo.dataResourceId}&amp;seoUrl=/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}','' ,500,500);" class="${styles.button_default!}">${uiLabelMap.ImageManagementShare}</a></@td> -->
                                 <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productImage.contentId}&amp;dataResourceId=${productImage.dataResourceId}','' ,500,500);" class="${styles.button_default!}">${uiLabelMap.ImageManagementShare}</a></@td>
                             </@tr>
-                            <br/>
                         </@tbody>
                     </@table>
                 </@td>
@@ -48,7 +47,7 @@ under the License.
                 <#assign imageIndex = 0>
                 <@tr></@tr>
                 <@td style="vertical-align:bottom">
-                    <@table>
+                    <@table type="fields" cellspacing="" class="">
                         <@tbody>
                             <@tr valign="middle">
                                 <#-- <@td align="center"><a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a></@td> -->
@@ -58,7 +57,6 @@ under the License.
                                 <#-- <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productContentAndInfo.contentId}&amp;dataResourceId=${productContentAndInfo.dataResourceId}&amp;seoUrl=/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}','' ,500,500);" class="${styles.button_default!}">${uiLabelMap.ImageManagementShare}</a></@td> -->
                                 <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productImage.contentId}&amp;dataResourceId=${productImage.dataResourceId}','' ,500,500);" class="${styles.button_default!}">${uiLabelMap.ImageManagementShare}</a></@td>
                             </@tr>
-                            <br/>
                         </@tbody>
                     </@table>
                 </@td>
@@ -67,4 +65,4 @@ under the License.
         </#list>
     </#if>
 </@table>
-<br/>
+

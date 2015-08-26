@@ -22,7 +22,7 @@ under the License.
 <br />
 <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="margin: 0;">
   <input type="hidden" name="VIEW_SIZE" value="10" />
-  <@table type="fields" border="0" width="100%">
+  <@table type="fields" cellspacing="" border="0" width="100%">
     <input type="hidden" name="SEARCH_CATALOG_ID" value="${currentCatalogId}" />
     <#if searchCategory?has_content>
         <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}" />

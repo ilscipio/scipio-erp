@@ -18,33 +18,31 @@ under the License.
 -->
 
   <#if days?has_content>
-    <table class="basic-table hover-bar" cellspacing="0">
-     <thead>
-      <tr class="header-row">
-        <th>${uiLabelMap.CommonStartDateTime}</th>
-        <th>${uiLabelMap.CommonEndDateTime}</th>
-        <th>${uiLabelMap.CommonType}</th>
-        <th>${uiLabelMap.WorkEffortName}</th>
-      </tr>
-      </thead>
+    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+     <@thead>
+      <@tr class="header-row">
+        <@th>${uiLabelMap.CommonStartDateTime}</@th>
+        <@th>${uiLabelMap.CommonEndDateTime}</@th>
+        <@th>${uiLabelMap.CommonType}</@th>
+        <@th>${uiLabelMap.WorkEffortName}</@th>
+      </@tr>
+      </@thead>
       <#list days as day>
         <#assign workEfforts = day.calendarEntries>
         <#if workEfforts?has_content>
-          <tr class="header-row"><th colspan="4"><hr /></th></tr>
-          <#assign alt_row = false>
+          <@tr class="header-row"><@th colspan="4"><hr /></@th></@tr>
           <#list workEfforts as calendarEntry>
             <#assign workEffort = calendarEntry.workEffort>
-            <tr<@dataRowClassStr alt=alt_row />>
-              <td><#if workEffort.actualStartDate??>${workEffort.actualStartDate}<#else>${workEffort.estimatedStartDate}</#if></td>
-              <td><#if workEffort.actualCompletionDate??>${workEffort.actualCompletionDate}<#else>${workEffort.estimatedCompletionDate}</#if></td>
-              <td>${workEffort.getRelatedOne("WorkEffortType", false).get("description",locale)}</td>
-              <td class="button-col"><a href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffort.workEffortId}${addlParam!}</@ofbizUrl>">${workEffort.workEffortName}</a></td>
-            </tr>
-            <#assign alt_row = !alt_row>
+            <@tr>
+              <@td><#if workEffort.actualStartDate??>${workEffort.actualStartDate}<#else>${workEffort.estimatedStartDate}</#if></@td>
+              <@td><#if workEffort.actualCompletionDate??>${workEffort.actualCompletionDate}<#else>${workEffort.estimatedCompletionDate}</#if></@td>
+              <@td>${workEffort.getRelatedOne("WorkEffortType", false).get("description",locale)}</@td>
+              <@td class="button-col"><a href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffort.workEffortId}${addlParam!}</@ofbizUrl>">${workEffort.workEffortName}</a></@td>
+            </@tr>
           </#list>
         </#if>
       </#list>
-    </table>
+    </@table>
   <#else>
-    <div class="screenlet-body">${uiLabelMap.WorkEffortNoEventsFound}.</div>
+    <@resultMsg>${uiLabelMap.WorkEffortNoEventsFound}.</@resultMsg>
   </#if>

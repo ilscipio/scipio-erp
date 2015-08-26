@@ -104,26 +104,26 @@
 </form>
 
 <form name="cmsmetaform" action="javascript:void(0);" style="margin: 0;">
-    <table>
-        <tr>
-            <td>Page Title</td>
-            <td><input type="text" name="title" value="${(title.objectInfo)!}" size="40" /></td>
-        </tr>
-        <tr>
-            <td>Title Property</td>
-            <td><input type="text" name="titleProperty" value="${(titleProperty.objectInfo)!}" size="40" /></td>
-        </tr>
-        <tr>
-            <td>Meta-Description</td>
-            <td><input type="text" name="metaDescription" value="${(metaDescription.objectInfo)!}" size="40" /></td>
-        </tr>
-        <tr>
-            <td>Meta-Keywords</td>
-            <td><input type="text" name="metaKeywords" value="${(metaKeywords.objectInfo)!}" size="40" /></td>
-        </tr>
-        <tr><td colspan="2">&nbsp;</td></tr>
-        <tr>
-            <td colspan="2" align="center"><input id="submit" type="button" onclick="javascript:saveMetaInfo(cmsmetaform);" class="smallSubmit" value="${uiLabelMap.CommonSave}"/></td>
-        </tr>
-    </table>
+    <@table type="fields">
+        <@tr>
+            <@td>Page Title</@td>
+            <@td><input type="text" name="title" value="${(title.objectInfo)!}" size="40" /></@td>
+        </@tr>
+        <@tr>
+            <@td>Title Property</@td>
+            <@td><input type="text" name="titleProperty" value="${(titleProperty.objectInfo)!}" size="40" /></@td>
+        </@tr>
+        <@tr>
+            <@td>Meta-Description</@td>
+            <@td><input type="text" name="metaDescription" value="${(metaDescription.objectInfo)!}" size="40" /></@td>
+        </@tr>
+        <@tr>
+            <@td>Meta-Keywords</@td>
+            <@td><input type="text" name="metaKeywords" value="${(metaKeywords.objectInfo)!}" size="40" /></@td>
+        </@tr>
+        <@tr><@td colspan="2">&nbsp;</@td></@tr>
+        <@tr>
+            <@td colspan="2" align="center"><input id="submit" type="button" onclick="javascript:saveMetaInfo(cmsmetaform);" class="smallSubmit" value="${uiLabelMap.CommonSave}"/></@td>
+        </@tr>
+    </@table>
 </form>

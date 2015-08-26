@@ -35,8 +35,8 @@ under the License.
           <#include "returnItemInc.ftl"/>
           <hr />
           <#if "CUSTOMER_RETURN" == returnHeaderTypeId>
-          <h3>${uiLabelMap.FormFieldTitle_paymentMethodId}:</h3>
-          <@table cellspacing="0" class="basic-table">
+          <@heading>${uiLabelMap.FormFieldTitle_paymentMethodId}:</@heading>
+          <@table type="fields" cellspacing="0" class="basic-table">
             <@tr><@td>
               <#if creditCardList?? || eftAccountList??>
                 <select name='paymentMethodId'>
@@ -62,7 +62,7 @@ under the License.
             </@td></@tr>
           </@table>
           </#if>
-          <@table cellspacing="0" class="basic-table">
+          <@table type="fields" cellspacing="0" class="basic-table">
             <@tr><@td colspan="8"><hr/></@td></@tr>
             <@tr>
               <@td colspan="8"><h3><#if "CUSTOMER_RETURN" == returnHeaderTypeId>${uiLabelMap.OrderReturnShipFromAddress}<#else>${uiLabelMap["checkhelper.select_shipping_destination"]}</#if></h3></@td>

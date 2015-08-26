@@ -27,7 +27,7 @@ under the License.
 </script>
 
     <#if fileType?has_content>
-<h3>${uiLabelMap.ProductResultOfImageUpload}</h3>
+    <@heading>${uiLabelMap.ProductResultOfImageUpload}</@heading>
         <#if !(clientFileName?has_content)>
     <div>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
         <#else>
@@ -40,7 +40,7 @@ under the License.
     </#if>
     <form action="<@ofbizUrl>updateProductContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
         <input type="hidden" name="productId" value="${productId!}"/>
-        <@table cellspacing="0" class="basic-table">
+        <@table type="fields" cellspacing="0" class="basic-table">
             <@tr>
                 <@td width="20%" align="right" valign="top"><b>${uiLabelMap.ProductProductName}</b></@td>
                 <@td>&nbsp;</@td>
@@ -185,7 +185,7 @@ under the License.
     </script>
     <h3>${uiLabelMap.ProductUploadImage}</h3>
     <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>" name="imageUploadForm">
-        <@table cellspacing="0" class="basic-table">
+        <@table type="fields" cellspacing="0" class="basic-table">
             <@tr>
                 <@td width="20%" align="right" valign="top">
                     <input type="file" size="50" name="fname"/>

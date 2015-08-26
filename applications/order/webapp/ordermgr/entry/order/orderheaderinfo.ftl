@@ -18,7 +18,7 @@ under the License.
 -->
 
 <@section title="${uiLabelMap.OrderOrderHeaderInfo}">
-        <@table class="basic-table">
+        <@table type="fields" class="basic-table">
         <#-- order name -->
         <#if (orderName?has_content)>
             <@tr>

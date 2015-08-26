@@ -19,7 +19,7 @@ under the License.
 
 <#if orderHeader?has_content>
 <@section title="${uiLabelMap.OrderOrderItems}">
-            <@table class="basic-table" cellspacing="0" role="grid">
+            <@table type="data-complex" class="basic-table" cellspacing="0" role="grid">
               <@thead>
                 <@tr valign="bottom" class="header-row">
                     <@th width="35%">${uiLabelMap.ProductProduct}</@th>
@@ -32,9 +32,9 @@ under the License.
                 </@tr>
                 </@thead>
                 <#if !orderItemList?has_content>
-                    <@tr>
+                    <@tr metaRow=true>
                         <@td colspan="7">
-                            ${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}
+                            <@alert type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@alert>
                         </@td>
                     </@tr>
                 <#else>
@@ -146,7 +146,7 @@ under the License.
                                                         </#if>
                                                     </#list>
                                         <@modal id="${productId}_q" label="${orderItem.quantity?default(0)?string.number}">    
-                                            <@table>
+                                            <@table type="data-complex" class="">
                                                 <@tr valign="top">
                                                     
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>
@@ -223,7 +223,7 @@ under the License.
                                             <#if unplannedQuantity < 0><#assign unplannedQuantity = 0></#if>
                                             &nbsp;
                                             <@modal id="${productId}_i" label="${uiLabelMap.ProductInventory}">
-                                                    <@table cellspacing="0" cellpadding="0" border="0">
+                                                    <@table type="fields" cellspacing="0" cellpadding="0" border="0">
                                                         <@tr>
                                                             <@td style="text-align: right; padding-bottom: 10px;">
                                                                 <a class=""
@@ -289,7 +289,7 @@ under the License.
                                 <@td class="text-right" valign="top" nowrap="nowrap">
                                     <#assign modallabel><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></#assign>
                                     <@modal id="${productId}_adj" label=modallabel>
-                                        <@table class="grid">
+                                        <@table type="data-complex" class="grid">
                                             <@thead>
                                                 <@tr>
                                                 <@th width="70%" colspan="2">${uiLabelMap.OrderAdjustments}</@th>
@@ -671,7 +671,7 @@ under the License.
                             <@td>&nbsp;</@td>
                             <@td colspan="4">
                               <@section>
-                                  <@table class="basic-table" cellspacing="0">
+                                  <@table type="data-list" class="basic-table" cellspacing="0">
                                     <@tr>
                                       <@td class="text-right" nowrap="nowrap">
                                         ${uiLabelMap.CommonComments}

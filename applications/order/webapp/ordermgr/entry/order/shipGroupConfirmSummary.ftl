@@ -28,7 +28,7 @@ standard order confirmation page and to be re-usable by other screens.
 
 <#if cart??>
 <@section title="${uiLabelMap.OrderShippingInformation}">
-    <@table class="basic-table">
+    <@table type="data-list" class="basic-table">
 
       <#-- header -->
 
@@ -95,12 +95,13 @@ standard order confirmation page and to be re-usable by other screens.
 
         <#assign itemIndex = 0 />
         <#list cartShipInfo.getShipItems() as shoppingCartItem>
-        <#if (itemIndex > 0)> <@tr> </#if>
+        <#-- FIXME: avoid openOnly/closeOnly structure, and something is weird here... -->
+        <#if (itemIndex > 0)> <@tr openOnly=true /> </#if>
 
         <@td valign="top"> ${shoppingCartItem.getProductId()?default("")} - ${shoppingCartItem.getName()?default("")} </@td>
         <@td valign="top"> ${cartShipInfo.getShipItemInfo(shoppingCartItem).getItemQuantity()?default("0")} </@td>
 
-        <#if (itemIndex == 0)> </@tr> </#if>
+        <#if (itemIndex == 0)> <@tr closeOnly=true /> </#if>
         <#assign itemIndex = itemIndex + 1 />
         </#list>
 

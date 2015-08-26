@@ -16,81 +16,79 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div>
+
     <#if glAcctgTrialBalanceList?has_content>
-        <div>
+        <#assign menuHtml>
+          <li><a href="<@ofbizUrl>GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}</@ofbizUrl>" target="_BLANK" class="${styles.button_default!}">${uiLabelMap.AccountingInvoicePDF}</a></li>
+        </#assign>
+        <@section menuHtml=menuHtml>
             <form name="glAccountTrialBalanceReport" id="glAccountTrialBalanceReport">
-                <div>
-                    <a href="<@ofbizUrl>GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}</@ofbizUrl>" target="_BLANK" class="${styles.button_default!}">${uiLabelMap.AccountingInvoicePDF}</a>
-                </div>
-                <h3>${uiLabelMap.AccountingSubsidiaryLedger}</h3>
-                <h3>${uiLabelMap.FormFieldTitle_companyName} : ${(currentOrganization.groupName)!}</h3>
-                <h3>${uiLabelMap.AccountingTimePeriod} : <#if currentTimePeriod?has_content>${(currentTimePeriod.fromDate)!} ${uiLabelMap.CommonTo} ${(currentTimePeriod.thruDate)!}</#if></h3>
-                <h3>${uiLabelMap.AccountingGlAccountNameAndGlAccountCode} : ${(glAccount.accountCode)!} - ${(glAccount.accountName)!}</h3>
-                <div style="width: 1210px;">
-                    <table border=2>
-                      <thead>
-                        <tr>
-                            <th align="left"><b>${uiLabelMap.FormFieldTitle_transactionDate}</b></th>
-                            <th align="left"><b>${uiLabelMap.AccountingAccountTransactionId}</b></th>
-                            <th align="left"><b>${uiLabelMap.CommonDescription}</b></th>
-                            <th align="left"><b>${uiLabelMap.AccountingTypeOfTheCurrency}</b></th>
-                            <th align="left"><b>${uiLabelMap.AccountingOriginalCurrency}</b></th>
-                            <th align="right"><b>${uiLabelMap.AccountingDebitAmount}</b></th>
-                            <th align="right"><b>${uiLabelMap.AccountingCreditAmount}</b></th>
-                            <th align="right"><b>${uiLabelMap.AccountingDebitOrCreditOfBalance}</b></th>
-                            <th align="right"><b>${uiLabelMap.AccountingBalanceOfTheAccount}</b></th>
-                        </tr>
-                        <tr class="header-row">
-                            <th colspan=2></th>
-                            <th colspan=3 align="center"><b>${uiLabelMap.AccountingTheBalanceOfLastYear}</b></th>
-                            <th colspan=2></th>
-                            <th ALIGN="right"><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></th>
-                            <th ALIGN="right">${(openingBalance)!}</th>
-                        </tr>
-                        </thead>
+                <@heading>${uiLabelMap.AccountingSubsidiaryLedger}</@heading>
+                <@heading>${uiLabelMap.FormFieldTitle_companyName} : ${(currentOrganization.groupName)!}</@heading>
+                <@heading>${uiLabelMap.AccountingTimePeriod} : <#if currentTimePeriod?has_content>${(currentTimePeriod.fromDate)!} ${uiLabelMap.CommonTo} ${(currentTimePeriod.thruDate)!}</#if></@heading>
+                <@heading>${uiLabelMap.AccountingGlAccountNameAndGlAccountCode} : ${(glAccount.accountCode)!} - ${(glAccount.accountName)!}</@heading>
+                    <@table type="data-complex" class="" cellspacing="" border=2 scrollable=true>
+                      <@thead>
+                        <@tr>
+                            <@th align="left"><b>${uiLabelMap.FormFieldTitle_transactionDate}</b></@th>
+                            <@th align="left"><b>${uiLabelMap.AccountingAccountTransactionId}</b></@th>
+                            <@th align="left"><b>${uiLabelMap.CommonDescription}</b></@th>
+                            <@th align="left"><b>${uiLabelMap.AccountingTypeOfTheCurrency}</b></@th>
+                            <@th align="left"><b>${uiLabelMap.AccountingOriginalCurrency}</b></@th>
+                            <@th align="right"><b>${uiLabelMap.AccountingDebitAmount}</b></@th>
+                            <@th align="right"><b>${uiLabelMap.AccountingCreditAmount}</b></@th>
+                            <@th align="right"><b>${uiLabelMap.AccountingDebitOrCreditOfBalance}</b></@th>
+                            <@th align="right"><b>${uiLabelMap.AccountingBalanceOfTheAccount}</b></@th>
+                        </@tr>
+                        <@tr class="header-row">
+                            <@th colspan=2></@th>
+                            <@th colspan=3 align="center"><b>${uiLabelMap.AccountingTheBalanceOfLastYear}</b></@th>
+                            <@th colspan=2></@th>
+                            <@th align="right"><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></@th>
+                            <@th align="right">${(openingBalance)!}</@th>
+                        </@tr>
+                      </@thead>
                         <#list glAcctgTrialBalanceList as glAcctgTrialBalance>
                         
                             <#assign acctgTransAndEntries = glAcctgTrialBalance.acctgTransAndEntries/>
                             <#if acctgTransAndEntries?has_content>
                                 <#list acctgTransAndEntries as acctgTransAndEntry>
-                                <tr>
-                                    <td ALIGN="left">${(acctgTransAndEntry.transactionDate)!}</td>
-                                    <td ALIGN="left">${(acctgTransAndEntry.acctgTransId)!}</td>
-                                    <td ALIGN="left">${(acctgTransAndEntry.transDescription)!}</td>
-                                    <td ALIGN="left">${(acctgTransAndEntry.currencyUomId)!}</td>
-                                    <td ALIGN="left">${(acctgTransAndEntry.origCurrencyUomId)!}</td>
-                                    <td ALIGN="right"><#if (acctgTransAndEntry.debitCreditFlag)! == "D">${(acctgTransAndEntry.amount)!}<#else>0</#if></td>
-                                    <td ALIGN="right"><#if (acctgTransAndEntry.debitCreditFlag)! == "C">${(acctgTransAndEntry.amount)!}<#else>0</#if></td>
-                                    <td ALIGN="right"></td>
-                                    <td ALIGN="right"></td>
-                                </tr>
+                                <@tr>
+                                    <@td align="left">${(acctgTransAndEntry.transactionDate)!}</@td>
+                                    <@td align="left">${(acctgTransAndEntry.acctgTransId)!}</@td>
+                                    <@td align="left">${(acctgTransAndEntry.transDescription)!}</@td>
+                                    <@td align="left">${(acctgTransAndEntry.currencyUomId)!}</@td>
+                                    <@td align="left">${(acctgTransAndEntry.origCurrencyUomId)!}</@td>
+                                    <@td align="right"><#if (acctgTransAndEntry.debitCreditFlag)! == "D">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
+                                    <@td align="right"><#if (acctgTransAndEntry.debitCreditFlag)! == "C">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
+                                    <@td align="right"></@td>
+                                    <@td align="right"></@td>
+                                </@tr>
                                 </#list>
-                                <tfoot>
-                                <tr class="header-row">
-                                    <td colspan=2></td>
-                                    <td colspan=3 ALIGN="center"><b>${uiLabelMap.AccountingTotalOfTheCurrentMonth}</b></td>
-                                    <td ALIGN="right" colspan=1><b>${(glAcctgTrialBalance.debitTotal)!}</b></td>
-                                    <td ALIGN="right" colspan=1><b>${(glAcctgTrialBalance.creditTotal)!}</b></td>
-                                    <td ALIGN="right" colspan=1><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></td>
-                                    <td ALIGN="right" colspan=1><b>${(glAcctgTrialBalance.balance)!}</b></td>
-                                </tr>
-                                <tr class="header-row">
-                                    <td colspan=2></td>
-                                    <td ALIGN="center" colspan=3><b>${uiLabelMap.AccountingTotalOfYearToDate}</b></td>
-                                    <td ALIGN="right"><b>${glAcctgTrialBalance.totalOfYearToDateDebit}</b></td>
-                                    <td ALIGN="right"><b>${glAcctgTrialBalance.totalOfYearToDateCredit}</b></td>
-                                    <td ALIGN="right"><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></td>
-                                    <td ALIGN="right"><b>${(glAcctgTrialBalance.balanceOfTheAcctgForYear)!}</b></td>
-                                </tr>
-                                </tfoot>
+                                <@tfoot>
+                                <@tr class="header-row">
+                                    <@td colspan=2></@td>
+                                    <@td colspan=3 align="center"><b>${uiLabelMap.AccountingTotalOfTheCurrentMonth}</b></@td>
+                                    <@td align="right" colspan=1><b>${(glAcctgTrialBalance.debitTotal)!}</b></@td>
+                                    <@td align="right" colspan=1><b>${(glAcctgTrialBalance.creditTotal)!}</b></@td>
+                                    <@td align="right" colspan=1><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></@td>
+                                    <@td align="right" colspan=1><b>${(glAcctgTrialBalance.balance)!}</b></@td>
+                                </@tr>
+                                <@tr class="header-row">
+                                    <@td colspan=2></@td>
+                                    <@td align="center" colspan=3><b>${uiLabelMap.AccountingTotalOfYearToDate}</b></@td>
+                                    <@td align="right"><b>${glAcctgTrialBalance.totalOfYearToDateDebit}</b></@td>
+                                    <@td align="right"><b>${glAcctgTrialBalance.totalOfYearToDateCredit}</b></@td>
+                                    <@td align="right"><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></@td>
+                                    <@td align="right"><b>${(glAcctgTrialBalance.balanceOfTheAcctgForYear)!}</b></@td>
+                                </@tr>
+                                </@tfoot>
                             </#if>
                         </#list>
-                    </table>
-                </div>
+                    </@table>
             </form>
-        </div>
+        </@section>
     <#else>
-        ${uiLabelMap.CommonNoRecordFound}
+        <@resultMsg>${uiLabelMap.CommonNoRecordFound}</@resultMsg>
     </#if>
-</div>
+

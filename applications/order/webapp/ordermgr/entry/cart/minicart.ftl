@@ -24,19 +24,22 @@ under the License.
     <#assign shoppingCartSize = 0>
 </#if>
 
-<div id="minicart">
-    <h3>${uiLabelMap.OrderCartSummary}</h3>
-    <div>
+<@section id="minicart" title="${uiLabelMap.OrderCartSummary}">
         <#if (shoppingCartSize > 0)>
-          <#if hidetoplinks?default("N") != "Y">
-            <ul>
-              <li><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="button">${uiLabelMap.OrderViewCart}</a></li>
-              <li><a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="button">${uiLabelMap.OrderCheckout}</a></li>
-              <li><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="button">${uiLabelMap.OrderCheckoutQuick}</a></li>
-              <li><a href="<@ofbizUrl>onePageCheckout</@ofbizUrl>" class="button">${uiLabelMap.EcommerceOnePageCheckout}</a></li>
-              <li><a href="<@ofbizUrl>googleCheckout</@ofbizUrl>" class="button">${uiLabelMap.EcommerceCartToGoogleCheckout}</a></li>
+          <#macro cartLinks>
+            <ul class="${styles.button_group!}">
+              <li><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewCart}</a></li>
+              <li><a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCheckout}</a></li>
+              <li><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCheckoutQuick}</a></li>
+              <li><a href="<@ofbizUrl>onePageCheckout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceOnePageCheckout}</a></li>
+              <li><a href="<@ofbizUrl>googleCheckout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceCartToGoogleCheckout}</a></li>
             </ul>
+          </#macro>
+        
+          <#if hidetoplinks?default("N") != "Y">
+            <@cartLinks />
           </#if>
+          
           <@table type="data-complex" class="">
             <@thead>
               <@tr>
@@ -75,17 +78,11 @@ under the License.
             </#list>
             </@tbody>
           </@table>
+          
           <#if hidebottomlinks?default("N") != "Y">
-            <ul>
-              <li><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="button">${uiLabelMap.OrderViewCart}</a></li>
-              <li><a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="button">${uiLabelMap.OrderCheckout}</a></li>
-              <li><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="button">${uiLabelMap.OrderCheckoutQuick}</a></li>
-              <li><a href="<@ofbizUrl>onePageCheckout</@ofbizUrl>" class="button">${uiLabelMap.EcommerceOnePageCheckout}</a></li>
-              <li><a href="<@ofbizUrl>googleCheckout</@ofbizUrl>" class="button">${uiLabelMap.EcommerceCartToGoogleCheckout}</a></li>
-            </ul>
+            <@cartLinks />
           </#if>
         <#else>
           <@resultMsg>${uiLabelMap.OrderShoppingCartEmpty}</@resultMsg>
         </#if>
-    </div>
-</div>
+</@section>

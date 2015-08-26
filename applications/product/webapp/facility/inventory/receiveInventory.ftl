@@ -19,18 +19,19 @@ under the License.
 <script language="JavaScript" type="text/javascript">
     function setNow(field) { eval('document.selectAllForm.' + field + '.value="${nowTimestamp}"'); }
 </script>
-<h2>${title}</h2>
+
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductNewFacility}</a></li>
+</#assign>
+<@section menuHtml=menuHtml>
         <#if invalidProductId??>
-            <div class="errorMessage">${invalidProductId}</div>
+            <@alert type="error">${invalidProductId}</@alert>
         </#if>
-        <div class="button-bar button-style-1">
-          <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="create">${uiLabelMap.ProductNewFacility}</a>
-        </div>
+
         <#-- Receiving Results -->
         <#if receivedItems?has_content>
-          <h3>${uiLabelMap.ProductReceiptPurchaseOrder} ${purchaseOrder.orderId}</h3>
-          <hr />
-          <@table class="basic-table" cellspacing="0">
+          <@section title="${uiLabelMap.ProductReceiptPurchaseOrder} ${purchaseOrder.orderId}">
+          <@table type="data-list" class="basic-table" cellspacing="0">
            <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.ProductShipmentId}</@th>
@@ -72,13 +73,14 @@ under the License.
             </#list>
             <@tr><@td colspan="10"><hr /></@td></@tr>
           </@table>
-          <br />
+          </@section>
         </#if>
 
         <#-- Single Product Receiving -->
         <#if requestParameters.initialSelected?? && product?has_content>
+          <@section>
           <form method="post" action="<@ofbizUrl>receiveSingleInventoryProduct</@ofbizUrl>" name="selectAllForm">
-            <@table class="basic-table" cellspacing="0">
+            <@table type="fields" class="basic-table" cellspacing="0">
               <#-- general request fields -->
               <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
               <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>
@@ -273,17 +275,17 @@ under the License.
               document.selectAllForm.quantityAccepted.focus();
             </script>
           </form>
-
+          </@section>
         <#-- Select Shipment Screen -->
         <#elseif requestParameters.initialSelected?? && !requestParameters.shipmentId??>
-          <h3>${uiLabelMap.ProductSelectShipmentReceive}</h3>
+          <@section title="${uiLabelMap.ProductSelectShipmentReceive}">
           <form method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>" name="selectAllForm">
             <#-- general request fields -->
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
             <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
             <input type="hidden" name="partialReceive" value="${partialReceive!}"/>
-            <@table class="basic-table" cellspacing="0">
+            <@table type="generic" class="basic-table" cellspacing="0">
               <#list shipments! as shipment>
                 <#assign originFacility = shipment.getRelatedOne("OriginFacility", true)!/>
                 <#assign destinationFacility = shipment.getRelatedOne("DestinationFacility", true)!/>
@@ -295,7 +297,7 @@ under the License.
                 </@tr>
                 <@tr>
                   <@td>
-                    <@table class="basic-table" cellspacing="0">
+                    <@table type="fields" class="basic-table" cellspacing="0">
                       <@tr>
                         <@td width="5%" nowrap="nowrap"><input type="radio" name="shipmentId" value="${shipment.shipmentId}" /></@td>
                         <@td width="5%" nowrap="nowrap">${shipment.shipmentId}</@td>
@@ -314,7 +316,7 @@ under the License.
               </@tr>
               <@tr>
                 <@td>
-                  <@table class="basic-table" cellspacing="0">
+                  <@table type="fields" class="basic-table" cellspacing="0">
                     <@tr>
                       <@td width="5%" nowrap="nowrap"><input type="radio" name="shipmentId" value="_NA_" /></@td>
                       <@td width="5%" nowrap="nowrap">${uiLabelMap.ProductNoSpecificShipment}</@td>
@@ -328,9 +330,10 @@ under the License.
               </@tr>
             </@table>
           </form>
-
+          </@section>
         <#-- Multi-Item PO Receiving -->
         <#elseif requestParameters.initialSelected?? && purchaseOrder?has_content>
+          <@section>
           <input type="hidden" id="getConvertedPrice" value="<@ofbizUrl secure="${request.isSecure()?string}">getConvertedPrice"</@ofbizUrl> />
           <input type="hidden" id="alertMessage" value="${uiLabelMap.ProductChangePerUnitPrice}" />
           <form method="post" action="<@ofbizUrl>receiveInventoryProduct</@ofbizUrl>" name="selectAllForm">
@@ -343,17 +346,17 @@ under the License.
             </#if>
             <input type="hidden" name="_useRowSubmit" value="Y"/>
             <#assign rowCount = 0/>
-            <@table class="basic-table" cellspacing="0">
+            <@table type="fields" class="basic-table" cellspacing="0">
               <#if !purchaseOrderItems?? || purchaseOrderItems.size() == 0>
-                <@tr>
+                <@tr metaRow=true>
                   <@td colspan="2">${uiLabelMap.ProductNoItemsPoReceive}.</@td>
                 </@tr>
-              <#else/>
+              <#else>
                 <@tr>
                   <@td>
-                    <h3>${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId}</h3>
+                    <@heading>${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId}</@heading>
                     <#if shipment?has_content>
-                    <h3>${uiLabelMap.ProductShipmentId} #${shipment.shipmentId}</h3>
+                    <@heading>${uiLabelMap.ProductShipmentId} #${shipment.shipmentId}</@heading>
                     <span>Set Shipment As Received</span>&nbsp;
                     <input type="checkbox" name="forceShipmentReceived" value="Y"/>
                     </#if>
@@ -393,7 +396,7 @@ under the License.
                   </@tr>
                   <@tr>
                     <@td>
-                      <@table class="basic-table" cellspacing="0">
+                      <@table type="fields" class="basic-table" cellspacing="0">
                         <@tr>
                           <#if orderItem.productId??>
                             <#assign product = orderItem.getRelatedOne("Product", true)/>
@@ -469,7 +472,7 @@ under the License.
                               <@td align="right">
                                 <input type="text" name="lotId_o_${rowCount}" size="20" />
                               </@td>
-                            <#else />
+                            <#else>
                               <@td align="right">&nbsp;</@td>
                               <@td align="right">&nbsp;</@td>
                             </#if>
@@ -540,14 +543,14 @@ under the License.
             <input type="hidden" name="_rowCount" value="${rowCount}"/>
           </form>
           <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
-
+          </@section>
         <#-- Initial Screen -->
         <#else>
-          <h2>${uiLabelMap.ProductReceiveItem}</h2>
+          <@section title="${uiLabelMap.ProductReceiveItem}">
           <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
-            <@table class="basic-table" cellspacing="0">
+            <@table type="fields" class="basic-table" cellspacing="0">
               <@tr>
                 <@td>${uiLabelMap.ProductPurchaseOrderNumber}</@td>
                 <@td>
@@ -570,4 +573,7 @@ under the License.
               </@tr>
             </@table>
           </form>
+          </@section>
         </#if>
+        
+</@section>

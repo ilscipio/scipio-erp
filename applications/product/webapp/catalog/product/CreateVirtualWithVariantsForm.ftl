@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="post" name="quickCreateVirtualWithVariants">
-<@table cellspacing="0" class="basic-table">
+<@table type="fields" cellspacing="0" class="basic-table">
     <@thead>
     <@tr class="header-row">
         <@th>${uiLabelMap.ProductQuickCreateVirtualFromVariants}</@th>
@@ -25,7 +25,6 @@ under the License.
     </@thead>
     <@tr>
         <@td>
-            <br />
             <span>${uiLabelMap.ProductVariantProductIds}:</span>
             <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
             <span>Hazmat:</span>

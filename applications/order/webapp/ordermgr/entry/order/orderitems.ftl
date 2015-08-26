@@ -24,7 +24,7 @@ under the License.
                 <a href="javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()" class="${styles.button_default!}">${uiLabelMap.OrderAddCheckedToCart}</a>
             </#if>
         </div>
-        <@table  class="basic-table">
+        <@table type="data-complex" cellspacing="" class="basic-table">
           <@thead>
           <@tr>
             <@th width="65%">${uiLabelMap.ProductProduct}</@th>

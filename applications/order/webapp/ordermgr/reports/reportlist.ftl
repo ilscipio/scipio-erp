@@ -17,15 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class='tabletext'>NOTE: These report are for demonstration purposes only.
+<p>NOTE: These report are for demonstration purposes only.
 They use the JasperReports reporting tool. They have not been polished yet, but
 they are good examples of creating detailed reports that you have a lot of
 control over. special thanks for Britton LaRoche for creating the first pass of
-these reports and helping to improve them.</div>
-<br />
+these reports and helping to improve them.</p>
 
 <form method="post" name="orderreportform" action="<@ofbizUrl>orderreportjasper.pdf</@ofbizUrl>" target="OrderReport">
-<@table>
+<@table type="fields">
 <@tr>
 <@td>From Date:</@td>
 <@td>
@@ -59,7 +58,7 @@ these reports and helping to improve them.</div>
 </form>
 
 <form method="post" name="itemreportform" action="<@ofbizUrl>orderitemreportjasper.pdf</@ofbizUrl>" target="OrderReport">
-<@table>
+<@table type="fields">
 <@tr>
 <@td>From Date:</@td>
 <@td>

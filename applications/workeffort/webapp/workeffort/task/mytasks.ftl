@@ -16,119 +16,115 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<h2>${uiLabelMap.PageTitleViewActivityAndTaskList}</h2>
-<div class="button-bar">
-  <a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.WorkEffortNewTask}</a>
-</div>
-  <h2>${uiLabelMap.WorkEffortAssignedTasks}</h2>
-  <br />
-  <table class="basic-table hover-bar" cellspacing="0">
-   <thead>
-    <tr class="header-row-2">
-      <th>${uiLabelMap.CommonStartDateTime}</th>
-      <th>${uiLabelMap.WorkEffortTaskName}</th>
-      <th>${uiLabelMap.WorkEffortPriority}</th>
-      <th>${uiLabelMap.WorkEffortStatus}</th>
-    </tr>
-    </thead>
-    <#assign alt_row = false>
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.WorkEffortNewTask}</a></li>
+</#assign>
+<@section title="${uiLabelMap.PageTitleViewActivityAndTaskList}" menuHtml=menuHtml>
+
+  <@section title="${uiLabelMap.WorkEffortAssignedTasks}">
+  <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+   <@thead>
+    <@tr class="header-row-2">
+      <@th>${uiLabelMap.CommonStartDateTime}</@th>
+      <@th>${uiLabelMap.WorkEffortTaskName}</@th>
+      <@th>${uiLabelMap.WorkEffortPriority}</@th>
+      <@th>${uiLabelMap.WorkEffortStatus}</@th>
+    </@tr>
+    </@thead>
     <#list tasks as workEffort>
-      <tr<@dataRowClassStr alt=alt_row />>
-        <td>${(workEffort.estimatedStartDate)!}</td>
-        <td><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></td>
-        <td>${workEffort.priority!}</td>
-        <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</td>
-      </tr>
-      <#assign alt_row = !alt_row>
+      <@tr>
+        <@td>${(workEffort.estimatedStartDate)!}</@td>
+        <@td><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></@td>
+        <@td>${workEffort.priority!}</@td>
+        <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</@td>
+      </@tr>
     </#list>
-  </table>
+  </@table>
+  </@section>
+  
   <#if (activities.size() > 0)>
-    <h2>${uiLabelMap.WorkEffortWorkflowActivitiesUser}</h2>
-    <br />
-    <table class="basic-table hover-bar" cellspacing="0">
-      <tr class="header-row-2">
-        <td>${uiLabelMap.CommonStartDateTime}</td>
-        <td>${uiLabelMap.WorkEffortPriority}</td>
-        <td>${uiLabelMap.WorkEffortActivityStatus}</td>
-        <td>${uiLabelMap.WorkEffortMyStatus}</td>
-        <#-- <td>${uiLabelMap.PartyPartyId}</td> -->
-        <td>${uiLabelMap.PartyRole}</td>
-        <td>${uiLabelMap.WorkEffortActivityName}</td>
-        <td>${uiLabelMap.CommonEdit}</td>
-      </tr>
-      <#assign alt_row = false>
+    <@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUser}">
+    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+      <@tr class="header-row-2">
+        <@td>${uiLabelMap.CommonStartDateTime}</@td>
+        <@td>${uiLabelMap.WorkEffortPriority}</@td>
+        <@td>${uiLabelMap.WorkEffortActivityStatus}</@td>
+        <@td>${uiLabelMap.WorkEffortMyStatus}</@td>
+        <#-- <@td>${uiLabelMap.PartyPartyId}</@td> -->
+        <@td>${uiLabelMap.PartyRole}</@td>
+        <@td>${uiLabelMap.WorkEffortActivityName}</@td>
+        <@td>${uiLabelMap.CommonEdit}</@td>
+      </@tr>
       <#list activities as workEffort>
-        <tr<@dataRowClassStr alt=alt_row />>
-          <td>${(workEffort.estimatedStartDate)!}</td>
-          <td>${workEffort.priority!}</td>
-          <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</td>
-          <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</td>
-          <#-- <td>${workEffort.partyId}</td> -->
-          <td>${workEffort.roleTypeId}</td>
-          <td><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></td>
-          <td class="button-col"><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortId}</a></td>
-        </tr>
-        <#assign alt_row = !alt_row>
+        <@tr>
+          <@td>${(workEffort.estimatedStartDate)!}</@td>
+          <@td>${workEffort.priority!}</@td>
+          <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</@td>
+          <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</@td>
+          <#-- <@td>${workEffort.partyId}</@td> -->
+          <@td>${workEffort.roleTypeId}</@td>
+          <@td><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></@td>
+          <@td class="button-col"><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortId}</a></@td>
+        </@tr>
       </#list>
-    </table>
+    </@table>
+    </@section>
   </#if>
   <#if (roleActivities.size() > 0)>
-    <h2>${uiLabelMap.WorkEffortWorkflowActivitiesUserRole}</h2>
-    <br />
-    <table class="basic-table hover-bar" cellspacing="0">
-      <tr class="header-row-2">
-        <td>${uiLabelMap.CommonStartDateTime}</td>
-        <td>${uiLabelMap.WorkEffortPriority}</td>
-        <td>${uiLabelMap.WorkEffortActivityStatus}</td>
-        <td>${uiLabelMap.WorkEffortMyStatus}</td>
-        <#-- <td>${uiLabelMap.PartyPartyId}</td> -->
-        <td>${uiLabelMap.PartyRole}</td>
-        <td>${uiLabelMap.WorkEffortActivityName}</td>
-        <td>${uiLabelMap.CommonEdit}</td>
-      </tr>
-      <#assign alt_row = false>
+    <@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUserRole}">
+    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+      <@tr class="header-row-2">
+        <@td>${uiLabelMap.CommonStartDateTime}</@td>
+        <@td>${uiLabelMap.WorkEffortPriority}</@td>
+        <@td>${uiLabelMap.WorkEffortActivityStatus}</@td>
+        <@td>${uiLabelMap.WorkEffortMyStatus}</@td>
+        <#-- <@td>${uiLabelMap.PartyPartyId}</@td> -->
+        <@td>${uiLabelMap.PartyRole}</@td>
+        <@td>${uiLabelMap.WorkEffortActivityName}</@td>
+        <@td>${uiLabelMap.CommonEdit}</@td>
+      </@tr>
       <#list roleActivities as workEffort>
-        <tr<@dataRowClassStr alt=alt_row />>
-          <td>${(workEffort.estimatedStartDate)!}</td>
-          <td>${workEffort.priority!}</td>
-          <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</td>
-          <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</td>
-          <#-- <td>${workEffort.partyId}</td> -->
-          <td>${workEffort.roleTypeId}</td>
-          <td><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></td>
-          <td class="button-col"><a href="<@ofbizUrl>acceptRoleAssignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate.toString()}</@ofbizUrl>">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></td>
-        </tr>
-        <#assign alt_row = !alt_row>
+        <@tr>
+          <@td>${(workEffort.estimatedStartDate)!}</@td>
+          <@td>${workEffort.priority!}</@td>
+          <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</@td>
+          <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</@td>
+          <#-- <@td>${workEffort.partyId}</@td> -->
+          <@td>${workEffort.roleTypeId}</@td>
+          <@td><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></@td>
+          <@td class="button-col"><a href="<@ofbizUrl>acceptRoleAssignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate.toString()}</@ofbizUrl>">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
+        </@tr>
       </#list>
-    </table>
+    </@table>
+    </@section>
   </#if>
   <#if (groupActivities.size() > 0)>
-    <h2>${uiLabelMap.WorkEffortWorkflowActivitiesUserGroup}</h2>
-    <br />
-    <table class="basic-table hover-bar" cellspacing="0">
-      <tr class="header-row-2">
-        <td>${uiLabelMap.CommonStartDateTime}</td>
-        <td>${uiLabelMap.WorkEffortPriority}</td>
-        <td>${uiLabelMap.WorkEffortActivityStatus}</td>
-        <td>${uiLabelMap.WorkEffortMyStatus}</td>
-        <td>${uiLabelMap.PartyGroupPartyId}</td>
-        <#-- <td>${uiLabelMap.PartyRole}</td> -->
-        <td>${uiLabelMap.WorkEffortActivityName}</td>
-        <td>${uiLabelMap.CommonEdit}</td>
-      </tr>
-      <#assign alt_row = false>
+    <@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUserGroup}">
+    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+      <@tr class="header-row-2">
+        <@td>${uiLabelMap.CommonStartDateTime}</@td>
+        <@td>${uiLabelMap.WorkEffortPriority}</@td>
+        <@td>${uiLabelMap.WorkEffortActivityStatus}</@td>
+        <@td>${uiLabelMap.WorkEffortMyStatus}</@td>
+        <@td>${uiLabelMap.PartyGroupPartyId}</@td>
+        <#-- <@td>${uiLabelMap.PartyRole}</@td> -->
+        <@td>${uiLabelMap.WorkEffortActivityName}</@td>
+        <@td>${uiLabelMap.CommonEdit}</@td>
+      </@tr>
       <#list groupActivities as workEffort>
-        <tr<@dataRowClassStr alt=alt_row />>
-          <td>${(workEffort.estimatedStartDate)!}</td>
-          <td>${workEffort.priority!}</td>
-          <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</td>
-          <td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</td>
-          <td>${workEffort.groupPartyId}</td>
-          <#-- <td>${workEffort.roleTypeId}</td> -->
-          <td><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></td>
-          <td class="button-col"><a href="<@ofbizUrl>acceptassignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate}</@ofbizUrl>">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></td>
-        </tr>
-        <#assign alt_row = !alt_row>
+        <@tr>
+          <@td>${(workEffort.estimatedStartDate)!}</@td>
+          <@td>${workEffort.priority!}</@td>
+          <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</@td>
+          <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</@td>
+          <@td>${workEffort.groupPartyId}</@td>
+          <#-- <@td>${workEffort.roleTypeId}</@td> -->
+          <@td><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></@td>
+          <@td class="button-col"><a href="<@ofbizUrl>acceptassignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate}</@ofbizUrl>">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
+        </@tr>
       </#list>
-    </table>
+    </@table>
+    </@section>
   </#if>
+  
+</@section>

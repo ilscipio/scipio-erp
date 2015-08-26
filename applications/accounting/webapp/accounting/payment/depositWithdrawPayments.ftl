@@ -69,8 +69,7 @@ function getPaymentRunningTotal() {
 
 
 </script>
-<div class="screenlet">
-    <div class="screenlet-body">
+<@section>
         <form id="depositWithdrawPaymentsForm" name="depositWithdrawPaymentsForm" method="post" action="<@ofbizUrl>depositWithdrawPayments</@ofbizUrl>">
             <#if paymentList?has_content>
                 <input type="hidden" name='organizationPartyId' value="${organizationPartyId!}" />
@@ -85,30 +84,28 @@ function getPaymentRunningTotal() {
                     <span>${uiLabelMap.AccountingRunningTotal} :</span>
                     <span  id="showPaymentRunningTotal"></span>
                 </div>
-                <table class="basic-table">
-                  <thead>
-                    <tr class="header-row-2">
-                        <th>${uiLabelMap.FormFieldTitle_paymentId}</th>
-                        <th>${uiLabelMap.AccountingPaymentType}</th>
-                        <th>${uiLabelMap.AccountingFromParty}</th>
-                        <th>${uiLabelMap.AccountingToParty}</th>
-                        <th>${uiLabelMap.CommonAmount}</th>
-                        <th>${uiLabelMap.CommonDate}</th>
-                        <th align="right">${uiLabelMap.CommonSelectAll}<input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></th>
-                    </tr>
-                    </thead>
-                    <#assign alt_row = false>
+                <@table type="data-list" autoAltRows=true class="basic-table">
+                  <@thead>
+                    <@tr class="header-row-2">
+                        <@th>${uiLabelMap.FormFieldTitle_paymentId}</@th>
+                        <@th>${uiLabelMap.AccountingPaymentType}</@th>
+                        <@th>${uiLabelMap.AccountingFromParty}</@th>
+                        <@th>${uiLabelMap.AccountingToParty}</@th>
+                        <@th>${uiLabelMap.CommonAmount}</@th>
+                        <@th>${uiLabelMap.CommonDate}</@th>
+                        <@th align="right">${uiLabelMap.CommonSelectAll}<input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></@th>
+                    </@tr>
+                    </@thead>
                     <#list paymentList as payment>
-                        <tr<@dataRowClassStr alt=alt_row />>
-                            <td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>">${payment.paymentId}</a></td>
-                            <td>${payment.paymentTypeDesc!}</td>
-                            <td>${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}</td>
-                            <td>${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}</td>
-                            <td><@ofbizCurrency amount=payment.amount isoCode=payment.currencyUomId/></td>
-                            <td>${payment.effectiveDate!}</td>
-                            <td align="right">${uiLabelMap.AccountingDeposit}<input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getPaymentRunningTotal();"/></td>
-                        </tr>
-                        <#assign alt_row = !alt_row>
+                        <@tr>
+                            <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>">${payment.paymentId}</a></@td>
+                            <@td>${payment.paymentTypeDesc!}</@td>
+                            <@td>${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}</@td>
+                            <@td>${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}</@td>
+                            <@td><@ofbizCurrency amount=payment.amount isoCode=payment.currencyUomId/></@td>
+                            <@td>${payment.effectiveDate!}</@td>
+                            <@td align="right">${uiLabelMap.AccountingDeposit}<input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getPaymentRunningTotal();"/></@td>
+                        </@tr>
                     </#list>
                     <div align="right">
                         <span>${uiLabelMap.AccountingPayment} ${uiLabelMap.PartyPartyGroupName}</span>
@@ -117,10 +114,9 @@ function getPaymentRunningTotal() {
                         <input type="checkbox" name="groupInOneTransaction" value="Y" checked="checked" />
                         <input id="submitButton" type="button"  onclick="javascript:document.depositWithdrawPaymentsForm.submit();" value="${uiLabelMap.AccountingDepositWithdraw}" disabled="disabled"/>
                     </div>
-                </table>
+                </@table>
             <#else>
-                <span>${uiLabelMap.CommonNoRecordFound}</span>
+                <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
             </#if>
         </form>
-    </div>
-</div>
+</@section>

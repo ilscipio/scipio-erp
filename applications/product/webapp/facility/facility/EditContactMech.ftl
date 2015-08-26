@@ -17,21 +17,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#assign menuHtml>
+  <li><a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
+  <#if (mechMap.contactMechTypeId)?has_content && (mechMap.contactMech)?has_content>
+    <li><a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewContactMech}</a></li>
+  </#if>
+</#assign>
+<@section menuHtml=menuHtml>
+
 <#if !mechMap.facilityContactMech?? && mechMap.contactMech??>
-  <p><h3>${uiLabelMap.PartyContactInfoNotBelongToYou}.</h3></p>
-  &nbsp;<a href="<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
+  <@alert type="error">${uiLabelMap.PartyContactInfoNotBelongToYou}.</@alert>
 <#else>
   <#if !mechMap.contactMech??>
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !preContactMechTypeId?has_content>
-    <h2>${title}</h2>
-    <div class="button-bar">
-      <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
-    </div>
+
     <form method="post" action='<@ofbizUrl>EditContactMech</@ofbizUrl>' name="createcontactmechform">
       <input type='hidden' name='facilityId' value='${facilityId}' />
       <input type='hidden' name='DONE_PAGE' value='${donePage!}' />
-      <@table width="50%" class="basic-table" cellspacing="0">
+      <@table type="fields" width="50%" class="basic-table" cellspacing="0">
         <@tr>
           <@td>${uiLabelMap.PartySelectContactType}</@td>
           <@td>
@@ -49,20 +53,11 @@ under the License.
 
   <#if mechMap.contactMechTypeId?has_content>
     <#if !mechMap.contactMech?has_content>
-      <h2>${title}</h2>
-      <div class="button-bar">
-        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
-      </div>
       <#if contactMechPurposeType??>
         <div><span>(${uiLabelMap.PartyMsgContactHavePurpose}</span>"${contactMechPurposeType.get("description",locale)!}")</div>
       </#if>
       <#assign tableWidth = "90%">
     <#else>
-      <h2>${title}</h2>
-      <div class="button-bar">
-        <a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
-        <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewContactMech}</a>
-      </div>
       <#assign tableWidth = "">
     </#if>
 
@@ -248,3 +243,5 @@ under the License.
   </@table>
   </#if>
 </#if>
+
+</@section>

@@ -17,13 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
         
-<@table cellspacing="0" class="basic-table">
+<@table type="generic" cellspacing="0" class="basic-table">
+  <@tr>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_0?has_content>
-                <div>${date0}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date0}</@td></@tr>
                 <#list approved_0 as show>
                     <@tr>
                         <@td>
@@ -35,11 +34,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_1?has_content>
-                <div>${date1}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date1}</@td></@tr>
                 <#list approved_1 as show>
                     <@tr>
                         <@td>
@@ -51,11 +48,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_2?has_content>
-                <div>${date2}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date2}</@td></@tr>
                 <#list approved_2 as show>
                     <@tr>
                         <@td>
@@ -67,11 +62,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_3?has_content>
-                <div>${date3}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date3}</@td></@tr>
                 <#list approved_3 as show>
                     <@tr>
                         <@td>
@@ -83,11 +76,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_4?has_content>
-                <div>${date4}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date4}</@td></@tr>
                 <#list approved_4 as show>
                     <@tr>
                         <@td>
@@ -99,11 +90,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_5?has_content>
-                <div>${date5}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date5}</@td></@tr>
                 <#list approved_5 as show>
                     <@tr>
                         <@td>
@@ -115,11 +104,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_6?has_content>
-                <div>${date6}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date6}</@td></@tr>
                 <#list approved_6 as show>
                     <@tr>
                         <@td>
@@ -131,11 +118,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_7?has_content>
-                <div>${date7}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date7}</@td></@tr>
                 <#list approved_7 as show>
                     <@tr>
                         <@td>
@@ -147,11 +132,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_8?has_content>
-                <div>${date8}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date8}</@td></@tr>
                 <#list approved_8 as show>
                     <@tr>
                         <@td>
@@ -163,11 +146,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_9?has_content>
-                <div>${date9}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date9}</@td></@tr>
                 <#list approved_9 as show>
                     <@tr>
                         <@td>
@@ -179,11 +160,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_10?has_content>
-                <div>${date10}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date10}</@td></@tr>
                 <#list approved_10 as show>
                     <@tr>
                         <@td>
@@ -195,11 +174,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_11?has_content>
-                <div>${date11}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date11}</@td></@tr>
                 <#list approved_11 as show>
                     <@tr>
                         <@td>
@@ -211,11 +188,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_12?has_content>
-                <div>${date12}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date12}</@td></@tr>
                 <#list approved_12 as show>
                     <@tr>
                         <@td>
@@ -227,11 +202,9 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table>
+        <@table type="data-complex" class="" cellspacing="">
             <#if approved_13?has_content>
-                <div>${date13}</div>
-                <br/>
-                <#assign alt_row = false>
+                <@tr><@td>${date13}</@td></@tr>
                 <#list approved_13 as show>
                     <@tr>
                         <@td>
@@ -242,4 +215,5 @@ under the License.
             </#if>
         </@table>
     </@td>
+  </@tr>
 </@table>

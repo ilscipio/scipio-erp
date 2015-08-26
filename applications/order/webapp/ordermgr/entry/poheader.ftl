@@ -19,16 +19,20 @@ under the License.
 
 <@section title="PO For ${partyId!}" classes="${styles.grid_large!}6">
 
-                <@table width="100%" cellspacing="0">
-                    <@tr><@td>Supplier Information Here</@td></@tr>
-                </@table>
+                <@row>
+                  <@cell>
+                    Supplier Information Here
+                  </@cell>
+                </@row>
 
       <#-- end of header box -->
 
       <#-- payment box -->
         <@section title="Place Holder">
-                  <@table width="100%" cellspacing="0">
-                  </@table>
+                  <@row>
+                    <@cell>
+                    </@cell>
+                  </@row>
         </@section>
 </@section>
 

@@ -168,62 +168,60 @@ function setServiceName(selection) {
                         </select>
                     </#if>
                 </div>
-                <table class="basic-table hover-bar">
-                  <thead>
-                    <tr class="header-row-2">
-                      <th>${uiLabelMap.FormFieldTitle_paymentId}</th>
-                      <th>${uiLabelMap.AccountingPaymentType}</th>
-                      <th>${uiLabelMap.CommonStatus}</th>
-                      <th>${uiLabelMap.CommonComments}</th>
-                      <th>${uiLabelMap.AccountingFromParty}</th>
-                      <th>${uiLabelMap.AccountingToParty}</th>
-                      <th>${uiLabelMap.AccountingEffectiveDate}</th>
-                      <th>${uiLabelMap.AccountingAmount}</th>
-                      <th>${uiLabelMap.FormFieldTitle_amountToApply}</th>
-                      <th>${uiLabelMap.CommonPaymentMethodType}</th>
-                      <th>
+                <@table type="data-list" autoAltRows=true class="basic-table hover-bar">
+                  <@thead>
+                    <@tr class="header-row-2">
+                      <@th>${uiLabelMap.FormFieldTitle_paymentId}</@th>
+                      <@th>${uiLabelMap.AccountingPaymentType}</@th>
+                      <@th>${uiLabelMap.CommonStatus}</@th>
+                      <@th>${uiLabelMap.CommonComments}</@th>
+                      <@th>${uiLabelMap.AccountingFromParty}</@th>
+                      <@th>${uiLabelMap.AccountingToParty}</@th>
+                      <@th>${uiLabelMap.AccountingEffectiveDate}</@th>
+                      <@th>${uiLabelMap.AccountingAmount}</@th>
+                      <@th>${uiLabelMap.FormFieldTitle_amountToApply}</@th>
+                      <@th>${uiLabelMap.CommonPaymentMethodType}</@th>
+                      <@th>
                         ${uiLabelMap.CommonSelectAll}
                         <input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <#assign alt_row = false>
+                      </@th>
+                    </@tr>
+                  </@thead>
+                  <@tbody>
                     <#list paymentList as payment>
-                      <tr<@dataRowClassStr alt=alt_row />>
-                        <td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.button_default!}">${payment.paymentId}</a></td>
-                        <td>
+                      <@tr>
+                        <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.button_default!}">${payment.paymentId}</a></@td>
+                        <@td>
                           ${payment.paymentTypeDesc?default(payment.paymentTypeId)}
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                           ${payment.statusDesc?default(payment.statusId)}
-                        </td>
-                        <td>${(payment.comments)!}</td>
-                        <td>
+                        </@td>
+                        <@td>${(payment.comments)!}</@td>
+                        <@td>
                           <a href="/partymgr/control/viewprofile?partyId=${payment.partyIdFrom}">${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}[${(payment.partyIdFrom)!}]</a>
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                           <a href="/partymgr/control/viewprofile?partyId=${payment.partyIdTo}">${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}[${(payment.partyIdTo)!}]</a>
-                        </td>
-                        <td>${payment.effectiveDate!}</td>
-                        <td><@ofbizCurrency amount = payment.amount isoCode = payment.currencyUomId /></td>
-                        <td>
+                        </@td>
+                        <@td>${payment.effectiveDate!}</@td>
+                        <@td><@ofbizCurrency amount = payment.amount isoCode = payment.currencyUomId /></@td>
+                        <@td>
                           <#assign amountToApply = Static["org.ofbiz.accounting.payment.PaymentWorker"].getPaymentNotApplied(payment) />
                           <@ofbizCurrency amount = amountToApply isoCode = amountToApply.currencyUomId />
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                           <#assign creditCard = (delegator.findOne("CreditCard", {"paymentMethodId" : payment.paymentMethodId}, false))! />
                           ${payment.paymentMethodTypeDesc?default(payment.paymentMethodTypeId)}
                           <#if creditCard?has_content>/${(creditCard.cardType)!}</#if>
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                           <input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getPaymentRunningTotal('paymentId_${payment_index}');" />
-                        </td>
-                      </tr>
-                        <#assign alt_row = !alt_row>
+                        </@td>
+                      </@tr>
                     </#list>
-                  </tbody>
-                </table>
+                  </@tbody>
+                </@table>
             <#else>
                 <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
             </#if>

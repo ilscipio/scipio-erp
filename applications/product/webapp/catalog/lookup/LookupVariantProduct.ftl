@@ -17,12 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if (requestAttributes.uiLabelMap)??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<br />
-<div>[${product.productId}] ${product.internalName}</div>
-<br />
+
+<p>[${product.productId}] ${product.internalName}</p>
+
 <#if searchFeatures?has_content>
   <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
-    <@table cellspacing="0" class="basic-table">
+    <@table type="fields" cellspacing="0" class="basic-table">
         <input type="hidden" name="productId" value="${product.productId}" />
         <#list searchFeatures as searchFeature>
             <@tr>
@@ -47,9 +47,9 @@ under the License.
     </@table>
   </form>
 </#if>
-<br />
+
 <#if variantProducts??>
-    <@table cellspacing="0" class="basic-table">
+    <@table type="data-list" cellspacing="0" class="basic-table">
        <@thead>
         <@tr class="header-row">
             <@td>${uiLabelMap.ProductProductId}</@td>
@@ -67,7 +67,7 @@ under the License.
     </@table>
 </#if>
 <#if productFeatureIds??>
-    <@table cellspacing="0" class="basic-table">
+    <@table type="fields" cellspacing="0" class="basic-table">
         <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="createNewVariant">
         <input type="hidden" name="productId" value="${product.productId}" />
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}" />

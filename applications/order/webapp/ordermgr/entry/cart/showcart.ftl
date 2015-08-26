@@ -134,8 +134,7 @@ under the License.
                         </#list>
                           </@field>
                 </#if>
-                    
-                    
+
                     <@row>
                          <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2"></@cell>
                          <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
@@ -153,7 +152,6 @@ under the License.
 
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
                     
-
                         <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
                         <option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option>
                         </@field>

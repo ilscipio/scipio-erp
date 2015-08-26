@@ -16,11 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.WorkEffortSearchWorkEfforts}, ${uiLabelMap.ProductSearchFor}:</h3>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.WorkEffortSearchWorkEfforts}, ${uiLabelMap.ProductSearchFor}:">
     <#list searchConstraintStrings as searchConstraintString>
         <div>&nbsp;<a href="<@ofbizUrl>WorkEffortSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
@@ -28,60 +24,36 @@ under the License.
     <div><a href="<@ofbizUrl>WorkEffortSearchOptions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !workEffortIds?has_content>
-      <br /><h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>
+      <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
     </#if>
 
-    <#if workEffortIds?has_content>
-    <table class="basic-table" cellspacing="0">
-        <tr>
-          <td align="right">
-            <#if 0 < viewIndex?int>
-              <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a>
-            </#if>
-            <#if 0 < listSize?int>
-              ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
-            </#if>
-            <#if highIndex?int < listSize?int>
-              | <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
-            </#if>
-          </td>
-        </tr>
-    </table>
-    </#if>
-
+    <#macro paginateWorkEfforts>
+      <#if (0 < listSize?int)>
+        <ul class="${styles.button_group!}">
+          <li><a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}<#if !(0 < viewIndex?int)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
+          <li><span class="text-entry">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span></li>
+          <li><a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}<#if !(highIndex?int < listSize?int)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
+        </ul>
+      </#if>
+    </#macro>
+    
     <#if workEffortIds?has_content>
 
+    <@paginateWorkEfforts />
     <center>
-      <table width="100%" cellpadding="0" cellspacing="0">
+      <@table type="data-list" width="100%" cellpadding="0" cellspacing="0">
         <#assign listIndex = lowIndex>
         <#list workEffortIds as workEffortId><#-- note that there is no boundary range because that is being done before the list is put in the content -->
           <#assign workEffort = delegator.findOne("WorkEffort", Static["org.ofbiz.base.util.UtilMisc"].toMap("workEffortId", workEffortId), false)>
-          <tr>
-            <td>
+          <@tr>
+            <@td>
               <a href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffortId}</@ofbizUrl>" class="${styles.button_default!}">${workEffortId} ${(workEffort.workEffortName)!}</a>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
         </#list>
-      </table>
+      </@table>
     </center>
+    <@paginateWorkEfforts />
+    
     </#if>
-
-    <#if workEffortIds?has_content>
-    <table class="basic-table" cellspacing="0">
-        <tr>
-          <td align="right">
-            <#if 0 < viewIndex?int>
-              <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
-            </#if>
-            <#if 0 < listSize?int>
-              ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
-            </#if>
-            <#if highIndex?int < listSize?int>
-              | <a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
-            </#if>
-          </td>
-        </tr>
-    </table>
-    </#if>
-  </div>
-</div>
+</@section>

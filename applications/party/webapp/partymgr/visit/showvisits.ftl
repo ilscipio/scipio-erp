@@ -29,8 +29,7 @@ under the License.
       <#elseif !partyId??>
         <li><a href="<@ofbizUrl>showvisits?showAll=true</@ofbizUrl>">${uiLabelMap.PartyShowAll}</a></li>
       </#if>
-</#assign>  
-
+</#assign>
 <@section title="${title}&nbsp;${uiLabelMap.PartyVisitListing}" menuHtml=menuHtml>
   <#if visitList?has_content>
     
@@ -85,7 +84,7 @@ under the License.
     </#if>
     
   <#else>
-    <p>${uiLabelMap.CommonNoRecordFound}.</p>
+    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
   </#if>
       
 </@section>

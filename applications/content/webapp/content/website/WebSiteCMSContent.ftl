@@ -101,10 +101,10 @@
         <#assign dataResourceTypeId = "NONE"/>
     <#else>
         <form name="cmsdatatype">
-            <table>
-                <tr>
-                    <td>${uiLabelMap.ContentDataType}</td>
-                    <td>
+            <@table type="fields">
+                <@tr>
+                    <@td>${uiLabelMap.ContentDataType}</@td>
+                    <@td>
                         <select name="dataResourceTypeId">
                             <option value="NONE">${uiLabelMap.ContentResourceNone}</option>
                             <option value="SHORT_TEXT">${uiLabelMap.ContentResourceShortText}</option>
@@ -115,17 +115,17 @@
                             <option value="AUDIO_OBJECT">${uiLabelMap.ContentResourceAudio}</option>
                             <option value="OTHER_OBJECT">${uiLabelMap.ContentResourceOther}</option>
                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" colspan="2">
+                    </@td>
+                </@tr>
+                <@tr>
+                    <@td align="center" colspan="2">
                         <a href="javascript:void(0);" onclick="javascript:selectDataType('${contentIdFrom?default(contentRoot)}');" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a>
-                    </td>
-                </tr>
+                    </@td>
+                </@tr>
                 <#list 0..15 as x>
-                    <tr><td colspan="2">&nbsp;</td></tr>
+                    <@tr><@td colspan="2">&nbsp;</@td></@tr>
                 </#list>
-            </table>
+            </@table>
         </form>
     </#if>
 </#if>
@@ -191,34 +191,34 @@
         <input type="hidden" name="webSiteId" value="${webSiteId}"/>
         <input type="hidden" name="dataResourceName" value="${(dataResource.dataResourceName)!}"/>
 
-        <table>
+        <@table type="fields">
           <#if (content?has_content)>
-            <tr>
-                <td>${uiLabelMap.FormFieldTitle_contentId}</td>
-                <td>${content.contentId}</td>
-            </tr>
+            <@tr>
+                <@td>${uiLabelMap.FormFieldTitle_contentId}</@td>
+                <@td>${content.contentId}</@td>
+            </@tr>
           </#if>
-          <tr>
-            <td>${uiLabelMap.CommonName}</td>
-            <td>
+          <@tr>
+            <@td>${uiLabelMap.CommonName}</@td>
+            <@td>
                 <input type="text" name="contentName" value="${(content.contentName)!}" size="40"/>
-            </td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.CommonDescription}</td>
-            <td>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.CommonDescription}</@td>
+            <@td>
                 <textarea name="description" cols="40" rows="6">${(content.description)!}</textarea>
-            </td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.ContentMapKey}</td>
-            <td>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.ContentMapKey}</@td>
+            <@td>
                 <input type="text" name="mapKey" value="${(assoc.mapKey)!}" size="40"/>
-            </td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.CommonPurpose}</td>
-            <td>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.CommonPurpose}</@td>
+            <@td>
                 <select name="contentPurposeTypeId">
                     <#if (currentPurpose?has_content)>
                         <#assign purpose = currentPurpose.getRelatedOne("ContentPurposeType", false)/>
@@ -232,17 +232,17 @@
                         <option value="${type.contentPurposeTypeId}">${type.description}</option>
                     </#list>
                 </select>
-            </td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.CommonSequenceNum}</td>
-            <td>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.CommonSequenceNum}</@td>
+            <@td>
               <input type="text" name="sequenceNum" value="${(currentPurpose.sequenceNum)!}" size="5" />
-            </td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.ContentDataType}</td>
-            <td>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.ContentDataType}</@td>
+            <@td>
                 <select name="dataTemplateTypeId">
                     <#if (dataResource?has_content)>
                         <#if (dataResource.dataTemplateTypeId?has_content)>
@@ -255,11 +255,11 @@
                         <option value="${type.dataTemplateTypeId}">${type.description}</option>
                     </#list>
                 </select>
-            </td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.ContentDecorator}</td>
-            <td>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.ContentDecorator}</@td>
+            <@td>
                 <select name="decoratorContentId">
                     <#if (content?has_content)>
                         <#if (content.decoratorContentId?has_content)>
@@ -273,11 +273,11 @@
                         <option value="${decorator.contentId}">${decorator.contentName}</option>
                     </#list>
                 </select>
-            </td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.ContentTemplate}</td>
-            <td>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.ContentTemplate}</@td>
+            <@td>
                 <select name="templateDataResourceId">
                     <#if (content?has_content)>
                         <#if (content.templateDataResourceId?has_content && content.templateDataResourceId != "NONE")>
@@ -291,11 +291,11 @@
                         <option value="${template.dataResourceId}">${template.dataResourceName}</option>
                     </#list>
                 </select>
-            </td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.CommonStatus}</td>
-            <td>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.CommonStatus}</@td>
+            <@td>
                 <select name="statusId">
                     <#if (content?has_content)>
                         <#if (content.statusId?has_content)>
@@ -308,11 +308,11 @@
                         <option value="${status.statusId}">${status.description}</option>
                     </#list>
                 </select>
-            </td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.FormFieldTitle_isPublic}</td>
-            <td>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.FormFieldTitle_isPublic}</@td>
+            <@td>
                 <select name="isPublic">
                     <#if (dataResource?has_content)>
                         <#if (dataResource.isPublic?has_content)>
@@ -325,53 +325,53 @@
                     <option>Y</option>
                     <option>N</option>
                 </select>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
+            </@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2">
               <textarea id="cmsdata" name="textData" cols="40" rows="6" style="display: none;">
                 <#if (dataText?has_content)>
                     ${StringUtil.wrapString(dataText.textData!)}
                 </#if>
               </textarea>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
 
           <#-- this all depends on the dataResourceTypeId which was selected -->
           <#if (dataResourceTypeId == 'IMAGE_OBJECT' || dataResourceTypeId == 'OTHER_OBJECT' || dataResourceTypeId == 'LOCAL_FILE' ||
                 dataResourceTypeId == 'OFBIZ_FILE' || dataResourceTypeId == 'VIDEO_OBJECT' || dataResourceTypeId == 'AUDIO_OBJECT')>
-            <tr>
-              <td></td>
-              <td>
+            <@tr>
+              <@td></@td>
+              <@td>
                 <#if ((content.contentId)?has_content)>
                     <@renderContentAsText contentId="${content.contentId}" ignoreTemplate="true"/>
                 </#if>
-              </td>
-            </tr>
-            <tr>
-              <td>${uiLabelMap.CommonUpload}</td>
-              <td>
+              </@td>
+            </@tr>
+            <@tr>
+              <@td>${uiLabelMap.CommonUpload}</@td>
+              <@td>
                 <input type="hidden" name="isUploadObject" value="Y"/>
                 <input type="file" name="uploadedFile" size="30"/>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           <#elseif (dataResourceTypeId == 'URL_RESOURCE')>
-            <tr>
-              <td>${uiLabelMap.ContentUrl}</td>
-              <td>
+            <@tr>
+              <@td>${uiLabelMap.ContentUrl}</@td>
+              <@td>
                 <input type="text" name="objectInfo" size="40" maxsize="255" value="${(dataResource.objectInfo)!}"/>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           <#elseif (dataResourceTypeId == 'SHORT_TEXT')>
-            <tr>
-              <td>${uiLabelMap.ContentText}</td>
-              <td>
+            <@tr>
+              <@td>${uiLabelMap.ContentText}</@td>
+              <@td>
                 <input type="text" name="objectInfo" size="40" maxsize="255" value="${(dataResource.objectInfo)!}"/>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           <#elseif (dataResourceTypeId == 'ELECTRONIC_TEXT')>
-            <tr>
-              <td colspan="2">
+            <@tr>
+              <@td colspan="2">
                 <div id="editorcontainer" class="nocolumns">
                     <div id="cmseditor" style="margin: 0; width: 100%; border: 1px solid black;">
                     <#if (dataText?has_content)>
@@ -379,15 +379,15 @@
                     </#if>
                     </div>
                 </div>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           </#if>
 
-          <tr>
-            <td align="center" colspan="2">
+          <@tr>
+            <@td align="center" colspan="2">
                 <a href="javascript:void(0);" onclick="javascript:cmsSave();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-            </td>
-          </tr>
-        </table>
+            </@td>
+          </@tr>
+        </@table>
     </form>
 </#if>

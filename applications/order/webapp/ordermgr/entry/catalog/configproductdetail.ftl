@@ -386,8 +386,8 @@ function getConfigDetails() {
       <#if variantSample?? && 0 < variantSample.size()>
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
-        <p>&nbsp;</p>
-        <@table cellspacing="0" cellpadding="0">
+
+        <@table type="data-complex" class="" cellspacing="0" cellpadding="0">
           <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>
@@ -410,7 +410,7 @@ function getConfigDetails() {
               <#assign indexer = indexer + 1>
             </#list>
             <#if (indexer > maxIndex)>
-              <div><b>${uiLabelMap.OrderMoreOptionsAvailable}.</b></div>
+              <@td><b>${uiLabelMap.OrderMoreOptionsAvailable}.</div></@td>
             </#if>
           </@tr>
         </@table>
@@ -437,11 +437,11 @@ function getConfigDetails() {
         <input type='hidden' name='quantity' value='1' />
 
         <input type='hidden' name='product_id' value='${product.productId}' />
-        <@table>
+        <@table type="fields" class="" cellspacing="">
           <@tr>
             <@td>
-                    <a href="javascript:verifyConfig();" class="${styles.button_default!}">${uiLabelMap.OrderVerifyConfiguration}</a>
-                </@td>
+                <a href="javascript:verifyConfig();" class="${styles.button_default!}">${uiLabelMap.OrderVerifyConfiguration}</a>
+            </@td>
           </@tr>
           <@tr><@td><hr /></@td></@tr>
           <#assign counter = 0>
@@ -660,7 +660,7 @@ ${setRequestAttribute("productValue", productValue)}
 
 <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
 <#if commonFeatureResultIds?has_content>
-  <h2>Similar Products That Might Interest You...</h2>
+  <@heading>Similar Products That Might Interest You...</@heading>
   <hr />
 
   <#list commonFeatureResultIds as commonFeatureResultId>

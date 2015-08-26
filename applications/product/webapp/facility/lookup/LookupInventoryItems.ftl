@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@table class="basic-table hover-bar" cellspacing="0">
+<@table type="data-complex" class="basic-table hover-bar" cellspacing="0">
  <@thead>
   <@tr class="header-row-2">
     <@th>${uiLabelMap.ProductInventoryItemId}</@th>
@@ -66,7 +66,6 @@ under the License.
         <@td>${inventoryItem.unitCost!}</@td>
       </@tr>
     </#list>
-    <@tr>
   </#if>
   <#if !(inventoryItemsForPo?? && inventoryItemsForPo?has_content) && !(inventoryItemsForSupplier?? && inventoryItemsForSupplier?has_content) && !(inventoryItemsForProduct?? && inventoryItemsForProduct?has_content)>
     <@tr><@td><span>${uiLabelMap.CommonNo} ${uiLabelMap.ProductInventoryItems} ${uiLabelMap.ProductAvailable}.</span></@td></@tr>

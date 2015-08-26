@@ -54,7 +54,7 @@ under the License.
                 </@row>
             </#if>
             
-        <@table class="basic-table">
+        <@table type="fields" class="basic-table">
             <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.Party}</@td>
                 <@td>
@@ -66,6 +66,7 @@ under the License.
                     ${partyMap.partyGroup.groupName!}
                   </#if>
               </@td>
+            </@tr>
             <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.CommonCurrency}</@td>
                 <@td>
@@ -88,5 +89,5 @@ under the License.
                 <@td class="${styles.grid_large!}3">${uiLabelMap.CommonTotal}</@td>
                 <@td><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></@td>
             </@tr>
-    </@table>
+        </@table>
 </@section>

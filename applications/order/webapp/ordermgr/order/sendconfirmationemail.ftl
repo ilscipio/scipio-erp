@@ -20,11 +20,16 @@ under the License.
 <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
 <@section title="${uiLabelMap.OrderSendConfirmationEmail}">
     <@row>
-    <@cell class="${styles.grid_large!}6 columns">
-
-      <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
-      <a href="javascript:document.sendConfirmationForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSend}</a>      
-      <br />
+    <@cell class="${styles.grid_large!}6 ${styles.grid_cell!}">
+      <#macro actionMenu>
+        <ul class="${styles.button_group!}">
+          <li><a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
+          <li><a href="javascript:document.sendConfirmationForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSend}</a></li>
+        </ul>
+      </#macro>
+      
+      <@actionMenu />
+      
       <form method="post" action="<@ofbizUrl>sendconfirmationmail/${donePage}</@ofbizUrl>" name="sendConfirmationForm">
         <input type="hidden" name="orderId" value="${orderId!}" />
         <#if ! productStoreEmailSetting??>
@@ -32,19 +37,18 @@ under the License.
         </#if>
         <input type="hidden" name="partyId" value="${partyId!}" />
         <input type="hidden" name="contentType" value="${productStoreEmailSetting.contentType?default("")}" />
-        <@table class="basic-table" cellspacing='0'>
+        <@table type="fields" class="basic-table" cellspacing='0'>
             <@tr>
                 <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailSubject}&nbsp;</@td>
                 <@td>
                     <input type="text" size="40" name="subject" value="${productStoreEmailSetting.subject?default(uiLabelMap.OrderOrderConfirmation + " " + uiLabelMap.OrderNbr + orderId)?replace("\\$\\{orderId\\}",orderId,"r")}" />
                 </@td>
             </@tr>
-            </@tr>
+            <@tr>
                 <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailSendTo}&nbsp;</@td>
                 <@td>
                     <input type="text" size="40" name="sendTo" value="${sendTo}"/>
                 </@td>
-            <@tr>
             </@tr>
             <@tr>
                 <@td  scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailCCTo}&nbsp;</@td>
@@ -67,7 +71,7 @@ under the License.
                         <input type="text" size="40" name="sendFrom" value="" />
                     </#if>
                 </@td>
-            <@tr>
+            </@tr>
             <@tr>
                 <@td  scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailContentType}&nbsp;</@td>
                 <@td>${productStoreEmailSetting.contentType?default("text/html")}</@td>
@@ -80,9 +84,8 @@ under the License.
             </@tr>
         </@table>
       </form>
-      <br />
-      <a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
-      <a href="javascript:document.sendConfirmationForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSend}</a>
+      
+      <@actionMenu />
       </@cell>
       </@row>
     </@section>

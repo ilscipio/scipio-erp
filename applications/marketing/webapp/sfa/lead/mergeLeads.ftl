@@ -17,13 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-<div class="screenlet-title-bar"><h3>${uiLabelMap.SfaMergingFollowing} ${uiLabelMap.SfaMergeLeads}</h3></div>
-<div class="screenlet-body">
+<@section title="${uiLabelMap.SfaMergingFollowing} ${uiLabelMap.SfaMergeLeads}">
   <form  method="post" action="<@ofbizUrl>mergeContacts</@ofbizUrl>" class="basic-form">
-  <table border="0" width="100%">
-    <tr>
-      <td>
+  <@table type="generic" border="0" width="100%">
+    <@tr>
+      <@td>
         <#if contactInfoList?has_content >
           <#assign contactInfo1 = contactInfoList[0]/>
           <#assign contactInfo2 = contactInfoList[1]/>
@@ -38,104 +36,103 @@ under the License.
           <input type="hidden" name="phoneContactMechId" value="${contactInfo2.phoneContactMechId!}" />
           <input type="hidden" name="emailContactMechId" value="${contactInfo2.emailContactMechId!}" />
 
-          <table>
-            <tr>
-              <td width="20%"></td>
-              <td width="30%"><h2>${uiLabelMap.SfaFirstContact}</h2><br /></td>
-              <td width="30%"><h2>${uiLabelMap.SfaSecondContact}</h2><br /></td>
-              <td width="20%"><h2>${uiLabelMap.CommonSelect}</h2><br /></td>
-            </tr>
-            <tr>
-              <td width="20%">${uiLabelMap.PartyFirstName}</td>
-              <td width="30%"><h3>${contactInfo1.firstName!}</h3></td>
-              <td width="30%"><h3>${contactInfo2.firstName!}</h3></td>
-              <td width="20%"></td>
-            </tr>
-            <tr>
-              <td width="20%">${uiLabelMap.PartyLastName}</td>
-              <td width="30%"><h3>${contactInfo1.lastName!}</h3></td>
-              <td width="30%"><h3>${contactInfo2.lastName!}</h3></td>
-              <td width="20%"></td>
-            </tr>
-            <tr>
-              <td width="30"><br /><h3>${uiLabelMap.PartyGeneralCorrespondenceAddress}</h3></td>
-              <td width="30"></td>
-            </tr>
-            <tr>
-              <td width="20%">${uiLabelMap.PartyAddressLine1}</td>
-              <td width="30%">${contactInfo1.address1!}</td>
-              <td width="30%">${contactInfo2.address1!}</td>
-              <td width="20%"><input type="checkbox" name="useAddress2" value="Y"/></td>
-            </tr>
+          <@table type="fields" class="" cellspacing="">
+            <@tr>
+              <@td width="20%"></@td>
+              <@td width="30%"><@heading>${uiLabelMap.SfaFirstContact}</@heading></@td>
+              <@td width="30%"><@heading>${uiLabelMap.SfaSecondContact}</@heading></@td>
+              <@td width="20%"><@heading>${uiLabelMap.CommonSelect}</@heading></@td>
+            </@tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.PartyFirstName}</@td>
+              <@td width="30%"><@heading relLevel=1>${contactInfo1.firstName!}</@heading></@td>
+              <@td width="30%"><@heading relLevel=1>${contactInfo2.firstName!}</@heading></@td>
+              <@td width="20%"></@td>
+            </@tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.PartyLastName}</@td>
+              <@td width="30%"><@heading relLevel=1>${contactInfo1.lastName!}</@heading></@td>
+              <@td width="30%"><@heading relLevel=1>${contactInfo2.lastName!}</@heading></@td>
+              <@td width="20%"></@td>
+            </@tr>
+            <@tr>
+              <@td width="30"><@heading relLevel=1>${uiLabelMap.PartyGeneralCorrespondenceAddress}</@heading></@td>
+              <@td width="30"></@td>
+            </@tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.PartyAddressLine1}</@td>
+              <@td width="30%">${contactInfo1.address1!}</@td>
+              <@td width="30%">${contactInfo2.address1!}</@td>
+              <@td width="20%"><input type="checkbox" name="useAddress2" value="Y"/></@td>
+            </@tr>
 
-            <tr>
-              <td width="20%">${uiLabelMap.PartyAddressLine2}</td>
-              <td width="30%">${contactInfo1.address2!}</td>
-              <td width="30%">${contactInfo2.address2!}</td>
-              <td width="20%"></td>
-            </tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.PartyAddressLine2}</@td>
+              <@td width="30%">${contactInfo1.address2!}</@td>
+              <@td width="30%">${contactInfo2.address2!}</@td>
+              <@td width="20%"></@td>
+            </@tr>
 
-            <tr>
-              <td width="20%">${uiLabelMap.PartyCity}</td>
-              <td width="30%">${contactInfo1.city!}</td>
-              <td width="30%">${contactInfo2.city!}</td>
-              <td width="20%"></td>
-            </tr>
-            <tr>
-              <td width="20%">${uiLabelMap.PartyState}</td>
-              <td width="30%">${contactInfo1.state!}</td>
-              <td width="30%">${contactInfo2.state!}</td>
-              <td width="20%"></td>
-            </tr>
-            <tr>
-              <td width="20%">${uiLabelMap.PartyZipCode}</td>
-              <td width="30%">${contactInfo1.postalCode!}</td>
-              <td width="30%">${contactInfo2.postalCode!}</td>
-              <td width="20%"></td>
-            </tr>
-            <tr>
-              <td width="20%">${uiLabelMap.CommonCountry}</td>
-              <td width="30%">${contactInfo1.country!}</td>
-              <td width="30%">${contactInfo2.country!}</td>
-              <td width="20%"></td>
-            </tr>
-            <tr><td><br /><h3>${uiLabelMap.PartyPrimaryPhone}</h3></td></tr>
-            <tr>
-              <td width="20%">${uiLabelMap.CommonCountryCode}</td>
-              <td width="30%">${contactInfo1.countryCode!}</td>
-              <td width="30%">${contactInfo2.countryCode!}</td>
-              <td width="10%"><input type="checkbox" name="useContactNum2" value="Y"/></td>
-            </tr>
-            <tr>
-              <td width="20%">${uiLabelMap.PartyAreaCode}</td>
-              <td width="30%">${contactInfo1.areaCode!}</td>
-              <td width="30%">${contactInfo2.areaCode!}</td>
-              <td width="20%"></td>
-            </tr>
-            <tr>
-              <td width="20%">${uiLabelMap.PartyPhoneNumber}</td>
-              <td width="30%">${contactInfo1.contactNumber!}</td>
-              <td width="30%">${contactInfo2.contactNumber!}</td>
-              <td width="20%"></td>
-            </tr>
-            <tr>
-              <td width="20%">${uiLabelMap.PartyEmailAddress}</td>
-              <td width="30%">${contactInfo1.primaryEmail!}</td>
-              <td width="30%">${contactInfo2.primaryEmail!}</td>
-              <td width="10%"><input type="checkbox" name="useEmail2" value="Y"/></td>
-            </tr>
-            <tr>
-              <td colspan="4" align="center"><br />
+            <@tr>
+              <@td width="20%">${uiLabelMap.PartyCity}</@td>
+              <@td width="30%">${contactInfo1.city!}</@td>
+              <@td width="30%">${contactInfo2.city!}</@td>
+              <@td width="20%"></@td>
+            </@tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.PartyState}</@td>
+              <@td width="30%">${contactInfo1.state!}</@td>
+              <@td width="30%">${contactInfo2.state!}</@td>
+              <@td width="20%"></@td>
+            </@tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.PartyZipCode}</@td>
+              <@td width="30%">${contactInfo1.postalCode!}</@td>
+              <@td width="30%">${contactInfo2.postalCode!}</@td>
+              <@td width="20%"></@td>
+            </@tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.CommonCountry}</@td>
+              <@td width="30%">${contactInfo1.country!}</@td>
+              <@td width="30%">${contactInfo2.country!}</@td>
+              <@td width="20%"></@td>
+            </@tr>
+            <@tr><@td><@heading relLevel=1>${uiLabelMap.PartyPrimaryPhone}</@heading></@td></@tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.CommonCountryCode}</@td>
+              <@td width="30%">${contactInfo1.countryCode!}</@td>
+              <@td width="30%">${contactInfo2.countryCode!}</@td>
+              <@td width="10%"><input type="checkbox" name="useContactNum2" value="Y"/></@td>
+            </@tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.PartyAreaCode}</@td>
+              <@td width="30%">${contactInfo1.areaCode!}</@td>
+              <@td width="30%">${contactInfo2.areaCode!}</@td>
+              <@td width="20%"></@td>
+            </@tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.PartyPhoneNumber}</@td>
+              <@td width="30%">${contactInfo1.contactNumber!}</@td>
+              <@td width="30%">${contactInfo2.contactNumber!}</@td>
+              <@td width="20%"></@td>
+            </@tr>
+            <@tr>
+              <@td width="20%">${uiLabelMap.PartyEmailAddress}</@td>
+              <@td width="30%">${contactInfo1.primaryEmail!}</@td>
+              <@td width="30%">${contactInfo2.primaryEmail!}</@td>
+              <@td width="10%"><input type="checkbox" name="useEmail2" value="Y"/></@td>
+            </@tr>
+            <@tr>
+              <@td colspan="4" align="center"><br />
                 <input type="submit" value="${uiLabelMap.CommonSubmit}"/>
-              </td>
-            </tr>
-          </table>
+              </@td>
+            </@tr>
+          </@table>
         <#else>
-          <h3>${uiLabelMap.SfaNoLeadsSelectedToMerged}</h3>
+          <@resultMsg>${uiLabelMap.SfaNoLeadsSelectedToMerged}</@resultMsg>
         </#if>
-      </td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+  </@table>
   </form>
-</div>
-</div>
+</@section>

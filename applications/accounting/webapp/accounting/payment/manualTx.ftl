@@ -27,11 +27,11 @@ under the License.
       <input type="hidden" name="paymentMethodId" value="${requestParameters.paymentMethodId}" />
     </#if>
 
-    <table border='0' cellpadding='2' cellspacing='0'>
-      <tr>
-        <td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonPaymentMethodType}</b></td>
-        <td width="5">&nbsp;</td>
-        <td width='74%'>
+    <@table type="fields" border='0' cellpadding='2' cellspacing='0'>
+      <@tr>
+        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonPaymentMethodType}</b></@td>
+        <@td width="5">&nbsp;</@td>
+        <@td width='74%'>
           <#if paymentMethodType?has_content>
             <div>${paymentMethodType.get("description",locale)}</div>
             <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodType.paymentMethodTypeId}" />
@@ -40,12 +40,12 @@ under the License.
               <option value="CREDIT_CARD">${uiLabelMap.AccountingCreditCard}</option>
             </select>
           </#if>
-        </td>
-      </tr>
-      <tr>
-        <td width="26%" align="right" valign="middle"><b>${uiLabelMap.ProductProductStore}</b></td>
-        <td width="5">&nbsp;</td>
-        <td width='74%'>
+        </@td>
+      </@tr>
+      <@tr>
+        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.ProductProductStore}</b></@td>
+        <@td width="5">&nbsp;</@td>
+        <@td width='74%'>
           <#if currentStore?has_content>
             <div><#if currentStore.storeName??>${currentStore.storeName}<#else>${currentStore.productStoreId}</#if></div>
             <input type="hidden" name="productStoreId" value="${currentStore.productStoreId}" />
@@ -56,12 +56,12 @@ under the License.
               </#list>
             </select>
           </#if>
-        </td>
-      </tr>
-      <tr>
-        <td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingTransactionType}</b></td>
-        <td width="5">&nbsp;</td>
-        <td width='74%'>
+        </@td>
+      </@tr>
+      <@tr>
+        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingTransactionType}</b></@td>
+        <@td width="5">&nbsp;</@td>
+        <@td width='74%'>
           <#if currentTx?has_content>
             <div>${currentTx.get("description",locale)}</div>
             <input type="hidden" name="transactionType" value="${currentTx.enumId}" />
@@ -74,8 +74,8 @@ under the License.
               </#list>
             </select>
           </#if>
-        </td>
-      </tr>
+        </@td>
+      </@tr>
 
       <#-- payment method information -->
       <#if paymentMethodType?has_content && paymentMethodTypeId == "CREDIT_CARD">
@@ -85,34 +85,34 @@ under the License.
       </#if>
 
      <#if requestAttributes.validTx?default("false") == "true">
-        <tr><td colspan="3"><hr/></td></tr>
+        <@tr><@td colspan="3"><hr/></@td></@tr>
         <#-- amount field -->
-        <tr>
-          <td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonAmount}</b></td>
-          <td width="5">&nbsp;</td>
-          <td width="74%">
+        <@tr>
+          <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonAmount}</b></@td>
+          <@td width="5">&nbsp;</@td>
+          <@td width="74%">
             <input type="text" size="20" maxlength="30" name="amount" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-          </td>
-        </tr>
+          </@td>
+        </@tr>
         <#-- submit button -->
-        <tr>
-          <td width="26%" align="right" valign="middle">&nbsp;</td>
-          <td width="5">&nbsp;</td>
-          <td width="74%">
+        <@tr>
+          <@td width="26%" align="right" valign="middle">&nbsp;</@td>
+          <@td width="5">&nbsp;</@td>
+          <@td width="74%">
             <input type="submit" value="${uiLabelMap.CommonSubmit}" />
-          </td>
-        </tr>
+          </@td>
+        </@tr>
       <#elseif txType?has_content>
-        <tr>
-          <td colspan="3" align="center">
+        <@tr>
+          <@td colspan="3" align="center">
             <br />
             <h2>${uiLabelMap.AccountingTransactionTypeNotYetSupported}</h2>
             <br />
-          </td>
-        </tr>
+          </@td>
+        </@tr>
       </#if>
-    </table>
+    </@table>
   </form>
 <#else>
   <@alert type="error">${uiLabelMap.AccountingPermissionError}</@alert>

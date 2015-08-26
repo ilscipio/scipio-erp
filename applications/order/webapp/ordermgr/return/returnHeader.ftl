@@ -28,7 +28,7 @@ under the License.
             <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
         </#if>
 
-        <@table cellspacing="0" class="basic-table">
+        <@table type="field" cellspacing="0" class="basic-table">
           <#if returnHeader??>
           <@tr>
             <@td width='14%'>&nbsp;</@td>

@@ -19,7 +19,7 @@ under the License.
 
 <#-- ==================== Party Selection dialog box ========================= -->
 <@section >
-<@table border="0" width="100%" cellspacing="0" cellpadding="0">
+<@table type="fields" border="0" width="100%" cellspacing="0" cellpadding="0">
   <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
     <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
     <input type="hidden" name="finalizeMode" value="addpty"/>
@@ -76,7 +76,7 @@ under the License.
 
   <@tr>
     <@td width="100%">
-      <@table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <@table type="fields" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <@tr>
           <@td>${uiLabelMap.CommonIdentifier} :</@td>
           <@td>
@@ -103,7 +103,7 @@ under the License.
 
   <@tr>
     <@td width="100%">
-      <@table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <@table type="fields" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <form method="post" action="<@ofbizUrl>addAdditionalParty</@ofbizUrl>" name="addAdditionalPartyForm" id="addAdditionalPartyForm">
         <@tr>
           <@td>&nbsp;</@td>

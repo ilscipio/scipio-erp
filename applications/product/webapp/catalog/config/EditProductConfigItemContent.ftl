@@ -80,7 +80,7 @@ function insertImageName(size,nameValue) {
     <@section title="${uiLabelMap.ProductOverrideSimpleFields}">
             <form action="<@ofbizUrl>updateProductConfigItemContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
                 <input type="hidden" name="configItemId" value="${configItemId!}" />
-                <@table cellspacing="0" class="basic-table">
+                <@table type="fields" cellspacing="0" class="basic-table">
                 <@tr>
                     <@td width="20%" align="right" valign="top">${uiLabelMap.CommonDescription}</@td>
                     <@td>&nbsp;</@td>

@@ -46,7 +46,7 @@ function submitForm(form, mode, value) {
 </script>
 
 <@section title="${uiLabelMap.OrderItemGroups}">
-        <@table width="100%" cellspacing="0" cellpadding="1" border="0">
+        <@table type="data-complex" width="100%" cellspacing="0" cellpadding="1" border="0">
           <#assign shipGroups = cart.getShipGroups()>
           <#if (shipGroups.size() > 0)>
             <#assign groupIdx = 0>
@@ -106,7 +106,7 @@ function submitForm(form, mode, value) {
                       </#list>
                     </select>
 
-                    <h2>${uiLabelMap.OrderSpecialInstructions}</h2>
+                    <@heading>${uiLabelMap.OrderSpecialInstructions}</@heading>
                     <textarea class='textAreaBox' cols="35" rows="3" wrap="hard" name="shippingInstructions">${cart.getShippingInstructions(groupIdx)!}</textarea>
                   </@td>
                   <@td>
@@ -127,7 +127,7 @@ function submitForm(form, mode, value) {
                       </select>
                     </div>
 
-                    <h2>${uiLabelMap.OrderGiftMessage}</h2>
+                    <@heading>${uiLabelMap.OrderGiftMessage}</@heading>
                     <textarea class='textAreaBox' cols="30" rows="3" wrap="hard" name="giftMessage">${cart.getGiftMessage(groupIdx)!}</textarea>
                   </@td>
                   <@td><input type="button" class="smallSubmit" value="${uiLabelMap.CommonSave}" onclick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>
@@ -141,13 +141,13 @@ function submitForm(form, mode, value) {
               </form>
             </#list>
           <#else>
-            <div class="tabletext">${uiLabelMap.OrderNoShipGroupsDefined}.</div>
+            <@resultMsg>${uiLabelMap.OrderNoShipGroupsDefined}.</@resultMsg>
           </#if>
         </@table>
     </@section>
 
 <@section title="${uiLabelMap.OrderAssignItems}">
-        <@table width="100%" cellspacing="0" cellpadding="1" border="0">
+        <@table type="data-complex" width="100%" cellspacing="0" cellpadding="1" border="0">
           <@tr>
             <@td><div class="tabletext"><b>${uiLabelMap.OrderProduct}</b></div></@td>
             <@td align="center"><div class="tabletext"><b>${uiLabelMap.OrderTotalQty}</b></div></@td>
@@ -237,7 +237,9 @@ function submitForm(form, mode, value) {
         </@table>
 </@section>
 
-<@section>
+<#assign menuHtml>
       <a href="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
       <a href="<@ofbizUrl>setBilling</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a>
+</#assign>
+<@section menuHtml=menuHtml>
 </@section>

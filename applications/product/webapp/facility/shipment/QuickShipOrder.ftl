@@ -24,13 +24,13 @@ function setWeight(weight) {
 </script>
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-  <h2>${uiLabelMap.ProductQuickShipOrderFrom} ${facility.facilityName!} [${uiLabelMap.CommonId}:${facilityId!}]</h2>
-  <div class="button-bar">
-    <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNextShipment}</a>
+<#assign menuHtml>
+    <li><a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNextShipment}</a></li>
     <#if shipment?has_content>
-      <a href="<@ofbizUrl>EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductEditShipment}</a>
+      <li><a href="<@ofbizUrl>EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductEditShipment}</a></li>
     </#if>
-  </div>
+</#assign>
+<@section title="${uiLabelMap.ProductQuickShipOrderFrom} ${facility.facilityName!} [${uiLabelMap.CommonId}:${facilityId!}]">
 
   <#if shipment??>
     <#if 1 < shipmentPackages.size()>
@@ -54,7 +54,7 @@ function setWeight(weight) {
               <input type="hidden" name="facilityId" value="${facilityId!}"/>
               <input type="hidden" name="shipmentId" value="${shipmentRoute.shipmentId}"/>
               <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRoute.shipmentRouteSegmentId}"/>
-              <@table border="0" cellpadding="2" cellspacing="0">
+              <@table type="fields" border="0" cellpadding="2" cellspacing="0">
                 <@tr>
                   <@td width="20%" align="right"><span>${uiLabelMap.ProductCarrier}</span></@td>
                   <@td>&nbsp;</@td>
@@ -127,7 +127,7 @@ function setWeight(weight) {
             <input type="hidden" name="facilityId" value="${facilityId!}"/>
             <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
-            <@table cellspacing="0" class="basic-table">
+            <@table type="fields" cellspacing="0" class="basic-table">
               <@tr>
                 <@td width="20%" align="right"><span>${uiLabelMap.ProductPackage}</span> ${shipmentPackage.shipmentPackageSeqId} ${uiLabelMap.ProductWeight}</@td>
                 <@td>&nbsp;</@td>
@@ -179,7 +179,7 @@ function setWeight(weight) {
       <input type="hidden" name="facilityId" value="${facilityId!}" />
       <input type="hidden" name="originFacilityId" value="${facilityId!}" />
       <input type="hidden" name="setPackedOnly" value="Y" />
-      <@table border='0' cellpadding='2' cellspacing="0">
+      <@table type="fields" border='0' cellpadding='2' cellspacing="0">
         <@tr>
           <@td width="25%" align='right'><span>${uiLabelMap.ProductOrderNumber}</span></@td>
           <@td width="1">&nbsp;</@td>
@@ -201,4 +201,5 @@ function setWeight(weight) {
         document.selectOrderForm.orderId.focus();
     </script>
   </#if>
+</@section>
 </#if>

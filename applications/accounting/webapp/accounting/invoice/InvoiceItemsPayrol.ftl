@@ -18,60 +18,60 @@ under the License.
 -->
 <form method="post" action="createInvoiceItemPayrol">
 <input type="hidden" name="invoiceId" value="${invoice.invoiceId}" />
-<table class="basic-table hover-bar" cellspacing="0">
+<@table type="data-complex" class="basic-table hover-bar" cellspacing="0">
 
 <#if PayrolGroup?has_content>
 <#list PayrolGroup as payrolGroup>
-<thead>
-<tr class="header-row">
-    <th>
+<@thead>
+<@tr class="header-row">
+    <@th>
     [${payrolGroup.description}]
-    </th>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
-</tr>
-<tr class="header-row">
-    <th width="50%" align="center">Description</th>
-    <th width="10px" align="center">Quantity</th>
-    <th width="10px" align="center">Amount</th>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
-</tr>
-</thead>
+    </@th>
+    <@th>&nbsp;</@th>
+    <@th>&nbsp;</@th>
+    <@th>&nbsp;</@th>
+    <@th>&nbsp;</@th>
+</@tr>
+<@tr class="header-row">
+    <@th width="50%" align="center">Description</@th>
+    <@th width="10px" align="center">Quantity</@th>
+    <@th width="10px" align="center">Amount</@th>
+    <@th>&nbsp;</@th>
+    <@th>&nbsp;</@th>
+</@tr>
+</@thead>
     <#if PayrolList?has_content>
         <#list PayrolList as payrolList>
             <#if payrolList.parentTypeId! == payrolGroup.invoiceItemTypeId!>
-<tr>
-    <td align="right">
+<@tr>
+    <@td align="right">
             ${payrolList.description} :
-    </td>
-    <td><input type="text" size=10 name="${payrolList.invoiceItemTypeId}_Quantity"/></td>
-    <td><input type="text" size=10 name="${payrolList.invoiceItemTypeId}_Amount"/></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-</tr>
+    </@td>
+    <@td><input type="text" size=10 name="${payrolList.invoiceItemTypeId}_Quantity"/></@td>
+    <@td><input type="text" size=10 name="${payrolList.invoiceItemTypeId}_Amount"/></@td>
+    <@td>&nbsp;</@td>
+    <@td>&nbsp;</@td>
+</@tr>
             </#if>
         </#list>
     </#if>
 </#list>
 </#if>
-<tfoot>
-<tr class="header-row">
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-</tr>
-<tr>
-    <td align="right"><b>Add all values : </b></td>
-    <td align="center"><input type="submit" value="Add" /></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-</tr>
-</tfoot>
-</table>
+<@tfoot>
+<@tr class="header-row">
+<@td>&nbsp;</@td>
+<@td>&nbsp;</@td>
+<@td>&nbsp;</@td>
+<@td>&nbsp;</@td>
+<@td>&nbsp;</@td>
+</@tr>
+<@tr>
+    <@td align="right"><b>Add all values : </b></@td>
+    <@td align="center"><input type="submit" value="Add" /></@td>
+    <@td>&nbsp;</@td>
+    <@td>&nbsp;</@td>
+    <@td>&nbsp;</@td>
+</@tr>
+</@tfoot>
+</@table>
 </form>

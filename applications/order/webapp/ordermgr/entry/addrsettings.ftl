@@ -21,12 +21,12 @@ under the License.
 
 <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
   <input type="hidden" name="finalizeMode" value="ship"/>
-  <@table width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
+  <@table type="fields" width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
     <@tr><@td>
 
       <#-- header table -->
 
-      <@table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <@table type="fields" width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <@tr>
           <@td valign="middle">
             <div class="boxhead">${uiLabelMap.OrderSelectAShippingAddress}</div>
@@ -34,7 +34,7 @@ under the License.
         </@tr>
       </@table>
 
-      <@table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="fields" width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <@tr><@td colspan="3"><hr /></@td></@tr>
 
         <#-- postal addresses for chosen id -->

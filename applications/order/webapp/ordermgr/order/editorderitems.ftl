@@ -26,19 +26,26 @@ under the License.
     <#assign allowPriceChange = true/>
 </#if>
 
-<@section title="${uiLabelMap.OrderOrderItems}">
-        <ul class="button-group">
-          <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-              <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-                  <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelSelectedOrderItems</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelSelectedItems}</a></li>
-                  <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelAllItems}</a></li>
-                  <li><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewOrder}</a></li>
-              </#if>
-          </#if>
-        </ul>
+<#assign menuHtml>
+  <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+      <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
+          <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelSelectedOrderItems</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelSelectedItems}</a></li>
+          <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelAllItems}</a></li>
+          <li><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewOrder}</a></li>
+      </#if>
+  </#if>
+</#assign>
+<@section title="${uiLabelMap.OrderOrderItems}" menuHtml=menuHtml>
+
         <#if !orderItemList?has_content>
-            <span class="alert">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</span>
-        <#else>
+            <@alert type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@alert>
+        </#if>
+        
+        <#-- CATO: FIXME: this whole template is full of forms inside table elems = invalid HTML -->
+        
+        <@table type="data-complex" class="basic-table order-items" cellspacing="0">
+
+        <#if orderItemList?has_content>
             <form name="updateItemInfo" method="post" action="<@ofbizUrl>updateOrderItems</@ofbizUrl>">
             <input type="hidden" name="orderId" value="${orderId}"/>
             <input type="hidden" name="orderItemSeqId" value=""/>
@@ -47,7 +54,6 @@ under the License.
               <input type="hidden" name="supplierPartyId" value="${partyId}"/>
               <input type="hidden" name="orderTypeId" value="PURCHASE_ORDER"/>
             </#if>
-            <@table class="basic-table order-items" cellspacing="0">
               <@thead>
                 <@tr class="header-row">
                     <@th width="30%">${uiLabelMap.ProductProduct}</@th>
@@ -156,7 +162,7 @@ under the License.
                                   <#assign remainingQuantity = ((orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - shippedQuantity?double)>
                                 </#if>
                                 <@modal id="${productId}_q" label="${orderItem.quantity?default(0)?string.number}">    
-                                            <@table>
+                                            <@table type="fields" class="" cellspacing="">
                                                 <@tr valign="top">
                                                     
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>
@@ -363,7 +369,7 @@ under the License.
                     <@td></@td>
                     <@td colspan="6"><hr/></@td>
                 </@tr>
-                
+             
             </form>
         </#if>
         <#list orderHeaderAdjustments as orderHeaderAdjustment>

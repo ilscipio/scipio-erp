@@ -19,7 +19,7 @@ under the License.
 <#if !mechMap.contactMech??>
   <#-- When creating a new contact mech, first select the type, then actually create -->
   <#if !preContactMechTypeId?has_content>
-    <h2>${uiLabelMap.PartyCreateNewContact}</h2>
+    <@section title="${uiLabelMap.PartyCreateNewContact}">
     <form method="post" action="<@ofbizUrl>editcontactmech</@ofbizUrl>" name="createcontactmechform">
       <input type="hidden" name="partyId" value="${partyId}" />
       <@table type="fields" class="basic-table" cellspacing="0">
@@ -38,20 +38,27 @@ under the License.
         </@tbody>
       </@table>
     </form>
+    </@section>
     </#if>
 </#if>
 <#if mechMap.contactMechTypeId?has_content>
 
   <#if !mechMap.contactMech?has_content>
-    <h2>${uiLabelMap.PartyCreateNewContact}</h2>
+    <#assign sectionTitle>${uiLabelMap.PartyCreateNewContact}</#assign>
+  <#else>
+    <#assign sectionTitle>${uiLabelMap.PartyEditContactInformation}</#assign>
+  </#if>
+  <@section title=sectionTitle>
+  
+  <#if !mechMap.contactMech?has_content>
     <div id="mech-purpose-types">
     <#if contactMechPurposeType??>
       <p>(${uiLabelMap.PartyMsgContactHavePurpose} <b>"${contactMechPurposeType.get("description",locale)!}"</b>)</p>
     </#if>
   <#else>
-    <h2>${uiLabelMap.PartyEditContactInformation}</h2>
     <div id="mech-purpose-types">
   </#if>
+  
     <@table type="data-list" class="basic-table" cellspacing="0">
     <@tbody>
     <#-- FIXME: form inside table -->
@@ -242,10 +249,14 @@ under the License.
   </@tbody>
   </@table>
   </div>
-  <div class="button-bar">
-    <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
-    <a href="javascript:document.editcontactmechform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-  </div>
+  
+  <ul class="${styles.button_group!}">
+    <li><a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
+    <li><a href="javascript:document.editcontactmechform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a></li>
+  </ul>
+  </@section>
 <#else>
-  <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a>
+  <ul class="${styles.button_group!}">
+    <li><a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
+  </ul>
 </#if>

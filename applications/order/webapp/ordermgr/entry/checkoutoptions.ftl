@@ -88,7 +88,7 @@ function submitForm(form, mode, value) {
 </#assign>
 
 <@section title=title>
-                <@table width="100%" border="0" cellpadding="1" cellspacing="0">
+                <@table type="fields" class="" width="100%" border="0" cellpadding="1" cellspacing="0">
                   <@tr>
                     <@td colspan="2">
                       <span>${uiLabelMap.OrderShipToParty}:</span>
@@ -158,7 +158,7 @@ function submitForm(form, mode, value) {
                 </#if>
         </#assign>
         <@section title=title>
-                <@table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
+                <@table type="fields" class="" width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
                  <#if shipping == true>
                   <#list carrierShipmentMethodList as carrierShipmentMethod>
                     <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
@@ -269,7 +269,7 @@ function submitForm(form, mode, value) {
             </@section>
 
             <@section title="3)${uiLabelMap.OrderHowShallYouPay}?">
-                <@table class="basic-table">
+                <@table type="fields" cellspacing="" class="basic-table">
                   <@tr>
                     <@td colspan="2">
                       <span>${uiLabelMap.CommonAdd}:</span>

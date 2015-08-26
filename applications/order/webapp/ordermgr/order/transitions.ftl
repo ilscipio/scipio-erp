@@ -19,14 +19,11 @@ under the License.
 
 <#if inProcess??>
 <@section title="${uiLabelMap.OrderProcessingStatus}">
-    <@table class="basic-table" cellspacing='0'>
-      <@tr>
-        <@td>
-          <!-- Suspended Processes -->
+          <#-- Suspended Processes -->
           <#if workEffortStatus == "WF_SUSPENDED">
             <form action="<@ofbizUrl>releasehold</@ofbizUrl>" method="post" name="activityForm">
               <input type="hidden" name="workEffortId" value="${workEffortId}" />
-              <@table class="basic-table" cellspacing='0'>
+              <@table type="fields" class="basic-table" cellspacing='0'>
                 <@tr>
                   <@td>${uiLabelMap.OrderProcessingInHold}&nbsp;${uiLabelMap.OrderProcessingInHoldNote}</@td>
                   <@td align="right" valign="center">
@@ -36,11 +33,11 @@ under the License.
               </@table>
             </form>
           </#if>
-          <!-- Active Processes -->
+          <#-- Active Processes -->
           <#if workEffortStatus == "WF_RUNNING">
             <form action="<@ofbizUrl>holdorder</@ofbizUrl>" method="post" name="activityForm">
               <input type="hidden" name="workEffortId" value="${workEffortId}" />
-              <@table class="basic-table" cellspacing='0'>
+              <@table type="fields" class="basic-table" cellspacing='0'>
                 <@tr>
                   <@td>${uiLabelMap.OrderProcessingInActive}</@td>
                   <@td align="right" valign="center">
@@ -50,23 +47,17 @@ under the License.
               </@table>
             </form>
           </#if>
-        </@td>
-      </@tr>
-    </@table>
   </@section>
 </#if>
-<br />
+
 <#if wfTransitions?? && wfTransitions?has_content>
 <@section title="${uiLabelMap.OrderProcessingTransitions}">
-    <@table class="basic-table" cellspacing='0'>
-      <@tr>
-        <@td>
           <form action="<@ofbizUrl>completeassignment</@ofbizUrl>" method="post" name="transitionForm">
             <input type="hidden" name="workEffortId" value="${workEffortId}" />
             <input type="hidden" name="partyId" value="${assignPartyId}" />
             <input type="hidden" name="roleTypeId" value="${assignRoleTypeId}" />
             <input type="hidden" name="fromDate" value="${fromDate}" />
-            <@table class="basic-table" cellspacing='0'>
+            <@table type="fields" class="basic-table" cellspacing='0'>
               <@tr>
                 <@td>
                   <select name="approvalCode">
@@ -86,8 +77,5 @@ under the License.
               </@tr>
             </@table>
           </form>
-        </@td>
-      </@tr>
-    </@table>
   </@section>
 </#if>

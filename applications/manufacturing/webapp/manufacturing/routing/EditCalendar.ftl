@@ -18,65 +18,57 @@ under the License.
 -->
 
 <#if techDataCalendar?has_content>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ManufacturingUpdateCalendar}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
-  <div class="button-bar"><a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ManufacturingNewCalendar}</a></div>
+  <#assign sectionTitle>${uiLabelMap.ManufacturingUpdateCalendar}</#assign>
+<#else>
+  <#assign sectionTitle>${uiLabelMap.ManufacturingCreateCalendar}</#assign>
+</#if>
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ManufacturingNewCalendar}</a></li>
+</#assign>
+<@section title=sectionTitle menuHtml=menuHtml>
+
+<#if techDataCalendar?has_content>
   <form name="calendarform" method="post" action="<@ofbizUrl>UpdateCalendar</@ofbizUrl>">
     <input type="hidden" name="calendarId" value="${techDataCalendar.calendarId}" />
 <#else>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ManufacturingCreateCalendar}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
-  <a href="<@ofbizUrl>EditCalendar</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ManufacturingNewCalendar}</a>
   <form name="calendarform" method="post" action="<@ofbizUrl>CreateCalendar</@ofbizUrl>">
 </#if>
-  <table class="basic-table" cellspacing="0">
+
+  <@table type="fields" class="basic-table" cellspacing="0">
     <#if techDataCalendar?has_content>
-    <tr>
-      <td width='26%' align='right' valign='top'>${uiLabelMap.ManufacturingCalendarId}</td>
-      <td width="5">&nbsp;</td>
-      <td width="74%" valign="top"><span>${techDataCalendar.calendarId!}</span> <span class="tooltip">(${uiLabelMap.CommonNotModifRecreat})</span></td>
-    </tr>
+    <@tr>
+      <@td width='26%' align='right' valign='top'>${uiLabelMap.ManufacturingCalendarId}</@td>
+      <@td width="5">&nbsp;</@td>
+      <@td width="74%" valign="top"><span>${techDataCalendar.calendarId!}</span> <span class="tooltip">(${uiLabelMap.CommonNotModifRecreat})</span></@td>
+    </@tr>
     <#else>
-    <tr>
-      <td width='26%' align='right' valign="top">${uiLabelMap.ManufacturingCalendarId}</td>
-      <td width="5">&nbsp;</td>
-      <td width="74%"><input type="text" size="12" name="calendarId" value="${calendarData.calendarId!}" /></td>
-    </tr>
+    <@tr>
+      <@td width='26%' align='right' valign="top">${uiLabelMap.ManufacturingCalendarId}</@td>
+      <@td width="5">&nbsp;</@td>
+      <@td width="74%"><input type="text" size="12" name="calendarId" value="${calendarData.calendarId!}" /></@td>
+    </@tr>
     </#if>
-    <tr>
-      <td width='26%' align='right' valign='top'>${uiLabelMap.CommonDescription}</td>
-      <td width="5">&nbsp;</td>
-      <td width="74%"><input type="text" size="40" name="description" value="${calendarData.description!}" /></td>
-    </tr>
-    <tr>
-      <td width='26%' align='right' valign='top'>${uiLabelMap.ManufacturingCalendarWeekId}</td>
-      <td width="5">&nbsp;</td>
-      <td width="74%">
+    <@tr>
+      <@td width='26%' align='right' valign='top'>${uiLabelMap.CommonDescription}</@td>
+      <@td width="5">&nbsp;</@td>
+      <@td width="74%"><input type="text" size="40" name="description" value="${calendarData.description!}" /></@td>
+    </@tr>
+    <@tr>
+      <@td width='26%' align='right' valign='top'>${uiLabelMap.ManufacturingCalendarWeekId}</@td>
+      <@td width="5">&nbsp;</@td>
+      <@td width="74%">
          <select name="calendarWeekId">
           <#list calendarWeeks as calendarWeek>
           <option value="${calendarWeek.calendarWeekId}" <#if calendarData?has_content && calendarData.calendarWeekId?default("") == calendarWeek.calendarWeekId>SELECTED</#if>>${(calendarWeek.get("description",locale))!}</option>
           </#list>
         </select>
-      </td>
-    </tr>
-    <tr>
-      <td width="26%" align="right" valign="top"></td>
-      <td width="5">&nbsp;</td>
-      <td width="74%"><input type="submit" value="${uiLabelMap.CommonUpdate}" /></td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="26%" align="right" valign="top"></@td>
+      <@td width="5">&nbsp;</@td>
+      <@td width="74%"><input type="submit" value="${uiLabelMap.CommonUpdate}" /></@td>
+    </@tr>
+  </@table>
   </form>
-  </div>
-</div>
+</@section>

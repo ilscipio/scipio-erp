@@ -283,7 +283,7 @@ ${virtualJavaScript!}
 
 <div id="productdetail">
 
-<@table border="0" cellpadding="2" cellspacing="0" width="100%">
+<@table type="data-complex" border="0" cellpadding="2" cellspacing="0" width="100%">
   <#-- Category next/previous -->
   <#if category??>
     <@tr>
@@ -314,7 +314,7 @@ ${virtualJavaScript!}
       </#if>
     </@td>
     <@td align="right" valign="top">
-      <h2>${productContentWrapper.get("PRODUCT_NAME")!}</h2>
+      <@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>
       <div>${productContentWrapper.get("DESCRIPTION")!}</div>
       <div><b>${product.productId!}</b></div>
       <#-- example of showing a certain type of feature with the product -->
@@ -421,7 +421,7 @@ ${virtualJavaScript!}
         <div><b>${uiLabelMap.ProductUsuallyShipsIn} <font color="red">${daysToShip}</font> ${uiLabelMap.CommonDays}!<b></div>
       </#if>
 
-      <#if disFeatureList?? && 0 < disFeatureList.size()>
+      <#if disFeatureList?? && (0 < disFeatureList.size())>
       <p>&nbsp;</p>
         <#list disFeatureList as currentFeature>
             <#assign disFeatureType = currentFeature.getRelatedOne("ProductFeatureType", true)/>
@@ -530,14 +530,18 @@ ${virtualJavaScript!}
               <input type="text" size="5" name="add_amount" value=""/>
             </div>
             <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
-                <@table width="100%"><@tr>
-                    <@htmlTemplate.renderDateTimeField name="reservStart" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="startDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="reservEnd" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="endDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                <@table type="fields" width="100%">
                 <@tr>
-                <#--td nowrap="nowrap" align="right">Number<br />of days</@td><@td><input type="textt" size="4" name="reservLength"/></@td></@tr><@tr><@td>&nbsp;</@td><@td align="right" nowrap>&nbsp;</td-->
-                <@td nowrap="nowrap" align="right">Number of persons</@td><@td><input type="text" size="4" name="reservPersons" value="2"/></@td>
-                <@td nowrap="nowrap" align="right">Number of rooms</@td><@td><input type="text" size="5" name="quantity" value="1"/></@td></@tr></@table>
-            <#else/>
+                    <@td><@htmlTemplate.renderDateTimeField name="reservStart" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="startDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></@td>
+                    <@td><@htmlTemplate.renderDateTimeField name="reservEnd" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="endDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></@td>
+                </@tr>
+                <@tr>
+                  <#--td nowrap="nowrap" align="right">Number<br />of days</@td><@td><input type="textt" size="4" name="reservLength"/></@td></@tr><@tr><@td>&nbsp;</@td><@td align="right" nowrap>&nbsp;</td-->
+                  <@td nowrap="nowrap" align="right">Number of persons</@td><@td><input type="text" size="4" name="reservPersons" value="2"/></@td>
+                  <@td nowrap="nowrap" align="right">Number of rooms</@td><@td><input type="text" size="5" name="quantity" value="1"/></@td>
+                </@tr>
+                </@table>
+            <#else>
                 <input type="text" size="5" name="quantity" value="1"<#if product.isVirtual!?upper_case == "Y"> disabled="disabled"</#if>/>
             </#if>
             <#-- This calls addItem() so that variants of virtual products cant be added before distinguishing features are selected, it should not be changed to additemSubmit() -->
@@ -567,7 +571,7 @@ ${virtualJavaScript!}
           </select>
           &nbsp;&nbsp;
           <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
-              <@table><@tr><@td>&nbsp;</@td><@td align="right">${uiLabelMap.CommonStartDate} (yyyy-mm-dd)</@td><@td><input type="text" size="10" name="reservStartStr" /></@td><@td>Number of&nbsp;days</@td><@td><input type="text" size="4" name="reservLength" /></@td><@td>&nbsp;</@td><@td align="right">Number of&nbsp;persons</@td><@td><input type="text" size="4" name="reservPersons" value="1" /></@td><@td align="right">Qty&nbsp;</@td><@td><input type="text" size="5" name="quantity" value="1" /></@td></@tr></@table>
+              <@table type="fields"><@tr><@td>&nbsp;</@td><@td align="right">${uiLabelMap.CommonStartDate} (yyyy-mm-dd)</@td><@td><input type="text" size="10" name="reservStartStr" /></@td><@td>Number of&nbsp;days</@td><@td><input type="text" size="4" name="reservLength" /></@td><@td>&nbsp;</@td><@td align="right">Number of&nbsp;persons</@td><@td><input type="text" size="4" name="reservPersons" value="1" /></@td><@td align="right">Qty&nbsp;</@td><@td><input type="text" size="5" name="quantity" value="1" /></@td></@tr></@table>
           <#else>
               <input type="text" size="5" name="quantity" value="1"/>
               <input type="hidden" name="reservStartStr" value= ""/>
@@ -585,11 +589,11 @@ ${virtualJavaScript!}
       </#if>
 
       <#-- Swatches (virtual products only) -->
-      <#if variantSample?? && 0 < variantSample.size()>
+      <#if variantSample?? && (0 < variantSample.size())>
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
         <p>&nbsp;</p>
-        <@table cellspacing="0" cellpadding="0">
+        <@table type="data-complex" cellspacing="0" cellpadding="0">
           <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>
@@ -612,7 +616,7 @@ ${virtualJavaScript!}
               <#assign indexer = indexer + 1>
             </#list>
             <#if (indexer > maxIndex)>
-              <div><b>${uiLabelMap.ProductMoreOptions}</b></div>
+              <@td><b>${uiLabelMap.ProductMoreOptions}</b></@td>
             </#if>
           </@tr>
         </@table>
@@ -646,7 +650,7 @@ ${virtualJavaScript!}
     <#assign targetRequest = targetRequestName>
   </#if>
   <#if assocProducts?has_content>
-    <h2>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName!}</h2>
+    <@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName!}</@heading>
 
     <div class="productsummary-container">
     <#list assocProducts as productAssoc>
@@ -689,9 +693,8 @@ ${setRequestAttribute("productValue", productValue)}
 
 <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
 <#if commonFeatureResultIds?has_content>
-    <h2>${uiLabelMap.ProductSimilarProducts}</h2>
-
-    <div class="productsummary-container">
+    <@section title="${uiLabelMap.ProductSimilarProducts}" class="productsummary-container">
+ 
         <#list commonFeatureResultIds as commonFeatureResultId>
             ${setRequestAttribute("optProductId", commonFeatureResultId)}
             ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
@@ -699,6 +702,6 @@ ${setRequestAttribute("productValue", productValue)}
             <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
             ${screens.render(productsummaryScreen)}
         </#list>
-    </div>
+    </@section>
 </#if>
 </div>

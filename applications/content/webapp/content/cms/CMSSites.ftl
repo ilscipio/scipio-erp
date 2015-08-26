@@ -36,75 +36,75 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 </#if>
 <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_ADMIN" >
 <br />
-<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
+<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <@tr>
+    <@td width='100%'>
       <form name="userform" method="post" action="<@ofbizUrl>CMSSites</@ofbizUrl>" >
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='appTitle'>
-        <tr>
-          <td colspan="1" valign="middle" align="right">
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='appTitle'>
+        <@tr>
+          <@td colspan="1" valign="middle" align="right">
             <div class="boxhead">&nbsp; Root Site ID&nbsp;&nbsp; </div>
-          </td>
-          <td valign="middle">
+          </@td>
+          <@td valign="middle">
             <div class="boxhead">
              <input type="text" name="rootForumId" size="20" value="${rootForumId!}"/>
             </div>
-          </td>
-          <td valign="middle" align="right">
+          </@td>
+          <@td valign="middle" align="right">
             <a href="javascript:document.userform.submit()" class="submenutextright">Refresh</a>
-          </td>
-        </tr>
-      </table>
+          </@td>
+        </@tr>
+      </@table>
       </form>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
+    </@td>
+  </@tr>
+  <@tr>
+    <@td width='100%'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <@tr>
+          <@td>
             <form method="post" name="publishsite" action="<@ofbizUrl>linkContentToPubPt</@ofbizUrl>">
-              <table width="100%" border="0" cellpadding="1">
+              <@table type="generic" width="100%" border="0" cellpadding="1">
                     <#assign rowCount = 0 />
                     <@showSites forumId=rootForumId />
-              </table>
+              </@table>
             </form>
-          </td>
-        </tr>
-        <tr>
-         <td>
+          </@td>
+        </@tr>
+        <@tr>
+         <@td>
             <a class="${styles.button_default!}" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${rootForumId}</@ofbizUrl>" >Add Top Level Forum</a>
-         </td >
-        </tr>
+         </@td >
+        </@tr>
 
-      </table>
-    </td>
-  </tr>
+      </@table>
+    </@td>
+  </@tr>
 <#if requestParameters.moderatedSiteId?has_content>
-  <tr>
-    <td width='100%'>
-      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-         <tr><td><hr /></td></tr>
-         <tr><td align="center"><h1>Unapproved entries for forum Id:${requestParameters.moderatedSiteId}</h1></td></tr>
-         <tr><td><hr /></td></tr>
+  <@tr>
+    <@td width='100%'>
+      <@table type="fields" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+         <@tr><@td><hr /></@td></@tr>
+         <@tr><@td align="center"><h1>Unapproved entries for forum Id:${requestParameters.moderatedSiteId}</h1></@td></@tr>
+         <@tr><@td><hr /></@td></@tr>
          <@moderateSite rootForumId=rootForumId forumId=requestParameters.moderatedSiteId />
-      </table>
-    </td>
-  </tr>
+      </@table>
+    </@td>
+  </@tr>
 </#if>
 <#if requestParameters.permRoleSiteId?has_content>
-  <tr>
-    <td width='100%'>
-      <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-         <tr><td><hr /></td></tr>
-         <tr><td align="center"><h1>Associated roles for forum Id:${requestParameters.permRoleSiteId}</h1></td></tr>
-         <tr><td><hr /></td></tr>
+  <@tr>
+    <@td width='100%'>
+      <@table type="fields" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+         <@tr><@td><hr /></@td></@tr>
+         <@tr><@td align="center"><h1>Associated roles for forum Id:${requestParameters.permRoleSiteId}</h1></@td></@tr>
+         <@tr><@td><hr /></@td></@tr>
          <@grantSiteRoles rootForumId=rootForumId forumId=requestParameters.permRoleSiteId/>
-      </table>
-    </td>
-  </tr>
+      </@table>
+    </@td>
+  </@tr>
 </#if>
-</table>
+</@table>
 </@checkPermission>
 
 <#macro showSites forumId formAction="/enableSites"  indentIndex=0 catTrail=[]>
@@ -120,28 +120,28 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <@loopSubContent contentId=forumId viewIndex=0 viewSize=9999 contentAssocTypeId="SUBSITE" returnAfterPickWhen="1==1";>
-       <tr>
-         <td>
+       <@tr>
+         <@td>
             ${indent}
             <#local plusMinus="-"/>
             ${plusMinus} ${content.contentName!}
-         </td >
-         <td>
+         </@td >
+         <@td>
             <a class="${styles.button_default!}" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
-         </td >
-         <td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
-         <td>
+         </@td >
+         <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
+         <@td>
             <a class="${styles.button_default!}" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
-         </td >
-         <td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
-         <td>
+         </@td >
+         <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
+         <@td>
             <a class="${styles.button_default!}" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${content.contentId}</@ofbizUrl>" >Add Child Forum</a>
-         </td >
-         <td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
-         <td>
+         </@td >
+         <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
+         <@td>
             <a class="${styles.button_default!}" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@ofbizUrl>">RemoveSite</a>
-         </td >
-       </tr>
+         </@td >
+       </@tr>
        <#assign rowCount = rowCount + 1 />
        <@showSites forumId=subContentId indentIndex=(indentIndex + 1)/>
 </@loopSubContent>
@@ -150,116 +150,117 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro moderateSite forumId rootForumId >
-<table width="100%" border="0">
+<@table type="fields" class="" cellspacing="" width="100%" border="0">
  <form name="mostrecent" method="post" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
   <#assign row=0/>
   <#list mostRecentList as content>
     <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_PUBLISH" subContentId=forumId >
-        <tr>
-          <td> <b>id:</b>${content.contentId} </td>
-          <td> <b>name:</b>${content.contentName} </td>
+        <#-- FIXME: restructure to avoid openOnly/closeOnly -->
+        <@tr openOnly=true />
+          <@td> <b>id:</b>${content.contentId} </@td>
+          <@td> <b>name:</b>${content.contentName} </@td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
-          <td>
-  <a class="tabButton" href="<@ofbizUrl>CMSContentEdit?contentId=${content.contentId}&amp;nodeTrailCsv=${nodeTrailCsv!}</@ofbizUrl>" >View</a>
-          </td>
-          <td>
+          <@td>
+          <a class="tabButton" href="<@ofbizUrl>CMSContentEdit?contentId=${content.contentId}&amp;nodeTrailCsv=${nodeTrailCsv!}</@ofbizUrl>" >View</a>
+          </@td>
+          <@td>
           <b>submitted:</b>
           <input type="radio" name="statusId_o_${row}" value="CTNT_FINAL_DRAFT" checked="checked"/>
-          </td>
-          <td>
+          </@td>
+          <@td>
           <b>publish:</b>
           <input type="radio" name="statusId_o_${row}" value="CTNT_PUBLISHED"/>
-          </td>
-          <td>
+          </@td>
+          <@td>
           <b>reject:</b>
           <input type="radio" name="statusId_o_${row}" value="CTNT_DEACTIVATED"/>
-          </td>
-        </tr>
+          </@td>
+        <@tr closeOnly=true />
           <input type="hidden" name="contentId_o_${row}" value="${content.contentId}"/>
-        <tr>
-          <td colspan="6">
+        <@tr>
+          <@td colspan="6">
           <b>content:</b><br />
             <@renderSubContentCache subContentId=content.contentId/>
-          </td>
-        </tr>
-        <tr> <td colspan="5"> <hr /> </td> </tr>
+          </@td>
+        </@tr>
+        <@tr> <@td colspan="5"> <hr /> </@td> </@tr>
         <#assign row = row + 1/>
       </@injectNodeTrailCsv >
     </@checkPermission >
   </#list>
-    <#if 0 < mostRecentList?size >
-        <tr>
-          <td colspan="5">
+    <#if (0 < mostRecentList?size)>
+        <@tr>
+          <@td colspan="5">
             <input type="submit" name="submitBtn" value="${uiLabelMap.CommonUpdate}"/>
-          </td>
-        </tr>
+          </@td>
+        </@tr>
     </#if>
           <input type="hidden" name="moderatedSiteId" value="${forumId}"/>
           <input type="hidden" name="rootForumId" value="${rootForumId}"/>
           <input type="hidden" name="_rowCount" value="${mostRecentList?size}"/>
  </form>
-</table>
+</@table>
 
 
 </#macro>
 
 
 <#macro grantSiteRoles forumId rootForumId >
-<table width="100%" border="0">
-  <tr>
-    <td width='100%'>
+<@table type="fields" class="" cellspacing="" width="100%" border="0">
+  <@tr>
+    <@td width='100%'>
       <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
       <input type="hidden" name="permRoleSiteId" value="${forumId}"/>
       <input type="hidden" name="forumId" value="${forumId}"/>
       <input type="hidden" name="rootForumId" value="${rootForumId}"/>
-      <table width='100%' border='0' cellspacing='0' cellpadding='4' class='boxoutside'>
-        <tr>
-            <td class="">User</td>
+      <@table type="fields" class="" cellspacing="" width='100%' border='0' cellspacing='0' cellpadding='4' class='boxoutside'>
+        <@tr>
+            <@td class="">User</@td>
             <#list blogRoleIdList as roleTypeId>
-              <td class="">${roleTypeId}</td>
+              <@td class="">${roleTypeId}</@td>
             </#list>
-        </tr>
+        </@tr>
 
       <#assign rowCount=0/>
         <#list siteList as siteRoleMap>
-          <tr>
-            <td class="">${siteRoleMap.partyId}</td>
+          <@tr>
+            <@td class="">${siteRoleMap.partyId}</@td>
             <#list blogRoleIdList as roleTypeId>
               <#assign cappedSiteRole= Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(roleTypeId) />
-              <td align="center">
+              <@td align="center">
               <input type="checkbox" name="${cappedSiteRole}_o_${rowCount}" value="Y" <#if siteRoleMap[cappedSiteRole]! == "Y">checked="checked"</#if>/>
-              </td>
+              </@td>
           <input type="hidden" name="${cappedSiteRole}FromDate_o_${rowCount}" value="${siteRoleMap[cappedSiteRole + "FromDate"]!}"/>
             </#list>
-          </tr>
+          </@tr>
           <input type="hidden" name="contentId_o_${rowCount}" value="${forumId}"/>
           <input type="hidden" name="partyId_o_${rowCount}" value="${siteRoleMap.partyId}"/>
           <#assign rowCount=rowCount + 1/>
         </#list>
-        <tr>
-          <td valign="middle">
+        <@tr>
+          <@td valign="middle">
             <@htmlTemplate.lookupField formName="siteRoleForm" name="partyId_o_${rowCount}" id="partyId_o_${rowCount}" fieldFormName="LookupPerson"/><#-- FIXME check if should be changed -->
-          </td>
+          </@td>
             <#list blogRoleIdList as roleTypeId>
               <#assign cappedSiteRole= Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(roleTypeId) />
-              <td align="center">
+              <@td align="center">
               <input type="checkbox" name="${cappedSiteRole}_o_${rowCount}" value="Y" />
-              </td>
+              </@td>
             </#list>
             <input type="hidden" name="contentId_o_${rowCount}" value="${forumId}"/>
             <#assign rowCount=rowCount + 1/>
-        </tr>
-          <tr>
-            <td>
+        </@tr>
+          <@tr>
+            <@td>
             <input type="submit" name="submitBtn" value="${uiLabelMap.CommonUpdate}"/>
-            </td>
-          </tr>
-      </table>
+            </@td>
+          </@tr>
+      </@table>
           <input type="hidden" name="_rowCount" value="${blogRoleIdList}"/>
       </form>
-    </td>
-  </tr>
-</table>
+    </@td>
+  </@tr>
+</@table>
 
 <script type="text/javascript" language="javascript">
 function call_fieldlookup3(view_name) {

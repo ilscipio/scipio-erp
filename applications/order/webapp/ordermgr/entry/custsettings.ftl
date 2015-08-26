@@ -19,13 +19,13 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 <@section>
-      <@table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <@table type="generic" width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <form name="checkoutsetupform" method="post" action="<@ofbizUrl>createCustomer</@ofbizUrl>">
         <input type="hidden" name="finalizeMode" value="cust" />
         <input type="hidden" name="finalizeReqNewShipAddress" value="true" />
         <@tr>
           <@td>
-            <@table width="100%" border="0" cellpadding="1" cellspacing="0">
+            <@table type="fields" width="100%" border="0" cellpadding="1" cellspacing="0">
               <@tr>
                 <@td width="26%" align="right">${uiLabelMap.CommonTitle}</@td>
                 <@td width="5">&nbsp;</@td>

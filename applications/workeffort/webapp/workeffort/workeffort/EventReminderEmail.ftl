@@ -39,67 +39,67 @@ under the License.
       padding: 10px 0 10px 0;
     }
     </style>
-    <table cellspacing=0>
+    <@table type="fields" class="" cellspacing=0>
       <#-- Work Effort Info -->
-      <tr><td>${uiLabelMap.CommonDate}</td><td>${parameters.eventDateTime?default("&nbsp;")}</td></tr>
-      <tr><td>${uiLabelMap.CommonName}</td><td>${workEffort.workEffortName?default("&nbsp;")}</td></tr>
-      <tr><td>${uiLabelMap.CommonDescription}</td><td>${workEffort.description?default("&nbsp;")}</td></tr>
-      <tr><td>${uiLabelMap.CommonType}</td><td>${(workEffortType.description)?default("&nbsp;")}</td></tr>
-      <tr><td>${uiLabelMap.CommonPurpose}</td><td>${(workEffortPurposeType.description)?default("&nbsp;")}</td></tr>
-      <tr><td>${uiLabelMap.CommonStatus}</td><td>${(currentStatusItem.description)?default("&nbsp;")}</td></tr>
-      <tr><td colspan="2"><hr /></td>
-    </table>
+      <@tr><@td>${uiLabelMap.CommonDate}</@td><@td>${parameters.eventDateTime?default("&nbsp;")}</@td></@tr>
+      <@tr><@td>${uiLabelMap.CommonName}</@td><@td>${workEffort.workEffortName?default("&nbsp;")}</@td></@tr>
+      <@tr><@td>${uiLabelMap.CommonDescription}</@td><@td>${workEffort.description?default("&nbsp;")}</@td></@tr>
+      <@tr><@td>${uiLabelMap.CommonType}</@td><@td>${(workEffortType.description)?default("&nbsp;")}</@td></@tr>
+      <@tr><@td>${uiLabelMap.CommonPurpose}</@td><@td>${(workEffortPurposeType.description)?default("&nbsp;")}</@td></@tr>
+      <@tr><@td>${uiLabelMap.CommonStatus}</@td><@td>${(currentStatusItem.description)?default("&nbsp;")}</@td></@tr>
+      <@tr><@td colspan="2"><hr /></@td></@tr>
+    </@table>
     <#if partyAssignments?has_content>
       <div><b>${uiLabelMap.PageTitleListWorkEffortPartyAssigns}</b></div>
-      <table cellspacing=0 cellpadding=2 border=1>
-        <thead><tr>
-          <th>${uiLabelMap.PartyParty}</th>
-          <th>${uiLabelMap.PartyRole}</th>
-          <th>${uiLabelMap.CommonFromDate}</th>
-          <th>${uiLabelMap.CommonThruDate}</th>
-          <th>${uiLabelMap.CommonStatus}</th>
-          <th>${uiLabelMap.WorkEffortDelegateReason}</th>
-        </tr></thead>
-        <tbody>
+      <@table type="data-list" class="" cellspacing=0 cellpadding=2 border=1>
+        <@thead><@tr>
+          <@th>${uiLabelMap.PartyParty}</@th>
+          <@th>${uiLabelMap.PartyRole}</@th>
+          <@th>${uiLabelMap.CommonFromDate}</@th>
+          <@th>${uiLabelMap.CommonThruDate}</@th>
+          <@th>${uiLabelMap.CommonStatus}</@th>
+          <@th>${uiLabelMap.WorkEffortDelegateReason}</@th>
+        </@tr></@thead>
+        <@tbody>
           <#list partyAssignments as wepa>
-            <tr>
-              <td>${wepa.groupName!}${wepa.firstName!} ${wepa.lastName!}</td>
-              <td>${(wepa.getRelatedOne("RoleType", false).description)?default("&nbsp;")}</td>
-              <td>${wepa.fromDate?default("&nbsp;")}</td>
-              <td>${wepa.thruDate?default("&nbsp;")}</td>
-              <td>${(wepa.getRelatedOne("AssignmentStatusItem", false).description)?default("&nbsp;")}</td>
-              <td>${(wepa.getRelatedOne("DelegateReasonEnumeration", false).description)?default("&nbsp;")}</td>
-            </tr>
+            <@tr>
+              <@td>${wepa.groupName!}${wepa.firstName!} ${wepa.lastName!}</@td>
+              <@td>${(wepa.getRelatedOne("RoleType", false).description)?default("&nbsp;")}</@td>
+              <@td>${wepa.fromDate?default("&nbsp;")}</@td>
+              <@td>${wepa.thruDate?default("&nbsp;")}</@td>
+              <@td>${(wepa.getRelatedOne("AssignmentStatusItem", false).description)?default("&nbsp;")}</@td>
+              <@td>${(wepa.getRelatedOne("DelegateReasonEnumeration", false).description)?default("&nbsp;")}</@td>
+            </@tr>
           </#list>
-        </tbody>
-      </table>
+        </@tbody>
+      </@table>
     </#if>
     <#if fixedAssetAssignments?has_content>
       <div><b>${uiLabelMap.PageTitleListWorkEffortFixedAssetAssigns}</b></div>
-      <table cellspacing=0 cellpadding=2 border=1>
-        <thead><tr>
-          <th>${uiLabelMap.AccountingFixedAsset}</th>
-          <th>${uiLabelMap.CommonFromDate}</th>
-          <th>${uiLabelMap.CommonThruDate}</th>
-          <th>${uiLabelMap.CommonStatus}</th>
-          <th>${uiLabelMap.FormFieldTitle_availabilityStatusId}</th>
-          <th>${uiLabelMap.FormFieldTitle_allocatedCost}</th>
-          <th>${uiLabelMap.CommonComments}</th>
-        </tr></thead>
-        <tbody>
+      <@table type="data-list" class="" cellspacing=0 cellpadding=2 border=1>
+        <@thead><@tr>
+          <@th>${uiLabelMap.AccountingFixedAsset}</@th>
+          <@th>${uiLabelMap.CommonFromDate}</@th>
+          <@th>${uiLabelMap.CommonThruDate}</@th>
+          <@th>${uiLabelMap.CommonStatus}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_availabilityStatusId}</@th>
+          <@th>${uiLabelMap.FormFieldTitle_allocatedCost}</@th>
+          <@th>${uiLabelMap.CommonComments}</@th>
+        </@tr></@thead>
+        <@tbody>
           <#list fixedAssetAssignments as wefa>
-            <tr>
-              <td>${wefa.fixedAssetName?default("&nbsp;")}</td>
-              <td>${wefa.fromDate?default("&nbsp;")}</td>
-              <td>${wefa.thruDate?default("&nbsp;")}</td>
-              <td>${(wefa.getRelatedOne("StatusItem", false).description)?default("&nbsp;")}</td>
-              <td>${(wefa.getRelatedOne("AvailabilityStatusItem", false).description)?default("&nbsp;")}</td>
-              <td>${wefa.allocatedCost?default("&nbsp;")}</td>
-              <td>${wefa.comments?default("&nbsp;")}</td>
-            </tr>
+            <@tr>
+              <@td>${wefa.fixedAssetName?default("&nbsp;")}</@td>
+              <@td>${wefa.fromDate?default("&nbsp;")}</@td>
+              <@td>${wefa.thruDate?default("&nbsp;")}</@td>
+              <@td>${(wefa.getRelatedOne("StatusItem", false).description)?default("&nbsp;")}</@td>
+              <@td>${(wefa.getRelatedOne("AvailabilityStatusItem", false).description)?default("&nbsp;")}</@td>
+              <@td>${wefa.allocatedCost?default("&nbsp;")}</@td>
+              <@td>${wefa.comments?default("&nbsp;")}</@td>
+            </@tr>
           </#list>
-        </tbody>
-      </table>
+        </@tbody>
+      </@table>
     </#if>
   </body>
 </html>

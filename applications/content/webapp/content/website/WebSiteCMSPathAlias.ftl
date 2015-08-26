@@ -33,61 +33,61 @@
 </#if>
 
 
-    <table border="1" cellpadding="2" cellspacing="0" class="calendarTable">
-     <thead>
-      <tr class="header-row">
-        <th>Web Site ID</th>
-        <th>Path Alias</th>
-        <th>Alias To</th>
-        <th>Content ID</th>
-        <th>Map Key</th>
-        <th>&nbsp;</th>
-      </tr>
-      </thead>
+    <@table type="data-list" border="1" cellpadding="2" cellspacing="0" class="calendarTable">
+     <@thead>
+      <@tr class="header-row">
+        <@th>Web Site ID</@th>
+        <@th>Path Alias</@th>
+        <@th>Alias To</@th>
+        <@th>Content ID</@th>
+        <@th>Map Key</@th>
+        <@th>&nbsp;</@th>
+      </@tr>
+      </@thead>
       <#if (aliases?has_content)>
         <#list aliases as alias>
-            <tr>
-              <td>${alias.webSiteId}</td>
-              <td>${alias.pathAlias}</td>
-              <td>${alias.aliasTo?default("N/A")}</td>
-              <td>${alias.contentId?default("N/A")}</td>
-              <td>${alias.mapKey?default("N/A")}</td>
-              <td><a href="javascript:void(0);" onclick="javascript:pathRemove('${webSiteId}', '${alias.pathAlias}', '${contentId}');" class="${styles.button_default!}">Remove</a></td>
-            </tr>
+            <@tr>
+              <@td>${alias.webSiteId}</@td>
+              <@td>${alias.pathAlias}</@td>
+              <@td>${alias.aliasTo?default("N/A")}</@td>
+              <@td>${alias.contentId?default("N/A")}</@td>
+              <@td>${alias.mapKey?default("N/A")}</@td>
+              <@td><a href="javascript:void(0);" onclick="javascript:pathRemove('${webSiteId}', '${alias.pathAlias}', '${contentId}');" class="${styles.button_default!}">Remove</a></@td>
+            </@tr>
         </#list>
       <#else>
-        <tr>
-          <td colspan="5">No aliases currently defined.</td>
-        </tr>
+        <@tr metaRow=true>
+          <@td colspan="5"><@resultMsg>No aliases currently defined.</@resultMsg></@td>
+        </@tr>
       </#if>
-    </table>
+    </@table>
 
 
 
     <form name="cmspathform" method="post" action="<@ofbizUrl>/createWebSitePathAliasJson</@ofbizUrl>" style="margin: 0;">
-        <table>
-            <tr><td colspan="2">&nbsp;</td></tr>
-            <tr>
-                <td>Web Site</td>
-                <td>${webSite.siteName?default(webSite.webSiteId)}</td>
+        <@table type="fields">
+            <@tr><@td colspan="2">&nbsp;</@td></@tr>
+            <@tr>
+                <@td>Web Site</@td>
+                <@td>${webSite.siteName?default(webSite.webSiteId)}</@td>
                 <input type="hidden" name="webSiteId" value="${webSiteId}"/>
-            </tr>
-            <tr>
-                <td>Content</td>
-                <td>${content.contentName?default(content.contentId)}</td>
+            </@tr>
+            <@tr>
+                <@td>Content</@td>
+                <@td>${content.contentName?default(content.contentId)}</@td>
                 <input type="hidden" name="contentId" value="${contentId}"/>
-            </tr>
-            <tr><td colspan="2">&nbsp;</td></tr>
-            <tr>
-                <td>Path Alias</td>
-                <td><input type="text" name="pathAlias" value="" /></td>
-            </tr>
-            <tr>
-                <td>Map Key</td>
-                <td><input type="text" name="mapKey" value="" /></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="center"><input id="submit" type="button" onclick="javascript:pathSave('${contentId}');" class="smallSubmit" value="Create"/></td>
-            </tr>
-        </table>
+            </@tr>
+            <@tr><@td colspan="2">&nbsp;</@td></@tr>
+            <@tr>
+                <@td>Path Alias</@td>
+                <@td><input type="text" name="pathAlias" value="" /></@td>
+            </@tr>
+            <@tr>
+                <@td>Map Key</@td>
+                <@td><input type="text" name="mapKey" value="" /></@td>
+            </@tr>
+            <@tr>
+                <@td colspan="2" align="center"><input id="submit" type="button" onclick="javascript:pathSave('${contentId}');" class="smallSubmit" value="Create"/></@td>
+            </@tr>
+        </@table>
     </form>

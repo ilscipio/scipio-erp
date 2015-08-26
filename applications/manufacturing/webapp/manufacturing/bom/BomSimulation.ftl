@@ -40,108 +40,102 @@ under the License.
   </div>
   <div class="screenlet-body">
 </#if>
-      <table class="basic-table" cellspacing="0">
-       <thead>
-        <tr class="header-row">
-          <th width="10%">${uiLabelMap.ManufacturingProductLevel}</th>
-          <th width="20%">${uiLabelMap.ProductProductId}</th>
-          <th width="10%">${uiLabelMap.ManufacturingProductVirtual}</th>
-          <th width="40%">${uiLabelMap.ProductProductName}</th>
-          <th width="10%" align="right">${uiLabelMap.CommonQuantity}</th>
-          <th width="10%" align="right">&nbsp;</th>
-        </tr>
-        </thead>
+      <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
+       <@thead>
+        <@tr class="header-row">
+          <@th width="10%">${uiLabelMap.ManufacturingProductLevel}</@th>
+          <@th width="20%">${uiLabelMap.ProductProductId}</@th>
+          <@th width="10%">${uiLabelMap.ManufacturingProductVirtual}</@th>
+          <@th width="40%">${uiLabelMap.ProductProductName}</@th>
+          <@th width="10%" align="right">${uiLabelMap.CommonQuantity}</@th>
+          <@th width="10%" align="right">&nbsp;</@th>
+        </@tr>
+        </@thead>
         <#if tree?has_content>
-          <#assign alt_row = false>
           <#list tree as node>
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-              <td>
-              <table cellspacing="1">
-              <tr>
-              <td>${node.depth}</td>
+            <@tr valign="middle">
+              <@td>
+              <@table type="generic" class="" cellspacing="1">
+              <@tr>
+              <@td>${node.depth}</@td>
               <#list 0..(node.depth) as level>
-              <td bgcolor="red">&nbsp;&nbsp;</td>
+              <@td bgcolor="red">&nbsp;&nbsp;</@td>
               </#list>
-              </tr>
-              </table>
-              </td>
-              <td>
-              <table cellspacing="1">
-              <tr>
+              </@tr>
+              </@table>
+              </@td>
+              <@td>
+              <@table type="generic" class="" cellspacing="1">
+              <@tr>
               <#list 0..(node.depth) as level>
-              <td>&nbsp;&nbsp;</td>
+              <@td>&nbsp;&nbsp;</@td>
               </#list>
-              <td>
+              <@td>
                 ${node.product.productId}
-              </td>
-              </tr>
-              </table>
-              </td>
-              <td>
+              </@td>
+              </@tr>
+              </@table>
+              </@td>
+              <@td>
                 <#if node.product.isVirtual?default("N") == "Y">
                     ${node.product.isVirtual}
                 </#if>
                 ${(node.ruleApplied.ruleId)!}
-              </td>
-              <td>${node.product.internalName?default("&nbsp;")}</td>
-              <td align="right">${node.quantity}</td>
-              <td align="right"><a href="<@ofbizUrl>EditProductBom?productId=${(node.product.productId)!}&amp;productAssocTypeId=${(node.bomTypeId)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a></td>
-            </tr>
-            <#-- toggle the row color -->
-            <#assign alt_row = !alt_row>
+              </@td>
+              <@td>${node.product.internalName?default("&nbsp;")}</@td>
+              <@td align="right">${node.quantity}</@td>
+              <@td align="right"><a href="<@ofbizUrl>EditProductBom?productId=${(node.product.productId)!}&amp;productAssocTypeId=${(node.bomTypeId)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a></@td>
+            </@tr>
           </#list>
         <#else>
-            <tr>
-              <td colspan="6">${uiLabelMap.CommonNoElementFound}.</td>
-            </tr>
+            <@tr metaRow=true>
+              <@td colspan="6"><@resultMsg>${uiLabelMap.CommonNoElementFound}.</@resultMsg></@td>
+            </@tr>
         </#if>
-      </table>
+      </@table>
       <br />
-      <table class="basic-table" cellspacing="0">
-       <thead>
-        <tr class="header-row">
-          <th width="20%">${uiLabelMap.ProductProductId}</th>
-          <th width="50%">${uiLabelMap.ProductProductName}</th>
-          <th width="6%" align="right">${uiLabelMap.CommonQuantity}</th>
-          <th width="6%" align="right">${uiLabelMap.ProductQoh}</th>
-          <th width="6%" align="right">${uiLabelMap.ProductWeight}</th>
-          <th width="6%" align="right">${uiLabelMap.FormFieldTitle_cost}</th>
-          <th width="6%" align="right">${uiLabelMap.CommonTotalCost}</th>
-        </tr>
-        </thead>
+      <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
+       <@thead>
+        <@tr class="header-row">
+          <@th width="20%">${uiLabelMap.ProductProductId}</@th>
+          <@th width="50%">${uiLabelMap.ProductProductName}</@th>
+          <@th width="6%" align="right">${uiLabelMap.CommonQuantity}</@th>
+          <@th width="6%" align="right">${uiLabelMap.ProductQoh}</@th>
+          <@th width="6%" align="right">${uiLabelMap.ProductWeight}</@th>
+          <@th width="6%" align="right">${uiLabelMap.FormFieldTitle_cost}</@th>
+          <@th width="6%" align="right">${uiLabelMap.CommonTotalCost}</@th>
+        </@tr>
+        </@thead>
         <#if productsData?has_content>
-          <#assign alt_row = false>
           <#list productsData as productData>
             <#assign node = productData.node>
-            <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-              <td><a href="/catalog/control/EditProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${node.product.productId}</a></td>
-              <td>${node.product.internalName?default("&nbsp;")}</td>
-              <td align="right">${node.quantity}</td>
-              <td align="right">${productData.qoh!}</td>
-              <td align="right">${node.product.productWeight!}</td>
+            <@tr valign="middle">
+              <@td><a href="/catalog/control/EditProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${node.product.productId}</a></@td>
+              <@td>${node.product.internalName?default("&nbsp;")}</@td>
+              <@td align="right">${node.quantity}</@td>
+              <@td align="right">${productData.qoh!}</@td>
+              <@td align="right">${node.product.productWeight!}</@td>
               <#if productData.unitCost?? && (productData.unitCost > 0)>
-              <td align="right">${productData.unitCost!}</td>
+              <@td align="right">${productData.unitCost!}</@td>
               <#else>
-              <td align="right"><a href="/catalog/control/EditProductCosts?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">NA</a></td>
+              <@td align="right"><a href="/catalog/control/EditProductCosts?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">NA</a></@td>
               </#if>
-              <td align="right">${productData.totalCost!}</td>
-            </tr>
-            <#-- toggle the row color -->
-            <#assign alt_row = !alt_row>
+              <@td align="right">${productData.totalCost!}</@td>
+            </@tr>
           </#list>
           <#--
           <#if grandTotalCost??>
-          <tr>
-            <td colspan="6" align="right">${grandTotalCost}</td>
-          </tr>
+          <@tr>
+            <@td colspan="6" align="right">${grandTotalCost}</@td>
+          </@tr>
           </#if>
           -->
         <#else>
-          <tr>
-            <td colspan="6">${uiLabelMap.CommonNoElementFound}.</td>
-          </tr>
+          <@tr metaRow=true>
+            <@td colspan="6"><@resultMsg>${uiLabelMap.CommonNoElementFound}.</@resultMsg></@td>
+          </@tr>
         </#if>
-      </table>
+      </@table>
   </div>
 </div>
 </#if>

@@ -34,13 +34,13 @@ under the License.
       </@tr>
     </#list>
   </@table>
-  <div>
-    <a href="<@ofbizUrl>clearCompareList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClearAll}</a>
-  </div>
-  <div>
-    <a href="javascript:popUp('<@ofbizUrl secure="${request.isSecure()?string}">compareProducts</@ofbizUrl>', 'compareProducts', '650', '750')" class="${styles.button_default!}">${uiLabelMap.ProductCompareProducts}</a>
-  </div>
-<#else/>
-  <@section title="${uiLabelMap.ProductNoProductsToCompare}"/>
+  <ul class="${styles.button_group!}">
+    <li><a href="<@ofbizUrl>clearCompareList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClearAll}</a></li>
+  </ul>
+  <ul class="${styles.button_group!}">
+    <li><a href="javascript:popUp('<@ofbizUrl secure="${request.isSecure()?string}">compareProducts</@ofbizUrl>', 'compareProducts', '650', '750')" class="${styles.button_default!}">${uiLabelMap.ProductCompareProducts}</a></li>
+  </ul>
+<#else>
+  <@resultMsg>${uiLabelMap.ProductNoProductsToCompare}</@resultMsg>
 </#if>
 </@section>

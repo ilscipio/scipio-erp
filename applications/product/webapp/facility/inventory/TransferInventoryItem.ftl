@@ -27,7 +27,7 @@ under the License.
        <#if !(inventoryItem??)>
             <form method="post" action="<@ofbizUrl>TransferInventoryItem</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${facilityId}" />
-            <@table cellspacing="0" class="basic-table">
+            <@table type="fields" cellspacing="0" class="basic-table">
             <@tr>
                 <@td>${uiLabelMap.ProductInventoryItemId}</@td>
                 <@td>
@@ -49,7 +49,7 @@ under the License.
                 function setNow(field) { eval('document.transferform.' + field + '.value="${nowTimestamp}"'); }
             </script>
 
-            <@table cellspacing="0" class="basic-table">
+            <@table type="fields" cellspacing="0" class="basic-table">
             <input type="hidden" name="inventoryItemId" value="${inventoryItemId!}" />
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <input type="hidden" name="locationSeqId" value="${(inventoryItem.locationSeqId)!}" />

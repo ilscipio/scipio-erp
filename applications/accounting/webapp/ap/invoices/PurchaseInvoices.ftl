@@ -171,48 +171,43 @@ function runAction() {
       <span>${uiLabelMap.AccountingCheckNumber}</span>
       <input type="text" name="checkStartNumber"/>
     </div>
-    <table class="basic-table hover-bar" cellspacing="0">
-      <#-- Header Begins -->
-      <thead>
-      <tr class="header-row-2">
-        <td>${uiLabelMap.FormFieldTitle_invoiceId}</td>
-        <td>${uiLabelMap.AccountingInvoiceDate}</td>
-        <td>${uiLabelMap.AccountingDueDate}</td>
-        <td>${uiLabelMap.CommonStatus}</td>
-        <td>${uiLabelMap.AccountingReferenceNumber}</td>
-        <td>${uiLabelMap.CommonDescription}</td>
-        <td>${uiLabelMap.AccountingVendorParty}</td>
-        <td>${uiLabelMap.AccountingToParty}</td>
-        <td>${uiLabelMap.AccountingAmount}</td>
-        <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
-        <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td> 
-        <td>${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
-      </tr>
-      </thead>
-      <#-- Header Ends-->
-      <#assign alt_row = false>
+    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+      <@thead>
+      <@tr class="header-row-2">
+        <@td>${uiLabelMap.FormFieldTitle_invoiceId}</@td>
+        <@td>${uiLabelMap.AccountingInvoiceDate}</@td>
+        <@td>${uiLabelMap.AccountingDueDate}</@td>
+        <@td>${uiLabelMap.CommonStatus}</@td>
+        <@td>${uiLabelMap.AccountingReferenceNumber}</@td>
+        <@td>${uiLabelMap.CommonDescription}</@td>
+        <@td>${uiLabelMap.AccountingVendorParty}</@td>
+        <@td>${uiLabelMap.AccountingToParty}</@td>
+        <@td>${uiLabelMap.AccountingAmount}</@td>
+        <@td>${uiLabelMap.FormFieldTitle_paidAmount}</@td>
+        <@td>${uiLabelMap.FormFieldTitle_outstandingAmount}</@td> 
+        <@td>${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></@td>
+      </@tr>
+      </@thead>
       <#list invoices as invoice>
         <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", Static["org.ofbiz.base.util.UtilMisc"].toMap("invoiceId", invoice.invoiceId, "userLogin", userLogin))/>
         <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
           <#assign statusItem = invoice.getRelatedOne("StatusItem", true)>
-          <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-            <td><a class="${styles.button_default!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></td>
-            <td><#if invoice.get("invoiceDate")?has_content>${invoice.get("invoiceDate")?date}</td></#if>
-            <td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date}</td></#if>
-            <td>${statusItem.description?default(invoice.statusId)}</td>
-            <td>${invoice.get("referenceNumber")!}</td>
-            <td>${(invoice.description)!}</td>
-            <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}] </a></td>
-            <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></td>
-            <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-            <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-            <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-            <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
-          </tr>
-          <#-- toggle the row color -->
-          <#assign alt_row = !alt_row>
+          <@tr valign="middle">
+            <@td><a class="${styles.button_default!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
+            <@td><#if invoice.get("invoiceDate")?has_content>${invoice.get("invoiceDate")?date}</#if></@td>
+            <@td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date}</#if></@td>
+            <@td>${statusItem.description?default(invoice.statusId)}</@td>
+            <@td>${invoice.get("referenceNumber")!}</@td>
+            <@td>${(invoice.description)!}</@td>
+            <@td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}] </a></@td>
+            <@td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></@td>
+            <@td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
+            <@td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
+            <@td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
+            <@td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></@td>
+          </@tr>
       </#list>
-    </table>
+    </@table>
   </form>
 <#else>
   <@resultMsg>${uiLabelMap.AccountingNoInvoicesFound}.</@resultMsg>

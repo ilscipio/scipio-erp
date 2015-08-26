@@ -16,55 +16,46 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<table cellspacing="0" width="100%">
-    <tr>
-      <td align="left">
-                    <#if (viewIndex > 0)>
-                        <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexFirst>
-                        <a href="javascript:nextPrevDocumentList('${url}');" class="nav-next">${uiLabelMap.CommonFirst}</a>|
-                          <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexPrevious>
-                        <a href="javascript:nextPrevDocumentList('${url}');" class="nav-previous">${uiLabelMap.CommonPrevious}</a>|
-                    </#if>
-                    <#if (arraySize > 0)>
-                        ${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${arraySize}
-                    </#if>
-                    <#if (arraySize > highIndex)>
-                        <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexNext>|
-                        <a href="javascript:nextPrevDocumentList('${url}');" class="nav-next">${uiLabelMap.CommonNext}</a>
-                        <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexLast>|
-                        <a href="javascript:nextPrevDocumentList('${url}');" class="nav-next">${uiLabelMap.CommonLast}</a>
-                    </#if>
-        </td>
-        <td></td>
-        <td></td>
-  </tr>
-   <#if (arraySize > 0)>
-           <tr><td colspan="3"><hr /></td></tr>
-   </#if>
-</table>
-<table class="basic-table hover-bar" cellspacing="0">
+  
+<ul class="${styles.button_group!}">
+  <#if (arraySize > 0)>
+        <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexFirst>
+        <li><a href="javascript:nextPrevDocumentList('${url}');" class="${styles.button_default!}<#if !(viewIndex > 0)> disabled</#if>">${uiLabelMap.CommonFirst}</a></li>
+          <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexPrevious>
+        <li><a href="javascript:nextPrevDocumentList('${url}');" class="${styles.button_default!}<#if !(viewIndex > 0)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
+        <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${arraySize}</span></li>
+        <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexNext>|
+        <li><a href="javascript:nextPrevDocumentList('${url}');" class="${styles.button_default!}<#if !(arraySize > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
+        <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexLast>|
+        <li><a href="javascript:nextPrevDocumentList('${url}');" class="${styles.button_default!}<#if !(arraySize > highIndex)> disabled</#if>">${uiLabelMap.CommonLast}</a></li>
+  </#if>
+</ul>
+
+<hr />
+
+<@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
 <#if tabButtonItem=="ListContentTree">
 <#--Form ListContentTree-->
-<thead>
-  <tr class="header-row">
-    <th>${uiLabelMap.FormFieldTitle_contentId}</th>
-    <th>${uiLabelMap.FormFieldTitle_coContentName}</th>
-    <th>${uiLabelMap.FormFieldTitle_mimeTypeId}</th>
-  </tr>
-</thead>
+<@thead>
+  <@tr class="header-row">
+    <@th>${uiLabelMap.FormFieldTitle_contentId}</@th>
+    <@th>${uiLabelMap.FormFieldTitle_coContentName}</@th>
+    <@th>${uiLabelMap.FormFieldTitle_mimeTypeId}</@th>
+  </@tr>
+</@thead>
 <#elseif tabButtonItem=="ListDocument">
 <#--Form ListDocument-->
-<thead>
- <tr class="header-row">
-    <th>${uiLabelMap.FormFieldTitle_contentId}</th>
-    <th>${uiLabelMap.CommonView}</th>
-    <th>${uiLabelMap.FormFieldTitle_contentTypeId}</th>
-    <th>${uiLabelMap.FormFieldTitle_mimeTypeId}</th>
-    <th>${uiLabelMap.FormFieldTitle_contentStatusId}</th>
-    <th>${uiLabelMap.FormFieldTitle_caCratedDate}</th>
-    <th>${uiLabelMap.CommonDelete}</th>
-  </tr>
-</thead>
+<@thead>
+ <@tr class="header-row">
+    <@th>${uiLabelMap.FormFieldTitle_contentId}</@th>
+    <@th>${uiLabelMap.CommonView}</@th>
+    <@th>${uiLabelMap.FormFieldTitle_contentTypeId}</@th>
+    <@th>${uiLabelMap.FormFieldTitle_mimeTypeId}</@th>
+    <@th>${uiLabelMap.FormFieldTitle_contentStatusId}</@th>
+    <@th>${uiLabelMap.FormFieldTitle_caCratedDate}</@th>
+    <@th>${uiLabelMap.CommonDelete}</@th>
+  </@tr>
+</@thead>
 </#if>
 <#if contentAssoc?has_content>  
        <#assign alt_row = false/>
@@ -72,25 +63,25 @@
       <#list contentAssoc as contentData>
       <#if tabButtonItem=="ListContentTree">
         <#--Form ListContentTree-->
-          <tr<@dataRowClassStr alt=alt_row />> 
-              <td><a class="plain" href="javascript:set_value('${contentData.contentId!}')">${contentData.contentId!}</a></td>
-              <td>${contentData.contentName!}</td>
-              <td>${contentData.mimeTypeId!}</td>
-          </tr>
+          <@tr> 
+              <@td><a class="plain" href="javascript:set_value('${contentData.contentId!}')">${contentData.contentId!}</a></@td>
+              <@td>${contentData.contentName!}</@td>
+              <@td>${contentData.mimeTypeId!}</@td>
+          </@tr>
       <#elseif tabButtonItem=="ListDocument">
           <#--Form ListDocument-->
-          <tr<@dataRowClassStr alt=alt_row />>
-              <td><a class="plain" href="/content/control/editContent?contentId=${contentData.contentId!}">${contentData.contentName!}[${contentData.contentId!}]</a></td>
-              <td><a class="plain" href="/content/control/showContent?contentId=${contentData.contentId!}" target="_blank">${uiLabelMap.CommonView}</a></td>
-              <td>${contentData.contentTypeId!}</td>
-              <td>${contentData.mimeTypeId!}</td>
-              <td>${contentData.statusId!}</td>
+          <@tr>
+              <@td><a class="plain" href="/content/control/editContent?contentId=${contentData.contentId!}">${contentData.contentName!}[${contentData.contentId!}]</a></@td>
+              <@td><a class="plain" href="/content/control/showContent?contentId=${contentData.contentId!}" target="_blank">${uiLabelMap.CommonView}</a></@td>
+              <@td>${contentData.contentTypeId!}</@td>
+              <@td>${contentData.mimeTypeId!}</@td>
+              <@td>${contentData.statusId!}</@td>
               <#if contentData.caFromDate?has_content>
              <#assign caFromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(contentData.caFromDate, "dd/MM/yyyy")/>
             </#if> 
-              <td>${caFromDate!}</td>
-              <td><a href="javascript:document.listDocumentForm_${listcount}.submit()">${uiLabelMap.CommonDelete}</a></td>
-          </tr>
+              <@td>${caFromDate!}</@td>
+              <@td><a href="javascript:document.listDocumentForm_${listcount}.submit()">${uiLabelMap.CommonDelete}</a></@td>
+          </@tr>
           <form action="<@ofbizUrl>removeDocumentFromTree</@ofbizUrl>" name="listDocumentForm_${listcount}" method="post">
             <input type="hidden" name="contentId" value="${contentData.contentIdStart!}"/>
             <input type="hidden" name="contentIdTo" value="${contentData.contentId!}"/>
@@ -98,8 +89,7 @@
             <input type="hidden" name="fromDate" value="${contentData.fromDate!}"/>
           </form>
      </#if>
-         <#assign alt_row = !alt_row/>
          <#assign listcount=listcount+1>
       </#list>
 </#if>
-</table>
+</@table>

@@ -24,7 +24,7 @@ under the License.
 </#if>
 <form id="addAdditionalImagesForm" method="post" action="<@ofbizUrl>addAdditionalImagesForProduct</@ofbizUrl>" enctype="multipart/form-data">
   <input id="additionalImageProductId" type="hidden" name="productId" value="${productId!}" />
-  <@table>
+  <@table type="generic">
     <@tbody>
       <@tr>
         <@td><#if productAdditionalImage1?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage1}</@ofbizContentUrl>"><img src="<@ofbizContentUrl>${productAdditionalImage1}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if></@td>

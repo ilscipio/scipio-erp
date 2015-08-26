@@ -18,32 +18,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if glAcctBalancesByCostCenter?has_content && glAccountCategories?has_content>
-  <table class="basic-table hover-bar" cellspacing="0">
-    <thead>
-    <tr class="header-row">
-      <th>${uiLabelMap.FormFieldTitle_glAccountId}</th>
-      <th>${uiLabelMap.FormFieldTitle_accountCode}</th>
-      <th>${uiLabelMap.FormFieldTitle_accountName}</th>
-      <th>${uiLabelMap.FormFieldTitle_postedBalance} - (${currencyUomId})</th>
+  <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+    <@thead>
+    <@tr class="header-row">
+      <@th>${uiLabelMap.FormFieldTitle_glAccountId}</@th>
+      <@th>${uiLabelMap.FormFieldTitle_accountCode}</@th>
+      <@th>${uiLabelMap.FormFieldTitle_accountName}</@th>
+      <@th>${uiLabelMap.FormFieldTitle_postedBalance} - (${currencyUomId})</@th>
       <#list glAccountCategories as glAccountCategory>
-        <th>${glAccountCategory.description!} - (${currencyUomId})</th>
+        <@th>${glAccountCategory.description!} - (${currencyUomId})</@th>
       </#list>
-    </tr>
-    </thead>
-    <#assign alt_row = false>
+    </@tr>
+    </@thead>
     <#list glAcctBalancesByCostCenter as glAcctBalanceByCostCenter>
-        <tr<@dataRowClassStr alt=alt_row />>
-          <td>${glAcctBalanceByCostCenter.glAccountId!}</td>
-          <td>${glAcctBalanceByCostCenter.accountCode!}</td>
-          <td>${glAcctBalanceByCostCenter.accountName!}</td>
-          <td>${glAcctBalanceByCostCenter.balance!}</td>
+        <@tr>
+          <@td>${glAcctBalanceByCostCenter.glAccountId!}</@td>
+          <@td>${glAcctBalanceByCostCenter.accountCode!}</@td>
+          <@td>${glAcctBalanceByCostCenter.accountName!}</@td>
+          <@td>${glAcctBalanceByCostCenter.balance!}</@td>
           <#list glAccountCategories as glAccountCategory>
-            <td>${(glAcctBalanceByCostCenter[glAccountCategory.glAccountCategoryId!]!)}</td>
+            <@td>${(glAcctBalanceByCostCenter[glAccountCategory.glAccountCategoryId!]!)}</@td>
           </#list>
-          <#assign alt_row = !alt_row>
-        </tr>
+        </@tr>
     </#list>
-  </table>
+  </@table>
 <#else>
   <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
 </#if>

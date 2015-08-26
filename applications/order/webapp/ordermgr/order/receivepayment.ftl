@@ -29,7 +29,7 @@ under the License.
         <input type="hidden" name="partyId" value="${orderRoles[0].partyId}" />
 
         <#if paymentMethods?has_content>
-        <@table class="basic-table" cellspacing='0'>
+        <@table type="data-list" class="basic-table" cellspacing='0'>
          <@thead>
           <@tr class="header-row">
             <@th width="30%" align="right">${uiLabelMap.PaymentMethod}</@th>
@@ -50,9 +50,9 @@ under the License.
           </#list>
         </@table>
         </#if>
-        <br /> <br />
+        
         <#if paymentMethodTypes?has_content>
-        <@table class="basic-table" cellspacing='0'>
+        <@table type="data-list" class="basic-table" cellspacing='0'>
          <@thead>
           <@tr class="header-row">
             <@th width="30%" align="right">${uiLabelMap.OrderPaymentType}</@th>
@@ -61,6 +61,7 @@ under the License.
             <@th>&nbsp;&nbsp;&nbsp;</@th>
             <@th width="60%">${uiLabelMap.OrderReference}</@th>
           </@tr>
+         </@thead>
           <#list paymentMethodTypes as payType>
           <@tr>
             <@td align="right">${payType.get("description",locale)?default(payType.paymentMethodTypeId)}</@td>

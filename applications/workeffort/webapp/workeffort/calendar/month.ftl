@@ -17,34 +17,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign styleTd = "style='height: 8em; width: 10em; vertical-align: top; padding: 0.5em;'">
-  
+<#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">
+
 <#if periods?has_content>
   <#-- Allow containing screens to specify the URL for creating a new event -->
   <#if !newCalEventUrl??>
     <#assign newCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
-<table cellspacing="0" class="basic-table calendar">
-  <thead>
-  <tr class="header-row">
-    <th width="1%">&nbsp;</th>
+<@table type="data-list" cellspacing="0" class="basic-table calendar">
+  <@thead>
+  <@tr class="header-row">
+    <@th width="1%">&nbsp;</@th>
     <#list periods as day>
-      <th>${day.start?date?string("EEEE")?cap_first}</th>
+      <@th>${day.start?date?string("EEEE")?cap_first}</@th>
       <#if (day_index > 5)><#break></#if>
     </#list>
-  </tr>
-  </thead>
+  </@tr>
+  </@thead>
   <#list periods as period>
     <#assign currentPeriod = false/>
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>
     <#assign indexMod7 = period_index % 7>
     <#if indexMod7 = 0>
-      <tr>
-        <td  ${styleTd}>
+      <#-- FIXME: rearrange without openOnly -->
+      <@tr openOnly=true />
+        <@td style=styleTdVal>
           <a href='<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>'>${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
-        </td>
+        </@td>
     </#if>
-    <td ${styleTd} <#if currentPeriod> class="current-period"<#else><#if (period.calendarEntries?size > 0)> class="active-period"</#if></#if>>
+    <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
+    <@td style=styleTdVal class=class>
       <span class="h1"><a href='<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>'>${period.start?date?string("d")?cap_first}</a></span>
       <a class="add-new" href='<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>'>${uiLabelMap.CommonAddNew}</a>
       <br class="clear"/>
@@ -110,20 +112,20 @@ under the License.
         <br />
       </#list>
       </#if>
-    </td>
+    </@td>
 
 <#--
-    <td valign="top">
-      <table width="100%" cellspacing="0" cellpadding="0" border="0">
-        <tr>
-          <td nowrap="nowrap" class="monthdaynumber"><a href='<@ofbizUrl>day?start=${period.start.time?string("#")}<#if eventsParam?has_content>&amp;${eventsParam}</#if>${addlParam!}</@ofbizUrl>' class="monthdaynumber">${period.start?date?string("d")?cap_first}</a></td>
-          <td align="right"><a href='<@ofbizUrl>EditWorkEffort?workEffortTypeId=EVENT&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${addlParam!}</@ofbizUrl>' class="add">${uiLabelMap.CommonAddNew}</a>&nbsp;&nbsp;</td>
-        </tr>
-      </table>
+    <@td valign="top">
+      <@table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <@tr>
+          <@td nowrap="nowrap" class="monthdaynumber"><a href='<@ofbizUrl>day?start=${period.start.time?string("#")}<#if eventsParam?has_content>&amp;${eventsParam}</#if>${addlParam!}</@ofbizUrl>' class="monthdaynumber">${period.start?date?string("d")?cap_first}</a></@td>
+          <@td align="right"><a href='<@ofbizUrl>EditWorkEffort?workEffortTypeId=EVENT&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${addlParam!}</@ofbizUrl>' class="add">${uiLabelMap.CommonAddNew}</a>&nbsp;&nbsp;</@td>
+        </@tr>
+      </@table>
       <#list period.calendarEntries as calEntry>
-      <table width="100%" cellspacing="0" cellpadding="0" border="0">
-        <tr width="100%">
-          <td class='monthcalendarentry' width="100%" valign='top'>
+      <@table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <@tr width="100%">
+          <@td class='monthcalendarentry' width="100%" valign='top'>
             <#if (calEntry.workEffort.estimatedStartDate.compareTo(period.start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(period.end) >= 0)>
               ${uiLabelMap.CommonAllDay}
             <#elseif calEntry.workEffort.estimatedStartDate.before(period.start)>
@@ -135,21 +137,22 @@ under the License.
             </#if>
             <br />
             <a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${calEntry.workEffort.workEffortId}${addlParam!}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName?default("Undefined")}</a>&nbsp;
-          </td>
-        </tr>
-      </table>
+          </@td>
+        </@tr>
+      </@table>
       </#list>
-    </td>
+    </@td>
 -->
     <#if !period_has_next && indexMod7 != 6>
-    <td colspan='${6 - (indexMod7)}'>&nbsp;</td>
+    <@td colspan="${6 - (indexMod7)}">&nbsp;</@td>
     </#if>
   <#if indexMod7 = 6 || !period_has_next>
-  </tr>
+  <#-- FIXME: closeOnly -->
+  <@tr closeOnly=true />
   </#if>
   </#list>
-</table>
+</@table>
 
 <#else>
-  <div class="screenlet-body">${uiLabelMap.WorkEffortFailedCalendarEntries}!</div>
+  <@resultMsg>${uiLabelMap.WorkEffortFailedCalendarEntries}!</@resultMsg>
 </#if>

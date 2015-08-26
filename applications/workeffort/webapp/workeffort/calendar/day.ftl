@@ -26,21 +26,22 @@ under the License.
   <#else>
     <#assign entryWidth = (100 / (maxConcurrentEntries))>
   </#if>
-<table cellspacing="0" class="basic-table calendar">
- <thead>
-  <tr class="header-row">
-    <th>${uiLabelMap.CommonTime}</th>
-    <th colspan="${maxConcurrentEntries}">${uiLabelMap.WorkEffortCalendarEntries}</th>
-  </tr>
-  </thead>
+<@table type="data-list" cellspacing="0" class="basic-table calendar">
+ <@thead>
+  <@tr class="header-row">
+    <@th>${uiLabelMap.CommonTime}</@th>
+    <@th colspan="${maxConcurrentEntries}">${uiLabelMap.WorkEffortCalendarEntries}</@th>
+  </@tr>
+  </@thead>
   <#list periods as period>
     <#assign currentPeriod = false/>
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>
-  <tr<#if currentPeriod> class="current-period"<#else><#if (period.calendarEntries?size > 0)> class="active-period"</#if></#if>>
-    <td>
+  <#assign class><#if currentPeriod>current-period<#else><#if (period.calendarEntries?size > 0)>active-period</#if></#if></#assign>
+  <@tr class=class>
+    <@td>
       ${period.start?time?string.short}<br />
       <a href="<@ofbizUrl>${newCalEventUrl}?period=day&amp;form=edit&amp;parentTypeId=${parentTypeId!}&amp;start=${parameters.start!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">${uiLabelMap.CommonAddNew}</a>
-    </td>
+    </@td>
       <#list period.calendarEntries as calEntry>
         <#if calEntry.workEffort.actualStartDate??>
             <#assign startDate = calEntry.workEffort.actualStartDate>
@@ -62,7 +63,9 @@ under the License.
         </#if>    
     
     <#if calEntry.startOfPeriod>
-    <td<#if (calEntry.periodSpan > 1)> rowspan="${calEntry.periodSpan}"</#if> width="${entryWidth?string("#")}%">
+    <#assign rowSpan><#if (calEntry.periodSpan > 1)>${calEntry.periodSpan}</#if></#assign>
+    <#assign width>${entryWidth?string("#")}%</#assign>
+    <@td rowSpan=rowSpan width=width>
     <#if (startDate.compareTo(start)  <= 0 && completionDate?has_content && completionDate.compareTo(next) >= 0)>
       ${uiLabelMap.CommonAllDay}
     <#elseif startDate.before(start) && completionDate?has_content>
@@ -78,19 +81,21 @@ under the License.
     ${setRequestAttribute("periodType", "day")}
     ${setRequestAttribute("workEffortId", calEntry.workEffort.workEffortId)}
     ${screens.render("component://workeffort/widget/CalendarScreens.xml#calendarEventContent")}
-    </td>
+    </@td>
     </#if>
     </#list>
     <#if (period.calendarEntries?size < maxConcurrentEntries)>
       <#assign emptySlots = (maxConcurrentEntries - period.calendarEntries?size)>
-        <td<#if (emptySlots > 1)> colspan="${emptySlots}"</#if>>&nbsp;</td>
+        <#assign colspan><#if (emptySlots > 1)>${emptySlots}</#if></#assign>
+        <@td colspan=colspan>&nbsp;</@td>
     </#if>
     <#if maxConcurrentEntries = 0>
-      <td width="${entryWidth?string("#")}%">&nbsp;</td>
+      <#assign width>${entryWidth?string("#")}%</#assign>
+      <@td width=width>&nbsp;</@td>
     </#if>
-  </tr>
+  </@tr>
   </#list>
-</table>
+</@table>
 <#else>
-  <div class="screenlet-body">${uiLabelMap.WorkEffortFailedCalendarEntries}!</div>
+  <@alert type="error">${uiLabelMap.WorkEffortFailedCalendarEntries}!</@alert>
 </#if>

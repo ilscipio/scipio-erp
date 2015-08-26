@@ -34,7 +34,7 @@ under the License.
 </#macro>
 
 <@section title="${uiLabelMap.AccountingPaymentInformation}">
-     <@table class="basic-table">
+     <@table type="data-complex" class="basic-table">
      <#assign orderTypeId = orderReadHelper.getOrderTypeId()>
      <#if orderTypeId == "PURCHASE_ORDER">
      <@thead>
@@ -143,7 +143,7 @@ under the License.
                           </div>
                     </@td>
                     <@td colspan="2">
-                        <@table class="basic-table" cellspacing='0'>
+                        <@table type="fields" class="basic-table" cellspacing='0'>
                             <@tr>
                                 <@td valign="top">
                                     ${uiLabelMap.CommonNbr}<a href="/accounting/control/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}${StringUtil.wrapString(externalKeyParam)}">${billingAccount.billingAccountId}</a>  - ${billingAccount.description!}

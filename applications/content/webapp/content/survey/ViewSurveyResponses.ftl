@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <table class="basic-table hover-bar" cellspacing="0">
+  <@table type="data-complex" class="basic-table hover-bar" cellspacing="0">
     <#assign questions = surveyWrapper.getSurveyQuestionAndAppls()>
     <#assign surveyResults = surveyWrapper.getResults(questions)>
 
@@ -25,16 +25,16 @@ under the License.
       <#list questions as question>
         <#assign results = surveyResults.get(question.surveyQuestionId)!>
 
-        <tr>
+        <@tr>
           <#-- seperator options -->
           <#if question.surveyQuestionTypeId == "SEPERATOR_TEXT">
-            <td colspan="5">${question.question!}</td>
+            <@td colspan="5">${question.question!}</@td>
           <#elseif question.surveyQuestionTypeId == "SEPERATOR_LINE">
-            <td colspan="5"><hr/></td>
+            <@td colspan="5"><hr/></@td>
           <#else>
 
             <#-- standard questions -->
-            <td align='right' nowrap="nowrap">
+            <@td align='right' nowrap="nowrap">
               <#assign answerString = "${uiLabelMap.ContentAnswers}">
               <#if (results._total?default(0) == 1)>
                 <#assign answerString = "${uiLabelMap.ContentAnswer}">
@@ -43,11 +43,11 @@ under the License.
               <#if question.hint?has_content>
                 <div>${question.hint}</div>
               </#if>
-            </td>
-            <td width='1'>&nbsp;</td>
+            </@td>
+            <@td width='1'>&nbsp;</@td>
 
             <#-- answers -->
-            <td>
+            <@td>
               <#if question.surveyQuestionTypeId == "BOOLEAN">
                 <#assign selectedOption = (answer.booleanResponse)?default("Y")>
                 <div>
@@ -106,15 +106,15 @@ under the License.
                   </#list>
                 </#if>
               </#if>
-            </td>
-            <td width="90%">&nbsp;</td>
+            </@td>
+            <@td width="90%">&nbsp;</@td>
           </#if>
-        </tr>
-        <tr><td colspan="3">&nbsp;</td></tr>
+        </@tr>
+        <@tr><@td colspan="3">&nbsp;</@td></@tr>
       </#list>
     <#else>
-      <tr>
-        <td>${uiLabelMap.ContentSurveyNoQuestions}</td>
-      </tr>
+      <@tr metaRow=true>
+        <@td><@resultMsg>${uiLabelMap.ContentSurveyNoQuestions}</@resultMsg></@td>
+      </@tr>
     </#if>
-  </table>
+  </@table>

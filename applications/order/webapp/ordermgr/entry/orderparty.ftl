@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-<@table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<@table type="fields" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <@tr>
     <@td width='100%'>
       <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -32,7 +32,7 @@ under the License.
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <@tr>
           <@td align="center">
             <#if person?has_content>

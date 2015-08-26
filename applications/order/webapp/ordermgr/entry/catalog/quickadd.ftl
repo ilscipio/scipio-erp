@@ -18,10 +18,10 @@ under the License.
 -->
 
 <#if productCategory?has_content>
-  <@table border='0'  cellpadding='3' cellspacing='0'>
+  <@table type="generic" border='0'  cellpadding='3' cellspacing='0'>
     <@tr>
       <@td>
-        <h2>${productCategory.categoryName!}</h2>
+        <@heading>${productCategory.categoryName!}</@heading>
       </@td>
       <@td align="right">
         <form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>" style='margin: 0;'>
@@ -76,13 +76,6 @@ under the License.
   </form>
   </center>
 <#else>
-  <@table border="0" cellpadding="2">
-    <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
-    <@tr>
-      <@td>
-        <div class='tabletext'>${uiLabelMap.ProductNoProductsInThisCategory}.</div>
-      </@td>
-    </@tr>
-  </@table>
+  <@resultMsg>${uiLabelMap.ProductNoProductsInThisCategory}.</@resultMsg>
 </#if>
 

@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-    <div class="button-bar button-style-1">
-      <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductNewFacility}</a>
-      <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductNewFacilityLocation}</a>
-    </div>
-
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductNewFacility}</a></li>
+  <li><a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductNewFacilityLocation}</a></li>
+</#assign>
+<@section menuHtml=menuHtml>
     <form action="<@ofbizUrl>FindFacilityLocation</@ofbizUrl>" method="get" name="findFacilityLocation" class="basic-form">
         <#if (facilityId??)>
             <input type="hidden" name="facilityId" value="${facilityId}" />
@@ -111,3 +111,4 @@ under the License.
         </@table>
       </@section>
     </#if>
+</@section>

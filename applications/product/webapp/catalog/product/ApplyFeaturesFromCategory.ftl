@@ -33,23 +33,15 @@ under the License.
     <#if productId?has_content>
       <#assign productString = "&amp;productId=" + productId>
     </#if>
-    <@table cellspacing="0" class="basic-table">
-        <@tr>
-        <@td align="right">
-            <span>
-            <b>
-            <#if (viewIndex > 0)>
-            <a href="<@ofbizUrl>ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonPrevious}]</a> |
-            </#if>
-            ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
-            <#if (listSize > highIndex)>
-            | <a href="<@ofbizUrl>ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonNext}]</a>
-            </#if>
-            </b>
-            </span>
-        </@td>
-        </@tr>
-    </@table>
+    
+    <#if (listSize > 0)>
+      <ul class="${styles.button_group!}">
+        <li><a href="<@ofbizUrl>ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="${styles.button_default!}<#if !(viewIndex > 0)> disabled</#if>">[${uiLabelMap.CommonPrevious}]</a></li>
+        <li><span class="text-entry">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span></li>
+        <li><a href="<@ofbizUrl>ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}</@ofbizUrl>" class="${styles.button_default!}<#if !(listSize > highIndex)> disabled</#if>">[${uiLabelMap.CommonNext}]</a></li>
+      </ul>
+    </#if>
+
 </#if>
 <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
 <form method="post" action="<@ofbizUrl>ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">

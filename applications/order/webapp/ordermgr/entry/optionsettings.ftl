@@ -22,7 +22,7 @@ under the License.
 <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
       <@row>
         <@cell class="${styles.grid_large!}6">      
-            <@table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
+            <@table type="fields" width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
               <@thead>
               <@tr>
                 <@th>
@@ -58,7 +58,7 @@ under the License.
   <@section title=sectionTitle>   
     <@row>
         <@cell class="${styles.grid_large!}6">
-            <@table class="basic-table">  
+            <@table type="fields" class="basic-table">  
                <#if cart.getOrderType() != "PURCHASE_ORDER">
 
               <@tr>

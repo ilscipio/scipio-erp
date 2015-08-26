@@ -18,11 +18,10 @@ under the License.
 -->
 
 <form id="addMultipleImagesForm" name="addMultipleImagesForm" method="post" action="<@ofbizUrl>addImageForProduct</@ofbizUrl>" enctype="multipart/form-data">
-<br/>
-<div>${uiLabelMap.ProductProductId} <@htmlTemplate.lookupField name="productId" id="productId" formName="addMultipleImagesForm" fieldFormName="LookupProduct"/></div>
-<br/>
-<br/>
-  <@table>
+
+<p>${uiLabelMap.ProductProductId} <@htmlTemplate.lookupField name="productId" id="productId" formName="addMultipleImagesForm" fieldFormName="LookupProduct"/></p>
+
+  <@table type="generic">
     <@tbody>
       <@tr>
         <@td>

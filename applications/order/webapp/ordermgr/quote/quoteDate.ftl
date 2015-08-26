@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.CommonDate}">
-        <@table cellspacing="0" class="basic-table">
+        <@table type="fields" cellspacing="0" class="basic-table">
             <@tr>
                 <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.OrderOrderQuoteIssueDate}
@@ -48,4 +48,4 @@ under the License.
                 </@td>
             </@tr>
         </@table>
-    </@section>
+</@section>

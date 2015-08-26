@@ -27,7 +27,7 @@ under the License.
 <#macro renderSurveyQuestionRequired surveyQuestionAndAppl>
   <#if surveyQuestionAndAppl.requiredField?default("N") == "Y">
     <span>*[required]</span>
-  <#else/>
+  <#else>
     <span>[optional]</span>
   </#if>
 </#macro>
@@ -42,37 +42,37 @@ under the License.
       <option <#if "Y" == selectedOption>selected="selected"</#if>>Y</option>
       <option <#if "N" == selectedOption>selected="selected"</#if>>N</option>
     </select>
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
     <textarea cols="40" rows="5" name="${questionFieldName}">${(answer.textResponse)!}</textarea>
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_SHORT"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_SHORT">
     <input type="text" size="15" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_LONG"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_LONG">
     <input type="text" size="35" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "EMAIL"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "EMAIL">
     <input type="text" size="30" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "URL"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "URL">
     <input type="text" size="40" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "DATE"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "DATE">
     <input type="text" size="12" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CREDIT_CARD"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CREDIT_CARD">
     <input type="text" size="20" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GIFT_CARD"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GIFT_CARD">
     <input type="text" size="20" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_CURRENCY"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_CURRENCY">
     <input type="text" size="6" class="inputBox" name="${questionFieldName}" value="${(answer.currencyResponse)?default(defValue!)}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_FLOAT"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_FLOAT">
     <input type="text" size="6" class="inputBox" name="${questionFieldName}" value="${(answer.floatResponse)?default(defValue!)}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_LONG"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_LONG">
     <input type="text" size="6" class="inputBox" name="${questionFieldName}" value="${(answer.numericResponse?default(defValue)?string("#"))!}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "PASSWORD"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "PASSWORD">
     <input type="password" size="30" class="textBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CONTENT"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CONTENT">
      <#if (answer.contentId)?has_content>
       <#assign content = answer.getRelatedOne("Content", false)>
       <a href="/content/control/img?imgId=${content.dataResourceId}" class="${styles.button_default!}">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}&nbsp;&nbsp;&nbsp;
     </#if>
     <input type="file" size="15" name="${questionFieldName}" class="inputBox"/>
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
     <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!/>
     <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")/>
     <select name="${questionFieldName}">
@@ -87,7 +87,7 @@ under the License.
         <option value="">Nothing to choose</option>
       </#if>
     </select>
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "ENUMERATION"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "ENUMERATION">
     <select name="${questionFieldName}">
     <#assign formatString = surveyQuestionAndAppl.get("formatString")!/>
     <#assign enums = surveyQuestionAndAppl.getRelated("Enumeration", null, null, false)/>
@@ -104,7 +104,7 @@ under the License.
         <option value='${enum.enumId}' ${selected}>${description}</option>
     </#list>
     </select>
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GEO"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GEO">
     <select name="${questionFieldName}">
     <#assign formatString = surveyQuestionAndAppl.get("formatString")!/>
     <#assign parentGeoId = surveyQuestionAndAppl.get("geoId")!/>
@@ -122,18 +122,18 @@ under the License.
         <option value='${geo.geoId}' ${selected}>${description}</option>
     </#list>
     </select>
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "STATE_PROVINCE"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "STATE_PROVINCE">
     <select name="${questionFieldName}">
     <#assign states = Static["org.ofbiz.common.CommonWorkers"].getStateList(delegator)>
     <#list states as state>
         <option value='${state.geoId}'>${state.geoName?default(state.geoId)}</option>
     </#list>
     </select>
-  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "COUNTRY"/>
+  <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "COUNTRY">
     <select name="${questionFieldName}">
       ${screens.render("component://common/widget/CommonScreens.xml#countries")}
     </select>
-  <#else/>
+  <#else>
     <div>Unsupported question type : ${surveyQuestionAndAppl.surveyQuestionTypeId}</div>
   </#if>
 </#macro>
@@ -165,7 +165,7 @@ under the License.
 <br />
 </#if>
 
-<table width="100%" border="0" cellpadding="2" cellspacing="0">
+<@table type="generic" width="100%" border="0" cellpadding="2" cellspacing="0">
   <#assign lastSurveyMultiRespId = ""/>
   <#assign haveOpenMultiRespHeader = false/>
 
@@ -185,68 +185,70 @@ under the License.
         <#assign closeMultiRespHeader = true/>
       </#if>
       <#assign lastSurveyMultiRespId = surveyMultiResp.surveyMultiRespId/>
-    <#else/>
+    <#else>
       <#if lastSurveyMultiRespId?has_content><#assign closeMultiRespHeader = true/></#if>
       <#assign lastSurveyMultiRespId = ""/>
     </#if>
 
+    <#-- CATO: FIXME: STRUCTURE BROKEN FOR @table, CAN'T SPLIT @table, NEEDS REWRITE -->
+
     <#-- this is before the rest because it will be done if the current row is not a MultiResp (or is different MultiResp) but the last row was... -->
     <#if closeMultiRespHeader>
       <#assign haveOpenMultiRespHeader = false/>
-          </table>
-        </td>
-      </tr>
+          </@table>
+        <@td closeOnly=true />
+      <@tr closeOnly=true />
     </#if>
 
     <#-- -->
     <#if openMultiRespHeader>
       <#assign haveOpenMultiRespHeader = true/>
-      <tr width="100%">
-        <td colspan="5" width="100%">
-          <table width="100%" border="1" cellpadding="1" cellspacing="0">
-            <tr>
-              <td>
+      <@tr width="100%" openOnly=true />
+        <@td colspan="5" width="100%" openOnly=true />
+          <@table type="fields" width="100%" border="1" cellpadding="1" cellspacing="0">
+            <@tr>
+              <@td>
                 <div class="tableheadtext">${surveyMultiResp.multiRespTitle?default("&nbsp;")}</div>
-              </td>
+              </@td>
               <#list surveyMultiRespColumnList as surveyMultiRespColumn>
-                <td align="center">
+                <@td align="center">
                   <div class="tableheadtext">${surveyMultiRespColumn.columnTitle?default("&nbsp;")}</div>
-                </td>
+                </@td>
               </#list>
-              <td><div class="tableheadtext">Required?</div></td><#-- placeholder for required/optional column -->
-            </tr>
+              <@td><div class="tableheadtext">Required?</div></@td><#-- placeholder for required/optional column -->
+            </@tr>
     </#if>
 
   <#if surveyMultiResp?has_content>
     <#assign sqaaWithColIdList = (sqaaWithColIdListByMultiRespId[surveyMultiResp.surveyMultiRespId])!/>
-    <tr>
-      <td>
+    <@tr>
+      <@td>
         <@renderSurveyQuestionText surveyQuestionAndAppl=surveyQuestionAndAppl/>
-      </td>
+      </@td>
       <#list surveyMultiRespColumnList as surveyMultiRespColumn>
-        <td align="center">
+        <@td align="center">
           <#--
             if there is a surveyMultiRespColId on the surveyQuestionAndAppl use the corresponding surveyQuestionId;
             these should be in the same order as the surveyQuestionAndAppls List, so just see if it matches the first in the list
           -->
-          <#if sqaaWithColIdList?has_content><#assign nextSqaaWithColId = sqaaWithColIdList?first/><#else/><#assign nextSqaaWithColId = []></#if>
+          <#if sqaaWithColIdList?has_content><#assign nextSqaaWithColId = sqaaWithColIdList?first/><#else><#assign nextSqaaWithColId = []></#if>
           <#if surveyQuestionAndAppl.surveyMultiRespColId?has_content &&
               nextSqaaWithColId?has_content &&
               nextSqaaWithColId.surveyMultiRespColId = surveyMultiRespColumn.surveyMultiRespColId>
             <#assign dummySqaaWithColId = Static["org.ofbiz.base.util.UtilMisc"].removeFirst(sqaaWithColIdList)/>
             <#assign changed = alreadyShownSqaaPkWithColId.add(nextSqaaWithColId.getPrimaryKey())/>
             <#assign questionFieldName = "answers_" + nextSqaaWithColId.surveyQuestionId + "_" + surveyMultiRespColumn.surveyMultiRespColId/>
-          <#else/>
+          <#else>
             <#assign questionFieldName = "answers_" + surveyQuestionAndAppl.surveyQuestionId + "_" + surveyMultiRespColumn.surveyMultiRespColId/>
           </#if>
           <@renderSurveyQuestionInput surveyQuestionAndAppl=surveyQuestionAndAppl questionFieldName=questionFieldName/>
-        </td>
+        </@td>
       </#list>
-      <td>
+      <@td>
         <@renderSurveyQuestionRequired surveyQuestionAndAppl=surveyQuestionAndAppl/>
-      </td>
-    </tr>
-  <#else/>
+      </@td>
+    </@tr>
+  <#else>
     <#-- special formatting for select boxes -->
     <#assign align = "left"/>
     <#if surveyQuestionAndAppl?? && surveyQuestionAndAppl.surveyQuestionTypeId?has_content>
@@ -265,42 +267,42 @@ under the License.
       <#assign defValue = defaultValues.get(surveyQuestionAndAppl.surveyQuestionId)!/>
     </#if>
 
-    <tr>
+    <@tr>
     <#if surveyQuestionAndAppl?? && surveyQuestionAndAppl.surveyQuestionTypeId?has_content>
       <#-- seperator options -->
       <#if surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_TEXT">
-        <td colspan="5"><div>${surveyQuestionAndAppl.question!}</div></td>
-      <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_LINE"/>
-        <td colspan="5"><hr /></td>
-      <#else/>
+        <@td colspan="5"><div>${surveyQuestionAndAppl.question!}</div></@td>
+      <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_LINE">
+        <@td colspan="5"><hr /></@td>
+      <#else>
         <#-- standard question options -->
-        <td align="right">
+        <@td align="right">
           <@renderSurveyQuestionText surveyQuestionAndAppl=surveyQuestionAndAppl/>
-        </td>
-        <td width="1">&nbsp;</td>
-        <td align="${align}">
+        </@td>
+        <@td width="1">&nbsp;</@td>
+        <@td align="${align}">
           <#assign questionFieldName = "answers_" + surveyQuestionAndAppl.surveyQuestionId/>
           <@renderSurveyQuestionInput surveyQuestionAndAppl=surveyQuestionAndAppl questionFieldName=questionFieldName/>
-        </td>
-        <td>
+        </@td>
+        <@td>
           <@renderSurveyQuestionRequired surveyQuestionAndAppl=surveyQuestionAndAppl/>
-        </td>
-        <td width="20%">&nbsp;</td>
+        </@td>
+        <@td width="20%">&nbsp;</@td>
       </#if>
     </#if>
-    </tr>
+    </@tr>
   </#if>
    </#if>
   </#list>
   <#-- one last check for a multi-resp table left open before moving on, will happen if last question was in a multi-resp -->
     <#if haveOpenMultiRespHeader>
-          </table>
-        </td>
-      </tr>
+          </@table>
+        </@td>
+      </@tr>
     </#if>
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td colspan="2"><input type="submit" class="smallSubmit" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else/>Submit</#if>"/></td>
-  </tr>
-</table>
+  <@tr>
+    <@td>&nbsp;</@td>
+    <@td>&nbsp;</@td>
+    <@td colspan="2"><input type="submit" class="smallSubmit" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>"/></@td>
+  </@tr>
+</@table>

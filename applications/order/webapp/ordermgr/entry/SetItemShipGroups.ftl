@@ -32,7 +32,7 @@ under the License.
           <@section title=sectionTitle>
               <@row>
                   <@cell>
-                  <@table class="basic-table">
+                  <@table type="data-list" class="basic-table">
                   <@thead>
               <@tr>
                     <@th>

@@ -53,62 +53,64 @@ function call_fieldlookup3(view_name) {
 </script>
 
 <#-- ============================================================= -->
-<br />
-<table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
+
+<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <@tr>
+    <@td width='100%'>
       <form name="userform" method="post" action="<@ofbizUrl>UserPermissions</@ofbizUrl>" >
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='appTitle'>
-        <tr>
-          <td colspan="1" valign="middle" align="right">
+      <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='appTitle'>
+        <@tr>
+          <@td colspan="1" valign="middle" align="right">
             <div class="boxhead">&nbsp; WebSitePublishPoint&nbsp;&nbsp; </div>
-          </td>
-          <td valign="middle">
+          </@td>
+          <@td valign="middle">
             <div class="boxhead">
              <input type="text" name="webSitePublishPoint" size="20" value="${webSitePublishPoint!}" />
              <input type="submit" value="${uiLabelMap.CommonRefresh}"/>
              <input type="hidden" name="partyId" value="${partyId!}"/>
              <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
             </div>
-          </td>
-        </tr>
-      </table>
+          </@td>
+        </@tr>
+      </@table>
       </form>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
+    </@td>
+  </@tr>
+  <@tr>
+    <@td width='100%'>
       <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
-      <table width='100%' border='0' cellspacing='0' cellpadding='4' class='boxoutside'>
-        <tr>
-            <td class="">${uiLabelMap.ContentWebSite}</td>
+      <@table type="data-list" width='100%' border='0' cellspacing='0' cellpadding='4' class='boxoutside'>
+        <@tr>
+            <@td class="">${uiLabelMap.ContentWebSite}</@td>
             <#list blogRoleIdList as roleTypeId>
-              <td class="">${roleTypeId}</td>
+              <@td class="">${roleTypeId}</@td>
             </#list>
-        </tr>
+        </@tr>
 
       <#assign rowCount=0/>
         <#list siteList as map>
-          <tr>
-            <td class="">${map.partyId!}</td>
+          <@tr>
+            <@td>${map.partyId!}</@td>
             <#list blogRoleIdList as roleTypeId>
               <#assign cappedSiteRole= Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(roleTypeId) />
-              <td align="center">
+              <@td align="center">
               <input type="checkbox" name="${cappedSiteRole}_o_${rowCount}" value="Y" <#if map[cappedSiteRole]?has_content && map[cappedSiteRole] == "Y">checked="checked"</#if>/>
-              </td>
+              </@td>
             </#list>
-          </tr>
+          </@tr>
           <input type="hidden" name="contentId_o_${rowCount}" value="${webSitePublishPoint}"/>
           <input type="hidden" name="partyId_o_${rowCount}" value="${map.partyId}"/>
           <#assign rowCount=rowCount + 1/>
         </#list>
-          <tr>
-            <td>
+        <@tfoot>
+          <@tr>
+            <@td>
               <div class="smallSubmit"><a href="javascript:submitRows('${rowCount!}')">${uiLabelMap.CommonUpdate}</a></div>
-            </td>
-          </tr>
-      </table>
+            </@td>
+          </@tr>
+        </@tfoot>
+      </@table>
       </form>
-    </td>
-  </tr>
-</table>
+    </@td>
+  </@tr>
+</@table>

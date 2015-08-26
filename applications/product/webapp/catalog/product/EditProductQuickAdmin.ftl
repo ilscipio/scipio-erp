@@ -64,7 +64,7 @@ function doPublish() {
             <#if (product.isVirtual)! == "Y">
                 <input type="hidden" name="isVirtual" value="Y"/>
             </#if>
-            <@table cellspacing="0" class="basic-table">
+            <@table type="fields" cellspacing="0" class="basic-table">
                 <@tr>
                     <@td><h2>${productId!}</h2></@td>
                     <@td><input type="text" name="productName" size="40" maxlength="40" value="${product.productName!}"/></@td>
@@ -79,7 +79,7 @@ function doPublish() {
         <!-- ***************************************************** Selectable features section -->
         <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeatureTypeSelector">
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <@table cellspacing="0" class="basic-table">
+            <@table type="fields" cellspacing="0" class="basic-table">
                 <@tr>
                     <@td colspan="2"><span>${uiLabelMap.CommonType}</span>
                         <select name="productFeatureTypeId" onchange="javascript:document.selectableFeatureTypeSelector.submit();">
@@ -138,7 +138,7 @@ function doPublish() {
             <@tr>
                 <@td colspan="2">&nbsp;</@td>
                 <@td>
-                    <@table cellspacing="0" class="basic-table">
+                    <@table type="fields" cellspacing="0" class="basic-table">
                         <#list selectableFeatureTypes as selectableFeatureType>
                         <@tr><@td><a class="${styles.button_default!}" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
                             <a class="${styles.button_default!}" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)!}&amp;productId=${product.productId!}</@ofbizUrl>">${(selectableFeatureType.get("description",locale))!}</a></@td></@tr>
@@ -146,7 +146,7 @@ function doPublish() {
                     </@table>
                 </@td>
                 <@td align="right">
-                    <@table cellspacing="0" class="basic-table">
+                    <@table type="fields" cellspacing="0" class="basic-table">
                         <@tr><@td align="right"><input name="applyToAll" type="submit" value="${uiLabelMap.ProductAddSelectableFeature}"/></@td></@tr>
                     </@table>
                 </@td>

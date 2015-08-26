@@ -87,48 +87,43 @@ function enableSubmitButton() {
       </select>
       <input id="submitButton" type="button" onclick="javascript:runAction();" value="${uiLabelMap.CommonRun}" disabled="disabled" />
     </div>
-    <table class="basic-table hover-bar" cellspacing="0">
-      <#-- Header Begins -->
-      <thead>
-      <tr class="header-row-2">
-        <td width="9%"><input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/> ${uiLabelMap.CommonSelectAll}</td>
-        <td width="6%">${uiLabelMap.FormFieldTitle_invoiceId}</td>
-        <td width="10%">${uiLabelMap.AccountingFromParty}</td>
-        <td width="14%">${uiLabelMap.AccountingToParty}</td>
-        <td width="4%">${uiLabelMap.CommonStatus}</td>
-        <td width="9%">${uiLabelMap.AccountingReferenceNumber}</td>
-        <td width="12%">${uiLabelMap.CommonDescription}</td>
-        <td width="9%">${uiLabelMap.AccountingInvoiceDate}</td>
-        <td width="8%">${uiLabelMap.AccountingDueDate}</td>
-        <td width="8%">${uiLabelMap.AccountingAmount}</td>
-        <td width="8%">${uiLabelMap.FormFieldTitle_paidAmount}</td>
-        <td width="8%">${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
-      </tr>
-      </thead>
-      <#-- Header Ends-->
-      <#assign alt_row = false>
+    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+      <@thead>
+      <@tr class="header-row-2">
+        <@td width="9%"><input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/> ${uiLabelMap.CommonSelectAll}</@td>
+        <@td width="6%">${uiLabelMap.FormFieldTitle_invoiceId}</@td>
+        <@td width="10%">${uiLabelMap.AccountingFromParty}</@td>
+        <@td width="14%">${uiLabelMap.AccountingToParty}</@td>
+        <@td width="4%">${uiLabelMap.CommonStatus}</@td>
+        <@td width="9%">${uiLabelMap.AccountingReferenceNumber}</@td>
+        <@td width="12%">${uiLabelMap.CommonDescription}</@td>
+        <@td width="9%">${uiLabelMap.AccountingInvoiceDate}</@td>
+        <@td width="8%">${uiLabelMap.AccountingDueDate}</@td>
+        <@td width="8%">${uiLabelMap.AccountingAmount}</@td>
+        <@td width="8%">${uiLabelMap.FormFieldTitle_paidAmount}</@td>
+        <@td width="8%">${uiLabelMap.FormFieldTitle_outstandingAmount}</@td>
+      </@tr>
+      </@thead>
       <#list invoices as invoice>
         <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", Static["org.ofbiz.base.util.UtilMisc"].toMap("invoiceId", invoice.invoiceId, "userLogin", userLogin))/>
         <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
         <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : invoice.statusId}, false)!/>
-        <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-          <td><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:enableSubmitButton();"/></td>
-          <td><a class="${styles.button_default!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></td>
-          <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!}</a></td>
-          <td><a href="/partymgr/control/viewprofile?partyId=${invoice.invoiceRolePartyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.invoiceRolePartyId, false)!}</a></td>
-          <td>${statusItem.get("description")!}</td>
-          <td>${invoice.get("referenceNumber")!}</td>
-          <td>${invoice.get("description")!}</td>
-          <td>${invoice.get("invoiceDate")!}</td>
-          <td>${invoice.get("dueDate")!}</td>
-          <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-          <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-          <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-        </tr>
-        <#-- toggle the row color -->
-        <#assign alt_row = !alt_row>
+        <@tr valign="middle">
+          <@td><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:enableSubmitButton();"/></@td>
+          <@td><a class="${styles.button_default!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
+          <@td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!}</a></@td>
+          <@td><a href="/partymgr/control/viewprofile?partyId=${invoice.invoiceRolePartyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.invoiceRolePartyId, false)!}</a></@td>
+          <@td>${statusItem.get("description")!}</@td>
+          <@td>${invoice.get("referenceNumber")!}</@td>
+          <@td>${invoice.get("description")!}</@td>
+          <@td>${invoice.get("invoiceDate")!}</@td>
+          <@td>${invoice.get("dueDate")!}</@td>
+          <@td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
+          <@td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
+          <@td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
+        </@tr>
       </#list>
-    </table>
+    </@table>
   </form>
 <#else>
   <@resultMsg>${uiLabelMap.AccountingNoInvoicesFound}.</@resultMsg>

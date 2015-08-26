@@ -19,7 +19,7 @@ under the License.
 
 <form method="post" action="<@ofbizUrl>SearchInventoryItemsByLabels</@ofbizUrl>">
   <input type="hidden" name="facilityId" value="${facility.facilityId}"/>
-  <@table>
+  <@table type="data-list">
   <#assign index = 0>
   <#list labelTypes as labelType>
     <#assign index = index + 1>
@@ -39,11 +39,13 @@ under the License.
       </@td>
     </@tr>
   </#list>
+  <@tfoot>
   <@tr>
     <@td>
       <input type="submit" value="${uiLabelMap.CommonSubmit}"/>
     </@td>
   </@tr>
+  </@tfoot>
   </@table>
   <input type="hidden" name="numberOfFields" value="${index}"/>
 </form>

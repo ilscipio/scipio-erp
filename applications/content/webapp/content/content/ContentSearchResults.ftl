@@ -16,72 +16,45 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.ContentSearchContents}, ${uiLabelMap.ProductSearchFor}:</h3>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.ContentSearchContents}, ${uiLabelMap.ProductSearchFor}:">
     <#list searchConstraintStrings as searchConstraintString>
-        <div>&nbsp;<a href="<@ofbizUrl>ContentSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${searchConstraintString}</div>
+        <div><a href="<@ofbizUrl>ContentSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
     <div><span>${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
     <div><a href="<@ofbizUrl>ContentSearchOptions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !contentIds?has_content>
-      <br /><h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>
+      <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
     </#if>
 
+    <#macro paginateContentResults>
+      <#if (0 < listSize?int)>
+      <ul class="${styles.button_group!}">
+          <li><a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}<#if !(0 < viewIndex?int)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
+          <li><span class="text-entry">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span></li>        
+          <li><a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}<#if !(highIndex?int < listSize?int)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
+      </ul>
+      </#if>
+    </#macro>
+    
     <#if contentIds?has_content>
-    <table class="basic-table" cellspacing="0">
-        <tr>
-          <td align="right">
-            <#if 0 < viewIndex?int>
-              <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a>
-            </#if>
-            <#if 0 < listSize?int>
-              ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
-            </#if>
-            <#if highIndex?int < listSize?int>
-              | <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
-            </#if>
-          </td>
-        </tr>
-    </table>
-    </#if>
-
-    <#if contentIds?has_content>
-
+    
+    <@paginateContentResults />
     <center>
-      <table width="100%" cellpadding="0" cellspacing="0">
+      <@table width="100%" cellpadding="0" cellspacing="0">
         <#assign listIndex = lowIndex>
         <#list contentIds as contentId><#-- note that there is no boundary range because that is being done before the list is put in the content -->
           <#assign content = delegator.findOne("Content", Static["org.ofbiz.base.util.UtilMisc"].toMap("contentId", contentId), false)>
-          <tr>
-            <td>
+          <@tr>
+            <@td>
               <a href="<@ofbizUrl>editContent?contentId=${contentId}</@ofbizUrl>" class="${styles.button_default!}">${contentId} ${(content.contentName)!}</a>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
         </#list>
-      </table>
+      </@table>
     </center>
+    <@paginateContentResults />
+    
     </#if>
 
-    <#if contentIds?has_content>
-    <table class="basic-table" cellspacing="0">
-        <tr>
-          <td align="right">
-            <#if 0 < viewIndex?int>
-              <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
-            </#if>
-            <#if 0 < listSize?int>
-              ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
-            </#if>
-            <#if highIndex?int < listSize?int>
-              | <a href="<@ofbizUrl>ContentSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
-            </#if>
-          </td>
-        </tr>
-    </table>
-    </#if>
-  </div>
-</div>
+</@section>

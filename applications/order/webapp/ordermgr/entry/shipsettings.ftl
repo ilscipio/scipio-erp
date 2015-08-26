@@ -38,7 +38,7 @@ under the License.
     <@section title="${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}">
         <@row>
             <@cell class="${styles.grid_large!}6">
-            <@table class="basic-table">
+            <@table type="data-complex" class="basic-table">
                 <#assign i = 0>
                 <#assign shipGroup = cart.getShipInfo(shipGroupIndex)>
                 <#list facilityMaps as facilityMap>
@@ -103,7 +103,7 @@ under the License.
   <@section title="${uiLabelMap.OrderShipToAnotherParty}">
     <@row>
       <@cell class="${styles.grid_large!}6">
-        <@table class='basic-table'>
+        <@table type="data-complex" class='basic-table'>
         
           <@tr><@td colspan="3">${uiLabelMap.OrderShipToAnotherParty}: <b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(shipToParty)}</b></@td></@tr>
           <@tr><@td colspan="3"><hr /></@td></@tr>
@@ -162,7 +162,7 @@ under the License.
     <@section title="${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}">
         <@row>
         <@cell class="${styles.grid_large!}6">
-            <@table class="basic-table">
+            <@table type="data-complex" class="basic-table">
               <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.PartySupplier}</@td>
                 <@td class="${styles.grid_large!}6">
@@ -273,7 +273,7 @@ under the License.
         <@section title="${uiLabelMap.OrderShipToAnotherParty}">
           <@row>
             <@cell class="${styles.grid_large!}6">
-          <@table class='basic-table'>
+          <@table type="fields" class='basic-table'>
             <@tr>
               <@td class="${styles.grid_large!}3">${uiLabelMap.PartyPartyId}</@td>
               <@td class="${styles.grid_large!}6"><@htmlTemplate.lookupField value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/></@td>

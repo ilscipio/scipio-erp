@@ -19,17 +19,17 @@ under the License.
 
 <#if orderHeader?has_content>
 
-<@section title="${uiLabelMap.OrderNotes}">
-        <ul class="button-group">
-        <#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>
-          <li><a href="<@ofbizUrl>createnewnote?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderNotesCreateNew}</a></li>
-        </#if>
-      </ul>
+<#assign menuHtml>
+<#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>
+  <li><a href="<@ofbizUrl>createnewnote?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderNotesCreateNew}</a></li>
+</#if>
+</#assign>
+<@section title="${uiLabelMap.OrderNotes}" menuHtml=menuHtml>
       
             <@row>
                 <@cell>
             <#if orderNotes?has_content>
-            <@table class="basic-table" cellspacing='0'>
+            <@table type="fields" class="basic-table" cellspacing='0'>
               <#list orderNotes as note>
                 <@tr>
                   <@td valign="top" width="35%">
@@ -68,7 +68,7 @@ under the License.
               </#list>
             </@table>
             <#else>
-                      &nbsp;${uiLabelMap.OrderNoNotes}.
+                      <@resultMsg>${uiLabelMap.OrderNoNotes}.</@resultMsg>
             </#if>
                 </@cell>
             </@row>

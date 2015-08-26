@@ -32,7 +32,7 @@ under the License.
             <b>${uiLabelMap.FormFieldTitle_replenishLevel}:</b> <@ofbizCurrency amount=ownedFinAccount.replenishLevel isoCode=ownedFinAccount.currencyUomId/>
         </#if>
     </p>
-    <br />
+
     <@table type="data-list" id="fa-transactions" class="basic-table" cellspacing="0" cellpadding="2">
         <@thead>
             <@tr class="header-row">

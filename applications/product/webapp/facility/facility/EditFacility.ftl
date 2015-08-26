@@ -20,7 +20,16 @@ under the License.
 <#if facility?? && facilityId?has_content>
   <form action="<@ofbizUrl>UpdateFacility</@ofbizUrl>" name="EditFacilityForm" method="post" class="basic-form">
   <input type="hidden" name="facilityId" value="${facilityId!}" />
-  <@table class="basic-table" cellspacing="0">
+<#else>
+  <form action="<@ofbizUrl>CreateFacility</@ofbizUrl>" name="EditFacilityForm" method="post" class="basic-form">
+  <#if facilityId??>
+    <h3>${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityId!}".</h3>
+  </#if>
+</#if>
+
+<@table type="fields" class="basic-table" cellspacing="0">
+
+<#if facility?? && facilityId?has_content>
   <@tr>
     <@td>${uiLabelMap.ProductFacilityId}</@td>
     <@td>
@@ -28,12 +37,8 @@ under the License.
     </@td>
   </@tr>
 <#else>
-  <form action="<@ofbizUrl>CreateFacility</@ofbizUrl>" name="EditFacilityForm" method="post" class="basic-form">
-  <#if facilityId??>
-    <h3>${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityId!}".</h3>
-  </#if>
-  <@table class="basic-table" cellspacing="0">
 </#if>
+
   <@tr>
     <@td>${uiLabelMap.ProductFacilityTypeId}</@td>
     <@td>

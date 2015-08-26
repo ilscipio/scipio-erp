@@ -17,14 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h2>${uiLabelMap.OrderReturnsCurrent}</h2>
-<div><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateReturn}</a></div>
-
-
+<#assign menuHtml>
+  <li><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateReturn}</a></li>
+</#assign>
+<@section title="${uiLabelMap.OrderReturnsCurrent}" menuHtml=menuHtml>
 <#if returnList?has_content>
-<@section>
-<@table cellspacing="0" class="basic-table">
-     <@thead>
+<@table type="data-list" cellspacing="0" class="basic-table">
+  <@thead>
   <@tr class="header-row">
         <@th>${uiLabelMap.OrderReturnId} ${uiLabelMap.CommonNbr}</@th>
         <@th>${uiLabelMap.FormFieldTitle_entryDate}</@th>
@@ -32,7 +31,7 @@ under the License.
         <@th>${uiLabelMap.FacilityFacility}</@th>
         <@th>${uiLabelMap.CommonStatus}</@th>
   </@tr>
-      </@thead>
+  </@thead>
   <#list returnList as returnHeader>
   <#assign statusItem = returnHeader.getRelatedOne("StatusItem", false)>
   <#if returnHeader.destinationFacilityId??>
@@ -52,6 +51,7 @@ under the License.
     <@td>${statusItem.get("description",locale)}</@td>
   </@tr>
   </#list>
-    </@table>
-</@section>
+</@table>
 </#if>
+
+</@section>

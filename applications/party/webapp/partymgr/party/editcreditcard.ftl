@@ -23,11 +23,15 @@ under the License.
 <#else>
   <#assign title = "${uiLabelMap.AccountingEditCreditCard}">
 </#if>
-<@section title=title>
-        <div class="button-bar">
-          <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
-          <a href="javascript:document.editcreditcardform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-        </div>
+<@section title=title menuHtml=menuHtml>
+    <#macro saveCancelMenu>
+      <ul class="${styles.button_group!}">
+        <li><a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a></li>
+        <li><a href="javascript:document.editcreditcardform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a></li>
+      </ul>
+    </#macro>
+    <@saveCancelMenu />
+
     <#if !creditCard??>
       <form method="post" action="<@ofbizUrl>createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform" style="margin: 0;">
     <#else>
@@ -138,9 +142,6 @@ under the License.
         </@tbody>
         </@table>
       </form>
-      <div class="button-bar">
-        <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
-        <a href="javascript:document.editcreditcardform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-      </div>
+      <@saveCancelMenu />
 </@section>
 <!-- end editcreditcard.ftl -->

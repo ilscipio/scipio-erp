@@ -16,33 +16,28 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PageTitleEditSurveyQuestions} ${uiLabelMap.ContentSurveySurveyId} ${surveyId}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
-      <table class="basic-table hover-bar" cellspacing="0">
-        <tr class="header-row">
-          <td>${uiLabelMap.CommonId}</td>
-          <td>${uiLabelMap.CommonType}</td>
-          <td>${uiLabelMap.ContentSurveryCategory}</td>
-          <td>${uiLabelMap.CommonDescription}</td>
-          <td>${uiLabelMap.ContentSurveyQuestion}</td>
-          <td>${uiLabelMap.CommonPage}</td>
-          <td>${uiLabelMap.ContentSurveyMultiResp}</td>
-          <td>${uiLabelMap.ContentSurveyMultiRespColumn}</td>
-          <td>${uiLabelMap.CommonRequired}</td>
-          <td>${uiLabelMap.CommonSequenceNum}</td>
-          <td>${uiLabelMap.ContentSurveyWithQuestion}</td>
-          <td>${uiLabelMap.ContentSurveyWithOption}</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>
-        <#assign alt_row = false>
+<@section title="${uiLabelMap.PageTitleEditSurveyQuestions} ${uiLabelMap.ContentSurveySurveyId} ${surveyId}">
+      <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+        <@thead>
+        <@tr class="header-row">
+          <@th>${uiLabelMap.CommonId}</@th>
+          <@th>${uiLabelMap.CommonType}</@th>
+          <@th>${uiLabelMap.ContentSurveryCategory}</@th>
+          <@th>${uiLabelMap.CommonDescription}</@th>
+          <@th>${uiLabelMap.ContentSurveyQuestion}</@th>
+          <@th>${uiLabelMap.CommonPage}</@th>
+          <@th>${uiLabelMap.ContentSurveyMultiResp}</@th>
+          <@th>${uiLabelMap.ContentSurveyMultiRespColumn}</@th>
+          <@th>${uiLabelMap.CommonRequired}</@th>
+          <@th>${uiLabelMap.CommonSequenceNum}</@th>
+          <@th>${uiLabelMap.ContentSurveyWithQuestion}</@th>
+          <@th>${uiLabelMap.ContentSurveyWithOption}</@th>
+          <@th>&nbsp;</@th>
+          <@th>&nbsp;</@th>
+          <@th>&nbsp;</@th>
+        </@tr>
+        </@thead>
+        <@tbody>
         <#list surveyQuestionAndApplList as surveyQuestionAndAppl>
           <#assign questionType = surveyQuestionAndAppl.getRelatedOne("SurveyQuestionType", true)/>
           <#assign questionCat = surveyQuestionAndAppl.getRelatedOne("SurveyQuestionCategory", true)!/>
@@ -54,17 +49,17 @@ under the License.
             <#assign currentSurveyMultiRespColumns = []/>
           </#if>
           
-            <tr<@dataRowClassStr alt=alt_row />>
+            <@tr>
             <form method="post" action="<@ofbizUrl>updateSurveyQuestionAppl</@ofbizUrl>">
               <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}" />
               <input type="hidden" name="surveyQuestionId" value="${surveyQuestionAndAppl.surveyQuestionId}" />
               <input type="hidden" name="fromDate" value="${surveyQuestionAndAppl.fromDate}" />
-              <td>${surveyQuestionAndAppl.surveyQuestionId}</td>
-              <td>${questionType.get("description",locale)}</td>
-              <td>${(questionCat.description)!}</td>
-              <td>${surveyQuestionAndAppl.description!}</td>
-              <td><input type="text" name="question" size="30" value="${surveyQuestionAndAppl.question!?html}" />
-              <td>
+              <@td>${surveyQuestionAndAppl.surveyQuestionId}</@td>
+              <@td>${questionType.get("description",locale)}</@td>
+              <@td>${(questionCat.description)!}</@td>
+              <@td>${surveyQuestionAndAppl.description!}</@td>
+              <@td><input type="text" name="question" size="30" value="${surveyQuestionAndAppl.question!?html}" /></@td>
+              <@td>
                 <select name="surveyPageId">
                   <#if surveyQuestionAndAppl.surveyPageSeqId?has_content>
                     <option value="${surveyQuestionAndAppl.surveyPageSeqId}">${(currentSurveyPage.pageName)!} [${surveyQuestionAndAppl.surveyPageSeqId}]</option>
@@ -75,8 +70,8 @@ under the License.
                     <option value="${surveyPage.surveyPageSeqId}">${surveyPage.pageName!} [${surveyPage.surveyPageSeqId}]</option>
                   </#list>
                 </select>
-              </td>
-              <td>
+              </@td>
+              <@td>
                 <select name="surveyMultiRespId">
                   <#if surveyQuestionAndAppl.surveyMultiRespId?has_content>
                     <option value="${surveyQuestionAndAppl.surveyMultiRespId}">${(currentSurveyMultiResp.multiRespTitle)!} [${surveyQuestionAndAppl.surveyMultiRespId}]</option>
@@ -87,9 +82,9 @@ under the License.
                     <option value="${surveyMultiResp.surveyMultiRespId}">${surveyMultiResp.multiRespTitle} [${surveyMultiResp.surveyMultiRespId}]</option>
                   </#list>
                 </select>
-              </td>
+              </@td>
               <#if currentSurveyMultiRespColumns?has_content>
-              <td>
+              <@td>
                 <select name="surveyMultiRespColId">
                   <#if surveyQuestionAndAppl.surveyMultiRespColId?has_content>
                     <#assign currentSurveyMultiRespColumn = surveyQuestionAndAppl.getRelatedOne("SurveyMultiRespColumn", false)/>
@@ -101,120 +96,102 @@ under the License.
                     <option value="${currentSurveyMultiRespColumn.surveyMultiRespColId}">${currentSurveyMultiRespColumn.columnTitle} [${currentSurveyMultiRespColumn.surveyMultiRespColId}]</option>
                   </#list>
                 </select>
-              </td>
-              <#else/>
-                <td><input type="text" name="surveyMultiRespColId" size="4" value="${surveyQuestionAndAppl.surveyMultiRespColId!}"/></td>
+              </@td>
+              <#else>
+                <@td><input type="text" name="surveyMultiRespColId" size="4" value="${surveyQuestionAndAppl.surveyMultiRespColId!}"/></@td>
               </#if>
-              <td>
+              <@td>
                 <select name="requiredField">
                   <option>${surveyQuestionAndAppl.requiredField?default("N")}</option>
                   <option value="${surveyQuestionAndAppl.requiredField?default("N")}">----</option>
                   <option>Y</option><option>N</option>
                 </select>
-              </td>
-              <td><input type="text" name="sequenceNum" size="5" value="${surveyQuestionAndAppl.sequenceNum!}"/></td>
-              <td><input type="text" name="withSurveyQuestionId" size="5" value="${surveyQuestionAndAppl.withSurveyQuestionId!}"/></td>
-              <td><input type="text" name="withSurveyOptionSeqId" size="5" value="${surveyQuestionAndAppl.withSurveyOptionSeqId!}"/></td>
-              <td><input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/></td>
-              <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.ContentSurveyQuestion}</a></td>
+              </@td>
+              <@td><input type="text" name="sequenceNum" size="5" value="${surveyQuestionAndAppl.sequenceNum!}"/></@td>
+              <@td><input type="text" name="withSurveyQuestionId" size="5" value="${surveyQuestionAndAppl.withSurveyQuestionId!}"/></@td>
+              <@td><input type="text" name="withSurveyOptionSeqId" size="5" value="${surveyQuestionAndAppl.withSurveyOptionSeqId!}"/></@td>
+              <@td><input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/></@td>
+              <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.ContentSurveyQuestion}</a></@td>
               </form>
-              <td>
+              <@td>
                 <form id="removeSurveyQuestion_${surveyQuestionAndAppl.surveyQuestionId}" action="<@ofbizUrl>removeSurveyQuestionAppl</@ofbizUrl>" method="post">
                   <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}" />
                   <input type="hidden" name="surveyQuestionId" value="${surveyQuestionAndAppl.surveyQuestionId}" />
                   <input type="hidden" name="fromDate" value="${surveyQuestionAndAppl.fromDate}" />
                   <a href="javascript:document.getElementById('removeSurveyQuestion_${surveyQuestionAndAppl.surveyQuestionId}').submit();"" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
                 </form>
-              </td>
-            </tr>
-          <#assign alt_row = !alt_row>
+              </@td>
+            </@tr>
         </#list>
-      </table>
-  </div>
-</div>
+        </@tbody>
+      </@table>
+</@section>
 <#-- apply question from category -->
 <#if surveyQuestionCategory?has_content>
-    <div class="screenlet">
-      <div class="screenlet-title-bar">
-        <ul>
-          <li class="h3">${uiLabelMap.ContentSurveyApplyQuestionFromCategory} - ${surveyQuestionCategory.description!} [${surveyQuestionCategory.surveyQuestionCategoryId}]</li>
-        </ul>
-        <br class="clear"/>
-      </div>
-      <div class="screenlet-body">
+    <@section title="${uiLabelMap.ContentSurveyApplyQuestionFromCategory} - ${surveyQuestionCategory.description!} [${surveyQuestionCategory.surveyQuestionCategoryId}]">
         <a name="appl">
-        <table class="basic-table hover-bar" cellspacing="0">
-          <thead>
-            <tr class="header-row">
-                <th>${uiLabelMap.CommonId}</th>
-                <th>${uiLabelMap.CommonDescription}</th>
-                <th>${uiLabelMap.CommonType}</th>
-                <th>${uiLabelMap.ContentSurveyQuestion}</th>
-                <th>${uiLabelMap.CommonPage}</th>
-                <th>${uiLabelMap.ContentSurveyMultiResp}</th>
-                <th>${uiLabelMap.ContentSurveyMultiRespColumn}</th>
-                <th>${uiLabelMap.CommonRequired}</th>
-                <th>${uiLabelMap.CommonSequenceNum}</th>
-                <th>${uiLabelMap.ContentSurveyWithQuestion}</th>
-                <th>${uiLabelMap.ContentSurveyWithOption}</th>
-                <th>&nbsp;</th>
-              </tr>
-            </thead>
-          <#assign alt_row = false>
+        <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+          <@thead>
+            <@tr class="header-row">
+                <@th>${uiLabelMap.CommonId}</@th>
+                <@th>${uiLabelMap.CommonDescription}</@th>
+                <@th>${uiLabelMap.CommonType}</@th>
+                <@th>${uiLabelMap.ContentSurveyQuestion}</@th>
+                <@th>${uiLabelMap.CommonPage}</@th>
+                <@th>${uiLabelMap.ContentSurveyMultiResp}</@th>
+                <@th>${uiLabelMap.ContentSurveyMultiRespColumn}</@th>
+                <@th>${uiLabelMap.CommonRequired}</@th>
+                <@th>${uiLabelMap.CommonSequenceNum}</@th>
+                <@th>${uiLabelMap.ContentSurveyWithQuestion}</@th>
+                <@th>${uiLabelMap.ContentSurveyWithOption}</@th>
+                <@th>&nbsp;</@th>
+              </@tr>
+            </@thead>
           <#list categoryQuestions as question>
             <#assign questionType = question.getRelatedOne("SurveyQuestionType", false)>
             <form method="post" action="<@ofbizUrl>createSurveyQuestionAppl</@ofbizUrl>">
               <input type="hidden" name="surveyId" value="${requestParameters.surveyId}" />
               <input type="hidden" name="surveyQuestionId" value="${question.surveyQuestionId}" />
               <input type="hidden" name="surveyQuestionCategoryId" value="${requestParameters.surveyQuestionCategoryId}" />
-              <tr<@dataRowClassStr alt=alt_row />>
-                <th><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${question.surveyQuestionId}&amp;surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="${styles.button_default!}">${question.surveyQuestionId}</a></td>
-                <td>${question.description!}</td>
-                <td>${questionType.get("description",locale)}</td>
-                <td>${question.question!}</td>
-              <td>
+              <@tr>
+                <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${question.surveyQuestionId}&amp;surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="${styles.button_default!}">${question.surveyQuestionId}</a></@td>
+                <@td>${question.description!}</@td>
+                <@td>${questionType.get("description",locale)}</@td>
+                <@td>${question.question!}</@td>
+              <@td>
                 <select name="surveyPageId">
                   <option value=""></option>
                   <#list surveyPageList as surveyPage>
                     <option value="${surveyPage.surveyPageSeqId}">${surveyPage.pageName} [${surveyPage.surveyPageSeqId}]</option>
                   </#list>
                 </select>
-              </td>
-              <td>
+              </@td>
+              <@td>
                 <select name="surveyMultiRespId">
                   <option value=""></option>
                   <#list surveyMultiRespList as surveyMultiResp>
                     <option value="${surveyMultiResp.surveyMultiRespId}">${surveyMultiResp.multiRespTitle} [${surveyMultiResp.surveyMultiRespId}]</option>
                   </#list>
                 </select>
-              </td>
-                <td><input type="text" name="surveyMultiRespColId" size="4"/></td>
-                <td>
+              </@td>
+                <@td><input type="text" name="surveyMultiRespColId" size="4"/></@td>
+                <@td>
                   <select name="requiredField">
                     <option>N</option>
                     <option>Y</option>
                   </select>
-                </td>
-                <td><input type="text" name="sequenceNum" size="5"/></td>
-                <td><input type="text" name="withSurveyQuestionId" size="5"/></td>
-                <td><input type="text" name="withSurveyOptionSeqId" size="5"/></td>
-                <td><input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit"/></td>
-              </tr>
+                </@td>
+                <@td><input type="text" name="sequenceNum" size="5"/></@td>
+                <@td><input type="text" name="withSurveyQuestionId" size="5"/></@td>
+                <@td><input type="text" name="withSurveyOptionSeqId" size="5"/></@td>
+                <@td><input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit"/></@td>
+              </@tr>
             </form>
-            <#assign alt_row = !alt_row>
           </#list>
-        </table>
-      </div>
-    </div>
+        </@table>
+    </@section>
 </#if>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ContentSurveyApplyQuestionFromCategory}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.ContentSurveyApplyQuestionFromCategory}">
       <form method="post" action="<@ofbizUrl>EditSurveyQuestions</@ofbizUrl>">
         <input type="hidden" name="surveyId" value="${requestParameters.surveyId}"/>
         <select name="surveyQuestionCategoryId">
@@ -225,8 +202,7 @@ under the License.
         &nbsp;
         <input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit"/>
       </form>
-  </div>
-</div>
+</@section>
 <div class="screenlet">
   <#-- new question / category -->
   <#if requestParameters.newCategory?default("N") == "Y">
@@ -274,33 +250,31 @@ under the License.
     <br class="clear"/>
   </div>
   <div class="screenlet-body">
-    <table class="basic-table hover-bar" cellspacing="0">
-     <thead>
-      <tr class="header-row">
-        <th>${uiLabelMap.CommonDescription}</th>
-        <th>${uiLabelMap.CommonSequenceNum}</th>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
-      </tr>
-      </thead>
-      <#assign alt_row = false>
+    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+     <@thead>
+      <@tr class="header-row">
+        <@th>${uiLabelMap.CommonDescription}</@th>
+        <@th>${uiLabelMap.CommonSequenceNum}</@th>
+        <@th>&nbsp;</@th>
+        <@th>&nbsp;</@th>
+      </@tr>
+      </@thead>
       <#list questionOptions as option>
-        <tr<@dataRowClassStr alt=alt_row />>
-          <td>${option.description!}</td>
-          <td>${option.sequenceNum!}</td>
-          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${option.surveyQuestionId}&amp;surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a></td>
-          <td>
+        <@tr>
+          <@td>${option.description!}</@td>
+          <@td>${option.sequenceNum!}</@td>
+          <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${option.surveyQuestionId}&amp;surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a></@td>
+          <@td>
             <form id="deleteSurveyQuestionOption_${option_index}" action="<@ofbizUrl>deleteSurveyQuestionOption</@ofbizUrl>" method="post">
               <input type="hidden" name="surveyId" value="${requestParameters.surveyId}" />
               <input type="hidden" name="surveyQuestionId" value="${option.surveyQuestionId}" />
               <input type="hidden" name="surveyOptionSeqId" value="${option.surveyOptionSeqId}" />
               <a href="javascript:document.getElementById('deleteSurveyQuestionOption_${option_index}').submit();"" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
             </form>
-          </td>
-        </tr>
-        <#assign alt_row = !alt_row>
+          </@td>
+        </@tr>
       </#list>
-    </table>
+    </@table>
   </div>
 </div>
 <div class="screenlet">

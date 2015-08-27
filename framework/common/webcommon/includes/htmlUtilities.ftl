@@ -310,6 +310,8 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 * createStack
 ************
 Creates a stack. Often not necessary.
+FTL kludge for special use cases and internal use.
+WARNING: stack type/format is subject to change; assume unknown.
     Usage example:  
      <#global myGlobalStack = createStack()>
 -->
@@ -325,6 +327,7 @@ Pushes a value onto the given stack. The stack will be modified in-place _if pos
 return value should always be used instead of the original to guarantee function.
 If variable is a non-stack, will be created as necessary.
 FTL kludge for special use cases and internal use.
+WARNING: stack type/format is subject to change; assume unknown.
     Usage example:  
      <#global myGlobalStack = pushStack(myGlobalStack!, {"attr1": "val1"})>
 -->
@@ -344,6 +347,7 @@ FTL kludge for special use cases and internal use.
 ************
 Reads the last value from the given stack. The stack is not modified.
 FTL kludge for special use cases and internal use.
+WARNING: stack type/format is subject to change; assume unknown.
     Usage example:  
      <#local val = readStack(myGlobalStack!)>
 -->
@@ -362,6 +366,7 @@ FTL kludge for special use cases and internal use.
 Pops the given stack. The stack will be modified in-place _if possible_ and returned, but
 return value should always be used instead of the original to guarantee function. 
 FTL kludge for special use cases and internal use. Use readStack to get value.
+WARNING: stack type/format is subject to change; assume unknown.
     Usage example:  
      <#global myGlobalStack = popStack(myGlobalStack!)>
 -->
@@ -1325,12 +1330,14 @@ Helps define table. Required wrapper for all table sub-elem macros.
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
     cellspacing     = cellspacing, default 0 for most types except generic, set to "" to prevent setting.
-    wrapIf          = advanced structure control, for esoteric cases
+    wrapIf/openOnly/closeOnly = advanced structure control, for esoteric cases
     attribs               = hash of other legacy <table attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
 -->
-<#macro table type="generic" class=true addClass="" id="" wrapIf=true cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs={} inlineAttribs...>
-<#if wrapIf>
+<#macro table type="generic" class=true addClass="" id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
   <#local prevSectionInfo = catoCurrentTableSectionInfo!>
@@ -1376,7 +1383,6 @@ Helps define table. Required wrapper for all table sub-elem macros.
       <#local cellspacing = "">
     </#if>
   </#if>
-  
   <#global catoCurrentTableInfo = {"type": type, "autoAltRows": autoAltRows,
     "inheritAltRows": inheritAltRows, "parentRowAlt": prevRowAlt, "useFootAltRows": useFootAltRows}>
   <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
@@ -1395,6 +1401,12 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#-- note: this var may be empty string (none) -->
   <#global catoCurrentTableLastRowAlt = prevRowAlt>
   <#local style = "">
+  <#-- need to save values on a stack if open-only! -->
+  <#if !close>
+    <#global catoCurrentTableStack = pushStack(catoCurrentTableStack!, 
+        {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAlt":prevRowAlt, 
+         "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable})>
+  </#if>
   <#if scrollable>
   <#-- TODO: change this to something more foundation-like.
        this is a custom workaround to get scrolling, nothing else working. -->
@@ -1402,7 +1414,19 @@ Helps define table. Required wrapper for all table sub-elem macros.
   </#if>
   <table<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#rt>
     <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+</#if>
     <#nested>
+<#if close>
+  <#-- need to get values back from stack if close-only! -->
+  <#if !open>
+    <#local stackValues = readStack(catoCurrentTableStack!)>
+    <#global catoCurrentTableStack = popStack(catoCurrentTableStack!)>
+    <#local prevTableInfo = stackValues.prevTableInfo>
+    <#local prevSectionInfo = stackValues.prevSectionInfo>
+    <#local prevRowAlt = stackValues.prevRowAlt>
+    <#local prevLastRowAlt = stackValues.prevLastRowAlt>
+    <#local scrollable = stackValues.scrollable>
+  </#if>
   </table>
   <#if scrollable>
   </div>
@@ -1411,47 +1435,84 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#global catoCurrentTableSectionInfo = prevSectionInfo>
   <#global catoCurrentTableRowAlt = prevRowAlt>
   <#global catoCurrentTableLastRowAlt = prevLastRowAlt>
-<#else>
-<#nested>
 </#if>
 </#macro>
 
-<#macro thead class="" id="" wrapIf=true attribs={} inlineAttribs...>
-<#if wrapIf>
+<#macro thead class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
   <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
   <#global catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
+  <#-- need to save values on a stack if open-only! -->
+  <#if !close>
+    <#global catoCurrentTableHeadStack = pushStack(catoCurrentTableHeadStack!, 
+        {"prevTableSectionInfo":prevTableSectionInfo})>
+  </#if>
   <thead<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+</#if>
     <#nested>
+<#if close>
+  <#-- need to get values back from stack if close-only! -->
+  <#if !open>
+    <#local stackValues = readStack(catoCurrentTableHeadStack!)>
+    <#global catoCurrentTableHeadStack = popStack(catoCurrentTableHeadStack!)>
+    <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+  </#if>
   </thead>
   <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
-<#else>
-<#nested>
 </#if>
 </#macro>
 
-<#macro tbody class="" id="" wrapIf=true attribs={} inlineAttribs...>
-<#if wrapIf>
+<#macro tbody class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
   <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
   <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
+  <#-- need to save values on a stack if open-only! -->
+  <#if !close>
+    <#global catoCurrentTableBodyStack = pushStack(catoCurrentTableBodyStack!, 
+        {"prevTableSectionInfo":prevTableSectionInfo})>
+  </#if>
   <tbody<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+</#if>
     <#nested>
+<#if close>
+  <#-- need to get values back from stack if close-only! -->
+  <#if !open>
+    <#local stackValues = readStack(catoCurrentTableBodyStack!)>
+    <#global catoCurrentTableBodyStack = popStack(catoCurrentTableBodyStack!)>
+    <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+  </#if>
   </tbody>
   <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
-<#else>
-<#nested>
-</#if>  
+</#if>
 </#macro>
 
-<#macro tfoot class="" id="" wrapIf=true attribs={} inlineAttribs...>
-<#if wrapIf>
+<#macro tfoot class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
   <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
   <#global catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
+  <#-- need to save values on a stack if open-only! -->
+  <#if !close>
+    <#global catoCurrentTableFootStack = pushStack(catoCurrentTableFootStack!, 
+        {"prevTableSectionInfo":prevTableSectionInfo})>
+  </#if>
   <tfoot<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+</#if>
     <#nested>
+<#if close>
+  <#-- need to get values back from stack if close-only! -->
+  <#if !open>
+    <#local stackValues = readStack(catoCurrentTableFootStack!)>
+    <#global catoCurrentTableFootStack = popStack(catoCurrentTableFootStack!)>
+    <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+  </#if>
   </tfoot>
   <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
-<#else>
-<#nested>
 </#if>
 </#macro>
 
@@ -1475,15 +1536,16 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     groupParent     = boolean, nested tables only, if specified, considers row logically grouped with parent row;
                       sets alt to exact same as parent row
     selected        = boolean, if specified and true marked as selected
-    wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (can omit nested)
+    wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
     attribs               = hash of other legacy <tr attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
 <#macro tr class="" id="" metaRow=false useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
-<#if wrapIf>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
   <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
-  <#local str = class>
   <#if !(useAlt?is_boolean && useAlt == false)>
     <#if !alt?is_boolean>
       <#if groupLast?is_boolean && groupLast == true>
@@ -1502,7 +1564,12 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
       </#if>
     </#if>
   </#if>
-<#if !closeOnly>
+  <#-- need to save values on a stack if open-only! -->
+  <#if !close>
+    <#global catoCurrentTableRowStack = pushStack(catoCurrentTableRowStack!, 
+        {"useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
+  </#if>
+  <#local str = class>
   <#if alt?is_boolean>
     <#local str = (str + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
   </#if>
@@ -1512,7 +1579,15 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <tr<#if str?has_content> class="${str}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
 </#if>    
     <#nested>
-<#if !openOnly>
+<#if close>
+  <#-- need to get values back from stack if close-only! -->
+  <#if !open>
+    <#local stackValues = readStack(catoCurrentTableRowStack!)>
+    <#global catoCurrentTableRowStack = popStack(catoCurrentTableRowStack!)>
+    <#local useAlt = stackValues.useAlt>
+    <#local alt = stackValues.alt>
+    <#local isRegAltRow = stackValues.isRegAltRow>
+  </#if>
   </tr>
   <#if !(useAlt?is_boolean && useAlt == false)>
     <#-- note: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
@@ -1525,9 +1600,6 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     <#global catoCurrentTableLastRowAlt = alt>
   </#if>
 </#if>
-<#else>
-<#nested>
-</#if>
 </#macro>
 
 <#-- 
@@ -1539,24 +1611,20 @@ Helps define table cells.
    * General Attributes *
     class           = manual classes to add
     id              = cell id
-    wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (can omit nested)
+    wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
     attribs               = hash of other legacy <th and <td attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <th and <td attributes and values
 -->
 <#macro th class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
-<#if wrapIf>
-  <#if !closeOnly><th<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if !openOnly></th></#if>
-<#else>
-<#nested>
-</#if>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+  <#if open><th<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#macro td class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
-<#if wrapIf>
-  <#if !closeOnly><td<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if !openOnly></td></#if>
-<#else>
-<#nested>
-</#if>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+  <#if open><td<#if class?has_content> class="${class}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 
 <#-- 

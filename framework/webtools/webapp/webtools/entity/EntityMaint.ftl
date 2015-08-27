@@ -39,7 +39,8 @@ under the License.
    <@cell>
         <h3>${uiLabelMap.WebtoolsEntitiesAlpha}</h3>
     <#assign firstChar = "x">
-    <#assign anchor="">
+    <#assign anchorId = "">
+    <#assign anchorAttribs = {}>
     <#assign alt_row = false>
     <#assign right_col = false>
         <@nav type="magellan">
@@ -51,36 +52,40 @@ under the License.
       </#list>
          </@nav>
         <#assign firstChar = "*">
-        <table class="basic-table hover-bar" cellspacing='0'>
-          <thead>
-          <tr class="header-row">
-            <th>${uiLabelMap.WebtoolsEntityName}</th>
-            <th>&nbsp;</th>
-            <th>${uiLabelMap.WebtoolsEntityName}</th>
-            <th>&nbsp;</th>
-          </tr>
-          </thead>
+        <@table type="data-complex" autoAltRows=false class="basic-table hover-bar" cellspacing='0'>
+          <@thead>
+          <@tr class="header-row">
+            <@th>${uiLabelMap.WebtoolsEntityName}</@th>
+            <@th>&nbsp;</@th>
+            <@th>${uiLabelMap.WebtoolsEntityName}</@th>
+            <@th>&nbsp;</@th>
+          </@tr>
+          </@thead>
           <#list entitiesList as entity>
+            <#-- TODO: rework this to avoid splitting up @tr -->
             <#if entity.entityName?substring(0, 1) != firstChar>
               <#if right_col>
-                <td>&nbsp;</td><td>&nbsp;</td></tr>
+                <@td>&nbsp;</@td><@td>&nbsp;</@td><@tr closeOnly=true />
                 <#assign right_col = false>
                 <#assign alt_row = !alt_row>
               </#if>
               <#if firstChar != "*">
-                <tr<@dataRowClassStr alt=alt_row />><td colspan="4">&nbsp;</td></tr>
+                <@tr alt=alt_row><@td colspan="4">&nbsp;</@td></@tr>
                 <#assign alt_row = !alt_row>
               </#if>
               <#assign firstChar = entity.entityName?substring(0, 1)>
-              <#assign anchor="id=\"Entity_${firstChar}\" data-magellan-destination=\"Entity_${firstChar}\"">
+              <#assign anchorId = "Entity_${firstChar}">
+              <#assign anchorAttribs = {"data-magellan-destination": "Entity_${firstChar}"}>
             </#if>
             <#if !right_col>
-              <tr<@dataRowClassStr alt=alt_row />>
+              <@tr alt=alt_row openOnly=true />
             </#if>
 
-            <td<#if anchor?has_content> ${anchor}</#if>>${entity.entityName}<#if entity.viewEntity == 'Y'>&nbsp;(${uiLabelMap.WebtoolsEntityView})</#if></td>
-            <#assign anchor="">
-            <td class="button-col">
+            <@td id=anchorId attribs=anchorAttribs>${entity.entityName}<#if entity.viewEntity == 'Y'>&nbsp;(${uiLabelMap.WebtoolsEntityView})</#if></@td>
+            
+            <#assign anchorId = "">
+            <#assign anchorAttribs = {}>
+            <@td class="button-col">
               <#if entity.viewEntity == 'Y'>
                 <#if entity.entityPermissionView == 'Y'>
                   <a href='<@ofbizUrl>ViewRelations?entityName=${entity.entityName}</@ofbizUrl>'>${uiLabelMap.WebtoolsReln}</a>
@@ -97,16 +102,16 @@ under the License.
                   <a href='<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>' title='${uiLabelMap.WebtoolsFindAllRecords}'>${uiLabelMap.WebtoolsAll}</a>
                 </#if>
               </#if>
-            </td>
+            </@td>
             <#if right_col>
-              </tr>
+              <@tr closeOnly=true />
               <#assign alt_row = !alt_row>
             </#if>
             <#assign right_col = !right_col>
           </#list>
           <#if right_col>
-            <td>&nbsp;</td><td>&nbsp;</td></tr>
+            <@td>&nbsp;</@td><@td>&nbsp;</@td><@tr closeOnly=true />
           </#if>
-        </table>
+        </@table>
     </@cell>
 </@row>

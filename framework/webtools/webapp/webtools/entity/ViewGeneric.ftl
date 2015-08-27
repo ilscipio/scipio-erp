@@ -39,7 +39,7 @@ function ShowTab(lname) {
 </script>-->
 <@section title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}">
 
-    <ul class="button-group">
+    <ul class="${styles.button_group!}">
       <li><a href='<@ofbizUrl>FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.WebtoolsBackToFindScreen}</a></li>
       <#if enableEdit = "false">
         <#if hasCreatePermission>
@@ -65,7 +65,7 @@ function ShowTab(lname) {
     <#if value?has_content>
     <@row>
         <@cell>
-          <h3 data-magellan-destination="xml-view" id="xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</h3>
+          <@heading id="xml-view" attribs={"data-magellan-destination":"xml-view"}>${uiLabelMap.WebtoolsEntityXMLRepresentation}</@heading>
         
           <@code type="html">
               <#assign valueXmlDoc = Static["org.ofbiz.entity.GenericValue"].makeXmlDocument([value]) />${Static["org.ofbiz.base.util.UtilXml"].writeXmlDocument(valueXmlDoc)}
@@ -81,7 +81,7 @@ function ShowTab(lname) {
             <@cell columns=6>
       <form name="relationForm" onchange="javascript:ShowTab(this.options[this.selectedIndex].value)">
          
-        <h3 data-magellan-destination="common-view" id="common-view">${uiLabelMap.CommonView}</h3>
+        <@heading id="common-view" attribs={"data-magellan-destination":"common-view"}>${uiLabelMap.CommonView}</@heading>
         <@field type="select" name="viewRelated">
           <option value="tab1">${entityName}</option>
           <#list relationFieldList as relation>
@@ -100,27 +100,26 @@ function ShowTab(lname) {
         <#assign alt_row = false>
            <@row>
             <@cell>
-            <h3 data-magellan-destination="current-view" id="current-view">${uiLabelMap.WebtoolsEntityEditValue}</h3>
+            <@heading id="current-view" attribs={"data-magellan-destination":"current-view"}>${uiLabelMap.WebtoolsEntityEditValue}</@heading>
           <#if pkNotFound>
             <p>${uiLabelMap.WebtoolsEntityName} ${entityName} ${uiLabelMap.WebtoolsWithPk} ${findByPk} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</p>
           </#if>
           <form action='<@ofbizUrl>UpdateGeneric?entityName=${entityName}</@ofbizUrl>' method="post" name="updateForm">
             <#assign showFields = true>
-            <#assign alt_row = false>
-            <table class="basic-table" cellspacing="0">
+            <#-- FIXME: inputs within table elems -->
+            <@table type="fields" autoAltRows=true class="basic-table" cellspacing="0">
               <#if value?has_content>
                 <#if hasUpdatePermission>
                   <#if newFieldPkList?has_content>
                     <input type="hidden" name="UPDATE_MODE" value="UPDATE"/>
                     <#list newFieldPkList as field>
-                      <tr<@dataRowClassStr alt=alt_row />>
-                        <td>${field.name}</td>
-                        <td>
+                      <@tr>
+                        <@td>${field.name}</@td>
+                        <@td>
                           <input type="hidden" name="${field.name}" value="${field.value}"/>
                           ${field.value}
-                        </td>
-                      </tr>
-                      <#assign alt_row = !alt_row>
+                        </@td>
+                      </@tr>
                     </#list>
                   </#if>
                 <#else>
@@ -130,12 +129,12 @@ function ShowTab(lname) {
               <#else>
                 <#if hasCreatePermission>
                   <#if newFieldPkList?has_content>
-                    <p>${uiLabelMap.WebtoolsYouMayCreateAnEntity}</p>
-                    <input type="hidden" name="UPDATE_MODE" value="CREATE"/>
+                    <@tr metaRow=true><@td><p>${uiLabelMap.WebtoolsYouMayCreateAnEntity}</p>
+                    <input type="hidden" name="UPDATE_MODE" value="CREATE"/></@td></@tr>
                     <#list newFieldPkList as field>
-                      <tr<@dataRowClassStr alt=alt_row />>
-                        <td>${field.name}</td>
-                        <td>
+                      <@tr>
+                        <@td>${field.name}</@td>
+                        <@td>
                           <#if field.fieldType == 'DateTime'>
                             DateTime(YYYY-MM-DD HH:mm:SS.sss):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                           <#elseif field.fieldType == 'Date'>
@@ -159,23 +158,21 @@ function ShowTab(lname) {
                           <#else>
                             <input type="text" size="20" name="${field.name}" value="${field.value}" />
                           </#if>
-                        </td>
-                      </tr>
-                      <#assign alt_row = !alt_row>
+                        </@td>
+                      </@tr>
                     </#list>
                   </#if>
                 <#else>
-                  <@alert type="error">${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}</@alert>
+                  <@tr metaRow=true><@td><@alert type="error">${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}</@alert></@td></@tr>
                   <#assign showFields = false>
                 </#if>
               </#if>
               <#if showFields>
                 <#if newFieldNoPkList?has_content>
-                  <#assign alt_row = false>
                   <#list newFieldNoPkList as field>
-                    <tr<@dataRowClassStr alt=alt_row />>
-                      <td>${field.name}</td>
-                      <td>
+                    <@tr>
+                      <@td>${field.name}</@td>
+                      <@td>
                         <#if field.fieldType == 'DateTime'>
                           DateTime(YYYY-MM-DD HH:mm:SS.sss):<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         <#elseif field.fieldType == 'Date'>
@@ -199,52 +196,51 @@ function ShowTab(lname) {
                         <#else>
                           <input type="text" size="20" name="${field.name}" value="${field.value}" />
                         </#if>
-                      </td>
-                    </tr>
-                    <#assign alt_row = !alt_row>
+                      </@td>
+                    </@tr>
                   </#list>
                   <#if value?has_content>
                     <#assign button = "${uiLabelMap.CommonUpdate}">
                   <#else>
                     <#assign button = "${uiLabelMap.CommonCreate}">
                   </#if>
-                  <tr<@dataRowClassStr alt=alt_row />>
-                    <td>&nbsp;</td>
-                    <td>
+                <@tfoot>
+                  <@tr>
+                    <@td>&nbsp;</@td>
+                    <@td>
                       <input type="submit" name="Update" value="${button}" />
-                      <a href="<@ofbizUrl>ViewGeneric?${curFindString}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonCancel}</a>
-                    </td>
-                  </tr>
+                      <a href="<@ofbizUrl>ViewGeneric?${curFindString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancel}</a>
+                    </@td>
+                  </@tr>
+                </@tfoot>
                 </#if>
               </#if>
-            </table>
+            </@table>
           </form>
         </@cell>
         </@row>
       <#else>
           <@row>
             <@cell>
-              <h3 data-magellan-destination="current-view" id="current-view">${uiLabelMap.WebtoolsEntityCurrentValue}</h3>
+              <@heading id="current-view" attribs={"data-magellan-destination":"current-view"}>${uiLabelMap.WebtoolsEntityCurrentValue}</@heading>
               <#if value?has_content>
-                <#assign alt_row = false>
-                <table class="${styles.grid_large!}12" cellspacing="0">
-                  <thead>
-                  <tr>
-                    <th class="${styles.grid_large!}3">${uiLabelMap.WebtoolsFieldName}</th>
-                    <th class="${styles.grid_large!}9">${uiLabelMap.CommonValue}</th>
-                  </tr>
-                  </thead>
+                <@table type="fields" autoAltRows=true class="basic-table ${styles.grid_large!}12" cellspacing="0">
+                  <@thead>
+                  <@tr>
+                    <@th class="${styles.grid_large!}3">${uiLabelMap.WebtoolsFieldName}</@th>
+                    <@th class="${styles.grid_large!}9">${uiLabelMap.CommonValue}</@th>
+                  </@tr>
+                  </@thead>
                   <#list fields as field>
-                    <tr<@dataRowClassStr alt=alt_row />>
-                      <td>${field.name}</td>
-                      <td>${field.value}</td>
-                    </tr>
-                    <#assign alt_row = !alt_row>
+                    <@tr>
+                      <@td>${field.name}</@td>
+                      <@td>${field.value}</@td>
+                    </@tr>
                   </#list>
-                </table>
+                </@table>
               <#else>
-                ${uiLabelMap.WebtoolsSpecifiedEntity1} ${entityName} ${uiLabelMap.WebtoolsSpecifiedEntity2}.
-      </#if>
+                <@alert type="error">${uiLabelMap.WebtoolsSpecifiedEntity1} ${entityName} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</@alert>
+              </#if>
             </@cell>
         </@row>
     </#if>
@@ -252,7 +248,7 @@ function ShowTab(lname) {
     <#if relationFieldList?has_content>
     <@row>
         <@cell>
-            <h3 data-magellan-destination="related-view" id="related-view">${uiLabelMap.WebtoolsRelatedEntity}</h3>
+            <@heading id="related-view" attribs={"data-magellan-destination":"related-view"}>${uiLabelMap.WebtoolsRelatedEntity}</@heading>
             <@grid>  
       <#list relationFieldList as relation>
                     <li>
@@ -268,26 +264,24 @@ function ShowTab(lname) {
             <#if relation.valueRelated?has_content>
                             <@pli>
                               <@modal id="rel_${relation.relatedTable}" label="${uiLabelMap.CommonValues}">                                
-                                  <table cellspacing="0" class="${styles.grid_large!}12">
-                                    <thead>
-                                        <tr>
-                                            <th class="${styles.grid_large!}3">${uiLabelMap.WebtoolsFieldName}</th>
-                                            <th class="${styles.grid_large!}9">${uiLabelMap.CommonValue}</th>
-                                        </tr>
-                                    </thead>
-                <#assign alt_row = false>
-                <tr<@dataRowClassStr alt=alt_row />>
-                                      <td class="">${uiLabelMap.WebtoolsPk}</td>
-                  <td>${relation.valueRelatedPk}</td>
-                </tr>
-                <#list relation.relatedFieldsList as relatedField>
-                  <tr<@dataRowClassStr alt=alt_row />>
-                                        <td class="">${relatedField.name}</td>
-                    <td>${relatedField.value}</td>
-                  </tr>
-                  <#assign alt_row = !alt_row>
-                </#list>
-              </table>
+                                  <@table type="fields" autoAltRows=true cellspacing="0" class="${styles.grid_large!}12">
+                                    <@thead>
+                                        <@tr>
+                                            <@th class="${styles.grid_large!}3">${uiLabelMap.WebtoolsFieldName}</@th>
+                                            <@th class="${styles.grid_large!}9">${uiLabelMap.CommonValue}</@th>
+                                        </@tr>
+                                    </@thead>
+                                    <@tr>
+                                      <@td class="">${uiLabelMap.WebtoolsPk}</@td>
+                                      <@td>${relation.valueRelatedPk}</@td>
+                                    </@tr>
+                                    <#list relation.relatedFieldsList as relatedField>
+                                      <@tr groupLast=true>
+                                        <@td class="">${relatedField.name}</@td>
+                                        <@td>${relatedField.value}</@td>
+                                      </@tr>
+                                    </#list>
+                                  </@table>
                               </@modal>
                           </@pli>
             

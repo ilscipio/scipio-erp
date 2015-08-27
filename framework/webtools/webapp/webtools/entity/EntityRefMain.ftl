@@ -54,9 +54,9 @@ under the License.
         <#list packagesList as package>
             <hr /><div id='${package.packageName}' class='packagetext'>${package.packageName}</div><hr />
             <#list package.entitiesList as entity>
-                <table width="95%" border="1" cellpadding='2' cellspacing='0'>
-                    <tr class='entityheader'>
-                        <td colspan="5">
+                <@table type="data-list" class="" width="95%" border="1" cellpadding='2' cellspacing='0'>
+                    <@tr class='entityheader'>
+                        <@td colspan="5">
                             <div id='${entity.entityName}' class="titletext">
                                 ${uiLabelMap.WebtoolsEntity}: ${entity.entityName}
                                 <#if entity.plainTableName?has_content>  | ${uiLabelMap.WebtoolsTable}: ${entity.plainTableName}</#if>
@@ -77,18 +77,18 @@ under the License.
                             <#if entity.location?has_content>
                                 <div class='description'>${entity.location}</div>
                             </#if>
-                        </td>
-                    </tr>
-                    <tr class='headertext'>
-                        <th width="30%">${uiLabelMap.WebtoolsJavaName}</th>
-                        <th width="30%">${uiLabelMap.WebtoolsDbName}</th>
-                        <th width="10%">${uiLabelMap.WebtoolsFieldType}</th>
-                        <th width="15%">${uiLabelMap.WebtoolsJavaType}</th>
-                        <th width="15%" nowrap="nowrap">${uiLabelMap.WebtoolsSqlType}</th>
-                    </tr>
+                        </@td>
+                    </@tr>
+                    <@tr class='headertext'>
+                        <@th width="30%">${uiLabelMap.WebtoolsJavaName}</@th>
+                        <@th width="30%">${uiLabelMap.WebtoolsDbName}</@th>
+                        <@th width="10%">${uiLabelMap.WebtoolsFieldType}</@th>
+                        <@th width="15%">${uiLabelMap.WebtoolsJavaType}</@th>
+                        <@th width="15%" nowrap="nowrap">${uiLabelMap.WebtoolsSqlType}</@th>
+                    </@tr>
                     <#list entity.javaNameList as javaName>
-                        <tr class='entitytext'>
-                            <td>
+                        <@tr class='entitytext'>
+                            <@td>
                               <div class='enametext<#if javaName.isPk> pktext</#if>'>${javaName.name}</div>
                               <#if javaName.description?has_content>
                                 <div class="descriptiontext">${javaName.description}</div>
@@ -96,29 +96,29 @@ under the License.
                               <#if javaName.encrypted>
                                 <div class="descriptiontext">[${uiLabelMap.WebtoolsEncrypted}]</div>
                               </#if>
-                            </td>
-                            <td>${javaName.colName}</td>
-                            <td>${javaName.type}</td>
+                            </@td>
+                            <@td>${javaName.colName}</@td>
+                            <@td>${javaName.type}</@td>
                             <#if javaName.javaType?has_content>
-                                <td>${javaName.javaType}</td>
-                                <td>${javaName.sqlType}</td>
+                                <@td>${javaName.javaType}</@td>
+                                <@td>${javaName.sqlType}</@td>
                             <#else>
-                                <td>${uiLabelMap.WebtoolsNotFound}</td>
-                                <td>${uiLabelMap.WebtoolsNotFound}</td>
+                                <@td>${uiLabelMap.WebtoolsNotFound}</@td>
+                                <@td>${uiLabelMap.WebtoolsNotFound}</@td>
                             </#if>
-                        </tr>
+                        </@tr>
                     </#list>
                     <#if entity.relationsList?has_content>
-                        <tr class='entityheader'>
-                            <td colspan="5"><hr /></td>
-                        </tr>
-                        <tr class='headertext'>
-                            <th>${uiLabelMap.WebtoolsRelation}</th>
-                            <th colspan='4'>${uiLabelMap.WebtoolsRelationType}</th>
-                        </tr>
+                        <@tr class='entityheader'>
+                            <@td colspan="5"><hr /></@td>
+                        </@tr>
+                        <@tr class='headertext'>
+                            <@th>${uiLabelMap.WebtoolsRelation}</@th>
+                            <@th colspan='4'>${uiLabelMap.WebtoolsRelationType}</@th>
+                        </@tr>
                         <#list entity.relationsList as relation>
-                            <tr class='relationtext'>
-                                <td>
+                            <@tr class='relationtext'>
+                                <@td>
                                     <#if relation.title?has_content><b>${relation.title}</b> </#if><a href='#${relation.relEntity}'>${relation.relEntity}</a>
                                     <#if relation.fkName?has_content>
                                         <br />${uiLabelMap.WebtoolsFKName}: ${relation.fkName}
@@ -126,8 +126,8 @@ under the License.
                                     <#if relation.description?has_content>
                                         <br /><span class='descriptiontext'>${relation.description}</span>
                                     </#if>
-                                </td>
-                                <td width="60%" colspan='4'>
+                                </@td>
+                                <@td width="60%" colspan='4'>
                                     ${relation.type}:
                                     <#if relation.length == 3>
                                         &nbsp;
@@ -142,30 +142,30 @@ under the License.
                                               </#if>
                                         </#list>
                                     </#if>
-                                </td>
-                            </tr>
+                                </@td>
+                            </@tr>
                         </#list>
                     </#if>
                     <#if entity.indexList?has_content>
-                        <tr class='entityheader'>
-                            <td colspan="5"><hr /></td>
-                        </tr>
-                        <tr class='headertext'>
-                            <th>${uiLabelMap.WebtoolsIndexName}</th>
-                            <th colspan='4'>${uiLabelMap.WebtoolsIndexFieldList}</th>
-                        </tr>
+                        <@tr class='entityheader'>
+                            <@td colspan="5"><hr /></@td>
+                        </@tr>
+                        <@tr class='headertext'>
+                            <@th>${uiLabelMap.WebtoolsIndexName}</@th>
+                            <@th colspan='4'>${uiLabelMap.WebtoolsIndexFieldList}</@th>
+                        </@tr>
                         <#list entity.indexList as index>
-                            <tr class='relationtext'>
-                                <td>${index.name}</td>
-                                <td width="60%" colspan='4'>
+                            <@tr class='relationtext'>
+                                <@td>${index.name}</@td>
+                                <@td width="60%" colspan='4'>
                                     <#list index.fieldNameList as fieldName>
                                         ${fieldName}
                                     </#list>
-                                </td>
-                            </tr>
+                                </@td>
+                            </@tr>
                         </#list>
                     </#if>
-                </table>
+                </@table>
                 <br />
                 <#assign numberShowed = numberShowed + 1>
             </#list>

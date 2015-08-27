@@ -17,19 +17,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section>
-    <table class="basic-table" cellspacing="3">
-        <tr>
-            <td>${uiLabelMap.WebtoolsLabelManagerKey}</td>
-            <td>${parameters.sourceKey!}</td>
-        </tr>
-        <tr>
-            <td>${uiLabelMap.WebtoolsLabelManagerFileName}</td>
-            <td>${parameters.fileName!}</td>
-        </tr>
-        <tr>
-            <td colspan="2">&nbsp;</td>
-        </tr>
-    </table>
+    <@table type="fields" class="basic-table" cellspacing="3">
+        <@tr>
+            <@td>${uiLabelMap.WebtoolsLabelManagerKey}</@td>
+            <@td>${parameters.sourceKey!}</@td>
+        </@tr>
+        <@tr>
+            <@td>${uiLabelMap.WebtoolsLabelManagerFileName}</@td>
+            <@td>${parameters.fileName!}</@td>
+        </@tr>
+        <@tr>
+            <@td colspan="2">&nbsp;</@td>
+        </@tr>
+    </@table>
     <textarea rows="${rows}}" cols="150" disabled="disabled">
 ${fileString}
     </textarea>

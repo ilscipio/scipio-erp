@@ -25,25 +25,25 @@ under the License.
       <input type="hidden" name="tempExprId" value="${temporalExpression.tempExprId}"/>
       <input type="hidden" name="tempExprTypeId" value="${temporalExpression.tempExprTypeId}"/>
   </#if>
-  <table class="basic-table" cellspacing="0">
-    <tr>
-      <td>${uiLabelMap.TemporalExpressionId}</td>
-      <td>${temporalExpression.tempExprId}</td>
-    </tr>
-    <tr>
-      <td>${uiLabelMap.TemporalExpressionType}</td>
-      <td>${uiLabelMap.get("TemporalExpression_" + temporalExpression.tempExprTypeId)}</td>
-    </tr>
+  <@table type="fields" class="basic-table" cellspacing="0">
+    <@tr>
+      <@td>${uiLabelMap.TemporalExpressionId}</@td>
+      <@td>${temporalExpression.tempExprId}</@td>
+    </@tr>
+    <@tr>
+      <@td>${uiLabelMap.TemporalExpressionType}</@td>
+      <@td>${uiLabelMap.get("TemporalExpression_" + temporalExpression.tempExprTypeId)}</@td>
+    </@tr>
   <#if !"INTERSECTION.UNION.DIFFERENCE.SUBSTITUTION"?contains(temporalExpression.tempExprTypeId)>
-    <tr>
-      <td>${uiLabelMap.CommonDescription}</td>
-      <td><input type="text" name="description" value="${temporalExpression.description!}" maxlength="60" size="20"/></td>
-    </tr>
+    <@tr>
+      <@td>${uiLabelMap.CommonDescription}</@td>
+      <@td><input type="text" name="description" value="${temporalExpression.description!}" maxlength="60" size="20"/></@td>
+    </@tr>
   <#else>
-    <tr>
-      <td>${uiLabelMap.CommonDescription}</td>
-      <td>${temporalExpression.get("description",locale)!}</td>
-    </tr>
+    <@tr>
+      <@td>${uiLabelMap.CommonDescription}</@td>
+      <@td>${temporalExpression.get("description",locale)!}</@td>
+    </@tr>
   </#if>
     <#if temporalExpression.tempExprTypeId == "DATE_RANGE">
       <@DateRange formName="updateExpression" fromDate=temporalExpression.date1 toDate=temporalExpression.date2/>
@@ -68,10 +68,10 @@ under the License.
     <#elseif "INTERSECTION.UNION.DIFFERENCE.SUBSTITUTION"?contains(temporalExpression.tempExprTypeId)>
       <#assign candidateIdList = Static["org.ofbiz.service.calendar.ExpressionUiHelper"].getCandidateIncludeIds(delegator, temporalExpression.tempExprId)/>
       <#if "INTERSECTION.UNION"?contains(temporalExpression.tempExprTypeId)>
-        <tr>
-          <td>${uiLabelMap.TemporalExpressionInclude}</td>
-          <td><@CreateExprAssocForm formName="includeExpression"/></td>
-        </tr>
+        <@tr>
+          <@td>${uiLabelMap.TemporalExpressionInclude}</@td>
+          <@td><@CreateExprAssocForm formName="includeExpression"/></@td>
+        </@tr>
       <#else>
         <#assign hasInclude = false hasExclude = false hasSubstitution = false/>
         <#if childExpressionList?has_content>
@@ -86,34 +86,34 @@ under the License.
           </#list>
         </#if>
         <#if !hasInclude>
-          <tr>
-            <td>${uiLabelMap.TemporalExpressionInclude}</td>
-            <td><@CreateExprAssocForm formName="includeExpression" exprAssocType="INCLUDE"/></td>
-          </tr>
+          <@tr>
+            <@td>${uiLabelMap.TemporalExpressionInclude}</@td>
+            <@td><@CreateExprAssocForm formName="includeExpression" exprAssocType="INCLUDE"/></@td>
+          </@tr>
         </#if>
         <#if !hasExclude>
-          <tr>
-            <td>${uiLabelMap.TemporalExpressionExclude}</td>
-            <td><@CreateExprAssocForm formName="excludeExpression" exprAssocType="EXCLUDE"/></td>
-          </tr>
+          <@tr>
+            <@td>${uiLabelMap.TemporalExpressionExclude}</@td>
+            <@td><@CreateExprAssocForm formName="excludeExpression" exprAssocType="EXCLUDE"/></@td>
+          </@tr>
         </#if>
         <#if !hasSubstitution && temporalExpression.tempExprTypeId == "SUBSTITUTION">
-          <tr>
-            <td>${uiLabelMap.TemporalExpression_SUBSTITUTION}</td>
-            <td><@CreateExprAssocForm formName="substitutionExpression" exprAssocType="SUBSTITUTION"/></td>
-          </tr>
+          <@tr>
+            <@td>${uiLabelMap.TemporalExpression_SUBSTITUTION}</@td>
+            <@td><@CreateExprAssocForm formName="substitutionExpression" exprAssocType="SUBSTITUTION"/></@td>
+          </@tr>
         </#if>
       </#if>
     </#if>
     <#if !"INTERSECTION.UNION.DIFFERENCE.SUBSTITUTION"?contains(temporalExpression.tempExprTypeId)>
-        <tr>
-          <td>&nbsp;</td>
-          <td><input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}"/></td>
-        </tr>
-      </table>
-      </form>
-    <#else>
-      </table>    
+        <@tr>
+          <@td>&nbsp;</@td>
+          <@td><input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}"/></@td>
+        </@tr>
+    </#if>
+    </@table>  
+    <#if !"INTERSECTION.UNION.DIFFERENCE.SUBSTITUTION"?contains(temporalExpression.tempExprTypeId)>
+      </form>  
     </#if>
 <#else>
   <#-- Create new expression -->
@@ -147,24 +147,24 @@ under the License.
 <#macro CreateForm expressionTypeId="" formContents=NullMacro>
   <form name="${expressionTypeId}" method="post" action="<@ofbizUrl>createTemporalExpression</@ofbizUrl>">
     <input type="hidden" name="tempExprTypeId" value="${expressionTypeId}"/>
-    <table class="basic-table" cellspacing="0">
+    <@table type="fields" class="basic-table" cellspacing="0">
       <#assign mapExpression = "TemporalExpression_" + expressionTypeId/>
       <#assign headingText = uiLabelMap[mapExpression]/>
-      <tr><td colspan="2" class="h2">${headingText}</td></tr>
-      <tr>
-        <td>${uiLabelMap.TemporalExpressionId}</td>
-        <td><input name="tempExprId" type="text" maxlength="20" size="20"/><span class="tooltip">${uiLabelMap.CommonAutoAssignedId}</span></td>
-      </tr>
-      <tr>
-        <td>${uiLabelMap.CommonDescription}</td>
-        <td><input name="description" type="text" maxlength="60" size="20"/></td>
-      </tr>
+      <@tr><@td colspan="2" class="h2">${headingText}</@td></@tr>
+      <@tr>
+        <@td>${uiLabelMap.TemporalExpressionId}</@td>
+        <@td><input name="tempExprId" type="text" maxlength="20" size="20"/><span class="tooltip">${uiLabelMap.CommonAutoAssignedId}</span></@td>
+      </@tr>
+      <@tr>
+        <@td>${uiLabelMap.CommonDescription}</@td>
+        <@td><input name="description" type="text" maxlength="60" size="20"/></@td>
+      </@tr>
       <@formContents/>
-      <tr>
-        <td>&nbsp;</td>
-        <td><input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}"/></td>
-      </tr>
-    </table>
+      <@tr>
+        <@td>&nbsp;</@td>
+        <@td><input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}"/></@td>
+      </@tr>
+    </@table>
   </form>
 </#macro>
 

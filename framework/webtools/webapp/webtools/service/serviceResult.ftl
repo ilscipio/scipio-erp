@@ -21,33 +21,35 @@ under the License.
     <@row>
         <@cell>
         <form method="post" action="<@ofbizUrl>saveServiceResultsToSession</@ofbizUrl>">
-        <table class="basic-table" cellspacing="0">
-              <thead>
-          <tr class="header-row">
-                <th>${uiLabelMap.WebtoolsParameterName}</th>
-                <th>${uiLabelMap.WebtoolsParameterValue}</th>
-                <th>${uiLabelMap.WebtoolsServiceSaveValue} ?</th>
-          </tr>
-              </thead>
+        <@table type="data-list" class="basic-table" cellspacing="0">
+              <@thead>
+          <@tr class="header-row">
+                <@th>${uiLabelMap.WebtoolsParameterName}</@th>
+                <@th>${uiLabelMap.WebtoolsParameterValue}</@th>
+                <@th>${uiLabelMap.WebtoolsServiceSaveValue} ?</@th>
+          </@tr>
+              </@thead>
             <#if serviceResultList?has_content>
               <#list serviceResultList as srl>
-                <tr>
+                <@tr>
                   <#if srl.hasChild=="Y">
-                    <td><a href="<@ofbizUrl>/serviceResult?servicePath=</@ofbizUrl><#if parameters.servicePath??>${parameters.servicePath}||</#if>${srl.key!}">${srl.key!}</a></td>
+                    <@td><a href="<@ofbizUrl>/serviceResult?servicePath=</@ofbizUrl><#if parameters.servicePath??>${parameters.servicePath}||</#if>${srl.key!}">${srl.key!}</a></@td>
                   <#else>
-                    <td>${srl.key!}</td>
+                    <@td>${srl.key!}</@td>
                   </#if>
-                    <td>${srl.value!}</td>
-                    <td><input type="checkbox" name="<#if parameters.servicePath??>${parameters.servicePath}||</#if>${srl.key!}" /></td>
-                  </tr>
+                    <@td>${srl.value!}</@td>
+                    <@td><input type="checkbox" name="<#if parameters.servicePath??>${parameters.servicePath}||</#if>${srl.key!}" /></@td>
+                  </@tr>
                </#list>
             </#if>
-          <tr>
-            <td>&nbsp;</td>
-                <td>${uiLabelMap.WebtoolsServiceClearPreviousParams} ? <input type="checkbox" name="_CLEAR_PREVIOUS_PARAMS_" /></td>
-            <td><input type="submit" value="${uiLabelMap.CommonSubmit}"/></td>
-          </tr>
-        </table>
+        <@tfoot>
+          <@tr>
+            <@td>&nbsp;</@td>
+                <@td>${uiLabelMap.WebtoolsServiceClearPreviousParams} ? <input type="checkbox" name="_CLEAR_PREVIOUS_PARAMS_" /></@td>
+            <@td><input type="submit" value="${uiLabelMap.CommonSubmit}"/></@td>
+          </@tr>
+        </@tfoot>
+        </@table>
       </form>
         </@cell>
     </@row>

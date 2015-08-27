@@ -21,35 +21,33 @@ under the License.
             <@htmlTemplate.nextPrev commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex highIndex=highIndex commonDisplaying=commonDisplaying/>
         </#if>
         <#if resultPartialList?has_content>
-          <table class="responsive" cellspacing="0">
-           <thead>
-            <tr class="header-row-2">
-                    <th>&nbsp;</th>
+          <@table type="data-list" autoAltRows=true class="basic-table responsive" cellspacing="0">
+           <@thead>
+            <@tr class="header-row-2">
+                    <@th>&nbsp;</@th>
                 <#list fieldList as field>
-                        <th>${field.name}</th>
+                        <@th>${field.name}</@th>
                 </#list>
-            </tr>
-            </thead>
+            </@tr>
+            </@thead>
             <#if resultPartialList?has_content>
-                <#assign alt_row = false>
                 <#list records as record>
-                    <tr<@dataRowClassStr alt=alt_row />>
-                        <td>
+                    <@tr>
+                        <@td>
                             <a href="<@ofbizUrl>ViewGeneric?${record.findString}</@ofbizUrl>">${uiLabelMap.CommonView}</a>
                         <#if hasDeletePermission == 'Y'>
                            <a href="<@ofbizUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@ofbizUrl>" class="alert">${uiLabelMap.CommonDelete}</a>
                         </#if>
-                        </td>
+                        </@td>
                         <#list fieldList as field>
-                            <td>${record.fields.get(field.name)!?string}</td>
+                            <@td>${record.fields.get(field.name)!?string}</@td>
                         </#list>
-                    </tr>
-                    <#assign alt_row = !alt_row>
+                    </@tr>
                 </#list>
             </#if>
-        </table>
+        </@table>
             <#else>
-         <@panel>${uiLabelMap.WebtoolsNoEntityRecordsFound} ${entityName}.</@panel>
+         <@panel><@resultMsg>${uiLabelMap.WebtoolsNoEntityRecordsFound} ${entityName}.</@resultMsg></@panel>
             </#if>
         <#if (arraySize > 0)>
             <@htmlTemplate.nextPrev commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex  highIndex=highIndex commonDisplaying=commonDisplaying />

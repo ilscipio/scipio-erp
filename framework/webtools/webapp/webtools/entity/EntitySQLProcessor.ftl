@@ -17,42 +17,42 @@ specific language governing permissions and limitations
 under the License.
 -->
     <form method="post" action="EntitySQLProcessor" name="EntitySQLCommand">
-      <table class="basic-table" cellspacing="0">
-        <tr>
-            <td>
+      <@table type="fields" class="basic-table" cellspacing="0">
+        <@tr>
+            <@td>
                 ${uiLabelMap.CommonGroup}
-            </td>
-            <td>
+            </@td>
+            <@td>
                 <select name="group">
                     <#list groups as group>
                         <option value="${group}" <#if selGroup??><#if group = selGroup>selected="selected"</#if></#if>>${group}</option>
                     </#list>
                 </select>
-            </td>
-        </tr>
-        <tr>
-            <td>
+            </@td>
+        </@tr>
+        <@tr>
+            <@td>
                 ${uiLabelMap.WebtoolsSqlCommand}
-            </td>
-            <td>
+            </@td>
+            <@td>
                 <textarea name="sqlCommand" cols="100" rows="5">${sqlCommand!}</textarea>
-            </td>
-        </tr>
-        <tr>
-            <td>
+            </@td>
+        </@tr>
+        <@tr>
+            <@td>
                 ${uiLabelMap.WebtoolsLimitRowsTo}
-            </td>
-            <td>
+            </@td>
+            <@td>
                 <input name="rowLimit" type="text" size="5" value="${rowLimit?default(200)}"/>
-            </td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>
+            </@td>
+        </@tr>
+        <@tr>
+            <@td>&nbsp;</@td>
+            <@td>
                 <input type="submit" name="submitButton" value="${uiLabelMap.CommonSubmit}"/>
-            </td>
-        </tr>
-      </table>
+            </@td>
+        </@tr>
+      </@table>
     </form>
 
 <@section title="${uiLabelMap.WebtoolsResults}">
@@ -61,25 +61,23 @@ under the License.
     </#if>
 
     <#if columns?has_content>
-        <table class="basic-table hover-bar" cellspacing="0">
-          <thead>
-            <tr class="header-row">
+        <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+          <@thead>
+            <@tr class="header-row">
             <#list columns as column>
-                <th>${column}</th>
+                <@th>${column}</@th>
             </#list>
-            </tr>
-           </thead>
+            </@tr>
+           </@thead>
             <#if records?has_content>
-            <#assign alt_row = false>
             <#list records as record>
-                <tr<@dataRowClassStr alt=alt_row /> >
+                <@tr>
                 <#list record as field>
-                    <td><#if field?has_content>${field}</#if></td>
+                    <@td><#if field?has_content>${field}</#if></@td>
                 </#list>
-                </tr>
-                <#assign alt_row = !alt_row>
+                </@tr>
             </#list>
             </#if>
-        </table>
+        </@table>
     </#if>
 </@section>

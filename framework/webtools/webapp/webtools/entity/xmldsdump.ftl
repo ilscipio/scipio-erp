@@ -17,30 +17,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if tobrowser?? && tobrowser>
-<h2>${uiLabelMap.WebtoolsExportFromDataSource}</h2>
-<br />
+<@heading>${uiLabelMap.WebtoolsExportFromDataSource}</@heading>
+
 <p>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</p>
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
     <a href="<@ofbizUrl>xmldsrawdump</@ofbizUrl>" class="${styles.button_default!}" target="_blank">Click Here to Get Data (or save to file)</a>
 <#else>
-    <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
+    <@alert type="error">You do not have permission to use this page (ENTITY_MAINT needed)</@alert>
 </#if>
 <#else>
 <#macro displayButtonBar>
-  <ul class="button-group">
+  <ul class="${styles.button_group!}">
     <li><input type="submit" value="${uiLabelMap.WebtoolsExport}"/></li>
     <li><a href="<@ofbizUrl>xmldsdump?checkAll=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.WebtoolsCheckAll}</a></li>
     <li><a href="<@ofbizUrl>xmldsdump</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.WebtoolsUnCheckAll}</a></li>
   </ul>
 </#macro>
 
-<h2>${uiLabelMap.PageTitleEntityExport}</h2>
+<@heading>${uiLabelMap.PageTitleEntityExport}</@heading>
 <p>${uiLabelMap.WebtoolsXMLExportInfo}</p>
 <hr />
 
 <#if security.hasPermission("ENTITY_MAINT", session)>
-  <h2>${uiLabelMap.WebtoolsResults}:</h2>
+  <@heading>${uiLabelMap.WebtoolsResults}:</@heading>
   <#if parameters.filename?has_content && (numberOfEntities?number > 0)>
     <p>${uiLabelMap.WebtoolsWroteXMLForAllDataIn}</p>
     <p>${uiLabelMap.WebtoolsWroteNRecordsToXMLFile}</p>
@@ -54,23 +54,21 @@ under the License.
 
   <hr />
 
-
-  
-  <h2>${uiLabelMap.WebtoolsExport}:</h2>
+  <@heading>${uiLabelMap.WebtoolsExport}:</@heading>
   <form method="post" action="<@ofbizUrl>xmldsdump</@ofbizUrl>" name="entityExport">
    <@row>
     <@cell class="${styles.grid_large!}6 columns">
   
     <@field type="input" label="${uiLabelMap.WebtoolsOutputDirectory}" size="60" name="outpath" value="${parameters.outpath!}"/>
-    <@field type="input" label="${uiLabelMap.WebtoolsMaxRecordsPerFile}" size="10" name="maxrecords"/></td>
-    <@field type="input" label="${uiLabelMap.WebtoolsSingleFilename}" size="60" name="filename" value="${parameters.filename!}"/></td>
+    <@field type="input" label="${uiLabelMap.WebtoolsMaxRecordsPerFile}" size="10" name="maxrecords"/>
+    <@field type="input" label="${uiLabelMap.WebtoolsSingleFilename}" size="60" name="filename" value="${parameters.filename!}"/>
     <@field type="datetime" dateType="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedSince}" name="entityFrom"  value="" size="25" maxlength="30" id="entityFrom1" dateType="date" />
     <@field type="datetime" dateType="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedBefore}" name="entityThru" value="" size="25" maxlength="30" id="entityThru1" dateType="date" />
     <@field type="checkbox" name="tobrowser" value="N" label="${StringUtil.wrapString(uiLabelMap.WebtoolsOutToBrowser)}"/>
      </@cell>
     </@row>
     <hr>
-    <h3>${uiLabelMap.WebtoolsEntityNames}:</h3>
+    <@heading relLevel=1>${uiLabelMap.WebtoolsEntityNames}:</@heading>
      <@row>
         <@cell class="${styles.grid_large!}6 columns">
     <@displayButtonBar/>

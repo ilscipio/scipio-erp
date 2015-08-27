@@ -28,15 +28,15 @@ under the License.
     <@section title="${uiLabelMap.WebtoolsServiceWSDL} - ${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
         <@code type="html">${selectedServiceMap.wsdl}</@code>
         <br />
-        <a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>" class="tiny button">${uiLabelMap.CommonBack}</a>
+        <a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBack}</a>
     </@section>
 
   <#else>
     <@section title="${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
-        <ul class="button-group">
-          <li><a href="<@ofbizUrl>${url}</@ofbizUrl>" class="tiny button">${uiLabelMap.CommonListAll}</a></li>
-          <li><a href="<@ofbizUrl>/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}</@ofbizUrl>" class="tiny button">${uiLabelMap.WebtoolsSchedule}</a></li>
-          <li><a href="<@ofbizUrl>/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y</@ofbizUrl>" class="tiny button">${uiLabelMap.PageTitleRunService}</a></li>
+        <ul class="${styles.button_group!}">
+          <li><a href="<@ofbizUrl>${url}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonListAll}</a></li>
+          <li><a href="<@ofbizUrl>/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.WebtoolsSchedule}</a></li>
+          <li><a href="<@ofbizUrl>/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PageTitleRunService}</a></li>
         </ul>
 
     <#-- Show a little form for exportServiceEoModelBundle -->
@@ -53,79 +53,79 @@ under the License.
 
     <@row>
         <@cell>
-        <table class="basic-table" cellspacing="0">
-        <thead>
-          <tr>
-                <th>${uiLabelMap.WebtoolsParameterName}</th>
-                <th>${uiLabelMap.CommonDescription}</th>
-                <th>${uiLabelMap.WebtoolsParameterName}</th>
-                <th>${uiLabelMap.CommonDescription}</th>
-            </tr>
-        </thead>
-          <tr>
-            <td>${uiLabelMap.WebtoolsServiceName}</td>
-            <td>${selectedServiceMap.serviceName}</td>
-            <td>${uiLabelMap.WebtoolsEngineName}</td>
-            <td><a href='<@ofbizUrl>${url}?constraint=engine_name@${selectedServiceMap.engineName}</@ofbizUrl>'>${selectedServiceMap.engineName}</a></td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.CommonDescription}</td>
-            <td>${selectedServiceMap.description}</td>
-            <td>${uiLabelMap.WebtoolsInvoke}</td>
-            <td>${selectedServiceMap.invoke}</td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.WebtoolsExportable}</td>
-            <td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool = "true">&nbsp;(<a href='<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>'>${uiLabelMap.WebtoolsShowShowWSDL}</a>)</#if></td>
-            <td>${uiLabelMap.WebtoolsLocation}</td>
-            <td><a href='<@ofbizUrl>${url}?constraint=location@${selectedServiceMap.location}</@ofbizUrl>'>${selectedServiceMap.location}</a></td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.WebtoolsDefinitionLocation}</td>
-            <td><a href='<@ofbizUrl>${url}?constraint=definitionLocation@${selectedServiceMap.definitionLocation}</@ofbizUrl>'>${selectedServiceMap.definitionLocation}</a></td>
-            <td>${uiLabelMap.WebtoolsDefaultEntityName}</td>
-            <td><a href='<@ofbizUrl>${url}?constraint=default_entity_name@${selectedServiceMap.defaultEntityName}</@ofbizUrl>'>${selectedServiceMap.defaultEntityName}</a></td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.WebtoolsArtifactInfo}</td>
-            <td><a href='<@ofbizUrl>ArtifactInfo?name=${selectedServiceMap.serviceName}&amp;type=service</@ofbizUrl>'>${uiLabelMap.WebtoolsArtifactInfo}</a></td>
-            <td>${uiLabelMap.WebtoolsRequireNewTransaction}</td>
-            <td>${selectedServiceMap.requireNewTransaction}</td>
-          </tr>
-          <tr>
-            <td colspan="2">&nbsp;</td>
-            <td>${uiLabelMap.WebtoolsUseTransaction}</td>
-            <td>${selectedServiceMap.useTrans}</td>
-          </tr>
-          <tr>
-            <td colspan="2">&nbsp;</td>
-            <td>${uiLabelMap.WebtoolsMaxRetries}</td>
-            <td>${selectedServiceMap.maxRetry}</td>
-          </tr>
-        </table>
+        <@table type="fields" class="basic-table" cellspacing="0">
+        <@thead>
+          <@tr>
+                <@th>${uiLabelMap.WebtoolsParameterName}</@th>
+                <@th>${uiLabelMap.CommonDescription}</@th>
+                <@th>${uiLabelMap.WebtoolsParameterName}</@th>
+                <@th>${uiLabelMap.CommonDescription}</@th>
+            </@tr>
+        </@thead>
+          <@tr>
+            <@td>${uiLabelMap.WebtoolsServiceName}</@td>
+            <@td>${selectedServiceMap.serviceName}</@td>
+            <@td>${uiLabelMap.WebtoolsEngineName}</@td>
+            <@td><a href='<@ofbizUrl>${url}?constraint=engine_name@${selectedServiceMap.engineName}</@ofbizUrl>'>${selectedServiceMap.engineName}</a></@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.CommonDescription}</@td>
+            <@td>${selectedServiceMap.description}</@td>
+            <@td>${uiLabelMap.WebtoolsInvoke}</@td>
+            <@td>${selectedServiceMap.invoke}</@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.WebtoolsExportable}</@td>
+            <@td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool = "true">&nbsp;(<a href='<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>'>${uiLabelMap.WebtoolsShowShowWSDL}</a>)</#if></@td>
+            <@td>${uiLabelMap.WebtoolsLocation}</@td>
+            <@td><a href='<@ofbizUrl>${url}?constraint=location@${selectedServiceMap.location}</@ofbizUrl>'>${selectedServiceMap.location}</a></@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.WebtoolsDefinitionLocation}</@td>
+            <@td><a href='<@ofbizUrl>${url}?constraint=definitionLocation@${selectedServiceMap.definitionLocation}</@ofbizUrl>'>${selectedServiceMap.definitionLocation}</a></@td>
+            <@td>${uiLabelMap.WebtoolsDefaultEntityName}</@td>
+            <@td><a href='<@ofbizUrl>${url}?constraint=default_entity_name@${selectedServiceMap.defaultEntityName}</@ofbizUrl>'>${selectedServiceMap.defaultEntityName}</a></@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.WebtoolsArtifactInfo}</@td>
+            <@td><a href='<@ofbizUrl>ArtifactInfo?name=${selectedServiceMap.serviceName}&amp;type=service</@ofbizUrl>'>${uiLabelMap.WebtoolsArtifactInfo}</a></@td>
+            <@td>${uiLabelMap.WebtoolsRequireNewTransaction}</@td>
+            <@td>${selectedServiceMap.requireNewTransaction}</@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2">&nbsp;</@td>
+            <@td>${uiLabelMap.WebtoolsUseTransaction}</@td>
+            <@td>${selectedServiceMap.useTrans}</@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2">&nbsp;</@td>
+            <@td>${uiLabelMap.WebtoolsMaxRetries}</@td>
+            <@td>${selectedServiceMap.maxRetry}</@td>
+          </@tr>
+        </@table>
     </@cell>
 </@row>
 
 <@row>
-        <@cell>
-        <h3>${uiLabelMap.SecurityGroups}</h3>
+    <@cell>
+        <@heading>${uiLabelMap.SecurityGroups}</@heading>
       <#if selectedServiceMap.permissionGroups != 'NA'>
-        <table class="basic-table" cellspacing="0">
-         <thead>
-          <tr class="header-row">
-            <th>${uiLabelMap.WebtoolsNameOrRole}</th>
-            <th>${uiLabelMap.WebtoolsPermissionType}</th>
-            <th>${uiLabelMap.WebtoolsAction}</th>
-          </tr>
-         </thead> 
+        <@table type="data-list" class="basic-table" cellspacing="0">
+         <@thead>
+          <@tr class="header-row">
+            <@th>${uiLabelMap.WebtoolsNameOrRole}</@th>
+            <@th>${uiLabelMap.WebtoolsPermissionType}</@th>
+            <@th>${uiLabelMap.WebtoolsAction}</@th>
+          </@tr>
+         </@thead> 
           <#list selectedServiceMap.permissionGroups as permGrp>
-            <tr>
-              <td>${permGrp.nameOrRole?default(uiLabelMap.CommonNA)}</td>
-              <td>${permGrp.permType?default(uiLabelMap.CommonNA)}</td>
-              <td>${permGrp.action?default(uiLabelMap.CommonNA)}</td>
-            </tr>
+            <@tr>
+              <@td>${permGrp.nameOrRole?default(uiLabelMap.CommonNA)}</@td>
+              <@td>${permGrp.permType?default(uiLabelMap.CommonNA)}</@td>
+              <@td>${permGrp.action?default(uiLabelMap.CommonNA)}</@td>
+            </@tr>
           </#list>
-        </table>
+        </@table>
       <#else>
            ${selectedServiceMap.permissionGroups}
       </#if>
@@ -134,7 +134,7 @@ under the License.
 
 <@row>
    <@cell>
-        <h3>${uiLabelMap.WebtoolsImplementedServices}</h3>
+        <@heading>${uiLabelMap.WebtoolsImplementedServices}</@heading>
 
         <#if selectedServiceMap.implServices == 'NA'>
           ${selectedServiceMap.implServices}
@@ -160,127 +160,127 @@ under the License.
       </script>
 <@row>
    <@cell>
-          <h3>${uiLabelMap.WebtoolsServiceECA}</h3>
-        <table class="basic-table" cellspacing="0">
-          <thead>
-          <tr class="header-row">
-            <th>${uiLabelMap.WebtoolsEventName}</th>
+          <@heading>${uiLabelMap.WebtoolsServiceECA}</@heading>
+        <@table type="data-complex" class="basic-table" cellspacing="0">
+          <@thead>
+          <@tr class="header-row">
+            <@th>${uiLabelMap.WebtoolsEventName}</@th>
             <#if ecaMapList.runOnError??>
-              <th>${uiLabelMap.WebtoolsRunOnError}</th>
+              <@th>${uiLabelMap.WebtoolsRunOnError}</@th>
             </#if>
             <#if ecaMapList.runOnFailure??>
-              <th>${uiLabelMap.WebtoolsRunOnFailure}</th>
+              <@th>${uiLabelMap.WebtoolsRunOnFailure}</@th>
             </#if>
-            <th>${uiLabelMap.WebtoolsActions}</th>
-            <th>${uiLabelMap.WebtoolsConditions}</th>
-            <th>${uiLabelMap.WebtoolsSet}</th>
-          </tr>
-          </thead>
+            <@th>${uiLabelMap.WebtoolsActions}</@th>
+            <@th>${uiLabelMap.WebtoolsConditions}</@th>
+            <@th>${uiLabelMap.WebtoolsSet}</@th>
+          </@tr>
+          </@thead>
           <#list ecaMapList as ecaMap>
-            <tr>
-              <td>${ecaMap.eventName!}</td>
+            <@tr>
+              <@td>${ecaMap.eventName!}</@td>
               <#if ecaMap.runOnError??>
-                <td>${ecaMap.runOnError}</td>
+                <@td>${ecaMap.runOnError}</@td>
               </#if>
               <#if ecaMap.runOnFailure??>
-                <td>${ecaMap.runOnFailure}</td>
+                <@td>${ecaMap.runOnFailure}</@td>
               </#if>
               <#if ecaMap.actions?has_content>
-                <td>
+                <@td>
                   <#list ecaMap.actions as action>
-                    <table class="basic-table" cellspacing="0">
-                      <tr>
-                        <td colspan="2"><a href='<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>'>${action.serviceName?default(uiLabelMap.CommonNA)}</a></td>
-                      </tr>
-                      <tr>
-                        <td>${uiLabelMap.WebtoolsSecasIgnoreError}</b> ${action.ignoreError?default(uiLabelMap.CommonNA)}</td>
-                        <td>${uiLabelMap.WebtoolsSecasIgnoreFailure}</b> ${action.ignoreFailure?default(uiLabelMap.CommonNA)}</td>
-                      </tr>
-                      <tr>
-                        <td>${uiLabelMap.WebtoolsSecasPersist}</b> ${action.persist?default(uiLabelMap.CommonNA)}</td>
-                        <td>${uiLabelMap.WebtoolsSecasResultMapName}</b> ${action.resultMapName?default(uiLabelMap.CommonNA)}</td>
-                      </tr>
-                      <tr>
-                        <td>${uiLabelMap.WebtoolsSecasResultToContext}</b> ${action.resultToContext?default(uiLabelMap.CommonNA)}</td>
-                        <td>${uiLabelMap.WebtoolsSecasResultToResult}</b> ${action.resultToResult?default(uiLabelMap.CommonNA)}</td>
-                      </tr>
-                      <tr>
-                        <td>${uiLabelMap.WebtoolsSecasServiceMode}</b> ${action.serviceMode?default(uiLabelMap.CommonNA)}</td>
-                        <td colspan="2">&nbsp;</td>
-                      </tr>
-                    </table>
+                    <@table type="fields" class="basic-table" cellspacing="0">
+                      <@tr>
+                        <@td colspan="2"><a href='<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>'>${action.serviceName?default(uiLabelMap.CommonNA)}</a></@td>
+                      </@tr>
+                      <@tr>
+                        <@td>${uiLabelMap.WebtoolsSecasIgnoreError}</b> ${action.ignoreError?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsSecasIgnoreFailure}</b> ${action.ignoreFailure?default(uiLabelMap.CommonNA)}</@td>
+                      </@tr>
+                      <@tr>
+                        <@td>${uiLabelMap.WebtoolsSecasPersist}</b> ${action.persist?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsSecasResultMapName}</b> ${action.resultMapName?default(uiLabelMap.CommonNA)}</@td>
+                      </@tr>
+                      <@tr>
+                        <@td>${uiLabelMap.WebtoolsSecasResultToContext}</b> ${action.resultToContext?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsSecasResultToResult}</b> ${action.resultToResult?default(uiLabelMap.CommonNA)}</@td>
+                      </@tr>
+                      <@tr>
+                        <@td>${uiLabelMap.WebtoolsSecasServiceMode}</b> ${action.serviceMode?default(uiLabelMap.CommonNA)}</@td>
+                        <@td colspan="2">&nbsp;</@td>
+                      </@tr>
+                    </@table>
                   </#list>
-                </td>
+                </@td>
               </#if>
               <#if ecaMap.conditions?has_content>
-                <td>
+                <@td>
                   <#list ecaMap.conditions as condition>
-                    <table class='basic-table' cellspacing="0">
-                      <tr>
-                        <td>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType?default(uiLabelMap.CommonNA)}</td>
-                        <td>
+                    <@table type="fields" class='basic-table' cellspacing="0">
+                      <@tr>
+                        <@td>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>
                           <b>${uiLabelMap.WebtoolsConditionService}</b>
                           <#if condition.conditionService?has_content>
                             <a href='<@ofbizUrl>${url}?sel_service_name=${condition.conditionService}</@ofbizUrl>'>${condition.conditionService?default(uiLabelMap.CommonNA)}</a>
                           <#else>
                             ${condition.conditionService?default(uiLabelMap.CommonNA)}
                           </#if>
-                        </td>
-                        <td>${uiLabelMap.WebtoolsFormat}</b> ${condition.format?default(uiLabelMap.CommonNA)}</td>
-                      </tr>
-                      <tr>
-                        <td>${uiLabelMap.WebtoolsIsService}</b> ${condition.isService?default(uiLabelMap.CommonNA)}</td>
-                        <td>${uiLabelMap.WebtoolsIsConstant}</b> ${condition.isConstant?default(uiLabelMap.CommonNA)}</td>
-                        <td>${uiLabelMap.WebtoolsOperator}</b> ${condition.operator?default(uiLabelMap.CommonNA)}</td>
-                      </tr>
-                      <tr>
-                        <td>${uiLabelMap.WebtoolsLHSMapName}</b> ${condition.lhsMapName?default(uiLabelMap.CommonNA)}</td>
-                        <td>${uiLabelMap.WebtoolsLHSValueName}</b> ${condition.lhsValueName?default(uiLabelMap.CommonNA)}</td>
-                        <td>&nbsp;</td>
-                      </tr>
-                      <tr>
-                        <td>${uiLabelMap.WebtoolsRHSMapName}</b> ${condition.rhsMapName?default(uiLabelMap.CommonNA)}</td>
-                        <td>${uiLabelMap.WebtoolsRHSValueName}</b> ${condition.rhsValueName?default(uiLabelMap.CommonNA)}</td>
-                        <td>&nbsp;</td>
-                      </tr>
-                    </table><br />
+                        </@td>
+                        <@td>${uiLabelMap.WebtoolsFormat}</b> ${condition.format?default(uiLabelMap.CommonNA)}</@td>
+                      </@tr>
+                      <@tr>
+                        <@td>${uiLabelMap.WebtoolsIsService}</b> ${condition.isService?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsIsConstant}</b> ${condition.isConstant?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsOperator}</b> ${condition.operator?default(uiLabelMap.CommonNA)}</@td>
+                      </@tr>
+                      <@tr>
+                        <@td>${uiLabelMap.WebtoolsLHSMapName}</b> ${condition.lhsMapName?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsLHSValueName}</b> ${condition.lhsValueName?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>&nbsp;</@td>
+                      </@tr>
+                      <@tr>
+                        <@td>${uiLabelMap.WebtoolsRHSMapName}</b> ${condition.rhsMapName?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsRHSValueName}</b> ${condition.rhsValueName?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>&nbsp;</@td>
+                      </@tr>
+                    </@table><br />
                   </#list>
-                </td>
+                </@td>
               </#if>
               <#if ecaMap.sets?has_content>
-                <td>
+                <@td>
                   <#list ecaMap.sets as set>
-                    <table class='basic-table' cellspacing="0">
-                      <tr>
-                        <td>${uiLabelMap.WebtoolsFieldName}</b> ${set.fieldName?default(uiLabelMap.CommonNA)}</td>
-                        <td>&nbsp;</td>
-                      </tr>
-                      <tr>
+                    <@table type="fields" class='basic-table' cellspacing="0">
+                      <@tr>
+                        <@td>${uiLabelMap.WebtoolsFieldName}</b> ${set.fieldName?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>&nbsp;</@td>
+                      </@tr>
+                      <@tr>
                         <#if set.envName?has_content>
-                          <td>${uiLabelMap.WebtoolsEnvName}</b> ${set.envName}</td>
-                          <td>&nbsp;</td>
+                          <@td>${uiLabelMap.WebtoolsEnvName}</b> ${set.envName}</@td>
+                          <@td>&nbsp;</@td>
                         </#if>
-                      </tr>
-                      <tr>
+                      </@tr>
+                      <@tr>
                         <#if set.value?has_content>
-                          <td>${uiLabelMap.CommonValue}</b> ${set.value}</td>
-                          <td>&nbsp;</td>
+                          <@td>${uiLabelMap.CommonValue}</b> ${set.value}</@td>
+                          <@td>&nbsp;</@td>
                         </#if>
-                      </tr>
-                      <tr>
+                      </@tr>
+                      <@tr>
                         <#if set.format?has_content>
-                          <td>${uiLabelMap.WebtoolsFormat}</b> ${set.format}</td>
-                          <td>&nbsp;</td>
+                          <@td>${uiLabelMap.WebtoolsFormat}</b> ${set.format}</@td>
+                          <@td>&nbsp;</@td>
                         </#if>
-                      </tr>
-                    </table><br />
+                      </@tr>
+                    </@table><br />
                   </#list>
-                </td>
+                </@td>
               </#if>
-            </tr>
-            <tr><td colspan='5'><hr/></td></tr>
+            </@tr>
+            <@tr><@td colspan='5'><hr/></@td></@tr>
           </#list>
-        </table>
+        </@table>
     </@cell>
 </@row>
     </#if>
@@ -295,43 +295,43 @@ under the License.
       </style>
     <@row>
        <@cell>
-          <h3>${paramList.title}</h3>
+          <@heading>${paramList.title}</@heading>
 
         <#if paramList.paramList?? && paramList.paramList?has_content>
-          <table class="basic-table param-table" cellspacing="0">
-            <thead>
-              <tr class="header-row">
-                <th>${uiLabelMap.WebtoolsParameterName}</th>
-                <th>${uiLabelMap.CommonDescription}</th>
-                <th>${uiLabelMap.WebtoolsOptional}</th>
-                <th>${uiLabelMap.CommonType}</th>
-                <#-- <th>Default Value</th> -->
-                <th>${uiLabelMap.WebtoolsMode}</th>
-                <th>${uiLabelMap.WebtoolsIsSetInternally}</th>
-                <th>${uiLabelMap.WebtoolsEntityName}</th>
-                <th>${uiLabelMap.WebtoolsFieldName}</th>
-              </tr>
-            </thead>
+          <@table type="data-list" class="basic-table param-table" cellspacing="0">
+            <@thead>
+              <@tr class="header-row">
+                <@th>${uiLabelMap.WebtoolsParameterName}</@th>
+                <@th>${uiLabelMap.CommonDescription}</@th>
+                <@th>${uiLabelMap.WebtoolsOptional}</@th>
+                <@th>${uiLabelMap.CommonType}</@th>
+                <#-- <@th>Default Value</@th> -->
+                <@th>${uiLabelMap.WebtoolsMode}</@th>
+                <@th>${uiLabelMap.WebtoolsIsSetInternally}</@th>
+                <@th>${uiLabelMap.WebtoolsEntityName}</@th>
+                <@th>${uiLabelMap.WebtoolsFieldName}</@th>
+              </@tr>
+            </@thead>
               <#list paramList.paramList as modelParam>
-                <tr>
-                  <td>${modelParam.name!}</td>
-                  <td>${modelParam.description!}</td>
-                  <td>${modelParam.optional!}</td>
-                  <td>${modelParam.type!}</td>
-                  <#-- <td>[${modelParam.defaultValue!}]</td> -->
-                  <td>${modelParam.mode!}</td>
-                  <td>${modelParam.internal!}</td>
-                  <td>
+                <@tr>
+                  <@td>${modelParam.name!}</@td>
+                  <@td>${modelParam.description!}</@td>
+                  <@td>${modelParam.optional!}</@td>
+                  <@td>${modelParam.type!}</@td>
+                  <#-- <@td>[${modelParam.defaultValue!}]</@td> -->
+                  <@td>${modelParam.mode!}</@td>
+                  <@td>${modelParam.internal!}</@td>
+                  <@td>
                     <#if modelParam.entityName??>
                       <a href='<@ofbizUrl>${url}?constraint=default_entity_name@${modelParam.entityName}</@ofbizUrl>'>${modelParam.entityName!}</a>
                     </#if>
-                  </td>
-                  <td>${modelParam.fieldName!}</td>
-                </tr>
+                  </@td>
+                  <@td>${modelParam.fieldName!}</@td>
+                </@tr>
               </#list>
-          </table>
+          </@table>
         <#else>
-            ${uiLabelMap.WebtoolsNoParametersDefined}
+            <@resultMsg>${uiLabelMap.WebtoolsNoParametersDefined}</@resultMsg>
         </#if>
         </@cell>
     </@row>
@@ -358,37 +358,45 @@ under the License.
       </@nav>
   </#if>
 
-<@section>
+<#assign menuHtml>
+  <li><a href='<@ofbizUrl>${url}</@ofbizUrl>' class="smallSubmit">${uiLabelMap.CommonListAll}</a></li>
+</#assign>
+<@section menuHtml=menuHtml>
       <#--
       ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
-      <table class="basic-table hover-bar" cellspacing="0">
-        <thead>
-        <tr class="header-row">
-          <th id="Service_all">${uiLabelMap.WebtoolsServiceName}</th>
-          <th>${uiLabelMap.WebtoolsEngineName}</th>
-          <th>${uiLabelMap.WebtoolsDefaultEntityName}</th>
-          <th>${uiLabelMap.WebtoolsInvoke}</th>
-          <th>${uiLabelMap.WebtoolsLocation}</th>
-          <th>${uiLabelMap.WebtoolsDefinitionLocation}</th>
-        </tr>
-        </thead>
-        <#assign alt_row = false>
+      <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+        <@thead>
+        <@tr class="header-row">
+          <@th id="Service_all">${uiLabelMap.WebtoolsServiceName}</@th>
+          <@th>${uiLabelMap.WebtoolsEngineName}</@th>
+          <@th>${uiLabelMap.WebtoolsDefaultEntityName}</@th>
+          <@th>${uiLabelMap.WebtoolsInvoke}</@th>
+          <@th>${uiLabelMap.WebtoolsLocation}</@th>
+          <@th>${uiLabelMap.WebtoolsDefinitionLocation}</@th>
+        </@tr>
+        </@thead>
+        <#assign lastChar = "">
         <#list servicesList as service>
           <#assign firstChar = service.serviceName?substring(0, 1)>
-          <#assign anchor="id=\"Service_${firstChar}\" data-magellan-destination=\"Service_${firstChar}\"">
-          <tr<@dataRowClassStr alt=alt_row />>
-            <td <#if anchor?has_content> ${anchor}</#if>><a href='<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>'>${service.serviceName}</a></td>
-            <td><a href='<@ofbizUrl>${url}?constraint=engine_name@${service.engineName?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.engineName}</a></td>
-            <td><a href='<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.defaultEntityName}</a></td>
-            <td>${service.invoke}</td>
-            <td><a href='<@ofbizUrl>${url}?constraint=location@${service.location?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.location}</a></td>
-            <td><a href='<@ofbizUrl>${url}?constraint=definitionLocation@${service.definitionLocation}</@ofbizUrl>'>${service.definitionLocation}</a></td>
-          </tr>
-          <#assign alt_row = !alt_row>
+          <#if firstChar != lastChar>
+            <#assign anchorId = "Service_${firstChar}">
+            <#assign anchorAttribs = {"data-magellan-destination":"Service_${firstChar}"}>
+          <#else>
+            <#assign anchorId = "">
+            <#assign anchorAttribs = {}>
+          </#if>
+          <@tr>
+            <@td id=anchorId attribs=anchorAttribs><a href='<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>'>${service.serviceName}</a></@td>
+            <@td><a href='<@ofbizUrl>${url}?constraint=engine_name@${service.engineName?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.engineName}</a></@td>
+            <@td><a href='<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.defaultEntityName}</a></@td>
+            <@td>${service.invoke}</@td>
+            <@td><a href='<@ofbizUrl>${url}?constraint=location@${service.location?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.location}</a></@td>
+            <@td><a href='<@ofbizUrl>${url}?constraint=definitionLocation@${service.definitionLocation}</@ofbizUrl>'>${service.definitionLocation}</a></@td>
+          </@tr>
+          <#assign lastChar = firstChar>
         </#list>
-      </table>
+      </@table>
 </@section>
 <#else>
-  ${uiLabelMap.WebtoolsNoServicesFound}.
-  <a href='<@ofbizUrl>${url}</@ofbizUrl>' class="smallSubmit">${uiLabelMap.CommonListAll}</a>
+  <@resultMsg>${uiLabelMap.WebtoolsNoServicesFound}.</@resultMsg>
 </#if>

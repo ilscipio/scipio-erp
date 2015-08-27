@@ -88,17 +88,17 @@ under the License.
         <#if artifactInfo.modelEntity.getFieldsUnmodifiable()?has_content>
             <@section title="Entity Fields">
                 <a href="<@ofbizUrl>FindGeneric?entityName=${artifactInfo.modelEntity.getEntityName()}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>">All Entity Data</a>
-                <table>
-                <ol><#list artifactInfo.modelEntity.getFieldsUnmodifiable() as modelField>
-                    <tr><td>${modelField.getName()}<#if modelField.getIsPk()>*</#if></td><td>${modelField.getType()}</td><td>${modelField.getDescription()!}</td></tr>
-                </#list></ol>
-                </table>
+                <@table type="data-list" class="" cellspacing="">
+                <#list artifactInfo.modelEntity.getFieldsUnmodifiable() as modelField>
+                    <@tr><@td>${modelField.getName()}<#if modelField.getIsPk()>*</#if></@td><@td>${modelField.getType()}</@td><@td>${modelField.getDescription()!}</@td></@tr>
+                </#list>
+                </@table>
             </@section>
         </#if>
         
         <#if artifactInfo.getEntitiesRelatedOne()?has_content>
             <@section title="Entities Related (One)">
-                <ol><ol><#list artifactInfo.getEntitiesRelatedOne()! as entityArtifactInfo>
+                <ol><#list artifactInfo.getEntitiesRelatedOne()! as entityArtifactInfo>
                     <@displayEntityArtifactInfo entityArtifactInfo=entityArtifactInfo/>
                 </#list></ol>
             </@section>
@@ -145,13 +145,13 @@ under the License.
         
         <#if artifactInfo.modelService.getAllParamNames()?has_content>
             <@section title="Service Parameters">
-                <table>
-                    <tr><td>Name</td><td>Type</td><td>Optional</td><td>Mode</td><td>Entity.field</td></tr>
-                <ol><#list artifactInfo.modelService.getAllParamNames() as paramName>
+                <@table type="data-list" class="" cellspacing="">
+                    <@thead><@tr><@td>Name</@td><@td>Type</@td><@td>Optional</@td><@td>Mode</@td><@td>Entity.field</@td></@tr></@thead>
+                  <#list artifactInfo.modelService.getAllParamNames() as paramName>
                     <#assign modelParam = artifactInfo.modelService.getParam(paramName)/>
-                    <tr><td>${modelParam.getName()}<#if modelParam.getInternal()> (internal)</#if></td><td>${modelParam.getType()}</td><td><#if modelParam.isOptional()>optional<#else/>required</#if></td><td>${modelParam.getMode()}</td><td>${modelParam.getEntityName()!}.${modelParam.getFieldName()!}</td></tr>
-                </#list></ol>
-                </table>
+                    <@tr><@td>${modelParam.getName()}<#if modelParam.getInternal()> (internal)</#if></@td><@td>${modelParam.getType()}</@td><@td><#if modelParam.isOptional()>optional<#else/>required</#if></@td><@td>${modelParam.getMode()}</@td><@td>${modelParam.getEntityName()!}.${modelParam.getFieldName()!}</@td></@tr>
+                </#list>
+                </@table>
             </@section>
         </#if>
         
@@ -345,7 +345,7 @@ under the License.
     <#elseif artifactInfo.getType() == "request"/>
         <#if artifactInfo.getServiceCalledByRequestEvent()??>
             <@section title="Service Called by Request Event">
-            <@displayServiceArtifactInfo serviceArtifactInfo=artifactInfo.getServiceCalledByRequestEvent()/>
+              <ol><@displayServiceArtifactInfo serviceArtifactInfo=artifactInfo.getServiceCalledByRequestEvent()/></ol>
             </@section>
         </#if>
 
@@ -417,14 +417,15 @@ under the License.
 
 <#-- ==================== MACROS ===================== -->
 <#macro displayEntityArtifactInfo entityArtifactInfo>
-    <div><@displayArtifactInfo artifactInfo=entityArtifactInfo/></div>
+    <li><@displayArtifactInfo artifactInfo=entityArtifactInfo/></li>
 </#macro>
 
 <#macro displayServiceArtifactInfo serviceArtifactInfo>
-    <div><@displayArtifactInfo artifactInfo=serviceArtifactInfo/></div>
+    <li><@displayArtifactInfo artifactInfo=serviceArtifactInfo/></li>
 </#macro>
 
 <#macro displayServiceEcaArtifactInfo serviceEcaArtifactInfo>
+  <li>
     <h4>Service ECA Rule: ${serviceEcaArtifactInfo.getDisplayPrefixedName()}</h4>
     <#if serviceEcaArtifactInfo.serviceEcaRule.getEcaConditionList()?has_content>
         <h4>ECA Rule Conditions</h4>
@@ -436,14 +437,14 @@ under the License.
     </#if>
     <#if serviceEcaArtifactInfo.serviceEcaRule.getEcaActionList()?has_content>
         <h4>ECA Rule Actions</h4>
-        <table>
+        <@table type="data-list" class="" cellspacing="">
         <#list serviceEcaArtifactInfo.serviceEcaRule.getEcaActionList() as ecaAction>
-            <tr>
-                <td><a href="<@ofbizUrl>ArtifactInfo?type=${artifactInfo.getType()}&amp;uniqueId=${ecaAction.getServiceName()}</@ofbizUrl>">${ecaAction.getServiceName()}</a></td>
-                <td>${ecaAction.getServiceMode()}<#if ecaAction.isPersist()>-persisted</#if></td>
-            </tr>
+            <@tr>
+                <@td><a href="<@ofbizUrl>ArtifactInfo?type=${artifactInfo.getType()}&amp;uniqueId=${ecaAction.getServiceName()}</@ofbizUrl>">${ecaAction.getServiceName()}</a></@td>
+                <@td>${ecaAction.getServiceMode()}<#if ecaAction.isPersist()>-persisted</#if></@td>
+            </@tr>
         </#list>
-        </table>
+        </@table>
     </#if>
 
     <#-- leaving this out, will show service links for actions
@@ -460,6 +461,7 @@ under the License.
             <@displayServiceArtifactInfo serviceArtifactInfo=serviceArtifactInfo/>
         </#list></ol>
     </#if>
+  </li>
 </#macro>
 
 <#macro displayFormWidgetArtifactInfo formWidgetArtifactInfo>

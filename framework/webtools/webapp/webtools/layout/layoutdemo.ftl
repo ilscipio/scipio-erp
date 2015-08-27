@@ -66,6 +66,24 @@
     </@grid>
 </@section>
 
+<@section title="Section Titles and Headings - Auto Leveling">
+  <@section title="Nested Section Title A">
+    <@section title="Nested Nested Section Title 1">
+    </@section>
+    <@section title="Nested Nested Section Title 2">
+    </@section>
+  </@section>
+  <@section title="Nested Section Title B">
+    <@section title="Nested Nested Section Title 3">
+    </@section>
+    <@section title="Nested Nested Section Title 4">
+    </@section>
+  </@section>
+  <@heading>Heading</@heading>
+  <@heading relLevel=1>Heading - Relative Level +1</@heading>
+  <@heading relLevel=2>Heading - Relative Level +2</@heading>
+</@section>
+
 <@section>
 <h2 ${mtarget("buttons")} id="buttons">Buttons</h2>
 <h3>Heading</h3>

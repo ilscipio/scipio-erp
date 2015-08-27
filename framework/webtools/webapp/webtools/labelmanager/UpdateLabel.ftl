@@ -24,13 +24,13 @@ under the License.
 </script>
 <@section>
     <form method="post" action="<@ofbizUrl>SaveLabelsToXmlFile</@ofbizUrl>" name="UpdateLabelForm">
-        <table class="basic-table" cellspacing="3">
-            <tr>
-                <td colspan="2">&nbsp;</td>
-            </tr>
-            <tr>
-                <td>${uiLabelMap.WebtoolsLabelManagerKey}</td>
-                <td>
+        <@table type="fields" class="basic-table" cellspacing="3">
+            <@tr>
+                <@td colspan="2">&nbsp;</@td>
+            </@tr>
+            <@tr>
+                <@td>${uiLabelMap.WebtoolsLabelManagerKey}</@td>
+                <@td>
                     <#if parameters.sourceKey??>
                         ${parameters.sourceKey}
                         <input type="hidden" name="key" value="${parameters.sourceKey}" />
@@ -39,17 +39,17 @@ under the License.
                         <input type="text" name="key" size="70" />
                         <input type="hidden" name="update_label" value="N" />
                     </#if>
-                </td>
-            </tr>
-            <tr>
-                <td>${uiLabelMap.WebtoolsLabelManagerKeyComment}</td>
-                <td>
+                </@td>
+            </@tr>
+            <@tr>
+                <@td>${uiLabelMap.WebtoolsLabelManagerKeyComment}</@td>
+                <@td>
                     <input type="text" name="keyComment" size="70" value="${parameters.sourceKeyComment!}" />
-                </td>
-            </tr>
-            <tr>
-                <td>${uiLabelMap.WebtoolsLabelManagerFileName}</td>
-                <td>
+                </@td>
+            </@tr>
+            <@tr>
+                <@td>${uiLabelMap.WebtoolsLabelManagerFileName}</@td>
+                <@td>
                     <#if parameters.sourceFileName??>
                         ${parameters.sourceFileName}
                         <input type="hidden" name="fileName" value="${parameters.sourceFileName}" />
@@ -61,10 +61,10 @@ under the License.
                             </#list>
                         </select>
                     </#if>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" align="center">
+                </@td>
+            </@tr>
+            <@tr>
+                <@td colspan="2" align="center">
                     <input type="submit" value="${uiLabelMap.CommonBack}"/>
                     <#if parameters.sourceKey??>
                         <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerRemove}" name="removeLabel"/>
@@ -73,8 +73,8 @@ under the License.
                         <input type="submit" value="${uiLabelMap.CommonAdd}" name="confirm"/>
                         <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerUpdateAndSave}" name="confirm" onclick="javascript:updateAndSaveLabel()"/>
                     </#if>
-                </td>
-            </tr>
+                </@td>
+            </@tr>
             <#list localesFound as localeFound>
                 <#assign labelValue = "">
                 <#assign labelComment = "">
@@ -90,7 +90,7 @@ under the License.
                     <#assign showLocale = false>
                 </#if>
                 <#if showLocale == true>
-                    <tr>
+                    <@tr>
                         <#assign locale = Static["org.ofbiz.base.util.UtilMisc"].parseLocale(localeFound)!/>
                         <#if locale?? && locale?has_content>
                             <#assign langAttr = localeFound.toString()?replace("_", "-")>
@@ -98,22 +98,22 @@ under the License.
                             <#if "ar.iw"?contains(langAttr?substring(0, 2))>
                                 <#assign langDir = "rtl">
                             </#if>
-                            <td lang="${langAttr}" dir="${langDir}" class=>
+                            <@td lang="${langAttr}" dir="${langDir}">
                                 ${locale.getDisplayName(locale)}
-                            </td>
+                            </@td>
                         <#else>
-                            <td>${localeFound}</td>
+                            <@td>${localeFound}</@td>
                         </#if>
-                        <td>
+                        <@td>
                             <input type="hidden" name="localeNames" value="${localeFound}" />
                             <input type="text" name="localeValues" size="70" value="${labelValue!}" />
                             <input type="text" name="localeComments" size="70" value="${labelComment!}" />
-                        </td>
-                    </tr>
+                        </@td>
+                    </@tr>
                 </#if>
             </#list>
-            <tr>
-                <td colspan="2" align="center">
+            <@tr>
+                <@td colspan="2" align="center">
                     <input type="submit" value="${uiLabelMap.CommonBack}"/>
                     <#if parameters.sourceKey??>
                         <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerRemove}" name="removeLabel"/>
@@ -122,8 +122,8 @@ under the License.
                         <input type="submit" value="${uiLabelMap.CommonAdd}" name="confirm"/>
                         <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerUpdateAndSave}" name="confirm" onclick="javascript:updateAndSaveLabel()"/>
                     </#if>
-                </td>
-            </tr>
-        </table>
+                </@td>
+            </@tr>
+        </@table>
     </form>
 </@section>

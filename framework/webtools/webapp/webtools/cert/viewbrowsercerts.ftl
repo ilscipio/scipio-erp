@@ -26,21 +26,21 @@ under the License.
 <@section title="${uiLabelMap.WebtoolsCertsX509}">
   <#if (isSecure)>
     <#if (clientCerts?has_content)>
-      <table class="basic-table">
+      <@table type="data-list" cellspacing="" class="basic-table">
         <#list clientCerts as cert>
           <#assign certString = Static["org.ofbiz.base.util.KeyStoreUtil"].certToString(cert)!>
           <#if (certString?has_content)>
-            <tr>
-              <td>${uiLabelMap.WebtoolsCertsCert}</td>
-              <td>${cert.getType()} ${cert.getSubjectX500Principal()}</td>
-            </tr>
-            <tr>
-              <td>${uiLabelMap.WebtoolsCertsSerialNum}:</td>
-              <td>${cert.getSerialNumber().toString(16)}</td>
-            </tr>
-            <tr>
-              <td>&nbsp;</td>
-              <td>
+            <@tr>
+              <@td>${uiLabelMap.WebtoolsCertsCert}</@td>
+              <@td>${cert.getType()} ${cert.getSubjectX500Principal()}</@td>
+            </@tr>
+            <@tr>
+              <@td>${uiLabelMap.WebtoolsCertsSerialNum}:</@td>
+              <@td>${cert.getSerialNumber().toString(16)}</@td>
+            </@tr>
+            <@tr>
+              <@td>&nbsp;</@td>
+              <@td>
                 <textarea rows="4" cols="130">
 ${certString}
 
@@ -49,11 +49,11 @@ ${Static["org.ofbiz.base.util.KeyStoreUtil"].pemToPkHex(certString)}
 -----END PUBLIC KEY HEX-----
 
                 </textarea>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           </#if>
         </#list>
-      </table>
+      </@table>
     <#else>
       <@alert type="info">${uiLabelMap.WebtoolsCertsNotFound}.</@alert>
     </#if>

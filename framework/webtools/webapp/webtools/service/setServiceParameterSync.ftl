@@ -21,20 +21,22 @@ under the License.
       <input type="hidden" name="${scheduleOption.name}" value="${scheduleOption.value}"/>
     </#list>
 
-    <table class="basic-table" cellspacing="0">
+    <@table type="fields" class="basic-table" cellspacing="0">
 
     <#list serviceParameters as serviceParameter>
-      <tr>
-        <td>${serviceParameter.name} (${serviceParameter.type}) <#if serviceParameter.optional == "N"><small>${uiLabelMap.CommonRequired}</small></#if></td>
-        <td>
+      <@tr>
+        <@td>${serviceParameter.name} (${serviceParameter.type}) <#if serviceParameter.optional == "N"><small>${uiLabelMap.CommonRequired}</small></#if></@td>
+        <@td>
           <input type="text" size="20" name="${serviceParameter.name}" value="<#if serviceParameter.value??>${serviceParameter.value?string}</#if>"<#if serviceParameter.optional == "N"> required</#if>/>
           <#if serviceParameter.optional == "N"><span class="tooltip">${uiLabelMap.CommonRequired}</span></#if>
           <#if serviceParameter.defaultValue?has_content>${uiLabelMap.WebtoolsServiceDefault} ${serviceParameter.defaultValue?string}</#if>
-        </td>
-      </tr>
+        </@td>
+      </@tr>
     </#list>
-      <tr>
-        <td colspan="2" align="center"><input type="submit" value="${uiLabelMap.CommonSubmit}" /></td>
-      </tr>
-    </table>
+    <@tfoot>
+      <@tr>
+        <@td colspan="2" align="center"><input type="submit" value="${uiLabelMap.CommonSubmit}" /></@td>
+      </@tr>
+    </@tfoot>
+    </@table>
 </form>

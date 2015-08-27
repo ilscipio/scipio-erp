@@ -23,32 +23,30 @@ under the License.
     <#if hasViewPermission>
         <@heading>${uiLabelMap.WebtoolsForEntity}: ${entityName}</@heading>
 
-        <table class="basic-table hover-bar" cellspacing="0">
-          <thead>
-            <tr class="header-row">
-                <th>${uiLabelMap.WebtoolsTitle}</th>
-                <th>${uiLabelMap.WebtoolsRelatedEntity}</th>
-                <th>${uiLabelMap.WebtoolsRelationType}</th>
-                <th>${uiLabelMap.WebtoolsFKName}</th>
-                <th>${uiLabelMap.WebtoolsFieldsList}</th>
-            </tr>
-           </thead>
-            <#assign alt_row = false>
+        <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+          <@thead>
+            <@tr class="header-row">
+                <@th>${uiLabelMap.WebtoolsTitle}</@th>
+                <@th>${uiLabelMap.WebtoolsRelatedEntity}</@th>
+                <@th>${uiLabelMap.WebtoolsRelationType}</@th>
+                <@th>${uiLabelMap.WebtoolsFKName}</@th>
+                <@th>${uiLabelMap.WebtoolsFieldsList}</@th>
+            </@tr>
+           </@thead>
             <#list relations as relation>
-                <tr<@dataRowClassStr alt=alt_row />>
-                    <td>${relation.title}</td>
-                    <td class="button-col"><a href='<@ofbizUrl>FindGeneric?entityName=${relation.relEntityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>'>${relation.relEntityName}</a></td>
-                    <td>${relation.type}</td>
-                    <td>${relation.fkName}</td>
-                    <td>
+                <@tr>
+                    <@td>${relation.title}</@td>
+                    <@td class="button-col"><a href='<@ofbizUrl>FindGeneric?entityName=${relation.relEntityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>'>${relation.relEntityName}</a></@td>
+                    <@td>${relation.type}</@td>
+                    <@td>${relation.fkName}</@td>
+                    <@td>
                         <#list relation.relFields as field>
                             ${field.fieldName} -> ${field.relFieldName}<br />
                         </#list>
-                    </td>
-                </tr>
-                <#assign alt_row = !alt_row>
+                    </@td>
+                </@tr>
             </#list>
-        </table>
+        </@table>
     <#else>
         <@alert type="error">${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}.</@alert>
     </#if>

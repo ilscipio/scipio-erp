@@ -18,7 +18,6 @@ under the License.
 -->
 <@section>
     <#if parameters.searchLabels??>
-      <#assign rowNum = "2">
       <#assign rowNumber = 1>
       <#assign totalLabels = 0>
       <#assign missingLabels = 0>
@@ -37,13 +36,13 @@ under the License.
         </@cell>
     </@row>
     </#if>
-  <table class="responsive ${styles.grid_large!}12">
-   <thead>
-    <tr class="header-row">
-      <#--<th>${uiLabelMap.WebtoolsLabelManagerRow}</th>-->
-      <th>${uiLabelMap.WebtoolsLabelManagerKey}</th>
-      <th>${uiLabelMap.WebtoolsLabelManagerFileName}</th>
-      <th>${uiLabelMap.WebtoolsLabelManagerReferences}</th>
+  <@table type="data-list" autoAltRows=true class="basic-table responsive ${styles.grid_large!}12">
+   <@thead>
+    <@tr class="header-row">
+      <#--<@th>${uiLabelMap.WebtoolsLabelManagerRow}</@th>-->
+      <@th>${uiLabelMap.WebtoolsLabelManagerKey}</@th>
+      <@th>${uiLabelMap.WebtoolsLabelManagerFileName}</@th>
+      <@th>${uiLabelMap.WebtoolsLabelManagerReferences}</@th>
       <#list localesFound as localeFound>
         <#assign showLocale = true>
         <#if parameters.labelLocaleName?? && parameters.labelLocaleName != "" && parameters.labelLocaleName != localeFound>
@@ -57,27 +56,27 @@ under the License.
             <#if "ar.iw"?contains(langAttr?substring(0, 2))>
               <#assign langDir = "rtl">
             </#if>
-            <th lang="${langAttr}" dir="${langDir}">
+            <@th lang="${langAttr}" dir="${langDir}">
               ${locale.getDisplayName(locale)}
-            </th>
+            </@th>
           <#else>
-            <th>${localeFound}</th>
+            <@th>${localeFound}</@th>
           </#if>
         </#if>
       </#list>
-    </tr>
-    </thead>
+    </@tr>
+    </@thead>
     <#--
-    <tfoot>
-          <tr class="header-row">
-            <th></th>
-            <th colspan="${localesFound?length+2}">
+    <@tfoot>
+          <@tr class="header-row">
+            <@th></@th>
+            <@th colspan="${localesFound?length+2}">
               ${uiLabelMap.WebtoolsLabelStatsMissing}: ${existingLabels!}<br/>
               ${uiLabelMap.WebtoolsLabelStatsExist}: ${missingLabels!}<br/>
               ${uiLabelMap.WebtoolsLabelStatsTotal}: ${totalLabels}
-            </th>
-          </tr>
-      </tfoot>-->
+            </@th>
+          </@tr>
+      </@tfoot>-->
       <#list labelsList as labelList>
         <#assign label = labels.get(labelList)>
         <#assign labelKey = label.labelKey>
@@ -109,11 +108,11 @@ under the License.
         <#if showLabel && parameters.labelFileName?? && parameters.labelFileName != "" && parameters.labelFileName != label.fileName>
           <#assign showLabel = false>
         </#if>
-          <tr<@dataRowClassStr alt=(rowNum == "1") />>
-            <#--<td>${rowNumber}</td>-->
-            <td><a href="<@ofbizUrl>UpdateLabel?sourceKey=${labelKey}&amp;sourceFileName=${label.fileName}&amp;sourceKeyComment=${label.labelKeyComment!}</@ofbizUrl>" <#if previousKey == labelKey>class="submenutext"</#if>>${label.labelKey}</a></td>
-            <td>${label.fileName}</td>
-            <td><a href="<@ofbizUrl>ViewReferences?sourceKey=${labelKey}&amp;labelFileName=${label.fileName}</@ofbizUrl>">${uiLabelMap.WebtoolsLabelManagerReferences}</a></td>
+          <@tr>
+            <#--<@td>${rowNumber}</@td>-->
+            <@td><a href="<@ofbizUrl>UpdateLabel?sourceKey=${labelKey}&amp;sourceFileName=${label.fileName}&amp;sourceKeyComment=${label.labelKeyComment!}</@ofbizUrl>" <#if previousKey == labelKey>class="submenutext"</#if>>${label.labelKey}</a></@td>
+            <@td>${label.fileName}</@td>
+            <@td><a href="<@ofbizUrl>ViewReferences?sourceKey=${labelKey}&amp;labelFileName=${label.fileName}</@ofbizUrl>">${uiLabelMap.WebtoolsLabelManagerReferences}</a></@td>
             <#list localesFound as localeFound>
               <#assign labelVal = label.getLabelValue(localeFound)!>
               <#assign showLocale = true>
@@ -122,22 +121,17 @@ under the License.
               </#if>
               <#if showLocale>
                 <#if labelVal?has_content>
-                  <td>${labelVal.getLabelValue()}</td>
+                  <@td>${labelVal.getLabelValue()}</@td>
                   <#assign existingLabels = existingLabels + 1>
                 <#else>
-                  <td>&nbsp;</td>
+                  <@td>&nbsp;</@td>
                   <#assign missingLabels = missingLabels + 1>
                 </#if>
               </#if>
             </#list>
-          </tr>
-          <#if rowNum == "2">
-            <#assign rowNum = "1">
-          <#else>
-            <#assign rowNum = "2">
-          </#if>
+          </@tr>
           <#assign previousKey = labelKey>
           <#assign rowNumber = rowNumber + 1>
       </#list>
-  </table>
+  </@table>
 </@section>  

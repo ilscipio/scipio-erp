@@ -31,7 +31,7 @@ under the License.
   </@tr>
   <@tr>
     <@td width="100%">
-      <@table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <@table type="fields" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <@tr>
           <@td align="right">
             <input type="radio" id="additionalPartyType_Person" name="additionalPartyType" value="Person" onclick="<#if additionalPartyType??>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if (additionalPartyType?? && additionalPartyType == "Person")> checked="checked"</#if> />

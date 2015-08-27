@@ -20,7 +20,7 @@ under the License.
 <#assign shoppingCart = sessionAttributes.shoppingCart!>
 
 <@section title="${uiLabelMap.OrderOrderShortcuts}">
-        <ul class="button-group">
+        <ul class="${styles.button_group!}">
             <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
               <li><a href="<@ofbizUrl>RequirementsForSupplier</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderRequirements}</a></li>
             </#if>

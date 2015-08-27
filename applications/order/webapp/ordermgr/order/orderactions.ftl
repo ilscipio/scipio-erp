@@ -1,7 +1,7 @@
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
 <#-- ${uiLabelMap.OrderActions}-->
 <@section>
-      <ul class="button-group">
+      <ul class="${styles.button_group!}">
         <#if security.hasEntityPermission("FACILITY", "_CREATE", session) && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
           <#-- Special shipment options -->
           <#if orderHeader.orderTypeId == "SALES_ORDER">
@@ -138,7 +138,7 @@
       </ul>
       
       
-      <ul class="button-group">
+      <ul class="${styles.button_group!}">
                 <#if currentStatus.statusId == "ORDER_APPROVED" && orderHeader.orderTypeId == "SALES_ORDER">
                   <li><a href="javascript:document.PrintOrderPickSheet.submit()" class="${styles.button_default!}">${uiLabelMap.FormFieldTitle_printPickSheet}</a>
                   <form name="PrintOrderPickSheet" method="post" action="<@ofbizUrl>orderPickSheet.pdf</@ofbizUrl>" target="_BLANK">

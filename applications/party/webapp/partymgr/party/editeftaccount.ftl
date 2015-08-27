@@ -19,11 +19,11 @@ under the License.
 
 <!-- begin editeftaccount.ftl -->
 <#if !eftAccount??>
-  <#assign title = "${uiLabelMap.AccountingAddNewEftAccount}">
+  <#assign sectionTitle = "${uiLabelMap.AccountingAddNewEftAccount}">
 <#else>
-  <#assign title = "${uiLabelMap.PageTitleEditEftAccount}">
+  <#assign sectionTitle = "${uiLabelMap.PageTitleEditEftAccount}">
 </#if>
-<@section title=title>
+<@section title=sectionTitle>
         <div class="button-bar">
           <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
           <a href="javascript:document.editeftaccountform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>

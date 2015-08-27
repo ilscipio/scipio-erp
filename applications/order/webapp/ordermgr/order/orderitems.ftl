@@ -647,7 +647,7 @@ under the License.
                                     </#if>
                                 </@td>
                                 <@td>
-                                    <ul class="button-group">
+                                    <ul class="${styles.button_group!}">
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
                                             <#list downloadContents as downloadContent>

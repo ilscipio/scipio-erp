@@ -19,7 +19,7 @@ under the License.
 
 <#if hasPermission>
 <@section title="${uiLabelMap.OrderScheduleDelivery}">
-      <ul class="button-group">
+      <ul class="${styles.button_group!}">
         <#if orderId??>
           <li><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewOrder}</a></li>
         </#if>

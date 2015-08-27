@@ -18,10 +18,10 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-<@table type="fields" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <@tr>
     <@td width='100%'>
-      <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <@tr>
           <@td valign="middle" align="center">
             <div class="boxhead">&nbsp;${uiLabelMap.PartyParty}</div>

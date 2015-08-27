@@ -28,7 +28,7 @@ under the License.
 
 
 <@section>   
-      <ul class="button-group">
+      <ul class="${styles.button_group!}">
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <#if shoppingCart.getOrderPartyId() == "_NA_" || (shoppingCart.size() = 0)>
           <li><a href="" class="${styles.button_default!} disabled">${uiLabelMap.OrderFinalizeOrder}</a></li>

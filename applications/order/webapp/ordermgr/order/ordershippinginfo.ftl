@@ -52,7 +52,7 @@ under the License.
   <#if parameters.view?has_content && parameters.view = "OISGA">
   <#-- New in Ofbiz 14.12 -->
   <@section title="${uiLabelMap.OrderShipmentInformation}">
-        <ul class="button-group">
+        <ul class="${styles.button_group!}">
            <li><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderShipmentInformationByOISG}</a></li>
         </ul>
         
@@ -211,7 +211,7 @@ under the License.
   <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
     <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}">
-       <ul class="button-group">
+       <ul class="${styles.button_group!}">
          <#--<li class="expanded"><a onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" title="Collapse">&nbsp;</a></li>-->
          <li><a target="_BLANK" class="${styles.button_default!}" href="<@ofbizUrl>shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}</@ofbizUrl>">${uiLabelMap.OrderShipGroup} PDF</a></li>
          <#-- Foundation: Button migrated from removed header to access OISGA -->

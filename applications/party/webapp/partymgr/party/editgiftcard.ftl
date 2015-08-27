@@ -19,11 +19,11 @@ under the License.
 
 <!-- begin editgiftcard.ftl -->
 <#if !giftCard??>
-  <#assign title = "${uiLabelMap.AccountingCreateNewGiftCard}">
+  <#assign sectionTitle = "${uiLabelMap.AccountingCreateNewGiftCard}">
 <#else>
-  <#assign title = "${uiLabelMap.AccountingEditGiftCard}">
+  <#assign sectionTitle = "${uiLabelMap.AccountingEditGiftCard}">
 </#if>
-<@section title=title>
+<@section title=sectionTitle>
     <#if !giftCard??>
       <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
     <#else>

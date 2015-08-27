@@ -35,7 +35,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
     <#assign rootForumId=defaultSiteId!/>
 </#if>
 <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_ADMIN" >
-<br />
+
 <@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <@tr>
     <@td width='100%'>

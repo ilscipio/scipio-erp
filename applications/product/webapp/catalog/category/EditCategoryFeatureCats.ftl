@@ -69,7 +69,7 @@ under the License.
     </@section>
     <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
             <#if productFeatureGroups?has_content>
-            <@table cellspacing="0" class="basic-table">
+            <@table type="fields" cellspacing="0" class="basic-table">
                 <@tr><@td>
                     <form method="post" action="<@ofbizUrl>createProductFeatureCatGrpAppl</@ofbizUrl>" style="margin: 0;" name="addNewGroupForm">
                     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />

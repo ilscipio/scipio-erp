@@ -149,14 +149,16 @@ under the License.
 <@section title="${uiLabelMap.ProductQuickStockMove}">
         <form method="post" action="<@ofbizUrl>processQuickStockMove</@ofbizUrl>" name='quickStockMove'>
             <input type="hidden" name="facilityId" value="${facilityId!}" />
-            <@table cellspacing="0" class="basic-table hover-bar">
+            <@table type="fields" cellspacing="0" class="basic-table hover-bar">
+              <@thead>
                 <@tr class="header-row">
-                    <@td>${uiLabelMap.ProductProduct}</@td>
-                    <@td>${uiLabelMap.ProductFromLocation}</@td>
-                    <@td>${uiLabelMap.ProductToLocation}</@td>
-                    <@td>${uiLabelMap.ProductMoveQuantity}</@td>
-                    <@td>&nbsp;</@td>
+                    <@th>${uiLabelMap.ProductProduct}</@th>
+                    <@th>${uiLabelMap.ProductFromLocation}</@th>
+                    <@th>${uiLabelMap.ProductToLocation}</@th>
+                    <@th>${uiLabelMap.ProductMoveQuantity}</@th>
+                    <@th>&nbsp;</@th>
                 </@tr>
+              </@thead>
                 <@tr>
                   <@td>
                     <@htmlTemplate.lookupField formName="quickStockMove" name="productId" id="productId" fieldFormName="LookupProduct"/>

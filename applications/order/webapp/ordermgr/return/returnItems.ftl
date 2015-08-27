@@ -340,7 +340,7 @@ under the License.
         <br />
         <form name="returnItems" method="post" action="<@ofbizUrl>returnItems</@ofbizUrl>">
           <input type="hidden" name="returnId" value="${returnId}" />
-          <@table border='0' cellpadding='2' cellspacing='0'>
+          <@table type="fields" class="" border='0' cellpadding='2' cellspacing='0'>
             <@tr><@td colspan="4"><h3>${uiLabelMap.OrderReturnItems}</h3></@td></@tr>
             <#if partyOrders?has_content>
               <@tr>

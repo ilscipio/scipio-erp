@@ -39,7 +39,7 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
 
 <h2>${title!}</h2>
 <@section classes="${styles.grid_large!}9">
-    <ul class="button-group">
+    <ul class="${styles.button_group!}">
       <li><a href="javascript:document.salesentryform.submit();" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a></li>
       <li><a href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.PartyFindParty}</a></li>
     </ul>
@@ -99,11 +99,11 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
 <!-- Purchase Order Entry -->
 <#if security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
   <#if shoppingCartOrderType != "SALES_ORDER">
-    <#assign title>
+    <#assign sectionTitle>
         ${uiLabelMap.OrderPurchaseOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgress}</#if>
     </#assign>
-    <@section title=title classes="${styles.grid_large!}9">
-      <ul class="button-group">
+    <@section title=sectionTitle classes="${styles.grid_large!}9">
+      <ul class="${styles.button_group!}">
         <li><a href="javascript:document.poentryform.submit();" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a></li>
         <li><a href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.PartyFindParty}</a></li>
       </ul>

@@ -203,53 +203,41 @@ under the License.
         <input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit"/>
       </form>
 </@section>
-<div class="screenlet">
+
+
   <#-- new question / category -->
   <#if requestParameters.newCategory?default("N") == "Y">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.ContentSurveyCreateQuestionCategory}</li>
-      </ul>
-      <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
-      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}</a>
-      <br /><br />
-      ${createSurveyQuestionCategoryWrapper.renderFormString(context)}
+    <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionCategory}</#assign>
+    <#assign menuHtml>  
+      <li><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}</a></li>
+    </#assign>
   <#else>
     <#if surveyQuestionId?has_content>
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.CommonEdit} ${uiLabelMap.ContentSurveyQuestion}</li>
-      </ul>
-      <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
-      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}</a>
+      <#assign sectionTitle>${uiLabelMap.CommonEdit} ${uiLabelMap.ContentSurveyQuestion}</#assign>
+      <#assign menuHtml>  
+        <li><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}</a></li>
+      </#assign>
     <#else>
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.ContentSurveyCreateQuestion}</li>
-      </ul>
-      <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+      <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestion}</#assign>
+      <#assign menuHtml>  
+      </#assign>
     </#if>
-    <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}</a>
-    <br /><br />
+
+    <#assign menuHtml>
+      ${menuHtml}
+      <li><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}</a></li>
+    </#assign>
+  </#if>
+<@section title=sectionTitle menuHtml=menuHtml>
+  <#if requestParameters.newCategory?default("N") == "Y">
+    ${createSurveyQuestionCategoryWrapper.renderFormString(context)}
+  <#else>
     ${createSurveyQuestionWrapper.renderFormString(context)}
   </#if>
-  </div>
-</div>
+</@section>
+
 <#if (surveyQuestion?has_content && surveyQuestion.surveyQuestionTypeId?default("") == "OPTION")>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ContentSurveyOptions} - ${uiLabelMap.CommonId} ${surveyQuestion.surveyQuestionId!}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.ContentSurveyOptions} - ${uiLabelMap.CommonId} ${surveyQuestion.surveyQuestionId!}">
     <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
      <@thead>
       <@tr class="header-row">
@@ -275,28 +263,18 @@ under the License.
         </@tr>
       </#list>
     </@table>
-  </div>
-</div>
-<div class="screenlet">
+</@section>
+
     <#if !surveyQuestionOption?has_content>
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.ContentSurveyCreateQuestionOption}</li>
-      </ul>
-      <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+      <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionOption}</#assign>
+      <#assign menuHtml></#assign>
     <#else>
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.ContentSurveyEditQuestionOption}</li>
-      </ul>
-      <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
-      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]</a>
+      <#assign sectionTitle>${uiLabelMap.ContentSurveyEditQuestionOption}</#assign>
+      <#assign menuHtml>
+        <li><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]</a></li>
+      </#assign>
     </#if>
+<@section title=sectionTitle menuHtml=menuHtml>
     ${createSurveyOptionWrapper.renderFormString()}
-    </div>
-</div>
+</@section>
 </#if>

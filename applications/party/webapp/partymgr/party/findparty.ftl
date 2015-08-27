@@ -293,7 +293,7 @@ under the License.
         <@td>${partyDate.createdDate!}</@td>
         <@td>${partyDate.lastModifiedDate!}</@td>
         <@td class="button-col">
-          <ul class="button-group">
+          <ul class="${styles.button_group!}">
           <li><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDetails}</a></li>
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
           <li><form name="searchorders_o_${rowCount}" method="post" action="/ordermgr/control/searchorders">

@@ -20,7 +20,7 @@ under the License.
     <#if orderHeader?has_content>
     <@section title="${uiLabelMap.PageTitleLookupBulkAddProduct}"/>
     <#else>
-    <#assign title>
+    <#assign sectionTitle>
         ${uiLabelMap.CommonCreate}
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
             ${uiLabelMap.OrderPurchaseOrder}
@@ -28,8 +28,8 @@ under the License.
             ${uiLabelMap.OrderSalesOrder}
         </#if>
     </#assign>
-    <@section title=title!>
-        <ul class="button-group">
+    <@section title=sectionTitle>
+        <ul class="${styles.button_group!}">
             <li><a href="<@ofbizUrl>orderentry</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderOrderItems}</a></li>
     </ul>
     </@section>

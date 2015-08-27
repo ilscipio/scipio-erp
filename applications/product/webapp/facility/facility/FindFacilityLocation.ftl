@@ -72,8 +72,8 @@ under the License.
     </form>
 
     <#if foundLocations??>
-      <#assign title>${uiLabelMap.CommonFound}:&nbsp;${foundLocations.size()}&nbsp;${uiLabelMap.ProductLocationsFor}&nbsp;<#if facility??>${(facility.facilityName)!}</#if> [ID:${facilityId!}]</#assign>
-      <@section title=title>
+      <#assign sectionTitle>${uiLabelMap.CommonFound}:&nbsp;${foundLocations.size()}&nbsp;${uiLabelMap.ProductLocationsFor}&nbsp;<#if facility??>${(facility.facilityName)!}</#if> [ID:${facilityId!}]</#assign>
+      <@section title=sectionTitle>
         <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
         <@thead>
         <@tr class="header-row-2">

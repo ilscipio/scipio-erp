@@ -33,7 +33,7 @@ under the License.
 </#if>
 
 
-<ul class="button-group">
+<ul class="${styles.button_group!}">
     <li><a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="${styles.button_default!}">${uiLabelMap.OrderQuickLookup}</a></li>
     <li><a href="javascript:quicklookupGiftCertificate()" class="${styles.button_default!}">${uiLabelMap.OrderAddGiftCertificate}</a></li>
   <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>

@@ -38,7 +38,7 @@ function makeExpDate() {
     <@row>
         <@cell class="${styles.grid_large!}6">
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
-         <ul class="button-group">
+         <ul class="${styles.button_group!}">
            <li><a href="<@ofbizUrl>setBilling?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a></li>
          </ul>
         

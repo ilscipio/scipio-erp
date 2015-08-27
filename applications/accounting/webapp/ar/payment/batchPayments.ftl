@@ -119,8 +119,7 @@ function setServiceName(selection) {
 //]]>
 
 </script>
-<div class="screenlet">
-    <div class="screenlet-body">
+<@section>
         <form id="paymentBatchForm" method="post" action="">
             <#if paymentList?has_content>
                 <div class="clearfix">
@@ -226,5 +225,4 @@ function setServiceName(selection) {
                 <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
             </#if>
         </form>
-    </div>
-</div>
+</@section>

@@ -26,19 +26,14 @@ function lookupBom() {
 }
 // -->
 </script>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PageTitleEditProductBom} <#if product??>${(product.internalName)!}</#if>&nbsp;[${uiLabelMap.CommonId}&nbsp;${productId!}]</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<#assign sectionTitle>${uiLabelMap.PageTitleEditProductBom} <#if product??>${(product.internalName)!}</#if>&nbsp;[${uiLabelMap.CommonId}&nbsp;${productId!}]</#assign>
+<#assign menuHtml>
     <#if product?has_content>
-        <a href="<@ofbizUrl>BomSimulation</@ofbizUrl>?productId=${productId}&amp;bomType=${productAssocTypeId}" class="${styles.button_default!}">${uiLabelMap.ManufacturingBomSimulation}</a>
+        <li><a href="<@ofbizUrl>BomSimulation</@ofbizUrl>?productId=${productId}&amp;bomType=${productAssocTypeId}" class="${styles.button_default!}">${uiLabelMap.ManufacturingBomSimulation}</a></li>
     </#if>
-    <br />
-    <br />
+</#assign>
+<@section title=sectionTitle>
+    
     <form name="searchform" action="<@ofbizUrl>UpdateProductBom</@ofbizUrl>#topform" method="post">
     <input type="hidden" name="UPDATE_MODE" value=""/>
 
@@ -91,7 +86,6 @@ function lookupBom() {
         <input type="hidden" name="productIdTo" value="${productIdTo!}"/>
         <input type="hidden" name="productAssocTypeId" value="${productAssocTypeId!}"/>
         <input type="hidden" name="fromDate" value="${fromDate!}"/>
-        
     </#if>
     
     <@table type="fields" class="basic-table" cellspacing="0">
@@ -159,7 +153,6 @@ function lookupBom() {
             <@td>${fromDate!}</@td>
           </@tr>
     </#if>
-    
     
     <@tr>
         <@td width="26%" align="right">${uiLabelMap.CommonThruDate}</@td>
@@ -238,17 +231,9 @@ function lookupBom() {
     </@tr>
     </@table>
     </form>
-  </div>
-</div>
+</@section>
 <#if productId?? && product??>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ManufacturingProductComponents}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.ManufacturingProductComponents}">
     <a name="components"></a>
     <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
      <@thead>
@@ -292,16 +277,8 @@ function lookupBom() {
       </@tr>
     </#list>
     </@table>
-  </div>
-</div>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ManufacturingProductComponentOf}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+</@section>
+<@section title="${uiLabelMap.ManufacturingProductComponentOf}">
       <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
        <@thead>
         <@tr class="header-row">
@@ -332,6 +309,5 @@ function lookupBom() {
       </@table>
       
       <p>${uiLabelMap.CommonNote}: <b class="alert">${uiLabelMap.CommonRed}</b> ${uiLabelMap.ManufacturingNote1} <b style="color: red;">${uiLabelMap.CommonRed}</b>${uiLabelMap.ManufacturingNote2} <b style="color: red;">${uiLabelMap.CommonRed}</b>${uiLabelMap.ManufacturingNote3}<p>
-  </div>
-</div>
+</@section>
 </#if>

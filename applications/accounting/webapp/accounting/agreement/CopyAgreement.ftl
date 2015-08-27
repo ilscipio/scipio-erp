@@ -17,14 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if agreement??>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.PageTitleCopyAgreement}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleCopyAgreement}">
     <form action="<@ofbizUrl>copyAgreement</@ofbizUrl>" method="post">
         <input type="hidden" name="agreementId" value="${agreementId}"/>
         <div>
@@ -38,6 +31,5 @@ under the License.
             <input type="submit" value="${uiLabelMap.CommonCopy}"/>
         </div>
     </form>
-  </div>
-</div>
+</@section>
 </#if>

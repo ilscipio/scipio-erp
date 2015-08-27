@@ -38,8 +38,6 @@ ${menuWrapper.renderMenuString()}
     </@td>
   </@tr>
 </@table>
-<br />
-
 
 <#if currentValue?has_content>
     <@renderTextData content=currentValue textData=textData! />
@@ -53,7 +51,6 @@ ${menuWrapper.renderMenuString()}
 -->
 <#-- ============================================================= -->
 
-<br />
 <@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <@tr>
     <@td width='100%'>
@@ -95,7 +92,6 @@ ${menuWrapper.renderMenuString()}
   </@tr>
 </@table>
 
-<br />
 <@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <@tr>
     <@td width='100%'>
@@ -169,10 +165,10 @@ ${menuWrapper.renderMenuString()}
 </@table>
 
 <#--
-<@table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <@tr>
     <@td width='100%'>
-      <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <@tr>
           <@td valign="middle">
             <div class="boxhead">&nbsp;Image Information</div>
@@ -186,10 +182,10 @@ ${menuWrapper.renderMenuString()}
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <@tr>
           <@td>
-  <@table width="100%" border="0" cellpadding="0" cellspacing='0'>
+  <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
     <@tr><@td align="right" nowrap="nowrap"><div class='tabletext'><b>Image</b></div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>
         <img src="<@ofbizUrl>img?imgId=${imgDataResourceId!}</@ofbizUrl>" alt="" />
 <div></@td></@tr>
@@ -233,7 +229,7 @@ ${menuWrapper.renderMenuString()}
 <@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <@tr>
     <@td width='100%'>
-      <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <@tr>
           <@td valign="middle">
             <div class="boxhead">&nbsp;</div>
@@ -247,7 +243,7 @@ ${menuWrapper.renderMenuString()}
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <@tr>
           <@td>
   <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>

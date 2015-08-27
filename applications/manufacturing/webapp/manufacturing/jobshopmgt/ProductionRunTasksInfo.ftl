@@ -17,15 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#if taskInfos?has_content>
 <#list taskInfos as taskInfo>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <#assign task = taskInfo.task>
-    <#assign taskForm = taskInfo.taskForm>
-    <h3>${task.workEffortName!} [${task.workEffortId}]</h3>
-  </div>
-  <div class="screenlet-body">
+  <#assign task = taskInfo.task>
+  <#assign taskForm = taskInfo.taskForm>
+  <@section title="${task.workEffortName!} [${task.workEffortId}]">
     ${taskForm.renderFormString(context)}
-  </div>
-</div>
+  </@section>
 </#list>
+</#if>

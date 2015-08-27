@@ -18,32 +18,18 @@ under the License.
 -->
 
 <#if techDataCalendar?has_content>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.ManufacturingEditCalendarExceptionDayFor}&nbsp;
+<#assign sectionTitle>${uiLabelMap.ManufacturingEditCalendarExceptionDayFor}&nbsp;
     <#if (techDataCalendar.description)?has_content>"${(techDataCalendar.get("description",locale))}"</#if>
-    [${uiLabelMap.CommonId} ${techDataCalendar.calendarId!}]</h3>
-  </div>
-  <div class="screenlet-body">
+    [${uiLabelMap.CommonId} ${techDataCalendar.calendarId!}]</#assign>
+<@section title=sectionTitle>
     ${listCalendarExceptionDayWrapper.renderFormString(context)}
-  </div>
-</div>
+</@section>
 <#if calendarExceptionDay?has_content>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.PageTitleEditCalendarExceptionWeek}</h3>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleEditCalendarExceptionWeek}">
     ${updateCalendarExceptionDayWrapper.renderFormString(context)}
-  </div>
-</div>
+</@section>
 </#if>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.PageTitleAddCalendarExceptionWeek}</h3>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleAddCalendarExceptionWeek}">
     ${addCalendarExceptionDayWrapper.renderFormString(context)}
-  </div>
-</div>
+</@section>
 </#if>

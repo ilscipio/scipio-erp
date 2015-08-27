@@ -21,7 +21,7 @@ under the License.
     <#assign stepTitle = uiLabelMap.get(stepTitleId)>
 </#if>
 
-<#assign title>
+<#assign sectionTitle>
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
             ${uiLabelMap.OrderPurchaseOrder}
         <#else>
@@ -30,8 +30,8 @@ under the License.
         :&nbsp;${stepTitle!}
 </#assign>
 
-<@section title=title>
-      <ul class="button-group">
+<@section title=sectionTitle>
+      <ul class="${styles.button_group!}">
       <#list checkoutSteps?reverse as checkoutStep>
         <#assign stepUiLabel = uiLabelMap.get(checkoutStep.label)>
         <#if checkoutStep.enabled == "N">

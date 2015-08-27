@@ -79,7 +79,7 @@ function submitForm(form, mode, value) {
   <input type="hidden" name="BACK_PAGE" value="quickcheckout"/>
 
 
-<#assign title>
+<#assign sectionTitle>
                 <#if shipping == true>
     1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?
                 <#else>
@@ -87,7 +87,7 @@ function submitForm(form, mode, value) {
                 </#if>
 </#assign>
 
-<@section title=title>
+<@section title=sectionTitle>
                 <@table type="fields" class="" width="100%" border="0" cellpadding="1" cellspacing="0">
                   <@tr>
                     <@td colspan="2">
@@ -150,14 +150,14 @@ function submitForm(form, mode, value) {
                 ${screens.render("component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo")}
                 -->
         </@section>
-        <#assign title>
+        <#assign sectionTitle>
                 <#if shipping == true>
                     2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?
                 <#else>
                     2)&nbsp;${uiLabelMap.OrderOptions}?
                 </#if>
         </#assign>
-        <@section title=title>
+        <@section title=sectionTitle>
                 <@table type="fields" class="" width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
                  <#if shipping == true>
                   <#list carrierShipmentMethodList as carrierShipmentMethod>

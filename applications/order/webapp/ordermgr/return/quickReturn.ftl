@@ -69,7 +69,7 @@ under the License.
             </@tr>
             <@tr>
               <@td colspan="8">
-                <@table cellspacing="0" class="basic-table">
+                <@table type="fields" cellspacing="0" class="basic-table">
                   <#list shippingContactMechList as shippingContactMech>
                     <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                     <@tr>

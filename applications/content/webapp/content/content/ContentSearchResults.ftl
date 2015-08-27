@@ -41,7 +41,7 @@ under the License.
     
     <@paginateContentResults />
     <center>
-      <@table width="100%" cellpadding="0" cellspacing="0">
+      <@table type="fields" class="" width="100%" cellpadding="0" cellspacing="0">
         <#assign listIndex = lowIndex>
         <#list contentIds as contentId><#-- note that there is no boundary range because that is being done before the list is put in the content -->
           <#assign content = delegator.findOne("Content", Static["org.ofbiz.base.util.UtilMisc"].toMap("contentId", contentId), false)>

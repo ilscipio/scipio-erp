@@ -121,7 +121,7 @@ under the License.
               <@td width="10%"><input type="checkbox" name="useEmail2" value="Y"/></@td>
             </@tr>
             <@tr>
-              <@td colspan="4" align="center"><br />
+              <@td colspan="4" align="center">
                 <input type="submit" value="${uiLabelMap.CommonSubmit}"/>
               </@td>
             </@tr>

@@ -58,7 +58,7 @@ function call_fieldlookup3(view_name) {
   <@tr>
     <@td width='100%'>
       <form name="userform" method="post" action="<@ofbizUrl>UserPermissions</@ofbizUrl>" >
-      <@table width='100%' border='0' cellspacing='0' cellpadding='0' class='appTitle'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='appTitle'>
         <@tr>
           <@td colspan="1" valign="middle" align="right">
             <div class="boxhead">&nbsp; WebSitePublishPoint&nbsp;&nbsp; </div>

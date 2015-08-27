@@ -102,7 +102,7 @@ under the License.
                   </@tr>
                   <@tr>
                     <@td>
-                      <@table cellspacing="0" class="basic-table">
+                      <@table type="fields" cellspacing="0" class="basic-table">
                         <@tr>
                           <#assign productId = "">
                           <#if orderItem.productId??>

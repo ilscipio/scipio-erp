@@ -26,7 +26,7 @@ under the License.
 </#assign>
 <@section title="${uiLabelMap.PageTitleEditCategoryProducts}" menuHtml=menuHtml>
       <#macro categoryProductsNav>
-        <ul class="button-group">
+        <ul class="${styles.button_group!}">
           <li><a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="${styles.button_default!}<#if (viewIndex <= 1)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
           <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span></li>
           <li><a class="${styles.button_default!}" href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="${styles.button_default!}<#if (listSize <= highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>

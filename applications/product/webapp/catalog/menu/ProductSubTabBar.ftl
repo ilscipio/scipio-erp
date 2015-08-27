@@ -18,7 +18,7 @@ under the License.
 -->
 <@row>
     <@cell>
-    <ul class="button-group">
+    <ul class="${styles.button_group!}">
         <li><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="tiny button success">${uiLabelMap.ProductNewProduct}</a></li>
         <#if product?has_content>
             <li><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>?product_id=${productId!}" class="tiny button success">${uiLabelMap.ProductNewVirtualProduct}</a></li>

@@ -20,15 +20,9 @@ under the License.
     <#assign uiLabelMap = requestAttributes.uiLabelMap>
 </#if>
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-      <h3>${uiLabelMap.WorkEffortWorkEffortManagerMainPage}</h3>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.WorkEffortWorkEffortManagerMainPage}">
       <#if !userLogin?has_content>
-          <div>${uiLabelMap.WorkEffortInterestingSure}.</div>
-          <br />
+          <p>${uiLabelMap.WorkEffortInterestingSure}.</p>
       </#if>
-      <div>${uiLabelMap.WorkEffortApplicationEventsTasksWorkflowActivities}.</div>
-  </div>
-</div>
+      <p>${uiLabelMap.WorkEffortApplicationEventsTasksWorkflowActivities}.</p>
+</@section>

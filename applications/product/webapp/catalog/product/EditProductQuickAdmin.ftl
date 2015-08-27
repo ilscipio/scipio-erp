@@ -335,7 +335,7 @@ function doPublish() {
             <@table type="fields" cellspacing="0" class="basic-table">
               <@tr>
               <@td>
-                  <@table cellspacing="0" class="basic-table">
+                  <@table type="fields" cellspacing="0" class="basic-table">
                       <@tr>
                           <@td>
                               <select multiple="multiple" name="categoryId">
@@ -353,7 +353,7 @@ function doPublish() {
               </@tr>
             </@table>
         </form>
-        <@table>
+        <@table type="generic">
           <@tr>
             <@td valign="top">
                 <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
@@ -384,7 +384,7 @@ function doPublish() {
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>" name="publish">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <input type="hidden" name="categoryId" value="${allCategoryId!}"/>
-        <@table cellspacing="0" class="basic-table">
+        <@table type="fields" cellspacing="0" class="basic-table">
             <@tr>
                 <@td>
                     <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
@@ -397,7 +397,7 @@ function doPublish() {
         <form action="<@ofbizUrl>quickAdminUnPublish</@ofbizUrl>" name="unpublish">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <input type="hidden" name="productCategoryId" value="${allCategoryId!}"/>
-        <@table cellspacing="0" class="basic-table">
+        <@table type="fields" cellspacing="0" class="basic-table">
             <@tr>
                 <@td>
                     <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>

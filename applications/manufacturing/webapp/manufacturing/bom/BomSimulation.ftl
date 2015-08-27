@@ -18,28 +18,21 @@ under the License.
 -->
 
 <#if requestParameters.lookupFlag?default("N") == "Y">
-    <#if selectedFeatures?has_content>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ManufacturingSelectedFeatures}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
-      <#list selectedFeatures as selectedFeature>
+
+<#if selectedFeatures?has_content>
+  <#assign sectionTitle>${uiLabelMap.ManufacturingSelectedFeatures}</#assign>
+  <#assign menuHtml></#assign>
+<#else>
+  <#assign sectionTitle>${uiLabelMap.ManufacturingBomSimulation}</#assign>
+  <#assign menuHtml></#assign>
+</#if>
+<@section title=sectionTitle menuHtml=menuHtml>
+     <#if selectedFeatures?has_content>
+       <#list selectedFeatures as selectedFeature>
          <p>${selectedFeature.productFeatureTypeId} = ${selectedFeature.description!} [${selectedFeature.productFeatureId}]</p>
        </#list>
-<#else>
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ManufacturingBomSimulation}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
-</#if>
+     </#if>
+
       <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
        <@thead>
         <@tr class="header-row">
@@ -93,7 +86,7 @@ under the License.
             </@tr>
         </#if>
       </@table>
-      <br />
+    
       <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
        <@thead>
         <@tr class="header-row">
@@ -136,6 +129,5 @@ under the License.
           </@tr>
         </#if>
       </@table>
-  </div>
-</div>
+</@section>
 </#if>

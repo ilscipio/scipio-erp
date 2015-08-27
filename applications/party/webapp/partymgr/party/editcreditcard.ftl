@@ -19,11 +19,11 @@ under the License.
 
 <!-- begin editcreditcard.ftl -->
 <#if !creditCard??>
-  <#assign title = "${uiLabelMap.AccountingAddNewCreditCard}">
+  <#assign sectionTitle = "${uiLabelMap.AccountingAddNewCreditCard}">
 <#else>
-  <#assign title = "${uiLabelMap.AccountingEditCreditCard}">
+  <#assign sectionTitle = "${uiLabelMap.AccountingEditCreditCard}">
 </#if>
-<@section title=title menuHtml=menuHtml>
+<@section title=sectionTitle menuHtml=menuHtml>
     <#macro saveCancelMenu>
       <ul class="${styles.button_group!}">
         <li><a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a></li>

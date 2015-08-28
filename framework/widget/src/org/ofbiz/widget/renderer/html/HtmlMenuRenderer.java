@@ -135,7 +135,7 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
     }
 
     public void renderFormatSimpleWrapperRows(Appendable writer, Map<String, Object> context, Object menuObj) throws IOException {
-        List<ModelMenuItem> menuItemList = ((ModelMenu) menuObj).getMenuItemList();
+        List<ModelMenuItem> menuItemList = ((ModelMenu) menuObj).getOrderedMenuItemList(context);
         for (ModelMenuItem currentMenuItem: menuItemList) {
             renderMenuItem(writer, context, currentMenuItem);
         }

@@ -182,7 +182,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     @Override
     public void renderFormatSimpleWrapperRows(Appendable writer, Map<String, Object> context, Object menu) throws IOException {
         contextHandler.registerContext(writer, context);
-        List<ModelMenuItem> menuItemList = ((ModelMenu) menu).getMenuItemList();
+        List<ModelMenuItem> menuItemList = ((ModelMenu) menu).getOrderedMenuItemList(context);
         for (ModelMenuItem currentMenuItem : menuItemList) {
             renderMenuItem(writer, context, currentMenuItem);
         }

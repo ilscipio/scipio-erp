@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -39,6 +40,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -112,6 +114,9 @@ public class ModelMenu extends ModelWidget {
     private final FlexibleStringExpander title;
     private final String tooltip;
     private final String type;
+    
+    private final String itemsSortMode;
+    
 
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
@@ -145,6 +150,7 @@ public class ModelMenu extends ModelWidget {
         FlexibleStringExpander title = FlexibleStringExpander.getInstance("");
         String tooltip = "";
         String type = "";
+        String itemsSortMode = "";
         // check if there is a parent menu to inherit from
         ModelMenu parent = null;
         String parentResource = menuElement.getAttribute("extends-resource");
@@ -174,6 +180,7 @@ public class ModelMenu extends ModelWidget {
             }
             if (parent != null) {
                 type = parent.type;
+                itemsSortMode = parent.type;
                 target = parent.target;
                 id = parent.id;
                 title = parent.title;
@@ -208,6 +215,8 @@ public class ModelMenu extends ModelWidget {
         }
         if (!menuElement.getAttribute("type").isEmpty())
             type = menuElement.getAttribute("type");
+        if (!menuElement.getAttribute("items-sort-mode").isEmpty())
+            type = menuElement.getAttribute("items-sort-mode");
         if (!menuElement.getAttribute("target").isEmpty())
             target = menuElement.getAttribute("target");
         if (!menuElement.getAttribute("id").isEmpty())
@@ -303,6 +312,7 @@ public class ModelMenu extends ModelWidget {
         this.title = title;
         this.tooltip = tooltip;
         this.type = type;
+        this.itemsSortMode = itemsSortMode;
     }
 
     /**
@@ -695,6 +705,129 @@ public class ModelMenu extends ModelWidget {
     public List<ModelMenuItem> getMenuItemList() {
         return menuItemList;
     }
+    
+    public List<ModelMenuItem> getOrderedMenuItemList(final Map<String, Object> context) {
+        if (itemsSortMode != null && !"off".equals(itemsSortMode)) {
+            String itemsSortMode = this.itemsSortMode;
+            boolean ignoreCase = itemsSortMode.endsWith("-ignorecase");
+            if (ignoreCase) {
+                itemsSortMode = itemsSortMode.substring(0, itemsSortMode.length() - "-ignorecase".length());
+            }
+            List<ModelMenuItem> sorted = new ArrayList<ModelMenuItem>(menuItemList);
+            Comparator<ModelMenuItem> cmp = null;
+            if ("name".equals(itemsSortMode)) {
+                if (ignoreCase) {
+                    cmp = new Comparator<ModelMenuItem>() {
+                        @Override
+                        public int compare(ModelMenuItem o1, ModelMenuItem o2) {
+                            return o1.getName().compareToIgnoreCase(o2.getName());
+                        }
+                    };
+                }
+                else {
+                    cmp = new Comparator<ModelMenuItem>() {
+                        @Override
+                        public int compare(ModelMenuItem o1, ModelMenuItem o2) {
+                            return o1.getName().compareTo(o2.getName());
+                        }
+                    };
+                }
+            }
+            else if ("title".equals(itemsSortMode)) {
+                if (ignoreCase) {
+                    cmp = new Comparator<ModelMenuItem>() {
+                        @Override
+                        public int compare(ModelMenuItem o1, ModelMenuItem o2) {
+                            return o1.getTitle(context).compareToIgnoreCase(o2.getTitle(context));
+                        }
+                    };
+                }
+                else {
+                    cmp = new Comparator<ModelMenuItem>() {
+                        @Override
+                        public int compare(ModelMenuItem o1, ModelMenuItem o2) {
+                            return o1.getTitle(context).compareTo(o2.getTitle(context));
+                        }
+                    };
+                }
+            }
+            else if ("link-text".equals(itemsSortMode)) {
+                if (ignoreCase) {
+                    cmp = new Comparator<ModelMenuItem>() {
+                        @Override
+                        public int compare(ModelMenuItem o1, ModelMenuItem o2) {
+                            MenuLink l1 = o1.getLink();
+                            MenuLink l2 = o2.getLink();
+                            if (l1 != null) {
+                                if (l2 != null) {
+                                    return l1.getTextExdr().expandString(context).compareToIgnoreCase(l2.getTextExdr().expandString(context));
+                                }
+                                else {
+                                    return 1;
+                                }
+                            }
+                            else {
+                                if (l2 != null) {
+                                    return -1;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            }
+                        }
+                    };
+                }
+                else {
+                    cmp = new Comparator<ModelMenuItem>() {
+                        @Override
+                        public int compare(ModelMenuItem o1, ModelMenuItem o2) {
+                            MenuLink l1 = o1.getLink();
+                            MenuLink l2 = o2.getLink();
+                            if (l1 != null) {
+                                if (l2 != null) {
+                                    return l1.getTextExdr().expandString(context).compareTo(l2.getTextExdr().expandString(context));
+                                }
+                                else {
+                                    return 1;
+                                }
+                            }
+                            else {
+                                if (l2 != null) {
+                                    return -1;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            }
+                        }
+                    };
+                }
+            }
+            else if ("display-text".equals(itemsSortMode)) {
+                if (ignoreCase) {
+                    cmp = new Comparator<ModelMenuItem>() {
+                        @Override
+                        public int compare(ModelMenuItem o1, ModelMenuItem o2) {
+                            return o1.getDisplayText(context).compareToIgnoreCase(o2.getDisplayText(context));
+                        }
+                    };
+                }
+                else {
+                    cmp = new Comparator<ModelMenuItem>() {
+                        @Override
+                        public int compare(ModelMenuItem o1, ModelMenuItem o2) {
+                            return o1.getDisplayText(context).compareTo(o2.getDisplayText(context));
+                        }
+                    };
+                }
+            }
+            if (cmp != null) {
+                Collections.sort(sorted, cmp);
+            }
+            return sorted;
+        }
+        return menuItemList;
+    }
 
     public Map<String, ModelMenuItem> getMenuItemMap() {
         return menuItemMap;
@@ -751,6 +884,10 @@ public class ModelMenu extends ModelWidget {
     public String getType() {
         return this.type;
     }
+    
+    public String getItemsSortMode() {
+        return this.itemsSortMode;
+    }
 
     public int renderedMenuItemCount(Map<String, Object> context) {
         int count = 0;
@@ -796,7 +933,7 @@ public class ModelMenu extends ModelWidget {
         menuStringRenderer.renderFormatSimpleWrapperOpen(writer, context, this);
 
         // render each menuItem row, except hidden & ignored rows
-        for (ModelMenuItem item : this.menuItemList) {
+        for (ModelMenuItem item : this.getOrderedMenuItemList(context)) {
             item.renderMenuItemString(writer, context, menuStringRenderer);
         }
         // render formatting wrapper close

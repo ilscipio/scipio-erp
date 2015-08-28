@@ -36,6 +36,7 @@ import org.ofbiz.widget.model.CommonWidgetModels.AutoServiceParameters;
 import org.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.ofbiz.widget.model.CommonWidgetModels.Link;
 import org.ofbiz.widget.model.CommonWidgetModels.Parameter;
+import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
 import org.ofbiz.widget.portal.PortalPageWorker;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Element;
@@ -519,6 +520,22 @@ public class ModelMenuItem extends ModelWidget {
 
     public ModelMenuItem mergeOverrideModelMenuItem(ModelMenuItem overrideMenuItem) {
         return new ModelMenuItem(this, overrideMenuItem);
+    }
+    
+    public String getDisplayText(Map<String, Object> context) {
+        String res;
+        MenuLink link = getLink();
+        if (link != null) {
+            res = link.getTextExdr().expandString(context);
+            if (UtilValidate.isNotEmpty(res)) {
+                return res;
+            }
+        }
+        res = getTitle(context);
+        if (UtilValidate.isNotEmpty(res)) {
+            return res;
+        }
+        return getName();
     }
 
     public void renderMenuItemString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)

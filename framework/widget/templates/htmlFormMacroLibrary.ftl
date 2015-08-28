@@ -586,6 +586,13 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatItemRowOpen formName itemIndex altRowStyles evenRowStyle oddRowStyle>
+  <#-- Cato: translate stock "alternate-row" odd-row-style to odd+even -->
+  <#local oddRowStyleSet = splitStyleNamesToSet(oddRowStyle)>
+  <#if oddRowStyleSet.contains("alternate-row")>
+    <#local remOddRowStyles = removeStyleNames(oddRowStyle, "alternate-row")>
+    <#local oddRowStyle = (styles.row_alt! + " " + remOddRowStyles)?trim>
+    <#local evenRowStyle = (styles.row_reg! + " " + removeStyleNames(evenRowStyle, "even-row"))?trim>
+  </#if>
   <tr <#if itemIndex?has_content><#if itemIndex%2==0><#if evenRowStyle?has_content>class="${evenRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content>class="${altRowStyles}"</#if><#else><#if oddRowStyle?has_content>class="${oddRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content>class="${altRowStyles}"</#if></#if></#if> >
 </#macro>
 <#macro renderFormatItemRowClose formName>

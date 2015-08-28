@@ -73,8 +73,8 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#rt/>
   /><#t/>
   <#if ajaxUrl?has_content>
-    <#assign defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
-    <#assign defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
+    <#local defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
+    <#local defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
     <script language="JavaScript" type="text/javascript">ajaxAutoCompleter('${ajaxUrl}', false, ${defaultMinLength!2}, ${defaultDelay!300});</script><#lt/>
   </#if>
 </#macro>
@@ -308,18 +308,18 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#if timeDropdown?has_content && timeDropdown=="time-dropdown">
       <select name="${timeHourName}" <#if classString?has_content>class="${classString}"</#if>><#rt/>
         <#if isTwelveHour>
-          <#assign x=11>
+          <#local x=11>
           <#list 0..x as i>
             <option value="${i}"<#if hour1?has_content><#if i=hour1> selected="selected"</#if></#if>>${i}</option><#rt/>
           </#list>
         <#else>
-          <#assign x=23>
+          <#local x=23>
           <#list 0..x as i>
             <option value="${i}"<#if hour2?has_content><#if i=hour2> selected="selected"</#if></#if>>${i}</option><#rt/>
           </#list>
         </#if>
         </select>:<select name="${timeMinutesName}" <#if classString?has_content>class="${classString}"</#if>><#rt/>
-          <#assign values = Static["org.ofbiz.base.util.StringUtil"].toList(timeValues)>
+          <#local values = Static["org.ofbiz.base.util.StringUtil"].toList(timeValues)>
           <#list values as i>
             <option value="${i}"<#if minutes?has_content><#if i?number== minutes ||((i?number==(60 -step?number)) && (minutes &gt; 60 - (step?number/2))) || ((minutes &gt; i?number )&& (minutes &lt; i?number+(step?number/2))) || ((minutes &lt; i?number )&& (minutes &gt; i?number-(step?number/2)))> selected="selected"</#if></#if>>${i}</option><#rt/>
           </#list>
@@ -697,17 +697,17 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase>
   <@row collapse=collapse!false>
   <#if opEquals?has_content>
-            <#assign class1="${styles.grid_small!}3 ${styles.grid_large!}3"/>
-            <#assign class2="${styles.grid_small!}6 ${styles.grid_large!}6"/>
-            <#assign class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+            <#local class1="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+            <#local class2="${styles.grid_small!}6 ${styles.grid_large!}6"/>
+            <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
             
         <#else>
-            <#assign class1=""/>
-            <#assign class2="${styles.grid_small!}9 ${styles.grid_large!}9"/>
-            <#assign class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+            <#local class1=""/>
+            <#local class2="${styles.grid_small!}9 ${styles.grid_large!}9"/>
+            <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
       </#if>      
       <#if opEquals?has_content>
-        <#assign newName = "${name}"/>
+        <#local newName = "${name}"/>
         <@cell class="${class1!}">
     <select <#if name?has_content>name="${name}_op"</#if>    class="selectBox"><#rt/>
       <option value="equals"<#if defaultOption=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
@@ -866,30 +866,43 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderRangeFindField className alert name value size maxlength autocomplete titleStyle defaultOptionFrom opEquals opGreaterThan opGreaterThanEquals opLessThan opLessThanEquals value2 defaultOptionThru>
-  <input type="text" <@renderClass className alert /> <#if name?has_content>name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
-  <#if titleStyle?has_content>
-    <span class="${titleStyle}"><#rt/>
-  </#if>
-  <select <#if name?has_content>name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
-    <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
-    <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
-    <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${opGreaterThanEquals}</option><#rt/>
-  </select><#rt/>
-  <#if titleStyle?has_content>
-    </span><#rt/>
-  </#if>
-  <br /><#rt/>
-  <input type="text" <@renderClass className alert /><#if name?has_content> name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
-  <#if titleStyle?has_content>
-    <span class="${titleStyle}"><#rt/>
-  </#if>
-  <select name=<#if name?has_content>"${name}_fld1_op"</#if> class="selectBox"><#rt/>
-    <option value="lessThan"<#if defaultOptionThru=="lessThan"> selected="selected"</#if>>${opLessThan?html}</option><#rt/>
-    <option value="lessThanEqualTo"<#if defaultOptionThru=="lessThanEqualTo"> selected="selected"</#if>>${opLessThanEquals?html}</option><#rt/>
-  </select><#rt/>
-  <#if titleStyle?has_content>
-    </span>
-  </#if>
+  <#local class1="${styles.grid_small!}9 ${styles.grid_large!}9"/>
+  <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+  <@row collapse=collapse!false>
+    <@cell class=class1>
+      <input type="text" <@renderClass className alert /><#if name?has_content> name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+    </@cell>
+    <@cell class=class2>
+      <#if titleStyle?has_content>
+        <span class="${titleStyle}"><#rt/>
+      </#if>
+      <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
+        <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
+        <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
+        <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${opGreaterThanEquals}</option><#rt/>
+      </select><#rt/>
+      <#if titleStyle?has_content>
+        </span><#rt/>
+      </#if>
+    </@cell>
+  </@row><#rt/>
+  <@row>
+    <@cell class=class1>
+      <input type="text" <@renderClass className alert /><#if name?has_content> name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+    </@cell>
+    <@cell class=class2>
+      <#if titleStyle?has_content>
+        <span class="${titleStyle}"><#rt/>
+      </#if>
+      <select name=<#if name?has_content>"${name}_fld1_op"</#if> class="selectBox"><#rt/>
+        <option value="lessThan"<#if defaultOptionThru=="lessThan"> selected="selected"</#if>>${opLessThan?html}</option><#rt/>
+        <option value="lessThanEqualTo"<#if defaultOptionThru=="lessThanEqualTo"> selected="selected"</#if>>${opLessThanEquals?html}</option><#rt/>
+      </select><#rt/>
+      <#if titleStyle?has_content>
+        </span>
+      </#if>
+    </@cell>
+  </@row>
 </#macro>
 
 <#--
@@ -976,8 +989,8 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
       );"></a><#rt>
     <#else>
       <#if ajaxEnabled?has_content && ajaxEnabled>
-        <#assign defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
-        <#assign defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
+        <#local defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
+        <#local defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
         <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
         <#if !ajaxUrl?contains("searchValueFieldName=")>
           <#if descriptionFieldName?has_content && showDescription == "true">
@@ -1007,12 +1020,12 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
             args :
               <#rt/>
                 <#if targetParameterIter?has_content>
-                  <#assign isFirst = true>
+                  <#local isFirst = true>
                   <#lt/>[<#rt/>
                   <#list targetParameterIter as item>
                     <#if isFirst>
                       <#lt/>document.${formName}.${item}<#rt/>
-                      <#assign isFirst = false>
+                      <#local isFirst = false>
                     <#else>
                       <#lt/> ,document.${formName}.${item}<#rt/>
                     </#if>
@@ -1130,7 +1143,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
             <li class="${paginatePreviousStyle}<#if (viewIndex> viewIndexFirst)>"><a ${actionStr}>${paginatePreviousLabel}</a><#else> unavailable">${paginatePreviousLabel}</#if></li>
         <#local displayDots = true/>
         <#if (listSize > 0)> 
-          <#assign x=(listSize/viewSize)?ceiling>
+          <#local x=(listSize/viewSize)?ceiling>
             <#list 1..x as i>
               <#local vi = viewIndexFirst + (i - 1)>
               <#if (vi gte viewIndexFirst && vi lte viewIndexFirst+itemRange) || (vi gte viewIndex-itemRange && vi lte viewIndex+itemRange)>

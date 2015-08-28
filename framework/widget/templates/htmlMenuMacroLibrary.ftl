@@ -37,31 +37,32 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     <#if styleSet.contains("menu-main")>
       <#local remStyle = removeStyleNames(style, "menu-main")>
         <li class="has-dropdown not-click active"><a href="#">${title!}</a>
-            <ul class="dropdown<#if remStyle?has_content> ${remStyle}</#if>">
+      <#local classes = joinStyleNames(styles.menu_main!, remStyle)>
     <#elseif styleSet.contains("menu-sidebar")>
       <#local remStyle = removeStyleNames(style, "menu-sidebar")>
         <nav>
             <h2>${navigation!}</h2>
-            <ul class="side-nav<#if remStyle?has_content> ${remStyle}</#if>">
+      <#local classes = joinStyleNames(styles.menu_sidebar!, remStyle)>
     <#elseif styleSet.contains("menu-button")>
       <#local remStyle = removeStyleNames(style, "menu-button")>
-        <ul class="${styles.button_group!} ${styles.button_force!}<#if remStyle?has_content> ${remStyle}</#if>">
+      <#local classes = joinStyleNames(styles.menu_button!, remStyle)>
     <#elseif styleSet.contains("menu-tab")>    
       <#local remStyle = removeStyleNames(style, "menu-tab")>
-        <ul class="${styles.button_group!} ${styles.button_force!}<#if remStyle?has_content> ${remStyle}</#if>">
+      <#local classes = joinStyleNames(styles.menu_tab!, remStyle)>
     <#elseif styleSet.contains("button-bar")>
       <#local remStyle = removeStyleNames(style, ["button-bar", "no-clear"])>
       <#-- right now translating button-bar menu-container-style here to avoid modifying all menu styles
            note: in stock, button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear (removed above) -->
       <#-- WARN: stock ofbiz usually applied styles to a containing div, 
            not sure should keep that behavior or not, but might not consistent with foundation styles? -->
-        <ul class="${styles.button_group!}<#if remStyle?has_content> ${remStyle}</#if>">
+      <#local classes = joinStyleNames(styles.menu_button!, remStyle)>
     <#else>
       <#-- all other cases -->
       <#-- WARN: stock ofbiz usually applied styles to a containing div, 
            not sure should keep that behavior or not, but might not consistent with foundation styles? -->
-        <ul<#if style?has_content> class="${style}"</#if>>
+      <#local classes = joinStyleNames(styles.menu_default!, style)>
     </#if>
+        <ul<#if classes?has_content> class="${classes}"</#if>>
   </#if>
 </#macro>
 

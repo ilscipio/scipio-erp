@@ -126,6 +126,27 @@ splits a style classes string into a Set of unique elems, no order.
 
 <#-- 
 *************
+* joinStyleNames function
+************
+Joins style names in a nice string
+Usage example:   
+    <#assign myVar = joinStyleNames("class1", "", " class3")>
+       
+   * Parameters *
+    styleNames     = style names (strings), as positional params.
+   * Return value *
+    a string of combined style names
+-->
+<#function joinStyleNames styleNames...>
+  <#local res = "">
+  <#list styleNames as name>
+    <#local res = (res + " " + name)?trim>
+  </#list>
+  <#return res>
+</#function> 
+
+<#-- 
+*************
 * containsStyleName function
 ************
 Returns true if class/style string contains given style.

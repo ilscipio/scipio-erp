@@ -382,7 +382,7 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
   -->
   
   <#if !menuClass?has_content>
-    <#local menuClass = "${styles.button_group!}"> <#-- ${styles.button_force!} -->
+    <#local menuClass = "${styles.menu_section!}"> <#-- ${styles.button_force!} -->
   <#elseif menuClass == "none">
     <#local menuClass = "">
   </#if>

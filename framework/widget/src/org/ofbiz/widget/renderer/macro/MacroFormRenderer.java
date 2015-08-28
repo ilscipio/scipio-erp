@@ -3310,6 +3310,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     public void renderAlternateText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException {
+        contextHandler.registerContext(writer, context);
         String className = UtilFormatOut.checkNull(modelForm.getAlternateTextStyle(context));
         String text = UtilFormatOut.checkNull(modelForm.getAlternateText(context));
         StringWriter sr = new StringWriter();

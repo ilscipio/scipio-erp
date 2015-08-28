@@ -22,16 +22,18 @@ under the License.
 <p>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</p>
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
-    <a href="<@ofbizUrl>xmldsrawdump</@ofbizUrl>" class="${styles.button_default!}" target="_blank">Click Here to Get Data (or save to file)</a>
+  <ul class="${styles.menu_button!}">
+    <li><a href="<@ofbizUrl>xmldsrawdump</@ofbizUrl>" class="${styles.menu_button_itemlink!}" target="_blank">Click Here to Get Data (or save to file)</a></li>
+  </ul>
 <#else>
     <@alert type="error">You do not have permission to use this page (ENTITY_MAINT needed)</@alert>
 </#if>
 <#else>
 <#macro displayButtonBar>
-  <ul class="${styles.button_group!}">
+  <ul class="${styles.menu_button!}">
     <li><input type="submit" value="${uiLabelMap.WebtoolsExport}"/></li>
-    <li><a href="<@ofbizUrl>xmldsdump?checkAll=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.WebtoolsCheckAll}</a></li>
-    <li><a href="<@ofbizUrl>xmldsdump</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.WebtoolsUnCheckAll}</a></li>
+    <li><a href="<@ofbizUrl>xmldsdump?checkAll=true</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.WebtoolsCheckAll}</a></li>
+    <li><a href="<@ofbizUrl>xmldsdump</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.WebtoolsUnCheckAll}</a></li>
   </ul>
 </#macro>
 
@@ -84,7 +86,6 @@ under the License.
         </@cell>
     </@row>
 
-
     <@grid>
           <#assign entCount = 0>
           <#assign checkAll = parameters.checkAll?default("false")>
@@ -95,7 +96,7 @@ under the License.
                 <#assign check = "false"/>
             </#if>
             <#assign curEntityName = modelEntity.getEntityName()/>
-            <li><@field type="checkbox" name="entityName" checked="${check}" id="${curEntityName}" label="${curEntityName}" norows=true nocells=true/></li>
+            <li><@field type="checkbox" name="entityName" checked="${check}" id="${curEntityName}" value="${curEntityName}" label="${curEntityName}" norows=true nocells=true/></li>
           </#list>
     </@grid>
 

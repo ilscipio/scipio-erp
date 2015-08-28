@@ -55,6 +55,14 @@ under the License.
     "icon_calendar" : "fi-calendar",
     "icon_arrow" : "fi-arrow-right",
     
+<#-- Menus -->   
+    "menu_app_itemlink" : "", 
+    "menu_side_itemlink" : "", 
+    "menu_tab_itemlink" : "button tiny", 
+    "menu_subtab_itemlink" : "button tiny", 
+    "menu_button_itemlink" : "button tiny",
+    "menu_section_itemlink" : "button tiny", 
+    
 <#-- Data and Tables -->  
     "table_default" : "",
     "table_data_list" : "basic-table",

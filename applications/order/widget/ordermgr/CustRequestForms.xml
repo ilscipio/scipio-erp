@@ -41,11 +41,14 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-            <field name="custRequestTypeId" position="2">
-                <drop-down allow-empty="true">
-                    <entity-options description="${description}" entity-name="CustRequestType" key-field-name="custRequestTypeId"/>
-                </drop-down>
-            </field>
+        <field name="custRequestTypeId" position="2">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="CustRequestType" key-field-name="custRequestTypeId"/>
+            </drop-down>
+        </field>
+        <field name="custRequestName" position-span="1">
+            <text-find/>
+        </field>
         <field name="currencyUomId"><ignored/></field>
         <field name="maximumAmountUomId"><ignored/></field>
         <field name="custRequestCategoryId"><ignored/></field>

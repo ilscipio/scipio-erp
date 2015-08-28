@@ -593,7 +593,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#local oddRowStyle = (styles.row_alt! + " " + remOddRowStyles)?trim>
     <#local evenRowStyle = (styles.row_reg! + " " + removeStyleNames(evenRowStyle, "even-row"))?trim>
   </#if>
-  <tr <#if itemIndex?has_content><#if itemIndex%2==0><#if evenRowStyle?has_content>class="${evenRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content>class="${altRowStyles}"</#if><#else><#if oddRowStyle?has_content>class="${oddRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content>class="${altRowStyles}"</#if></#if></#if> >
+  <tr<#if itemIndex?has_content><#if itemIndex%2==0><#if evenRowStyle?has_content> class="${evenRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content> class="${altRowStyles}"</#if><#else><#if oddRowStyle?has_content> class="${oddRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content> class="${altRowStyles}"</#if></#if></#if>>
 </#macro>
 <#macro renderFormatItemRowClose formName>
   </tr>

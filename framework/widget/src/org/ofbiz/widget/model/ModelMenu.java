@@ -751,7 +751,7 @@ public class ModelMenu extends ModelWidget {
                     };
                 }
             }
-            else if ("link-text".equals(itemsSortMode)) {
+            else if ("linktext".equals(itemsSortMode)) {
                 if (ignoreCase) {
                     cmp = new Comparator<ModelMenuItem>() {
                         @Override
@@ -803,7 +803,7 @@ public class ModelMenu extends ModelWidget {
                     };
                 }
             }
-            else if ("display-text".equals(itemsSortMode)) {
+            else if ("displaytext".equals(itemsSortMode)) {
                 if (ignoreCase) {
                     cmp = new Comparator<ModelMenuItem>() {
                         @Override

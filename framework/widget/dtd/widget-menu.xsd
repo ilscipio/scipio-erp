@@ -99,7 +99,7 @@ under the License.
             <xs:attribute name="items-sort-mode">
                 <xs:annotation>
                     <xs:documentation>Cato: If true, sort final menu items by some attribute. Default off.
-                        display-text means try to use link-text, if none use title, if none use name.</xs:documentation>
+                        displaytext means try to use linktext, if none use title, if none use name.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -108,10 +108,10 @@ under the License.
                         <xs:enumeration value="name-ignorecase" />
                         <xs:enumeration value="title" />
                         <xs:enumeration value="title-ignorecase" />
-                        <xs:enumeration value="link-text" />
-                        <xs:enumeration value="link-text-ignorecase" />
-                        <xs:enumeration value="display-text" />
-                        <xs:enumeration value="display-text-ignorecase" />
+                        <xs:enumeration value="linktext" />
+                        <xs:enumeration value="linktext-ignorecase" />
+                        <xs:enumeration value="displaytext" />
+                        <xs:enumeration value="displaytext-ignorecase" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

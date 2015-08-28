@@ -22,7 +22,7 @@ under the License.
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="CommonAppBarMenu" default-menu-item-name="main" id="app-navigation" type="simple" title="${applicationTitle}&amp;nbsp;"
-        default-selected-style="active" menu-container-style="menu-main" default-link-style="${styles.menu_app_itemlink}" selected-menuitem-context-field-name="headerItem">
+        default-selected-style="active" menu-container-style="menu-main" default-link-style="${styles.menu_main_itemlink}" selected-menuitem-context-field-name="headerItem">
         <menu-item name="main" title="${uiLabelMap.CommonMain}">
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
@@ -39,5 +39,5 @@ under the License.
     <menu name="CommonButtonBarMenu" type="simple" menu-container-style="menu-button" default-widget-style="" default-link-style="${styles.menu_button_itemlink}" default-selected-style="" />    
     
     <!-- New in Cato -->
-    <menu name="CommonSideBarMenu" type="simple" menu-container-style="menu-sidebar" default-widget-style="${styles.menu_side_itemlink}" default-selected-style="active"/>
+    <menu name="CommonSideBarMenu" type="simple" menu-container-style="menu-sidebar" default-widget-style="${styles.menu_sidebar_itemlink}" default-selected-style="active"/>
 </menus>

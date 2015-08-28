@@ -55,12 +55,18 @@ under the License.
     "icon_calendar" : "fi-calendar",
     "icon_arrow" : "fi-arrow-right",
     
-<#-- Menus -->   
-    "menu_app_itemlink" : "", 
-    "menu_side_itemlink" : "", 
+<#-- Menus -->  
+    "menu_main" : "",  
+    "menu_main_itemlink" : "", 
+    "menu_sidebar" : "", 
+    "menu_sidebar_itemlink" : "", 
+    "menu_tab" : "button-group", 
     "menu_tab_itemlink" : "button tiny", 
+    "menu_subtab" : "button-group",
     "menu_subtab_itemlink" : "button tiny", 
+    "menu_button" : "button-group",
     "menu_button_itemlink" : "button tiny",
+    "menu_section" : "button-group",
     "menu_section_itemlink" : "button tiny", 
     
 <#-- Data and Tables -->  

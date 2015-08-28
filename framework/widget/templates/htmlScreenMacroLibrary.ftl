@@ -22,10 +22,10 @@ context, such as request, response, etc. however it is only from the initial con
 not "current" context (too intrusive in current renderer design). still relies on macro params.
 -->
 <#macro renderScreenBegin>
-<#if locale??><#assign docLangAttr = locale.toString()?replace("_", "-")></#if>
-<#assign langDir = "ltr">
+<#if locale??><#local docLangAttr = locale.toString()?replace("_", "-")></#if>
+<#local langDir = "ltr">
 <#if docLangAttr?? && "ar.iw"?contains(docLangAttr?substring(0, 2))>
-    <#assign langDir = "rtl">
+    <#local langDir = "rtl">
 </#if>
 <!DOCTYPE html>
 <!--[if IE 9]><html class="lt-ie10" lang="${docLangAttr!"en"}" <#if langDir??>dir="${langDir}"</#if>> <![endif]-->
@@ -89,8 +89,8 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#-- If a label widget has one of the h1-h6 styles, then it is considered block level element.
          Otherwise it is considered an inline element. -->
     <#-- Cato: also support "p" style to indicate paragraph, headings and special error classes -->
-    <#assign idText = ""/>
-    <#if id?has_content><#assign idText = " id=\"${id}\""/></#if>
+    <#local idText = ""/>
+    <#if id?has_content><#local idText = " id=\"${id}\""/></#if>
     <#if style?has_content>
       <#-- Cato: also support both style and class split by ":" -->
       <#local styleParts = style?split(":")>

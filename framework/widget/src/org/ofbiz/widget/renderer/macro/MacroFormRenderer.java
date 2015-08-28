@@ -1639,11 +1639,14 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String oddRowStyle = "";
         if (itemIndex != null) {
             altRowStyles = modelForm.getStyleAltRowStyle(context);
-            if (itemIndex.intValue() % 2 == 0) {
-                evenRowStyle = modelForm.getEvenRowStyle();
-            } else {
-                oddRowStyle = FlexibleStringExpander.expandString(modelForm.getOddRowStyle(), context);
-            }
+            // Cato: this is silly, pass both and let FTL make the check so it has more info
+            //if (itemIndex.intValue() % 2 == 0) {
+            //    evenRowStyle = modelForm.getEvenRowStyle();
+            //} else {
+            //    oddRowStyle = FlexibleStringExpander.expandString(modelForm.getOddRowStyle(), context);
+            //}
+            evenRowStyle = FlexibleStringExpander.expandString(modelForm.getEvenRowStyle(), context);
+            oddRowStyle = FlexibleStringExpander.expandString(modelForm.getOddRowStyle(), context);
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatItemRowOpen ");

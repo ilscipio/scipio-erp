@@ -33,7 +33,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#else>
     <#--
     <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>
-      <span <#if idName?has_content>id="cc_${idName}"</#if> <#if title?has_content>title="${title}"</#if> <@renderClass class alert />><#t/>
+      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if> <@renderClass class alert />><#t/>
     </#if>
     -->
     <#if description?has_content>
@@ -168,7 +168,7 @@ not "current" context (too intrusive in current renderer design). still relies o
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
             <#if id?has_content> id="${id}_i18n"</#if> class="${styles.grid_small!}3 ${styles.grid_cell!}"/><#rt/>
 
-            <input type="hidden" name="${name}" <#if id?has_content> id="${id}"</#if> <#if value?has_content> value="${value}"</#if> />            
+            <input type="hidden" name="${name}"<#if id?has_content> id="${id}"</#if><#if value?has_content> value="${value}"</#if> />            
           </#if>
         </div>
         <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
@@ -569,14 +569,14 @@ not "current" context (too intrusive in current renderer design). still relies o
   </thead>
 </#macro>
 <#macro renderFormatHeaderRowCellOpen style positionSpan>
-  <th <#if positionSpan?has_content && positionSpan gt 1>colspan="${positionSpan}"</#if><#if style?has_content>class="${style}"</#if>>
+  <th<#if positionSpan?has_content && positionSpan gt 1> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowCellClose>
   </th>
 </#macro>
 
 <#macro renderFormatHeaderRowFormCellOpen style>
-  <th <#if style?has_content>class="${style}"</#if>>
+  <th<#if style?has_content> class="${style}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowFormCellClose>
   </th>
@@ -599,7 +599,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   </tr>
 </#macro>
 <#macro renderFormatItemRowCellOpen fieldName style positionSpan>
-  <td <#if positionSpan?has_content && positionSpan gt 1>colspan="${positionSpan}"</#if><#if style?has_content>class="${style}"</#if>>
+  <td<#if positionSpan?has_content && positionSpan gt 1> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
 </#macro>
 <#macro renderFormatItemRowCellClose fieldName>
   </td>
@@ -612,7 +612,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatSingleWrapperOpen formName style="">
-  <#--<table cellspacing="0" <#if style?has_content>class="${style}"</#if>>-->
+  <#--<table cellspacing="0"<#if style?has_content> class="${style}"</#if>>-->
 </#macro>
 <#macro renderFormatSingleWrapperClose formName>
   <#--</table>-->

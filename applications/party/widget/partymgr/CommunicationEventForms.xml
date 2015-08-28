@@ -539,7 +539,7 @@ under the License.
         <field name="statusId" entry-name="roleStatusId" widget-style="${styles.button_default}" widget-area-style="fieldWidth300">
             <display-entity entity-name="StatusItem" description="${description}">
                 <sub-hyperlink target="setCommunicationEventRoleStatus"
-                    description="${uiLabelMap.${toComplete}}">
+                    description="${uiLabelMap[toComplete]}">
                     <parameter param-name="communicationEventId"/>
                     <parameter param-name="partyId"/>
                     <parameter param-name="roleTypeId"/>

@@ -436,7 +436,7 @@ under the License.
                                             <parameter param-name="contentId" from-field="rootContentId"/>
                                             <parameter param-name="contentRevisionSeqId" from-field="rootContentRevisionSeqId"/>
                                         </link>
-                                        <link target="ViewInstances">
+                                        <link target="ViewInstances" style="${styles.button_default}">
                                             <parameter param-name="rootContentId"/>
                                             <parameter param-name="contentRevisionSeqId" from-field="rootContentRevisionSeqId"/>
                                         </link>

@@ -195,7 +195,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListContactListParty}">
                             <container>
-                                <link  text="${uiLabelMap.MarketingContactListPartyCreate}" target="EditContactListParty">
+                                <link style="${styles.button_default}" text="${uiLabelMap.MarketingContactListPartyCreate}" target="EditContactListParty">
                                     <parameter param-name="contactListId"/>
                                     <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                 </link>
@@ -303,7 +303,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListContactList} ${uiLabelMap.CommonFor} contactListId=${contactListId}">
                             <container>
-                                <link  text="${uiLabelMap.MarketingContactListCommEventCreate}" target="EditContactListCommEvent">
+                                <link style="${styles.button_default}" text="${uiLabelMap.MarketingContactListCommEventCreate}" target="EditContactListCommEvent">
                                     <parameter param-name="contactListId"/>
                                     <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                 </link>

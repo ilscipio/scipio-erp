@@ -843,7 +843,7 @@ under the License.
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.quoteDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar button-style-1">
-                            <link target="createnewquotenote" text="${uiLabelMap.OrderCreateOrderQuoteNote}">
+                            <link style="${styles.button_default}" target="createnewquotenote" text="${uiLabelMap.OrderCreateOrderQuoteNote}">
                                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
                             </link>
                         </container>

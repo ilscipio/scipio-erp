@@ -63,8 +63,8 @@ under the License.
                             <widgets>
                                 <include-menu name="blog" location="component://content/widget/content/ContentMenus.xml"/>
                                 <include-menu name="blogSub" location="component://content/widget/content/ContentMenus.xml"/>
-                                <label style="h2" text="${blogContent.contentName}"/>
-                                <link style="h2" text=" [${blogContent.contentId}]" target="blogContent">
+                                <label style="${styles.button_default}" text="${blogContent.contentName}"/>
+                                <link style="${styles.button_default}" text=" [${blogContent.contentId}]" target="blogContent">
                                     <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
                                 </link>
                             </widgets>

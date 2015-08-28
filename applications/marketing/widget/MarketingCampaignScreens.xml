@@ -87,7 +87,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar button-style-1">
-                                    <link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="create">
+                                    <link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="${styles.button_default} create">
                                         <parameter param-name="DONE_PAGE" from-field="donePage" />
                                     </link>
                                 </container>

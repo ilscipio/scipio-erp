@@ -125,7 +125,7 @@ under the License.
                                 <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommFindTabBar"/>
                                 <label style="h2" text="${uiLabelMap.PartyPendingCommunicationEvents}"/>
                                 <container>
-                                    <link style="smallSubmit" target="ViewCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}">
+                                    <link style="${styles.button_default}" target="ViewCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}">
                                         <parameter param-name="partyId"/>
                                     </link>
                                 </container>

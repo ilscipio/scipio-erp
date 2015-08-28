@@ -1007,12 +1007,14 @@ levels manually, but most often should let @section menu handle them.
   <#if relLevel?has_content>
     <#local level = level + relLevel>
   </#if>
+  <#local headingLevelClass = "heading-level-" + level?string>
   <#if (level < 1)>
     <#local level = 1>
   <#elseif (level > 6)>
     <#local level = 6>
   </#if>
-  <h${level}<#if class?has_content || addClass?has_content> class="${(class + " " + addClass)?trim}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>><#nested></h${level}>
+  <#local classes = ((class + " " + headingLevelClass)?trim + " " + addClass)?trim>
+  <h${level}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>><#nested></h${level}>
 </#macro>
 
 <#-- 

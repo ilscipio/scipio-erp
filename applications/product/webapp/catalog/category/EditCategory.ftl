@@ -213,7 +213,7 @@ function insertImageName(type,nameValue) {
                             <input type="radio" name="upload_file_type_bogus" value="linkOne" onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=linkOne</@ofbizUrl>");'/>${uiLabelMap.ProductLinkOneImageUrl}
                             <input type="radio" name="upload_file_type_bogus" value="linkTwo"onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=linkTwo</@ofbizUrl>");'/>${uiLabelMap.ProductLinkTwoImageUrl}
                         </span>
-                        <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}"/>
+                        <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductUploadImage}"/>
                     </@td></@tr>
                 </@table>
             </form>
@@ -225,7 +225,7 @@ function insertImageName(type,nameValue) {
                         ${uiLabelMap.ProductDuplicateProductCategorySelected}:
                         <input type="hidden" name="oldProductCategoryId" value="${productCategoryId}"/>
                         <div>
-                            <input type="text" size="20" maxlength="20" name="productCategoryId"/>&nbsp;<input type="submit" class="smallSubmit" value="${uiLabelMap.CommonGo}"/>
+                            <input type="text" size="20" maxlength="20" name="productCategoryId"/>&nbsp;<input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonGo}"/>
                         </div>
                         <div>
                             <b>${uiLabelMap.CommonDuplicate}:</b>

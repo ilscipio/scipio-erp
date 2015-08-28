@@ -87,7 +87,7 @@
                 <@td><input type="text" name="mapKey" value="" /></@td>
             </@tr>
             <@tr>
-                <@td colspan="2" align="center"><input id="submit" type="button" onclick="javascript:pathSave('${contentId}');" class="smallSubmit" value="Create"/></@td>
+                <@td colspan="2" align="center"><input id="submit" type="button" onclick="javascript:pathSave('${contentId}');" class="smallSubmit ${styles.button_default!}" value="Create"/></@td>
             </@tr>
         </@table>
     </form>

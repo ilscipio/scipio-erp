@@ -110,7 +110,7 @@ under the License.
               <@td><input type="text" name="sequenceNum" size="5" value="${surveyQuestionAndAppl.sequenceNum!}"/></@td>
               <@td><input type="text" name="withSurveyQuestionId" size="5" value="${surveyQuestionAndAppl.withSurveyQuestionId!}"/></@td>
               <@td><input type="text" name="withSurveyOptionSeqId" size="5" value="${surveyQuestionAndAppl.withSurveyOptionSeqId!}"/></@td>
-              <@td><input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/></@td>
+              <@td><input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/></@td>
               <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.ContentSurveyQuestion}</a></@td>
               </form>
               <@td>
@@ -184,7 +184,7 @@ under the License.
                 <@td><input type="text" name="sequenceNum" size="5"/></@td>
                 <@td><input type="text" name="withSurveyQuestionId" size="5"/></@td>
                 <@td><input type="text" name="withSurveyOptionSeqId" size="5"/></@td>
-                <@td><input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit"/></@td>
+                <@td><input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit ${styles.button_default!}"/></@td>
               </@tr>
             </form>
           </#list>
@@ -200,7 +200,7 @@ under the License.
           </#list>
         </select>
         &nbsp;
-        <input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit"/>
+        <input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit ${styles.button_default!}"/>
       </form>
 </@section>
 

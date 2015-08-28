@@ -102,11 +102,11 @@ function submitFindForm(val){
 
 <#assign menuHtml>
   <#if (requestParameters.hideFields!"N") == "Y">
-    <li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" class="tiny button">${uiLabelMap.CommonShowLookupFields}</a></li>
+    <li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonShowLookupFields}</a></li>
   <#else>
-    <#if orderList??><li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields!"Y"}.submit()"  class="tiny button">${uiLabelMap.CommonHideFields}</a></li></#if>
-    <li><a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}"  class="tiny button">${uiLabelMap.PartyLookupParty}</a></li>
-    <li><a href="javascript:lookupOrders(true);"  class="tiny button">${uiLabelMap.OrderLookupOrder}</a></li>
+    <#if orderList??><li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields!"Y"}.submit()"  class="${styles.button_default!}">${uiLabelMap.CommonHideFields}</a></li></#if>
+    <li><a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}"  class="${styles.button_default!}">${uiLabelMap.PartyLookupParty}</a></li>
+    <li><a href="javascript:lookupOrders(true);"  class="${styles.button_default!}">${uiLabelMap.OrderLookupOrder}</a></li>
   </#if>
 </#assign>
 <#assign showFields = ((parameters.hideFields!"N") != "Y")>
@@ -488,7 +488,7 @@ document.lookuporder.orderId.focus();
               <@td>${orderHeader.getString("orderDate")!}</@td>
               <@td>
                 <#if partyId != "_NA_">
-                  <a href="${customerDetailLink}${partyId}" class="">${partyId}</a>
+                  <a href="${customerDetailLink}${partyId}" class="${styles.button_default!}">${partyId}</a>
                 <#else>
                   ${uiLabelMap.CommonNA}
                 </#if>

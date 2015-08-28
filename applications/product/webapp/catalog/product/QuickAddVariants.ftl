@@ -103,7 +103,7 @@ function clickAll(e) {
             <#assign columns = featureTypes.size() + 4>
             <@td colspan="${columns}" align="center">
                 <input type="hidden" name="_rowCount" value="${rowCount}" />
-                <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonCreate}"/>
+                <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonCreate}"/>
             </@td>
         </@tr>
         </@tfoot>
@@ -122,7 +122,7 @@ function clickAll(e) {
                 <input type="hidden" name="productId" value="${productId}"/>
                 <span>${uiLabelMap.ProductVariantProductIds}:</span>
                 <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
-                <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductVariantAdd}"/>
+                <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductVariantAdd}"/>
             </@td>
         </@tr>
     </@table>

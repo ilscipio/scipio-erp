@@ -134,7 +134,7 @@ under the License.
                                   <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
                                   <#if returnHeader.statusId != "RETURN_CANCELLED">
                                                 <font color="red">${uiLabelMap.OrderReturned}</font>
-                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="">${returnItem.returnId}</a>
+                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="${styles.button_default!}">${returnItem.returnId}</a>
                                   </#if>
                                   </#list>
                                   </#if>
@@ -408,7 +408,7 @@ under the License.
                             <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=adjustmentAmount/>" class="text-right"/></@td>
                             <@td nowrap="nowrap">
                                 <#if (allowPriceChange)>
-                                    <input class="smallSubmit" type="submit" value="${uiLabelMap.CommonUpdate}"/>
+                                    <input class="smallSubmit ${styles.button_default!}" type="submit" value="${uiLabelMap.CommonUpdate}"/>
                                     <a href="javascript:document.deleteOrderAdjustment${orderAdjustmentId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                                 <#else>
                                     <@ofbizAmount amount=adjustmentAmount/>
@@ -452,7 +452,7 @@ under the License.
                         <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=0.00/>" class="text-right"/></@td>
                         <@td>
                             
-                            <input class="smallSubmit" type="submit" value="${uiLabelMap.CommonAdd}"/>
+                            <input class="smallSubmit ${styles.button_default!}" type="submit" value="${uiLabelMap.CommonAdd}"/>
                         </@td>
                     </@tr>
             </form>

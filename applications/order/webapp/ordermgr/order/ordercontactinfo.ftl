@@ -61,7 +61,7 @@ under the License.
           </#list>
         </#if>
       </select>
-      <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit" />
+      <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}" />
     </form>
   </#if>
 </#macro>

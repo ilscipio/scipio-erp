@@ -34,7 +34,7 @@ under the License.
         <@tr>
           <@td></@td>
           <@td>
-            <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}"/>
+            <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}"/>
           </@td>
         </@tr>
     </@table>

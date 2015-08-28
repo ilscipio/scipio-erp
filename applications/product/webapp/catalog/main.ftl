@@ -27,7 +27,7 @@ under the License.
   <form method="post" action="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" style="margin: 0;" name="EditProdCatalogForm">
                 <@pul title="${uiLabelMap.ProductEditCatalogWithCatalogId}"> 
                     <@pli><@field type="input" size="20" maxlength="20" name="prodCatalogId" value="" postfix=true/></@pli>
-                    <@pli><a href="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" class="tiny success">${uiLabelMap.ProductCreateNewCatalog}</a></@pli>
+                    <@pli><a href="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" class="${styles.tiny!} success">${uiLabelMap.ProductCreateNewCatalog}</a></@pli>
                </@pul>
   </form>
          </li>      
@@ -35,7 +35,7 @@ under the License.
   <form method="post" action="<@ofbizUrl>EditCategory</@ofbizUrl>" style="margin: 0;" name="EditCategoryForm">
             <@pul title="${uiLabelMap.ProductEditCategoryWithCategoryId}">
                 <@pli><@field type="lookup" name="productCategoryId" id="productCategoryId" formName="EditCategoryForm" fieldFormName="LookupProductCategory" postfix=true/></@pli>
-                <@pli><a href="<@ofbizUrl>EditCategory</@ofbizUrl>" class="tiny success">${uiLabelMap.ProductCreateNewCategory}</a></@pli>
+                <@pli><a href="<@ofbizUrl>EditCategory</@ofbizUrl>" class="${styles.tiny!} success">${uiLabelMap.ProductCreateNewCategory}</a></@pli>
             </@pul>
   </form>
          </li>
@@ -44,8 +44,8 @@ under the License.
   <form method="post" action="<@ofbizUrl>EditProduct</@ofbizUrl>" style="margin: 0;" name="EditProductForm">
           <@pul title="${uiLabelMap.ProductEditProductWithProductId}">
                 <@pli><@field type="lookup" name="productId" id="productId" formName="EditProductForm" fieldFormName="LookupProduct" postfix=true/></@pli>
-                <@pli><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="tiny success">${uiLabelMap.ProductCreateNewProduct}</a></@pli>
-                <@pli><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>" class="tiny">${uiLabelMap.ProductQuickCreateVirtualFromVariants}</a></@pli>
+                <@pli><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="${styles.tiny!} success">${uiLabelMap.ProductCreateNewProduct}</a></@pli>
+                <@pli><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>" class="${styles.tiny!}">${uiLabelMap.ProductQuickCreateVirtualFromVariants}</a></@pli>
             </@pul>
   </form>
         </li>

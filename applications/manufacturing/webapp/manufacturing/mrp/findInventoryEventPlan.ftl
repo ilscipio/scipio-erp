@@ -37,10 +37,10 @@ function lookupInventory() {
               <@td align='right'>
                 <p>
                   <#if requestParameters.hideFields?default("N") == "Y">
-                    <a href="<@ofbizUrl>FindInventoryEventPlan?hideFields=N${paramList}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonShowLookupFields}</a>
+                    <a href="<@ofbizUrl>FindInventoryEventPlan?hideFields=N${paramList}</@ofbizUrl>" class="smallSubmit ${styles.button_default!}">${uiLabelMap.CommonShowLookupFields}</a>
                   <#else>
                     <#if inventoryList??>
-                        <a href="<@ofbizUrl>FindInventoryEventPlan?hideFields=Y${paramList}</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonHideFields}</a>
+                        <a href="<@ofbizUrl>FindInventoryEventPlan?hideFields=Y${paramList}</@ofbizUrl>" class="smallSubmit ${styles.button_default!}">${uiLabelMap.CommonHideFields}</a>
                     </#if>
                   </#if>
                 </p>
@@ -71,7 +71,7 @@ function lookupInventory() {
                   <@tr>
                     <@td width="20%" align="center" valign="top">&nbsp;</@td>
                     <@td width="5%">&nbsp;</@td>
-                    <@td width="75%"> <a href="javascript:lookupInventory();" class="smallSubmit">&nbsp; ${uiLabelMap.CommonFind} &nbsp;</a></@td>
+                    <@td width="75%"> <a href="javascript:lookupInventory();" class="smallSubmit ${styles.button_default!}">&nbsp; ${uiLabelMap.CommonFind} &nbsp;</a></@td>
                   </@tr>
                 </@table>
               </@td>

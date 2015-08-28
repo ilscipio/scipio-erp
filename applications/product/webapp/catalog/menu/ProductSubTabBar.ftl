@@ -18,17 +18,17 @@ under the License.
 -->
 <@row>
     <@cell>
-    <ul class="${styles.button_group!}">
-        <li><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="tiny button success">${uiLabelMap.ProductNewProduct}</a></li>
+    <ul class="${styles.menu_subtab!}">
+        <li><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="${styles.menu_subtab_itemlink!} success">${uiLabelMap.ProductNewProduct}</a></li>
         <#if product?has_content>
-            <li><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>?product_id=${productId!}" class="tiny button success">${uiLabelMap.ProductNewVirtualProduct}</a></li>
-            <li><a href="/ecommerce/control/product?product_id=${productId!}" class="tiny button success">${uiLabelMap.ProductProductPage}</a></li>
-            <li><a href="<@ofbizUrl>ProductBarCode.pdf</@ofbizUrl>?productId=${productId!}" class="tiny button" target="_blank">${uiLabelMap.ProductBarcode}</a></li>
+            <li><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>?product_id=${productId!}" class="${styles.menu_subtab_itemlink!} success">${uiLabelMap.ProductNewVirtualProduct}</a></li>
+            <li><a href="/ecommerce/control/product?product_id=${productId!}" class="${styles.menu_subtab_itemlink!} success">${uiLabelMap.ProductProductPage}</a></li>
+            <li><a href="<@ofbizUrl>ProductBarCode.pdf</@ofbizUrl>?productId=${productId!}" class="${styles.menu_subtab_itemlink!}" target="_blank">${uiLabelMap.ProductBarcode}</a></li>
         </#if>
-        <li><a href="<@ofbizUrl>EditProductTag</@ofbizUrl>" class="tiny button">${uiLabelMap.ProductTags}</a></li>
+        <li><a href="<@ofbizUrl>EditProductTag</@ofbizUrl>" class="${styles.menu_subtab_itemlink!}">${uiLabelMap.ProductTags}</a></li>
         <#--<#if tabButtonItem?has_content && tabButtonItem="EditProduct">
-            <li><a href="javascript:expandAll(true);" class="tiny button">${uiLabelMap.CommonExpandAll}</a></li>
-            <li><a href="javascript:expandAll(false);" class="tiny button">${uiLabelMap.CommonCollapseAll}</a></li>
+            <li><a href="javascript:expandAll(true);" class="${styles.menu_subtab_itemlink!}">${uiLabelMap.CommonExpandAll}</a></li>
+            <li><a href="javascript:expandAll(false);" class="${styles.menu_subtab_itemlink!}">${uiLabelMap.CommonCollapseAll}</a></li>
         </#if>-->
     </ul>
     </@cell>

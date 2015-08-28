@@ -172,7 +172,7 @@ under the License.
             </@tr>
             <@tr>
                 <@td colspan="2">&nbsp;</@td>
-                <@td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/></@td>
+                <@td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/></@td>
                 <@td colspan="3">&nbsp;</@td>
             </@tr>
         </@table>
@@ -197,7 +197,7 @@ under the License.
                     <input type="radio" name="upload_file_type_bogus" value="large"onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=large</@ofbizUrl>");'/>${uiLabelMap.CommonLarge}
                     <input type="radio" name="upload_file_type_bogus" value="detail" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=detail</@ofbizUrl>");'/>${uiLabelMap.CommonDetail}
                     <input type="radio" name="upload_file_type_bogus" value="original" checked="checked" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>");'/>${uiLabelMap.ProductOriginal}
-                    <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}"/>
+                    <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductUploadImage}"/>
                 </@td>
             </@tr>
         </@table>

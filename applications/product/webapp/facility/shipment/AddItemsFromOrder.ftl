@@ -27,7 +27,7 @@ under the License.
                 </span>
                 <span>${uiLabelMap.ProductOrderShipGroupId}</span>
                 <input type="text" size="20" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-                <input type="submit" value="${uiLabelMap.CommonSelect}" class="smallSubmit"/>
+                <input type="submit" value="${uiLabelMap.CommonSelect}" class="smallSubmit ${styles.button_default!}"/>
             </div>
         </form>
 </@section>
@@ -206,7 +206,7 @@ under the License.
                 </#if>
             </#list>
         </@table>
-        <div align="right"><input type="submit" class="smallSubmit" value="${uiLabelMap.ProductIssueAll}"/></div>
+        <div align="right"><input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductIssueAll}"/></div>
         <input type="hidden" name="_rowCount" value="${rowCount}" />
         </form>
         <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>

@@ -148,7 +148,7 @@ under the License.
                 <input type='text' size='20' name='paymentMethodId' value="${(returnHeader.paymentMethodId)!}"/>
               </#if>
               <#if (returnHeader.fromPartyId)?has_content>
-                <a href="/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="smallSubmit">${uiLabelMap.AccountingCreateNewCreditCard}</a>
+                <a href="/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="smallSubmit ${styles.button_default!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
             </@td>
           </@tr>

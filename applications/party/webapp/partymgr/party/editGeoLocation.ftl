@@ -129,7 +129,7 @@ under the License.
             <input type="hidden" name="geoPointId" value="${geoPointId!}"/>
             <input type="hidden" name="lat" id="lat"/>
             <input type="hidden" name="lng" id="lng"/>
-            <input type="submit" id="createMapButton" class="smallSubmit" value="${uiLabelMap.CommonSubmit}">
+            <input type="submit" id="createMapButton" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonSubmit}">
         </form>
         <br/><br/><br/>
     </center>

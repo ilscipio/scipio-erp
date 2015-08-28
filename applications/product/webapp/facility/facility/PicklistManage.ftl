@@ -57,7 +57,7 @@ under the License.
                 <option value="${statusValidChangeToDetail.get("statusIdTo", locale)}">${statusValidChangeToDetail.get("description", locale)} (${statusValidChangeToDetail.get("transitionName", locale)})</option>
               </#list>
             </select>
-            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
+            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/>
           </form>
           <span>${uiLabelMap.ProductCreatedModifiedBy}</span> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
           <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
@@ -89,7 +89,7 @@ under the License.
                 <option value="${partyRoleAndPartyDetail.partyId}">${partyRoleAndPartyDetail.firstName!} ${partyRoleAndPartyDetail.middleName!} ${partyRoleAndPartyDetail.lastName!} ${partyRoleAndPartyDetail.groupName!} [${partyRoleAndPartyDetail.partyId}]</option>
               </#list>
             </select>
-            <input type="submit" value="${uiLabelMap.CommonAdd}" class="smallSubmit"/>
+            <input type="submit" value="${uiLabelMap.CommonAdd}" class="smallSubmit ${styles.button_default!}"/>
           </form>
         </div>
 
@@ -131,7 +131,7 @@ under the License.
                     <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected="selected"</#if>>${picklistActive.picklistId} [${uiLabelMap.CommonDate}:${picklistActive.picklistDate},${uiLabelMap.CommonStatus}:${picklistActiveStatusItem.get("description",locale)}]</option>
                   </#list>
                 </select>
-                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
+                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/>
               </form>
             </div>
             <#if picklistBinInfo.picklistItemInfoList?has_content>

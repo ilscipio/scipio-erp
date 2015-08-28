@@ -80,7 +80,7 @@ under the License.
               <@tr>
                 <@td colspan="3">&nbsp;</@td>
                 <@td>
-                <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSubmit}"/>
+                <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonSubmit}"/>
                 </@td>
               </@tr>
               </#if>

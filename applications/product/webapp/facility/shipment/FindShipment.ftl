@@ -147,26 +147,26 @@ function lookupShipments() {
 <#if shipmentList??>
 
 <#assign menuHtml>
-            <#if 0 < shipmentList?size>
-                <li><a class="nav-next" href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y</@ofbizUrl>" class="${styles.button_default!}<#if !(shipmentList?size > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
+            <#if (0 < shipmentList?size)>
+                <li><a href="<#if !(viewIndex > 1)>javascript:void(0);<#else><@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y</@ofbizUrl></#if>" class="nav-previous ${styles.button_default!}<#if !(viewIndex > 1)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
                 <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${shipmentList?size}</span></li>
-                <li><a class="nav-previous" href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y</@ofbizUrl>" class="${styles.button_default!}<#if (viewIndex > 1)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
+                <li><a href="<#if !(shipmentList?size > highIndex)>javascript:void(0);<#else><@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y</@ofbizUrl></#if>" class="nav-next ${styles.button_default!}<#if !(shipmentList?size > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
             </#if>
 </#assign>
 <@section id="findOrders_2" title="${uiLabelMap.ProductShipmentsFound}" menuHtml=menuHtml>
       <#if shipmentList?has_content>  
         <@table type="data-list" autoAltRows=true cellspacing="0" cellpadding="2" class="basic-table hover-bar">
-        <@tr class="header-row">
-         <@thead>
-          <@th width="5%">${uiLabelMap.ProductShipmentId}</@th>
-          <@th width="15%">${uiLabelMap.ProductShipmentType}</@th>
-          <@th width="10%">${uiLabelMap.CommonStatus}</@th>
-          <@th width="25%">${uiLabelMap.ProductOriginFacility}</@th>
-          <@th width="25%">${uiLabelMap.ProductDestFacility}</@th>
-          <@th width="15%">${uiLabelMap.ProductShipDate}</@th>
-          <@th width="5%">&nbsp;</@th>
-         </@thead>
-        </@tr>
+        <@thead>
+          <@tr class="header-row">
+            <@th width="5%">${uiLabelMap.ProductShipmentId}</@th>
+            <@th width="15%">${uiLabelMap.ProductShipmentType}</@th>
+            <@th width="10%">${uiLabelMap.CommonStatus}</@th>
+            <@th width="25%">${uiLabelMap.ProductOriginFacility}</@th>
+            <@th width="25%">${uiLabelMap.ProductDestFacility}</@th>
+            <@th width="15%">${uiLabelMap.ProductShipDate}</@th>
+            <@th width="5%">&nbsp;</@th>
+          </@tr>
+        </@thead>
           <#list shipmentList as shipment>
             <#assign originFacility = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", shipment.originFacilityId), true)! />
             <#assign destinationFacility = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", shipment.destinationFacilityId), true)! />

@@ -31,7 +31,7 @@ under the License.
           <span>${uiLabelMap.ProductRemoveResultsFrom} ${uiLabelMap.ProductCategory}:</span>
           <@htmlTemplate.lookupField formName="searchRemoveFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
           <input type="hidden" name="clearSearch" value="N" />
-          <input type="submit" value="${uiLabelMap.CommonRemove}" class="smallSubmit" />
+          <input type="submit" value="${uiLabelMap.CommonRemove}" class="smallSubmit ${styles.button_default!}" />
           <br />
         </form>
     </div>
@@ -45,7 +45,7 @@ under the License.
           <span>${uiLabelMap.CommonThru}</span>
           <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           <input type="hidden" name="clearSearch" value="N" />
-          <input type="submit" value="${uiLabelMap.CommonExpire}" class="smallSubmit" />
+          <input type="submit" value="${uiLabelMap.CommonExpire}" class="smallSubmit ${styles.button_default!}" />
           <br />
         </form>
     </div>
@@ -59,7 +59,7 @@ under the License.
           <span>${uiLabelMap.CommonFrom}</span>
           <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           <input type="hidden" name="clearSearch" value="N" />
-          <input type="submit" value="${uiLabelMap.ProductAddToCategory}" class="smallSubmit" />
+          <input type="submit" value="${uiLabelMap.ProductAddToCategory}" class="smallSubmit ${styles.button_default!}" />
           <br />
         </form>
     </div>
@@ -89,7 +89,7 @@ under the License.
                </#list>
           </select>
           <input type="hidden" name="clearSearch" value="N" />
-          <input type="submit" value="${uiLabelMap.ProductAddFeature}" class="smallSubmit" />
+          <input type="submit" value="${uiLabelMap.ProductAddFeature}" class="smallSubmit ${styles.button_default!}" />
           <br />
         </form>
     </div>
@@ -101,7 +101,7 @@ under the License.
           <span>${uiLabelMap.ProductRemoveFeatureFromResults}:</span><br />
           <span>${uiLabelMap.ProductFeatureId}</span><input type="text" size="10" name="productFeatureId" value="" />
           <input type="hidden" name="clearSearch" value="N" />
-          <input type="submit" value="${uiLabelMap.ProductRemoveFeature}" class="smallSubmit" />
+          <input type="submit" value="${uiLabelMap.ProductRemoveFeature}" class="smallSubmit ${styles.button_default!}" />
           <br />
         </form>
     </div>

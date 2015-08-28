@@ -119,7 +119,7 @@ under the License.
                                         <@td width="26%" align="right" valign="top">&nbsp;</@td>
                                         <@td width="5">&nbsp;</@td>
                                         <@td width="74%">
-                                            <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}" />
+                                            <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}" />
                                         </@td>
                                     </@tr>
                                 </@table>

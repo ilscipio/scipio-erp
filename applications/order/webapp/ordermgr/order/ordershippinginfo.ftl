@@ -292,7 +292,7 @@ under the License.
                     <@td scope="row" class="${styles.grid_large!}3">&nbsp;</@td>
                     <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">
-                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
+                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/>
                         <a class="${styles.button_default!}" id="newShippingAddress" href="javascript:void(0);">${uiLabelMap.OrderNewShippingAddress}</a>
                         <script type="text/javascript">
                             jQuery("#newShippingAddress").click(function(){jQuery("#newShippingAddressForm").dialog("open")});
@@ -443,7 +443,7 @@ under the License.
                     <input type="hidden" name="shippingAmount" value="${shippingAmount!}"/>
                     <@tr>
                       <@td valign="top" width="80%">
-                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
+                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/>
                       </@td>
                     </@tr>
                   </form>
@@ -659,7 +659,7 @@ under the License.
                            <option value="${facility.facilityId}">${facility.facilityName}</option>
                          </#list>
                        </select>
-                       <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderNewShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]"/>
+                       <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.OrderNewShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]"/>
                     </form>
                     </div>
                <#else>

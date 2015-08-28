@@ -128,7 +128,7 @@ under the License.
               </@tr>
               <@tr>
                 <@td>&nbsp;</@td>
-                <@td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}" /></@td>
+                <@td><input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}" /></@td>
               </@tr>
             </@table>
         </form>

@@ -278,7 +278,7 @@ under the License.
               <@td class="${styles.grid_large!}3">${uiLabelMap.PartyPartyId}</@td>
               <@td class="${styles.grid_large!}6"><@htmlTemplate.lookupField value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/></@td>
               <@td>                  
-                  <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonContinue}" />
+                  <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonContinue}" />
               </@td>
             </@tr>
           </@table>

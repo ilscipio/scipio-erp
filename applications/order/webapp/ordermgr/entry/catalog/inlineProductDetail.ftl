@@ -375,7 +375,7 @@ ${virtualJavaScript!}
                 <@td align="center" valign="bottom">
                   <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" alt="" /></a>
                   <br />
-                  <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="linktext">${key}</a>
+                  <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="linktext ${styles.button_default!}">${key}</a>
                 </@td>
               </#if>
               <#assign indexer = indexer + 1>

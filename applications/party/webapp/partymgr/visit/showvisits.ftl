@@ -18,19 +18,19 @@ under the License.
 -->
 
 <#if partyId??>
-    <#assign title = uiLabelMap.PartyParty>
+    <#assign sectionTitleParty = uiLabelMap.PartyParty>
   <#else>
-    <#assign title = uiLabelMap.PartyActive>
+    <#assign sectionTitleParty = uiLabelMap.PartyActive>
   </#if>
   
 <#assign menuHtml>
       <#if !partyId?? && showAll?lower_case == "true">
-        <li><a href="<@ofbizUrl>showvisits?showAll=false</@ofbizUrl>">${uiLabelMap.PartyShowActive}</a></li>
+        <li><a href="<@ofbizUrl>showvisits?showAll=false</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyShowActive}</a></li>
       <#elseif !partyId??>
-        <li><a href="<@ofbizUrl>showvisits?showAll=true</@ofbizUrl>">${uiLabelMap.PartyShowAll}</a></li>
+        <li><a href="<@ofbizUrl>showvisits?showAll=true</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyShowAll}</a></li>
       </#if>
 </#assign>
-<@section title="${title}&nbsp;${uiLabelMap.PartyVisitListing}" menuHtml=menuHtml>
+<@section title="${sectionTitleParty}&nbsp;${uiLabelMap.PartyVisitListing}" menuHtml=menuHtml>
   <#if visitList?has_content>
     
     <#assign paginated = false>

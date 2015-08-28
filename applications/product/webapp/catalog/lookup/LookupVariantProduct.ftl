@@ -42,7 +42,7 @@ under the License.
             </@tr>
         </#list>
         <@tr>
-            <@td><input type="submit" value="${uiLabelMap.CommonSearch}" class="smallSubmit" /></@td>
+            <@td><input type="submit" value="${uiLabelMap.CommonSearch}" class="smallSubmit ${styles.button_default!}" /></@td>
     </@tr>
     </@table>
   </form>
@@ -72,7 +72,7 @@ under the License.
         <input type="hidden" name="productId" value="${product.productId}" />
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}" />
         <input type="text" name="productVariantId" value="${productVariantId}" />
-        <input type="submit" value="${uiLabelMap.ProductQuickAddVariants}" class="smallSubmit" />
+        <input type="submit" value="${uiLabelMap.ProductQuickAddVariants}" class="smallSubmit ${styles.button_default!}" />
         </form>
     </@table>
 </#if>

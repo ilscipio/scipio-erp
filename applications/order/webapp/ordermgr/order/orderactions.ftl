@@ -27,7 +27,7 @@
                           <option value="${facility.facilityId}">${facility.facilityName}</option>
                         </#list>
                       </select>
-                      <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderQuickReceivePurchaseOrder}"/>
+                      <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.OrderQuickReceivePurchaseOrder}"/>
                      </form>
                   </li>
                   <li>
@@ -81,7 +81,7 @@
                         <option value="${facility.facilityId}">${facility.facilityName}</option>
                       </#list>
                     </select>
-                    <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderForceCompletePurchaseOrder}"/>
+                    <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.OrderForceCompletePurchaseOrder}"/>
                     </form>
                   </li>
               </#if>

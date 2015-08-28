@@ -19,7 +19,7 @@ under the License.
 
   <#assign menuHtml>
         <#--if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
-          <li><a href="<@ofbizUrl>editcontactmech?partyId=${partyId}</@ofbizUrl>">${uiLabelMap.CommonCreateNew}</a></li>
+          <li><a href="<@ofbizUrl>editcontactmech?partyId=${partyId}</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.CommonCreateNew}</a></li>
         </#if-->
   </#assign>
   <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}" menuHtml=menuHtml>
@@ -124,20 +124,20 @@ under the License.
                         <option value="${type.custRequestTypeId}">${type.get("description", locale)}</option>
                       </#list>
                     </select>
-                    <input type="submit" class="smallSubmit" value="${uiLabelMap.PartyCreateNewCustRequest}"/>
+                    <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.PartyCreateNewCustRequest}"/>
                   </form>
                 </#if>
               </@td>
               <@td valign="top"><b>(${partyContactMech.allowSolicitation!})</b></@td>
               <@td class="button-col">
                 <#--if security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId>
-                  <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
+                  <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
                 </#if>
                 <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session) || userLogin.partyId == partyId>
                   <form name="partyDeleteContact" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)">
                     <input name="partyId" value="${partyId}" type="hidden"/>
                     <input name="contactMechId" value="${contactMech.contactMechId}" type="hidden"/>
-                    <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonExpire}"/>
+                    <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonExpire}"/>
                   </form>
                 </#if-->
               </@td>

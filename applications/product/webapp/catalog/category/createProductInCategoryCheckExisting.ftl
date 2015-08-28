@@ -119,7 +119,7 @@ under the License.
                 <@tr>
                     <@td colspan="3">
                             ${uiLabelMap.ProductNewProductId}: <input type="text" name="productId" value=""/>
-                            <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="smallSubmit"/>
+                            <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="smallSubmit ${styles.button_default!}"/>
                     </@td>
                 </@tr>
             </@table>

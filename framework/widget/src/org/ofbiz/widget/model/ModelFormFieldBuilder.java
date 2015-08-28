@@ -777,6 +777,8 @@ public class ModelFormFieldBuilder {
             this.onClickUpdateAreas.addAll(builder.getOnClickUpdateAreas());
         this.encodeOutput = builder.getEncodeOutput();
         this.position = builder.getPosition();
+        this.positionSpan = builder.getPositionSpan();
+        this.combinePrevious = builder.getCombinePrevious();
         this.requiredField = builder.getRequiredField();
         this.separateColumn = builder.getSeparateColumn();
     }

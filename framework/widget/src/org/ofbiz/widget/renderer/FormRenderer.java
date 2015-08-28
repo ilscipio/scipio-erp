@@ -239,18 +239,33 @@ public class FormRenderer {
             context.put("useRequestParameters", Boolean.FALSE);
         }
 
+        
         // find the highest position number to get the max positions used
-        int positions = 1;
-        for (ModelFormField modelFormField : modelForm.getFieldList()) {
-            int curPos = modelFormField.getPosition();
-            if (curPos > positions) {
-                positions = curPos;
-            }
-            FieldInfo currentFieldInfo = modelFormField.getFieldInfo();
-            if (currentFieldInfo == null) {
-                throw new IllegalArgumentException(
-                        "Error rendering form, a field has no FieldInfo, ie no sub-element for the type of field for field named: "
-                                + modelFormField.getName());
+        // Cato: use explicit if set, and also take position-span into account here
+        Integer positions = modelForm.getPositions();
+        if (positions == null || positions < 1) {
+            positions = 1;
+            for (ModelFormField modelFormField : modelForm.getFieldList()) {
+                int curPos = modelFormField.getPosition();
+                
+                Integer positionSpan = modelFormField.getPositionSpan();
+                if (positionSpan == null) {
+                    positionSpan = modelForm.getDefaultPositionSpan();
+                }
+                if (positionSpan != null && positionSpan > 0) {
+                    curPos += (positionSpan - 1);
+                }
+                
+                if (curPos > positions) {
+                    positions = curPos;
+                }
+                
+                FieldInfo currentFieldInfo = modelFormField.getFieldInfo();
+                if (currentFieldInfo == null) {
+                    throw new IllegalArgumentException(
+                            "Error rendering form, a field has no FieldInfo, ie no sub-element for the type of field for field named: "
+                                    + modelFormField.getName());
+                }
             }
         }
 

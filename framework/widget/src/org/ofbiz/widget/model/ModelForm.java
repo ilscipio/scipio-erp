@@ -205,6 +205,7 @@ public abstract class ModelForm extends ModelWidget {
     private final FlexibleStringExpander progressOptions;
     private final FlexibleStringExpander progressSuccessAction;
     
+    private final Integer positions;
     private final Integer defaultPositionSpan;
     
     private final boolean defaultCombineActionFields;
@@ -425,6 +426,21 @@ public abstract class ModelForm extends ModelWidget {
             progressSuccessAction = parentModel.progressSuccessAction;
         }
         this.progressSuccessAction = progressSuccessAction;
+        
+        String positionsStr = formElement.getAttribute("positions");
+        Integer positions = null;
+        try {
+            if (UtilValidate.isNotEmpty(positionsStr)) {
+                positions = Integer.valueOf(positionsStr);
+            }
+            else if (parentModel != null) {
+                positions = parentModel.positions;
+            }
+        } catch (Exception e) {
+            Debug.logError(e, "Could not convert positions attribute to an integer: [" + positionsStr
+                    + "]; using the default of the form renderer", module);
+        }
+        this.positions = positions;
         
         String defaultPositionSpanStr = formElement.getAttribute("default-position-span");
         int defaultPositionSpan = 0;
@@ -1303,6 +1319,10 @@ public abstract class ModelForm extends ModelWidget {
         return this.progressSuccessAction.expandString(context);
     }
 
+    public Integer getPositions() {
+        return positions;
+    }
+    
     public int getDefaultPositionSpan() {
         if (this.defaultPositionSpan == null)
             return 0;

@@ -54,7 +54,7 @@ standard order confirmation page and to be re-usable by other screens.
 
       <#-- spacer goes here -->
 
-      <@tr>
+      <@tr openOnly=true />
 
         <#-- address destination column (spans a number of rows = number of cart items in it) -->
 
@@ -105,7 +105,7 @@ standard order confirmation page and to be re-usable by other screens.
         <#assign itemIndex = itemIndex + 1 />
         </#list>
 
-      </@tr>
+      <@tr closeOnly=true />
 
       </#if>
       </#list>

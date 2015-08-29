@@ -86,11 +86,11 @@ under the License.
                         </#if>
                       </#if>
                             </#assign>
-                            <@field type="radio" name="${shipGroupIndex?default(0)}_shipping_method" value="${shippingMethod}" id="${shipGroupIndex?default(0)}_shipping_method_${shippingMethod}" label=radioText checked=chosenShippingMethod?default("N@A")/>                   
+                            <@field type="radio" name="${shipGroupIndex?default(0)}_shipping_method" value="${shippingMethod}" id="${shipGroupIndex?default(0)}_shipping_method_${shippingMethod}" label=radioText checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>                   
                 </#list>
-                <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
+                        <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                         
-                            <@field type="radio" name="${shipGroupIndex?default(0)}_shipping_method" value="Default" checked="checked" label="${uiLabelMap.FacilityNoOtherShippingMethods}"/>
+                            <@field type="radio" name="${shipGroupIndex?default(0)}_shipping_method" value="Default" checked=true label="${uiLabelMap.FacilityNoOtherShippingMethods}"/>
         
                         </#if>
                              
@@ -113,8 +113,8 @@ under the License.
                     ${uiLabelMap.FacilityShipOnceOrAvailable}
                   </@td>
                   <@td>
-                    <@field type="radio" name="${shipGroupIndex?default(0)}_may_split" value="false" checked=cart.getMaySplit(shipGroupIndex)?default("N") label="${uiLabelMap.FacilityWaitEntireOrderReady}"/>
-                    <@field type="radio" name="${shipGroupIndex?default(0)}_may_split" value="true" checked=cart.getMaySplit(shipGroupIndex)?default("N") label="${uiLabelMap.FacilityShipAvailable}"/>
+                    <@field type="radio" name="${shipGroupIndex?default(0)}_may_split" value="false" checked=((cart.getMaySplit(shipGroupIndex)!"N") == "N") label="${uiLabelMap.FacilityWaitEntireOrderReady}"/>
+                    <@field type="radio" name="${shipGroupIndex?default(0)}_may_split" value="true" checked=((cart.getMaySplit(shipGroupIndex)!"N") == "Y") label="${uiLabelMap.FacilityShipAvailable}"/>
                   </@td>
                 </@tr>
                 <@tr>
@@ -149,8 +149,8 @@ under the License.
                         <@tr>
                             <@td class="${styles.grid_large!}3">${uiLabelMap.OrderIsThisGift}</@td>
                             <@td>
-                                <@field type="radio" name="${shipGroupIndex?default('0')}_is_gift" value="true" checked=cart.getIsGift(shipGroupIndex)?default('N') label="${uiLabelMap.CommonYes}"/>
-                                <@field type="radio" name="${shipGroupIndex?default('0')}_is_gift" value="false" checked=cart.getIsGift(shipGroupIndex)?default('Y') label="${uiLabelMap.CommonNo}"/>
+                                <@field type="radio" name="${shipGroupIndex?default('0')}_is_gift" value="true" checked=((cart.getIsGift(shipGroupIndex)!'Y') == 'Y') label="${uiLabelMap.CommonYes}"/>
+                                <@field type="radio" name="${shipGroupIndex?default('0')}_is_gift" value="false" checked=((cart.getIsGift(shipGroupIndex)!'N') == 'N') label="${uiLabelMap.CommonNo}"/>
                             </@td>
                         </@tr>
                     </#if>

@@ -185,3 +185,58 @@
     $('#test_meter').css({"width": "78%"});
     </script>
 </@section>
+
+<@section title="Tables">
+    <@table type="data-complex" autoAltRows=true>
+      <@thead>
+        <@tr><@th>Column 1</@th><@th>Column 2</@th><@th>Column 3</@th></@tr>
+      </@thead>
+      <@tbody>
+        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+        <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+        <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+        <@tr><@td>
+          <@table type="data-complex" inheritAltRows=true>
+            <@tr><@td>Table inheriting alt rows from parent</@td><@td>Cell</@td></@tr>
+            <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+            <@tr><@td>Regular row</@td><@td>
+              <@table type="data-complex" inheritAltRows=true>
+                <@tr><@td>Table inheriting alt rows from parent</@td><@td>Cell</@td></@tr>
+                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+              </@table>
+            </@td></@tr>
+            <@tr><@td>Regular row</@td><@td>
+              <@table type="data-complex" autoAltRows=true firstRowAlt=true inheritAltRows=false>
+                <@tr><@td>Table using its own alt rows within parent, first row odd</@td><@td>Cell</@td></@tr>
+                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td></@tr>
+                <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td></@tr>
+                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                <@tr metaRow=true><@td colspan=2>Special meta row</@td></@tr>
+                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                <@tr alt=false><@td>Row forced to even alt</@td><@td>Cell</@td></@tr>
+                <@tr alt=false><@td>Row forced to even alt</@td><@td>Cell</@td></@tr>
+                <@tr alt=true><@td>Row forced to odd alt</@td><@td>Cell</@td></@tr>
+                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+              </@table>
+            </@td></@tr>
+          </@table>
+        </@td><@td>Regular row</@td><@td>Cell</@td></@tr>
+        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+        <@tr metaRow=true><@td colspan=3>Special meta row</@td></@tr>
+        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+      </@tbody>
+      <@tfoot>
+        <@tr><@td colspan=3>Footer</@td></@tr>
+      </@tfoot>
+    </@table>
+</@section>

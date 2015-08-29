@@ -1364,8 +1364,9 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#-- save previous globals, for nesting -->
   <#local prevTableInfo = catoCurrentTableInfo!>
   <#local prevSectionInfo = catoCurrentTableSectionInfo!>
-  <#local prevRowAlt = catoCurrentTableRowAlt!"">
-  <#local prevLastRowAlt = catoCurrentTableLastRowAlt!"">
+  <#local prevRowAltFlag = catoCurrentTableRowAltFlag!""> <#-- used to keep track of state (always boolean) -->
+  <#local prevCurrentRowAlt = catoCurrentTableCurrentRowAlt!""> <#-- the actual alt value of current row (may be empty) -->
+  <#local prevLastRowAlt = catoCurrentTableLastRowAlt!""> <#-- the actual alt value of "last" row (may be empty) -->
   <#if !autoAltRows?is_boolean>
     <#-- don't enable for all data-list tables by default for now, not sure wanted...
     <#local autoAltRows = (type == "data-list") || inheritAltRows>-->
@@ -1407,28 +1408,32 @@ Helps define table. Required wrapper for all table sub-elem macros.
     </#if>
   </#if>
   <#global catoCurrentTableInfo = {"type": type, "autoAltRows": autoAltRows,
-    "inheritAltRows": inheritAltRows, "parentRowAlt": prevRowAlt, "useFootAltRows": useFootAltRows}>
+    "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
   <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
+  <#-- note: catoCurrentTableRowAltFlag should always be boolean
+       note: catoCurrentTableCurrentRowAlt probably doesn't need to be set here, but playing it safe -->
   <#if firstRowAlt?is_boolean>
-    <#global catoCurrentTableRowAlt = firstRowAlt>
+    <#global catoCurrentTableRowAltFlag = firstRowAlt>
+    <#global catoCurrentTableCurrentRowAlt = firstRowAlt>
   <#elseif inheritAltRows>
-    <#if prevRowAlt?is_boolean>
-      <#global catoCurrentTableRowAlt = prevRowAlt> 
+    <#if prevCurrentRowAlt?is_boolean>
+      <#global catoCurrentTableRowAltFlag = prevCurrentRowAlt> 
     <#else>
-      <#global catoCurrentTableRowAlt = false> 
+      <#global catoCurrentTableRowAltFlag = false> 
     </#if>
+    <#global catoCurrentTableCurrentRowAlt = prevCurrentRowAlt>
   <#else>
-    <#-- note: this var should always be a boolean -->
-    <#global catoCurrentTableRowAlt = false> 
+    <#global catoCurrentTableRowAltFlag = false> 
+    <#global catoCurrentTableCurrentRowAlt = false>
   </#if>
   <#-- note: this var may be empty string (none) -->
-  <#global catoCurrentTableLastRowAlt = prevRowAlt>
+  <#global catoCurrentTableLastRowAlt = prevCurrentRowAlt>
   <#local style = "">
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#global catoCurrentTableStack = pushStack(catoCurrentTableStack!, 
-        {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAlt":prevRowAlt, 
-         "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable})>
+        {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
+         "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable})>
   </#if>
   <#if scrollable>
   <#-- TODO: change this to something more foundation-like.
@@ -1446,7 +1451,8 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <#global catoCurrentTableStack = popStack(catoCurrentTableStack!)>
     <#local prevTableInfo = stackValues.prevTableInfo>
     <#local prevSectionInfo = stackValues.prevSectionInfo>
-    <#local prevRowAlt = stackValues.prevRowAlt>
+    <#local prevRowAltFlag = stackValues.prevRowAltFlag>
+    <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
     <#local prevLastRowAlt = stackValues.prevLastRowAlt>
     <#local scrollable = stackValues.scrollable>
   </#if>
@@ -1456,7 +1462,8 @@ Helps define table. Required wrapper for all table sub-elem macros.
   </#if>
   <#global catoCurrentTableInfo = prevTableInfo>
   <#global catoCurrentTableSectionInfo = prevSectionInfo>
-  <#global catoCurrentTableRowAlt = prevRowAlt>
+  <#global catoCurrentTableRowAltFlag = prevRowAltFlag>
+  <#global catoCurrentTableCurrentRowAlt = prevCurrentRowAlt>
   <#global catoCurrentTableLastRowAlt = prevLastRowAlt>
 </#if>
 </#macro>
@@ -1579,14 +1586,16 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
         <#if ((catoCurrentTableInfo.inheritAltRows)!)==true>
           <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
         <#else>
-          <#local alt = catoCurrentTableRowAlt!false> <#-- always boolean -->
+          <#local alt = catoCurrentTableRowAltFlag!false> <#-- always boolean -->
         </#if>
       <#elseif useAlt?is_boolean && useAlt == true>
         <#-- forced -->
-        <#local alt = catoCurrentTableRowAlt!false>
+        <#local alt = catoCurrentTableRowAltFlag!false>
       </#if>
     </#if>
   </#if>
+  <#-- save the "effective" or "real" current row alt -->
+  <#global catoCurrentTableCurrentRowAlt = alt>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#global catoCurrentTableRowStack = pushStack(catoCurrentTableRowStack!, 
@@ -1615,13 +1624,11 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#if !(useAlt?is_boolean && useAlt == false)>
     <#-- note: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
     <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
-      <#global catoCurrentTableRowAlt = !alt>
+      <#global catoCurrentTableRowAltFlag = !alt>
     </#if>
   </#if>
-  <#if isRegAltRow>
-    <#-- note: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
-    <#global catoCurrentTableLastRowAlt = alt>
-  </#if>
+  <#-- note: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
+  <#global catoCurrentTableLastRowAlt = alt>
 </#if>
 </#macro>
 

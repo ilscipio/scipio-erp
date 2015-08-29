@@ -50,7 +50,6 @@ under the License.
                 </#if>
                 <@tr valign="middle" openOnly=true />
                   <@td openOnly=true />
-                    <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
                       <div>
                         ${keyword.enteredKeyword}
                         <form method="post" action="<@ofbizUrl>deleteKeywordThesaurus</@ofbizUrl>" name="deleteKeywordThesaurus">
@@ -60,12 +59,13 @@ under the License.
                         </form>
                       </div>
                       <div>
+                      <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
                         <input type="hidden" name="enteredKeyword" value="${keyword.enteredKeyword}" />
                         <span>${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10" />
                         <span>${uiLabelMap.ProductRelationship}</span><select name="relationshipEnumId"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option></#list></select>
                         <input type="submit" value="${uiLabelMap.CommonAdd}" />
+                      </form>
                       </div>
-                    </form>
                   <@td closeOnly=true />
                   <@td openOnly=true />
               </#if>

@@ -21,34 +21,26 @@ under the License.
 
 <#if (shoppingLists??) && (shoppingCartSize > 0)>
     <@section title="${uiLabelMap.OrderAddOrderToShoppingList}">
-      <@table type="generic" border="0" cellspacing="0" cellpadding="0">
-        <@tr>
-          <@td>
-            <form method="post" name="addBulkToShoppingList" action="<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>" style='margin: 0;'>
-              <#assign index = 0/>
-              <#list shoppingCart.items() as cartLine>
-                <#if (cartLine.getProductId()??) && !cartLine.getIsPromo()>
-                  <input type="hidden" name="selectedItem" value="${index}"/>
-                </#if>
-                <#assign index = index + 1/>
-              </#list>
-              <@table type="fields" border="0">
-                <@tr>
-                  <@td>
-                    <select name='shoppingListId'>
-                      <#list shoppingLists as shoppingList>
-                        <option value='${shoppingList.shoppingListId}'>${shoppingList.getString("listName")}</option>
-                      </#list>
-                        <option value="">---</option>
-                        <option value="">${uiLabelMap.OrderNewShoppingList}</option>
-                    </select>
-                    <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.OrderAddToShoppingList}"/>
-                  </@td>
-                </@tr>
-              </@table>
-            </form>
-          </@td>
-        </@tr>
-      </@table>
+        <form method="post" name="addBulkToShoppingList" action="<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>" style='margin: 0;'>
+          <#assign index = 0/>
+          <#list shoppingCart.items() as cartLine>
+            <#if (cartLine.getProductId()??) && !cartLine.getIsPromo()>
+              <input type="hidden" name="selectedItem" value="${index}"/>
+            </#if>
+            <#assign index = index + 1/>
+          </#list>
+          
+          <@field type="select" label="" name="shoppingListId" currentValue="">
+          <#list shoppingLists as shoppingList>
+            <option value='${shoppingList.shoppingListId}'>${shoppingList.getString("listName")}</option>
+          </#list>
+            <option value="">---</option>
+            <option value="">${uiLabelMap.OrderNewShoppingList}</option>
+          </@field>
+          
+          <@field type="submitarea">
+            <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.OrderAddToShoppingList}"/>
+          </@field>
+        </form>
     </@section>
 </#if>

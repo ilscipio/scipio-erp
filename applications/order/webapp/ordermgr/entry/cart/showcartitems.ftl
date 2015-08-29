@@ -36,7 +36,7 @@ under the License.
         <input type="hidden" name="finalizeReqPayInfo" value="false"/>
         <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
       </#if>
-      <@table type="data-complex" autoAltRows=false class="" cellspacing="0" cellpadding="1" border="0">
+      <@table type="data-complex" autoAltRows=true class="basic-table" cellspacing="0" cellpadding="1" border="0">
         <@thead>
         <@tr>
           <@th>&nbsp;</@th>
@@ -66,11 +66,11 @@ under the License.
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
           <#assign lineOptionalFeatures = cartLine.getOptionalProductFeatures()>
-          <@tr><@td colspan="8"><hr/></@td></@tr>
+          <#--<@tr><@td colspan="8"><hr/></@td></@tr>-->
           <@tr valign="top">
             <@td>&nbsp;</@td>
             <@td>
-          <@table type="fields" border="0">
+          <@table type="fields" inheritAltRows=true class="basic-table" border="0">
           <@tr><@td colspan="2">
                   <#if cartLine.getProductId()??>
                     <#-- product item -->
@@ -140,7 +140,7 @@ under the License.
               <#assign product = cartLine.getProduct()>
               <@tr>
                 <@td colspan="2">
-                    <a href="/catalog/control/EditProductInventoryItems?productId=${productId}" class="${styles.button_default!}"><b>${uiLabelMap.ProductInventory}</b></a>:
+                    <a href="/catalog/control/EditProductInventoryItems?productId=${productId}" class="${styles.button_default!}"><b>${uiLabelMap.ProductInventory}</b></a> : 
                     ${uiLabelMap.ProductAtp} = ${availableToPromiseMap.get(productId)}, ${uiLabelMap.ProductQoh} = ${quantityOnHandMap.get(productId)}
                     <#if Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG")>
                     ${uiLabelMap.ProductMarketingPackageATP} = ${mktgPkgATPMap.get(productId)}, ${uiLabelMap.ProductMarketingPackageQOH} = ${mktgPkgQOHMap.get(productId)}
@@ -182,13 +182,14 @@ under the License.
             <#-- ship before/after date -->
             <@tr>
               <@td colspan="2">
-               <@table type="fields" border="0" cellpadding="0" cellspacing="0" width="100%">
+               <@table type="fields" class="basic-table" inheritAltRows=true border="0" cellpadding="0" cellspacing="0" width="100%">
                <@tr>
                 <@td>
                   ${uiLabelMap.OrderShipAfterDate}
                     <@htmlTemplate.renderDateTimeField name="shipAfterDate_${cartLineIndex}" value="${cartLine.getShipAfterDate()?default('')}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipAfterDate_${cartLineIndex}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                 </@td>
-                <@td>&nbsp;</@td>
+               </@tr>
+               <@tr>
                 <@td>
                   ${uiLabelMap.OrderShipBeforeDate}
                     <@htmlTemplate.renderDateTimeField name="shipBeforeDate_${cartLineIndex}" value="${cartLine.getShipBeforeDate()?default('')}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipBeforeDate_${cartLineIndex}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
@@ -203,7 +204,7 @@ under the License.
               <#assign itemProductAssocList = cartLine.getProduct().getRelated("MainProductAssoc", null, Static["org.ofbiz.base.util.UtilMisc"].toList("productAssocTypeId", "sequenceNum"), false)!/>
             </#if>
             <#if itemProductAssocList?? && itemProductAssocList?has_content>
-              <@tr><@td colspan="8"><hr /></@td></@tr>
+              <#--<@tr><@td colspan="8"><hr /></@td></@tr>-->
               <@tr>
                 <@td>${uiLabelMap.OrderAssociatedProducts}</@td>
                 <@td><a href="<@ofbizUrl>LookupAssociatedProducts?productId=${cartLine.getProductId()!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderQuickLookup}</a></@td>
@@ -281,10 +282,11 @@ under the License.
           </@tr>
         </#list>
 
+      <@tfoot>
+        <@tr><@td colspan="8"><hr /></@td></@tr>
         <#if shoppingCart.getAdjustments()?has_content>
-            <@tr><@td colspan="7"><hr /></@td></@tr>
               <@tr>
-                <@td colspan="4" nowrap="nowrap" align="right">${uiLabelMap.OrderSubTotal}:</@td>
+                <@td colspan="6" nowrap="nowrap" align="right">${uiLabelMap.OrderSubTotal}:</@td>
                 <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=currencyUomId/></@td>
                 <@td>&nbsp;</@td>
               </@tr>
@@ -292,7 +294,7 @@ under the License.
               <#assign adjustmentType = cartAdjustment.getRelatedOne("OrderAdjustmentType", true)>
               <#if adjustmentType.get("orderAdjustmentTypeId",locale) != 'SHIPPING_CHARGES'>
                 <@tr>
-                  <@td colspan="4" nowrap="nowrap" align="right">
+                  <@td colspan="6" nowrap="nowrap" align="right">
                       <i>${uiLabelMap.OrderAdjustment}</i> - ${adjustmentType.get("description",locale)!}
                     <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDetails}</a></#if>:
                   </@td>
@@ -323,10 +325,12 @@ under the License.
             <hr />
             <div><b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></b></div>
           </@td>
+          <@td>&nbsp;</@td>
         </@tr>
-        <@tr>
+        <#--<@tr>
           <@td colspan="8">&nbsp;</@td>
-        </@tr>
+        </@tr>-->
+      </@tfoot>
       </@table>
     </form>
   <#else>

@@ -111,19 +111,19 @@ under the License.
                       </#if>
 
 
-                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderDesiredDeliveryDate}" name="itemDesiredDeliveryDate" value="${value!}" size="25" maxlength="30" id="item1" />
+                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderDesiredDeliveryDate}" name="itemDesiredDeliveryDate" value="${value!}" size="25" maxlength="30" id="additem_itemDesiredDeliveryDate" />
                          <@row>
                          <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2"></@cell>
                          <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
-                            <input type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true"/>&nbsp;${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
+                            <input type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true"<#if useAsDefaultDesiredDeliveryDate??> checked="checked"</#if>/>&nbsp;${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
                          </@cell>
                          </@row>
                           
                          <#--<@field type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true" checked=(useAsDefaultDesiredDeliveryDate??) label="${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}"/>-->
 
 
-                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate" value="${shoppingCart.getDefaultShipAfterDate()!}" size="25" maxlength="30" id="item1" />
-                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate" value="${shoppingCart.getDefaultShipBeforeDate()!}" size="25" maxlength="30" id="item1"/>
+                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate" value="${shoppingCart.getDefaultShipAfterDate()!}" size="25" maxlength="30" id="additem_shipAfterDate" />
+                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate" value="${shoppingCart.getDefaultShipBeforeDate()!}" size="25" maxlength="30" id="additem_shipBeforeDate"/>
 
                    
                 <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">

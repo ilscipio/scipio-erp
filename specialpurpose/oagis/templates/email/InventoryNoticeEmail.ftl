@@ -30,37 +30,34 @@
     <h1>${title}</h1>
     <#-- custom logo or text can be inserted here -->
     <br />
-    <div class="screenlet-title-bar">
-      <div class="h3">${uiLabelMap.OagisInventoryDescription}</div>
-    </div>
-    <div class="screenlet-body">
-      <table class="basic-table" cellspacing="0">
-        <thead>
-        <tr valign="bottom" class="header-row">
-          <th width="10%">${uiLabelMap.ProductProduct}</th>
-          <th width="10%" align="center">${uiLabelMap.OagisInventoryLevelDateTime}</th>
-          <th width="10%" align="right">${uiLabelMap.OrderReturnItemInventoryStatus}</th>
-          <th width="10%" align="right">${uiLabelMap.OrderQuantity} (Inventory)</th>
-          <th width="10%" align="right">${uiLabelMap.OrderQuantity} (Message)</th>
-          <th width="10%" align="right">${uiLabelMap.OagisQuantityDiff}.</th>
-        </tr>
-        </thead>
-        <tr><td colspan="10"><hr /></td></tr>
+    <@section title="${uiLabelMap.OagisInventoryDescription}">
+      <@table type="data-complex" autoAltRows=false class="basic-table" cellspacing="0">
+        <@thead>
+        <@tr valign="bottom" class="header-row">
+          <@th width="10%">${uiLabelMap.ProductProduct}</@th>
+          <@th width="10%" align="center">${uiLabelMap.OagisInventoryLevelDateTime}</@th>
+          <@th width="10%" align="right">${uiLabelMap.OrderReturnItemInventoryStatus}</@th>
+          <@th width="10%" align="right">${uiLabelMap.OrderQuantity} (Inventory)</@th>
+          <@th width="10%" align="right">${uiLabelMap.OrderQuantity} (Message)</@th>
+          <@th width="10%" align="right">${uiLabelMap.OagisQuantityDiff}.</@th>
+        </@tr>
+        </@thead>
+        <@tr><@td colspan="10"><hr /></@td></@tr>
         <#assign alt_row = false>
         <#list inventoryMapList as inventoryMap>
-          <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-            <td valign="top"> ${inventoryMap.productId!}</td>
-            <td align="right" valign="top"> ${inventoryMap.timestamp!!}</td>
-            <td align="right" valign="top"> ${inventoryMap.statusId!!}</td>
-            <td align="center" valign="top"> ${inventoryMap.quantityOnHandTotal!!}</td>
-            <td align="center" valign="top"> ${inventoryMap.quantityFromMessage!!}</td>
-            <td align="right" valign="top"> ${inventoryMap.quantityDiff!!}</td>
-          </tr>
+          <@tr valign="middle" alt=alt_row>
+            <@td valign="top"> ${inventoryMap.productId!}</@td>
+            <@td align="right" valign="top"> ${inventoryMap.timestamp!!}</@td>
+            <@td align="right" valign="top"> ${inventoryMap.statusId!!}</@td>
+            <@td align="center" valign="top"> ${inventoryMap.quantityOnHandTotal!!}</@td>
+            <@td align="center" valign="top"> ${inventoryMap.quantityFromMessage!!}</@td>
+            <@td align="right" valign="top"> ${inventoryMap.quantityDiff!!}</@td>
+          </@tr>
           <#-- toggle the row color -->
           <#assign alt_row = !alt_row>
         </#list>
-        <tr><td colspan="10"><hr /></td></tr>
-      </table>
-    </div>
+        <@tr><@td colspan="10"><hr /></@td></@tr>
+      </@table>
+    </@section>
   </body>
 </html>

@@ -18,51 +18,51 @@ under the License.
 -->
 <div id="searchProductsResults" style="display:none">
   <form method="post" action="javascript:void(0);" id="SearchProductsResultsForm" name="SearchProductsResultsForm">
-    <table>
-      <tr>
-        <td width="25%">
+    <@table type="fields" class="" cellspacing="">
+      <@tr>
+        <@td width="25%">
           <label for="searchByProductIdValue"><b>&nbsp;${uiLabelMap.ProductGoodIdentification}</b></label>
-        </td>
-        <td width="25%">
+        </@td>
+        <@td width="25%">
           <input type="hidden" id="goodIdentificationTypeId" name="goodIdentificationTypeId" value="" />
           <input type="text" id="searchByProductIdValue" name="searchByProductIdValue"/>
-        </td>
-        <td width="25%">
+        </@td>
+        <@td width="25%">
           <label for="searchByProductName"><b>&nbsp;${uiLabelMap.ProductProductName}</b></label>
-        </td>
-        <td width="25%">
+        </@td>
+        <@td width="25%">
           <input type="text" id="searchByProductName" name="searchByProductName"/>
-        </td>
-      </tr>
-      <tr>
-        <td width="25%">
+        </@td>
+      </@tr>
+      <@tr>
+        <@td width="25%">
           <label for="searchByProductDescription"><b>&nbsp;${uiLabelMap.ProductProductDescription}</b></label>
-        </td>
-        <td width="25%">
+        </@td>
+        <@td width="25%">
           <input type="text" id="searchByProductDescription" name="searchByProductDescription"/>
-        </td>
-        <td width="50%" colspan="2" style="text-align:center">
+        </@td>
+        <@td width="50%" colspan="2" style="text-align:center">
           <input type="submit" value="${uiLabelMap.CommonSearch}" id="searchProductsResultsSearch"/>
           &nbsp;
           <input type="submit" value="${uiLabelMap.CommonCancel}" id="searchProductsResultsCancel"/>
-        </td>
-      </tr>
-    </table>
-    <table cellspacing="0" cellpadding="2" class="basic-table">
-      <thead class="searchProductsResultsHead">
-        <tr class="header-row">
-          <th nowrap>&nbsp;</th>
-          <th nowrap>${uiLabelMap.ProductProductId}</th>
-          <th nowrap>${uiLabelMap.ProductProductName}</th>
-          <th nowrap>${uiLabelMap.ProductProductDescription}</th>
-        </tr>
-      </thead>
-      <tbody id="searchProductsResultsList" class="searchProductsResultsCartBody">
-        <tr>
-          <td colspan="3">
-          </td>
-        </tr>
-      <tbody>
-    </table>
+        </@td>
+      </@tr>
+    </@table>
+    <@table type="data-list" cellspacing="0" cellpadding="2" class="basic-table">
+      <@thead class="searchProductsResultsHead">
+        <@tr class="header-row">
+          <@th nowrap>&nbsp;</@th>
+          <@th nowrap>${uiLabelMap.ProductProductId}</@th>
+          <@th nowrap>${uiLabelMap.ProductProductName}</@th>
+          <@th nowrap>${uiLabelMap.ProductProductDescription}</@th>
+        </@tr>
+      </@thead>
+      <@tbody id="searchProductsResultsList" class="searchProductsResultsCartBody">
+        <@tr>
+          <@td colspan="3">
+          </@td>
+        </@tr>
+      </@tbody>
+    </@table>
   </form>
 </div>

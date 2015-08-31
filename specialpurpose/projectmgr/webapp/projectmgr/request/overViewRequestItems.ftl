@@ -16,100 +16,81 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.PageTitleRequestItems}</li>
-        </ul>
-        <br class="clear"/>
-    </div>
-    <table class="basic-table hover-bar" cellspacing="0">
-    <thead>
-    <tr class="header-row">
-           <th>
+<@section title="${uiLabelMap.PageTitleRequestItems}">
+    <@table type="data-complex" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+    <@thead>
+      <@tr class="header-row">
+           <@th>
               ${uiLabelMap.CommonNbr}
-           </th>
-           <th colspan="2">
+           </@th>
+           <@th colspan="2">
               ${uiLabelMap.CommonDescription}
-           </th>
-           <th>
-           </th>
-       </tr>
-       </thead>
+           </@th>
+           <@th>
+           </@th>
+      </@tr>
+    </@thead>
     <#list custRequestItems as custRequestItemList>
     <#if custRequestItemList.custRequestItemSeqId?has_content>
-       <tr class="header-row">
-           <td>
-           </td>
-           <td colspan="2">
-           </td>
-           <td>
-           </td>
-        </tr>
-        <tr>
-            <td>
+        <@tr>
+            <@td>
               <a href="<@ofbizUrl>requestitem?custRequestId=${custRequestItemList.custRequestId}&amp;custRequestItemSeqId=${custRequestItemList.custRequestItemSeqId}</@ofbizUrl>" class="linktext">${custRequestItemList.custRequestItemSeqId}</a>
-            </td>
-            <td colspan="2">
+            </@td>
+            <@td colspan="2">
               <#if custRequestItemList.story?has_content>
                 <textarea readonly="readonly" rows="15" cols="72">${custRequestItemList.story}</textarea>
               </#if>
-            </td>
+            </@td>
             
             <#-- now show notes details per line item -->
-            <td colspan="1" align="right" valign="top" width="50%" nowrap="nowrap" style="background-color:white; vertical-align: top;">
+            <@td colspan="1" align="right" valign="top" width="50%" nowrap="nowrap" style="background-color:white; vertical-align: top;">
                 <#if custRequestItemNoteViews?has_content>
-                    <table class="basic-table hover-bar" cellspacing="0">
-                        <thead>
-                        <tr class="header-row">
-                            <th>
-                            </th>
-                            <th>
+                    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+                        <@thead>
+                        <@tr class="header-row">
+                            <@th>
+                            </@th>
+                            <@th>
                                 ${uiLabelMap.CommonNbr}
-                            </th>
-                            <th>
+                            </@th>
+                            <@th>
                                 ${uiLabelMap.CommonNote}
-                            </th>
-                            <th>
+                            </@th>
+                            <@th>
                                 ${uiLabelMap.PartyParty} ${uiLabelMap.PartyName}
-                            </th>
-                            <th>
+                            </@th>
+                            <@th>
                                 ${uiLabelMap.CommonDate}
-                            </th>
-                        </tr>
-                        </thead>
+                            </@th>
+                        </@tr>
+                        </@thead>
                         <#list custRequestItemNoteViews as custRequestItemNoteViewList>
                             <#if custRequestItemNoteViewList.custRequestItemSeqId == custRequestItemList.custRequestItemSeqId>
-                            <#if row?has_content>
-                                 <#assign row="">
-                                 <#else>
-                                     <#assign row="alternate-row">
-                            </#if>
                             <#assign partyNameView = delegator.findOne("PartyNameView", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", custRequestItemNoteViewList.partyId), false)!/>
-                            <tr<@dataRowClassStr alt=(row == "alternate-row") />>
-                                <td>
-                                </td>
-                                <td>
+                            <@tr>
+                                <@td>
+                                </@td>
+                                <@td>
                                    ${custRequestItemNoteViewList.noteId}
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                    ${custRequestItemNoteViewList.noteInfo}
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                    ${partyNameView.groupName!} ${partyNameView.firstName!} ${partyNameView.lastName!}
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                    ${custRequestItemNoteViewList.noteDateTime.toString().substring(0,10)}
-                                </td>
-                            </tr>
+                                </@td>
+                            </@tr>
                             </#if>
                         </#list>
-                    </table>
+                    </@table>
                 </#if>
                 <a href="<@ofbizUrl>requestitemnotes?custRequestId=${custRequestItemList.custRequestId}&amp;custRequestItemSeqId=${custRequestItemList.custRequestItemSeqId}</@ofbizUrl>" class="linktext">${uiLabelMap.OrderAddNote}</a>
-            </td>
-        </tr>
+            </@td>
+        </@tr>
     </#if>
     </#list>
-    </table>
-</div>
+    </@table>
+</@section>

@@ -16,16 +16,16 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<table>
-  <tr>
-    <td>
+<@table type="generic">
+  <@tr>
+    <@td>
       <ol id="posShortcut"></ol>
-    </td>
-    <td>
+    </@td>
+    <@td>
       <div id="pleaseWait" style="display:none;"> <b>${uiLabelMap.WebPosPleaseWait}</b></div>
-    </td>
-  </tr>
-</table>
+    </@td>
+  </@tr>
+</@table>
 <script type="text/javascript">
   function activateHotKeys() {
     $(document).keydown(function(e){

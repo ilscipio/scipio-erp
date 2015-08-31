@@ -17,59 +17,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="payCreditCard" style="display:none">
-  <table border="0" width="100%">
-    <tr>
-      <td colspan="4">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="100%" align="center" colspan="4">
+  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+    <@tr>
+      <@td colspan="4">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" align="center" colspan="4">
         <b>${uiLabelMap.WebPosTransactionTotalDue} <span id="creditCardTotalDue"/></b>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%" align="center" colspan="4">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" align="center" colspan="4">
         <b>${uiLabelMap.WebPosPayCreditCardTotal} <span id="creditCardTotalPaid"/></b>
         <a id="removeCreditCardTotalPaid" href="javascript:void(0);"><img src="/images/collapse.gif"></a>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%" align="center" colspan="4">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" align="center" colspan="4">
         ${uiLabelMap.WebPosPayCreditCardSwipe} <input type="checkbox" id="swipeCard" name="swipeCard" value="Y" checked="checked">
-      </td>
-    </tr>
-    <tr id="showSwipeData">
-      <td width="25%" align="right">
+      </@td>
+    </@tr>
+    <@tr id="showSwipeData">
+      <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCardSwipeData}
-      </td>
-      <td width="75%" align="left" colspan="3">
+      </@td>
+      <@td width="75%" align="left" colspan="3">
         <input type="password" id="swipeData" name="swipeData" size="50" value=""/>
-      </td>
-    </tr>
-    <tr id="showCreditCardData1" style="display:none">
-      <td width="25%" align="right">
+      </@td>
+    </@tr>
+    <@tr id="showCreditCardData1" style="display:none">
+      <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCardFirstName}
-      </td>
-      <td width="25%" align="left">
+      </@td>
+      <@td width="25%" align="left">
         <input type="text" id="firstName" name="firstName" size="20" maxlength="60" value=""/>
-      </td>
-      <td width="25%" align="right">
+      </@td>
+      <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCardLastName}
-      </td>
-      <td width="25%" align="left">
-        <input type="text" id="lastName" name="lastName" size="20" maxlength="60" value=""/></td>
-      </td>
-    </tr>
-    <tr id="showCreditCardData2" style="display:none">
-      <td width="25%" align="right">
+      </@td>
+      <@td width="25%" align="left">
+        <input type="text" id="lastName" name="lastName" size="20" maxlength="60" value=""/>
+      </@td>
+    </@tr>
+    <@tr id="showCreditCardData2" style="display:none">
+      <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCardNum}
-      </td>
-      <td width="25%" align="left">
+      </@td>
+      <@td width="25%" align="left">
         <input type="text" id="cardNum" name="cardNum" size="20" maxlength="30" value=""/>
-      </td>
-      <td width="25%" align="right">
+      </@td>
+      <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCardExp}
-      </td>
-      <td width="25%" align="left">
+      </@td>
+      <@td width="25%" align="left">
         <#assign expMonth = "">
         <#assign expYear = "">
         <select id="expMonth" name="expMonth">
@@ -93,59 +93,59 @@ under the License.
         </#if>
         ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
         </select>
-      </td>
-    </tr>
-    <tr>
-      <td width="25%" align="right">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCardType}
-      </td>
-      <td width="25%" align="left">
+      </@td>
+      <@td width="25%" align="left">
         <select id="cardType" name="cardType">
           ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
         </select>
-      </td>
-      <td width="25%" align="right">
+      </@td>
+      <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCardSecurityCode}
-      </td>
-      <td width="25%" align="left">
+      </@td>
+      <@td width="25%" align="left">
         <input type="text" id="securityCode" name="securityCode" size="5" maxlength="10" value=""/>
         <input type="hidden" name="track2" id="track2"/>
-      </td>
-    </tr>
-    <tr>
-      <td width="25%" align="right">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCard}
-      </td>
-      <td width="25%" align="left">
+      </@td>
+      <@td width="25%" align="left">
         <input type="text" id="amountCreditCard" name="amountCreditCard" size="10" value=""/>
-      </td>
-      <td width="25%" align="right">
+      </@td>
+      <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCardPostalCode}
-      </td>
-      <td width="25%" align="left">
+      </@td>
+      <@td width="25%" align="left">
         <input type="text" id="postalCode" name="postalCode" value=""/>
-      </td>
-    </tr>
-    <tr>
-      <td width="25%" align="right">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCardRefNum}
-      </td>
-      <td width="25%" align="left">
+      </@td>
+      <@td width="25%" align="left">
         <input type="text" id="refNumCreditCard" name="refNum" size="10" value=""/>
-      </td>
-      <td width="50%" colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="100%" colspan="4">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="4" align="center">
+      </@td>
+      <@td width="50%" colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" colspan="4">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td colspan="4" align="center">
         <input type="submit" value="${uiLabelMap.CommonConfirm}" id="payCreditCardConfirm"/>
         <input type="submit" value="${uiLabelMap.CommonCancel}" id="payCreditCardCancel"/>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="4"><div class="errorPosMessage"><span id="payCreditCardFormServerError"/></div></td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td colspan="4"><div class="errorPosMessage"><span id="payCreditCardFormServerError"/></div></@td>
+    </@tr>
+  </@table>
 </div>

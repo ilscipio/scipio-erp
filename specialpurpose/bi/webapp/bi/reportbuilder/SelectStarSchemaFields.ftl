@@ -19,41 +19,40 @@ under the License.
 
 <form action="<@ofbizUrl>ReportBuilderRenderStarSchemaReport</@ofbizUrl>">
     <input type="hidden" name="starSchemaName" value="${starSchemaName}"/>
-    <table cellspacing="0" class="basic-table hover-bar">
-      <thead>    
-        <tr class="header-row">
-            <th>
+    <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table hover-bar">
+      <@thead>    
+        <@tr class="header-row">
+            <@th>
                 ${uiLabelMap.CommonSelect}
-            </th>
-            <th>
+            </@th>
+            <@th>
                 ${uiLabelMap.BusinessIntelligenceFieldName}
-            </th>
-            <th>
+            </@th>
+            <@th>
                 ${uiLabelMap.BusinessIntelligenceFieldDescription}
-            </th>
-        </tr>
-      </thead>        
-        <#assign alt_row = false>
+            </@th>
+        </@tr>
+      </@thead>        
         <#list starSchemaFields as starSchemaField>
-        <tr valign="middle"<@dataRowClassStr alt=alt_row />>
-            <td>
+        <@tr valign="middle">
+            <@td>
                 <input name="selectedFieldName_o_${starSchemaField_index}" value="${starSchemaField.name}" type="hidden"/>
                 <input name="_rowSubmit_o_${starSchemaField_index}" value="Y" type="checkbox"/>
-            </td>
-            <td>
+            </@td>
+            <@td>
                 ${starSchemaField.name}
-            </td>
-            <td>
+            </@td>
+            <@td>
                 ${starSchemaField.description?default("")}
-            </td>
-        </tr>
-        <#-- toggle the row color -->
-        <#assign alt_row = !alt_row>
+            </@td>
+        </@tr>
         </#list>
-        <tr>
-            <td colspan="3">
+      <@tfoot>
+        <@tr>
+            <@td colspan="3">
                 <input name="submitButton" type="submit" value="${uiLabelMap.BusinessIntelligenceRenderTheReport}"/>
-            </td>
-        </tr>
-    </table>
+            </@td>
+        </@tr>
+      </@tfoot>
+    </@table>
 </form>

@@ -17,59 +17,53 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul><li class="h3">${uiLabelMap.CommonList} ${uiLabelMap.EcommerceSurveys}</li></ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.CommonList} ${uiLabelMap.EcommerceSurveys}">
     <#if workEffortSurveyAppls?has_content>
-      <table class="basic-table hover-bar" cellspacing="0">
-      <thead>
-        <tr class="header-row">
-          <th>${uiLabelMap.ContentSurveySurveyId}</th>
-          <th>${uiLabelMap.CommonFromDateTime}</th>
-          <th>${uiLabelMap.CommonThruDateTime}</th>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
-        </tr>
-        </thead>
+      <@table type="data-list" class="basic-table hover-bar" cellspacing="0">
+      <@thead>
+        <@tr class="header-row">
+          <@th>${uiLabelMap.ContentSurveySurveyId}</@th>
+          <@th>${uiLabelMap.CommonFromDateTime}</@th>
+          <@th>${uiLabelMap.CommonThruDateTime}</@th>
+          <@th>&nbsp;</@th>
+          <@th>&nbsp;</@th>
+          <@th>&nbsp;</@th>
+        </@tr>
+        </@thead>
         <#list workEffortSurveyAppls as workEffortSurveyAppl>
           <#if workEffortSurveyAppl?has_content>
             <#assign productStoreSurveyAppls = workEffortSurveyAppl.getRelated("ProductStoreSurveyAppl", null, null, false)>
             <#list productStoreSurveyAppls as productStoreSurveyAppl>
               <#if productStoreSurveyAppl?has_content>
                 <#assign survey = productStoreSurveyAppl.getRelatedOne("Survey", false)>
-                <tr>
+                <@tr>
                   <form method="post" action="<@ofbizUrl>updateWorkEffortSurveyAppl</@ofbizUrl>" name="editWorkEffortSurveyAppl_${workEffortSurveyAppl_index}">
-                  <td><a href="/content/control/EditSurvey?surveyId=${workEffortSurveyAppl.surveyId!}" class="${styles.button_default!}">${workEffortSurveyAppl.surveyId!} - ${survey.surveyName!}</a></td>
-                  <td>${workEffortSurveyAppl.fromDate!}</td>
-                  <td>
+                  <@td><a href="/content/control/EditSurvey?surveyId=${workEffortSurveyAppl.surveyId!}" class="${styles.button_default!}">${workEffortSurveyAppl.surveyId!} - ${survey.surveyName!}</a></@td>
+                  <@td>${workEffortSurveyAppl.fromDate!}</@td>
+                  <@td>
                     <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(workEffortSurveyAppl.thruDate)!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    </td>
-                  <td><a href="<@ofbizUrl>testWorkEffortSurvey?productStoreSurveyId=${productStoreSurveyAppl.productStoreSurveyId!}&amp;workEffortId=${workEffortSurveyAppl.workEffortId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceTakeSurvey}</a></td>
+                    </@td>
+                  <@td><a href="<@ofbizUrl>testWorkEffortSurvey?productStoreSurveyId=${productStoreSurveyAppl.productStoreSurveyId!}&amp;workEffortId=${workEffortSurveyAppl.workEffortId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceTakeSurvey}</a></@td>
                   <#if !isReadable??>
                     <input type="hidden" name="surveyId" value="${workEffortSurveyAppl.surveyId!}"/>
                     <input type="hidden" name="workEffortId" value="${workEffortSurveyAppl.workEffortId!}"/>
                     <input type="hidden" name="fromDate" value="${workEffortSurveyAppl.fromDate!}"/>
-                    <td><input type="submit" name="submitBtn" value='${uiLabelMap.CommonUpdate}' /> </td>
+                    <@td><input type="submit" name="submitBtn" value='${uiLabelMap.CommonUpdate}' /> </@td>
                   </form>
-                    <td>
+                    <@td>
                       <form id="deleteWorkEffortSurveyAppl_${workEffortSurveyAppl_index}" method="post" action="<@ofbizUrl>deleteWorkEffortSurveyAppl</@ofbizUrl>">
                         <input type="hidden" name="surveyId" value="${workEffortSurveyAppl.surveyId!}" />
                         <input type="hidden" name="workEffortId" value="${workEffortSurveyAppl.workEffortId!}" />
                         <input type="hidden" name="fromDate" value="${workEffortSurveyAppl.fromDate!}" />
                         <a href="javascript:document.getElementById('deleteWorkEffortSurveyAppl_${workEffortSurveyAppl_index}').submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                       </form>
-                    </td>
+                    </@td>
                   </#if>
-                </tr>
+                </@tr>
               </#if>
             </#list>
           </#if>
         </#list>
-      </table>
+      </@table>
     </#if>
-  </div>
-</div>
+</@section>

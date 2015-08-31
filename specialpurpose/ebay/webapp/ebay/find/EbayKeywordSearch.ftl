@@ -16,11 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.ProductSearchProducts}, ${uiLabelMap.ProductSearchFor}:</h3>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.ProductSearchProducts}, ${uiLabelMap.ProductSearchFor}:">
     <#list searchConstraintStrings as searchConstraintString>
       <div><a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">X</a>${searchConstraintString}</div>
     </#list>
@@ -78,23 +74,20 @@ under the License.
         <fieldset>
           <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
           <input type="hidden" name="SEARCH_CATEGORY_ID" value="${(requestParameters.SEARCH_CATEGORY_ID)!}" />
-          <table class="basic-table border-top border-bottom">
+          <@table type="data-list" autoAltRows=true firstRowAlt=true cellspacing="" class="basic-table border-top border-bottom">
             <#assign listIndex = lowIndex />
-            <#assign altRow = false />
             <#list productIds as productId>
-              <#assign altRow = !altRow />
               <#assign product = delegator.findOne("Product", {"productId" : productId}, true) />
-              <tr<@dataRowClassStr alt=altRow />>
-                <td>
+              <@tr>
+                <@td>
                   <input type="checkbox" name="selectResult" value="${productId}"/>
                   <a href="<@ofbizUrl>EditProduct?productId=${productId}</@ofbizUrl>" class="${styles.button_default!}">[${productId}] ${(product.internalName)!}</a>
-                </td>
-              </tr>
+                </@td>
+              </@tr>
             </#list>
-          </table>
+          </@table>
         </fieldset>
       </form>
       <@paginationPanel />
     </#if>
-  </div>
-</div>
+</@section>

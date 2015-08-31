@@ -17,40 +17,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="payGiftCard" style="display:none">
-  <table border="0" width="100%">
-    <tr>
-      <td colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="100%" align="center" colspan="2">
+  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" align="center" colspan="2">
         <b>${uiLabelMap.WebPosTransactionTotalDue} <span id="giftCardTotalDue"/></b>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%" align="center" colspan="2">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" align="center" colspan="2">
         <b>${uiLabelMap.WebPosPayGiftCardTotal} <span id="giftCardTotalPaid"/></b>
         <a id="removeGiftCardTotalPaid" href="javascript:void(0);"><img src="/images/collapse.gif"></a>
-      </td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosPayGiftCard}</td>
-      <td width="50%" align="left"><input type="text" id="amountGiftCard" name="amountGiftCard" size="10" value=""/></td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosPayGiftCardRefNum}</td>
-      <td width="50%" align="left"><input type="text" id="refNumGiftCard" name="refNum" size="10" value=""/></td>
-    </tr>
-    <tr>
-      <td colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="2" align="center">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosPayGiftCard}</@td>
+      <@td width="50%" align="left"><input type="text" id="amountGiftCard" name="amountGiftCard" size="10" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosPayGiftCardRefNum}</@td>
+      <@td width="50%" align="left"><input type="text" id="refNumGiftCard" name="refNum" size="10" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2" align="center">
         <input type="submit" value="${uiLabelMap.CommonConfirm}" id="payGiftCardConfirm"/>
         <input type="submit" value="${uiLabelMap.CommonCancel}" id="payGiftCardCancel"/>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="errorPosMessage"><span id="payGiftCardFormServerError"/></div></td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2"><div class="errorPosMessage"><span id="payGiftCardFormServerError"/></div></@td>
+    </@tr>
+  </@table>
 </div>

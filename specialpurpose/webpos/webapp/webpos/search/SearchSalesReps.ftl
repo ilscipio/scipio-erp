@@ -19,7 +19,7 @@ under the License.
 <div>
   <div id="SearchSalesRepsList">
     <#if salesReps?? && salesReps?has_content>
-      <table id="salesRepsResults" name="salesRepsResults" cellspacing="0" cellpadding="2" class="basic-table">
+      <@table type="data-complex" autoAltRows=false id="salesRepsResults" name="salesRepsResults" cellspacing="0" cellpadding="2" class="basic-table">
       <#assign alt_row = false>
         <#list salesReps as salesRep>
           <#assign salesRepInCart = false>
@@ -38,8 +38,9 @@ under the License.
             <#assign person = person + (salesRep.firstName).trim()/>
           </#if>
           <#assign person = person + " (" + salesRep.partyId + ")"/>
-          <tr <#if salesRepInCart>class="pos-cart-choose"<#else><#if alt_row>class="pos-cart-even"<#else>class="pos-cart-odd"</#if></#if>>
-            <td>
+          <#assign class><#if salesRepInCart>pos-cart-choose<#else><#if alt_row>pos-cart-even<#else>pos-cart-odd</#if></#if></#assign>
+          <@tr alt=alt_row class=class>
+            <@td>
               <#if salesRepInCart>
               <a href="javascript:removeSalesRep('${salesRep.partyId}');">
                 &nbsp;${person}
@@ -49,12 +50,12 @@ under the License.
                 &nbsp;${person}
               </a>
               </#if>
-            </td>
-          </tr>
+            </@td>
+          </@tr>
           <#-- toggle the row color -->
           <#assign alt_row = !alt_row>
         </#list>
-      </table>
+      </@table>
     </#if>
   </div>
 </div>

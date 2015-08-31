@@ -17,41 +17,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="closeTerminal" style="display:none">
-  <table border="0" width="100%">
-    <tr>
-      <td colspan="2"">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosManagerCloseTerminalCashAmount}</td>
-      <td width="50%" align="left"><input type="text" id="endingDrawerCashAmount" name="endingDrawerCashAmount" size="10" value=""/></td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosManagerCloseTerminalCheckAmount}</td>
-      <td width="50%" align="left"><input type="text" id="endingDrawerCheckAmount" name="endingDrawerCheckAmount" size="10" value=""/></td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosManagerCloseTerminalCcAmount}</td>
-      <td width="50%" align="left"><input type="text" id="endingDrawerCcAmount" name="endingDrawerCcAmount" size="10" value=""/></td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosManagerCloseTerminalGcAmount}</td>
-      <td width="50%" align="left"><input type="text" id="endingDrawerGcAmount" name="endingDrawerGcAmount" size="10" value=""/></td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosManagerCloseTerminalOtherAmount}</td>
-      <td width="50%" align="left"><input type="text" id="endingDrawerOtherAmount" name="endingDrawerOtherAmount" size="10" value=""/></td>
-    </tr>
-    <tr>
-      <td colspan="2"">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="2" align="center">
+  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosManagerCloseTerminalCashAmount}</@td>
+      <@td width="50%" align="left"><input type="text" id="endingDrawerCashAmount" name="endingDrawerCashAmount" size="10" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosManagerCloseTerminalCheckAmount}</@td>
+      <@td width="50%" align="left"><input type="text" id="endingDrawerCheckAmount" name="endingDrawerCheckAmount" size="10" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosManagerCloseTerminalCcAmount}</@td>
+      <@td width="50%" align="left"><input type="text" id="endingDrawerCcAmount" name="endingDrawerCcAmount" size="10" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosManagerCloseTerminalGcAmount}</@td>
+      <@td width="50%" align="left"><input type="text" id="endingDrawerGcAmount" name="endingDrawerGcAmount" size="10" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosManagerCloseTerminalOtherAmount}</@td>
+      <@td width="50%" align="left"><input type="text" id="endingDrawerOtherAmount" name="endingDrawerOtherAmount" size="10" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2" align="center">
         <input type="submit" value="${uiLabelMap.CommonConfirm}" id="closeTerminalConfirm"/>
         <input type="submit" value="${uiLabelMap.CommonCancel}" id="closeTerminalCancel"/>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="errorPosMessage"><span id="closeTerminalFormServerError"/></div></td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2"><div class="errorPosMessage"><span id="closeTerminalFormServerError"/></div></@td>
+    </@tr>
+  </@table>
 </div>

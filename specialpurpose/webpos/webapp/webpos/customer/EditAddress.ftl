@@ -17,82 +17,82 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="editAddress" style="display:none">
-  <table border="0" width="100%">
-    <tr>
-      <td width="100%" colspan="4">
+  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+    <@tr>
+      <@td width="100%" colspan="4">
         <br />
-      </td>
-    </tr>
-    <tr>
-      <td width="15%">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="15%">
         <b>${uiLabelMap.PartyLastName}</b>
-      </td>
-      <td width="35%">
+      </@td>
+      <@td width="35%">
         <input type="hidden" id="partyId" name="partyId" value="" />
         <input type="hidden" id="contactMechId" name="contactMechId" value="" />
         <input type="hidden" id="contactMechPurposeTypeId" name="contactMechPurposeTypeId" value="" />
         <input type="text" id="personLastName" name="personLastName" value="" size="40" />
-      </td>
-      <td width="15%">
+      </@td>
+      <@td width="15%">
         <b>${uiLabelMap.PartyFirstName}</b>
-      </td>
-      <td width="35%">
+      </@td>
+      <@td width="35%">
         <input type="text" id="personFirstName" name="personFirstName" value="" size="40" />
-      </td>
-    </tr>
-    <tr>
-      <td width="15%">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="15%">
         <b>${uiLabelMap.PartyAddressLine1}</b>
-      </td>
-      <td width="35%">
+      </@td>
+      <@td width="35%">
         <input type="text" id="personAddress1" name="personAddress1" value="" size="40" />
-      </td>
-      <td width="15%">
+      </@td>
+      <@td width="15%">
         <b>${uiLabelMap.PartyAddressLine2}</b>
-      </td>
-      <td width="35%">
+      </@td>
+      <@td width="35%">
         <input type="text" id="personAddress2" name="personAddress2" value="" size="40" />
-      </td>
-    </tr>
-    <tr>
-      <td width="15%">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="15%">
         <b>${uiLabelMap.CommonCountry}</b>
-      </td>
-      <td width="35%">
+      </@td>
+      <@td width="35%">
         <input type="text" id="countryProvinceGeo" name="countryProvinceGeo" value="" />
-      </td>
-      <td width="15%">
+      </@td>
+      <@td width="15%">
         <b>${uiLabelMap.PartyState}</b>
-      </td>
-      <td width="35%">
+      </@td>
+      <@td width="35%">
         <input type="text" id="stateProvinceGeo" name="stateProvinceGeo" value="" />
-      </td>
-    </tr>
-    <tr>
-      <td width="15%">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="15%">
         <b>${uiLabelMap.PartyCity}</b>
-      </td>
-      <td width="35%">
+      </@td>
+      <@td width="35%">
         <input type="text" id="personCity" name="personCity" value="" size="40" />
-      </td>
-      <td width="15%">
+      </@td>
+      <@td width="15%">
         <b>${uiLabelMap.PartyPostalCode}</b>
-      </td>
-      <td width="35%">
+      </@td>
+      <@td width="35%">
         <input type="text" id="personPostalCode" name="personPostalCode" value="" size="7" />
-      </td>
-    </tr>
-    <tr>
-      <td width="100%" colspan="4">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" colspan="4">
         <br />
-      </td>
-    </tr>
-    <tr>
-      <td width="100%" colspan="4" align="center">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" colspan="4" align="center">
         <input type="submit" id="editAddressCreateUpdate" name="editAddressCreateUpdate" value="${uiLabelMap.CommonCreate}"/>
         &nbsp;
         <input type="submit" id="editAddressCancel" name="editAddressCancel" value="${uiLabelMap.CommonCancel}"/>
-      </td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+  </@table>
 </div>

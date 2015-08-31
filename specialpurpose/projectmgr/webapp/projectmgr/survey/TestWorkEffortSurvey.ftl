@@ -17,11 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${survey.surveyName}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${survey.surveyName}">
         <#-- Render the survey -->
         <#if surveyWrapper?has_content>
             <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>testWorkEffortSurveyResponse</@ofbizUrl>" style="margin: 0;">
@@ -32,5 +28,4 @@ under the License.
         <#else>
             <h2>${uiLabelMap.OrderNothingToDoHere}</h2>
         </#if>
-    </div>
-</div>
+</@section>

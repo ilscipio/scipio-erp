@@ -17,18 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <#if task?has_content>
-        <li class="h3">&nbsp;${uiLabelMap.PageTitleEditTask}&nbsp;#${project.workEffortId!} ${uiLabelMap.CommonInformation}</li>
-      <#else>
-        <li class="h3">&nbsp;${uiLabelMap.PageTitleAddTask}</li>
-      </#if>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<#assign sectionTitle>
+  <#if task?has_content>
+    <li class="h3">&nbsp;${uiLabelMap.PageTitleEditTask}&nbsp;#${project.workEffortId!} ${uiLabelMap.CommonInformation}</li>
+  <#else>
+    <li class="h3">&nbsp;${uiLabelMap.PageTitleAddTask}</li>
+  </#if>
+</#assign>
+<@section title=sectionTitle>
     <#assign workEffortIdFrom = parameters.workEffortIdFrom>
     <#if task?has_content>
       <form name="addTaskAndAssocForm" method="get" action="<@ofbizUrl>updateTaskAndAssoc</@ofbizUrl>">
@@ -36,57 +32,57 @@ under the License.
       <br />
       <form name="addTaskAndAssocForm" method="get" action="<@ofbizUrl>createTaskAndAssoc</@ofbizUrl>">
     </#if>
-        <table width="100%" cellpadding="2" cellspacing="0">
-        <tr>
+        <@table type="fields" class="" width="100%" cellpadding="2" cellspacing="0">
+        <@tr>
           <#if !(task??)>
-            <td><input type="hidden" name="workEffortTypeId" value="${parameters.workEffortTypeId!}"/></td>
+            <@td><input type="hidden" name="workEffortTypeId" value="${parameters.workEffortTypeId!}"/></@td>
           <#else>
-            <td><input type="hidden" name="workEffortTypeId" value="${task.workEffortTypeId!}"/></td>
-            <td><input type="hidden" name="workEffortId" value="${task.workEffortId!}"/></td>
-            <td><input type="hidden" name="workEffortName" value="${task.workEffortName!}"/></td>
+            <@td><input type="hidden" name="workEffortTypeId" value="${task.workEffortTypeId!}"/></@td>
+            <@td><input type="hidden" name="workEffortId" value="${task.workEffortId!}"/></@td>
+            <@td><input type="hidden" name="workEffortName" value="${task.workEffortName!}"/></@td>
           </#if>
-        </tr>
-        <tr>
-            <td><input type="hidden" name="workEffortIdFrom" value="${workEffortIdFrom!}"/></td>
-            <td><input type="hidden" name="workEffortParentId" value="${workEffortIdFrom!}"/></td>
-            <td><input type="hidden" name="workEffortAssocTypeId" value="WORK_EFF_BREAKDOWN"/>
-        </tr>
-        <tr>
-          <td width="20%">
+        </@tr>
+        <@tr>
+            <@td><input type="hidden" name="workEffortIdFrom" value="${workEffortIdFrom!}"/></@td>
+            <@td><input type="hidden" name="workEffortParentId" value="${workEffortIdFrom!}"/></@td>
+            <@td><input type="hidden" name="workEffortAssocTypeId" value="WORK_EFF_BREAKDOWN"/></@td>
+        </@tr>
+        <@tr>
+          <@td width="20%">
             ${uiLabelMap.ProjectMgrTaskDetails}
-          </td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.ProjectMgrQuickAssignPartyId}</td>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td class="label">${uiLabelMap.ProjectMgrQuickAssignPartyId}</@td>
+          <@td>
             <@htmlTemplate.lookupField formName="addTaskAndAssocForm" name="quickAssignPartyId" id="quickAssignPartyId" fieldFormName="LookupPartyName"/>
-          </td>
-        </tr>
-        <tr>
+          </@td>
+        </@tr>
+        <@tr>
           <#if task??>
-            <td class="label">${uiLabelMap.ProjectMgrWorkEffortId}</td>
-            <td>${task.workEffortId!}</td>
+            <@td class="label">${uiLabelMap.ProjectMgrWorkEffortId}</@td>
+            <@td>${task.workEffortId!}</@td>
           </#if>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.CommonName}*</td>
+        </@tr>
+        <@tr>
+          <@td class="label">${uiLabelMap.CommonName}*</@td>
             <#if task??>
-              <td>${task.workEffortName!}<span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
+              <@td>${task.workEffortName!}<span class="tooltip">${uiLabelMap.CommonRequired}</span></@td>
             <#else>
-              <td><input type="text" name="workEffortName" value=""/><span class="tooltip">${uiLabelMap.CommonRequired}</span></td>
+              <@td><input type="text" name="workEffortName" value=""/><span class="tooltip">${uiLabelMap.CommonRequired}</span></@td>
             </#if>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.CommonDescription}</td>
+        </@tr>
+        <@tr>
+          <@td class="label">${uiLabelMap.CommonDescription}</@td>
             <#if task??>
-              <td><input type="text" name="description" value="${task.description!}"/></td>
+              <@td><input type="text" name="description" value="${task.description!}"/></@td>
             <#else>
-              <td><input type="text" name="description" value=""/></td>
+              <@td><input type="text" name="description" value=""/></@td>
           </#if>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.CommonStatus}</td>
-          <td>
+        </@tr>
+        <@tr>
+          <@td class="label">${uiLabelMap.CommonStatus}</@td>
+          <@td>
             <select name="currentStatusId">
               <#if task??>
                 <#assign currentStatus = task.geRelatedOne("CurrentStatusItem")!>
@@ -110,11 +106,11 @@ under the License.
                 </#list>
               </#if>
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.CommonPriority}</td>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td class="label">${uiLabelMap.CommonPriority}</@td>
+          <@td>
             <#if task?has_content>
               <#assign priority = task.priority!>
             </#if>
@@ -144,11 +140,11 @@ under the License.
                 <option value=9>${uiLabelMap.WorkEffortPriorityNine}</option>
               </#if>
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}</td>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td class="label">${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}</@td>
+          <@td>
             <#assign enumerations = delegator.findByAnd("Enumeration", Static["org.ofbiz.base.util.UtilMisc"].toMap("enumTypeId", "WORK_EFF_SCOPE"), null, false)>
             <select name="scopeEnumId">
               <#if task??>
@@ -162,31 +158,31 @@ under the License.
                 </#list>
               </#if>
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.WorkEffortEstimatedStartDate}</td>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td class="label">${uiLabelMap.WorkEffortEstimatedStartDate}</@td>
+          <@td>
             <#if task??>
               <@htmlTemplate.renderDateTimeField name="estimatedStartDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.estimatedStartDate!}" size="25" maxlength="30" id="estimatedStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
             <#else>
               <@htmlTemplate.renderDateTimeField name="estimatedStartDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="estimatedStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
             </#if>
-          </td>
-         </tr>
-         <tr>
-           <td class="label">${uiLabelMap.WorkEffortEstimatedCompletionDate}</td>
-           <td>
+          </@td>
+         </@tr>
+         <@tr>
+           <@td class="label">${uiLabelMap.WorkEffortEstimatedCompletionDate}</@td>
+           <@td>
              <#if task??>
                <@htmlTemplate.renderDateTimeField name="estimatedCompletionDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.estimatedCompletionDate!}" size="25" maxlength="30" id="estimatedCompletionDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              <#else>
                <@htmlTemplate.renderDateTimeField name="estimatedCompletionDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="estimatedCompletionDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              </#if>
-           </td>
-         </tr>
-         <tr>
-           <td class="label">${uiLabelMap.FormFieldTitle_actualStartDate}</td>
-           <td>
+           </@td>
+         </@tr>
+         <@tr>
+           <@td class="label">${uiLabelMap.FormFieldTitle_actualStartDate}</@td>
+           <@td>
 
 
              <#if task??>
@@ -194,26 +190,25 @@ under the License.
              <#else>
                <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              </#if>
-           </td>
-         </tr>
-         <tr>
-           <td class="label">${uiLabelMap.FormFieldTitle_actualCompletionDate}</td>
-           <td>
+           </@td>
+         </@tr>
+         <@tr>
+           <@td class="label">${uiLabelMap.FormFieldTitle_actualCompletionDate}</@td>
+           <@td>
 
              <#if task??>
                <@htmlTemplate.renderDateTimeField name="actualCompletionDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.actualCompletionDate!}" size="25" maxlength="30" id="actualCompletionDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              <#else>
                <@htmlTemplate.renderDateTimeField name="actualCompletionDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualCompletionDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              </#if>
-           </td>
-         </tr>
-         <tr>
-           <td>&nbsp;</td>
-           <td>
+           </@td>
+         </@tr>
+         <@tr>
+           <@td>&nbsp;</@td>
+           <@td>
              <input type="submit" name="submit" value="${uiLabelMap.CommonSave}"/>
-           </td>
-         </tr>
-       </table>
+           </@td>
+         </@tr>
+       </@table>
      </form>
-   </div>
-</div>
+</@section>

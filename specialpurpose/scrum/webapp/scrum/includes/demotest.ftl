@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div align="center">
-<h3>Welcome to The Scrum Component Demonstration</h3>
+<@heading>Welcome to The Scrum Component Demonstration</@heading>
 
 This component is based on the following documents: <br/>
 <a href="http://www.scrum.org/scrumguides/" target="_BLANK">Scrum guide in various languages.</a> <br/>
@@ -28,72 +28,72 @@ The table shows the demo user's which are setup in the demo data for this compon
 When you click on the User Login ID,the system will login to the Scrum Component of that User Login ID <br/><br/>
 </div>
 
-<table>
-    <tr>
-        <th>USER LOGIN ID</th>
-        <th>DESCRIPTION</th>
-    </tr>
-    <tr>
-        <td>
+<@table type="data-list" class="" cellspacing="">
+    <@tr>
+        <@th>USER LOGIN ID</@th>
+        <@th>DESCRIPTION</@th>
+    </@tr>
+    <@tr>
+        <@td>
         <a href="/scrum/control/main?USERNAME=scrumadmin&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrum Admin</a><br/>
-        </td>
-        <td>
+        </@td>
+        <@td>
             <b>Scrum Admin</b><br/>
             The Scrum Admin is a userlogin who has full control and can execute any function in the Scrum Component.
-        </td>
-    </tr>
-    <tr>
-        <td>
-        <a href="/scrum/control/main?USERNAME=scrummaster&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrum Master</td>
-        <td>
+        </@td>
+    </@tr>
+    <@tr>
+        <@td>
+        <a href="/scrum/control/main?USERNAME=scrummaster&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrum Master</@td>
+        <@td>
             <b>Scrum Master</b><br/>
             The Scrummaster can create the project and sprint and will put the product backlog into the sprint,<br/>
             can assign the tasks to the scrummember, add member to the project and sprint,and can manage timesheets.
-        <td>
-    </tr>
-    <tr>
-        <td>
+        </@td>
+    </@tr>
+    <@tr>
+        <@td>
         <a href="/scrum/control/main?USERNAME=productowner&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Product Owner</a><br/>
         <a href="/scrum/control/main?USERNAME=productowner2&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Product Owner2</a><br/>
-        </td>
-        <td>
+        </@td>
+        <@td>
             <b>Product Owner</b><br/>
             The Product Owner can maintain his products, find products and see all products that belong to this Product Owner. <br/>
             Product Owner can add and re-arrange the product backlog and look at the project/sprint overview and detail.<br/>
-        </td>
-    </tr>
-    <tr>
-        <td>
+        </@td>
+    </@tr>
+    <@tr>
+        <@td>
         <a href="/scrum/control/main?USERNAME=scrumteam1&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrumteam1</a><br/>
         <a href="/scrum/control/main?USERNAME=scrumteam2&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrumteam2</a><br/>
         <a href="/scrum/control/main?USERNAME=scrumteam3&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrumteam3</a><br/>
         <a href="/scrum/control/main?USERNAME=scrumteam4&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrumteam4</a><br/>
-        </td>
-        <td>
+        </@td>
+        <@td>
             <b>Scrumteam</b><br/>
             The Scrumteam can read the product information, see all products that the Scrumteam is working on.<br/>
             The Scrumteam can see and update the task information in a sprint.
-        </td>
-    </tr>
-    <tr>
-        <td>
+        </@td>
+    </@tr>
+    <@tr>
+        <@td>
         <a href="/scrum/control/main?USERNAME=testadmin&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Testadmin</a>
-        </td>
-        <td>
+        </@td>
+        <@td>
             <b>Opentest</b><br/>
             This is the QA function in the system. This function will show all tasks which are complete but no final test was yet done.<br/>
             If the test was ok, the backlogitem will be be set to 'completed'<br/>
             However when the test failed the QA person can add error tasks to indicate what did not work yet.
-        </td>
-    </tr>
-    <tr>
-        <td>
+        </@td>
+    </@tr>
+    <@tr>
+        <@td>
         <a href="/scrum/control/main?USERNAME=DemoStakeholder&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">DemoStakeholder</a>
-        </td>
-        <td>
+        </@td>
+        <@td>
             <b>The Stakeholder</b><br/>
             The DemoStakeholder can view the Stakeholder's product and project/sprints only.<br/>
             This is for people belonging to the same company as the product owner and are interested in how the development is going.
-        </td>
-    </tr>
-</table>
+        </@td>
+    </@tr>
+</@table>

@@ -17,25 +17,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="promo" style="display:none">
-  <table border="0" width="100%">
-    <tr>
-      <td colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosPromoCode}</td>
-      <td width="50%" align="left"><input type="text" id="promoCode" name="promoCode" size="10" value=""/></td>
-    </tr>
-    <tr>
-      <td colspan="2"">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="2" align="center">
+  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosPromoCode}</@td>
+      <@td width="50%" align="left"><input type="text" id="promoCode" name="promoCode" size="10" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2" align="center">
         <input type="submit" value="${uiLabelMap.CommonConfirm}" id="promoCodeConfirm"/>
         <input type="submit" value="${uiLabelMap.CommonCancel}" id="promoCodeCancel"/>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="errorPosMessage"><span id="promoCodeFormServerError"/></div></td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2"><div class="errorPosMessage"><span id="promoCodeFormServerError"/></div></@td>
+    </@tr>
+  </@table>
 </div>

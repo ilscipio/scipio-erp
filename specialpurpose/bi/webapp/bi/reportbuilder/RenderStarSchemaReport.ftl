@@ -17,28 +17,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<table cellspacing="0" class="basic-table hover-bar">
-  <thead>
-    <tr class="header-row">
+<@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table hover-bar">
+  <@thead>
+    <@tr class="header-row">
         <#assign firstRecord = records[0]!/>
         <#list columnNames as columnName>
-        <th<#if firstRecord?? && firstRecord[columnName]?default("")?is_number> class="align-text"</#if>>
+        <#assign class><#if firstRecord?? && firstRecord[columnName]?default("")?is_number>align-text</#if></#assign>
+        <@th class=class>
             ${columnName}
-        </th>
+        </@th>
         </#list>
-    </tr>
-  </thead>
-    <#assign alt_row = false>
+    </@tr>
+  </@thead>
     <#list records as record>
-    <tr valign="middle"<@dataRowClassStr alt=alt_row />>
+    <@tr valign="middle">
         <#list columnNames as columnName>
         <#assign columnValue = record[columnName]?default("")>
-        <td<#if columnValue?is_number> class="align-text"</#if>>
+        <#assign class><#if columnValue?is_number>align-text</#if></#assign>
+        <@td class=class>
             ${columnValue}
-        </td>
+        </@td>
         </#list>
-    </tr>
-    <#-- toggle the row color -->
-    <#assign alt_row = !alt_row>
+    </@tr>
     </#list>
-</table>
+</@table>

@@ -17,40 +17,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="payCheck" style="display:none">
-  <table border="0" width="100%">
-    <tr rowspan="2">
-      <td colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="100%" align="center" colspan="2">
+  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+    <@tr rowspan="2">
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" align="center" colspan="2">
         <b>${uiLabelMap.WebPosTransactionTotalDue} <span id="checkTotalDue"/></b>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%" align="center" colspan="2">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" align="center" colspan="2">
         <b>${uiLabelMap.WebPosPayCheckTotal} <span id="checkTotalPaid"/></b>
         <a id="removeCheckTotalPaid" href="javascript:void(0);"><img src="/images/collapse.gif"></a>
-      </td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosPayCheck}</td>
-      <td width="50%" align="left"><input type="text" id="amountCheck" name="amountCheck" size="10" value=""/></td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosPayCheckRefNum}</td>
-      <td width="50%" align="left"><input type="text" id="refNumCheck" name="refNum" size="10" value=""/></td>
-    </tr>
-    <tr>
-      <td colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="2" align="center">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosPayCheck}</@td>
+      <@td width="50%" align="left"><input type="text" id="amountCheck" name="amountCheck" size="10" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosPayCheckRefNum}</@td>
+      <@td width="50%" align="left"><input type="text" id="refNumCheck" name="refNum" size="10" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2" align="center">
         <input type="submit" value="${uiLabelMap.CommonConfirm}" id="payCheckConfirm"/>
         <input type="submit" value="${uiLabelMap.CommonCancel}" id="payCheckCancel"/>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="errorPosMessage"><span id="payCheckFormServerError"/></div></td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2"><div class="errorPosMessage"><span id="payCheckFormServerError"/></div></@td>
+    </@tr>
+  </@table>
 </div>

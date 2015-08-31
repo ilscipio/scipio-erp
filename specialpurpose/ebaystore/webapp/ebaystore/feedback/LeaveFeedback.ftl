@@ -51,15 +51,15 @@ under the License.
 </script>
 <form name="leaveFeedback" action="<@ofbizUrl>sendLeaveFeedback</@ofbizUrl>" method="post">
     <input type="hidden" value="${parameters.productStoreId}" name="productStoreId"/>
-<table cellspacing="0" class="basic-table">
-    <tbody>
-      <thead>
-        <tr class="header-row">
-            <th>Item</th>
-            <th width="600">Rate this transaction</th>
-            <th>Role</th>
-        </tr>
-       </thead>
+<@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
+    <@tbody>
+      <@thead>
+        <@tr class="header-row">
+            <@th>Item</@th>
+            <@th width="600">Rate this transaction</@th>
+            <@th>Role</@th>
+        </@tr>
+       </@thead>
         <#assign row = "alternate-row">
         <#assign FeedbackSize = 0>
         <#assign feedbackCounter = 0>
@@ -83,12 +83,12 @@ under the License.
                     <input type="hidden" value="${leaveFeedback.userID}" name="targetUser${feedbackCounter}"/>
                     <input type="hidden" value="${leaveFeedback.commentingUser}" name="commentingUser${feedbackCounter}"/>
                     <input type="hidden" value="${leaveFeedback.role}" name="role${feedbackCounter}"/>
-                    <tr<@dataRowClassStr alt=(row == "alternate-row") /> style="border:#eeeeee solid thin">
-                        <td valign="top">
+                    <@tr alt=(row == "alternate-row") style="border:#eeeeee solid thin">
+                        <@td valign="top">
                         ${leaveFeedback.itemID} - ${leaveFeedback.title}
                         <a target="_blank" href="http://payments.sandbox.ebay.com/ws/eBayISAPI.dll?ViewPaymentStatus&amp;transId=${leaveFeedback.transactionID}&amp;ssPageName=STRK:MESOX:VPS&amp;itemid=${leaveFeedback.itemID}">order details</a>
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                             <input type="radio" name="commentType${feedbackCounter}" value="positive" 
                                 onclick="document.getElementById('rate${feedbackCounter}').style.display='block';"/><span>Positive</span>
                             <input type="radio" name="commentType${feedbackCounter}" checked="checked" value="none" 
@@ -97,11 +97,11 @@ under the License.
                                 <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                                 <br />80 characters left<br /><br />
                             </div>
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                             Buyer:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}">${leaveFeedback.userID}</a>
-                        </td>
-                    </tr>
+                        </@td>
+                    </@tr>
                 <#else>
                     <#assign feedbackCounter = feedbackCounter + 1>
                     <#if row == "">
@@ -114,12 +114,12 @@ under the License.
                     <input type="hidden" value="${leaveFeedback.userID}" name="targetUser${feedbackCounter}"/>
                     <input type="hidden" value="${leaveFeedback.commentingUser}" name="commentingUser${feedbackCounter}"/>
                     <input type="hidden" value="${leaveFeedback.role}" name="role${feedbackCounter}"/>
-                    <tr<@dataRowClassStr alt=(row == "alternate-row") /> style="border:#eeeeee solid thin">
-                        <td valign="top">
+                    <@tr alt=(row == "alternate-row") style="border:#eeeeee solid thin">
+                        <@td valign="top">
                         ${leaveFeedback.itemID} - ${leaveFeedback.title}
                         <a target="_blank" href="http://payments.sandbox.ebay.com/ws/eBayISAPI.dll?ViewPaymentStatus&amp;transId=${leaveFeedback.transactionID}&amp;ssPageName=STRK:MESOX:VPS&amp;itemid=${leaveFeedback.itemID}">order details</a>
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                         <input type="radio" name="commentType${feedbackCounter}" value="positive" 
                             onclick="document.getElementById('rate${feedbackCounter}').style.display='block';"/><span>Positive</span>
                         <input type="radio" name="commentType${feedbackCounter}" value="neutral" 
@@ -132,99 +132,99 @@ under the License.
                             <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                             <br />80 characters left<br /><br />
                             <b>Rate details about this purchase</b>
-                            <table>
-                                <tr>
-                                    <td>
+                            <@table type="fields" cellspacing="" class="">
+                                <@tr>
+                                    <@td>
                                         How accurate was the item description?
-                                    </td>
-                                    <td>
+                                    </@td>
+                                    <@td>
                                         <input id="ItemAsDescribedId${feedbackCounter}" type="hidden" value="0" name="ratingItem${feedbackCounter}"/>
                                         <img id="starItemAsDescribedId${feedbackCounter}_1" src="/images/rate/starDefault.gif" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',1,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='block'"/>
                                         <img id="starItemAsDescribedId${feedbackCounter}_2" src="/images/rate/starDefault.gif" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',2,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='block'"/>
                                         <img id="starItemAsDescribedId${feedbackCounter}_3" src="/images/rate/starDefault.gif" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',3,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='none'"/>
                                         <img id="starItemAsDescribedId${feedbackCounter}_4" src="/images/rate/starDefault.gif" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',4,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='none'"/>
                                         <img id="starItemAsDescribedId${feedbackCounter}_5" src="/images/rate/starDefault.gif" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',5,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='none'"/>
-                                    </td>
-                                </tr>
-                                <tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
-                                    <td colspan="2">
+                                    </@td>
+                                </@tr>
+                                <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
+                                    <@td colspan="2">
                                         Why weren't you satisfied with the item description?
-                                        <table class="answers" width="100%" border="0" cellpadding="0" cellspacing="0">
-                                            <tbody>
-                                                <tr>
-                                                    <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
-                                                    </td><td>Item was not received</td>
-                                                </tr>
-                                                <tr>
-                                                    <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="6" type="radio" /></td>
-                                                    <td>Quality did not match item description</td>
-                                                </tr>
-                                                <tr>
-                                                    <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="2" type="radio" /></td>
-                                                    <td>Item was damaged</td>
-                                                </tr>
-                                                <tr>
-                                                    <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="1" type="radio" /></td>
-                                                    <td>Item was a counterfeit, replica, or an unauthorized copy</td>
-                                                </tr>
-                                                <tr>
-                                                    <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="3" type="radio" /></td>
-                                                    <td>Wrong item</td>
-                                                </tr>
-                                                <tr>
-                                                    <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="4" type="radio" checked="checked" /></td>
-                                                    <td>Other</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                                        <@table type="fields" class="answers" width="100%" border="0" cellpadding="0" cellspacing="0">
+                                            <@tbody>
+                                                <@tr>
+                                                    <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
+                                                    </@td><@td>Item was not received</@td>
+                                                </@tr>
+                                                <@tr>
+                                                    <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="6" type="radio" /></@td>
+                                                    <@td>Quality did not match item description</@td>
+                                                </@tr>
+                                                <@tr>
+                                                    <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="2" type="radio" /></@td>
+                                                    <@td>Item was damaged</@td>
+                                                </@tr>
+                                                <@tr>
+                                                    <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="1" type="radio" /></@td>
+                                                    <@td>Item was a counterfeit, replica, or an unauthorized copy</@td>
+                                                </@tr>
+                                                <@tr>
+                                                    <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="3" type="radio" /></@td>
+                                                    <@td>Wrong item</@td>
+                                                </@tr>
+                                                <@tr>
+                                                    <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="4" type="radio" checked="checked" /></@td>
+                                                    <@td>Other</@td>
+                                                </@tr>
+                                            </@tbody>
+                                        </@table>
+                                    </@td>
+                                </@tr>
+                                <@tr>
+                                    <@td>
                                         How satisfied were you with the seller's communication?
-                                    </td>
-                                    <td>
+                                    </@td>
+                                    <@td>
                                         <input id="CommResponsivenessId${feedbackCounter}" type="hidden" value="0" name="ratingComm${feedbackCounter}"/>
                                         <img id="starCommResponsivenessId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',1,this,${feedbackCounter})"/>
                                         <img id="starCommResponsivenessId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',2,this,${feedbackCounter})"/>
                                         <img id="starCommResponsivenessId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',3,this,${feedbackCounter})"/>
                                         <img id="starCommResponsivenessId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',4,this,${feedbackCounter})"/>
                                         <img id="starCommResponsivenessId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',5,this,${feedbackCounter})"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                                    </@td>
+                                </@tr>
+                                <@tr>
+                                    <@td>
                                         How quickly did the seller ship the item?
-                                    </td>
-                                    <td>
+                                    </@td>
+                                    <@td>
                                         <input id="ShippingTimeId${feedbackCounter}" type="hidden" value="0" name="ratingShip${feedbackCounter}"/>
                                         <img id="starShippingTimeId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',1,this,${feedbackCounter})"/>
                                         <img id="starShippingTimeId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',2,this,${feedbackCounter})"/>
                                         <img id="starShippingTimeId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',3,this,${feedbackCounter})"/>
                                         <img id="starShippingTimeId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',4,this,${feedbackCounter})"/>
                                         <img id="starShippingTimeId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',5,this,${feedbackCounter})"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                                    </@td>
+                                </@tr>
+                                <@tr>
+                                    <@td>
                                         How reasonable were the shipping and handling charges?
-                                    </td>
-                                    <td>
+                                    </@td>
+                                    <@td>
                                         <input id="ShippingHandlingChargesId${feedbackCounter}" type="hidden" value="0" name="ratingShipHand${feedbackCounter}"/>
                                         <img id="starShippingHandlingChargesId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',1,this,${feedbackCounter})"/>
                                         <img id="starShippingHandlingChargesId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',2,this,${feedbackCounter})"/>
                                         <img id="starShippingHandlingChargesId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',3,this,${feedbackCounter})"/>
                                         <img id="starShippingHandlingChargesId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',4,this,${feedbackCounter})"/>
                                         <img id="starShippingHandlingChargesId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',5,this,${feedbackCounter})"/>
-                                    </td>
-                                </tr>
-                            </table>
+                                    </@td>
+                                </@tr>
+                            </@table>
                         </div>
-                        </td>
-                        <td>
+                        </@td>
+                        <@td>
                             Seller:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}">${leaveFeedback.userID}</a>
-                        </td>
-                    </tr>
+                        </@td>
+                    </@tr>
                 </#if>
             </#if>
         <#elseif role=="buyer">
@@ -240,12 +240,12 @@ under the License.
                 <input type="hidden" value="${leaveFeedback.userID}" name="targetUser${feedbackCounter}"/>
                 <input type="hidden" value="${leaveFeedback.commentingUser}" name="commentingUser${feedbackCounter}"/>
                 <input type="hidden" value="${leaveFeedback.role}" name="role${feedbackCounter}"/>
-                <tr<@dataRowClassStr alt=(row == "alternate-row") /> style="border:#eeeeee solid thin">
-                    <td valign="top">
+                <@tr alt=(row == "alternate-row") style="border:#eeeeee solid thin">
+                    <@td valign="top">
                     ${leaveFeedback.itemID}]${leaveFeedback.title}
                     <a target="_blank" href="http://payments.sandbox.ebay.com/ws/eBayISAPI.dll?ViewPaymentStatus&amp;transId=${leaveFeedback.transactionID}&amp;ssPageName=STRK:MESOX:VPS&amp;itemid=${leaveFeedback.itemID}">order details</a>
-                    </td>
-                    <td>
+                    </@td>
+                    <@td>
                         <input type="radio" name="commentType${feedbackCounter}" value="positive" 
                             onclick="document.getElementById('rate${feedbackCounter}').style.display='block';"/><span>Positive</span>
                         <input type="radio" name="commentType${feedbackCounter}" checked="checked" value="none" 
@@ -254,11 +254,11 @@ under the License.
                             <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                             <br />80 characters left<br /><br />
                         </div>
-                    </td>
-                    <td>
+                    </@td>
+                    <@td>
                         Buyer:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}">${leaveFeedback.userID}</a>
-                    </td>
-                </tr>
+                    </@td>
+                </@tr>
             </#if>
         <#elseif role == "seller">
             <#if leaveFeedback.role == "seller">
@@ -273,12 +273,12 @@ under the License.
                 <input type="hidden" value="${leaveFeedback.userID}" name="targetUser${feedbackCounter}"/>
                 <input type="hidden" value="${leaveFeedback.commentingUser}" name="commentingUser${feedbackCounter}"/>
                 <input type="hidden" value="${leaveFeedback.role}" name="role${feedbackCounter}"/>
-                <tr<@dataRowClassStr alt=(row == "alternate-row") />  style="border:#eeeeee solid thin">
-                    <td valign="top">
+                <@tr alt=(row == "alternate-row") style="border:#eeeeee solid thin">
+                    <@td valign="top">
                     ${leaveFeedback.itemID} - ${leaveFeedback.title}
                     <a target="_blank" href="http://payments.sandbox.ebay.com/ws/eBayISAPI.dll?ViewPaymentStatus&amp;transId=${leaveFeedback.transactionID}&amp;ssPageName=STRK:MESOX:VPS&amp;itemid=${leaveFeedback.itemID}">order details</a>
-                    </td>
-                    <td>
+                    </@td>
+                    <@td>
                     <input type="radio" name="commentType${feedbackCounter}" value="positive" 
                         onclick="document.getElementById('rate${feedbackCounter}').style.display='block';"/><span>Positive</span>
                     <input type="radio" name="commentType${feedbackCounter}" value="neutral" 
@@ -291,99 +291,99 @@ under the License.
                         <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                         <br />80 characters left<br /><br />
                         <b>Rate details about this purchase</b>
-                        <table>
-                            <tr>
-                                <td>
+                        <@table type="fields" class="" cellspacing="">
+                            <@tr>
+                                <@td>
                                     How accurate was the item description?
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                     <input id="ItemAsDescribedId${feedbackCounter}" type="hidden" value="0" name="ratingItem${feedbackCounter}"/>
                                     <img id="starItemAsDescribedId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',1,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='block'"/>
                                     <img id="starItemAsDescribedId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',2,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='block'"/>
                                     <img id="starItemAsDescribedId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',3,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='none'"/>
                                     <img id="starItemAsDescribedId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',4,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='none'"/>
                                     <img id="starItemAsDescribedId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',5,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='none'"/>
-                                </td>
-                            </tr>
-                            <tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
-                                <td colspan="2">
+                                </@td>
+                            </@tr>
+                            <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
+                                <@td colspan="2">
                                     Why weren't you satisfied with the item description?
-                                    <table class="answers" width="100%" border="0" cellpadding="0" cellspacing="0">
-                                        <tbody>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
-                                                </td><td>Item was not received</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="6" type="radio" /></td>
-                                                <td>Quality did not match item description</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="2" type="radio" /></td>
-                                                <td>Item was damaged</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="1" type="radio" /></td>
-                                                <td>Item was a counterfeit, replica, or an unauthorized copy</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="3" type="radio" /></td>
-                                                <td>Wrong item</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="4" type="radio" checked="checked" /></td>
-                                                <td>Other</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
+                                    <@table type="fields" class="answers" width="100%" border="0" cellpadding="0" cellspacing="0">
+                                        <@tbody>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
+                                                </@td><@td>Item was not received</@td>
+                                            </@tr>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="6" type="radio" /></@td>
+                                                <@td>Quality did not match item description</@td>
+                                            </@tr>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="2" type="radio" /></@td>
+                                                <@td>Item was damaged</@td>
+                                            </@tr>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="1" type="radio" /></@td>
+                                                <@td>Item was a counterfeit, replica, or an unauthorized copy</@td>
+                                            </@tr>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="3" type="radio" /></@td>
+                                                <@td>Wrong item</@td>
+                                            </@tr>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="4" type="radio" checked="checked" /></@td>
+                                                <@td>Other</@td>
+                                            </@tr>
+                                        </@tbody>
+                                    </@table>
+                                </@td>
+                            </@tr>
+                            <@tr>
+                                <@td>
                                     How satisfied were you with the seller's communication?
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                     <input id="CommResponsivenessId${feedbackCounter}" type="hidden" value="0" name="ratingComm${feedbackCounter}"/>
                                     <img id="starCommResponsivenessId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',1,this,${feedbackCounter})"/>
                                     <img id="starCommResponsivenessId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',2,this,${feedbackCounter})"/>
                                     <img id="starCommResponsivenessId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',3,this,${feedbackCounter})"/>
                                     <img id="starCommResponsivenessId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',4,this,${feedbackCounter})"/>
                                     <img id="starCommResponsivenessId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',5,this,${feedbackCounter})"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
+                                </@td>
+                            </@tr>
+                            <@tr>
+                                <@td>
                                     How quickly did the seller ship the item?
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                     <input id="ShippingTimeId${feedbackCounter}" type="hidden" value="0" name="ratingShip${feedbackCounter}"/>
                                     <img id="starShippingTimeId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',1,this,${feedbackCounter})"/>
                                     <img id="starShippingTimeId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',2,this,${feedbackCounter})"/>
                                     <img id="starShippingTimeId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',3,this,${feedbackCounter})"/>
                                     <img id="starShippingTimeId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',4,this,${feedbackCounter})"/>
                                     <img id="starShippingTimeId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',5,this,${feedbackCounter})"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
+                                </@td>
+                            </@tr>
+                            <@tr>
+                                <@td>
                                     How reasonable were the shipping and handling charges?
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                     <input id="ShippingHandlingChargesId${feedbackCounter}" type="hidden" value="0" name="ratingShipHand${feedbackCounter}"/>
                                     <img id="starShippingHandlingChargesId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',1,this,${feedbackCounter})"/>
                                     <img id="starShippingHandlingChargesId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',2,this,${feedbackCounter})"/>
                                     <img id="starShippingHandlingChargesId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',3,this,${feedbackCounter})"/>
                                     <img id="starShippingHandlingChargesId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',4,this,${feedbackCounter})"/>
                                     <img id="starShippingHandlingChargesId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',5,this,${feedbackCounter})"/>
-                                </td>
-                            </tr>
-                        </table>
+                                </@td>
+                            </@tr>
+                        </@table>
                     </div>
-                    </td>
-                    <td>
+                    </@td>
+                    <@td>
                         Seller:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}">${leaveFeedback.userID}</a>
-                    </td>
-                </tr>
+                    </@td>
+                </@tr>
             </#if>
         <#else>
             <#assign feedbackCounter = feedbackCounter + 1>
@@ -397,12 +397,12 @@ under the License.
             <input type="hidden" value="${leaveFeedback.userID}" name="targetUser${feedbackCounter}"/>
             <input type="hidden" value="${leaveFeedback.commentingUser}" name="commentingUser${feedbackCounter}"/>
             <input type="hidden" value="${leaveFeedback.role}" name="role${feedbackCounter}"/>
-            <tr<@dataRowClassStr alt=(row == "alternate-row") />>
-                <td>
+            <@tr alt=(row == "alternate-row")>
+                <@td>
                 ${leaveFeedback.itemID} - ${leaveFeedback.title}
                 <a target="_blank" href="http://payments.sandbox.ebay.com/ws/eBayISAPI.dll?ViewPaymentStatus&amp;transId=${leaveFeedback.transactionID}&amp;ssPageName=STRK:MESOX:VPS&amp;itemid=${leaveFeedback.itemID}">order details</a>
-                </td>
-                <td>
+                </@td>
+                <@td>
                 <#if leaveFeedback.role == "seller">
                     <input type="radio" name="commentType${feedbackCounter}" value="positive" 
                         onclick="document.getElementById('rate${feedbackCounter}').style.display='block';"/><span>Positive</span>
@@ -423,93 +423,93 @@ under the License.
                         <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                         <br />80 characters left<br /><br />
                         <b>Rate details about this purchase</b>
-                        <table>
-                            <tr>
-                                <td>
+                        <@table type="fields" class="" cellspacing="">
+                            <@tr>
+                                <@td>
                                     How accurate was the item description?
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                     <input id="ItemAsDescribedId${feedbackCounter}" type="hidden" value="0" name="ratingItem${feedbackCounter}"/>
                                     <img id="starItemAsDescribedId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',1,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='block'"/>
                                     <img id="starItemAsDescribedId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',2,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='block'"/>
                                     <img id="starItemAsDescribedId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',3,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='none'"/>
                                     <img id="starItemAsDescribedId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',4,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='none'"/>
                                     <img id="starItemAsDescribedId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ItemAsDescribedId',5,this,${feedbackCounter});document.getElementById('itemOption${feedbackCounter}').style.display='none'"/>
-                                </td>
-                            </tr>
-                            <tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
-                                <td colspan="2">
+                                </@td>
+                            </@tr>
+                            <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
+                                <@td colspan="2">
                                     Why weren't you satisfied with the item description?
-                                    <table class="answers" width="100%" border="0" cellpadding="0" cellspacing="0">
-                                        <tbody>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
-                                                </td><td>Item was not received</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="6" type="radio" /></td>
-                                                <td>Quality did not match item description</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="2" type="radio" /></td>
-                                                <td>Item was damaged</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="1" type="radio" /></td>
-                                                <td>Item was a counterfeit, replica, or an unauthorized copy</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="3" type="radio" /></td>
-                                                <td>Wrong item</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="4" type="radio" checked="checked" /></td>
-                                                <td>Other</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
+                                    <@table type="fields" class="answers" width="100%" border="0" cellpadding="0" cellspacing="0">
+                                        <@tbody>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
+                                                </@td><@td>Item was not received</@td>
+                                            </@tr>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="6" type="radio" /></@td>
+                                                <@td>Quality did not match item description</@td>
+                                            </@tr>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="2" type="radio" /></@td>
+                                                <@td>Item was damaged</@td>
+                                            </@tr>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="1" type="radio" /></@td>
+                                                <@td>Item was a counterfeit, replica, or an unauthorized copy</@td>
+                                            </@tr>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="3" type="radio" /></@td>
+                                                <@td>Wrong item</@td>
+                                            </@tr>
+                                            <@tr>
+                                                <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="4" type="radio" checked="checked" /></@td>
+                                                <@td>Other</@td>
+                                            </@tr>
+                                        </@tbody>
+                                    </@table>
+                                </@td>
+                            </@tr>
+                            <@tr>
+                                <@td>
                                     How satisfied were you with the seller's communication?
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                     <input id="CommResponsivenessId${feedbackCounter}" type="hidden" value="0" name="ratingComm${feedbackCounter}"/>
                                     <img id="starCommResponsivenessId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',1,this,${feedbackCounter})"/>
                                     <img id="starCommResponsivenessId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',2,this,${feedbackCounter})"/>
                                     <img id="starCommResponsivenessId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',3,this,${feedbackCounter})"/>
                                     <img id="starCommResponsivenessId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',4,this,${feedbackCounter})"/>
                                     <img id="starCommResponsivenessId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('CommResponsivenessId',5,this,${feedbackCounter})"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
+                                </@td>
+                            </@tr>
+                            <@tr>
+                                <@td>
                                     How quickly did the seller ship the item?
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                     <input id="ShippingTimeId${feedbackCounter}" type="hidden" value="0" name="ratingShip${feedbackCounter}"/>
                                     <img id="starShippingTimeId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',1,this,${feedbackCounter})"/>
                                     <img id="starShippingTimeId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',2,this,${feedbackCounter})"/>
                                     <img id="starShippingTimeId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',3,this,${feedbackCounter})"/>
                                     <img id="starShippingTimeId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',4,this,${feedbackCounter})"/>
                                     <img id="starShippingTimeId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingTimeId',5,this,${feedbackCounter})"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
+                                </@td>
+                            </@tr>
+                            <@tr>
+                                <@td>
                                     How reasonable were the shipping and handling charges?
-                                </td>
-                                <td>
+                                </@td>
+                                <@td>
                                     <input id="ShippingHandlingChargesId${feedbackCounter}" type="hidden" value="0" name="ratingShipHand${feedbackCounter}"/>
                                     <img id="starShippingHandlingChargesId${feedbackCounter}_1" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',1,this,${feedbackCounter})"/>
                                     <img id="starShippingHandlingChargesId${feedbackCounter}_2" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',2,this,${feedbackCounter})"/>
                                     <img id="starShippingHandlingChargesId${feedbackCounter}_3" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',3,this,${feedbackCounter})"/>
                                     <img id="starShippingHandlingChargesId${feedbackCounter}_4" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',4,this,${feedbackCounter})"/>
                                     <img id="starShippingHandlingChargesId${feedbackCounter}_5" src="/images/rate/starDefault.gif" alt="" onmouseover="overStar(this)" onmouseout="outStar(this)" onclick="setRate('ShippingHandlingChargesId',5,this,${feedbackCounter})"/>
-                                </td>
-                            </tr>
-                        </table>
+                                </@td>
+                            </@tr>
+                        </@table>
                     </div>
                 <#else>
                     <div id="rate${feedbackCounter}" style="display:none">
@@ -517,20 +517,20 @@ under the License.
                         <br />80 characters left<br /><br />
                     </div>
                 </#if>
-                </td>
-                <td>
+                </@td>
+                <@td>
                 <#if leaveFeedback.role == "buyer">
                     Buyer:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}">${leaveFeedback.userID}</a>
                 <#else>
                     Seller:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}">${leaveFeedback.userID}</a>
                 </#if>
-                </td>
-            </tr>
+                </@td>
+            </@tr>
         </#if>
         </#if>    
         </#list>
-    </tbody>
-</table>
+    </@tbody>
+</@table>
 <br />
 <input type="hidden" name="feedbackSize" value="${feedbackCounter}"/>
 <input type="submit" value="Leave Feedback"/>

@@ -114,10 +114,10 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                  <label style="h3" text="BIRT is an open source Eclipse-based reporting system that integrates with any OFBiz application to produce compelling reports including graphical presentations like pie and bar charts."/>
-                                  <label style="h3" text="This application provides you with a sample example report."/>
-                                  <label style="h3" text="See the help option how to create your own OFBiz intergrated reports."/>
-                                  <link style="h3" text="or see the Birt home for more information" target="http://eclipse.org/birt/phoenix/intro/" url-mode="plain" target-window="_blank_"/>
+                                  <label style="p" text="BIRT is an open source Eclipse-based reporting system that integrates with any OFBiz application to produce compelling reports including graphical presentations like pie and bar charts."/>
+                                  <label style="p" text="This application provides you with a sample example report."/>
+                                  <label style="p" text="See the help option how to create your own OFBiz intergrated reports."/>
+                                  <link text="or see the Birt home for more information" target="http://eclipse.org/birt/phoenix/intro/" url-mode="plain" target-window="_blank_"/>
                             </widgets>
                         </section>
                     </decorator-section>

@@ -33,43 +33,38 @@ under the License.
   <#assign focusName = true>
 </#if>
 <center>
-  <div class="screenlet login-screenlet">
-    <div class="screenlet-title-bar">
-      <h3>${uiLabelMap.CommonRegistered}</h3>
-    </div>
-    <div class="screenlet-body">
+  <@section title="${uiLabelMap.CommonRegistered}" addClass="login-screenlet">
       <form method="post" action="<@ofbizUrl>Login${previousParams!}</@ofbizUrl>" name="loginform">
-        <table class="basic-table" cellspacing="0">
-          <tr>
-            <td class="label">${uiLabelMap.CommonUsername}</td>
-            <td><input type="text" name="USERNAME" value="${username}" size="20"/></td>
-          </tr>
-          <tr>
-            <td class="label">${uiLabelMap.CommonPassword}</td>
-            <td><input type="password" name="PASSWORD" value="" size="20"/></td>
-          </tr>
-          <tr>
-            <td class="label">${uiLabelMap.WebPosChooseTerminal}</td>
-            <td>
+        <@table type="fields" class="basic-table" cellspacing="0">
+          <@tr>
+            <@td class="label">${uiLabelMap.CommonUsername}</@td>
+            <@td><input type="text" name="USERNAME" value="${username}" size="20"/></@td>
+          </@tr>
+          <@tr>
+            <@td class="label">${uiLabelMap.CommonPassword}</@td>
+            <@td><input type="password" name="PASSWORD" value="" size="20"/></@td>
+          </@tr>
+          <@tr>
+            <@td class="label">${uiLabelMap.WebPosChooseTerminal}</@td>
+            <@td>
               <select name="posTerminalId" id="posTerminalId">
                 <#list posTerminals as posTerminal>
                   <option value="${posTerminal.posTerminalId}">${posTerminal.terminalName}</option>
                 </#list>
               </select>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2" align="center">
+            </@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2" align="center">
               <input type="submit" value="${uiLabelMap.CommonLogin}"/>
-            </td>
-          </tr>
-        </table>
+            </@td>
+          </@tr>
+        </@table>
         <input type="hidden" name="JavaScriptEnabled" value="N"/>
         <br/>
         <a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a>
       </form>
-    </div>
-  </div>
+  </@section>
 </center>
 
 <script language="JavaScript" type="text/javascript">

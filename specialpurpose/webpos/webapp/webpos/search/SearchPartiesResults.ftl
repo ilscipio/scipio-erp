@@ -18,69 +18,69 @@ under the License.
 -->
 <div id="searchPartiesResults" style="display:none">
   <form method="post" action="javascript:void(0);" id="SearchPartiesResultsForm" name="SearchPartiesResultsForm">
-    <table>
-      <tr>
-        <td width="12.5%">
+    <@table type="fields" class="" cellspacing="">
+      <@tr>
+        <@td width="12.5%">
           <label for="searchByPartyLastName"><b>&nbsp;${uiLabelMap.PartyLastName}</b></label>
-        </td>
-        <td width="12.5%">
+        </@td>
+        <@td width="12.5%">
           <input type="text" id="searchByPartyLastName" name="searchByPartyLastName"/>
-        </td>
-        <td width="12.5%">
+        </@td>
+        <@td width="12.5%">
           <label for="searchByPartyFirstName"><b>&nbsp;${uiLabelMap.PartyFirstName}</b></label>
-        </td>
-        <td width="12.5%">
+        </@td>
+        <@td width="12.5%">
           <input type="text" id="searchByPartyFirstName" name="searchByPartyFirstName"/>
-        </td>
-        <td width="20%">
+        </@td>
+        <@td width="20%">
           <label for="billingLocation"><b>&nbsp;${uiLabelMap.WebPosBillingAddress}</b></label>
-        </td>
-        <td width="5%">
+        </@td>
+        <@td width="5%">
           <input type="checkbox" id="billingLoc" name="billingLoc"/>
-        </td>
-        <td width="20%">
+        </@td>
+        <@td width="20%">
           <label for="shippingLocation"><b>&nbsp;${uiLabelMap.WebPosShippingAddress}</b></label>
-        </td>
-        <td width="5%">
+        </@td>
+        <@td width="5%">
           <input type="checkbox" id="shippingLoc" name="shippingLoc"/>
-        </td>
-      </tr>
-      <tr>
-        <td width="12.5%">
+        </@td>
+      </@tr>
+      <@tr>
+        <@td width="12.5%">
           <label for="searchByPartyIdValue"><b>&nbsp;${uiLabelMap.PartyPartyIdentification}</b></label>
-        </td>
-        <td width="12.5%">
+        </@td>
+        <@td width="12.5%">
           <input type="text" id="searchByPartyIdValue" name="searchByPartyIdValue"/>
-        </td>
-        <td width="50%" colspan="4" style="text-align:center">
+        </@td>
+        <@td width="50%" colspan="4" style="text-align:center">
           <input type="submit" value="${uiLabelMap.CommonSearch}" id="searchPartiesResultsSearch"/>
           &nbsp;
           <input type="submit" value="${uiLabelMap.CommonCancel}" id="searchPartiesResultsCancel"/>
-        </td>
-        <td width="25%" colspan="2"></td>
-      </tr>
-    </table>
-    <table cellspacing="0" cellpadding="2" class="basic-table">
-      <thead class="searchPartiesResultsHead">
-        <tr class="header-row">
-          <th>&nbsp;</th>
-          <th>${uiLabelMap.PartyPartyId}</th>
-          <th>${uiLabelMap.PartyLastName}</th>
-          <th>${uiLabelMap.PartyFirstName}</th>
-          <th>${uiLabelMap.PartyAddressLine1}</th>
-          <th>${uiLabelMap.PartyCity}</th>
-          <th>${uiLabelMap.PartyPostalCode}</th>
-          <th>${uiLabelMap.PartyState}</th>
-          <th>${uiLabelMap.CommonCountry}</th>
-          <th>B/S</th>
-        </tr>
-      </thead>
-      <tbody id="searchPartiesResultsList" class="searchPartiesResultsCartBody">
-        <tr>
-          <td colspan="9">
-          </td>
-        </tr>
-      <tbody>
-    </table>
+        </@td>
+        <@td width="25%" colspan="2"></@td>
+      </@tr>
+    </@table>
+    <@table type="data-list" cellspacing="0" cellpadding="2" class="basic-table">
+      <@thead class="searchPartiesResultsHead">
+        <@tr class="header-row">
+          <@th>&nbsp;</@th>
+          <@th>${uiLabelMap.PartyPartyId}</@th>
+          <@th>${uiLabelMap.PartyLastName}</@th>
+          <@th>${uiLabelMap.PartyFirstName}</@th>
+          <@th>${uiLabelMap.PartyAddressLine1}</@th>
+          <@th>${uiLabelMap.PartyCity}</@th>
+          <@th>${uiLabelMap.PartyPostalCode}</@th>
+          <@th>${uiLabelMap.PartyState}</@th>
+          <@th>${uiLabelMap.CommonCountry}</@th>
+          <@th>B/S</@th>
+        </@tr>
+      </@thead>
+      <@tbody id="searchPartiesResultsList" class="searchPartiesResultsCartBody">
+        <@tr>
+          <@td colspan="9">
+          </@td>
+        </@tr>
+      </@tbody>
+    </@table>
   </form>
 </div>

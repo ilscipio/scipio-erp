@@ -28,19 +28,19 @@ under the License.
 
 <#if productList?has_content>
     <span>Products Found:</span>
-    <table>
+    <@table type="data-list" class="" cellspacing="">
         <#list productList as product>
-            <tr>
-                <td>
+            <@tr>
+                <@td>
                     <div><b>${product.productId}</b></div>
-                </td>
-                <td>&nbsp;&nbsp;</td>
-                <td>
+                </@td>
+                <@td>&nbsp;&nbsp;</@td>
+                <@td>
                     <a href="<@ofbizUrl>productstocktake?facilityId=${facility.facilityId!}&amp;productId=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">${(product.internalName)!}</a>
-                </td>
-            </tr>
+                </@td>
+            </@tr>
         </#list>
-    </table>
+    </@table>
 </#if>
 
 

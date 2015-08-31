@@ -17,10 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productCategoryMembers??>
-<table>
+<@table type="generic">
   <#assign numButton = 1/>
   <#assign cell = 0/>
-  <tr>    
+  <@tr openOnly=true />    
   <#list productCategoryMembers as productCategoryMember>
   <#assign product = productCategoryMember.getRelatedOne("Product", false)!>
   <#if product?? && product?has_content>
@@ -33,7 +33,7 @@ under the License.
       <#assign productName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "DESCRIPTION", locale, dispatcher)! />
     </#if>
     <#assign addItemLink = "javascript:addItem('" + product.productId + "', '1', 'Y');">
-    <td>
+    <@td>
       <ol id="posButton">
         <#assign button = "button" + numButton>
         <li id="${button}" class="notSelectedButton">
@@ -49,19 +49,19 @@ under the License.
           <b>${productName}</b>
         </a>
       </div>
-    <td>
+    </@td>
   </#if>
   <#assign numButton = numButton + 1/>
   <#assign cell = cell + 1/>
   <#if cell == 3>
-  </tr>
+  <@tr closeOnly=true />
   <#assign cell = 0/>
   </#if>
   </#list>
   <#if cell != 3>
-  </tr>
+  <@tr closeOnly=true />
   </#if>
-</table>
+</@table>
 <script language="JavaScript" type="text/javascript">
   showSelectedButton();
 </script>

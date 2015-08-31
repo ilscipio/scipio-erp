@@ -167,7 +167,7 @@ under the License.
                             </actions>
                             <widgets>
                                 <label style="h2" text="${uiLabelMap.MyPortalRegisterComplete}"/>
-                                <link target="main" style="h2" text="${uiLabelMap.CommonBeLogged}"/>
+                                <link target="main" text="${uiLabelMap.CommonBeLogged}"/>
                                 <screenlet title="${uiLabelMap.PartyPersonalInformation}">
                                     <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>

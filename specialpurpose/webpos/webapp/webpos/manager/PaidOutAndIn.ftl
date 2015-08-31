@@ -18,20 +18,20 @@ under the License.
 -->
 <div id="paidOutAndIn" style="display:none">
   <input type="hidden" id="paidType" name="type"/>
-  <table border="0" width="100%">
-    <tr>
-      <td colspan="2"">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">
+  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">
         <span id="amountPaidIn" style="display:none">${uiLabelMap.WebPosManagerPaidInAmount}</span>
         <span id="amountPaidOut" style="display:none">${uiLabelMap.WebPosManagerPaidOutAmount}</span>
-      </td>
-      <td width="50%" align="left"><input type="text" id="amountInOut" name="amountInOut" value=""/></td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosManagerPaidOutAndIndReason}</td>
-      <td width="50%" align="left">
+      </@td>
+      <@td width="50%" align="left"><input type="text" id="amountInOut" name="amountInOut" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosManagerPaidOutAndIndReason}</@td>
+      <@td width="50%" align="left">
         <div id="reasonIn" style="display:none">
           <select id="reasIn" name="reasonIn">
             <#list paidReasonIn as reason>
@@ -46,23 +46,23 @@ under the License.
             </#list>
           </select>
         </div>
-      </td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosManagerPaidOutAndIndReasonComment}</td>
-      <td width="50%" align="left"><input type="text" id="reasonCommentInOut" name="reasonCommentInOut" value=""/></td>
-    </tr>
-    <tr>
-      <td colspan="2"">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="2" align="center">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosManagerPaidOutAndIndReasonComment}</@td>
+      <@td width="50%" align="left"><input type="text" id="reasonCommentInOut" name="reasonCommentInOut" value=""/></@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2" align="center">
         <input type="submit" value="${uiLabelMap.CommonConfirm}" id="paidOutAndInConfirm"/>
         <input type="submit" value="${uiLabelMap.CommonCancel}" id="paidOutAndInCancel"/>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="errorPosMessage"><span id="paidOutAndInFormServerError"/></div></td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2"><div class="errorPosMessage"><span id="paidOutAndInFormServerError"/></div></@td>
+    </@tr>
+  </@table>
 </div>

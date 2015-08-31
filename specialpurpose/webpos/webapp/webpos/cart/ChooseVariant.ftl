@@ -18,60 +18,62 @@ under the License.
 -->
 <div id="chooseVariant" style="display:none">
   <form method="post" action="javascript:void(0);" id="ChooseVariantForm">
-    <table border="0" width="100%">
-      <tr>
-        <td colspan="2">&nbsp;</td>
-      </tr>
-      <tr>
-        <td width="100%" align="center" colspan="2">
+    <@table type="fields" class="" cellspacing="" border="0" width="100%">
+      <@tr>
+        <@td colspan="2">&nbsp;</@td>
+      </@tr>
+      <@tr>
+        <@td width="100%" align="center" colspan="2">
           <div id="features" style="display: none"/>
-        </td>
-      </tr>
-      <tr>
-        <td width="100%" align="center" colspan="2">&nbsp;</td>
-      </tr>
-      <tr>
-        <td width="100%" align="center" colspan="2">
+        </@td>
+      </@tr>
+      <@tr>
+        <@td width="100%" align="center" colspan="2">&nbsp;</@td>
+      </@tr>
+      <@tr>
+        <@td width="100%" align="center" colspan="2">
           <b>
             <div id="variantProductDescription"></div>
             <div id="variantProductPrice"></div>
           </b>
-        </td>
-      </tr>
-      <tr id="addAmount" style="display:none">
-        <td width="50%" align="right">
+        </@td>
+      </@tr>
+      <@tr id="addAmount" style="display:none">
+        <@td width="50%" align="right">
           ${uiLabelMap.CommonAmount}
-        </td>
-        <td width="50%" align="left">
+        </@td>
+        <@td width="50%" align="left">
           <input type="text" id="amount" name="add_amount" size="5" value=""/>
-        </td>
-      </tr>
-      <tr>
-        <td width="50%" align="right">
+        </@td>
+      </@tr>
+      <@tr>
+        <@td width="50%" align="right">
           ${uiLabelMap.CommonQuantity}
-        </td>
-        <td width="50%" align="left">
+        </@td>
+        <@td width="50%" align="left">
           <input type="hidden" id="variantProductId" name="add_product_id"/>
           <input type="hidden" id="variant" name="variant" value="Y"/>
           <input type="text" id="variantQuantity" name="variantQuantity" size="5" maxlength="5" value=""/>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2">&nbsp;</td>
-      </tr>
-      <tr>
-        <td colspan="2" align="center">
+        </@td>
+      </@tr>
+      <@tr>
+        <@td colspan="2">&nbsp;</@td>
+      </@tr>
+    <@tfoot>
+      <@tr>
+        <@td colspan="2" align="center">
           <input type="submit" value="${uiLabelMap.CommonConfirm}" id="chooseVariantConfirm"/>
           <input type="submit" value="${uiLabelMap.CommonCancel}" id="chooseVariantCancel"/>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2">
+        </@td>
+      </@tr>
+      <@tr>
+        <@td colspan="2">
           <div class="errorPosMessage">
             <span id="chooseVariantFormServerError"/>
           </div>
-        </td>
-      </tr>
-    </table>
+        </@td>
+      </@tr>
+    </@tfoot>
+    </@table>
   </form>
 </div>

@@ -164,7 +164,7 @@ under the License.
                                         <label style="h3" text="${uiLabelMap.ProjectMgrPhaseName}: ${phaseName}"/>
                                         <container style="h2">
                                             <label text="${uiLabelMap.ProjectMgrProjectName}: ${projectName}"/>
-                                            <link text="[${projectId}]" target="projectView"><parameter param-name="projectId"/></link>
+                                            <link text="[${projectId}]" target="projectView" style="${styles.button_default!}"><parameter param-name="projectId"/></link>
                                         </container>
                                     </widgets>
                                 </section>

@@ -35,12 +35,8 @@ under the License.
 </script>
 
 <#if productIds?has_content>
-    <table cellspacing="0" class="basic-table">
-        <tr>
-            <td align="center" colspan="2">
-                <hr />
-                <a href="javascript:exportToGoogle();" class="${styles.button_default!}">${uiLabelMap.GoogleBaseExportToGoogle}</a>
-            </td>
-        </tr>
-    </table>
+    <hr />
+    <ul class="${styles.menu_button!}>      
+        <li><a href="javascript:exportToGoogle();" class="${styles.menu_button_itemlink!}">${uiLabelMap.GoogleBaseExportToGoogle}</a></li>
+    </ul>
 </#if>

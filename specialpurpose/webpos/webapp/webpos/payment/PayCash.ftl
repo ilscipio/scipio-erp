@@ -17,38 +17,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="payCash" style="display:none">
-  <table border="0" width="100%">
-    <tr>
-      <td colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="100%" align="center" colspan="2">
+  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" align="center" colspan="2">
         <b>${uiLabelMap.WebPosTransactionTotalDue} <span id="cashTotalDue"/></b>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%" align="center" colspan="2">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="100%" align="center" colspan="2">
         <b>${uiLabelMap.WebPosPayCashTotal} <span id="cashTotalPaid"/></b>
         <a id="removeCashTotalPaid" href="javascript:void(0);"><img src="/images/collapse.gif"></a>
-      </td>
-    </tr>
-    <tr>
-      <td width="50%" align="right">${uiLabelMap.WebPosPayCash}</td>
-      <td width="50%" align="left">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td width="50%" align="right">${uiLabelMap.WebPosPayCash}</@td>
+      <@td width="50%" align="left">
         <input type="text" id="amountCash" name="amountCash" size="10" value=""/>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-      <td colspan="2" align="center">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2">&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2" align="center">
         <input type="submit" value="${uiLabelMap.CommonConfirm}" id="payCashConfirm"/>
         <input type="submit" value="${uiLabelMap.CommonCancel}" id="payCashCancel"/>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2"><div class="errorPosMessage"><span id="payCashFormServerError"/></div></td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2"><div class="errorPosMessage"><span id="payCashFormServerError"/></div></@td>
+    </@tr>
+  </@table>
 </div>

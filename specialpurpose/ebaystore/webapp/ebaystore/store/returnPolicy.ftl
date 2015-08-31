@@ -26,19 +26,19 @@ under the License.
 <#assign  title = "Return policy is "+(not!)+" enabled for this category.">
 
 <form name="APIForm" id="APIForm" method="post" action="ReturnPolicyServlet">
-  <table align="center"  border="0">
-    <tr><td><img src="ebay.gif" alt="" /></td></tr>
-    <tr><td>${title!}</td></tr>
-    <tr>
-         <td>&nbsp;</td>
-    </tr>
+  <@table type="fields" class="" cellspacing="" align="center" border="0">
+    <@tr><@td><img src="ebay.gif" alt="" /></@td></@tr>
+    <@tr><@td>${title!}</@td></@tr>
+    <@tr>
+         <@td>&nbsp;</@td>
+    </@tr>
     <!-- specify return policy -->
     <#if returnPolicyEnabled! == true>
-        <tr align="left">
-            <td><b>Returns accepted:</b></td>
-        </tr>
-        <tr align="left">
-                <td>
+        <@tr align="left">
+            <@td><b>Returns accepted:</b></@td>
+        </@tr>
+        <@tr align="left">
+                <@td>
                         <select name="ReturnsAccepted">
                         <#if returnPolicyDetails?has_content>
                         <#assign retAccpTypeArray = returnPolicyDetails.getReturnsAccepted()!>
@@ -52,16 +52,16 @@ under the License.
                         </#list>
                         </#if>
                         </select>
-                </td>
-        </tr>
-        <tr>
-             <td></td>
-        </tr>
-        <tr align="left">
-            <td><b>Item must be returned within:</b></td>
-        </tr>
-        <tr align="left">
-            <td>
+                </@td>
+        </@tr>
+        <@tr>
+             <@td></@td>
+        </@tr>
+        <@tr align="left">
+            <@td><b>Item must be returned within:</b></@td>
+        </@tr>
+        <@tr align="left">
+            <@td>
                 <select  name="ReturnsWithin">
                  <#if returnPolicyDetails?has_content>
                  <#assign retWithinArray = returnPolicyDetails.getReturnsWithin()!>
@@ -73,18 +73,18 @@ under the License.
                 </#list>
                 </#if>
                 </select>
-            </td>
-        </tr>
-        <tr>
-             <td></td>
-        </tr>
-        <tr align="left">
-            <td>
+            </@td>
+        </@tr>
+        <@tr>
+             <@td></@td>
+        </@tr>
+        <@tr align="left">
+            <@td>
                 <b>Refund will be given as:</b>
-            </td>
-        </tr>
-        <tr align="left">
-            <td>
+            </@td>
+        </@tr>
+        <@tr align="left">
+            <@td>
                 <select  name="Refund">
                  <#if returnPolicyDetails?has_content>
                  <#assign refundArray = returnPolicyDetails.getRefund()!>
@@ -96,17 +96,17 @@ under the License.
                  </#list>
                  </#if>
                 </select>
-            </td>
-        </tr>
-        <tr>
-             <td></td>
-        </tr>
-        <tr align="left">
-            <td><b>Return shipping will be paid by:</b>
-            </td>
-        </tr>
-        <tr align="left">
-            <td>
+            </@td>
+        </@tr>
+        <@tr>
+             <@td></@td>
+        </@tr>
+        <@tr align="left">
+            <@td><b>Return shipping will be paid by:</b>
+            </@td>
+        </@tr>
+        <@tr align="left">
+            <@td>
                 <select name="ShippingCostPaidBy">
                 <#if returnPolicyDetails?has_content>
                 <#assign paidByArray = returnPolicyDetails.getShippingCostPaidBy()!>
@@ -118,37 +118,37 @@ under the License.
                 </#list>
                 </#if>
                 </select>
-            </td>
-        </tr>
-        <tr>
-             <td></td>
-        </tr>
-        <tr align="left">
-            <td>
+            </@td>
+        </@tr>
+        <@tr>
+             <@td></@td>
+        </@tr>
+        <@tr align="left">
+            <@td>
                 <b>Return policy details(500 character limit):</b>
-            </td>
-        </tr>
-        <tr align="left">
-            <td>
+            </@td>
+        </@tr>
+        <@tr align="left">
+            <@td>
                 <textarea name="ReturnPolicyDetailsDescription" cols="70" rows="6"<#if !returnPolicyDetails.isDescription().booleanValue()>disabled="true"</#if>></textarea>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-        </tr>
-        <tr>
-            <td>
+            </@td>
+        </@tr>
+        <@tr>
+            <@td></@td>
+        </@tr>
+        <@tr>
+            <@td>
                 <font size="2" face="Verdana,Geneva,Arial,Helvetica" color="#666666" style="font-size:11px">- Specify a return policy. <a target=_new HREF="http://pages.ebay.com/help/sell/contextual/return-policy.html" onclick="if(window.openContextualHelpWindow){return openContextualHelpWindow(this.href)}" target="helpwin">Learn More</a>.</font>
-            </td>
-        </tr>
+            </@td>
+        </@tr>
     </#if>
-    <tr>
-         <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <td align="center">
+    <@tr>
+         <@td>&nbsp;</@td>
+    </@tr>
+    <@tr>
+      <@td align="center">
         <input type="submit" name="btSubmit" id="btSubmit" value="Continue"/>
-      </td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+  </@table>
 </form>

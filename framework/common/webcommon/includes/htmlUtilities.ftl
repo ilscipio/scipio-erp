@@ -1992,7 +1992,190 @@ TODO: document better if needed
 </#macro>
 
 
+<#-- 
+*************
+* Menu
+************
+TODO: WIP!!!
 
+Menu macro, mainly intended for small inline menu definitions in templates, but can substitute for widget menu
+definitions if needed, to a limited extent, though not intended to replace.
+It can be used in two forms:
+  <#assign items = [{"type":"link", ...}, {"type":"link", ...}, ...]>
+  <@menu ... items=items />
+  OR
+  <@menu ...>
+    <@menuitem type="link" ... />
+    <@menuitem type="link" ... />
+    ...
+  </@menu>
+In the first, each hash of the items list represents a menu item with the exact same arguments as the @menuitem macro.
+The first method gives the @menu macro more control over the items, and to delegate the definitions, while 
+second is cleaner to express.
+
+Note that both macros support arguments passed in a hash (or map) using the "args" argument, so the entire menu definition
+can be delegated in infinite ways (even to data prep). The inline args have priority over the hash args, as would be expected.
+                    
+   * General Attributes *
+    type            = menu type: [section|main|tab|subtab|button|...]
+    inlineItems     = boolean, if true, generate only items, not menu container
+    class           = menu class style. can be boolean true/false or string, if string
+                      starts with "+" the classes are in addition to defaults, otherwise replace defaults.
+    id              = menu id
+    items           = list of hashes, where each hash contains arguments representing a menu item,
+                      same as @menuitem macro parameters.
+                      alternatively, the items can be specified as nested content.
+    sort[By/Desc]    = items sorting behavior; will only work if items are specified
+                       through items list of hashes, currently does not apply to 
+                       nested items. if true, sorts by text, or sortBy can specify a menu item arg to sort by.
+                       normally case-insensitive.
+-->
+<#-- type="" inline=true class=true items=true sortBy=false sortIgnoreCase=true -->
+<#macro menu args={} inlineArgs...>
+  <#local type = inlineArgs.type!args.type!"">
+  <#local inlineItems = inlineArgs.inlineItems!args.inlineItems!false>
+  <#local class = inlineArgs.class!args.class!true>
+  <#local id = inlineArgs.id!args.id!true>
+  <#local items = inlineArgs.items!args.items!true>
+  <#local sortBy = inlineArgs.sortBy!args.sortBy!false>
+  <#local sortDesc = inlineArgs.sortDesc!args.sortDesc!false>
+  <#t>
+  <#local prevMenuInfo = catoCurrentMenuInfo!"">
+  <#local prevMenuItemIndex = catoCurrentMenuItemIndex!"">
+  <#global catoCurrentMenuInfo = {"type":type}>
+  <#global catoCurrentMenuItemIndex = 0>
+  <#t>
+  <#local classes = makeClassesArg(class, styles["menu_" + type]!"")>
+  <#t>
+  <#if !inlineItems>
+    <ul<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>>
+  </#if>
+  <#if !(items?is_boolean && items == false)>
+    <#if items?is_sequence>
+      <#if (sortBy?is_boolean && sortBy == true)>
+        <#local sortBy = "text">
+      </#if>
+      <#if sortBy?is_string || sortBy?is_sequence>
+        <#local items = items?sort_by(sortBy)>
+        <#if sortDesc>
+          <#local items = items?reverse>
+        </#if>
+      </#if>
+      <#list items as item>
+        <@menuitem args=item />
+      </#list>
+    </#if>
+        <#nested>
+  </#if>
+  <#if !inlineItems>
+    </ul>
+  </#if>
+  <#t>
+  <#global catoCurrentMenuInfo = prevMenuInfo>
+  <#global catoCurrentMenuItemIndex = prevMenuItemIndex>
+</#macro>
+
+<#-- 
+*************
+* Menu Item
+************
+TODO: WIP!!!
+
+Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if need to generate
+items only).
+             
+   * General Attributes *
+    type            = menu item (content) type: [link|text|submit]
+    class           = menu item class (for <li> element)
+    id              = menu item id
+    contentClass    = menu item content class (for <a>, <span> or <input> element)
+    contentId       = menu item content id
+    text            = text to use as content. for now ALWAYS use this argument to specify
+                      text, not nested content.
+                      TODO: clarify nested content usage (because may have nested menus?)
+    href            = content link, for "link" type
+    contentClick    = onClick, for content elem
+-->
+<#-- type="link|text|submit" class=true text="" href="javascript:void(0);" onClick="" -->
+<#macro menuitem args={} inlineArgs...>
+  <#local type = inlineArgs.type!args.type!"">
+  <#local class = inlineArgs.class!args.class!true>
+  <#local id = inlineArgs.id!args.id!"">
+  <#local contentClass = inlineArgs.contentClass!args.contentClass!true>
+  <#local contentId = inlineArgs.contentId!args.contentId!"">
+  <#local text = inlineArgs.text!args.text!"">
+  <#local href = inlineArgs.href!args.href!"javascript:void(0);">
+  <#local contentClick = inlineArgs.contentClick!args.contentClick!"">
+  <#t>
+  <#local menuType = (catoCurrentMenuInfo.type)!"">
+  <#t>
+  <#local classes = makeClassesArg(class, styles["menu_" + menuType + "_item"]!"")>
+  <#t>
+  <#if type == "link">
+    <#local defaultContentClass = styles["menu_" + menuType + "_itemlink"]!"">
+  <#elseif type == "text">
+    <#local defaultContentClass = "text-entry">
+  <#elseif type == "submit">
+    <#local defaultContentClass = "">
+  <#else>
+    <#local defaultContentClass = "">
+  </#if>
+  <#local contentClasses = makeClassesArg(contentClass, defaultContentClass)>
+  <#t>
+  <#-- TODO: clarify nested content usage, may have nested menus, not just text... -->
+  <li<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt>
+    <#if type == "link">
+      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}<#else><#nested></#if></a>
+    <#elseif type == "text">
+      <span<#if contentClasses?has_content> class="${contentClasses}</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}<#else><#nested></#if></span>
+    <#elseif type == "submit">
+      <input type="submit"<#if contentClasses?has_content> class="${contentClasses}</#if><#if contentId?has_content> id="${contentId}"</#if>> value="<#if text?has_content>${text}<#else><#nested></#if>" />
+    <#else>
+      <#if text?has_content>${text}<#else><#nested></#if>
+    </#if>
+  </li><#lt>
+  <#global catoCurrentMenuItemIndex = catoCurrentMenuItemIndex + 1>
+</#macro>
+
+<#function isClassArgUseDefault class>
+  <#return (class?is_string && class?starts_with("+")) || (class?is_boolean && class == false)>
+</#function>
+
+<#function parseAddClassArg class>
+  <#if class?is_string && class?starts_with("+")>
+    <#return class?substring(1)>
+  <#else>
+    <#return "">
+  </#if>
+</#function>
+<#function parseClassArg class defaultVal>
+  <#if class?is_string && class?starts_with("+")>
+    <#return defaultVal>
+  </#if>
+  <#if class?is_boolean>
+    <#if class>
+      <#return defaultVal>
+    <#else>
+      <#return "">
+    </#if>
+  </#if>
+</#function>
+<#--
+<#local addClass = parseAddClassArg(class)>
+<#local class = parseClassArg(class)>
+-->
+<#-- should be called as late as possible in the macro/function, after proper defaultVal is decided -->
+<#function makeClassesArg class defaultVal>
+  <#if class?is_string>
+    <#if class?starts_with("+")>
+      <#return (defaultVal + " " + class?substring(1))?trim>
+    <#else>
+      <#return class>
+    </#if>
+  <#else>
+    <#return class?string(defaultVal, "")>
+  </#if>
+</#function>
 
 <#-- UTLITY MACROS END -->
 

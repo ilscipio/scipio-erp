@@ -81,6 +81,13 @@ under the License.
     "row_alt" : "odd",
     "row_selected" : "selected",
     
+    "link_action" : "button tiny", 
+    "link_id" : "button tiny", 
+    "link_name" : "button tiny", 
+    "link_desc" : "",
+    "link_text" : "",
+    "link_image" : "",
+    
 <#-- Colors -->
     "color_green" : "success",
     "color_red" : "alert",

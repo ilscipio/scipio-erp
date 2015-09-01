@@ -37,7 +37,7 @@ under the License.
                 <field-map field-name="fixedAssetId" from-field="fixedAssetId"/>
             </service>
         </row-actions>
-        <field name="fixedAssetId" widget-style="linktext" sort-field="true">
+        <field name="fixedAssetId" widget-style="linktext ${styles.button_default}" sort-field="true">
             <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset">
                 <parameter param-name="fixedAssetId"/>
             </hyperlink>
@@ -324,7 +324,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="maintHistSeqId">
+        <field name="maintHistSeqId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${maintHistSeqId}" target="EditFixedAssetMaint">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="maintHistSeqId"/>
@@ -434,7 +434,7 @@ under the License.
         </field>
         <field name="readingDate"><display/></field>
         <field name="meterValue" title="${uiLabelMap.AccountingFixedAssetMeterValue}"><text/></field>
-        <field name="maintHistSeqId" title="${uiLabelMap.AccountingFixedAssetMaint}">
+        <field name="maintHistSeqId" title="${uiLabelMap.AccountingFixedAssetMaint}" widget-style="${styles.button_default}">
             <hyperlink target="EditFixedAssetMaint" description="${maintHistSeqId}" also-hidden="false">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="maintHistSeqId"/>

@@ -482,7 +482,7 @@ under the License.
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="invoiceItemTypeId"><hidden/></field>
         <field name="description"><display/></field>
-        <field name="defaultGlAccountId">
+        <field name="defaultGlAccountId" widget-style="${styles.button_default}">
             <hyperlink target="GlAccountNavigate" description="${defaultGlAccountId}">
                 <parameter param-name="glAccountId" from-field="defaultGlAccountId"/>
             </hyperlink>
@@ -536,7 +536,7 @@ under the License.
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="invoiceItemTypeId"><hidden/></field>
         <field name="description"><display/></field>
-        <field name="defaultGlAccountId">
+        <field name="defaultGlAccountId" widget-style="${styles.button_default}">
             <hyperlink target="GlAccountNavigate" description="${defaultGlAccountId}">
                 <parameter param-name="glAccountId" from-field="defaultGlAccountId"/>
             </hyperlink>
@@ -645,7 +645,7 @@ under the License.
             </display-entity>
         </field>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="defaultGlAccountId">
+        <field name="defaultGlAccountId" widget-style="${styles.button_default}">
             <hyperlink target="GlAccountNavigate" description="${defaultGlAccountId} : ${description}">
                 <parameter param-name="glAccountId" from-field="defaultGlAccountId"/>
             </hyperlink>
@@ -1037,7 +1037,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <auto-fields-service service-name="updatePartyGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="partyId">
+        <field name="partyId" widget-style="${styles.button_default}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyId}" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>

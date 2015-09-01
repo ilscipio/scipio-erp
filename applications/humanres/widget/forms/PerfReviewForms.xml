@@ -56,7 +56,7 @@ under the License.
             </display-entity>
         </field>
         <field name="managerRoleTypeId"><ignored/></field>
-        <field name="perfReviewId">
+        <field name="perfReviewId" widget-style="${styles.button_default}">
            <hyperlink also-hidden="false" description="${perfReviewId}" target="EditPerfReview">
                 <parameter param-name="perfReviewId"/>
                 <parameter param-name="employeePartyId"/>

@@ -122,7 +122,7 @@ under the License.
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="contentId"/>
             <call-parent-actions/>
         </actions>
-        <field name="contentId">
+        <field name="contentId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentName"><display/></field>
@@ -568,7 +568,7 @@ under the License.
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
         <field name="caCreatedDate"><display/></field>
-        <field name="delete" title="${uiLabelMap.CommonDelete}">
+        <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="removeDocumentFromTree" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo"/>

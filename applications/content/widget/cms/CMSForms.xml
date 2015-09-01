@@ -44,7 +44,7 @@ under the License.
             </service>
         </actions>
 
-        <field name="caContentIdTo" title=" ">
+        <field name="caContentIdTo" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${caContentIdTo}" target="EditAddContent">
                 <parameter param-name="MASTER_contentId" from-field="contentId"/>
                 <parameter param-name="MASTER_drDataResourceId" from-field="drDataResourceId"/>
@@ -133,7 +133,7 @@ under the License.
         <field name="newTopicDescription" title="Description"  position="3">
             <text size="24"/>
         </field>
-        <field name="createTopic" title=" "  position="4">
+        <field name="createTopic" title=" "  position="4" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target="createTopic${pageName}" description="Create Topic">
                 <parameter param-name="mode" value="restore"/>
             </hyperlink>
@@ -296,7 +296,7 @@ under the License.
                 <hidden value="${dataResourceTypeId}"/>
         </field>
 <!--
-        <field name="submitContentEdit" title=" ">
+        <field name="submitContentEdit" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="Submit" target="javascript:document.EditAddContent.action='${persistAction}'; document.EditAddContent.submit()" target-type="plain"/>
         </field>
 -->

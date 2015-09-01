@@ -208,7 +208,7 @@ under the License.
         </field>
         <field name="fromDate"><display type="date"/></field>
         <field name="thruDate"><display type="date"/></field>
-        <field name="submitButton" title=" ">
+        <field name="submitButton" title=" " widget-style="${styles.button_default}">
             <hyperlink target="updateProductStoreGroupRollup" request-confirmation="true" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productStoreGroupId"/>
                 <parameter param-name="parentGroupId"/>
@@ -224,7 +224,7 @@ under the License.
                 <field-map field-name="productStoreGroupId" from-field="productStoreGroup.productStoreGroupId"/>
             </entity-and>
         </actions>
-        <field name="productStoreId">
+        <field name="productStoreId" widget-style="${styles.button_default}">
             <hyperlink target="EditProductStore" description="${productStoreId}">
                 <parameter param-name="productStoreId"/>
             </hyperlink>

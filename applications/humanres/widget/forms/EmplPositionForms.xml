@@ -32,7 +32,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="EmplPosition" default-field-type="display"/>
-        <field name="emplPositionId" title="${uiLabelMap.HumanResEmployeePositionId}" widget-style="linktext">
+        <field name="emplPositionId" title="${uiLabelMap.HumanResEmployeePositionId}" widget-style="linktext ${styles.button_default}">
             <hyperlink also-hidden="false" description="${emplPositionId}" target="emplPositionView">
                 <parameter param-name="emplPositionId"/>
             </hyperlink>

@@ -51,8 +51,8 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="FinAccount" default-field-type="display"/>
-        <field name="finAccountId">
-            <hyperlink  description="${finAccountId}" target="EditFinAccount">
+        <field name="finAccountId" widget-style="${styles.button_default}">
+            <hyperlink description="${finAccountId}" target="EditFinAccount">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
@@ -63,12 +63,12 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="organizationPartyId">
+        <field name="organizationPartyId" widget-style="${styles.button_default}">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
         </field>
-        <field name="ownerPartyId">
+        <field name="ownerPartyId" widget-style="${styles.button_default}">
             <hyperlink target="/partymgr/control/viewprofile" description="${ownerPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="ownerPartyId"/>
             </hyperlink>

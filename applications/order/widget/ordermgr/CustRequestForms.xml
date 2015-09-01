@@ -89,7 +89,7 @@ under the License.
 
     <form name="ListRequestList" type="list" use-row-submit="true" list-name="custRequests" title="List of customer requests" sort-field-parameter-name="custRequestSortField"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <field name="custRequestId" sort-field="true">
+        <field name="custRequestId" sort-field="true" widget-style="${styles.button_default}">
             <hyperlink description="${custRequestId}" target="ViewRequest">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
@@ -109,7 +109,7 @@ under the License.
         </field>
         <field name="lastModifiedDate" sort-field="true"><display/></field>
         <!--field name="statusId"><hidden value="CRQ_REJECTED"/></field-->
-        <field name="rejectButton">
+        <field name="rejectButton" widget-style="${styles.button_default}">
             <hyperlink target="setCustRequestStatus" description="${uiLabelMap.FormFieldTitle_rejectButton}">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="CRQ_REJECTED"/>
@@ -135,7 +135,7 @@ under the License.
         <field name="statusId">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
-        <field name="addNote" use-when="!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_CANCELLED&quot;)&amp;&amp;!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_COMPLETED&quot;)">
+        <field name="addNote" use-when="!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_CANCELLED&quot;)&amp;&amp;!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_COMPLETED&quot;)" widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.FormFieldTitle_addNote}" target="requestitemnotes">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>

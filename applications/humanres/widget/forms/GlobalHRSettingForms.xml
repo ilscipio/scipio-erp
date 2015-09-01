@@ -110,7 +110,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-service service-name="updateEmplPositionType" default-field-type="hidden"/>
-        <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmplPositionType}">
+        <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmplPositionType}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${emplPositionTypeId}" target="EditEmplPositionTypes">
                 <parameter param-name="emplPositionTypeId"/>
             </hyperlink>

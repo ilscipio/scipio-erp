@@ -115,7 +115,7 @@ under the License.
 
         <field name="webSiteId"><display also-hidden="true"/></field>
         <!--
-        <field name="contentId" title="Content ID" widget-style="linktext">
+        <field name="contentId" title="Content ID" widget-style="linktext ${styles.button_default}">
             <hyperlink description="${contentId}" target="EditContent" also-hidden="true">
                 <parameter param-name="contentId"/>
             </hyperlink>

@@ -191,7 +191,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}">
+        <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}" widget-style="${styles.button_default}">
             <hyperlink description="${visitId}" target="/partymgr/control/visitdetail" target-type="inter-app">
                 <parameter param-name="visitId"/>
                 <parameter param-name="DONE_PAGE" from-field="donePage"/>

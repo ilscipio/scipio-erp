@@ -318,7 +318,7 @@ under the License.
                 <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" description="[${partyId}]" target-type="inter-app"/>
             </display-entity>
         </field>
-        <field name="supplierProductId" title="${uiLabelMap.ProductSupplierProductId}">
+        <field name="supplierProductId" title="${uiLabelMap.ProductSupplierProductId}" widget-style="${styles.button_default}">
             <hyperlink target="/catalog/control/EditProductSuppliers?productId=${productId}" description="${supplierProductId}" target-type="inter-app"/>
         </field>
         <field name="idValue" title="${uiLabelMap.ProductUPCA}"><display/></field>

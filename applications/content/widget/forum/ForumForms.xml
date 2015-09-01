@@ -110,14 +110,16 @@ under the License.
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
         <field name="fromDate"><display/></field>
         <field name="updateButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="text-link"/></field>
-        <field name="deleteButton" title="${uiLabelMap.CommonDelete}"><hyperlink target="deleteForumGroupRole">
+        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+            <hyperlink target="deleteForumGroupRole">
                 <parameter param-name="forumGroupId"/>
                 <parameter param-name="contentIdTo"/>
                 <parameter param-name="contentId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
                 <parameter param-name="fromDate"/>
-            </hyperlink></field>
+            </hyperlink>
+        </field>
     </form>
     <form name="AddForumGroupRole" type="single" target="createForumGroupRole" default-map-name=""
         header-row-style="header-row" default-table-style="basic-table">

@@ -153,7 +153,7 @@ under the License.
     <!-- this is used to list AcctgTransEntries and can be called either by using an acctgTransId or a glAccountId -->
     <form name="ListAcctgTransEntries" type="list" list-name="entries"  default-entity-name="AcctgTransEntry"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="acctgTransId">
+        <field name="acctgTransId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="ListAcctgTransEntries">
                 <parameter param-name="acctgTransId"/>
             </hyperlink>
@@ -180,7 +180,7 @@ under the License.
 
     <form name="GlAccountsNavForm" type="single" target="" title="GL Accounts" default-map-name="journal"
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="backToAdmin" title=" ">
+        <field name="backToAdmin" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.AccountingBackToAdmin}" target="AdminMain">
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
@@ -189,7 +189,7 @@ under the License.
 
     <form name="ListGlReconciliations" type="list" list-name="glReconciliations" default-entity-name="GlReconciliation"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="glReconciliationId">
+        <field name="glReconciliationId" widget-style="${styles.button_default}">
            <hyperlink also-hidden="false" description="${glReconciliationId}" target="EditGlReconciliation">
                 <parameter param-name="glReconciliationId"/>
                 <parameter param-name="organizationPartyId"/>
@@ -214,7 +214,7 @@ under the License.
     <form name="ListGlReconciliationEntries" type="list" list-name="glReconciliationEntries" default-entity-name="GlReconciliationEntry"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="glReconciliationId"><display/></field>
-        <field name="acctgTransId">
+        <field name="acctgTransId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="ListAcctgTransEntries">
                 <parameter param-name="acctgTransId"/>
             </hyperlink>

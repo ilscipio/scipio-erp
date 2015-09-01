@@ -140,7 +140,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}">
+        <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${dataResourceId}" target="javascript:set_value('${dataResourceId}')"/>
         </field>
         <field name="dataResourceName"><display/></field>

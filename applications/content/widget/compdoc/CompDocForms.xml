@@ -297,7 +297,7 @@ under the License.
         <field name="sequenceNum" widget-style="inputBox"  use-when="&quot;COMPDOC_TEMPLATE&quot;.equals(contentTypeId)"><text/></field>
         <field name="comments" widget-style="inputBox"><textarea cols="30" rows="3"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit/></field>
-        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit">
+        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit ${styles.button_default}">
             <hyperlink target="removeContentApproval" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="contentApprovalId"/>
                 <parameter param-name="rootContentId"/>

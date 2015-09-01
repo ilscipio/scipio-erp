@@ -42,7 +42,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productId" sort-field="true">
+        <field name="productId" sort-field="true" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -1361,7 +1361,7 @@ under the License.
     <form name="OutstandingPurchaseOrders" type="list" list-name="purchaseOrders"
         odd-row-style="alternate-row" default-table-style="basic-table">
         <field name="orderDate"><display/></field>
-        <field name="orderId">
+        <field name="orderId" widget-style="${styles.button_default}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${orderId}" target="/ordermgr/control/orderview" target-type="inter-app">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -2243,7 +2243,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="keywordTypeId"><hidden/></field>
-        <field name="productId">
+        <field name="productId" widget-style="${styles.button_default}">
             <hyperlink target="EditProduct" description="${productId}">
                 <parameter param-name="productId"/>
             </hyperlink>

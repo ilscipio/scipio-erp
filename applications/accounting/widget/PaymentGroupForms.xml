@@ -118,7 +118,7 @@ under the License.
             <set field="paymentRefNum" from-field="payment.paymentRefNum"/>
         </row-actions>
         <field name="paymentGroupId"><hidden/></field>
-        <field name="paymentId">
+        <field name="paymentId" widget-style="${styles.button_default}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -175,7 +175,7 @@ under the License.
             <set field="partyIdFrom" from-field="payment.partyIdFrom"/>
             <set field="partyIdTo" from-field="payment.partyIdTo"/>
         </row-actions>
-        <field name="paymentId">
+        <field name="paymentId" widget-style="${styles.button_default}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>

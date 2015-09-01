@@ -435,12 +435,12 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="emplPositionId" title="${uiLabelMap.HumanResEmployeePositionId}" widget-style="linktext">
+        <field name="emplPositionId" title="${uiLabelMap.HumanResEmployeePositionId}" widget-style="linktext ${styles.button_default}">
             <hyperlink also-hidden="false" description="${emplPositionId}" target="emplPositionView">
                 <parameter param-name="emplPositionId"/>
             </hyperlink>
         </field>
-        <field name="emplPositionIdReportingTo" widget-style="linktext">
+        <field name="emplPositionIdReportingTo" widget-style="linktext ${styles.button_default}">
             <hyperlink also-hidden="false" description="${emplPositionIdReportingTo}" target="emplPositionView">
                 <parameter param-name="emplPositionId" from-field="emplPositionIdReportingTo"/>
             </hyperlink>

@@ -229,7 +229,7 @@ under the License.
         <field name="orderTypeId" title="${uiLabelMap.FormFieldTitle_orderTypeId}">
             <display-entity entity-name="OrderType" description="${description}"/>
         </field>
-        <field name="orderId" title="${uiLabelMap.OrderOrderId}">
+        <field name="orderId" title="${uiLabelMap.OrderOrderId}" widget-style="${styles.button_default}">
             <hyperlink target="orderview" description="${orderId}">
                 <parameter param-name="orderId"/>
             </hyperlink>

@@ -425,19 +425,19 @@ under the License.
         <field name="actualStartDate"><display type="date"/></field>
         <field name="actualCompletionDate"><display type="date"/></field>
         <!-- These links have been commented because they are (partially or totally) broken
-        <field name="editLink" title=" " widget-style="linktext">
+        <field name="editLink" title=" " widget-style="linktext ${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditWorkEffort">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="DONE_PAGE" value="ListWorkEfforts?${queryStringEncoded"/>
             </hyperlink>
         </field>
-        <field name="childLink" title=" " widget-style="linktext">
+        <field name="childLink" title=" " widget-style="linktext ${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonEntityChildren}" target="ChildWorkEfforts">
                 <parameter param-name="trail" from-field="workEffortId"/>
                 <parameter param-name="DONE_PAGE" value="ListWorkEfforts?${queryStringEncoded"/>
             </hyperlink>
         </field>
-        <field name="editChildLink" title=" " widget-style="linktext">
+        <field name="editChildLink" title=" " widget-style="linktext ${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDetail} + ${uiLabelMap.CommonEntityChildren}" target="EditListWorkEfforts">
                 <parameter param-name="trail" from-field="workEffortId"/>
                 <parameter param-name="DONE_PAGE" value="ListWorkEfforts?${queryStringEncoded"/>
@@ -655,7 +655,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="communicationEventId">
+        <field name="communicationEventId" widget-style="${styles.button_default}">
             <hyperlink description="${communicationEventId}" target="EditWorkEffortCommEvent" target-type="intra-app">
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="DONE_PAGE" from-field="donePage"/>
@@ -912,7 +912,7 @@ under the License.
                 <order-by field-name="noteId"/>
             </entity-condition>
         </actions>
-        <field name="noteId">
+        <field name="noteId" widget-style="${styles.button_default}">
             <hyperlink target="EditWorkEffortNotes" also-hidden="false" description="${noteId}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="noteId"/>
@@ -1429,7 +1429,7 @@ under the License.
             </entity-and>
             <set field="serverRootUrl" value="${bsh: org.ofbiz.base.util.UtilHttp.getServerRootUrl(request)}"/>
         </actions>
-        <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${workEffortId}" target="EditICalendar" target-type="plain">
                 <parameter param-name="workEffortId"/>
             </hyperlink>

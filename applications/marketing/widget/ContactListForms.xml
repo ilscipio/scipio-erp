@@ -460,7 +460,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="communicationEventId" title="${uiLabelMap.MarketingContactListCommEventId}">
+        <field name="communicationEventId" title="${uiLabelMap.MarketingContactListCommEventId}" widget-style="${styles.button_default}">
             <hyperlink description="${communicationEventId}" target="EditContactListCommEvent" target-type="intra-app">
                 <parameter param-name="contactListId"/>
                 <parameter param-name="communicationEventId"/>

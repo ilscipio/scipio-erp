@@ -57,7 +57,7 @@ under the License.
                 <field-map field-name="distinct" value="Y"/>
             </service>
         </actions>
-        <field name="export" title="${uiLabelMap.SfaVCard}">
+        <field name="export" title="${uiLabelMap.SfaVCard}" widget-style="${styles.button_default}">
             <hyperlink target="createVCardFromContact" description="${uiLabelMap.SfaVCard}">
                 <parameter param-name="partyId"/>
             </hyperlink>

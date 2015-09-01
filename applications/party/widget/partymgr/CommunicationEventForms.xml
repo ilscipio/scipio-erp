@@ -251,7 +251,7 @@ under the License.
         <field name="datetimeEnded" title="${uiLabelMap.CommonEndDate}"><display type="date"/></field>
         <field name="subject"><display also-hidden="false"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}"><display also-hidden="false"/></field>
-        <field name="parentCommEventId">
+        <field name="parentCommEventId" widget-style="${styles.button_default}">
             <hyperlink description="${communicationEvent.parentCommEventId}" target="ViewCommunicationEvent">
                 <parameter param-name="communicationEventId" from-field="communicationEvent.parentCommEventId"/>
             </hyperlink>
@@ -467,10 +467,10 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="orderId" title="${uiLabelMap.FormFieldTitle_orderId}">
+        <field name="orderId" title="${uiLabelMap.FormFieldTitle_orderId}" widget-style="${styles.button_default}">
             <hyperlink target="/ordermgr/control/orderview?orderId=${orderId}" description="${orderId}" target-type="inter-app"/>
         </field>
-        <field name="communicationEventId">
+        <field name="communicationEventId" widget-style="${styles.button_default}">
             <hyperlink description="${communicationEventId}" target="ViewCommunicationEvent">
                 <parameter param-name="communicationEventId"/>
             </hyperlink>
@@ -654,7 +654,7 @@ under the License.
         <field name="communicationEventPrpTypId">
             <display-entity description="${description}" entity-name="CommunicationEventPrpTyp"/>
         </field>
-        <field name="removeLink" title=" " widget-style="smallSubmit">
+        <field name="removeLink" title=" " widget-style="smallSubmit ${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeCommunicationEventPurpose">
                 <parameter param-name="communicationEventPrpTypId"/>
                 <parameter param-name="communicationEventId"/>
@@ -845,7 +845,7 @@ under the License.
                 </sub-hyperlink>
             </lookup>
         </field>
-        <field name="surveyResponseLink" map-name="dummy" widget-style="smallSubmit"
+        <field name="surveyResponseLink" map-name="dummy" widget-style="smallSubmit ${styles.button_default}"
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
             <hyperlink description="Create Response (for Survey ${templateDataResource.relatedDetailId})" target="EditSurveyResponse" also-hidden="false" target-window="_blank">
                 <parameter param-name="surveyId" from-field="templateDataResource.relatedDetailId"/>

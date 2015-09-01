@@ -29,7 +29,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="requirementId" widget-style="linktext">
+        <field name="requirementId" widget-style="linktext ${styles.button_default}">
             <hyperlink target="/ordermgr/control/EditRequirement" target-type="inter-app" description="${requirementId}">
                 <parameter param-name="requirementId"/>
             </hyperlink>

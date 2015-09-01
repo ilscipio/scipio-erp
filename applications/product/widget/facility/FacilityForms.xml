@@ -30,7 +30,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="facilityId">
+        <field name="facilityId" widget-style="${styles.button_default}">
             <hyperlink target="EditFacility" description="${facilityId}">
                 <parameter param-name="facilityId"/>
             </hyperlink>
@@ -117,7 +117,7 @@ under the License.
         <field name="statusId"><display-entity entity-name="StatusItem"/></field>
         <field name="datetimeReceived"><display/></field>
         <field name="expireDate" title="${uiLabelMap.ProductExpireDate}"><display/></field>
-        <field name="productId">
+        <field name="productId" widget-style="${styles.button_default}">
             <hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -160,7 +160,7 @@ under the License.
         <field name="statusId"><display/></field>
         <field name="datetimeReceived"><display/></field>
         <field name="expireDate" title="${uiLabelMap.ProductExpireDate}"><display/></field>
-        <field name="productId">
+        <field name="productId" widget-style="${styles.button_default}">
             <hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -481,17 +481,17 @@ under the License.
     <!-- multi-form for list of packages ready to be weighted and scheduled for shipment -->
     <form name="SchedulingList" type="multi" use-row-submit="true" list-name="shipmentRouteSegments" title="${uiLabelMap.PageTitlePackageShipmentScheduling}" target="BatchScheduleShipmentRouteSegments?facilityId=${facilityId}"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
-        <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}">
+        <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}" widget-style="${styles.button_default}">
             <hyperlink target="ViewShipment" description="${shipmentId}">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
-        <field name="primaryOrderId" title="${uiLabelMap.ProductOrderId}">
+        <field name="primaryOrderId" title="${uiLabelMap.ProductOrderId}" widget-style="${styles.button_default}">
             <hyperlink target="/ordermgr/control/orderview" description="${primaryOrderId}" target-type="inter-app">
                 <parameter param-name="orderId" from-field="primaryOrderId"/>
             </hyperlink>
         </field>
-        <field name="shipmentRouteSegmentId">
+        <field name="shipmentRouteSegmentId" widget-style="${styles.button_default}">
             <hyperlink target="EditShipmentRouteSegments" description="${shipmentRouteSegmentId}">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
@@ -523,12 +523,12 @@ under the License.
          (to see how this dual-action multi form works, see batchPrintMarkAsAccepted.ftl) -->
     <form name="Labels" type="multi" use-row-submit="true" list-name="shipmentPackageRouteSegments" title="" target="BatchPrintShippingLabels" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}">
+        <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}" widget-style="${styles.button_default}">
             <hyperlink target="ViewShipment" description="${shipmentId}">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
-        <field name="primaryOrderId" title="${uiLabelMap.ProductOrderId}">
+        <field name="primaryOrderId" title="${uiLabelMap.ProductOrderId}" widget-style="${styles.button_default}">
             <hyperlink target="/ordermgr/control/orderview" description="${primaryOrderId}" target-type="inter-app">
                 <parameter param-name="orderId" from-field="primaryOrderId"/>
             </hyperlink>
@@ -884,7 +884,7 @@ under the License.
     <form name="ListFacilityContent" type="list" list-name="facilityContentDetails" 
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="facilityId"><hidden/></field>
-        <field name="contentId" title="${uiLabelMap.CommonView}">
+        <field name="contentId" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="/content/control/ViewSimpleContent" description="[${contentId}]" target-type="inter-app">
                 <parameter param-name="contentId"/>
             </hyperlink>

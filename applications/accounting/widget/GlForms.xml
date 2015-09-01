@@ -817,25 +817,25 @@ under the License.
             </entity-condition>
         </actions>
 
-        <field name="acctgTransId">
+        <field name="acctgTransId" widget-style="${styles.button_default}">
             <hyperlink description="${acctgTransId}" target="EditAcctgTrans">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>
         <field name="acctgTransEntrySeqId"><display/></field>
-        <field name="glAccountId">
+        <field name="glAccountId" widget-style="${styles.button_default}">
             <hyperlink target="GlAccountNavigate" description="${glAccountId}">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
         </field>
-        <field name="partyId">
+        <field name="partyId" widget-style="${styles.button_default}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyIdTo}" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <field name="productId"><display/></field>
-        <field name="organizationPartyId">
+        <field name="organizationPartyId" widget-style="${styles.button_default}">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
@@ -906,7 +906,7 @@ under the License.
                 </condition-list>
             </entity-condition>
         </actions>
-        <field name="glReconciliationId">
+        <field name="glReconciliationId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${glReconciliationId}" target="EditGlReconciliations">
                 <parameter param-name="glReconciliationId"/>
                 <parameter param-name="tabButtonItem" from-field="AccountReconciliations"/>
@@ -917,12 +917,12 @@ under the License.
         <field name="description"><display/></field>
         <field name="createdByUserLogin"><display/></field>
         <field name="lastModifiedByUserLogin"><display/></field>
-        <field name="glAccountId">
+        <field name="glAccountId" widget-style="${styles.button_default}">
             <hyperlink target="GlAccountNavigate" description="${glAccountId}">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
         </field>
-        <field name="organizationPartyId">
+        <field name="organizationPartyId" widget-style="${styles.button_default}">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
@@ -956,8 +956,8 @@ under the License.
         <field name="postedDate" position="2"/>
         <field name="inventoryItemId" position="1"/>
         <field name="physicalInventoryId" position="2"/>
-        <field name="invoiceId" position="1"><hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/></field>
-        <field name="paymentId" position="2"><hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/></field>
+        <field name="invoiceId" position="1" widget-style="${styles.button_default}"><hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/></field>
+        <field name="paymentId" position="2" widget-style="${styles.button_default}"><hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/></field>
         <field name="receiptId" position="1"/>
         <field name="workEffortId" position="2"/>
         <field name="shipmentId" position="1"/>

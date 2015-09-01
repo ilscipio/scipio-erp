@@ -18,7 +18,7 @@ under the License.
 -->
 
 <@section title="${uiLabelMap.SfaMergingFollowing} ${uiLabelMap.SfaMergeLeads}">
-  <form  method="post" action="<@ofbizUrl>mergeContacts</@ofbizUrl>" class="basic-form">
+  <form method="post" action="<@ofbizUrl>mergeContacts</@ofbizUrl>" class="basic-form">
   <@table type="generic" border="0" width="100%">
     <@tr>
       <@td>

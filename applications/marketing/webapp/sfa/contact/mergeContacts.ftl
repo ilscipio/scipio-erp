@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<form  method="post" action="<@ofbizUrl>mergeContacts</@ofbizUrl>" class="basic-form">
+<form method="post" action="<@ofbizUrl>mergeContacts</@ofbizUrl>" class="basic-form">
   <@table type="generic" border="0" width="100%">
     <@tr>
       <@td>

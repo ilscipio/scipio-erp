@@ -125,7 +125,7 @@ function setServiceName(selection) {
                 <div class="clearfix">
                 <div class="float-left">
                     <span>${uiLabelMap.AccountingRunningTotal} :</span>
-                    <span  id="showPaymentRunningTotal"></span>
+                    <span id="showPaymentRunningTotal"></span>
                 </div>
                 <div class="align-float">
                     <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">

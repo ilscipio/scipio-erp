@@ -134,7 +134,7 @@ under the License.
       <#assign numCol = numCol?number>
       <#assign tabCol = 1>
       <div
-      <#if categoryImageUrl?string?has_content>
+<#if categoryImageUrl?string?has_content>
         style="position: relative; margin-top: ${height}px;"
       </#if>
       class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">

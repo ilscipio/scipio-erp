@@ -423,7 +423,7 @@ under the License.
               <#if packedLines?has_content>
                 <br />
                 <#assign packedLine = packedLines.get(0)!>
-                <span  style="font-size:1.2em">${uiLabelMap.ProductPackage}&nbsp;${packedLine.getPackageSeq()!}</span>
+                <span style="font-size:1.2em">${uiLabelMap.ProductPackage}&nbsp;${packedLine.getPackageSeq()!}</span>
                 <br />
                 <@table type="data-list" class="basic-table" cellspacing="0">
                   <@tr class="header-row">

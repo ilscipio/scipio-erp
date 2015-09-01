@@ -82,7 +82,7 @@ function getPaymentRunningTotal() {
                 <input type="hidden" name='paymentGroupTypeId' value="BATCH_PAYMENT" />
                 <div>
                     <span>${uiLabelMap.AccountingRunningTotal} :</span>
-                    <span  id="showPaymentRunningTotal"></span>
+                    <span id="showPaymentRunningTotal"></span>
                 </div>
                 <@table type="data-list" autoAltRows=true class="basic-table">
                   <@thead>

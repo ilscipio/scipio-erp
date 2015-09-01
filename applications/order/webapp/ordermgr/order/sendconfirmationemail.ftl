@@ -51,7 +51,7 @@ under the License.
                 </@td>
             </@tr>
             <@tr>
-                <@td  scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailCCTo}&nbsp;</@td>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailCCTo}&nbsp;</@td>
                 <@td>
                     <input type="text" size="40" name="sendCc" value="${productStoreEmailSetting.ccAddress?default("")}" />
                 </@td>
@@ -73,7 +73,7 @@ under the License.
                 </@td>
             </@tr>
             <@tr>
-                <@td  scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailContentType}&nbsp;</@td>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailContentType}&nbsp;</@td>
                 <@td>${productStoreEmailSetting.contentType?default("text/html")}</@td>
             </@tr>
             <@tr>

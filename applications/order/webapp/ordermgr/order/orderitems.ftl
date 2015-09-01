@@ -554,7 +554,7 @@ under the License.
                                                     <@tr class="${rowColor!}">
                                                         <@td colspan="2">
                                                             ${uiLabelMap.OrderPlannedInShipment}&nbsp;<a
-                                            target="facility"
+target="facility"
                                             href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}"
                                                                 class="">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}
                                     </@td>

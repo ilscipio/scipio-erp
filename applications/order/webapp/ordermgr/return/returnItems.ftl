@@ -98,15 +98,15 @@ under the License.
           <@tr><@td colspan="10">
               <@table type="summary" cellspacing="0" class="basic-table">
                 <@tr>
-                  <@td  width="25%">${uiLabelMap.OrderOrderTotal}</@td>
+                  <@td width="25%">${uiLabelMap.OrderOrderTotal}</@td>
                   <@td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></@td>
                 </@tr>
                 <@tr>
-                  <@td  width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</@td>
+                  <@td width="25%">${uiLabelMap.OrderAmountAlreadyCredited}</@td>
                   <@td><@ofbizCurrency amount=orh.getReturnedCreditTotalWithBillingAccountBd() isoCode=orh.getCurrency()/></@td>
                 </@tr>
                 <@tr>
-                  <@td  width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</@td>
+                  <@td width="25%">${uiLabelMap.OrderAmountAlreadyRefunded}</@td>
                   <@td><@ofbizCurrency amount=orh.getReturnedRefundTotalWithBillingAccountBd() isoCode=orh.getCurrency()/></@td>
                 </@tr>
               </@table>

@@ -553,11 +553,29 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatListWrapperOpen formName style columnStyles>
+  <#local styleSet = splitStyleNamesToSet(style)>
+  <#local scrollable = false>
+  <#if styleSet.contains("scrollable")>
+    <#local scrollable = true>
+    <#local style = removeStyleNames(style, "scrollable")>
+  </#if>
+  <#global renderFormatListWrapperStack = pushStack(renderFormatListWrapperStack!, {"formName":formName, "style":style, "scrollable":scrollable})>
+  <#if scrollable>
+  <#-- TODO: change this to something more foundation-like.
+       this is a custom workaround to get scrolling, nothing else working. -->
+  <div class="scrollable-table-container">
+  </#if>
   <table cellspacing="0" class="<#if style?has_content>${style}<#else>basic-table form-widget-table dark-grid</#if>"><#lt/>
 </#macro>
 
 <#macro renderFormatListWrapperClose formName>
+  <#local stackValues = readStack(renderFormatListWrapperStack!)>
+  <#global renderFormatListWrapperStack = popStack(renderFormatListWrapperStack!)>
+  <#local scrollable = stackValues.scrollable>
   </table><#lt/>
+  <#if scrollable>
+  </div>
+  </#if>
 </#macro>
 
 <#macro renderFormatHeaderRowOpen style>

@@ -27,7 +27,6 @@ under the License.
 <div id="footer" align="center">
   <div>Copyright (c) 2001-${nowTimestamp?string("yyyy")} The Apache Software Foundation - <a href="http://www.apache.org/" target="_blank">www.apache.org</a></div>
 </div>
-<br />
 
 </body>
 </html>

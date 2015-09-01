@@ -19,8 +19,11 @@ under the License.
 
 
 <#list blogList as blog>
+  <@row>
+    <@cell>
     <i><b>${blog.contentName}</b></i>
-    <a href="ViewArticle?articleContentId=${blog.contentId}&amp;blogContentId=${blogContentId}">[${blog.contentId}]</a><br />
+    <a href="ViewArticle?articleContentId=${blog.contentId}&amp;blogContentId=${blogContentId}" class="${styles.button_default!}">[${blog.contentId}]</a><br />
     <@renderSubContentCache subContentId=blog.contentId mapKey="SUMMARY"/>
-    <br /><br />
+    </@cell>
+  </@row>
 </#list>

@@ -18,9 +18,9 @@ under the License.
 -->
   <#assign menuHtml>
       <#--if project?has_content>
-        <li><a href="<@ofbizUrl>newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y</@ofbizUrl>">${uiLabelMap.ProjectMgrNotesCreateNew}</a></li>
+        <li><a href="<@ofbizUrl>newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProjectMgrNotesCreateNew}</a></li>
       <#else>
-        <li><a href="<@ofbizUrl>newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y</@ofbizUrl>">${uiLabelMap.ProjectMgrNotesCreateNew}</a></li>
+        <li><a href="<@ofbizUrl>newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProjectMgrNotesCreateNew}</a></li>
       </#if-->
   </#assign>
   <@section title="${uiLabelMap.WorkEffortNotes}" menuHtml=menuHtml>
@@ -35,8 +35,7 @@ under the License.
                     <div>&nbsp;<b>${uiLabelMap.CommonBy}: </b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</div>
                     <div>&nbsp;<b>${uiLabelMap.CommonAt}: </b>${Static["org.ofbiz.base.util.UtilDateTime"].timeStampToString(note.noteDateTime!,"dd-MM-yyyy HH:mm",Static["java.util.TimeZone"].getDefault(),context.get("locale"))}</div>
                   </@td>
-                  <@td valign="top" width="50%">
-                    <div>${note.noteInfo!}</div>
+                  <@td valign="top" width="50%">${note.noteInfo!}
                   </@td>
                   <@td align="right" valign="top" width="15%">
                     <#if note.internalNote! == "N">
@@ -91,7 +90,7 @@ under the License.
                 </#if>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.OrderNote}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.OrderNote}</@td>
                 <@td width="54%">
                   <textarea name="noteInfo" rows="5" cols="70"></textarea>
                 </@td>

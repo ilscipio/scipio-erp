@@ -141,7 +141,7 @@
         <field name="workEffortId"><hidden/></field>
         <field name="phaseName" position="1" use-when="showPosition1"><display description="${phaseName}[${phaseId}]"/></field>
         <field name="workEffortName" title="${uiLabelMap.FormFieldTitle_taskName}" position="1" use-when="showPosition1"><hyperlink target="taskView?workEffortId=${workEffortId}" description="${workEffortName}[${workEffortId}]"/></field>
-        <field name="timesheetId" position="2">
+        <field name="timesheetId" position="2" widget-style="${styles.button_default}">
             <hyperlink description="${timesheetId}" target="Timesheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -351,7 +351,7 @@
         </field>
         <field name="estimatedStartDate" title="${uiLabelMap.WorkEffortEstimatedStartDate}"><date-time type="date"/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.WorkEffortEstimatedCompletionDate}"><date-time type="date"/></field>
-        <field name="edit" title=" ">
+        <field name="edit" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditTask?workEffortId=${workEffortId}" description="${uiLabelMap.CommonEdit}"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
@@ -456,7 +456,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListOrderInfo" target="EditProjectOrders?projectId=${projectId}" type="list" list-name="listOrderAssoProject" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="orderId">
+        <field name="orderId" widget-style="${styles.button_default}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -713,24 +713,24 @@
         <field name="actualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}" widget-area-style="centered"><display type="date"/></field>
         <field name="plannedHours" widget-area-style="centered"><display/></field>
         <field name="actualHours" widget-area-style="centered"><display/></field>
-        <field name="remove" title="${uiLabelMap.CommonRemove}">
-        <hyperlink target="updateResourcesTaskAssigment"  description="${uiLabelMap.CommonRemove}">
-            <parameter param-name="workEffortId"/>
-            <parameter param-name="partyId"/>
-            <parameter param-name="roleTypeId"/>
-            <parameter param-name="fromDate"/>
-            <parameter param-name="statusId" value="PAS_ENDED"/>
-        </hyperlink>
+        <field name="remove" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
+            <hyperlink target="updateResourcesTaskAssigment" description="${uiLabelMap.CommonRemove}">
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="partyId"/>
+                <parameter param-name="roleTypeId"/>
+                <parameter param-name="fromDate"/>
+                <parameter param-name="statusId" value="PAS_ENDED"/>
+            </hyperlink>
         </field>
-        <field name="toComplete" title="${uiLabelMap.CommonStatustoComplete}">
-        <hyperlink target="updateResourcesTaskAssigment" description="${uiLabelMap.CommonStatustoComplete}">
-            <parameter param-name="workEffortId"/>
-            <parameter param-name="partyId"/>
-            <parameter param-name="roleTypeId"/>
-            <parameter param-name="fromDate"/>
-            <parameter param-name="statusId" value="PAS_COMPLETED"/>
-        </hyperlink>
-    </field>
+        <field name="toComplete" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
+            <hyperlink target="updateResourcesTaskAssigment" description="${uiLabelMap.CommonStatustoComplete}">
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="partyId"/>
+                <parameter param-name="roleTypeId"/>
+                <parameter param-name="fromDate"/>
+                <parameter param-name="statusId" value="PAS_COMPLETED"/>
+            </hyperlink>
+        </field>
     </form>
     <form name="listResourcesProjects" type="list" list-name="parties"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">

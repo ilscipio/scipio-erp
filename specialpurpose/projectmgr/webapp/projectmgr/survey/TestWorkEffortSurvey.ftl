@@ -26,6 +26,6 @@ under the License.
               ${surveyWrapper.render()}
             </form>
         <#else>
-            <h2>${uiLabelMap.OrderNothingToDoHere}</h2>
+            <@resultMsg>${uiLabelMap.OrderNothingToDoHere}</@resultMsg>
         </#if>
 </@section>

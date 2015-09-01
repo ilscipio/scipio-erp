@@ -79,14 +79,20 @@ under the License.
                 <entity-one entity-name="WorkEffort" value-field="project">
                     <field-map field-name="workEffortId" from-field="projectId"/>
                 </entity-one>
+                
+                <service service-name="securityPermissionCheck" result-map="permResult">
+                    <field-map field-name="primaryPermission" value="PROJECTMGR" />
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${(context.hasBasePermission == true) and (not empty context.project)}">
                         <section>
                             <condition>
                                 <and>
-                                    <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                                    <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                                     <not><if-empty field="project"/></not>
                                 </and>
                             </condition>
@@ -98,7 +104,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
                                 <section>
@@ -110,10 +116,9 @@ under the License.
                                     <widgets>
                                         <include-menu name="ProjectButtonBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
                                         <container style="clear"/>
-                                        <label style="h2" text="${uiLabelMap.ProjectMgrProjectCurrent}: ${project.workEffortName}[${project.workEffortId}]"/>
+                                        <label style="p" text="${uiLabelMap.ProjectMgrProjectCurrent}: ${project.workEffortName} [${project.workEffortId}]"/>
                                     </widgets>
                                  </section>
-
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -131,14 +136,20 @@ under the License.
                 <set field="headerItem" value="task"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/getProjectId.groovy"/>
+            
+                <service service-name="securityPermissionCheck" result-map="permResult">
+                    <field-map field-name="primaryPermission" value="PROJECTMGR" />
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${(context.hasBasePermission == true) and (not empty context.workEffort)}">
                         <section>
                             <condition>
                                 <and>
-                                    <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                                    <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                                     <not><if-empty field="workEffort"/></not>
                                 </and>
                             </condition>
@@ -150,7 +161,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
                                 <section>
@@ -160,10 +171,10 @@ under the License.
                                     <widgets>
                                         <include-menu name="TaskSubTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
                                         <container style="clear"/>
-                                        <label style="h2" text="${uiLabelMap.ProjectMgrTaskCurrent}: ${workEffort.workEffortName} [${workEffort.workEffortId}]"/>
-                                        <label style="h3" text="${uiLabelMap.ProjectMgrPhaseName}: ${phaseName}"/>
-                                        <container style="h2">
-                                            <label text="${uiLabelMap.ProjectMgrProjectName}: ${projectName}"/>
+                                        <label style="p" text="${uiLabelMap.ProjectMgrTaskCurrent}: ${workEffort.workEffortName} [${workEffort.workEffortId}]"/>
+                                        <label style="p" text="${uiLabelMap.ProjectMgrPhaseName}: ${phaseName}"/>
+                                        <container>
+                                            <label style="p" text="${uiLabelMap.ProjectMgrProjectName}: ${projectName}"/>
                                             <link text="[${projectId}]" target="projectView" style="${styles.button_default!}"><parameter param-name="projectId"/></link>
                                         </container>
                                     </widgets>
@@ -183,13 +194,19 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="mytasks"/>
+                
+                <service service-name="securityPermissionCheck" result-map="permResult">
+                    <field-map field-name="primaryPermission" value="PROJECTMGR" />
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -208,6 +225,12 @@ under the License.
             <actions>
                 <set field="skillTypeId" from-field="parameters.skillTypeId"/>
                 <entity-one entity-name="SkillType" value-field="skillType"/>
+                
+                <service service-name="securityPermissionCheck" result-map="permResult">
+                    <field-map field-name="primaryPermission" value="PROJECTMGR" />
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -215,7 +238,7 @@ under the License.
                         <section>
                             <!-- do check for PartyAbility, _VIEW permission -->
                             <condition>
-                                <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -238,13 +261,19 @@ under the License.
                 <entity-one entity-name="PartyNameView" value-field="partyName">
                     <field-map field-name="partyId" from-field="timesheet.partyId"/>
                 </entity-one>
+                
+                <service service-name="securityPermissionCheck" result-map="permResult">
+                    <field-map field-name="primaryPermission" value="PROJECTMGR" />
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
                                 <!--include-menu name="TimesheetTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/-->
@@ -256,7 +285,7 @@ under the License.
                                         </not>
                                     </condition>
                                     <widgets>
-                                        <label style="h2">${uiLabelMap.WorkEffortTimesheetTimesheetId}: ${timesheetId} ${uiLabelMap.CommonFrom}: ${partyName.firstName} ${partyName.middleName} ${partyName.lastName} ${partyName.groupName} [${timesheet.partyId}]</label>
+                                        <label style="p">${uiLabelMap.WorkEffortTimesheetTimesheetId}: ${timesheetId} ${uiLabelMap.CommonFrom}: ${partyName.firstName} ${partyName.middleName} ${partyName.lastName} ${partyName.groupName} [${timesheet.partyId}]</label>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -274,6 +303,12 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="mytime"/>
+                
+                <service service-name="securityPermissionCheck" result-map="permResult">
+                    <field-map field-name="primaryPermission" value="PROJECTMGR" />
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -283,7 +318,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                    <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -326,6 +361,12 @@ under the License.
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
                 <set field="okayToUpdate" value="true" type="Boolean" global="true"/>
+                
+                <service service-name="securityPermissionCheck" result-map="permResult">
+                    <field-map field-name="primaryPermission" value="PROJECTMGR" />
+                    <field-map field-name="mainAction" value="VIEW"/>
+                </service>
+                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                 <section>
@@ -356,8 +397,8 @@ under the License.
                             <!-- do check for PROJECTMGR, _VIEW permission -->
                             <condition>
                                 <or>
+                                    <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                                     <if-has-permission permission="PARTYMGR" action="_ADMIN"/>
-                                    <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
                                 </or>
                             </condition>
                             <widgets>

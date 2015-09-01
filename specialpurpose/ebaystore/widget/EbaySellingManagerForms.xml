@@ -125,7 +125,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" position="1"><submit/></field>
-        <field name="cancelButton" title=" " widget-style="smallSubmit" position="2">
+        <field name="cancelButton" title=" " widget-style="smallSubmit ${styles.button_default}" position="2">
             <hyperlink target="soldListing" description="${uiLabelMap.CommonCancel}">
                 <parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
             </hyperlink>
@@ -179,8 +179,8 @@ under the License.
         <field name="productName" entry-name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${productName}"></display-entity>
         </field>
-        <field name="quantityReserved" >
-            <hyperlink  target="updateQuantityReserved" description="${quantityReserved}">
+        <field name="quantityReserved" widget-style="${styles.button_default}">
+            <hyperlink target="updateQuantityReserved" description="${quantityReserved}">
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="facilityId"/>
                 <parameter param-name="productId"/>
@@ -301,7 +301,7 @@ under the License.
         <field name="isAutoFeedbackReminder" tooltip="${uiLabelMap.EbayIsAutoFeedbackReminderTooltip}" position="1" title="${uiLabelMap.EbayIsAutoFeedbackReminder}"><check></check></field>
         <field name="afterDays" title="${uiLabelMap.EbayAfter}"  position="1"  tooltip="${uiLabelMap.CommonDays} ${uiLabelMap.EbayIsSendCopyEmailTooltip}" ><text default-value="5" size="5" maxlength="2"></text></field>
         <field name="isSendCopyEmailToSeller" position="1" title="${uiLabelMap.EbayIsSendCopyEmailToSeller}"><check></check></field>
-        <field name="emailTemplate" title="Email" tooltip="Edit Feedback Reminder email template">
+        <field name="emailTemplate" title="Email" tooltip="Edit Feedback Reminder email template" widget-style="${styles.button_default}">
             <hyperlink target="editEmailTemplate" description="Edit Email Template">
                 <parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
                 <parameter param-name="emailType" value="EBAY_WIN_BUYER_NOTI"/>
@@ -323,7 +323,7 @@ under the License.
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
         <field name="isAutoSendPayReceivedEmail" tooltip="${uiLabelMap.EbayAutoPaymentReceviedEmail}" position="1" title="${uiLabelMap.EbayIsAutoSendEmail}"><check></check></field>
         <field name="isSendCopyEmailToSeller" position="1" title="${uiLabelMap.EbayIsSendCopyEmailToSeller}"><check></check></field>
-        <field name="emailTemplate" title="Email" tooltip="Edit Payment received email template">
+        <field name="emailTemplate" title="Email" tooltip="Edit Payment received email template" widget-style="${styles.button_default}">
             <hyperlink target="editEmailTemplate" description="${uiLabelMap.EbayEditEmailTemplate}">
                 <parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
                 <parameter param-name="emailType" value="EBAY_PAY_RECIEVED"/>
@@ -482,7 +482,7 @@ under the License.
         <field name="startTime"><display/></field>
         <field name="quantity"><display/></field>
         <field name="listingType"><display/></field>
-        <field name="EditItem">
+        <field name="EditItem" widget-style="${styles.button_default}">
             <hyperlink target="getItemProduct?productStoreId=${parameters.productStoreId}&amp;itemId=${itemId}" description="Edit" target-type="plain" target-window="_BLANK"/>
         </field>
     </form>
@@ -720,7 +720,8 @@ under the License.
         </row-actions>
         <field name="_rowSubmit"  position="1" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="productStoreId"><hidden value="${productStoreId}"/></field>
-        <field name="orderId" title="Order ID">
+        <field name="orderId" title="Order ID" widget-style="${styles.button_default}">
+            <!-- FIXME: horrible hardcoded URL -->
             <hyperlink target="https://localhost:8443/ordermgr/control/orderview?orderId=${orderId}" description="${orderId}" target-type="plain" target-window="_BLANK"/>
         </field>
         <field name="externalId" title="Transaction ID"><display description="${externalId}"/></field>
@@ -761,7 +762,7 @@ under the License.
         </row-actions>
         <field name="productStoreId"><hidden value="${productStoreId}"/></field>
         <field name="_rowSubmit" position="1" title="${uiLabelMap.CommonSelect}" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}"><check/></field>
-        <field name="orderId" position="1" title="Order ID" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}">
+        <field name="orderId" position="1" title="Order ID" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}" widget-style="${styles.button_default}">
             <hyperlink target="https://localhost:8443/ordermgr/control/orderview?orderId=${orderId}" description="${orderId}" target-type="plain" target-window="_BLANK"/>
         </field>
         <field name="externalId" title="External ID" position="1" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}"><display description="${externalId}"></display></field>

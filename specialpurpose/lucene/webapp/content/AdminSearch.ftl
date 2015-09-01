@@ -49,27 +49,21 @@ under the License.
 <@td>
   <@table type="fields" class="" cellspacing="" border="0" width="100%">
     <@tr>
-      <@td align="right" valign="middle">
-        <div>${uiLabelMap.ProductFeatures}:</div>
+      <@td align="right" valign="middle">${uiLabelMap.ProductFeatures}:
       </@td>
       <@td align="right" valign="middle">
-        <div>
           ${uiLabelMap.CommonAll} <input type="radio" name="any_or_all" value="all" checked="checked"/>
           ${uiLabelMap.CommonAny} <input type="radio" name="any_or_all" value="any"/>
-        </div>
       </@td>
     </@tr>
 <#--
     <@tr>
-      <@td align="right" valign="middle">
-        <div>Feature IDs:</div>
+      <@td align="right" valign="middle">Feature IDs:
       </@td>
       <@td valign="middle">
-        <div>
           <input type="text" class="inputBox" name="SEARCH_FEAT" size="15" value="${requestParameters.SEARCH_FEAT!}"/>&nbsp;
           <input type="text" class="inputBox" name="SEARCH_FEAT2" size="15" value="${requestParameters.SEARCH_FEAT!}"/>&nbsp;
           <input type="text" class="inputBox" name="SEARCH_FEAT3" size="15" value="${requestParameters.SEARCH_FEAT!}"/>&nbsp;
-        </div>
       </@td>
     </@tr>
 -->
@@ -78,25 +72,21 @@ under the License.
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
       <@tr>
-        <@td align="right" valign="middle">
-          <div>${(productFeatureType.description)!}:</div>
+        <@td align="right" valign="middle">${(productFeatureType.description)!}:
         </@td>
         <@td valign="middle">
-          <div>
             <select name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
             </select>
-          </div>
         </@td>
       </@tr>
     </#list>
     <#if searchConstraintStrings?has_content>
       <@tr>
-        <@td align="right" valign="top">
-          <div>${uiLabelMap.CommonLast} ${uiLabelMap.CommonSearch}:</div>
+        <@td align="right" valign="top">${uiLabelMap.CommonLast} ${uiLabelMap.CommonSearch}:
         </@td>
         <@td valign="top">
             <#list searchConstraintStrings as searchConstraintString>

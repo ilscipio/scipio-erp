@@ -31,8 +31,7 @@ under the License.
     <@table type="data-list" class="" cellspacing="">
         <#list productList as product>
             <@tr>
-                <@td>
-                    <div><b>${product.productId}</b></div>
+                <@td><b>${product.productId}</b>
                 </@td>
                 <@td>&nbsp;&nbsp;</@td>
                 <@td>

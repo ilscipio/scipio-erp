@@ -193,9 +193,9 @@ under the License.
     }
 </script>
 <#assign menuHtml>
-    <li><a href="<@ofbizUrl>clearExpListing</@ofbizUrl>?productStoreId=${productStoreId!}">Clear Listing</a></li>
+    <li><a href="<@ofbizUrl>clearExpListing</@ofbizUrl>?productStoreId=${productStoreId!}" class="${styles.button_default!}">Clear Listing</a></li>
     <#if isExportValid?? && isExportValid == "true">
-    <li><a href="<@ofbizUrl>exportListingToEbay</@ofbizUrl>?productStoreId=${productStoreId!}">Export Products Listing</a></li>
+    <li><a href="<@ofbizUrl>exportListingToEbay</@ofbizUrl>?productStoreId=${productStoreId!}" class="${styles.button_default!}">Export Products Listing</a></li>
     </#if>
 </#assign>
 <@section title="Items to export" menuHtml=menuHtml>
@@ -242,7 +242,6 @@ under the License.
                                 <@td><input type="text" readonly="readonly" name="item" value="${item.getItemID()!}"/></@td>
                                 <@td class="label">Item Fee</@td>
                                 <@td>
-                                    <div>
                                         <input type="text" readonly="readonly" name="itemFee" value="${request.getAttribute("itemFee")!}"/>
                                         <!-- itemlisting buttons bar -->
                                         <a href="#" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>updateProductExportDetail</@ofbizUrl>';document.ProductsExportToEbay.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
@@ -252,8 +251,7 @@ under the License.
                                     </#if>
                                         <a href="#" class="${styles.button_default!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>removeProductFromListing</@ofbizUrl>';document.ProductsExportToEbay.submit();">Remove</a>
                                         <#--a href="#" class="${styles.button_default!}">Save and ${uiLabelMap.EbayExportToEbay}</a-->
-                                        <!-- end buttons bar --> 
-                                    </div>
+                                        <!-- end buttons bar -->
                                 </@td>
                             </@tr>
                           </@table>
@@ -554,7 +552,7 @@ under the License.
                              <@section title="Listing Type">
                                        <!--  set  listing type, duration, prices --> 
                                     <div id="tabs">
-                                        <ul>
+                                        <ul class="${styles.menu_button!}">
                                            <#assign id = 1>
                                            <#assign tabName = "">
                                            <#list listingTypes as listingType>
@@ -562,7 +560,7 @@ under the License.
                                                <#if listingType.type.equals("Chinese") || listingType.type == "FixedPriceItem">
                                                     <#if listingType.type.equals("Chinese") > <#assign tabName = "Auction"></#if>
                                                     <#if listingType.type.equals("FixedPriceItem") > <#assign tabName = "Fixed Price"></#if>
-                                                    <li  <#if id==1> style="margin-left: 1px" id="tabHeaderActive_"<#else> id="tabHeader_${id}" </#if>><a href="javascript:void(0)" onclick="toggleTab(${id},2)"><span>${tabName!}</span></a></li>
+                                                    <li<#if id==1> style="margin-left: 1px" id="tabHeaderActive_"<#else> id="tabHeader_${id}"</#if>><a href="javascript:void(0)" onclick="toggleTab(${id},2)" class="${styles.menu_button_itemlink!}"><span>${tabName!}</span></a></li>
                                                     <#assign id = id + 1>
                                                </#if>
                                             </#list>
@@ -575,7 +573,6 @@ under the License.
                                         <#if listingType.type.equals("Chinese") > <#assign tabName = "Auction"></#if>
                                         <#if listingType.type.equals("FixedPriceItem") ><#assign tabName = "Fixed Price"></#if>
                                        <div id="tabContent${id}" class="tabContent" <#if id != 1>style="display:none;"</#if>>
-                                            <br />
                                             <@table type="fields" class="" width="50%" height="100%" id="table2" cellspacing="0">
                                                     <@tr>
                                                          <@td class="label"></@td>

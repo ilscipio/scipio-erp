@@ -19,16 +19,16 @@ under the License.
 
 <div data-role="content">
 <ul data-role="listview">
-<li><a accesskey="1" href="<@ofbizUrl>/receipt?facilityId=${parameters.facilityId!}</@ofbizUrl>">Goods Receipt</a></li>
-<li><a accesskey="2" href="<@ofbizUrl>/movement?facilityId=${parameters.facilityId!}</@ofbizUrl>">Inventory Movement</a></li>
-<li><a accesskey="3" href="<@ofbizUrl>/picking?facilityId=${parameters.facilityId!}</@ofbizUrl>">Picking</a></li>
-<li><a accesskey="4" href="<@ofbizUrl>/packing?facilityId=${parameters.facilityId!}</@ofbizUrl>">Packing</a></li>
-<li><a accesskey="5" href="<@ofbizUrl>/stocktake?facilityId=${parameters.facilityId!}</@ofbizUrl>">Stocktake</a></li>
+<li><a accesskey="1" href="<@ofbizUrl>/receipt?facilityId=${parameters.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">Goods Receipt</a></li>
+<li><a accesskey="2" href="<@ofbizUrl>/movement?facilityId=${parameters.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">Inventory Movement</a></li>
+<li><a accesskey="3" href="<@ofbizUrl>/picking?facilityId=${parameters.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">Picking</a></li>
+<li><a accesskey="4" href="<@ofbizUrl>/packing?facilityId=${parameters.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">Packing</a></li>
+<li><a accesskey="5" href="<@ofbizUrl>/stocktake?facilityId=${parameters.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">Stocktake</a></li>
 </ul>
 </div>
 
 <#-- Setting Menu. -->
 <div data-role="controlgroup">
-  <a data-role="button" data-icon="gear" href="<@ofbizUrl>/menu</@ofbizUrl>">Select Facility</a>
-  <a data-role="button" data-icon="info" href="<@ofbizUrl>/logout</@ofbizUrl>">Logout</a>
+  <a data-role="button" data-icon="gear" href="<@ofbizUrl>/menu</@ofbizUrl>" class="${styles.button_default!}">Select Facility</a>
+  <a data-role="button" data-icon="info" href="<@ofbizUrl>/logout</@ofbizUrl>" class="${styles.button_default!}">Logout</a>
 </div>

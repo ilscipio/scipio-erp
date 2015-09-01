@@ -67,7 +67,7 @@ under the License.
                     <decorator-section name="body">
                         <include-menu name="ProjectButtonBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
                         <container style="clear"/>
-                        <screenlet name="findProject" collapsible="true" title="${uiLabelMap.PageTitleFindProject}">
+                        <screenlet name="findProject" collapsible="true">
                             <include-form name="FindProject" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleFindProjectResults}" navigation-form-name="ListProjects">

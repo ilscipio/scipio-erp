@@ -32,10 +32,10 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleFindTimeSheet}">
+                                <screenlet>
                                     <include-form name="FindTimeSheet" location="component://projectmgr/widget/forms/TimeSheetForms.xml"/>
                                 </screenlet>
-                                <screenlet title="${uiLabelMap.PageTitleTimesheets}" navigation-form-name="ListFindTimeSheet">
+                                <screenlet navigation-form-name="ListFindTimeSheet">
                                     <include-form name="ListFindTimeSheet" location="component://projectmgr/widget/forms/TimeSheetForms.xml"/>
                                 </screenlet>
                             </widgets>

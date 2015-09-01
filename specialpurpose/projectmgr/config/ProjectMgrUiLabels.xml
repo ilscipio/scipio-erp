@@ -2087,7 +2087,7 @@
     </property>
     <property key="ProjectMgrReviewedCustomerRequestTaskList">
         <value xml:lang="de">Geprüfte aber nicht komplette Kunden Anfragen Liste mit verbundenen Aufgaben</value>
-        <value xml:lang="en">Reviewed but not completed Customer Request list with task assigned'</value>
+        <value xml:lang="en">Reviewed but not completed Customer Request list with task assigned</value>
         <value xml:lang="fr">Liste des demandes client vérifiées mais incomplètes et associées à une tâche</value>
         <value xml:lang="it">Verificato ma non completato, lista richiesta cliente con il compito assegnato</value>
         <value xml:lang="ja">割当済タスクのうち、確認済で未完了の顧客リクエスト一覧</value>

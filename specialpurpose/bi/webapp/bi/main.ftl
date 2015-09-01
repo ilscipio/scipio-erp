@@ -32,7 +32,7 @@ under the License.
     ${uiLabelMap.BusinessIntelligenceNote11}
     ${uiLabelMap.BusinessIntelligenceNote12}
 </p>
-<h2>${uiLabelMap.BusinessIntelligenceCurrentStatus}</h2>
+<@heading>${uiLabelMap.BusinessIntelligenceCurrentStatus}</@heading>
 <p>
     ${uiLabelMap.BusinessIntelligenceNote13}
     ${uiLabelMap.BusinessIntelligenceNote14}
@@ -41,7 +41,7 @@ under the License.
     ${uiLabelMap.BusinessIntelligenceNote17}
     ${uiLabelMap.BusinessIntelligenceNote18}
 </p>
-<h2>${uiLabelMap.BusinessIntelligenceQuickStartGuide}</h2>
+<@heading>${uiLabelMap.BusinessIntelligenceQuickStartGuide}</@heading>
 <p>
     ${uiLabelMap.BusinessIntelligenceNote19}
     ${uiLabelMap.BusinessIntelligenceNote20}

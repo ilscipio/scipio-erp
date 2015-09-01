@@ -96,7 +96,6 @@ under the License.
         <#assign class><#if alt_row>pos-cart-even<#else>pos-cart-odd</#if></#assign>
         <@tr id="cartLine${cartLineIndex}" alt=alt_row class=class>
           <@td>
-            <div>
               <#if cartLine.getProductId()??>
                 <#-- product item -->
                 <#-- start code to display a small image of the product -->
@@ -116,14 +115,13 @@ under the License.
                 <#-- this is a non-product item -->
                 <b>${cartLine.getItemTypeDestion()!}</b> : ${cartLine.getName()!}
               </#if>
-            </div>
           </@td>
           <@td nowrap align="center">
             ${cartLine.getQuantity()?string.number}
           </@td>
-          <@td nowrap align="right"><div><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></div></@td>
-          <@td nowrap align="right"><div><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></div></@td>
-          <@td nowrap align="right"><div><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></div></@td>
+          <@td nowrap align="right"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></@td>
+          <@td nowrap align="right"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></@td>
+          <@td nowrap align="right"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></@td>
           <@td nowrap align="center"><a href="javascript:deleteCartItem('${cartLineIndex}');"><img src="/images/mini-trash.png" /></a></@td>
         </@tr>
         <#-- toggle the row color -->

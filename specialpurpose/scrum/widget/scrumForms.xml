@@ -1134,7 +1134,7 @@ under the License.
         <field name="custSequenceNum" position="1" title="${uiLabelMap.ScrumSeq}"><display/></field>
         <field name="realSequenceNum"><hidden/></field>
         <field name="custRequestId"><hidden/></field>
-        <field name="backlogId" position="1" title="${uiLabelMap.ScrumBacklogId}">
+        <field name="backlogId" position="1" title="${uiLabelMap.ScrumBacklogId}" widget-style="${styles.button_default}">
             <hyperlink target="ViewProdBacklogItem" description="${custRequestId}">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>

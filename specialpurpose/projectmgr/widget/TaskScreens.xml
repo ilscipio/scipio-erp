@@ -171,7 +171,7 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <screenlet  title="${uiLabelMap.PageTitleFindTask}" collapsible="true" id="findTask">
+                                <screenlet collapsible="true" id="findTask">
                                     <include-form name="FindTask" location="component://projectmgr/widget/forms/TaskForms.xml"/>
                                     <include-form name="ListTasks" location="component://projectmgr/widget/forms/TaskForms.xml"/>
                                 </screenlet>

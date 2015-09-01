@@ -17,5 +17,5 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>Facility Handheld Demo</h1>
+<@heading>Facility Handheld Demo</@heading>
 <p>Choose option from top of screen</p>

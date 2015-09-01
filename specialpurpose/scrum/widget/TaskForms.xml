@@ -693,7 +693,7 @@
             <set field="taskEstimatedMilliSeconds" from-field="resultMap.initPlanHours"/>
         </row-actions>
         <field name="taskId" title="${uiLabelMap.ScrumTask}" parameter-name="workEffortId">
-            <hyperlink target="taskView" link-type="hidden-form"  description="${taskName} - [${taskId}]">
+            <hyperlink target="taskView" link-type="hidden-form" description="${taskName} - [${taskId}]">
                 <parameter param-name="taskId"/>
             </hyperlink>
         </field>

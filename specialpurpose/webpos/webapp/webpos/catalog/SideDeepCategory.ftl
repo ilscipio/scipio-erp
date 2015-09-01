@@ -39,7 +39,7 @@ under the License.
   </#if>
   <#if wrapInBox == "Y">
   <div id="sidedeepcategory">
-    <h3><#if categoryDescription?has_content>${categoryDescription}<#else>${categoryName?default("")}</#if></h3>
+    <@heading><#if categoryDescription?has_content>${categoryDescription}<#else>${categoryName?default("")}</#if></@heading>
     <div>
       <div class="browsecategorylist">
   </#if>

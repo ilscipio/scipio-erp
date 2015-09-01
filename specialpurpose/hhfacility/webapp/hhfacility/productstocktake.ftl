@@ -21,9 +21,9 @@ under the License.
 
 <span>
 <#if negativeQOH?has_content>
-    <a href="<@ofbizUrl>/fixproductnegativeqoh?facilityId=${facility.facilityId!}&amp;productId=${product.productId!}</@ofbizUrl>">Fix negative QOH</a>
+    <a href="<@ofbizUrl>/fixproductnegativeqoh?facilityId=${facility.facilityId!}&amp;productId=${product.productId!}</@ofbizUrl>" class="${styles.button_default!}">Fix negative QOH</a>
 </#if>
-    <a href="<@ofbizUrl>/productstocktake?facilityId=${facility.facilityId!}&amp;productId=${product.productId!}</@ofbizUrl>">Refresh</a>
+    <a href="<@ofbizUrl>/productstocktake?facilityId=${facility.facilityId!}&amp;productId=${product.productId!}</@ofbizUrl>" class="${styles.button_default!}">Refresh</a>
 
 <#--    <ol>
     Display of edit box for barcode

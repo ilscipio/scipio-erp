@@ -96,7 +96,7 @@ under the License.
                     </@tr>
                     <@tr>
                         <@td class="label"> Code Captcha </@td>
-                        <@td><div><img id="captchaImage" src="<@ofbizUrl>captcha.jpg?captchaCodeId=captchaImage&amp;unique=${nowTimestamp.getTime()}</@ofbizUrl>" alt="" /></div></@td>
+                        <@td><img id="captchaImage" src="<@ofbizUrl>captcha.jpg?captchaCodeId=captchaImage&amp;unique=${nowTimestamp.getTime()}</@ofbizUrl>" alt="" /></@td>
                     </@tr>
                     <script type="text/javascript" language="JavaScript">
                     <!--
@@ -111,7 +111,7 @@ under the License.
                     <@tr>
                         <@td class="label"> </@td>
                         <@td>
-                            <a href="javascript:reloadCaptcha('captchaImage');">${uiLabelMap.CommonReloadCaptchaCode}</a>
+                            <a href="javascript:reloadCaptcha('captchaImage');" class="${styles.button_default!}">${uiLabelMap.CommonReloadCaptchaCode}</a>
                         </@td>
                     </@tr>
                     <@tr>

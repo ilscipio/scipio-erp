@@ -482,7 +482,7 @@ not "current" context (too intrusive in current renderer design). still relies o
             </#if>
           </#if>
           
-          <@progress id="${baseId}_progbar" type="info" addWrapClass="${styles.hidden!}" progressOptions=progressOptions/>
+          <@progress id="${baseId}_progbar" type="info" wrapperClass="+${styles.hidden!}" progressOptions=progressOptions/>
         </@cell>
         <@cell class="${styles.grid_small!}3 ${styles.grid_large!}4 ${styles.grid_end!}" id="${baseId}_textbox">
         </@cell>

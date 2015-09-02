@@ -96,7 +96,7 @@ not "current" context (too intrusive in current renderer design). still relies o
       <#local styleParts = style?split(":")>
       <#if (styleParts?size <= 1)>
         <#local elemType = style?lower_case>
-        <#local class = "">
+        <#local class = true>
       <#else>
         <#local elemType = styleParts?first?lower_case>
         <#local class = style?substring(elemType?length + 1)>
@@ -105,35 +105,35 @@ not "current" context (too intrusive in current renderer design). still relies o
       <#if res>
         <#if res?groups[2]?has_content>
           <#if res?groups[3]?has_content>
-            <@heading relLevel=res?groups[3]?number addClass=class id=id>${text}</@heading>
+            <@heading relLevel=res?groups[3]?number class=class id=id>${text}</@heading>
           <#else>
-            <@heading addClass=class id=id>${text}</@heading>
+            <@heading class=class id=id>${text}</@heading>
           </#if>
         <#else>
           <#if res?groups[3]?has_content>
-            <@heading level=res?groups[3]?number addClass=class id=id>${text}</@heading>
+            <@heading level=res?groups[3]?number class=class id=id>${text}</@heading>
           <#else>
-            <@heading addClass=class id=id>${text}</@heading>
+            <@heading class=class id=id>${text}</@heading>
           </#if>
         </#if>
       <#elseif elemType=="p">
-        <p${idText}<#if class?has_content> class="${class}"</#if>>${text}</p>
+        <p${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</p>
       <#elseif elemType=="span">
-        <span${idText}<#if class?has_content> class="${class}"</#if>>${text}</span>
+        <span${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</span>
       <#-- specific permission error class -->
       <#elseif elemType=="perm-error-msg">
-        <@errorMsg type="permission" addClass=class id=id>${text}</@errorMsg>
+        <@errorMsg type="permission" class=class id=id>${text}</@errorMsg>
       <#-- more general security error class -->
       <#elseif elemType=="security-error-msg">
-        <@errorMsg type="security" addClass=class id=id>${text}</@errorMsg>
+        <@errorMsg type="security" class=class id=id>${text}</@errorMsg>
       <#-- general error class -->
       <#elseif elemType=="error-msg">
-        <@errorMsg type="error" addClass=class id=id>${text}</@errorMsg>
+        <@errorMsg type="error" class=class id=id>${text}</@errorMsg>
       <#-- result message class: sometimes messages like "no product found" are not an error but expected possible result -->
       <#elseif elemType=="result-msg">
-        <@resultMsg addClass=class id=id>${text}</@resultMsg>
+        <@resultMsg class=class id=id>${text}</@resultMsg>
       <#elseif elemType=="message">
-        <@alert type="info" addClass=class id=id>${text}</@alert>
+        <@alert type="info" class=class id=id>${text}</@alert>
       <#else>
         <span${idText} class="${style}">${text}</span>
       </#if>
@@ -242,7 +242,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     </#if>
     
     <#local titleElemType = "">
-    <#local titleClass = "">
+    <#local titleClass = true>
     <#if titleStyle?has_content>
       <#local titleStyleParts = titleStyle?split(":")>
       <#if (titleStyleParts?size <= 1)>
@@ -267,12 +267,12 @@ not "current" context (too intrusive in current renderer design). still relies o
           </#if>
         </#if>
         <#if (titleStyleParts?size <= 1)>
-          <#local titleClass = "">
+          <#local titleClass = true>
         </#if>
         <#local titleElemType = "">
       <#elseif ['div','span','p']?seq_contains(titleElemType)>
         <#if (titleStyleParts?size <= 1)>
-          <#local titleClass = "">
+          <#local titleClass = true>
         </#if>
       <#else>
         <#local titleElemType = "">
@@ -355,7 +355,8 @@ not "current" context (too intrusive in current renderer design). still relies o
       <#local tElem = "h${hLevel}">
     </#if>
   </#if>
-      <${tElem} class="heading-level-${hLevel}<#if titleClass?has_content> ${titleClass}</#if>">${title}</${tElem}>
+  <#local titleClasses = makeClassesArg(titleClass, "")>
+      <${tElem} class="heading-level-${hLevel}<#if titleClasses?has_content> ${titleClasses}</#if>">${title}</${tElem}>
   
   <#if titleContainerStyle?has_content>
     </${tcElem}>

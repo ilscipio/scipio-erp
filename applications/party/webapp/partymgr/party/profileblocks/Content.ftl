@@ -27,9 +27,9 @@ under the License.
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
         <input type="hidden" name="partyId" value="${partyId}" id="contentPartyId"/>
 
-        <@field type="file" label="${uiLabelMap.PartyAttachFile}" name="uploadedFile" required=true addClass="error" size=25 />
+        <@field type="file" label="${uiLabelMap.PartyAttachFile}" name="uploadedFile" required=true class="+error" size=25 />
         
-        <@field type="select" label="${uiLabelMap.PartyContentType}" name="partyContentTypeId" required=true addClass="error">
+        <@field type="select" label="${uiLabelMap.PartyContentType}" name="partyContentTypeId" required=true class="+error">
           <option value="">${uiLabelMap.PartySelectPurpose}</option>
           <#list partyContentTypes as partyContentType>
             <option value="${partyContentType.partyContentTypeId}">${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>

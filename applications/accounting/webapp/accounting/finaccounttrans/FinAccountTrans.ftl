@@ -98,7 +98,7 @@ function getFinAccountTransRunningTotalAndBalances() {
       <#assign glReconciliations = delegator.findByAnd("GlReconciliation", {"glAccountId" : finAccount.postToGlAccountId!, "statusId" : "GLREC_CREATED"}, Static["org.ofbiz.base.util.UtilMisc"].toList("reconciledDate DESC"), false)>
       <#if (glReconciliationId?has_content && (glReconciliationId == "_NA_" && finAccountTransList?has_content)) || !grandTotal??>
         <@row>
-          <@cell addClass="text-right">
+          <@cell class="+text-right">
           <#if grandTotal??>
             <#if glReconciliations?has_content>
               <select name="glReconciliationId">

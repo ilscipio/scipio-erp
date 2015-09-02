@@ -240,3 +240,32 @@
       </@tfoot>
     </@table>
 </@section>
+
+<#-- The titleStyle usage here is a demo of what can be set in <label style="..." /> in screens,
+     usually don't need in @section macro. See outputted markup for results. -->
+<@section title="Macro demo" titleClass="heading+3:+test-additional-section-title-class">
+    <@row class="+test-additional-row-class">
+      <@cell class="+test-additional-cell-class">
+        In a cell
+      </@cell>
+    </@row>
+    <@row>
+      <@cell class="${styles.grid_large}9">
+        In a cell
+      </@cell>
+    </@row>
+    <@row class=["+", "test-additional-row-class-1", "test-additional-row-class-2"]>
+      <@cell class=["${styles.grid_large}9"]>
+        In a cell
+      </@cell>
+      <@cell large=3 class=["+", "test-additional-cell-class"]>
+        In a cell
+      </@cell>
+    </@row>
+    <@section title="Another section" class="+test-additional-section-class">
+      In a sub-section (auto title level increase)
+    </@section>
+    <@section title="Another section" titleClass="h6">
+      In a sub-section (manual title level to h6)
+    </@section>
+</@section>

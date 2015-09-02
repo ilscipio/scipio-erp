@@ -27,7 +27,7 @@ under the License.
   <#assign focusName = true>
 </#if>
 <center>
-  <@section title="${uiLabelMap.CommonRegistered}" addClass="login-screenlet">
+  <@section title="${uiLabelMap.CommonRegistered}" class="+login-screenlet">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
         <@table type="fields" class="basic-table" cellspacing="0">
           <@tr>

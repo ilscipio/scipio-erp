@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="PO For ${partyId!}" classes="${styles.grid_large!}6">
+<@section title="PO For ${partyId!}" class="${styles.grid_large!}6">
 
                 <@row>
                   <@cell>
@@ -37,11 +37,11 @@ under the License.
 </@section>
 
 <#-- content box -->
-<@section title="Place Holder" classes="${styles.grid_large!}3">
+<@section title="Place Holder" class="${styles.grid_large!}3">
 
 </@section>
 
       <#-- shipping info box -->
-<@section title="Place Holder" classes="${styles.grid_large!}3">
+<@section title="Place Holder" class="${styles.grid_large!}3">
 
 </@section>

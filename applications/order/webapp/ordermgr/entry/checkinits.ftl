@@ -40,7 +40,7 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
       <li><a href="javascript:document.salesentryform.submit();" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a></li>
       <li><a href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.PartyFindParty}</a></li>
 </#assign>
-<@section classes="${styles.grid_large!}9" title=sectionTitle menuHtml=menuHtml>
+<@section class="${styles.grid_large!}9" title=sectionTitle menuHtml=menuHtml>
       <form method="post" name="salesentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
       <input type="hidden" name="originOrderId" value="${parameters.originOrderId!}"/>
       <input type="hidden" name="finalizeMode" value="type"/>
@@ -99,7 +99,7 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
         <li><a href="javascript:document.poentryform.submit();" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a></li>
         <li><a href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.PartyFindParty}</a></li>
     </#assign>
-    <@section title=sectionTitle classes="${styles.grid_large!}9" menuHtml=menuHtml>
+    <@section title=sectionTitle class="${styles.grid_large!}9" menuHtml=menuHtml>
       <form method="post" name="poentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
       <input type='hidden' name='finalizeMode' value='type'/>
       <input type='hidden' name='orderMode' value='PURCHASE_ORDER'/>

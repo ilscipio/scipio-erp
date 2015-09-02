@@ -415,25 +415,25 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 <#macro field type="" label="" name="" value="" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="" postfix=false required=false items=[] autocomplete=true progressOptions={}>
+        fieldFormName="" formName="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={}>
 
 <#-- fieldIdNum will always increment throughout the page -->
-<#global fieldIdNum=(fieldIdNum!0)+1 />
+<#global fieldIdNum = (fieldIdNum!0)+1 />
 
 <#local radioSingle = (type=="radio" && !items?has_content)>
 
 <#if !id?has_content>
-    <#local id="field_id_${renderSeqNumber!}_${fieldIdNum!0}">
+    <#local id = "field_id_${renderSeqNumber!}_${fieldIdNum!0}">
 </#if>
 
 <#-- NOTE: here, "classes" is for @cell container; "class" is for input elem (not same as other macros)! 
      can't allow specify @cell container classes as-is because can't calculate from it, would need columns param as int -->
 <#local classes = "${styles.grid_large!}12"/>
-<#local columnspostfix=0/>
+<#local columnspostfix = 0/>
 <#if postfix>
-    <#local columnspostfix=1/>
-    <#local collapse=true/>
-    <#local classes="${styles.grid_small!}${12-columnspostfix}"/>
+    <#local columnspostfix = postfixSize/>
+    <#local collapse = true/>
+    <#local classes = "${styles.grid_small!}${12-columnspostfix} ${styles.grid_large!}${12-columnspostfix}"/>
 </#if>
 
 <#local class = makeClassesArg(class, "")>
@@ -452,7 +452,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
         </#if>
         
         <#if !radioSingle>
-            <@cell class=subclasses+" field-entry-title" nocells=nocells>
+            <@cell class=(subclasses+" field-entry-title")?trim nocells=nocells>
                 <#if type=="checkbox" || collapse==false>
                     <label class="form-field-label"<#if id?has_content> for="${id}"</#if>>${label}</label>
                 <#else>
@@ -461,7 +461,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
             </@cell>
         </#if>
     </#if>
-    <@cell class="${classes!}"+" field-entry-widget" nocells=nocells>
+    <@cell class=("${classes!}"+" field-entry-widget")?trim nocells=nocells>
         <#switch type>
           <#case "input">
                 <@renderTextField name=name 
@@ -629,7 +629,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
         </#switch>
      </@cell>
      <#if postfix && !nocells>
-         <@cell class="${styles.grid_small!}1">
+         <@cell class="${styles.grid_small!}${postfixSize} ${styles.grid_large!}${postfixSize}">
                 <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
          </@cell>
      </#if>

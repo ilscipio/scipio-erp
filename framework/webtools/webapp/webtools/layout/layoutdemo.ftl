@@ -269,3 +269,12 @@
       In a sub-section (manual title level to h6)
     </@section>
 </@section>
+
+<#-- javascript test; entitymaint should only appear once in output... -->
+<script language="JavaScript" type="text/javascript">
+<@requireScriptOfbizUrl "entitymaint" />
+<@requireScriptOfbizUrl "entitymaint" />
+<@requireScriptOfbizUrl "entitymaint" />
+<@requireScriptOfbizUrl "entitymaint" />
+<@requireScriptOfbizUrl "ServiceList" />
+</script>

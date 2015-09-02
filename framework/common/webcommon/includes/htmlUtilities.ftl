@@ -240,8 +240,8 @@ FIXME: #global FTL variable may not be reliable, may need to use request attrib.
     url             = controller request uri
 -->
 
-<#global requiredScriptOfbizUrls = []>
 <#macro requireScriptOfbizUrl uri htmlwrap=false>
+  <#local requiredScriptOfbizUrls = request.getAttribute("requiredScriptOfbizUrls")![]>
   <#if !requiredScriptOfbizUrls?seq_contains(uri)>
     <#if htmlwrap>
 <script language="JavaScript" type="text/javascript">
@@ -252,7 +252,9 @@ FIXME: #global FTL variable may not be reliable, may need to use request attrib.
 // -->
 </script>
     </#if>
-    <#global requiredScriptOfbizUrls = requiredScriptOfbizUrls + [uri]>
+    <#-- FIXME: inefficient -->
+    <#local requiredScriptOfbizUrls = requiredScriptOfbizUrls + [uri]>
+    <#local dummy = request.setAttribute("requiredScriptOfbizUrls", requiredScriptOfbizUrls)!>
   </#if>
 </#macro>
 

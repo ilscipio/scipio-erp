@@ -30,7 +30,7 @@ under the License.
                         <@field type="input" name="productId" label="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotFindProductId} [${productId}]" size="20" maxlength="20"/>
                     </#if>    
                 <#else>
-                    <@field type="input" name="productId" label="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProduct}" />
+                    <@field type="input" name="productId" label="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProduct}" readonly=true value=productId! />
                  </#if>
             </@cell>
         </@row>

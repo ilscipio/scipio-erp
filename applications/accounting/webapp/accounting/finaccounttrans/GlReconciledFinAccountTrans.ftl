@@ -23,11 +23,13 @@ under the License.
   <input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>
   
   <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
       <li><a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${finAccountId}&amp;glReconciliationId=${glReconciliationId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a></li>
       <#assign finAcctTransCondList = delegator.findByAnd("FinAccountTrans", {"glReconciliationId" : glReconciliationId, "statusId" : "FINACT_TRNS_CREATED"}, null, false)>
       <#if finAcctTransCondList?has_content>
         <li><a href="javascript:document.CancelBankReconciliationForm.submit();" class="${styles.button_default!}">${uiLabelMap.AccountingCancelBankReconciliation}</a></li>
       </#if>
+    </@menu>
   </#assign>
   <@section title="${uiLabelMap.AccountingCurrentBankReconciliation}">
       <#if currentGlReconciliation?has_content>

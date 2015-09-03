@@ -35,12 +35,14 @@ under the License.
 </#macro>
 
   <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
     <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
       <li><a href="<@ofbizUrl>editeftaccount?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.AccountingCreateNewEftAccount}</a></li>
       <li><a href="<@ofbizUrl>editgiftcard?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.AccountingCreateNewGiftCard}</a></li>
       <li><a href="<@ofbizUrl>editcreditcard?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.AccountingCreateNewCreditCard}</a></li>
       <li><a href="<@ofbizUrl>EditBillingAccount?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.AccountingCreateBillingAccount}</a></li>
     </#if>  
+    </@menu>
   </#assign>
   <@section id="partyPaymentMethod" title="${uiLabelMap.PartyPaymentMethodInformation}" menuHtml=menuHtml>
       <#if paymentMethodValueMaps?has_content || billingAccounts?has_content>

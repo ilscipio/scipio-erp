@@ -32,10 +32,14 @@ under the License.
 
   <#if currentCustomTimePeriod?has_content>
     <#assign menuHtml>
+      <@menu type="section" inlineItems=true>
       <li><a href="<@ofbizUrl>EditCustomTimePeriod?findOrganizationPartyId=${findOrganizationPartyId!}</@ofbizUrl>">${uiLabelMap.CommonClearCurrent}</a></li>
+      </@menu>
     </#assign>
   <#else>
-    <#assign menuHtml></#assign>
+    <#assign menuHtml>
+      <@menu type="section" inlineItems=true>  </@menu>
+</#assign>
   </#if>
   <@section title="${uiLabelMap.AccountingCurrentCustomTimePeriod}" menuHtml=menuHtml>
     <#if currentCustomTimePeriod?has_content>

@@ -31,7 +31,9 @@ under the License.
 </script>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href="<@ofbizUrl>PickMoveStockSimple?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrint}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductStockMovesNeeded}" menuHtml=menuHtml>
         <#if moveByOisgirInfoList?has_content || moveByPflInfoList?has_content>

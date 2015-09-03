@@ -19,7 +19,9 @@ under the License.
 
     <#if glAcctgTrialBalanceList?has_content>
         <#assign menuHtml>
+          <@menu type="section" inlineItems=true>
           <li><a href="<@ofbizUrl>GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}</@ofbizUrl>" target="_BLANK" class="${styles.button_default!}">${uiLabelMap.AccountingInvoicePDF}</a></li>
+          </@menu>
         </#assign>
         <@section menuHtml=menuHtml>
             <form name="glAccountTrialBalanceReport" id="glAccountTrialBalanceReport">

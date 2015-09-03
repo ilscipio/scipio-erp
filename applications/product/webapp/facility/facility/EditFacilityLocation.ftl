@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
 <#if facilityId?? && locationSeqId??>
     <li><a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacility}</a></li>
     <li><a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewFacilityLocation}</a></li>
@@ -26,6 +27,7 @@ under the License.
       <li><a href="<@ofbizUrl>FacilityLocationGeoLocation?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGeoLocation}</a></li>
     </#if>
 </#if>
+  </@menu>
 </#assign>
 <@section menuHtml=menuHtml>
 

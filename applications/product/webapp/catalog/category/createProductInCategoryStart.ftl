@@ -20,9 +20,11 @@ under the License.
 <#assign productFeaturesByTypeMap = Static["org.ofbiz.product.feature.ParametricSearch"].makeCategoryFeatureLists(productCategoryId, delegator)>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
 <#if productCategoryId?has_content>
     <li><a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.ProductBackToEditCategory}]</a></li>
 </#if>
+  </@menu>
 </#assign>
 <@section menuHtml=menuHtml>
         <form name="createProductInCategoryCheckExistingForm" method="post" action="<@ofbizUrl>CreateProductInCategoryCheckExisting</@ofbizUrl>">

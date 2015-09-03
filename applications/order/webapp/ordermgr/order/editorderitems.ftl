@@ -27,6 +27,7 @@ under the License.
 </#if>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
       <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
           <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelSelectedOrderItems</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelSelectedItems}</a></li>
@@ -34,6 +35,7 @@ under the License.
           <li><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewOrder}</a></li>
       </#if>
   </#if>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.OrderOrderItems}" menuHtml=menuHtml>
 

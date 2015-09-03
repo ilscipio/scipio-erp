@@ -17,7 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href="<@ofbizUrl>CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductCreateNewFeature}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductEditFeaturesForFeatureCategory} \"${(curProductFeatureCategory.description)!}\"" menuHtml=menuHtml>
         <form action="<@ofbizUrl>QuickAddProductFeatures</@ofbizUrl>" method="post">

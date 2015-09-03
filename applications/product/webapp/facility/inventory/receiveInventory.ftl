@@ -21,7 +21,9 @@ under the License.
 </script>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductNewFacility}</a></li>
+  </@menu>
 </#assign>
 <@section menuHtml=menuHtml>
         <#if invalidProductId??>

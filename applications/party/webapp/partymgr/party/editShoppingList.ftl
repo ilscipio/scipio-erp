@@ -18,12 +18,14 @@ under the License.
 -->
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
       <li>
         <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
           <input type="hidden" name="partyId" value="${partyId!}" />
           <a href="javascript:document.getElementById('createEmptyShoppingList').submit();" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a>
         </form>
       </li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.PartyShoppingLists}" menuHtml=menuHtml>
     <#if shoppingLists?has_content>
@@ -48,6 +50,7 @@ under the License.
 <#if shoppingList?has_content>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
       <li><a href="javascript:document.updateList.submit();" class="${styles.menu_section_itemlink!}">${uiLabelMap.CommonSave}</a></li>
       <li>
       <form method="post" name="createQuoteFromShoppingListForm" action="/ordermgr/control/createQuoteFromShoppingList">
@@ -58,6 +61,7 @@ under the License.
       </li>
       <li><a href="/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyCreateNewCustRequest}</a></li>
       <li><a href="/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" class="${styles.menu_section_itemlink!}">${uiLabelMap.OrderNewOrder}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}" menuHtml=menuHtml>
     <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
@@ -126,7 +130,9 @@ under the License.
 
 <#if childShoppingListDatas?has_content>
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
       <li><a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes</@ofbizUrl>"  class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyAddChildListsToCart}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuHtml=menuHtml>
     <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
@@ -153,7 +159,9 @@ under the License.
 </#if>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
 <#-- <li><a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyAddListToCart}</a></li> -->
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuHtml=menuHtml>
     <#if shoppingListItemDatas?has_content>

@@ -18,9 +18,11 @@ under the License.
 -->
 
   <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
     <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
       <li><a href="<@ofbizUrl>AddPartyNote?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a></li>
     </#if>
+    </@menu>
   </#assign>
   <@section id="partyNotes" title="${uiLabelMap.CommonNotes}" menuHtml=menuHtml>
       <#if notes?has_content>

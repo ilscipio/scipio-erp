@@ -40,7 +40,9 @@ under the License.
 </@section>  
   
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a class="${styles.button_default!}" href="<@ofbizUrl>ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}</@ofbizUrl>">${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductFindOrdersToPick}" menuHtml=menuHtml>
   <#if pickMoveInfoList?has_content>

@@ -18,8 +18,10 @@ under the License.
 -->
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductNewFacility}</a></li>
   <li><a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductNewFacilityLocation}</a></li>
+  </@menu>
 </#assign>
 <@section menuHtml=menuHtml>
     <form action="<@ofbizUrl>FindFacilityLocation</@ofbizUrl>" method="get" name="findFacilityLocation" class="basic-form">

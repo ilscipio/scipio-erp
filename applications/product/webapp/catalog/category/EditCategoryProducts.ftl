@@ -18,11 +18,13 @@ under the License.
 -->
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <#if activeOnly>
     <li><a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductActiveAndInactive}</a></li>
   <#else>
     <li><a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductActiveOnly}</a></li>
   </#if>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.PageTitleEditCategoryProducts}" menuHtml=menuHtml>
       <#macro categoryProductsNav>

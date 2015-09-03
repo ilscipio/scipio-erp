@@ -19,6 +19,7 @@ under the License.
 <#assign externalKeyParam = "&amp;externalLoginKey=" + requestAttributes.externalLoginKey!>
 <#assign sectionTitle>${uiLabelMap.ProductInventoryItems} ${uiLabelMap.CommonFor} <#if product??>${(product.internalName)!} </#if> [${uiLabelMap.CommonId}:${productId!}]</#assign>
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
         <#if productId?has_content>
             <li><a href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewInventoryItemProduct}</a></li>
             <#if showEmpty>
@@ -27,6 +28,7 @@ under the License.
                 <li><a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}&amp;showEmpty=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductShowEmptyItems}</a></li>
             </#if>
         </#if>
+  </@menu>
 </#assign>
 <@section title=sectionTitle menuHtml=menuHtml>
   <#if product??>

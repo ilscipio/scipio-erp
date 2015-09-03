@@ -101,6 +101,7 @@ function submitFindForm(val){
 <input type="hidden" name="viewIndex" value="${viewIndex}"/>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <#if (requestParameters.hideFields!"N") == "Y">
     <li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonShowLookupFields}</a></li>
   <#else>
@@ -108,6 +109,7 @@ function submitFindForm(val){
     <li><a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}"  class="${styles.button_default!}">${uiLabelMap.PartyLookupParty}</a></li>
     <li><a href="javascript:lookupOrders(true);"  class="${styles.button_default!}">${uiLabelMap.OrderLookupOrder}</a></li>
   </#if>
+  </@menu>
 </#assign>
 <#assign showFields = ((parameters.hideFields!"N") != "Y")>
 <@section menuHtml=menuHtml hasContent=showFields>

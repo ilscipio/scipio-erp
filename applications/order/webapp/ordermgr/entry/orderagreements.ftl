@@ -21,7 +21,9 @@ under the License.
 <form method="post" name="agreementForm" action="<@ofbizUrl>setOrderCurrencyAgreementShipDates</@ofbizUrl>">
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href="javascript:document.agreementForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.OrderOrderEntryCurrencyAgreementShipDates}" menuHtml=menuHtml>
     <@table type="fields" class="basic-table">

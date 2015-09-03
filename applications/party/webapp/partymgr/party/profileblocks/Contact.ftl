@@ -18,9 +18,11 @@ under the License.
 -->
 
   <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
     <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
       <li><a href="<@ofbizUrl>editcontactmech?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a></li>
     </#if>
+    </@menu>
   </#assign>
   <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}" menuHtml=menuHtml>
       <#if contactMeches?has_content>

@@ -17,11 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
   <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
       <#--if project?has_content>
         <li><a href="<@ofbizUrl>newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProjectMgrNotesCreateNew}</a></li>
       <#else>
         <li><a href="<@ofbizUrl>newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProjectMgrNotesCreateNew}</a></li>
       </#if-->
+    </@menu>
   </#assign>
   <@section title="${uiLabelMap.WorkEffortNotes}" menuHtml=menuHtml>
       <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>

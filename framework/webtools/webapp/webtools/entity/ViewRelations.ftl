@@ -17,7 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href="<@ofbizUrl>FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>" class="smallSubmit">${uiLabelMap.WebtoolsBackToFindScreen}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.WebtoolsRelations}">
     <#if hasViewPermission>

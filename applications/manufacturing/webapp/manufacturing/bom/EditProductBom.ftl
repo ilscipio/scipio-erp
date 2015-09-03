@@ -28,9 +28,11 @@ function lookupBom() {
 </script>
 <#assign sectionTitle>${uiLabelMap.PageTitleEditProductBom} <#if product??>${(product.internalName)!}</#if>&nbsp;[${uiLabelMap.CommonId}&nbsp;${productId!}]</#assign>
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
     <#if product?has_content>
         <li><a href="<@ofbizUrl>BomSimulation</@ofbizUrl>?productId=${productId}&amp;bomType=${productAssocTypeId}" class="${styles.button_default!}">${uiLabelMap.ManufacturingBomSimulation}</a></li>
     </#if>
+  </@menu>
 </#assign>
 <@section title=sectionTitle>
     

@@ -26,11 +26,13 @@ under the License.
 </script>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
       <#if (orderList?has_content && 0 < orderList?size)>
           <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" class="${styles.button_default!}<#if !(orderListSize > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
           <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${orderListSize}</span></li>
           <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" class="${styles.button_default!}<#if !(viewIndex > 1)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
       </#if>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.OrderOrderFound}" menuHtml=menuHtml>
     <form name="paginationForm" method="post" action="<@ofbizUrl>viewProductOrder</@ofbizUrl>">

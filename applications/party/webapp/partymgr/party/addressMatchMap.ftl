@@ -18,7 +18,9 @@ under the License.
 -->
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href="<@ofbizUrl>findAddressMatch</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PageTitleFindMatches}</a></li>
+  </@menu>
 </#assign>
 <@section id="address-match-map" title="${uiLabelMap.PageTitleCreateAddressMatchMap}" menuHtml=menuHtml>
   <@section id="addressmatchmap_create">

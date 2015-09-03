@@ -20,9 +20,11 @@ under the License.
 <#if orderHeader?has_content>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
 <#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>
   <li><a href="<@ofbizUrl>createnewnote?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderNotesCreateNew}</a></li>
 </#if>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.OrderNotes}" menuHtml=menuHtml>
       

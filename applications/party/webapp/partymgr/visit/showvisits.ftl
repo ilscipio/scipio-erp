@@ -24,11 +24,13 @@ under the License.
   </#if>
   
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
       <#if !partyId?? && showAll?lower_case == "true">
         <li><a href="<@ofbizUrl>showvisits?showAll=false</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyShowActive}</a></li>
       <#elseif !partyId??>
         <li><a href="<@ofbizUrl>showvisits?showAll=true</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyShowAll}</a></li>
       </#if>
+  </@menu>
 </#assign>
 <@section title="${sectionTitleParty}&nbsp;${uiLabelMap.PartyVisitListing}" menuHtml=menuHtml>
   <#if visitList?has_content>

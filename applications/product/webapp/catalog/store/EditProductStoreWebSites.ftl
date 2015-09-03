@@ -17,7 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewProductStoreWebSite}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.PageTitleEditProductStoreWebSites}" menuHtml=menuHtml>
         <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">

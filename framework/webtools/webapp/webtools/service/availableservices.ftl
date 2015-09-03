@@ -359,7 +359,9 @@ under the License.
   </#if>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href='<@ofbizUrl>${url}</@ofbizUrl>' class="smallSubmit">${uiLabelMap.CommonListAll}</a></li>
+  </@menu>
 </#assign>
 <@section menuHtml=menuHtml>
       <#--

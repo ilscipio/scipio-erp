@@ -208,24 +208,32 @@ under the License.
   <#-- new question / category -->
   <#if requestParameters.newCategory?default("N") == "Y">
     <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionCategory}</#assign>
-    <#assign menuHtml>  
+    <#assign menuHtml>
+      <@menu type="section" inlineItems=true>  
       <li><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}</a></li>
+      </@menu>
     </#assign>
   <#else>
     <#if surveyQuestionId?has_content>
       <#assign sectionTitle>${uiLabelMap.CommonEdit} ${uiLabelMap.ContentSurveyQuestion}</#assign>
-      <#assign menuHtml>  
+      <#assign menuHtml>
+        <@menu type="section" inlineItems=true>  
         <li><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}</a></li>
+        </@menu>
       </#assign>
     <#else>
       <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestion}</#assign>
-      <#assign menuHtml>  
+      <#assign menuHtml>
+        <@menu type="section" inlineItems=true>  
+        </@menu>
       </#assign>
     </#if>
 
     <#assign menuHtml>
+      <@menu type="section" inlineItems=true>
       ${menuHtml}
       <li><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}</a></li>
+      </@menu>
     </#assign>
   </#if>
 <@section title=sectionTitle menuHtml=menuHtml>
@@ -267,11 +275,15 @@ under the License.
 
     <#if !surveyQuestionOption?has_content>
       <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionOption}</#assign>
-      <#assign menuHtml></#assign>
+      <#assign menuHtml>
+        <@menu type="section" inlineItems=true>  </@menu>
+</#assign>
     <#else>
       <#assign sectionTitle>${uiLabelMap.ContentSurveyEditQuestionOption}</#assign>
       <#assign menuHtml>
+        <@menu type="section" inlineItems=true>
         <li><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]</a></li>
+        </@menu>
       </#assign>
     </#if>
 <@section title=sectionTitle menuHtml=menuHtml>

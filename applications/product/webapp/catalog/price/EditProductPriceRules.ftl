@@ -17,7 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductFindRule}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductGlobalPriceRule}" menuHtml=menuHtml>
         <@table type="fields" cellspacing="0" class="basic-table">

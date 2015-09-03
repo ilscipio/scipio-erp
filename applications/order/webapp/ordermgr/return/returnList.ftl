@@ -18,7 +18,9 @@ under the License.
 -->
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <li><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateReturn}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.OrderReturnsCurrent}" menuHtml=menuHtml>
 <#if returnList?has_content>

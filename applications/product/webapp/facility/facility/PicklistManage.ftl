@@ -25,11 +25,13 @@ under the License.
 </script>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
       <#if (picklistInfoList?has_content && 0 < picklistInfoList?size)>
           <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" class="${styles.button_default!}<#if !(picklistCount > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
           <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${picklistCount}</span></li>
           <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" class="${styles.button_default!}<#if !(viewIndex > 0)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
       </#if>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductPicklistManage}" menuHtml=menuHtml>
 

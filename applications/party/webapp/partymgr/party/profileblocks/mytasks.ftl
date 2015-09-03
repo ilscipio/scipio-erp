@@ -21,7 +21,9 @@ under the License.
 <#setting time_zone = timeZone.getID()>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
     <li><a href="/workeffort/control/EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION" class="${styles.button_default!}">${uiLabelMap.WorkEffortNewTask}</a></li>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.WorkEffortMyCurrentTaskList}" menuHtml=menuHtml>
 

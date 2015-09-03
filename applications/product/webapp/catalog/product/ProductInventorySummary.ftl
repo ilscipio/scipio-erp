@@ -17,11 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
   <#if parameters.showAllFacilities??>
     <li><a href="EditProductInventoryItems?productId=${productId}" class="${styles.button_default!}">${uiLabelMap.ProductShowProductFacilities}</a></li>
   <#else>
     <li><a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="${styles.button_default!}">${uiLabelMap.ProductShowAllFacilities}</a></li>
   </#if>
+  </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductInventorySummary}" menuHtml=menuHtml>
   <#if product??>

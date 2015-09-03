@@ -238,8 +238,10 @@ function submitForm(form, mode, value) {
 </@section>
 
 <#assign menuHtml>
+  <@menu type="section" inlineItems=true>
       <a href="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
       <a href="<@ofbizUrl>setBilling</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a>
+  </@menu>
 </#assign>
 <@section menuHtml=menuHtml>
 </@section>

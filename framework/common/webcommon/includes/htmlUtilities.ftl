@@ -2063,7 +2063,12 @@ items only).
                       text, not nested content.
                       TODO: clarify nested content usage (because may have nested menus?)
     href            = content link, for "link" type
-    contentClick    = onClick (for content elem)
+    ofbizHref       = for link, convenience attrib, wraps url in <@ofbizUrl></@ofbizUrl> before
+                      setting as href
+    fullPath,
+    secure,
+    encode          = options for ofbizHref
+    onClick         = onClick (for content elem)
     disabled        = whether disabled
 -->
 <#-- type="link|text|submit" class=true text="" href="javascript:void(0);" onClick="" -->
@@ -2074,8 +2079,12 @@ items only).
   <#local contentClass = inlineArgs.contentClass!args.contentClass!true>
   <#local contentId = inlineArgs.contentId!args.contentId!"">
   <#local text = inlineArgs.text!args.text!"">
-  <#local href = inlineArgs.href!args.href!"javascript:void(0);">
-  <#local contentClick = inlineArgs.contentClick!args.contentClick!"">
+  <#local href = inlineArgs.href!args.href!true>
+  <#local ofbizHref = inlineArgs.ofbizHref!args.ofbizHref!false>
+  <#local fullPath = inlineArgs.fullPath!args.fullPath!false>
+  <#local secure = inlineArgs.secure!args.secure!false>
+  <#local encode = inlineArgs.encode!args.encode!true>
+  <#local onClick = inlineArgs.onClick!args.onClick!"">
   <#local disabled = inlineArgs.disabled!args.disabled!false>
   <#t>
   <#local menuType = (catoCurrentMenuInfo.type)!"">
@@ -2101,11 +2110,20 @@ items only).
        I removed <#nested> for now. use text attrib. -->
   <li<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt>
     <#if type == "link">
+      <#if ofbizHref?is_string>
+        <#-- ofbiz kludge -->
+        <#if fullPath?is_boolean><#local fullPath = fullPath?c></#if>
+        <#if secure?is_boolean><#local secure = secure?c></#if>
+        <#if encode?is_boolean><#local encode = encode?c></#if>
+        <#local href><@ofbizUrl fullPath=fullPath secure=secure encode=encode>${ofbizHref}</@ofbizUrl></#local>
+      <#elseif !href?is_string>
+        <#local href = "javascript:void(0);">
+      </#if>
       <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}</#if></a>
     <#elseif type == "text">
-      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}</#if></span>
+      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if text?has_content>${text}</#if></span>
     <#elseif type == "submit">
-      <input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if> value="<#if text?has_content>${text}</#if>"<#if disabled> disabled="disabled"</#if> />
+      <input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if> value="<#if text?has_content>${text}</#if>"<#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> />
     <#else>
       <#if text?has_content>${text}</#if>
     </#if>

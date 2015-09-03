@@ -108,7 +108,7 @@ under the License.
 
         <field name="salesDiscWhenNotAvail" title="${uiLabelMap.ProductSalesDiscontinuationNotAvailable}">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
-            </field>
+        </field>
         <field position="1" name="requirementMethodEnumId" title="${uiLabelMap.ProductRequirementMethodEnumId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -1361,7 +1361,7 @@ under the License.
     <form name="OutstandingPurchaseOrders" type="list" list-name="purchaseOrders"
         odd-row-style="alternate-row" default-table-style="basic-table">
         <field name="orderDate"><display/></field>
-        <field name="orderId" widget-style="${styles.button_default}" widget-style="${styles.button_default}">
+        <field name="orderId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${orderId}" target="/ordermgr/control/orderview" target-type="inter-app">
                 <parameter param-name="orderId"/>
             </hyperlink>

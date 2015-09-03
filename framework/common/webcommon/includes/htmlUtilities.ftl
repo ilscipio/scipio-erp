@@ -2103,9 +2103,9 @@ items only).
     <#if type == "link">
       <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}</#if></a>
     <#elseif type == "text">
-      <span<#if contentClasses?has_content> class="${contentClasses}</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}</#if></span>
+      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}</#if></span>
     <#elseif type == "submit">
-      <input type="submit"<#if contentClasses?has_content> class="${contentClasses}</#if><#if contentId?has_content> id="${contentId}"</#if>> value="<#if text?has_content>${text}</#if>" />
+      <input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if> value="<#if text?has_content>${text}</#if>"<#if disabled> disabled="disabled"</#if> />
     <#else>
       <#if text?has_content>${text}</#if>
     </#if>

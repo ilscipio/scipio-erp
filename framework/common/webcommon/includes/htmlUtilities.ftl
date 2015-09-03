@@ -1956,8 +1956,6 @@ TODO: document better if needed
 *************
 * Menu
 ************
-TODO: WIP!!!
-
 Menu macro, mainly intended for small inline menu definitions in templates, but can substitute for widget menu
 definitions if needed, to a limited extent, though not intended to replace.
 It can be used in two forms:
@@ -1985,23 +1983,26 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
     items           = list of hashes, where each hash contains arguments representing a menu item,
                       same as @menuitem macro parameters.
                       alternatively, the items can be specified as nested content.
-    sort[By/Desc]    = items sorting behavior; will only work if items are specified
-                       through items list of hashes, currently does not apply to 
-                       nested items. if true, sorts by text, or sortBy can specify a menu item arg to sort by.
-                       normally case-insensitive.
+    sort[By/Desc]   = items sorting behavior; will only work if items are specified
+                      through items list of hashes, currently does not apply to 
+                      nested items. if true, sorts by text, or sortBy can specify a menu item arg to sort by.
+                      normally case-insensitive.
+    nestedFirst     = default false, if true, use nested items before items list, otherwise items list always first.
+                      usually use only one of alternatives but versatile.
 -->
 <#-- type="" inline=true class=true items=true sortBy=false sortIgnoreCase=true -->
 <#macro menu args={} inlineArgs...>
   <#local type = inlineArgs.type!args.type!"">
   <#local inlineItems = inlineArgs.inlineItems!args.inlineItems!false>
   <#local class = inlineArgs.class!args.class!true>
-  <#local id = inlineArgs.id!args.id!true>
+  <#local id = inlineArgs.id!args.id!"">
   <#local items = inlineArgs.items!args.items!true>
   <#local sortBy = inlineArgs.sortBy!args.sortBy!false>
   <#local sortDesc = inlineArgs.sortDesc!args.sortDesc!false>
+  <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
   <#t>
-  <#local prevMenuInfo = catoCurrentMenuInfo!"">
-  <#local prevMenuItemIndex = catoCurrentMenuItemIndex!"">
+  <#local prevMenuInfo = catoCurrentMenuInfo!>
+  <#local prevMenuItemIndex = catoCurrentMenuItemIndex!>
   <#global catoCurrentMenuInfo = {"type":type}>
   <#global catoCurrentMenuItemIndex = 0>
   <#t>
@@ -2011,6 +2012,9 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
     <ul<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>>
   </#if>
   <#if !(items?is_boolean && items == false)>
+    <#if nestedFirst>
+        <#nested>
+    </#if>
     <#if items?is_sequence>
       <#if (sortBy?is_boolean && sortBy == true)>
         <#local sortBy = "text">
@@ -2025,7 +2029,9 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
         <@menuitem args=item />
       </#list>
     </#if>
+    <#if !nestedFirst>
         <#nested>
+    </#if>
   </#if>
   <#if !inlineItems>
     </ul>
@@ -2054,7 +2060,7 @@ items only).
                       text, not nested content.
                       TODO: clarify nested content usage (because may have nested menus?)
     href            = content link, for "link" type
-    contentClick    = onClick, for content elem
+    contentClick    = onClick (for content elem)
     disabled        = whether disabled
 -->
 <#-- type="link|text|submit" class=true text="" href="javascript:void(0);" onClick="" -->
@@ -2088,16 +2094,17 @@ items only).
     <#local contentClasses = (contentClasses + " disabled")?trim>
     <#local href = "javascript:void(0);">
   </#if>
-  <#-- TODO: clarify nested content usage, may have nested menus, not just text... -->
+  <#-- TODO: clarify nested content usage, may have nested menus, not just text...
+       I removed <#nested> for now. use text attrib. -->
   <li<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt>
     <#if type == "link">
-      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}<#else><#nested></#if></a>
+      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}</#if></a>
     <#elseif type == "text">
-      <span<#if contentClasses?has_content> class="${contentClasses}</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}<#else><#nested></#if></span>
+      <span<#if contentClasses?has_content> class="${contentClasses}</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}</#if></span>
     <#elseif type == "submit">
-      <input type="submit"<#if contentClasses?has_content> class="${contentClasses}</#if><#if contentId?has_content> id="${contentId}"</#if>> value="<#if text?has_content>${text}<#else><#nested></#if>" />
+      <input type="submit"<#if contentClasses?has_content> class="${contentClasses}</#if><#if contentId?has_content> id="${contentId}"</#if>> value="<#if text?has_content>${text}</#if>" />
     <#else>
-      <#if text?has_content>${text}<#else><#nested></#if>
+      <#if text?has_content>${text}</#if>
     </#if>
   </li><#lt>
   <#global catoCurrentMenuItemIndex = catoCurrentMenuItemIndex + 1>

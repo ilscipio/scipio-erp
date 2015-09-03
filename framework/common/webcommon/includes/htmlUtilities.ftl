@@ -1983,9 +1983,11 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
     items           = list of hashes, where each hash contains arguments representing a menu item,
                       same as @menuitem macro parameters.
                       alternatively, the items can be specified as nested content.
-    sort[By/Desc]   = items sorting behavior; will only work if items are specified
+    sort,
+    sortBy,
+    sortDesc        = items sorting behavior; will only work if items are specified
                       through items list of hashes, currently does not apply to 
-                      nested items. if true, sorts by text, or sortBy can specify a menu item arg to sort by.
+                      nested items. by default, sorts by text, or sortBy can specify a menu item arg to sort by.
                       normally case-insensitive.
     nestedFirst     = default false, if true, use nested items before items list, otherwise items list always first.
                       usually use only one of alternatives but versatile.
@@ -1997,7 +1999,8 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#local class = inlineArgs.class!args.class!true>
   <#local id = inlineArgs.id!args.id!"">
   <#local items = inlineArgs.items!args.items!true>
-  <#local sortBy = inlineArgs.sortBy!args.sortBy!false>
+  <#local sort = inlineArgs.sort!args.sort!false>
+  <#local sortBy = inlineArgs.sortBy!args.sortBy!"">
   <#local sortDesc = inlineArgs.sortDesc!args.sortDesc!false>
   <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
   <#t>
@@ -2016,10 +2019,10 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
         <#nested>
     </#if>
     <#if items?is_sequence>
-      <#if (sortBy?is_boolean && sortBy == true)>
+      <#if sort && (!sortBy?has_content)>
         <#local sortBy = "text">
       </#if>
-      <#if sortBy?is_string || sortBy?is_sequence>
+      <#if sortBy?has_content>
         <#local items = items?sort_by(sortBy)>
         <#if sortDesc>
           <#local items = items?reverse>

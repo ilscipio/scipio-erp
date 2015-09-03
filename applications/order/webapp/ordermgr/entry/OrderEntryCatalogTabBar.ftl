@@ -29,8 +29,8 @@ under the License.
         </#if>
     </#assign>
     <@section title=sectionTitle>
-        <ul class="${styles.button_group!}">
+        <@menu type="button">
             <li><a href="<@ofbizUrl>orderentry</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderOrderItems}</a></li>
-    </ul>
+    </@menu>
     </@section>
 </#if>

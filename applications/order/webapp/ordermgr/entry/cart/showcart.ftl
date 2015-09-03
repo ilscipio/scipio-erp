@@ -33,13 +33,13 @@ under the License.
 </#if>
 
 
-<ul class="${styles.button_group!}">
+<@menu type="button">
     <li><a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="${styles.button_default!}">${uiLabelMap.OrderQuickLookup}</a></li>
     <li><a href="javascript:quicklookupGiftCertificate()" class="${styles.button_default!}">${uiLabelMap.OrderAddGiftCertificate}</a></li>
   <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>
         <li><a href="javascript:showQohAtp()" class="${styles.button_default!}">${uiLabelMap.ProductAtpQoh}</a></li>
   </#if>
-</ul>
+</@menu>
 
 <@section title="${uiLabelMap.CommonCreate} ${uiLabelMap.OrderOrder}">
       <#if shoppingCart.getOrderType() == "SALES_ORDER">

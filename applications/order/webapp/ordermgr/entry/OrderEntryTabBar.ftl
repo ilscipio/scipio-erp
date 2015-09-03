@@ -28,7 +28,7 @@ under the License.
 
 
 <@section>   
-      <ul class="${styles.button_group!}">
+      <@menu type="button">
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <#if shoppingCart.getOrderPartyId() == "_NA_" || (shoppingCart.size() = 0)>
           <li><a href="" class="${styles.button_default!} disabled">${uiLabelMap.OrderFinalizeOrder}</a></li>
@@ -55,5 +55,5 @@ under the License.
         <li><a href="" class="${styles.button_default!} disabled">${uiLabelMap.OrderRemoveSelected}</a></li>
       </#if>
       <li><a href="<@ofbizUrl>emptycart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderClearOrder}</a></li>
-    </ul>
+    </@menu>
 </@section>

@@ -22,10 +22,10 @@ under the License.
     <@row>
     <@cell class="${styles.grid_large!}6 ${styles.grid_cell!}">
       <#macro actionMenu>
-        <ul class="${styles.button_group!}">
+        <@menu type="button">
           <li><a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
           <li><a href="javascript:document.sendConfirmationForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSend}</a></li>
-        </ul>
+        </@menu>
       </#macro>
       
       <@actionMenu />

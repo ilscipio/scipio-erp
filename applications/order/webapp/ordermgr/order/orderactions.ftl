@@ -1,7 +1,7 @@
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
 <#-- ${uiLabelMap.OrderActions}-->
 <@section>
-      <ul class="${styles.button_group!}">
+      <@menu type="button">
         <#if security.hasEntityPermission("FACILITY", "_CREATE", session) && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
           <#-- Special shipment options -->
           <#if orderHeader.orderTypeId == "SALES_ORDER">
@@ -135,10 +135,10 @@
         </#if>
         <li><a href="<@ofbizUrl>OrderHistory?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewOrderHistory}</a></li>
         <li><a href="<@ofbizUrl>order.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">PDF</a></li>
-      </ul>
+      </@menu>
       
       
-      <ul class="${styles.button_group!}">
+      <@menu type="button">
                 <#if currentStatus.statusId == "ORDER_APPROVED" && orderHeader.orderTypeId == "SALES_ORDER">
                   <li><a href="javascript:document.PrintOrderPickSheet.submit()" class="${styles.button_default!}">${uiLabelMap.FormFieldTitle_printPickSheet}</a>
                   <form name="PrintOrderPickSheet" method="post" action="<@ofbizUrl>orderPickSheet.pdf</@ofbizUrl>" target="_BLANK">
@@ -206,7 +206,7 @@
                   </form>
                   </li>
                 </#if>
-            </ul>
+            </@menu>
       
     </@section>
 </#if>

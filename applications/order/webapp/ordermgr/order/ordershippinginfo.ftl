@@ -52,9 +52,9 @@ under the License.
   <#if parameters.view?has_content && parameters.view = "OISGA">
   <#-- New in Ofbiz 14.12 -->
   <@section title="${uiLabelMap.OrderShipmentInformation}">
-        <ul class="${styles.button_group!}">
+        <@menu type="button">
            <li><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderShipmentInformationByOISG}</a></li>
-        </ul>
+        </@menu>
         
     <div>
       <@table type="data-complex" cellspacing="0" class="basic-table" role="grid">
@@ -211,14 +211,14 @@ under the License.
   <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
     <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}">
-       <ul class="${styles.button_group!}">
+       <@menu type="button">
          <#--<li class="expanded"><a onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" title="Collapse">&nbsp;</a></li>-->
          <li><a target="_BLANK" class="${styles.button_default!}" href="<@ofbizUrl>shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}</@ofbizUrl>">${uiLabelMap.OrderShipGroup} PDF</a></li>
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>
            <li><a href="<@ofbizUrl>orderview?orderId=${orderId}&amp;view=OISGA</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderShipmentInformationByOrderItem}</a></li>
          </#if>
-       </ul>
+       </@menu>
 
     <div id="ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}">
           <form name="updateOrderItemShipGroup" method="post" action="<@ofbizUrl>updateShipGroupShipInfo</@ofbizUrl>">

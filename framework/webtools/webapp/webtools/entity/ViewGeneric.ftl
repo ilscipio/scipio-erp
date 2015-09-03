@@ -39,7 +39,7 @@ function ShowTab(lname) {
 </script>-->
 <@section title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}">
 
-    <ul class="${styles.button_group!}">
+    <@menu type="button">
       <li><a href='<@ofbizUrl>FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.WebtoolsBackToFindScreen}</a></li>
       <#if enableEdit = "false">
         <#if hasCreatePermission>
@@ -52,7 +52,7 @@ function ShowTab(lname) {
           </#if>
         </#if>
       </#if>
-    </ul>
+    </@menu>
     <br/>
     <@nav type="magellan">
         <#if value?has_content><@mli arrival="xml-view"><a href="#xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</a></@mli></#if>

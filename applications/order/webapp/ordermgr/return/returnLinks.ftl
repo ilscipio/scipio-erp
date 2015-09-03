@@ -18,13 +18,13 @@ under the License.
 -->
 <#assign selected = tabButtonItem?default("void")>
 <#if returnHeader??>
-    <ul class="${styles.menu_button!}">
+    <@menu type="button">
       <li<#if selected="OrderReturnHeader"> class="selected"</#if>><a href="<@ofbizUrl>returnMain?returnId=${returnId!}</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.OrderReturnHeader}</a></li>
       <li<#if selected="OrderReturnItems"> class="selected"</#if>><a href="<@ofbizUrl>returnItems?returnId=${returnId!}</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.OrderReturnItems}</a></li>
       <li<#if selected="OrderReturnHistory"> class="selected"</#if>><a href="<@ofbizUrl>ReturnHistory?returnId=${returnId!}</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.OrderReturnHistory}</a></li>
-    </ul>
+    </@menu>
   <#if selected != "OrderReturnHistory">
-    <ul class="${styles.menu_button!} button-style-1">
+    <@menu type="button" class="+button-style-1">
       <li><a href="<@ofbizUrl>return.pdf?returnId=${returnId!}</@ofbizUrl>" target="_BLANK" class="${styles.menu_button_itemlink!}">PDF</a></li>
       <#if returnId??>
         <#assign returnItems = delegator.findByAnd("ReturnItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("returnId", returnId, "returnTypeId", "RTN_REFUND"), null, false)/>
@@ -58,7 +58,7 @@ under the License.
           </#if>
         </#if>
       </#if>
-    </ul>
+    </@menu>
   </#if>
 <#else>
   <@heading>${uiLabelMap.OrderCreateNewReturn}</@heading>

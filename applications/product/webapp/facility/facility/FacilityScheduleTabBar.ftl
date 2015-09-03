@@ -19,8 +19,8 @@ under the License.
 <#assign selected = scheduleTabButtonItem?default("void")>
 
 <#if facilityId?has_content>
-    <ul class="${styles.menu_tab!}">
+    <@menu type="tab">
         <li<#if selected="ScheduleTabButton"> class="selected"</#if>><a href="<@ofbizUrl>ScheduleShipmentRouteSegment?facilityId=${facilityId}</@ofbizUrl>" class="${styles.menu_tab_itemlink!}">${uiLabelMap.ProductSchedule}</a></li>
         <li<#if selected="LabelsTabButton"> class="selected"</#if>><a href="<@ofbizUrl>Labels?facilityId=${facilityId}</@ofbizUrl>" class="${styles.menu_tab_itemlink!}">${uiLabelMap.ProductLabels}</a></li>
-    </ul> 
+    </@menu> 
 </#if>

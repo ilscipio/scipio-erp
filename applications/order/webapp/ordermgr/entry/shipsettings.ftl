@@ -28,9 +28,9 @@ under the License.
             <input type="hidden" name="finalizeReqShipGroups" value="true"/>
             </#if>
           
-        <ul class="${styles.button_group!}">
+        <@menu type="button">
           <li><a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateShipGroup}</a></li>
-      </ul>         
+      </@menu>         
 
 
 <#list 1..cart.getShipGroupSize() as currIndex>
@@ -149,10 +149,10 @@ under the License.
             <#if (cart.getShipGroupSize() > 1)>
             <input type="hidden" name="finalizeReqShipGroups" value="true"/>
             </#if>
-    <ul class="${styles.button_group!}">
+    <@menu type="button">
         <li><a href="<@ofbizUrl>setShipping?createNewShipGroup=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}</a></li>
         <li><a href="<@ofbizUrl>EditShipAddress</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateShippingAddress}</a></li>
-    </ul> 
+    </@menu> 
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
 

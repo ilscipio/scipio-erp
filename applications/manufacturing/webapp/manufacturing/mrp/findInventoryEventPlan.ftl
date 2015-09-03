@@ -102,11 +102,11 @@ document.lookupinventory.productId.focus();
             <@td width="50%">
              <div class="boxhead" align="right">
                <#if 0 < listSize>
-                <ul class="${styles.button_group!}">
+                <@menu type="button">
                   <li><a href="<@ofbizUrl>FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="${styles.button_default!}<#if !(0 < viewIndex)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
                   <li><span class="text-entry">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span></li>
                   <li><a href="<@ofbizUrl>FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="${styles.button_default!}<#if !(highIndex < listSize)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
-                </ul>
+                </@menu>
               </#if>
             </div>
           </@td>

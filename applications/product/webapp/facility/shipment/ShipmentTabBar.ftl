@@ -21,7 +21,7 @@ under the License.
 </#if>
 <#assign selected = tabButtonItem?default("void")>
 <#if shipmentId?has_content>
-    <ul class="${styles.menu_tab!}">
+    <@menu type="tab">
             <li<#if selected="ViewShipment"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.CommonView}</a></li>
             <li<#if selected="EditShipment"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>EditShipment?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.CommonEdit}</a></li>
         <#if (shipment.shipmentTypeId)?? && shipment.shipmentTypeId = "PURCHASE_RETURN">
@@ -38,5 +38,5 @@ under the License.
             <li<#if selected="EditShipmentPlan"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>EditShipmentPlan?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.ProductOrderItems}</a></li>
             <li<#if selected="ViewShipmentReceipts"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>ViewShipmentReceipts?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.ProductShipmentReceipts}</a></li>
         </#if>
-    </ul>
+    </@menu>
 </#if>

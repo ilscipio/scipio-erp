@@ -30,14 +30,14 @@ under the License.
       <#if invoiceIds?? && invoiceIds?has_content>
         <div>
           <span>${uiLabelMap.AccountingInvoices}:</span>
-          <ul class="${styles.button_group!}">
+          <@menu type="button">
             <#list invoiceIds as invoiceId>
               <li>
                 ${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="${styles.button_default!}">${invoiceId}</a>
                 (<a href="/accounting/control/invoice.pdf?invoiceId=${invoiceId}${StringUtil.wrapString(externalKeyParam)}" target="_blank" class="${styles.button_default!}">PDF</a>)
               </li>
             </#list>
-          </ul>
+          </@menu>
         </div>
       </#if>
     </#if>

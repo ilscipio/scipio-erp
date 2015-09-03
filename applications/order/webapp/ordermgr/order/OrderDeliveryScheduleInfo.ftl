@@ -19,11 +19,11 @@ under the License.
 
 <#if hasPermission>
 <@section title="${uiLabelMap.OrderScheduleDelivery}">
-      <ul class="${styles.button_group!}">
+      <@menu type="button">
         <#if orderId??>
           <li><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewOrder}</a></li>
         </#if>
-      </ul>
+      </@menu>
         <#if orderId?has_content>
           ${updatePODeliveryInfoWrapper.renderFormString(context)}
         <#else>

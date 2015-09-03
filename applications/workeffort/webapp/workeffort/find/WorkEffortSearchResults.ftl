@@ -29,11 +29,11 @@ under the License.
 
     <#macro paginateWorkEfforts>
       <#if (0 < listSize?int)>
-        <ul class="${styles.button_group!}">
+        <@menu type="button">
           <li><a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}<#if !(0 < viewIndex?int)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
           <li><span class="text-entry">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span></li>
           <li><a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}<#if !(highIndex?int < listSize?int)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
-        </ul>
+        </@menu>
       </#if>
     </#macro>
     

@@ -22,7 +22,7 @@ under the License.
   <ul>
     <li>
       <h2>${uiLabelMap.ExampleApplication}</h2>
-      <ul class="${styles.menu_main!}">
+      <@menu type="main">
       <#if userLogin?has_content>
         <li <#if selected = "${uiLabelMap.ExampleExample}"> class="selected"</#if>><a href="<@ofbizUrl>FindExample?portalPageId=${uiLabelMap.ExampleExample}</@ofbizUrl>" class="${styles.menu_main_itemlink!}">${uiLabelMap.ExampleExample}</a></li>
         <li <#if selected = "${uiLabelMap.ExampleFeature}"> class="selected"</#if>><a href="<@ofbizUrl>FindExampleFeature?portalPageId=${uiLabelMap.ExampleFeature}</@ofbizUrl>" class="${styles.menu_main_itemlink!}">${uiLabelMap.ExampleFeature}</a></li>
@@ -37,7 +37,7 @@ under the License.
         </#if>
         <li class="opposed"><a href="<@ofbizUrl>ManagePortalPages?parentPortalPageId=EXAMPLE</@ofbizUrl>" class="${styles.menu_main_itemlink!}">${uiLabelMap.CommonDashboard}</a></li>
       </#if>
-      </ul>
+      </@menu>
     </li>
   </ul>
 </div>

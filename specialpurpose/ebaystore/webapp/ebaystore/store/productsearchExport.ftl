@@ -206,7 +206,7 @@ under the License.
     <@table type="generic" class="basic-table" cellspacing="0">
         <@tr><@td>
         <#if addItemObj?has_content>
-                    <ul class="${styles.menu_button!}">
+                    <@menu type="button">
                        <#assign id = 1>
                        <#if contentList?has_content>
                            <#list contentList as content>
@@ -218,7 +218,7 @@ under the License.
                                  <#assign id = id+1>
                            </#list>
                        </#if>
-                    </ul>
+                    </@menu>
         <#assign addItemList = addItemObj.itemListing!>
         <#if addItemList?has_content>
             <#list addItemList as addItemObj>
@@ -554,7 +554,7 @@ under the License.
                              <@section title="Listing Type">
                                        <!--  set  listing type, duration, prices --> 
                                     <div id="tabs">
-                                        <ul class="${styles.menu_button!}">
+                                        <@menu type="button">
                                            <#assign id = 1>
                                            <#assign tabName = "">
                                            <#list listingTypes as listingType>
@@ -566,7 +566,7 @@ under the License.
                                                     <#assign id = id + 1>
                                                </#if>
                                             </#list>
-                                        </ul>
+                                        </@menu>
                                     </div>
                                     <div id="tabscontent">
                                        <#assign id = 1>

@@ -17,7 +17,7 @@
   under the License.
   -->
   
-<ul class="${styles.button_group!}">
+<@menu type="button">
   <#if (arraySize > 0)>
         <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexFirst>
         <li><a href="javascript:nextPrevDocumentList('${url}');" class="${styles.button_default!}<#if !(viewIndex > 0)> disabled</#if>">${uiLabelMap.CommonFirst}</a></li>
@@ -29,7 +29,7 @@
         <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexLast>|
         <li><a href="javascript:nextPrevDocumentList('${url}');" class="${styles.button_default!}<#if !(arraySize > highIndex)> disabled</#if>">${uiLabelMap.CommonLast}</a></li>
   </#if>
-</ul>
+</@menu>
 
 <hr />
 

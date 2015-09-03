@@ -18,7 +18,7 @@ under the License.
 -->
 <@row>
     <@cell>
-    <ul class="${styles.menu_subtab!}">
+    <@menu type="subtab">
         <li><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="${styles.menu_subtab_itemlink!} success">${uiLabelMap.ProductNewProduct}</a></li>
         <#if product?has_content>
             <li><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>?product_id=${productId!}" class="${styles.menu_subtab_itemlink!} success">${uiLabelMap.ProductNewVirtualProduct}</a></li>
@@ -30,6 +30,6 @@ under the License.
             <li><a href="javascript:expandAll(true);" class="${styles.menu_subtab_itemlink!}">${uiLabelMap.CommonExpandAll}</a></li>
             <li><a href="javascript:expandAll(false);" class="${styles.menu_subtab_itemlink!}">${uiLabelMap.CommonCollapseAll}</a></li>
         </#if>-->
-    </ul>
+    </@menu>
     </@cell>
 </@row>

@@ -33,11 +33,11 @@ under the License.
 
   <#else>
     <@section title="${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
-        <ul class="${styles.button_group!}">
+        <@menu type="button">
           <li><a href="<@ofbizUrl>${url}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonListAll}</a></li>
           <li><a href="<@ofbizUrl>/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.WebtoolsSchedule}</a></li>
           <li><a href="<@ofbizUrl>/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PageTitleRunService}</a></li>
-        </ul>
+        </@menu>
 
     <#-- Show a little form for exportServiceEoModelBundle -->
     <@row>

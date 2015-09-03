@@ -241,9 +241,28 @@
     </@table>
 </@section>
 
+<@section title="Menus">
+<@menu type="button">
+  <@menuitem type="link" text="Menu Button 1" />
+  <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
+  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.color_green}"/>
+</@menu>
+
+<#assign menuItems = [
+  {"type":"link", "text":"Menu Tab 2", "disabled":true},
+  {"type":"link", "text":"Menu Tab 1"},
+  {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.color_green}"},
+  {"type":"text", "text":"Menu Tab 3 (text entry)"}
+  {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true}
+]>
+<@menu type="button" items=menuItems sort=true sortDesc=true/>
+</@section>
+
 <#-- The titleStyle usage here is a demo of what can be set in <label style="..." /> in screens,
      usually don't need in @section macro. See outputted markup for results. -->
-<@section title="Macro demo" titleClass="heading+3:+test-additional-section-title-class">
+<@section title="Macro Test">
+    <@section title="Nested section title" titleClass="heading+2:+test-additional-section-title-class">
+    </@section>
     <@row class="+test-additional-row-class">
       <@cell class="+test-additional-cell-class">
         In a cell

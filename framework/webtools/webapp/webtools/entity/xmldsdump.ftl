@@ -22,19 +22,19 @@ under the License.
 <p>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</p>
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
-  <ul class="${styles.menu_button!}">
+  <@menu type="button">
     <li><a href="<@ofbizUrl>xmldsrawdump</@ofbizUrl>" class="${styles.menu_button_itemlink!}" target="_blank">Click Here to Get Data (or save to file)</a></li>
-  </ul>
+  </@menu>
 <#else>
     <@alert type="error">You do not have permission to use this page (ENTITY_MAINT needed)</@alert>
 </#if>
 <#else>
 <#macro displayButtonBar>
-  <ul class="${styles.menu_button!}">
+  <@menu type="button">
     <li><input type="submit" value="${uiLabelMap.WebtoolsExport}"/></li>
     <li><a href="<@ofbizUrl>xmldsdump?checkAll=true</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.WebtoolsCheckAll}</a></li>
     <li><a href="<@ofbizUrl>xmldsdump</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.WebtoolsUnCheckAll}</a></li>
-  </ul>
+  </@menu>
 </#macro>
 
 <@heading>${uiLabelMap.PageTitleEntityExport}</@heading>

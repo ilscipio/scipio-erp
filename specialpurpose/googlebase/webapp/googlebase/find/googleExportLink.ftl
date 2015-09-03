@@ -36,7 +36,7 @@ under the License.
 
 <#if productIds?has_content>
     <hr />
-    <ul class="${styles.menu_button!}>      
+    <@menu type="button">
         <li><a href="javascript:exportToGoogle();" class="${styles.menu_button_itemlink!}">${uiLabelMap.GoogleBaseExportToGoogle}</a></li>
-    </ul>
+    </@menu>
 </#if>

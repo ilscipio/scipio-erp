@@ -295,7 +295,7 @@ under the License.
         <@td>${partyDate.createdDate!}</@td>
         <@td>${partyDate.lastModifiedDate!}</@td>
         <@td class="button-col">
-          <ul class="${styles.button_group!}">
+          <@menu type="button">
           <li><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDetails}</a></li>
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
           <li><form name="searchorders_o_${rowCount}" method="post" action="/ordermgr/control/searchorders">
@@ -312,7 +312,7 @@ under the License.
           <li><a href="/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}" class="${styles.button_default!}">${uiLabelMap.OrderNewOrder}</a></li>
           <li><a href="/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}" class="${styles.button_default!}">${uiLabelMap.OrderNewQuote}</a></li>
       </#if>
-          </ul>
+          </@menu>
         </@td>
       </@tr>
       <#assign rowCount = rowCount + 1>

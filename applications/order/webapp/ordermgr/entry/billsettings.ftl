@@ -38,9 +38,9 @@ function makeExpDate() {
     <@row>
         <@cell class="${styles.grid_large!}6">
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
-         <ul class="${styles.button_group!}">
+         <@menu type="button">
            <li><a href="<@ofbizUrl>setBilling?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a></li>
-         </ul>
+         </@menu>
         
           <#-- initial screen when we have a associated party -->
           <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">

@@ -647,7 +647,7 @@ target="facility"
                                     </#if>
                                 </@td>
                                 <@td>
-                                    <ul class="${styles.button_group!}">
+                                    <@menu type="button">
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
                                             <#list downloadContents as downloadContent>
@@ -660,7 +660,7 @@ target="facility"
                                             <li><a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>"
                                                target="_orderImage" class="${styles.button_default!}">${uiLabelMap.OrderViewImage}</a></li>
                                         </#if>
-                                      </ul>
+                                      </@menu>
                                 </@td>
                             </#if>
                         </@tr>

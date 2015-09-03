@@ -27,13 +27,13 @@ under the License.
 <@section id="minicart" title="${uiLabelMap.OrderCartSummary}">
         <#if (shoppingCartSize > 0)>
           <#macro cartLinks>
-            <ul class="${styles.button_group!}">
+            <@menu type="button">
               <li><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewCart}</a></li>
               <li><a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCheckout}</a></li>
               <li><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCheckoutQuick}</a></li>
               <li><a href="<@ofbizUrl>onePageCheckout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceOnePageCheckout}</a></li>
               <li><a href="<@ofbizUrl>googleCheckout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceCartToGoogleCheckout}</a></li>
-            </ul>
+            </@menu>
           </#macro>
         
           <#if hidetoplinks?default("N") != "Y">

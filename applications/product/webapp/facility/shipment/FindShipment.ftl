@@ -35,10 +35,10 @@ function lookupShipments() {
                 <li><a href="<@ofbizUrl>quickShipOrder?facilityId=${requestParameters.facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductQuickShipOrder}</a></li>
             </#if>
             <li><a href="<@ofbizUrl>EditShipment</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewShipment}</a></li>
-            <li><a href="javascript:lookupShipments();" class="${styles.button_default!}">${uiLabelMap.ProductFindShipment}</a></li>
+            <#--<li><a href="javascript:lookupShipments();" class="${styles.button_default!}">${uiLabelMap.ProductFindShipment}</a></li>-->
   </@menu>
 </#assign>
-<@section id="findOrders" title="${uiLabelMap.ProductFindShipmentTitle}" menuHtml=menuHtml>
+<@section id="findOrders" menuHtml=menuHtml> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->
         <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
             <@table type="fields" cellspacing="0" cellpadding="2" class="basic-table">
@@ -143,6 +143,12 @@ function lookupShipments() {
                   </@table>
                 </@td>
               </@tr>
+              
+              <@tfoot>
+              <@tr>
+                <@td colspan=3><a href="javascript:lookupShipments();" class="${styles.button_default!}">${uiLabelMap.ProductFindShipment}</a></@td>
+              </@tr>
+              </@tfoot>
             </@table>
         </form>
 </@section>

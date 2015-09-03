@@ -230,7 +230,7 @@ under the License.
                                   </#if>
                               </@td>
                               <@td>
-                                    <ul class="${styles.button_group!}">
+                                    <@menu type="button">
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
                                             <#list downloadContents as downloadContent>
@@ -243,7 +243,7 @@ under the License.
                                             <li><a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>"
                                                target="_orderImage" class="${styles.button_default!}">${uiLabelMap.OrderViewImage}</a></li>
                                         </#if>
-                                      </ul>
+                                      </@menu>
                             </@td>
                           </#if>
                         </@tr>
@@ -307,13 +307,13 @@ under the License.
                                     </@td>
                                     <@td colspan="3"></@td>
                                     <@td>
-                                      <ul class="${styles.button_group!}">
+                                      <@menu type="button">
                                         <#if itemSelectable>
                                               <li>
                                                   <a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" class="${styles.button_default!} alert">${uiLabelMap.CommonCancel} ${uiLabelMap.CommonItem}</a>
                                               </li>
                                         </#if>
-                                      </ul>
+                                      </@menu>
                                     </@td>
                                 </@tr>
                               <#else>
@@ -360,9 +360,9 @@ under the License.
                 <@tr>
                         <@td colspan="6">&nbsp;</@td>
                     <@td>
-                            <ul class="${styles.button_group!}">
+                            <@menu type="button">
                                 <li><input type="submit" value="${uiLabelMap.OrderUpdateItems}" class="${styles.button_default!}"/></li>
-                            </ul>
+                            </@menu>
                     </@td>
                 </@tr>
                     

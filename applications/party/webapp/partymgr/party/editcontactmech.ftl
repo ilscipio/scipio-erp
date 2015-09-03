@@ -250,13 +250,13 @@ under the License.
   </@table>
   </div>
   
-  <ul class="${styles.button_group!}">
+  <@menu type="button">
     <li><a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
     <li><a href="javascript:document.editcontactmechform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a></li>
-  </ul>
+  </@menu>
   </@section>
 <#else>
-  <ul class="${styles.button_group!}">
+  <@menu type="button">
     <li><a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
-  </ul>
+  </@menu>
 </#if>

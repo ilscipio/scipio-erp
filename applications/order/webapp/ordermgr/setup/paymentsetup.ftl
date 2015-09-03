@@ -20,9 +20,9 @@ under the License.
 <#-- TODO: Convert hard-coded text to UI label properties -->
 
 <#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
-  <ul class="${styles.menu_button!} button-style-1">
+  <@menu type="button" class="+button-style-1">
     <li><a href="<@ofbizUrl>paysetup</@ofbizUrl>" class="${styles.menu_button_itemlink!} selected">Payment&nbsp;Setup</a></li>
-  </ul>
+  </@menu>
 </#if>
 
 <#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>

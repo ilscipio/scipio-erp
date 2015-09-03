@@ -38,11 +38,11 @@ under the License.
           <#if productId?has_content>
             <#local productString = "&amp;productId=" + productId>
           </#if>
-          <ul class="${styles.button_group!}">
+          <@menu type="button">
             <li><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="${styles.button_default!}<#if (viewIndex <= 0)> disabled</#if>">[${uiLabelMap.CommonPrevious}]</a></li>
             <li>${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</li>
             <li><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}</@ofbizUrl>" class="${styles.button_default!}<#if (listSize <= highIndex)> disabled</#if>">[${uiLabelMap.CommonNext}]</a></li>
-          </ul>
+          </@menu>
         </#macro>
         
         <#if (listSize > 0)>

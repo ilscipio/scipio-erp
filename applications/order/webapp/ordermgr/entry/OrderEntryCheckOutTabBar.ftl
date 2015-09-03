@@ -31,7 +31,7 @@ under the License.
 </#assign>
 
 <@section title=sectionTitle>
-      <ul class="${styles.button_group!}">
+      <@menu type="button">
       <#list checkoutSteps?reverse as checkoutStep>
         <#assign stepUiLabel = uiLabelMap.get(checkoutStep.label)>
         <#if checkoutStep.enabled == "N">
@@ -45,5 +45,5 @@ under the License.
       <#else>
         <li><a href="<@ofbizUrl>processorder</@ofbizUrl>" class="${styles.button_default!} alert">${uiLabelMap.OrderCreateOrder}</a></li>
       </#if>
-    </ul>
+    </@menu>
 </@section>

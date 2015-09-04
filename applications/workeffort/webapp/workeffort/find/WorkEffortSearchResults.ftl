@@ -30,9 +30,9 @@ under the License.
     <#macro paginateWorkEfforts>
       <#if (0 < listSize?int)>
         <@menu type="button">
-          <li><a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}<#if !(0 < viewIndex?int)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
-          <li><span class="text-entry">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span></li>
-          <li><a href="<@ofbizUrl>WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}<#if !(highIndex?int < listSize?int)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
+          <@menuitem type="link" ofbizHref="WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N" text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex?int)) />
+          <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
+          <@menuitem type="link" ofbizHref="WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N" text="${uiLabelMap.CommonNext}" disabled=(!(highIndex?int < listSize?int)) />
         </@menu>
       </#if>
     </#macro>

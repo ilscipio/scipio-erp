@@ -22,7 +22,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-  <li><a href="javascript:document.agreementForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a></li>
+  <@menuitem type="link" href="javascript:document.agreementForm.submit()" text="${uiLabelMap.CommonContinue}" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.OrderOrderEntryCurrencyAgreementShipDates}" menuHtml=menuHtml>

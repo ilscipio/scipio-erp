@@ -103,7 +103,7 @@ function submitFindForm(val){
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
   <#if (requestParameters.hideFields!"N") == "Y">
-    <li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonShowLookupFields}</a></li>
+    <@menuitem type="link" href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" text="${uiLabelMap.CommonShowLookupFields}" />
   <#else>
     <#if orderList??><li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields!"Y"}.submit()"  class="${styles.button_default!}">${uiLabelMap.CommonHideFields}</a></li></#if>
     <li><a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}"  class="${styles.button_default!}">${uiLabelMap.PartyLookupParty}</a></li>

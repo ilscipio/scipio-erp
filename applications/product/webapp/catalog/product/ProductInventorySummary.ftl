@@ -19,9 +19,9 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
   <#if parameters.showAllFacilities??>
-    <li><a href="EditProductInventoryItems?productId=${productId}" class="${styles.button_default!}">${uiLabelMap.ProductShowProductFacilities}</a></li>
+    <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductShowProductFacilities}" />
   <#else>
-    <li><a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="${styles.button_default!}">${uiLabelMap.ProductShowAllFacilities}</a></li>
+    <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" text="${uiLabelMap.ProductShowAllFacilities}" />
   </#if>
   </@menu>
 </#assign>

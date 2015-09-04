@@ -20,7 +20,7 @@ under the License.
   <#assign menuHtml>
     <@menu type="section" inlineItems=true>
         <#--if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
-          <li><a href="<@ofbizUrl>editcontactmech?partyId=${partyId}</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.CommonCreateNew}</a></li>
+          <@menuitem type="link" ofbizHref="editcontactmech?partyId=${partyId}" text="${uiLabelMap.CommonCreateNew}" />
         </#if-->
     </@menu>
   </#assign>

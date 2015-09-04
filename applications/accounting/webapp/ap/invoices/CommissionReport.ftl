@@ -20,7 +20,7 @@ under the License.
 <#if commissionReportList?has_content>
   <#assign menuHtml>
     <@menu type="section" inlineItems=true>
-    <li><a href="<@ofbizUrl>CommissionReport.pdf?isSearch=Y&amp;productId=${parameters.productId!}&amp;partyId=${parameters.partyId!}&amp;fromDate=${parameters.fromDate!}&amp;thruDate=${parameters.thruDate!}</@ofbizUrl>" target="_BLANK" class="${styles.button_default!}">${uiLabelMap.AccountingInvoicePDF}</a></li>
+    <@menuitem type="link" ofbizHref="CommissionReport.pdf?isSearch=Y&amp;productId=${parameters.productId!}&amp;partyId=${parameters.partyId!}&amp;fromDate=${parameters.fromDate!}&amp;thruDate=${parameters.thruDate!}" text="${uiLabelMap.AccountingInvoicePDF}" target="_BLANK" />
     </@menu>
   </#assign>
   <@section menuHtml=menuHtml>

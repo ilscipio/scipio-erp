@@ -37,7 +37,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-      <li><a href="<@ofbizUrl>${createUrl}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.CommonCreateNew}</a></li>
+      <@menuitem type="link" ofbizHref="${createUrl}" text="${uiLabelMap.CommonCreateNew}" contentClass="+create" />
 <#if partyList?has_content>    
   <#if hideFields == "Y">
       <li class="collapsed"><a href="<@ofbizUrl>findparty?hideFields=N&amp;sortField=${sortField!}${paramList}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonShowLookupFields}</a></li>
@@ -296,7 +296,7 @@ under the License.
         <@td>${partyDate.lastModifiedDate!}</@td>
         <@td class="button-col">
           <@menu type="button">
-          <li><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDetails}</a></li>
+          <@menuitem type="link" ofbizHref="viewprofile?partyId=${partyRow.partyId}" text="${uiLabelMap.CommonDetails}" />
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
           <li><form name="searchorders_o_${rowCount}" method="post" action="/ordermgr/control/searchorders">
             <input type="hidden" name="lookupFlag" value="Y" />
@@ -306,11 +306,11 @@ under the License.
             <input type="hidden" name="viewSize" value="20" />
             <a href="javascript:document.searchorders_o_${rowCount}.submit()" class="${styles.button_default!}">${uiLabelMap.OrderOrders}</a>
           </form></li>
-          <li><a href="/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}" class="${styles.button_default!}">${uiLabelMap.OrderOrderQuotes}</a></li>
+          <@menuitem type="link" href="/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderOrderQuotes}" />
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-          <li><a href="/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}" class="${styles.button_default!}">${uiLabelMap.OrderNewOrder}</a></li>
-          <li><a href="/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}" class="${styles.button_default!}">${uiLabelMap.OrderNewQuote}</a></li>
+          <@menuitem type="link" href="/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderNewOrder}" />
+          <@menuitem type="link" href="/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderNewQuote}" />
       </#if>
           </@menu>
         </@td>

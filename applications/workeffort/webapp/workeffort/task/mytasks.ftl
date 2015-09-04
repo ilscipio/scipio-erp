@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-  <li><a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.WorkEffortNewTask}</a></li>
+  <@menuitem type="link" ofbizHref="EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION" text="${uiLabelMap.WorkEffortNewTask}" contentClass="+create" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.PageTitleViewActivityAndTaskList}" menuHtml=menuHtml>

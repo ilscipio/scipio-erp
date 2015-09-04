@@ -22,7 +22,7 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
 <#if productCategoryId?has_content>
-    <li><a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.ProductBackToEditCategory}]</a></li>
+    <@menuitem type="link" ofbizHref="EditCategory?productCategoryId=${productCategoryId}" text="[${uiLabelMap.ProductBackToEditCategory}]" />
 </#if>
   </@menu>
 </#assign>

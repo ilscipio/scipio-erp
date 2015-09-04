@@ -26,7 +26,7 @@ under the License.
         <#else>
           <#assign listParam = "">
         </#if>
-        <li><a href="<@ofbizUrl>editShoppingList?partyId=${partyId}${listParam}</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.CommonEdit}</a></li>
+        <@menuitem type="link" ofbizHref="editShoppingList?partyId=${partyId}${listParam}" text="${uiLabelMap.CommonEdit}" />
       </#if>
       </@menu>
     </#assign>

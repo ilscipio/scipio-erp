@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-  <li><a href="<@ofbizUrl>FindProductPriceRules</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductFindRule}</a></li>
+  <@menuitem type="link" ofbizHref="FindProductPriceRules" text="${uiLabelMap.ProductFindRule}" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductGlobalPriceRule}" menuHtml=menuHtml>

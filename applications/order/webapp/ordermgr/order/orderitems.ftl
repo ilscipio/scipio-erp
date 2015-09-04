@@ -651,11 +651,11 @@ target="facility"
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
                                             <#list downloadContents as downloadContent>
-                                                <li><a href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ContentDownload}</a></li>
+                                                <@menuitem type="link" href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" text="${uiLabelMap.ContentDownload}" target="_blank" />
                                             </#list>
                                         </#if>
-                                        <li><a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ProductCatalog}</a></li>
-                                        <li><a href="/ecommerce/control/product?product_id=${productId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.OrderEcommerce}</a></li>
+                                        <@menuitem type="link" href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCatalog}" target="_blank" />
+                                        <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId}" text="${uiLabelMap.OrderEcommerce}" target="_blank" />
                                         <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
                                             <li><a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>"
                                                target="_orderImage" class="${styles.button_default!}">${uiLabelMap.OrderViewImage}</a></li>

@@ -21,7 +21,7 @@ under the License.
   <@menu type="section" inlineItems=true>
   <li><a href='<@ofbizUrl>authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
   <#if (mechMap.contactMechTypeId)?has_content && (mechMap.contactMech)?has_content>
-    <li><a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewContactMech}</a></li>
+    <@menuitem type="link" ofbizHref="EditContactMech?facilityId=${facilityId}" text="${uiLabelMap.ProductNewContactMech}" />
   </#if>
   </@menu>
 </#assign>

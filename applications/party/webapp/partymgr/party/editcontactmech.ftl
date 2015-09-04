@@ -251,12 +251,12 @@ under the License.
   </div>
   
   <@menu type="button">
-    <li><a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
-    <li><a href="javascript:document.editcontactmechform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a></li>
+    <@menuitem type="link" ofbizHref="backHome" text="${uiLabelMap.CommonGoBack}" />
+    <@menuitem type="link" href="javascript:document.editcontactmechform.submit()" text="${uiLabelMap.CommonSave}" />
   </@menu>
   </@section>
 <#else>
   <@menu type="button">
-    <li><a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
+    <@menuitem type="link" ofbizHref="backHome" text="${uiLabelMap.CommonGoBack}" />
   </@menu>
 </#if>

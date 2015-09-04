@@ -28,11 +28,11 @@ under the License.
         <#if (shoppingCartSize > 0)>
           <#macro cartLinks>
             <@menu type="button">
-              <li><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewCart}</a></li>
-              <li><a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCheckout}</a></li>
-              <li><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCheckoutQuick}</a></li>
-              <li><a href="<@ofbizUrl>onePageCheckout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceOnePageCheckout}</a></li>
-              <li><a href="<@ofbizUrl>googleCheckout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceCartToGoogleCheckout}</a></li>
+              <@menuitem type="link" ofbizHref="view/showcart" text="${uiLabelMap.OrderViewCart}" />
+              <@menuitem type="link" ofbizHref="checkoutoptions" text="${uiLabelMap.OrderCheckout}" />
+              <@menuitem type="link" ofbizHref="quickcheckout" text="${uiLabelMap.OrderCheckoutQuick}" />
+              <@menuitem type="link" ofbizHref="onePageCheckout" text="${uiLabelMap.EcommerceOnePageCheckout}" />
+              <@menuitem type="link" ofbizHref="googleCheckout" text="${uiLabelMap.EcommerceCartToGoogleCheckout}" />
             </@menu>
           </#macro>
         

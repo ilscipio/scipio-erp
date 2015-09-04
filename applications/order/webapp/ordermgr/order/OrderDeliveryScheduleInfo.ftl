@@ -21,7 +21,7 @@ under the License.
 <@section title="${uiLabelMap.OrderScheduleDelivery}">
       <@menu type="button">
         <#if orderId??>
-          <li><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewOrder}</a></li>
+          <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}" text="${uiLabelMap.OrderViewOrder}" />
         </#if>
       </@menu>
         <#if orderId?has_content>

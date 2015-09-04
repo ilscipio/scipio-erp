@@ -32,10 +32,10 @@ function lookupShipments() {
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
             <#if requestParameters.facilityId?has_content>
-                <li><a href="<@ofbizUrl>quickShipOrder?facilityId=${requestParameters.facilityId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductQuickShipOrder}</a></li>
+                <@menuitem type="link" ofbizHref="quickShipOrder?facilityId=${requestParameters.facilityId}" text="${uiLabelMap.ProductQuickShipOrder}" />
             </#if>
-            <li><a href="<@ofbizUrl>EditShipment</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewShipment}</a></li>
-            <#--<li><a href="javascript:lookupShipments();" class="${styles.button_default!}">${uiLabelMap.ProductFindShipment}</a></li>-->
+            <@menuitem type="link" ofbizHref="EditShipment" text="${uiLabelMap.ProductNewShipment}" />
+            <#--<@menuitem type="link" href="javascript:lookupShipments();" text="${uiLabelMap.ProductFindShipment}" />-->
   </@menu>
 </#assign>
 <@section id="findOrders" menuHtml=menuHtml> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->
@@ -158,7 +158,7 @@ function lookupShipments() {
   <@menu type="section" inlineItems=true>
             <#if (0 < shipmentList?size)>
                 <li><a href="<#if !(viewIndex > 1)>javascript:void(0);<#else><@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y</@ofbizUrl></#if>" class="nav-previous ${styles.button_default!}<#if !(viewIndex > 1)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
-                <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${shipmentList?size}</span></li>
+                <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${shipmentList?size}" />
                 <li><a href="<#if !(shipmentList?size > highIndex)>javascript:void(0);<#else><@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y</@ofbizUrl></#if>" class="nav-next ${styles.button_default!}<#if !(shipmentList?size > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
             </#if>
   </@menu>

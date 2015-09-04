@@ -51,7 +51,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-      <li><a href="javascript:document.updateList.submit();" class="${styles.menu_section_itemlink!}">${uiLabelMap.CommonSave}</a></li>
+      <@menuitem type="link" href="javascript:document.updateList.submit();" text="${uiLabelMap.CommonSave}" />
       <li>
       <form method="post" name="createQuoteFromShoppingListForm" action="/ordermgr/control/createQuoteFromShoppingList">
         <input type= "hidden" name= "applyStorePromotions" value= "N"/>
@@ -59,8 +59,8 @@ under the License.
       </form>
       <a href="javascript:document.createQuoteFromShoppingListForm.submit()" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyCreateNewQuote}</a>
       </li>
-      <li><a href="/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyCreateNewCustRequest}</a></li>
-      <li><a href="/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" class="${styles.menu_section_itemlink!}">${uiLabelMap.OrderNewOrder}</a></li>
+      <@menuitem type="link" href="/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" text="${uiLabelMap.PartyCreateNewCustRequest}" />
+      <@menuitem type="link" href="/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" text="${uiLabelMap.OrderNewOrder}" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}" menuHtml=menuHtml>
@@ -160,7 +160,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-<#-- <li><a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyAddListToCart}</a></li> -->
+<#-- <@menuitem type="link" ofbizHref="addListToCart?shoppingListId=${shoppingList.shoppingListId}" text="${uiLabelMap.PartyAddListToCart}" /> -->
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuHtml=menuHtml>

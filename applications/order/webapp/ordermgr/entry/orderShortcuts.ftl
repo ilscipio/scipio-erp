@@ -22,26 +22,26 @@ under the License.
 <@section title="${uiLabelMap.OrderOrderShortcuts}">
         <@menu type="button">
             <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-              <li><a href="<@ofbizUrl>RequirementsForSupplier</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderRequirements}</a></li>
+              <@menuitem type="link" ofbizHref="RequirementsForSupplier" text="${uiLabelMap.OrderRequirements}" />
             </#if>
             <#if shoppingCart.getOrderType()?has_content && shoppingCart.items()?has_content>
-              <li><a href="<@ofbizUrl>createQuoteFromCart?destroyCart=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateQuoteFromCart}</a></li>
-              <li><a href="<@ofbizUrl>FindQuoteForCart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderOrderQuotes}</a></li>
+              <@menuitem type="link" ofbizHref="createQuoteFromCart?destroyCart=Y" text="${uiLabelMap.OrderCreateQuoteFromCart}" />
+              <@menuitem type="link" ofbizHref="FindQuoteForCart" text="${uiLabelMap.OrderOrderQuotes}" />
             </#if>
             <#if shoppingCart.getOrderType() == "SALES_ORDER">
-              <li><a href="<@ofbizUrl>createCustRequestFromCart?destroyCart=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateCustRequestFromCart}</a></li>
+              <@menuitem type="link" ofbizHref="createCustRequestFromCart?destroyCart=Y" text="${uiLabelMap.OrderCreateCustRequestFromCart}" />
             </#if>
-            <li><a href="/partymgr/control/findparty?${externalKeyParam!}" class="${styles.button_default!}">${uiLabelMap.PartyFindParty}</a></li>
+            <@menuitem type="link" href="/partymgr/control/findparty?${externalKeyParam!}" text="${uiLabelMap.PartyFindParty}" />
             <#if shoppingCart.getOrderType() == "SALES_ORDER">
-              <li><a href="<@ofbizUrl>setCustomer</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PartyCreateNewCustomer}</a></li>
+              <@menuitem type="link" ofbizHref="setCustomer" text="${uiLabelMap.PartyCreateNewCustomer}" />
             </#if>
-            <li><a href="<@ofbizUrl>checkinits</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PartyChangeParty}</a></li>
+            <@menuitem type="link" ofbizHref="checkinits" text="${uiLabelMap.PartyChangeParty}" />
             <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
-               <li><a href="/catalog/control/EditProduct?${externalKeyParam!}" target="catalog" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewProduct}</a></li>
+               <@menuitem type="link" href="/catalog/control/EditProduct?${externalKeyParam!}" target="catalog" text="${uiLabelMap.ProductCreateNewProduct}" />
             </#if>
-            <li><a href="<@ofbizUrl>quickadd</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderQuickAdd}</a></li>
+            <@menuitem type="link" ofbizHref="quickadd" text="${uiLabelMap.OrderQuickAdd}" />
             <#if shoppingLists??>
-              <li><a href="<@ofbizUrl>viewPartyShoppingLists?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PageTitleShoppingList}</a></li>
+              <@menuitem type="link" ofbizHref="viewPartyShoppingLists?partyId=${partyId}" text="${uiLabelMap.PageTitleShoppingList}" />
             </#if>
         </@menu>
 </@section>

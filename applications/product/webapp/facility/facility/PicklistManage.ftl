@@ -27,9 +27,9 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
       <#if (picklistInfoList?has_content && 0 < picklistInfoList?size)>
-          <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" class="${styles.button_default!}<#if !(picklistCount > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
-          <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${picklistCount}</span></li>
-          <li><a href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" class="${styles.button_default!}<#if !(viewIndex > 0)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
+          <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" text="${uiLabelMap.CommonNext}" disabled=(!(picklistCount > highIndex)) />
+          <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${picklistCount}" />
+          <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 0)) />
       </#if>
   </@menu>
 </#assign>

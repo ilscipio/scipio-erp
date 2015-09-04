@@ -117,7 +117,7 @@ under the License.
 
     <menu name="rootTemplateLine" menu-container-style="button-bar button-style-1" default-menu-item-name="content"
         selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
-        <menu-item name="edit-inplace" title="${contentName}[${contentId}]" widget-style="h2">
+        <menu-item name="edit-inplace" title="${contentName}[${contentId}]" widget-style="+h2">
             <link target="EditRootCompDoc">
                 <parameter param-name="rootContentId"/>
                 <parameter param-name="contentRevisionSeqId" from-field="rootContentRevisionSeqId"/>
@@ -246,7 +246,7 @@ under the License.
     </menu>
 
     <menu name="rootInstanceLine" menu-container-style="button-bar button-style-1" default-menu-item-name="content" selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
-        <menu-item name="edit-inplace" title="${instanceContent.contentName}[${instanceContent.contentId}]"  widget-style="h2">
+        <menu-item name="edit-inplace" title="${instanceContent.contentName}[${instanceContent.contentId}]"  widget-style="+h2">
             <link target="EditRootCompDoc">
                 <parameter param-name="rootContentId"/>
                 <parameter param-name="contentRevisionSeqId" from-field="rootContentRevisionSeqId"/>

@@ -32,7 +32,7 @@ under the License.
       <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
           <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelSelectedOrderItems</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelSelectedItems}</a></li>
           <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelAllItems}</a></li>
-          <li><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewOrder}</a></li>
+          <@menuitem type="link" ofbizHref="orderview?${paramString}" text="${uiLabelMap.OrderViewOrder}" />
       </#if>
   </#if>
   </@menu>
@@ -234,14 +234,13 @@ under the License.
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
                                             <#list downloadContents as downloadContent>
-                                                <li><a href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ContentDownload}</a></li>
+                                                <@menuitem type="link" href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" text="${uiLabelMap.ContentDownload}" target="_blank" />
                               </#list>
                             </#if>
-                                        <li><a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ProductCatalog}</a></li>
-                                        <li><a href="/ecommerce/control/product?product_id=${productId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.OrderEcommerce}</a></li>
+                                        <@menuitem type="link" href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCatalog}" target="_blank" />
+                                        <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId}" text="${uiLabelMap.OrderEcommerce}" target="_blank" />
                                         <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
-                                            <li><a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>"
-                                               target="_orderImage" class="${styles.button_default!}">${uiLabelMap.OrderViewImage}</a></li>
+                                            <li><a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.button_default!}">${uiLabelMap.OrderViewImage}</a></li>
                                         </#if>
                                       </@menu>
                             </@td>
@@ -309,9 +308,7 @@ under the License.
                                     <@td>
                                       <@menu type="button">
                                         <#if itemSelectable>
-                                              <li>
-                                                  <a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" class="${styles.button_default!} alert">${uiLabelMap.CommonCancel} ${uiLabelMap.CommonItem}</a>
-                                              </li>
+                                              <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" class="${styles.button_default!} alert">${uiLabelMap.CommonCancel} ${uiLabelMap.CommonItem}</a></li>
                                         </#if>
                                       </@menu>
                                     </@td>

@@ -22,7 +22,7 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
 <#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>
-  <li><a href="<@ofbizUrl>createnewnote?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderNotesCreateNew}</a></li>
+  <@menuitem type="link" ofbizHref="createnewnote?${paramString}" text="${uiLabelMap.OrderNotesCreateNew}" />
 </#if>
   </@menu>
 </#assign>

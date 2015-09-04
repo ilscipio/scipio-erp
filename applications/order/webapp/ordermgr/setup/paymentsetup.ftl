@@ -21,7 +21,7 @@ under the License.
 
 <#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
   <@menu type="button" class="+button-style-1">
-    <li><a href="<@ofbizUrl>paysetup</@ofbizUrl>" class="${styles.menu_button_itemlink!} selected">Payment&nbsp;Setup</a></li>
+    <@menuitem type="link" ofbizHref="paysetup" text="Payment&nbsp;Setup" contentClass="+selected" />
   </@menu>
 </#if>
 

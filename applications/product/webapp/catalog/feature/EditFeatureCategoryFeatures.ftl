@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-  <li><a href="<@ofbizUrl>CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductCreateNewFeature}</a></li>
+  <@menuitem type="link" ofbizHref="CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}" text="${uiLabelMap.ProductCreateNewFeature}" contentClass="+create" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductEditFeaturesForFeatureCategory} \"${(curProductFeatureCategory.description)!}\"" menuHtml=menuHtml>
@@ -39,9 +39,9 @@ under the License.
             <#local productString = "&amp;productId=" + productId>
           </#if>
           <@menu type="button">
-            <li><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}</@ofbizUrl>" class="${styles.button_default!}<#if (viewIndex <= 0)> disabled</#if>">[${uiLabelMap.CommonPrevious}]</a></li>
+            <@menuitem type="link" ofbizHref="EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}" text="[${uiLabelMap.CommonPrevious}]" disabled=((viewIndex <= 0)) />
             <li>${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</li>
-            <li><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}</@ofbizUrl>" class="${styles.button_default!}<#if (listSize <= highIndex)> disabled</#if>">[${uiLabelMap.CommonNext}]</a></li>
+            <@menuitem type="link" ofbizHref="EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}" text="[${uiLabelMap.CommonNext}]" disabled=((listSize <= highIndex)) />
           </@menu>
         </#macro>
         

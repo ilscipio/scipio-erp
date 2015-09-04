@@ -35,15 +35,15 @@ under the License.
       <#list checkoutSteps?reverse as checkoutStep>
         <#assign stepUiLabel = uiLabelMap.get(checkoutStep.label)>
         <#if checkoutStep.enabled == "N">
-            <li><a href="#" class="${styles.button_default!} disabled">${stepUiLabel}</a></li>
+            <@menuitem type="link" text="${stepUiLabel}" disabled=true />
         <#else>
-            <li><a href="<@ofbizUrl>${checkoutStep.uri}</@ofbizUrl>" class="${styles.button_default!}">${stepUiLabel}</a></li>
+            <@menuitem type="link" ofbizHref="${checkoutStep.uri}" text="${stepUiLabel}" />
         </#if>
       </#list>
       <#if isLastStep == "N">
-        <li><a href="javascript:document.checkoutsetupform.submit();" class="${styles.button_default!} success">${uiLabelMap.CommonContinue}</a></li>
+        <@menuitem type="link" href="javascript:document.checkoutsetupform.submit();" text="${uiLabelMap.CommonContinue}" contentClass="+ success" />
       <#else>
-        <li><a href="<@ofbizUrl>processorder</@ofbizUrl>" class="${styles.button_default!} alert">${uiLabelMap.OrderCreateOrder}</a></li>
+        <@menuitem type="link" ofbizHref="processorder" text="${uiLabelMap.OrderCreateOrder}" contentClass="+alert" />
       </#if>
     </@menu>
 </@section>

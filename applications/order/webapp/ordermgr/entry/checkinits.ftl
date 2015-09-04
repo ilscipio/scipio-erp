@@ -38,8 +38,8 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
 </#assign>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-      <li><a href="javascript:document.salesentryform.submit();" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a></li>
-      <li><a href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.PartyFindParty}</a></li>
+      <@menuitem type="link" href="javascript:document.salesentryform.submit();" text="${uiLabelMap.CommonContinue}" />
+      <@menuitem type="link" href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.PartyFindParty}" />
   </@menu>
 </#assign>
 <@section class="${styles.grid_large!}9" title=sectionTitle menuHtml=menuHtml>
@@ -99,8 +99,8 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
     </#assign>
     <#assign menuHtml>
       <@menu type="section" inlineItems=true>
-        <li><a href="javascript:document.poentryform.submit();" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a></li>
-        <li><a href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.PartyFindParty}</a></li>
+        <@menuitem type="link" href="javascript:document.poentryform.submit();" text="${uiLabelMap.CommonContinue}" />
+        <@menuitem type="link" href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.PartyFindParty}" />
       </@menu>
     </#assign>
     <@section title=sectionTitle class="${styles.grid_large!}9" menuHtml=menuHtml>

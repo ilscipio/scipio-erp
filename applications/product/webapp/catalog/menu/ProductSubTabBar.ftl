@@ -19,16 +19,16 @@ under the License.
 <@row>
     <@cell>
     <@menu type="subtab">
-        <li><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="${styles.menu_subtab_itemlink!} success">${uiLabelMap.ProductNewProduct}</a></li>
+        <@menuitem type="link" ofbizHref="EditProduct" text="${uiLabelMap.ProductNewProduct}" contentClass="+success" />
         <#if product?has_content>
             <li><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>?product_id=${productId!}" class="${styles.menu_subtab_itemlink!} success">${uiLabelMap.ProductNewVirtualProduct}</a></li>
             <li><a href="/ecommerce/control/product?product_id=${productId!}" class="${styles.menu_subtab_itemlink!} success">${uiLabelMap.ProductProductPage}</a></li>
             <li><a href="<@ofbizUrl>ProductBarCode.pdf</@ofbizUrl>?productId=${productId!}" class="${styles.menu_subtab_itemlink!}" target="_blank">${uiLabelMap.ProductBarcode}</a></li>
         </#if>
-        <li><a href="<@ofbizUrl>EditProductTag</@ofbizUrl>" class="${styles.menu_subtab_itemlink!}">${uiLabelMap.ProductTags}</a></li>
+        <@menuitem type="link" ofbizHref="EditProductTag" text="${uiLabelMap.ProductTags}" />
         <#--<#if tabButtonItem?has_content && tabButtonItem="EditProduct">
-            <li><a href="javascript:expandAll(true);" class="${styles.menu_subtab_itemlink!}">${uiLabelMap.CommonExpandAll}</a></li>
-            <li><a href="javascript:expandAll(false);" class="${styles.menu_subtab_itemlink!}">${uiLabelMap.CommonCollapseAll}</a></li>
+            <@menuitem type="link" href="javascript:expandAll(true);" text="${uiLabelMap.CommonExpandAll}" />
+            <@menuitem type="link" href="javascript:expandAll(false);" text="${uiLabelMap.CommonCollapseAll}" />
         </#if>-->
     </@menu>
     </@cell>

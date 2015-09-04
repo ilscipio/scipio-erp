@@ -21,11 +21,11 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
         <#if productId?has_content>
-            <li><a href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewInventoryItemProduct}</a></li>
+            <@menuitem type="link" href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCreateNewInventoryItemProduct}" />
             <#if showEmpty>
-                <li><a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductHideEmptyItems}</a></li>
+                <@menuitem type="link" ofbizHref="EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductHideEmptyItems}" />
             <#else>
-                <li><a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}&amp;showEmpty=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductShowEmptyItems}</a></li>
+                <@menuitem type="link" ofbizHref="EditProductInventoryItems?productId=${productId}&amp;showEmpty=true" text="${uiLabelMap.ProductShowEmptyItems}" />
             </#if>
         </#if>
   </@menu>

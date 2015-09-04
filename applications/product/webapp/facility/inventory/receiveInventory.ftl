@@ -22,7 +22,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-  <li><a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.button_default!} create">${uiLabelMap.ProductNewFacility}</a></li>
+  <@menuitem type="link" ofbizHref="EditFacility" text="${uiLabelMap.ProductNewFacility}" contentClass="+create" />
   </@menu>
 </#assign>
 <@section menuHtml=menuHtml>

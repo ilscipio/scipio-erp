@@ -91,7 +91,7 @@
         </#if>
         <#-- Refunds/Returns for Sales Orders and Delivery Schedules -->
         <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
-          <li><a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewEditDeliveryScheduleInfo}</a></li>
+          <@menuitem type="link" ofbizHref="OrderDeliveryScheduleInfo?orderId=${orderId}" text="${uiLabelMap.OrderViewEditDeliveryScheduleInfo}" />
         </#if>
         <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session) && orderHeader.statusId == "ORDER_COMPLETED">
           <#if returnableItems?has_content>
@@ -118,9 +118,9 @@
         <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED">
           <#if orderHeader.statusId != "ORDER_COMPLETED">
             <#--
-              <li><a href="<@ofbizUrl>cancelOrderItem?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCancelAllItems}</a></li>
+              <@menuitem type="link" ofbizHref="cancelOrderItem?${paramString}" text="${uiLabelMap.OrderCancelAllItems}" />
             -->
-            <li><a href="<@ofbizUrl>editOrderItems?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderEditItems}</a></li>
+            <@menuitem type="link" ofbizHref="editOrderItems?${paramString}" text="${uiLabelMap.OrderEditItems}" />
             <li>
             <form name="createOrderItemShipGroup" method="post" action="<@ofbizUrl>createOrderItemShipGroup</@ofbizUrl>">
               <input type="hidden" name="orderId" value="${orderId}"/>
@@ -128,13 +128,13 @@
             <a href="javascript:document.createOrderItemShipGroup.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCreateShipGroup}</a>
             </li>
           </#if>
-          <li><a href="<@ofbizUrl>loadCartFromOrder?${paramString}&amp;finalizeMode=init</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateAsNewOrder}</a></li>
+          <@menuitem type="link" ofbizHref="loadCartFromOrder?${paramString}&amp;finalizeMode=init" text="${uiLabelMap.OrderCreateAsNewOrder}" />
           <#if orderHeader.statusId == "ORDER_COMPLETED">
-            <li><a href="<@ofbizUrl>loadCartForReplacementOrder?${paramString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateReplacementOrder}</a></li>
+            <@menuitem type="link" ofbizHref="loadCartForReplacementOrder?${paramString}" text="${uiLabelMap.OrderCreateReplacementOrder}" />
           </#if>
         </#if>
-        <li><a href="<@ofbizUrl>OrderHistory?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewOrderHistory}</a></li>
-        <li><a href="<@ofbizUrl>order.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">PDF</a></li>
+        <@menuitem type="link" ofbizHref="OrderHistory?orderId=${orderId}" text="${uiLabelMap.OrderViewOrderHistory}" />
+        <@menuitem type="link" ofbizHref="order.pdf?orderId=${orderId}" text="PDF" target="_blank" />
       </@menu>
       
       

@@ -23,8 +23,8 @@ under the License.
     <@cell class="${styles.grid_large!}6 ${styles.grid_cell!}">
       <#macro actionMenu>
         <@menu type="button">
-          <li><a href="<@ofbizUrl>authview/${donePage}?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGoBack}</a></li>
-          <li><a href="javascript:document.sendConfirmationForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSend}</a></li>
+          <@menuitem type="link" ofbizHref="authview/${donePage}?orderId=${orderId}" text="${uiLabelMap.CommonGoBack}" />
+          <@menuitem type="link" href="javascript:document.sendConfirmationForm.submit()" text="${uiLabelMap.CommonSend}" />
         </@menu>
       </#macro>
       

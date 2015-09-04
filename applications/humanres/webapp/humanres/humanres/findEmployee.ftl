@@ -22,10 +22,10 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
     <#if parameters.hideFields?default("N") == "Y">
-        <li><a href="<@ofbizUrl>findEmployees?hideFields=N${paramList}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonShowLookupFields}</a></li>
+        <@menuitem type="link" ofbizHref="findEmployees?hideFields=N${paramList}" text="${uiLabelMap.CommonShowLookupFields}" />
     <#else>
-    <#if partyList??><li><a href="<@ofbizUrl>findEmployees?hideFields=Y${paramList}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonHideFields}</a></li></#if>
-        <li><a href="javascript:document.lookupparty.submit();" class="${styles.button_default!}">${uiLabelMap.PartyLookupParty}</a></li>
+    <#if partyList??><@menuitem type="link" ofbizHref="findEmployees?hideFields=Y${paramList}" text="${uiLabelMap.CommonHideFields}" /></#if>
+        <@menuitem type="link" href="javascript:document.lookupparty.submit();" text="${uiLabelMap.PartyLookupParty}" />
     </#if>
   </@menu>
 </#assign>
@@ -131,7 +131,7 @@ under the License.
      <@menu type="section" inlineItems=true>
         <#if (partyListSize > 0)>
             <li><a class="nav-next" href="<@ofbizUrl>findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="${styles.button_default!}<#if !(partyListSize > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
-            <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${partyListSize}</span></li>
+            <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${partyListSize}" />
             <li><a class="nav-previous" href="<@ofbizUrl>findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="${styles.button_default!}<#if !(viewIndex > 0)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
         </#if>
      </@menu>

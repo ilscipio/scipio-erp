@@ -26,9 +26,9 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
       <#if !partyId?? && showAll?lower_case == "true">
-        <li><a href="<@ofbizUrl>showvisits?showAll=false</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyShowActive}</a></li>
+        <@menuitem type="link" ofbizHref="showvisits?showAll=false" text="${uiLabelMap.PartyShowActive}" />
       <#elseif !partyId??>
-        <li><a href="<@ofbizUrl>showvisits?showAll=true</@ofbizUrl>" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyShowAll}</a></li>
+        <@menuitem type="link" ofbizHref="showvisits?showAll=true" text="${uiLabelMap.PartyShowAll}" />
       </#if>
   </@menu>
 </#assign>

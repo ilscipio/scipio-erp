@@ -20,17 +20,17 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
   <#if activeOnly>
-    <li><a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductActiveAndInactive}</a></li>
+    <@menuitem type="link" ofbizHref="EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false" text="${uiLabelMap.ProductActiveAndInactive}" />
   <#else>
-    <li><a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductActiveOnly}</a></li>
+    <@menuitem type="link" ofbizHref="EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=true" text="${uiLabelMap.ProductActiveOnly}" />
   </#if>
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.PageTitleEditCategoryProducts}" menuHtml=menuHtml>
       <#macro categoryProductsNav>
         <@menu type="button">
-          <li><a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="${styles.button_default!}<#if (viewIndex <= 1)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
-          <li><span class="text-entry">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span></li>
+          <@menuitem type="link" ofbizHref="EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;activeOnly=${activeOnly.toString()}" text="${uiLabelMap.CommonPrevious}" disabled=((viewIndex <= 1)) />
+          <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
           <li><a class="${styles.button_default!}" href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="${styles.button_default!}<#if (listSize <= highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
         </@menu>
       </#macro>

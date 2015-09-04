@@ -23,7 +23,7 @@ under the License.
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
   <@menu type="button">
-    <li><a href="<@ofbizUrl>xmldsrawdump</@ofbizUrl>" class="${styles.menu_button_itemlink!}" target="_blank">Click Here to Get Data (or save to file)</a></li>
+    <@menuitem type="link" ofbizHref="xmldsrawdump" target="_blank" text="Click Here to Get Data (or save to file)" />
   </@menu>
 <#else>
     <@alert type="error">You do not have permission to use this page (ENTITY_MAINT needed)</@alert>
@@ -31,9 +31,9 @@ under the License.
 <#else>
 <#macro displayButtonBar>
   <@menu type="button">
-    <li><input type="submit" value="${uiLabelMap.WebtoolsExport}"/></li>
-    <li><a href="<@ofbizUrl>xmldsdump?checkAll=true</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.WebtoolsCheckAll}</a></li>
-    <li><a href="<@ofbizUrl>xmldsdump</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.WebtoolsUnCheckAll}</a></li>
+    <@menuitem type="submit" text="${uiLabelMap.WebtoolsExport}" />
+    <@menuitem type="link" ofbizHref="xmldsdump?checkAll=true" text="${uiLabelMap.WebtoolsCheckAll}" />
+    <@menuitem type="link" ofbizHref="xmldsdump" text="${uiLabelMap.WebtoolsUnCheckAll}" />
   </@menu>
 </#macro>
 

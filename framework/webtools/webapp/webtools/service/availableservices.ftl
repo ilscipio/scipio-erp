@@ -34,9 +34,9 @@ under the License.
   <#else>
     <@section title="${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
         <@menu type="button">
-          <li><a href="<@ofbizUrl>${url}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonListAll}</a></li>
-          <li><a href="<@ofbizUrl>/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.WebtoolsSchedule}</a></li>
-          <li><a href="<@ofbizUrl>/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PageTitleRunService}</a></li>
+          <@menuitem type="link" ofbizHref="${url}" text="${uiLabelMap.CommonListAll}" />
+          <@menuitem type="link" ofbizHref="/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}" text="${uiLabelMap.WebtoolsSchedule}" />
+          <@menuitem type="link" ofbizHref="/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y" text="${uiLabelMap.PageTitleRunService}" />
         </@menu>
 
     <#-- Show a little form for exportServiceEoModelBundle -->
@@ -360,7 +360,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-  <li><a href='<@ofbizUrl>${url}</@ofbizUrl>' class="smallSubmit">${uiLabelMap.CommonListAll}</a></li>
+    <li><a href="<@ofbizUrl>${url}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonListAll}</a></li>
   </@menu>
 </#assign>
 <@section menuHtml=menuHtml>

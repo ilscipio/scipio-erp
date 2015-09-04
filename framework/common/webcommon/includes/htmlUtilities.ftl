@@ -2070,6 +2070,7 @@ items only).
     encode          = options for ofbizHref
     onClick         = onClick (for content elem)
     disabled        = whether disabled
+    wrapNested      = if true, nested content is wrapped in link or span element. default false (nested outside, following).
 -->
 <#-- type="link|text|submit" class=true text="" href="javascript:void(0);" onClick="" -->
 <#macro menuitem args={} inlineArgs...>
@@ -2086,6 +2087,8 @@ items only).
   <#local encode = inlineArgs.encode!args.encode!true>
   <#local onClick = inlineArgs.onClick!args.onClick!"">
   <#local disabled = inlineArgs.disabled!args.disabled!false>
+  <#local target = inlineArgs.target!args.target!"">
+  <#local wrapNested = inlineArgs.wrapNested!args.wrapNested!false>
   <#t>
   <#local menuType = (catoCurrentMenuInfo.type)!"">
   <#t>
@@ -2119,14 +2122,15 @@ items only).
       <#elseif !href?is_string>
         <#local href = "javascript:void(0);">
       </#if>
-      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if>><#if text?has_content>${text}</#if></a>
+      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if target?has_content> target="${target}"</#if>><#if text?has_content>${text}</#if><#if wrapNested><#nested></#if></a>
     <#elseif type == "text">
-      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if text?has_content>${text}</#if></span>
+      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if text?has_content>${text}</#if><#if wrapNested><#nested></#if></span>
     <#elseif type == "submit">
-      <input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if> value="<#if text?has_content>${text}</#if>"<#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> />
+      <input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if> value="<#if text?has_content>${text}</#if>"<#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#if wrapNested><#nested></#if>
     <#else>
-      <#if text?has_content>${text}</#if>
+      <#if text?has_content>${text}</#if><#if wrapNested><#nested></#if>
     </#if>
+    <#if !wrapNested><#nested></#if>
   </li><#lt>
   <#global catoCurrentMenuItemIndex = catoCurrentMenuItemIndex + 1>
 </#macro>

@@ -250,8 +250,8 @@
 
 <#assign menuItems = [
   {"type":"link", "text":"Menu Tab 2", "disabled":true},
-  {"type":"link", "text":"Menu Tab 1"},
-  {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.color_green}"},
+  {"type":"link", "text":"Menu Tab 1", "ofbizHref":"WebtoolsLayoutDemo"},
+  {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
   {"type":"text", "text":"Menu Tab 3 (text entry)"}
   {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true}
 ]>

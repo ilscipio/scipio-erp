@@ -273,13 +273,13 @@ under the License.
                <parameter param-name="clear" value="true"/>
             </link>
         </menu-item>
-        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style=" refresh">
+        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh">
             <link target="StatsSinceStart"/>
         </menu-item>
     </menu>
 
     <menu name="StatsBinHistory" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style=" refresh">
+        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh">
             <link target="StatBinsHistory">
                <parameter param-name="statsId" from-field="parameters.statsId"/>
                <parameter param-name="type" from-field="parameters.type"/>
@@ -288,7 +288,7 @@ under the License.
     </menu>
 
     <menu name="FindCacheTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="refresh">
+        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh">
             <link target="FindUtilCache"/>
         </menu-item>
         <menu-item name="clearAll" title="${uiLabelMap.WebtoolsClearAllCaches}">
@@ -341,7 +341,7 @@ under the License.
     </menu>
     
     <menu name="LayoutDemoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="Selected" title="${uiLabelMap.CommonSelected}" widget-style="active">
+        <menu-item name="Selected" title="${uiLabelMap.CommonSelected}" widget-style="+active">
             <link target="${demoTargetUrl}">
                 <parameter param-name="demoParam1"/>
                 <parameter param-name="demoParam2"/>
@@ -355,7 +355,7 @@ under the License.
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        <menu-item name="Disabled" title="${uiLabelMap.CommonDisabled}" widget-style="disabled">
+        <menu-item name="Disabled" title="${uiLabelMap.CommonDisabled}" widget-style="+disabled">
         </menu-item>
     </menu>
     

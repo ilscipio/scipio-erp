@@ -495,18 +495,18 @@ public class ModelMenuItem extends ModelWidget {
             // Cato: support extending styles
             if (this.widgetStyle.startsWith("+")) {
                 String addStyles = this.widgetStyle.substring(1);
-                String res;
+                String inheritedStyles;
                 if (parentMenuItem != null) {
-                    res = parentMenuItem.getWidgetStyle();
+                    inheritedStyles = parentMenuItem.getWidgetStyle();
                 } else {
-                    res = this.modelMenu.getDefaultWidgetStyle();
+                    inheritedStyles = this.modelMenu.getDefaultWidgetStyle();
                 }
-                if (res != null && !res.isEmpty()) {
+                if (inheritedStyles != null && !inheritedStyles.isEmpty()) {
                     if (!addStyles.isEmpty()) {
-                        return res + " " + addStyles;
+                        return inheritedStyles + (addStyles.startsWith(" ") ? "" : " ") + addStyles;
                     }
                     else {
-                        return res;
+                        return inheritedStyles;
                     }
                 }
                 else {
@@ -528,18 +528,18 @@ public class ModelMenuItem extends ModelWidget {
             // Cato: support extending styles
             if (this.linkStyle.startsWith("+")) {
                 String addStyles = this.linkStyle.substring(1);
-                String res;
+                String inheritedStyles;
                 if (parentMenuItem != null) {
-                    res = parentMenuItem.getLinkStyle();
+                    inheritedStyles = parentMenuItem.getLinkStyle();
                 } else {
-                    res = this.modelMenu.getDefaultLinkStyle();
+                    inheritedStyles = this.modelMenu.getDefaultLinkStyle();
                 }
-                if (res != null && !res.isEmpty()) {
+                if (inheritedStyles != null && !inheritedStyles.isEmpty()) {
                     if (!addStyles.isEmpty()) {
-                        return res + " " + addStyles;
+                        return inheritedStyles + (addStyles.startsWith(" ") ? "" : " ") + addStyles;
                     }
                     else {
-                        return res;
+                        return inheritedStyles;
                     }
                 }
                 else {

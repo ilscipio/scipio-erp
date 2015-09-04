@@ -492,7 +492,24 @@ public class ModelMenuItem extends ModelWidget {
 
     public String getWidgetStyle() {
         if (!this.widgetStyle.isEmpty()) {
-            return this.widgetStyle;
+            // Cato: support extending styles
+            if (this.widgetStyle.startsWith("+")) {
+                String res;
+                if (parentMenuItem != null) {
+                    res = parentMenuItem.getWidgetStyle();
+                } else {
+                    res = this.modelMenu.getDefaultWidgetStyle();
+                }
+                if (res != null && !res.isEmpty()) {
+                    return res + " " + this.widgetStyle.substring(1);
+                }
+                else {
+                    return this.widgetStyle.substring(1);
+                }
+            }
+            else {
+                return this.widgetStyle;
+            }
         } else if (parentMenuItem != null) {
             return parentMenuItem.getWidgetStyle();
         } else {
@@ -502,7 +519,24 @@ public class ModelMenuItem extends ModelWidget {
     
     public String getLinkStyle() {
         if (!this.linkStyle.isEmpty()) {
-            return this.linkStyle;
+            // Cato: support extending styles
+            if (this.linkStyle.startsWith("+")) {
+                String res;
+                if (parentMenuItem != null) {
+                    res = parentMenuItem.getLinkStyle();
+                } else {
+                    res = this.modelMenu.getDefaultLinkStyle();
+                }
+                if (res != null && !res.isEmpty()) {
+                    return res + " " + this.linkStyle.substring(1);
+                }
+                else {
+                    return this.linkStyle.substring(1);
+                }
+            }
+            else {
+                return this.linkStyle;
+            }
         } else if (parentMenuItem != null) {
             return parentMenuItem.getLinkStyle();
         } else {

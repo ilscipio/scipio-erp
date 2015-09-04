@@ -194,9 +194,9 @@ under the License.
 </script>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <li><a href="<@ofbizUrl>clearExpListing</@ofbizUrl>?productStoreId=${productStoreId!}" class="${styles.button_default!}">Clear Listing</a></li>
+    <li><a href="<@ofbizUrl>clearExpListing?productStoreId=${productStoreId!}</@ofbizUrl>" class="${styles.button_default!}">Clear Listing</a></li>
     <#if isExportValid?? && isExportValid == "true">
-    <li><a href="<@ofbizUrl>exportListingToEbay</@ofbizUrl>?productStoreId=${productStoreId!}" class="${styles.button_default!}">Export Products Listing</a></li>
+    <li><a href="<@ofbizUrl>exportListingToEbay?productStoreId=${productStoreId!}</@ofbizUrl>" class="${styles.button_default!}">Export Products Listing</a></li>
     </#if>
   </@menu>
 </#assign>

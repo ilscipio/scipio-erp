@@ -19,9 +19,9 @@ under the License.
   <#assign menuHtml>
     <@menu type="section" inlineItems=true>
       <#--if project?has_content>
-        <li><a href="<@ofbizUrl>newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProjectMgrNotesCreateNew}</a></li>
+        <@menuitem type="link" ofbizHref="newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y" text="${uiLabelMap.ProjectMgrNotesCreateNew}" />
       <#else>
-        <li><a href="<@ofbizUrl>newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProjectMgrNotesCreateNew}</a></li>
+        <@menuitem type="link" ofbizHref="newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y" text="${uiLabelMap.ProjectMgrNotesCreateNew}" />
       </#if-->
     </@menu>
   </#assign>

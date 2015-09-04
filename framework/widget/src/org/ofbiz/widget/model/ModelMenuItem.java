@@ -494,6 +494,7 @@ public class ModelMenuItem extends ModelWidget {
         if (!this.widgetStyle.isEmpty()) {
             // Cato: support extending styles
             if (this.widgetStyle.startsWith("+")) {
+                String addStyles = this.widgetStyle.substring(1);
                 String res;
                 if (parentMenuItem != null) {
                     res = parentMenuItem.getWidgetStyle();
@@ -501,10 +502,15 @@ public class ModelMenuItem extends ModelWidget {
                     res = this.modelMenu.getDefaultWidgetStyle();
                 }
                 if (res != null && !res.isEmpty()) {
-                    return res + " " + this.widgetStyle.substring(1);
+                    if (!addStyles.isEmpty()) {
+                        return res + " " + addStyles;
+                    }
+                    else {
+                        return res;
+                    }
                 }
                 else {
-                    return this.widgetStyle.substring(1);
+                    return addStyles;
                 }
             }
             else {
@@ -521,6 +527,7 @@ public class ModelMenuItem extends ModelWidget {
         if (!this.linkStyle.isEmpty()) {
             // Cato: support extending styles
             if (this.linkStyle.startsWith("+")) {
+                String addStyles = this.linkStyle.substring(1);
                 String res;
                 if (parentMenuItem != null) {
                     res = parentMenuItem.getLinkStyle();
@@ -528,10 +535,15 @@ public class ModelMenuItem extends ModelWidget {
                     res = this.modelMenu.getDefaultLinkStyle();
                 }
                 if (res != null && !res.isEmpty()) {
-                    return res + " " + this.linkStyle.substring(1);
+                    if (!addStyles.isEmpty()) {
+                        return res + " " + addStyles;
+                    }
+                    else {
+                        return res;
+                    }
                 }
                 else {
-                    return this.linkStyle.substring(1);
+                    return addStyles;
                 }
             }
             else {

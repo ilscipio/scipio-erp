@@ -2008,7 +2008,6 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
     nestedFirst     = default false, if true, use nested items before items list, otherwise items list always first.
                       usually use only one of alternatives but versatile.
 -->
-<#-- type="" inline=true class=true items=true sortBy=false sortIgnoreCase=true -->
 <#macro menu args={} inlineArgs...>
   <#local type = inlineArgs.type!args.type!"">
   <#local inlineItems = inlineArgs.inlineItems!args.inlineItems!false>
@@ -2022,10 +2021,11 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#t>
   <#local prevMenuInfo = catoCurrentMenuInfo!>
   <#local prevMenuItemIndex = catoCurrentMenuItemIndex!>
-  <#global catoCurrentMenuInfo = {"type":type}>
+  <#local styleName = (type == "generic")?string("default", type)>
+  <#global catoCurrentMenuInfo = {"type":type, "styleName":styleName}>
   <#global catoCurrentMenuItemIndex = 0>
   <#t>
-  <#local classes = makeClassesArg(class, styles["menu_" + type]!"")>
+  <#local classes = makeClassesArg(class, styles["menu_" + styleName]!"")>
   <#t>
   <#if !inlineItems>
     <ul<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>>
@@ -2066,8 +2066,7 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
 ************
 TODO: WIP!!!
 
-Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if need to generate
-items only).
+Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if need to generate items only).
              
    * General Attributes *
     type            = menu item (content) type: [generic|link|text|submit], default generic (but discouraged; prefer specific)
@@ -2085,10 +2084,10 @@ items only).
     secure,
     encode          = options for ofbizHref
     onClick         = onClick (for content elem)
-    disabled        = whether disabled
+    title           = logical title attribute of content (link)
+    disabled        = whether disabled, default false
     wrapNested      = if true, nested content is wrapped in link or span element. default false (nested outside, following).
 -->
-<#-- type="link|text|submit" class=true text="" href="javascript:void(0);" onClick="" -->
 <#macro menuitem args={} inlineArgs...>
   <#local type = inlineArgs.type!args.type!"">
   <#local class = inlineArgs.class!args.class!true>
@@ -2107,11 +2106,12 @@ items only).
   <#local wrapNested = inlineArgs.wrapNested!args.wrapNested!false>
   <#t>
   <#local menuType = (catoCurrentMenuInfo.type)!"">
+  <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">
   <#t>
-  <#local classes = makeClassesArg(class, styles["menu_" + menuType + "_item"]!"")>
+  <#local classes = makeClassesArg(class, styles["menu_" + menuStyleName + "_item"]!"")>
   <#t>
   <#if type == "link">
-    <#local defaultContentClass = styles["menu_" + menuType + "_itemlink"]!"">
+    <#local defaultContentClass = styles["menu_" + menuStyleName + "_itemlink"]!"">
   <#elseif type == "text">
     <#local defaultContentClass = "text-entry">
   <#elseif type == "submit">
@@ -2130,15 +2130,11 @@ items only).
   <li<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt>
     <#if type == "link">
       <#if ofbizHref?is_string>
-        <#-- ofbiz kludge -->
-        <#if fullPath?is_boolean><#local fullPath = fullPath?c></#if>
-        <#if secure?is_boolean><#local secure = secure?c></#if>
-        <#if encode?is_boolean><#local encode = encode?c></#if>
-        <#local href><@ofbizUrl fullPath=fullPath secure=secure encode=encode>${ofbizHref}</@ofbizUrl></#local>
+        <#local href = makeOfbizUrl(ofbizHref, fullPath, secure, encode)>
       <#elseif !href?is_string>
         <#local href = "javascript:void(0);">
       </#if>
-      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if target?has_content> target="${target}"</#if>><#if text?has_content>${text}</#if><#if wrapNested><#nested></#if></a>
+      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if text?has_content>${text}</#if><#if wrapNested><#nested></#if></a>
     <#elseif type == "text">
       <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if text?has_content>${text}</#if><#if wrapNested><#nested></#if></span>
     <#elseif type == "submit">

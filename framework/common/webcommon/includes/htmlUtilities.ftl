@@ -2086,7 +2086,9 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
     onClick         = onClick (for content elem)
     title           = logical title attribute of content (link)
     disabled        = whether disabled, default false
+    nestedHtml      = alternative to #nested content, so can be passed in @menu items hash list
     wrapNested      = if true, nested content is wrapped in link or span element. default false (nested outside, following).
+    nestedFirst     = if true, nested content comes before content elem. default false (comes after content elem/text).
 -->
 <#macro menuitem args={} inlineArgs...>
   <#local type = inlineArgs.type!args.type!"">
@@ -2103,7 +2105,9 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
   <#local onClick = inlineArgs.onClick!args.onClick!"">
   <#local disabled = inlineArgs.disabled!args.disabled!false>
   <#local target = inlineArgs.target!args.target!"">
+  <#local nestedHtml = inlineArgs.nestedHtml!args.nestedHtml!true>
   <#local wrapNested = inlineArgs.wrapNested!args.wrapNested!false>
+  <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
   <#t>
   <#local menuType = (catoCurrentMenuInfo.type)!"">
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">
@@ -2128,21 +2132,25 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
   <#-- TODO: clarify nested content usage, may have nested menus, not just text...
        I removed <#nested> for now. use text attrib. -->
   <li<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt>
+    <#if !(nestedHtml?is_string && nestedHtml)>
+      <#local nestedHtml><#nested></#local>
+    </#if>
+    <#if !wrapNested && nestedFirst>${nestedHtml}</#if>
     <#if type == "link">
       <#if ofbizHref?is_string>
         <#local href = makeOfbizUrl(ofbizHref, fullPath, secure, encode)>
       <#elseif !href?is_string>
         <#local href = "javascript:void(0);">
       </#if>
-      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if text?has_content>${text}</#if><#if wrapNested><#nested></#if></a>
+      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></a>
     <#elseif type == "text">
-      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if text?has_content>${text}</#if><#if wrapNested><#nested></#if></span>
+      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></span>
     <#elseif type == "submit">
-      <input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if> value="<#if text?has_content>${text}</#if>"<#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#if wrapNested><#nested></#if>
+      <#if wrapNested && nestedFirst>${nestedHtml}</#if><input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if> value="<#if text?has_content>${text}</#if>"<#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#if wrapNested && !nestedFirst>${nestedHtml}</#if>
     <#else>
-      <#if text?has_content>${text}</#if><#if wrapNested><#nested></#if>
+      <#if text?has_content>${text}</#if><#if wrapNested>${nestedHtml}</#if>
     </#if>
-    <#if !wrapNested><#nested></#if>
+    <#if !wrapNested && !nestedFirst>${nestedHtml}</#if>
   </li><#lt>
   <#global catoCurrentMenuItemIndex = catoCurrentMenuItemIndex + 1>
 </#macro>

@@ -388,12 +388,14 @@ expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '$
     <#local menuClass = "">
   </#if>
 
-  <#-- note: menuString shouldn't contain <ul because li may be added here (traditionally), but check anyway -->
-  <#if !menuString?has_content || menuString?starts_with("<li")><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
+  <#-- note: menuString shouldn't contain <ul because li may be added here (traditionally), but check anyway, may have to allow -->
+  <#local menuItemsInlined = menuString?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<li(\s|>).*', 'rs')>
+  
+  <#if !menuString?has_content || menuItemsInlined><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
   <#if !forceEmptyMenu>
     ${menuString}
   </#if>
-  <#if !menuString?has_content || menuString?starts_with("<li")></ul></#if>
+  <#if !menuString?has_content || menuItemsInlined></ul></#if>
 </#if>
 
 </#if>

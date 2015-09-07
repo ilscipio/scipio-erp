@@ -35,6 +35,22 @@ under the License.
 
 <#-- 
 *************
+* makeOfbizUrl function
+************
+This is a function version of the @ofbizUrl macro, because sometimes this is easier to use.
+Also this one supports booleans (but strings still work).
+Dev note: could be optimized later.
+-->
+<#function makeOfbizUrl uri fullPath=false secure=false encode=true>
+  <#if fullPath?is_boolean><#local fullPath = fullPath?c></#if>
+  <#if secure?is_boolean><#local secure = secure?c></#if>
+  <#if encode?is_boolean><#local encode = encode?c></#if>
+  <#local res><@ofbizUrl fullPath=fullPath secure=secure encode=encode>${uri}</@ofbizUrl></#local>
+  <#return res>
+</#function>
+
+<#-- 
+*************
 * label function
 ************
 Returns empty string if no label is found

@@ -45,7 +45,7 @@ if (!orderHeader && orderId) {
     if (parameters.facilityId) {
         response.setHeader("Content-Disposition","attachment; filename=\"PickSheet" + orderId + ".pdf" + "\";");
     } else {
-    	response.setHeader("Content-Disposition","attachment; filename=\"" + orderId + ".pdf" + "\";");
+        response.setHeader("Content-Disposition","attachment; filename=\"" + orderId + ".pdf" + "\";");
     }
 } else if (shipmentId) {
     shipment = from("Shipment").where("shipmentId", shipmentId).queryOne();
@@ -213,27 +213,27 @@ if (emails) {
 
 // website
 websiteUrls = from("PartyContactWithPurpose")
-                  .where("partyId", partyId, "contactMechPurposeTypeId", "PRIMARY_WEB_URLs")
+                  .where("partyId", partyId, "contactMechPurposeTypeId", "PRIMARY_WEB_URL")
                   .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate")
                   .queryList();
 if (websiteUrls) {
     websiteUrl = EntityUtil.getFirst(websiteUrls);
     context.website = from("ContactMech").where("contactMechId", websiteUrl.contactMechId).queryOne();
 } else { //get web address from party contact mech
-selContacts = from("PartyContactMech")
-                  .where("partyId", partyId)
-                  .filterByDate(nowTimestamp, "fromDate", "thruDate")
-                  .queryList();
-if (selContacts) {
-    Iterator i = selContacts.iterator();
-    while (i.hasNext())    {
-        website = i.next().getRelatedOne("ContactMech", false);
-        if ("WEB_ADDRESS".equals(website.contactMechTypeId)) {
-            context.website = website;
-            break;
+    selContacts = from("PartyContactMech")
+                      .where("partyId", partyId)
+                      .filterByDate(nowTimestamp, "fromDate", "thruDate")
+                      .queryList();
+    if (selContacts) {
+        Iterator i = selContacts.iterator();
+        while (i.hasNext())    {
+            website = i.next().getRelatedOne("ContactMech", false);
+            if ("WEB_ADDRESS".equals(website.contactMechTypeId)) {
+                context.website = website;
+                break;
+            }
         }
     }
-}
 }
 
 //Bank account
@@ -246,7 +246,9 @@ if (selPayments) {
 }
 
 // Tax ID Info
-partyTaxAuthInfoList = from("PartyTaxAuthInfo").where("partyId", partyId).queryList();
+partyTaxAuthInfoList = from("PartyTaxAuthInfo").where("partyId", partyId)
+                        .filterByDate(nowTimestamp, "fromDate", "thruDate")
+                        .queryList();
 if (partyTaxAuthInfoList) {
     if (address.countryGeoId) {
         // if we have an address with country filter by that
@@ -260,3 +262,4 @@ if (partyTaxAuthInfoList) {
         context.sendingPartyTaxId = partyTaxAuthInfoList[0].partyTaxId;
     }
 }
+

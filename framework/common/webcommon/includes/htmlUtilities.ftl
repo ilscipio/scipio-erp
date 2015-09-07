@@ -1991,7 +1991,7 @@ Note that both macros support arguments passed in a hash (or map) using the "arg
 can be delegated in infinite ways (even to data prep). The inline args have priority over the hash args, as would be expected.
                     
    * General Attributes *
-    type            = menu type: [section|main|tab|subtab|button|...]
+    type            = menu type: [generic|section|main|tab|subtab|button|...], default generic (but discouraged; prefer specific)
     inlineItems     = boolean, if true, generate only items, not menu container
     class           = menu class style. can be boolean true/false or string, if string
                       starts with "+" the classes are in addition to defaults, otherwise replace defaults.
@@ -2070,7 +2070,7 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
 items only).
              
    * General Attributes *
-    type            = menu item (content) type: [link|text|submit]
+    type            = menu item (content) type: [generic|link|text|submit], default generic (but discouraged; prefer specific)
     class           = menu item class (for <li> element)
     id              = menu item id
     contentClass    = menu item content class (for <a>, <span> or <input> element)

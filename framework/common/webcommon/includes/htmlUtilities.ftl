@@ -1996,6 +1996,8 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
     class           = menu class style. can be boolean true/false or string, if string
                       starts with "+" the classes are in addition to defaults, otherwise replace defaults.
     id              = menu id
+    style           = legacy menu style (for <ul element)
+    attribs         = hash of other menu attribs (for <ul element, especially those with dashes)
     items           = list of hashes, where each hash contains arguments representing a menu item,
                       same as @menuitem macro parameters.
                       alternatively, the items can be specified as nested content.
@@ -2013,6 +2015,8 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#local inlineItems = inlineArgs.inlineItems!args.inlineItems!false>
   <#local class = inlineArgs.class!args.class!true>
   <#local id = inlineArgs.id!args.id!"">
+  <#local style = inlineArgs.style!args.style!"">
+  <#local attribs = inlineArgs.attribs!args.attribs!"">
   <#local items = inlineArgs.items!args.items!true>
   <#local sort = inlineArgs.sort!args.sort!false>
   <#local sortBy = inlineArgs.sortBy!args.sortBy!"">
@@ -2028,7 +2032,7 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#local classes = makeClassesArg(class, styles["menu_" + styleName]!"")>
   <#t>
   <#if !inlineItems>
-    <ul<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>>
+    <ul<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
   </#if>
   <#if !(items?is_boolean && items == false)>
     <#if nestedFirst>
@@ -2072,8 +2076,12 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
     type            = menu item (content) type: [generic|link|text|submit], default generic (but discouraged; prefer specific)
     class           = menu item class (for <li> element)
     id              = menu item id
+    style           = legacy menu item style (for <li> element)
+    attribs         = other menu item attributes (for <li> element, especially those with dashes in names)
     contentClass    = menu item content class (for <a>, <span> or <input> element)
     contentId       = menu item content id
+    contentStyle    = legacy menu item content style
+    contentAttribs  = other menu item content attributes (for <a>, <span> or <input> element, especially those with dashes in names)
     text            = text to use as content. for now ALWAYS use this argument to specify
                       text, not nested content.
                       TODO: clarify nested content usage (because may have nested menus?)
@@ -2086,7 +2094,11 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
     onClick         = onClick (for content elem)
     title           = logical title attribute of content (link)
     disabled        = whether disabled, default false
+    selected        = whether selected or not, default false
+    active          = whether active or not, default false
     nestedHtml      = alternative to #nested content, so can be passed in @menu items hash list
+    nestedMenu      = alternative to nestedHtml and #nested content, is a hash of @menu attribs
+                      for menu to use as sub-menu.
     wrapNested      = if true, nested content is wrapped in link or span element. default false (nested outside, following).
     nestedFirst     = if true, nested content comes before content elem. default false (comes after content elem/text).
 -->
@@ -2094,8 +2106,12 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
   <#local type = inlineArgs.type!args.type!"">
   <#local class = inlineArgs.class!args.class!true>
   <#local id = inlineArgs.id!args.id!"">
+  <#local style = inlineArgs.style!args.style!"">
+  <#local attribs = inlineArgs.attribs!args.attribs!"">
   <#local contentClass = inlineArgs.contentClass!args.contentClass!true>
   <#local contentId = inlineArgs.contentId!args.contentId!"">
+  <#local contentStyle = inlineArgs.contentStyle!args.contentStyle!"">
+  <#local contentAttribs = inlineArgs.contentAttribs!args.contentAttribs!"">
   <#local text = inlineArgs.text!args.text!"">
   <#local href = inlineArgs.href!args.href!true>
   <#local ofbizHref = inlineArgs.ofbizHref!args.ofbizHref!false>
@@ -2104,8 +2120,11 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
   <#local encode = inlineArgs.encode!args.encode!true>
   <#local onClick = inlineArgs.onClick!args.onClick!"">
   <#local disabled = inlineArgs.disabled!args.disabled!false>
+  <#local selected = inlineArgs.selected!args.selected!false>
+  <#local active = inlineArgs.active!args.active!false>
   <#local target = inlineArgs.target!args.target!"">
   <#local nestedHtml = inlineArgs.nestedHtml!args.nestedHtml!true>
+  <#local nestedMenu = inlineArgs.nestedMenu!args.nestedMenu!false>
   <#local wrapNested = inlineArgs.wrapNested!args.wrapNested!false>
   <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
   <#t>
@@ -2126,13 +2145,24 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
   <#local contentClasses = makeClassesArg(contentClass, defaultContentClass)>
   <#t>
   <#if disabled>
+    <#local classes = (classes + " disabled")?trim>
     <#local contentClasses = (contentClasses + " disabled")?trim>
     <#local href = "javascript:void(0);">
   </#if>
-  <#-- TODO: clarify nested content usage, may have nested menus, not just text...
-       I removed <#nested> for now. use text attrib. -->
-  <li<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt>
-    <#if !(nestedHtml?is_string && nestedHtml)>
+  <#if selected>
+    <#local classes = (classes + " selected")?trim>
+    <#local contentClasses = (contentClasses + " selected")?trim>
+  </#if>
+  <#if active>
+    <#local classes = (classes + " active")?trim>
+    <#local contentClasses = (contentClasses + " active")?trim>
+  </#if>
+  <li<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#rt>
+    <#if !nestedHtml?is_boolean>
+      <#-- use nestedHtml -->
+    <#elseif !nestedMenu?is_boolean>
+      <#local nestedHtml><@menu args=nestedMenu /></#local>
+    <#else>
       <#local nestedHtml><#nested></#local>
     </#if>
     <#if !wrapNested && nestedFirst>${nestedHtml}</#if>
@@ -2142,11 +2172,11 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
       <#elseif !href?is_string>
         <#local href = "javascript:void(0);">
       </#if>
-      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></a>
+      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs /></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></a>
     <#elseif type == "text">
-      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></span>
+      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs /></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></span>
     <#elseif type == "submit">
-      <#if wrapNested && nestedFirst>${nestedHtml}</#if><input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if> value="<#if text?has_content>${text}</#if>"<#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#if wrapNested && !nestedFirst>${nestedHtml}</#if>
+      <#if wrapNested && nestedFirst>${nestedHtml}</#if><input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs /></#if> value="<#if text?has_content>${text}</#if>"<#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#if wrapNested && !nestedFirst>${nestedHtml}</#if>
     <#else>
       <#if text?has_content>${text}</#if><#if wrapNested>${nestedHtml}</#if>
     </#if>

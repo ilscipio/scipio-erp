@@ -36,7 +36,8 @@ under the License.
   </@table>
   <@menu type="button">
     <@menuitem type="link" ofbizHref="clearCompareList" text="${uiLabelMap.CommonClearAll}" />
-    <li><a href="javascript:popUp('<@ofbizUrl secure="${request.isSecure()?string}">compareProducts</@ofbizUrl>', 'compareProducts', '650', '750')" class="${styles.menu_button_itemlink!}">${uiLabelMap.ProductCompareProducts}</a></li>
+    <#assign compareProductsUrl><@ofbizUrl secure="${request.isSecure()?string}">compareProducts</@ofbizUrl></#assign>
+    <@menuitem type="link" href="javascript:popUp('${compareProductsUrl}', 'compareProducts', '650', '750')" text="${uiLabelMap.ProductCompareProducts}" />
   </@menu>
 <#else>
   <@resultMsg>${uiLabelMap.ProductNoProductsToCompare}</@resultMsg>

@@ -210,7 +210,7 @@ under the License.
     <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionCategory}</#assign>
     <#assign menuHtml>
       <@menu type="section" inlineItems=true>  
-      <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}" />
+        <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}" />
       </@menu>
     </#assign>
   <#else>
@@ -218,7 +218,7 @@ under the License.
       <#assign sectionTitle>${uiLabelMap.CommonEdit} ${uiLabelMap.ContentSurveyQuestion}</#assign>
       <#assign menuHtml>
         <@menu type="section" inlineItems=true>  
-        <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}" />
+          <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}" />
         </@menu>
       </#assign>
     <#else>
@@ -231,8 +231,8 @@ under the License.
 
     <#assign menuHtml>
       <@menu type="section" inlineItems=true>
-      ${menuHtml}
-      <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}" />
+        ${menuHtml}
+        <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}" />
       </@menu>
     </#assign>
   </#if>
@@ -245,7 +245,7 @@ under the License.
 </@section>
 
 <#if (surveyQuestion?has_content && surveyQuestion.surveyQuestionTypeId?default("") == "OPTION")>
-<@section title="${uiLabelMap.ContentSurveyOptions} - ${uiLabelMap.CommonId} ${surveyQuestion.surveyQuestionId!}">
+  <@section title="${uiLabelMap.ContentSurveyOptions} - ${uiLabelMap.CommonId} ${surveyQuestion.surveyQuestionId!}">
     <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
      <@thead>
       <@tr class="header-row">
@@ -271,22 +271,23 @@ under the License.
         </@tr>
       </#list>
     </@table>
-</@section>
+  </@section>
 
     <#if !surveyQuestionOption?has_content>
       <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionOption}</#assign>
       <#assign menuHtml>
-        <@menu type="section" inlineItems=true>  </@menu>
+        <@menu type="section" inlineItems=true>
+        </@menu>
       </#assign>
     <#else>
       <#assign sectionTitle>${uiLabelMap.ContentSurveyEditQuestionOption}</#assign>
       <#assign menuHtml>
         <@menu type="section" inlineItems=true>
-        <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}" text="[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]" />
+          <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}" text="[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]" />
         </@menu>
       </#assign>
     </#if>
-<@section title=sectionTitle menuHtml=menuHtml>
+  <@section title=sectionTitle menuHtml=menuHtml>
     ${createSurveyOptionWrapper.renderFormString()}
-</@section>
+  </@section>
 </#if>

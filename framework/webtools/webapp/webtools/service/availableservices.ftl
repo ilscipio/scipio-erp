@@ -24,6 +24,7 @@ under the License.
 
 <#-- Selected Service is available -->
 <#if selectedServiceMap??>
+
   <#if showWsdl?? && showWsdl = true>
     <@section title="${uiLabelMap.WebtoolsServiceWSDL} - ${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
         <@code type="html">${selectedServiceMap.wsdl}</@code>
@@ -358,12 +359,12 @@ under the License.
       </@nav>
   </#if>
 
-<#assign menuHtml>
-  <@menu type="section" inlineItems=true>
-    <li><a href="<@ofbizUrl>${url}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonListAll}</a></li>
-  </@menu>
-</#assign>
-<@section menuHtml=menuHtml>
+  <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
+      <@menuitem type="link" ofbizHref="${url}" text="${uiLabelMap.CommonListAll}" />
+    </@menu>
+  </#assign>
+  <@section menuHtml=menuHtml>
       <#--
       ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
       <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
@@ -398,7 +399,7 @@ under the License.
           <#assign lastChar = firstChar>
         </#list>
       </@table>
-</@section>
+  </@section>
 <#else>
   <@resultMsg>${uiLabelMap.WebtoolsNoServicesFound}.</@resultMsg>
 </#if>

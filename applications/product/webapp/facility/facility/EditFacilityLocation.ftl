@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-<#if facilityId?? && locationSeqId??>
+  <#if facilityId?? && locationSeqId??>
     <@menuitem type="link" ofbizHref="EditFacility" text="${uiLabelMap.ProductNewFacility}" />
     <@menuitem type="link" ofbizHref="EditFacilityLocation?facilityId=${facilityId!}" text="${uiLabelMap.ProductNewFacilityLocation}" />
     <@menuitem type="link" ofbizHref="EditInventoryItem?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}" text="${uiLabelMap.ProductNewInventoryItem}" />
@@ -26,16 +26,16 @@ under the License.
     <#if latestGeoPoint?has_content>
       <@menuitem type="link" ofbizHref="FacilityLocationGeoLocation?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}" text="${uiLabelMap.CommonGeoLocation}" />
     </#if>
-</#if>
+  </#if>
   </@menu>
 </#assign>
 <@section menuHtml=menuHtml>
 
 <#if facilityId?? && !(facilityLocation??)>
-    <form action="<@ofbizUrl>CreateFacilityLocation</@ofbizUrl>" method="post">
+  <form action="<@ofbizUrl>CreateFacilityLocation</@ofbizUrl>" method="post">
     <input type="hidden" name="facilityId" value="${facilityId}" />
 <#elseif facilityLocation??>
-    <form action="<@ofbizUrl>UpdateFacilityLocation</@ofbizUrl>" method="post">
+  <form action="<@ofbizUrl>UpdateFacilityLocation</@ofbizUrl>" method="post">
     <input type="hidden" name="facilityId" value="${facilityId!}" />
     <input type="hidden" name="locationSeqId" value="${locationSeqId}" />
 <#else>

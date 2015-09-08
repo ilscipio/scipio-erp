@@ -38,8 +38,9 @@ under the License.
     </#assign>
   <#else>
     <#assign menuHtml>
-      <@menu type="section" inlineItems=true>  </@menu>
-</#assign>
+      <@menu type="section" inlineItems=true>
+      </@menu>
+    </#assign>
   </#if>
   <@section title="${uiLabelMap.AccountingCurrentCustomTimePeriod}" menuHtml=menuHtml>
     <#if currentCustomTimePeriod?has_content>

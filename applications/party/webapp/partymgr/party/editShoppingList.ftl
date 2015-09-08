@@ -19,12 +19,11 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-      <li>
-        <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
-          <input type="hidden" name="partyId" value="${partyId!}" />
-          <a href="javascript:document.getElementById('createEmptyShoppingList').submit();" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a>
-        </form>
-      </li>
+    <@menuitem type="link" href="javascript:document.getElementById('createEmptyShoppingList').submit();" text="${uiLabelMap.CommonCreateNew}">
+      <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
+        <input type="hidden" name="partyId" value="${partyId!}" />
+      </form>
+    </@menuitem>
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.PartyShoppingLists}" menuHtml=menuHtml>
@@ -52,13 +51,12 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
       <@menuitem type="link" href="javascript:document.updateList.submit();" text="${uiLabelMap.CommonSave}" />
-      <li>
-      <form method="post" name="createQuoteFromShoppingListForm" action="/ordermgr/control/createQuoteFromShoppingList">
-        <input type= "hidden" name= "applyStorePromotions" value= "N"/>
-        <input type= "hidden" name= "shoppingListId" value= "${shoppingList.shoppingListId!}"/>
-      </form>
-      <a href="javascript:document.createQuoteFromShoppingListForm.submit()" class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyCreateNewQuote}</a>
-      </li>
+      <@menuitem type="link" href="javascript:document.createQuoteFromShoppingListForm.submit()" text="${uiLabelMap.PartyCreateNewQuote}">
+        <form method="post" name="createQuoteFromShoppingListForm" action="/ordermgr/control/createQuoteFromShoppingList">
+          <input type= "hidden" name= "applyStorePromotions" value= "N"/>
+          <input type= "hidden" name= "shoppingListId" value= "${shoppingList.shoppingListId!}"/>
+        </form>
+      </@menuitem>
       <@menuitem type="link" href="/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" text="${uiLabelMap.PartyCreateNewCustRequest}" />
       <@menuitem type="link" href="/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" text="${uiLabelMap.OrderNewOrder}" />
   </@menu>
@@ -131,7 +129,7 @@ under the License.
 <#if childShoppingListDatas?has_content>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-      <li><a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes</@ofbizUrl>"  class="${styles.menu_section_itemlink!}">${uiLabelMap.PartyAddChildListsToCart}</a></li>
+    <@menuitem type="link" ofbizHref="addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes" text="${uiLabelMap.PartyAddChildListsToCart}" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuHtml=menuHtml>

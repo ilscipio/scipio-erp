@@ -21,12 +21,12 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <#if parameters.hideFields?default("N") == "Y">
-        <@menuitem type="link" ofbizHref="findEmployees?hideFields=N${paramList}" text="${uiLabelMap.CommonShowLookupFields}" />
-    <#else>
+  <#if parameters.hideFields?default("N") == "Y">
+    <@menuitem type="link" ofbizHref="findEmployees?hideFields=N${paramList}" text="${uiLabelMap.CommonShowLookupFields}" />
+  <#else>
     <#if partyList??><@menuitem type="link" ofbizHref="findEmployees?hideFields=Y${paramList}" text="${uiLabelMap.CommonHideFields}" /></#if>
-        <@menuitem type="link" href="javascript:document.lookupparty.submit();" text="${uiLabelMap.PartyLookupParty}" />
-    </#if>
+    <@menuitem type="link" href="javascript:document.lookupparty.submit();" text="${uiLabelMap.PartyLookupParty}" />
+  </#if>
   </@menu>
 </#assign>
 <@section id="findEmployee" title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" menuHtml=menuHtml>
@@ -118,25 +118,26 @@ under the License.
         </form>
     </#if>
 </@section>
-    <#if parameters.hideFields?default("N") != "Y">
-        <script language="JavaScript" type="text/javascript">
+
+  <#if parameters.hideFields?default("N") != "Y">
+    <script language="JavaScript" type="text/javascript">
     <!--//
       document.lookupparty.partyId.focus();
     //-->
-        </script>
-    </#if>
-    <#if partyList??>
-   
-   <#assign menuHtml>
-     <@menu type="section" inlineItems=true>
-        <#if (partyListSize > 0)>
-            <li><a class="nav-next" href="<@ofbizUrl>findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="${styles.button_default!}<#if !(partyListSize > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
-            <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${partyListSize}" />
-            <li><a class="nav-previous" href="<@ofbizUrl>findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="${styles.button_default!}<#if !(viewIndex > 0)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
-        </#if>
-     </@menu>
-   </#assign>
-   <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}" menuHtml=menuHtml>
+    </script>
+  </#if>
+    
+  <#if partyList??>
+    <#assign menuHtml>
+      <@menu type="section" inlineItems=true>
+      <#if (partyListSize > 0)>
+        <@menuitem type="link" ofbizHref="findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonNext}" contentClass="+nav-next" disabled=(!(partyListSize > highIndex)) />
+        <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${partyListSize}" />
+        <@menuitem type="link" ofbizHref="findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonPrevious}" contentClass="+nav-previous" disabled=(!(viewIndex > 0)) />
+      </#if>
+      </@menu>
+    </#assign>
+    <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}" menuHtml=menuHtml>
     <#if partyList?has_content>
         <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
           <@thead>
@@ -213,5 +214,5 @@ under the License.
         <@alert type="error">${lookupErrorMessage}</@alert>
     </#if>
     </@section>
-    </#if>
+  </#if>
 <!-- end findEmployees.ftl -->

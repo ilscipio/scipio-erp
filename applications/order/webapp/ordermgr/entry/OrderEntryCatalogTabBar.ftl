@@ -17,9 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-    <#if orderHeader?has_content>
+  <#if orderHeader?has_content>
     <@section title="${uiLabelMap.PageTitleLookupBulkAddProduct}"/>
-    <#else>
+  <#else>
     <#assign sectionTitle>
         ${uiLabelMap.CommonCreate}
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
@@ -28,9 +28,10 @@ under the License.
             ${uiLabelMap.OrderSalesOrder}
         </#if>
     </#assign>
-    <@section title=sectionTitle>
-        <@menu type="button">
-            <@menuitem type="link" ofbizHref="orderentry" text="${uiLabelMap.OrderOrderItems}" />
-    </@menu>
-    </@section>
-</#if>
+    <#assign menuHtml>
+      <@menu type="button">
+        <@menuitem type="link" ofbizHref="orderentry" text="${uiLabelMap.OrderOrderItems}" />
+      </@menu>
+    </#assign>
+    <@section title=sectionTitle menuHtml=menuHtml />
+  </#if>

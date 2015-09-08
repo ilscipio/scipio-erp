@@ -26,17 +26,18 @@ function lookupBom() {
 }
 // -->
 </script>
-<#assign sectionTitle>${uiLabelMap.PageTitleEditProductBom} <#if product??>${(product.internalName)!}</#if>&nbsp;[${uiLabelMap.CommonId}&nbsp;${productId!}]</#assign>
+
+<#assign sectionTitle>${uiLabelMap.PageTitleEditProductBom}<#if product??> ${(product.internalName)!}</#if>&nbsp;[${uiLabelMap.CommonId}&nbsp;${productId!}]</#assign>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <#if product?has_content>
-        <@menuitem type="link" ofbizHref="BomSimulation?productId=${productId}&amp;bomType=${productAssocTypeId}" text="${uiLabelMap.ManufacturingBomSimulation}" />
-    </#if>
+  <#if product?has_content>
+    <@menuitem type="link" ofbizHref="BomSimulation?productId=${productId}&amp;bomType=${productAssocTypeId}" text="${uiLabelMap.ManufacturingBomSimulation}" />
+  </#if>
   </@menu>
 </#assign>
-<@section title=sectionTitle>
+<@section title=sectionTitle menuHtml=menuHtml>
     
-    <form name="searchform" action="<@ofbizUrl>UpdateProductBom</@ofbizUrl>#topform" method="post">
+  <form name="searchform" action="<@ofbizUrl>UpdateProductBom</@ofbizUrl>#topform" method="post">
     <input type="hidden" name="UPDATE_MODE" value=""/>
 
     <@table type="fields" class="basic-table" cellspacing="0">
@@ -76,7 +77,7 @@ function lookupBom() {
             </@td>
         </@tr>
     </@table>
-    </form>
+  </form>
     <hr />
     <form action="<@ofbizUrl>UpdateProductBom</@ofbizUrl>" method="post" name="editProductAssocForm">
     <#if !(productAssoc??)>
@@ -234,8 +235,9 @@ function lookupBom() {
     </@table>
     </form>
 </@section>
+
 <#if productId?? && product??>
-<@section title="${uiLabelMap.ManufacturingProductComponents}">
+  <@section title="${uiLabelMap.ManufacturingProductComponents}">
     <a name="components"></a>
     <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
      <@thead>
@@ -279,8 +281,8 @@ function lookupBom() {
       </@tr>
     </#list>
     </@table>
-</@section>
-<@section title="${uiLabelMap.ManufacturingProductComponentOf}">
+  </@section>
+  <@section title="${uiLabelMap.ManufacturingProductComponentOf}">
       <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
        <@thead>
         <@tr class="header-row">
@@ -311,5 +313,5 @@ function lookupBom() {
       </@table>
       
       <p>${uiLabelMap.CommonNote}: <b class="alert">${uiLabelMap.CommonRed}</b> ${uiLabelMap.ManufacturingNote1} <b style="color: red;">${uiLabelMap.CommonRed}</b>${uiLabelMap.ManufacturingNote2} <b style="color: red;">${uiLabelMap.CommonRed}</b>${uiLabelMap.ManufacturingNote3}<p>
-</@section>
+  </@section>
 </#if>

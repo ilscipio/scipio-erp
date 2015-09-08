@@ -22,21 +22,21 @@ under the License.
 <#assign selected = tabButtonItem?default("void")>
 <#if shipmentId?has_content>
     <@menu type="tab">
-            <li<#if selected="ViewShipment"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.CommonView}</a></li>
-            <li<#if selected="EditShipment"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>EditShipment?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.CommonEdit}</a></li>
+            <@menuitem type="link" ofbizHref="ViewShipment?shipmentId=${shipmentId}" text="${uiLabelMap.CommonView}" selected=(selected=="ViewShipment") />
+            <@menuitem type="link" ofbizHref="EditShipment?shipmentId=${shipmentId}" text="${uiLabelMap.CommonEdit}" selected=(selected=="EditShipment") />
         <#if (shipment.shipmentTypeId)?? && shipment.shipmentTypeId = "PURCHASE_RETURN">
-            <li<#if selected="AddItemsFromInventory"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>AddItemsFromInventory?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.ProductOrderItems}</a></li>
+            <@menuitem type="link" ofbizHref="AddItemsFromInventory?shipmentId=${shipmentId}" text="${uiLabelMap.ProductOrderItems}" selected=(selected=="AddItemsFromInventory") />
         </#if>
         <#if (shipment.shipmentTypeId)?? && shipment.shipmentTypeId = "SALES_SHIPMENT">
-            <li<#if selected="EditShipmentPlan"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>EditShipmentPlan?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.ProductShipmentPlan}</a></li>
-            <li<#if selected="AddItemsFromOrder"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>AddItemsFromOrder?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.ProductOrderItems}</a></li>
-            <li<#if selected="EditShipmentItems"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>EditShipmentItems?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.ProductItems}</a></li>
-            <li<#if selected="EditShipmentPackages"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>EditShipmentPackages?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.ProductPackages}</a></li>
-            <li<#if selected="EditShipmentRouteSegments"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>EditShipmentRouteSegments?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.ProductRouteSegments}</a></li>
+            <@menuitem type="link" ofbizHref="EditShipmentPlan?shipmentId=${shipmentId}" text="${uiLabelMap.ProductShipmentPlan}" selected=(selected=="EditShipmentPlan") />
+            <@menuitem type="link" ofbizHref="AddItemsFromOrder?shipmentId=${shipmentId}" text="${uiLabelMap.ProductOrderItems}" selected=(selected=="AddItemsFromOrder") />
+            <@menuitem type="link" ofbizHref="EditShipmentItems?shipmentId=${shipmentId}" text="${uiLabelMap.ProductItems}" selected=(selected=="EditShipmentItems") />
+            <@menuitem type="link" ofbizHref="EditShipmentPackages?shipmentId=${shipmentId}" text="${uiLabelMap.ProductPackages}" selected=(selected=="EditShipmentPackages") />
+            <@menuitem type="link" ofbizHref="EditShipmentRouteSegments?shipmentId=${shipmentId}" text="${uiLabelMap.ProductRouteSegments}" selected=(selected=="EditShipmentRouteSegments") />
         </#if>
         <#if (shipment.shipmentTypeId)?? && shipment.shipmentTypeId='PURCHASE_SHIPMENT'>
-            <li<#if selected="EditShipmentPlan"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>EditShipmentPlan?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.ProductOrderItems}</a></li>
-            <li<#if selected="ViewShipmentReceipts"> class="selected"</#if>><a class="${styles.menu_tab_itemlink!}" href="<@ofbizUrl>ViewShipmentReceipts?shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.ProductShipmentReceipts}</a></li>
+            <@menuitem type="link" ofbizHref="EditShipmentPlan?shipmentId=${shipmentId}" text="${uiLabelMap.ProductOrderItems}" selected=(selected=="EditShipmentPlan") />
+            <@menuitem type="link" ofbizHref="ViewShipmentReceipts?shipmentId=${shipmentId}" text="${uiLabelMap.ProductShipmentReceipts}" selected=(selected=="ViewShipmentReceipts") />
         </#if>
     </@menu>
 </#if>

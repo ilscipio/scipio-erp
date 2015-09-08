@@ -38,8 +38,8 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
 </#assign>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-      <@menuitem type="link" href="javascript:document.salesentryform.submit();" text="${uiLabelMap.CommonContinue}" />
-      <@menuitem type="link" href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.PartyFindParty}" />
+    <@menuitem type="link" href="javascript:document.salesentryform.submit();" text="${uiLabelMap.CommonContinue}" />
+    <@menuitem type="link" href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.PartyFindParty}" />
   </@menu>
 </#assign>
 <@section class="${styles.grid_large!}9" title=sectionTitle menuHtml=menuHtml>

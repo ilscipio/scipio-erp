@@ -18,19 +18,19 @@ under the License.
 -->
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-  <@menuitem type="link" ofbizHref="CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}" text="${uiLabelMap.ProductCreateNewFeature}" contentClass="+create" />
+    <@menuitem type="link" ofbizHref="CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}" text="${uiLabelMap.ProductCreateNewFeature}" contentClass="+create" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductEditFeaturesForFeatureCategory} \"${(curProductFeatureCategory.description)!}\"" menuHtml=menuHtml>
-        <form action="<@ofbizUrl>QuickAddProductFeatures</@ofbizUrl>" method="post">
-          <div>
-            ${uiLabelMap.CommonAdd}
-            <input type="text" name="featureNum" value="1" size="3" />
-            ${uiLabelMap.ProductAddFeatureToCategory}
-            <input class="smallSubmit ${styles.button_default!}" type="submit" value="${uiLabelMap.CommonCreate}" />
-          </div>
-          <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
-        </form>
+    <form action="<@ofbizUrl>QuickAddProductFeatures</@ofbizUrl>" method="post">
+      <div>
+        ${uiLabelMap.CommonAdd}
+        <input type="text" name="featureNum" value="1" size="3" />
+        ${uiLabelMap.ProductAddFeatureToCategory}
+        <input class="smallSubmit ${styles.button_default!}" type="submit" value="${uiLabelMap.CommonCreate}" />
+      </div>
+      <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
+    </form>
 </@section>
 
 <@section title="${uiLabelMap.ProductProductFeatureMaintenance}">
@@ -39,9 +39,9 @@ under the License.
             <#local productString = "&amp;productId=" + productId>
           </#if>
           <@menu type="button">
-            <@menuitem type="link" ofbizHref="EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}" text="[${uiLabelMap.CommonPrevious}]" disabled=((viewIndex <= 0)) />
-            <li>${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</li>
-            <@menuitem type="link" ofbizHref="EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}" text="[${uiLabelMap.CommonNext}]" disabled=((listSize <= highIndex)) />
+            <@menuitem type="link" ofbizHref="EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}" text="[${uiLabelMap.CommonPrevious}]" disabled=(viewIndex <= 0) />
+            <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
+            <@menuitem type="link" ofbizHref="EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}" text="[${uiLabelMap.CommonNext}]" disabled=(listSize <= highIndex) />
           </@menu>
         </#macro>
         
@@ -49,7 +49,7 @@ under the License.
           <@productFeatureMaintNav />
         </#if>
          
-        <form method='post' action='<@ofbizUrl>UpdateProductFeatureInCategory</@ofbizUrl>' name="selectAllForm">
+      <form method='post' action='<@ofbizUrl>UpdateProductFeatureInCategory</@ofbizUrl>' name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
@@ -110,13 +110,13 @@ under the License.
             </@tbody>
             <@tfoot>
             <@tr><@td colspan="11" align="center">
-            <input type="hidden" name="_rowCount" value="${rowCount}" />
-            <input type="submit" value='${uiLabelMap.CommonUpdate}'/>
+              <input type="hidden" name="_rowCount" value="${rowCount}" />
+              <input type="submit" value='${uiLabelMap.CommonUpdate}'/>
             </@td></@tr>
             </@tfoot>
         </#if>
         </@table>
-        </form>
+      </form>
         
         <#if (listSize > 0)>
           <@productFeatureMaintNav />

@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-  <@menuitem type="link" href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" text="${uiLabelMap.ProductCreateNewProductStoreWebSite}" />
+    <@menuitem type="link" href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" text="${uiLabelMap.ProductCreateNewProductStoreWebSite}" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.PageTitleEditProductStoreWebSites}" menuHtml=menuHtml>

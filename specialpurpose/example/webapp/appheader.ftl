@@ -24,18 +24,20 @@ under the License.
       <h2>${uiLabelMap.ExampleApplication}</h2>
       <@menu type="main">
       <#if userLogin?has_content>
-        <li <#if selected = "${uiLabelMap.ExampleExample}"> class="selected"</#if>><a href="<@ofbizUrl>FindExample?portalPageId=${uiLabelMap.ExampleExample}</@ofbizUrl>" class="${styles.menu_main_itemlink!}">${uiLabelMap.ExampleExample}</a></li>
-        <li <#if selected = "${uiLabelMap.ExampleFeature}"> class="selected"</#if>><a href="<@ofbizUrl>FindExampleFeature?portalPageId=${uiLabelMap.ExampleFeature}</@ofbizUrl>" class="${styles.menu_main_itemlink!}">${uiLabelMap.ExampleFeature}</a></li>
-        <li <#if selected = "${uiLabelMap.ExampleFormWidgetExamples}"> class="selected"</#if>><a href="<@ofbizUrl>FormWidgetExamples?portalPageId=${uiLabelMap.ExampleFormWidgetExamples}</@ofbizUrl>" class="${styles.menu_main_itemlink!}">${uiLabelMap.ExampleFormWidgetExamples}</a></li>
-        <li <#if selected = "${uiLabelMap.ExampleAjaxExamples}"> class="selected"</#if>><a href="<@ofbizUrl>authview/findExampleAjax?portalPageId=${uiLabelMap.ExampleAjaxExamples}</@ofbizUrl>" class="${styles.menu_main_itemlink!}">${uiLabelMap.ExampleAjaxExamples}</a></li>
+        <@menuitem type="link" ofbizHref="FindExample?portalPageId=${uiLabelMap.ExampleExample}" text="${uiLabelMap.ExampleExample}" selected=(selected=="${uiLabelMap.ExampleExample}") />
+        <@menuitem type="link" ofbizHref="FindExampleFeature?portalPageId=${uiLabelMap.ExampleFeature}" text="${uiLabelMap.ExampleFeature}" selected=(selected=="${uiLabelMap.ExampleFeature}") />
+        <@menuitem type="link" ofbizHref="FormWidgetExamples?portalPageId=${uiLabelMap.ExampleFormWidgetExamples}" text="${uiLabelMap.ExampleFormWidgetExamples}" selected=(selected=="${uiLabelMap.ExampleFormWidgetExamples}") />
+        <@menuitem type="link" ofbizHref="authview/findExampleAjax?portalPageId=${uiLabelMap.ExampleAjaxExamples}" text="${uiLabelMap.ExampleAjaxExamples}" selected=(selected=="${uiLabelMap.ExampleAjaxExamples}") />
+
         <#if portalPages?has_content>
             <#list portalPages as page>
               <#if page.portalPageName?has_content>
-                <li<#if selected = "${page.portalPageId}"> class="selected"</#if>><a href="<@ofbizUrl>showPortalPage?portalPageId=${page.portalPageId}</@ofbizUrl>" class="${styles.menu_main_itemlink!}"><#if page.portalPageName??>${page.portalPageName}<#else>?</#if></a></li>
+                <#assign text><#if page.portalPageName??>${page.portalPageName}<#else>?</#if></#assign>
+                <@menuitem type="link" ofbizHref="showPortalPage?portalPageId=${page.portalPageId}" text=text selected=(selected=="${page.portalPageId}") />
               </#if>
             </#list>
         </#if>
-        <li class="opposed"><a href="<@ofbizUrl>ManagePortalPages?parentPortalPageId=EXAMPLE</@ofbizUrl>" class="${styles.menu_main_itemlink!}">${uiLabelMap.CommonDashboard}</a></li>
+        <@menuitem type="link" ofbizHref="ManagePortalPages?parentPortalPageId=EXAMPLE" text="${uiLabelMap.CommonDashboard}" class="+opposed" />
       </#if>
       </@menu>
     </li>

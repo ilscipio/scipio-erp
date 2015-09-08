@@ -24,7 +24,7 @@ under the License.
 </#if>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-  <@menuitem type="link" ofbizHref="EditCalendar" text="${uiLabelMap.ManufacturingNewCalendar}" />
+    <@menuitem type="link" ofbizHref="EditCalendar" text="${uiLabelMap.ManufacturingNewCalendar}" />
   </@menu>
 </#assign>
 <@section title=sectionTitle menuHtml=menuHtml>

@@ -19,13 +19,13 @@ under the License.
 <#assign selected = tabButtonItem?default("void")>
 <#if returnHeader??>
     <@menu type="button">
-      <li<#if selected="OrderReturnHeader"> class="selected"</#if>><a href="<@ofbizUrl>returnMain?returnId=${returnId!}</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.OrderReturnHeader}</a></li>
-      <li<#if selected="OrderReturnItems"> class="selected"</#if>><a href="<@ofbizUrl>returnItems?returnId=${returnId!}</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.OrderReturnItems}</a></li>
-      <li<#if selected="OrderReturnHistory"> class="selected"</#if>><a href="<@ofbizUrl>ReturnHistory?returnId=${returnId!}</@ofbizUrl>" class="${styles.menu_button_itemlink!}">${uiLabelMap.OrderReturnHistory}</a></li>
+      <@menuitem type="link" ofbizHref="returnMain?returnId=${returnId!}" text="${uiLabelMap.OrderReturnHeader}" selected=(selected=="OrderReturnHeader") />
+      <@menuitem type="link" ofbizHref="returnItems?returnId=${returnId!}" text="${uiLabelMap.OrderReturnItems}" selected=(selected=="OrderReturnItems") />
+      <@menuitem type="link" ofbizHref="ReturnHistory?returnId=${returnId!}" text="${uiLabelMap.OrderReturnHistory}" selected=(selected=="OrderReturnHistory") />
     </@menu>
   <#if selected != "OrderReturnHistory">
     <@menu type="button" class="+button-style-1">
-      <li><a href="<@ofbizUrl>return.pdf?returnId=${returnId!}</@ofbizUrl>" target="_BLANK" class="${styles.menu_button_itemlink!}">PDF</a></li>
+      <@menuitem type="link" ofbizHref="return.pdf?returnId=${returnId!}" text="PDF" target="_BLANK" />
       <#if returnId??>
         <#assign returnItems = delegator.findByAnd("ReturnItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("returnId", returnId, "returnTypeId", "RTN_REFUND"), null, false)/>
         <#if returnItems?has_content>
@@ -45,12 +45,13 @@ under the License.
                 <#assign shipmentRouteSegment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("ShipmentRouteSegment", {"shipmentId" : shipGroupShipment.shipmentId}, null, false))>
                 <#if shipmentRouteSegment??>
                   <#if "UPS" == shipmentRouteSegment.carrierPartyId>
-                    <li><a href="javascript:document.upsEmailReturnLabel.submit();" class="${styles.menu_button_itemlink!}">${uiLabelMap.ProductEmailReturnShippingLabelUPS}</a>
-                    <form name="upsEmailReturnLabel" method="post" action="<@ofbizUrl>upsEmailReturnLabelReturn</@ofbizUrl>">
-                      <input type="hidden" name="returnId" value="${returnId}"/>
-                      <input type="hidden" name="shipmentId" value="${shipGroupShipment.shipmentId}"/>
-                      <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}" />
-                    </form></li>
+                    <@menuitem type="link" href="javascript:document.upsEmailReturnLabel.submit();" text="${uiLabelMap.ProductEmailReturnShippingLabelUPS}">
+                      <form name="upsEmailReturnLabel" method="post" action="<@ofbizUrl>upsEmailReturnLabelReturn</@ofbizUrl>">
+                        <input type="hidden" name="returnId" value="${returnId}"/>
+                        <input type="hidden" name="shipmentId" value="${shipGroupShipment.shipmentId}"/>
+                        <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}" />
+                      </form>
+                    </@menuitem>
                   </#if>
                 </#if>
               </#if>

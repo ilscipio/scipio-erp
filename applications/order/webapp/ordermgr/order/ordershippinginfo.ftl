@@ -212,8 +212,8 @@ under the License.
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
     <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}">
        <@menu type="button">
-         <#--<li class="expanded"><a onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" title="Collapse">&nbsp;</a></li>-->
-         <li><a target="_BLANK" class="${styles.button_default!}" href="<@ofbizUrl>shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}</@ofbizUrl>">${uiLabelMap.OrderShipGroup} PDF</a></li>
+         <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" text="&nbsp;" title="Collapse" />-->
+         <@menuitem type="link" ofbizHref="shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}" text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" />
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>
            <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}&amp;view=OISGA" text="${uiLabelMap.OrderShipmentInformationByOrderItem}" />

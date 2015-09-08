@@ -23,7 +23,6 @@ under the License.
 <#else>
     <#assign shoppingCartSize = 0>
 </#if>
-
 <@section id="minicart" title="${uiLabelMap.OrderCartSummary}">
         <#if (shoppingCartSize > 0)>
           <#macro cartLinks>

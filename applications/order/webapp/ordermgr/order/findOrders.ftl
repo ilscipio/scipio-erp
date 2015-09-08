@@ -105,9 +105,11 @@ function submitFindForm(val){
   <#if (requestParameters.hideFields!"N") == "Y">
     <@menuitem type="link" href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" text="${uiLabelMap.CommonShowLookupFields}" />
   <#else>
-    <#if orderList??><li><a href="javascript:document.lookupandhidefields${requestParameters.hideFields!"Y"}.submit()"  class="${styles.button_default!}">${uiLabelMap.CommonHideFields}</a></li></#if>
-    <li><a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}"  class="${styles.button_default!}">${uiLabelMap.PartyLookupParty}</a></li>
-    <li><a href="javascript:lookupOrders(true);"  class="${styles.button_default!}">${uiLabelMap.OrderLookupOrder}</a></li>
+    <#if orderList??>
+      <@menuitem type="link" href="javascript:document.lookupandhidefields${requestParameters.hideFields!'Y'}.submit()" text="${uiLabelMap.CommonHideFields}" />
+    </#if>
+    <@menuitem type="link" href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}" text="${uiLabelMap.PartyLookupParty}" />
+    <@menuitem type="link" href="javascript:lookupOrders(true);" text="${uiLabelMap.OrderLookupOrder}" />
   </#if>
   </@menu>
 </#assign>

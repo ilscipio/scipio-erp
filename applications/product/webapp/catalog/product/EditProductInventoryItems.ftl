@@ -20,14 +20,14 @@ under the License.
 <#assign sectionTitle>${uiLabelMap.ProductInventoryItems} ${uiLabelMap.CommonFor} <#if product??>${(product.internalName)!} </#if> [${uiLabelMap.CommonId}:${productId!}]</#assign>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-        <#if productId?has_content>
-            <@menuitem type="link" href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCreateNewInventoryItemProduct}" />
-            <#if showEmpty>
-                <@menuitem type="link" ofbizHref="EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductHideEmptyItems}" />
-            <#else>
-                <@menuitem type="link" ofbizHref="EditProductInventoryItems?productId=${productId}&amp;showEmpty=true" text="${uiLabelMap.ProductShowEmptyItems}" />
-            </#if>
-        </#if>
+  <#if productId?has_content>
+    <@menuitem type="link" href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCreateNewInventoryItemProduct}" />
+    <#if showEmpty>
+      <@menuitem type="link" ofbizHref="EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductHideEmptyItems}" />
+    <#else>
+      <@menuitem type="link" ofbizHref="EditProductInventoryItems?productId=${productId}&amp;showEmpty=true" text="${uiLabelMap.ProductShowEmptyItems}" />
+    </#if>
+  </#if>
   </@menu>
 </#assign>
 <@section title=sectionTitle menuHtml=menuHtml>

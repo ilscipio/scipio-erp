@@ -57,18 +57,25 @@ under the License.
     
 <#-- Menus -->  
     "menu_default" : "",  
+    "menu_default_item" : "", 
     "menu_default_itemlink" : "", 
     "menu_main" : "dropdown",  
+    "menu_main_item" : "",
     "menu_main_itemlink" : "", 
     "menu_sidebar" : "side-nav", 
+    "menu_sidebar_item" : "",
     "menu_sidebar_itemlink" : "", 
     "menu_tab" : "button-group force-button", 
+    "menu_tab_item" : "", 
     "menu_tab_itemlink" : "button tiny", 
     "menu_subtab" : "button-group force-button",
+    "menu_subtab_item" : "",
     "menu_subtab_itemlink" : "button tiny", 
     "menu_button" : "button-group force-button",
+    "menu_button_item" : "",
     "menu_button_itemlink" : "button tiny",
     "menu_section" : "button-group",
+    "menu_section_item" : "",
     "menu_section_itemlink" : "button tiny", 
     
 <#-- Data and Tables -->  

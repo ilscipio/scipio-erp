@@ -37,12 +37,12 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-      <@menuitem type="link" ofbizHref="${createUrl}" text="${uiLabelMap.CommonCreateNew}" contentClass="+create" />
+    <@menuitem type="link" ofbizHref="${createUrl}" text="${uiLabelMap.CommonCreateNew}" contentClass="+create" />
 <#if partyList?has_content>    
   <#if hideFields == "Y">
-      <li class="collapsed"><a href="<@ofbizUrl>findparty?hideFields=N&amp;sortField=${sortField!}${paramList}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonShowLookupFields}</a></li>
+    <@menuitem type="link" ofbizHref="findparty?hideFields=N&amp;sortField=${sortField!}${paramList}" text="${uiLabelMap.CommonShowLookupFields}" class="+collapsed" />
   <#else>
-      <li class="expanded"><a href="<@ofbizUrl>findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonHideFields}</a></li>
+    <@menuitem type="link" ofbizHref="findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}" text="${uiLabelMap.CommonHideFields}" class="+expanded" />
   </#if>
 </#if>  
   </@menu>
@@ -298,14 +298,15 @@ under the License.
           <@menu type="button">
           <@menuitem type="link" ofbizHref="viewprofile?partyId=${partyRow.partyId}" text="${uiLabelMap.CommonDetails}" />
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-          <li><form name="searchorders_o_${rowCount}" method="post" action="/ordermgr/control/searchorders">
+          <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text="${uiLabelMap.OrderOrders}">
+          <form name="searchorders_o_${rowCount}" method="post" action="/ordermgr/control/searchorders">
             <input type="hidden" name="lookupFlag" value="Y" />
             <input type="hidden" name="hideFields" value="Y" />
             <input type="hidden" name="partyId" value="${partyRow.partyId}" />
             <input type="hidden" name="viewIndex" value="1" />
             <input type="hidden" name="viewSize" value="20" />
-            <a href="javascript:document.searchorders_o_${rowCount}.submit()" class="${styles.button_default!}">${uiLabelMap.OrderOrders}</a>
-          </form></li>
+          </form>
+          </@menuitem>
           <@menuitem type="link" href="/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderOrderQuotes}" />
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>

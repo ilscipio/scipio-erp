@@ -194,9 +194,9 @@ under the License.
 </script>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <li><a href="<@ofbizUrl>clearExpListing?productStoreId=${productStoreId!}</@ofbizUrl>" class="${styles.button_default!}">Clear Listing</a></li>
+    <@menuitem type="link" ofbizHref="clearExpListing?productStoreId=${productStoreId!}" text="Clear Listing" />
     <#if isExportValid?? && isExportValid == "true">
-    <li><a href="<@ofbizUrl>exportListingToEbay?productStoreId=${productStoreId!}</@ofbizUrl>" class="${styles.button_default!}">Export Products Listing</a></li>
+      <@menuitem type="link" ofbizHref="exportListingToEbay?productStoreId=${productStoreId!}" text="Export Products Listing" />
     </#if>
   </@menu>
 </#assign>
@@ -206,19 +206,33 @@ under the License.
     <@table type="generic" class="basic-table" cellspacing="0">
         <@tr><@td>
         <#if addItemObj?has_content>
-                    <@menu type="button">
-                       <#assign id = 1>
-                       <#if contentList?has_content>
-                           <#list contentList as content>
-                                 <#if !isProductId?has_content>
-                                    <li<#if id == 1> class="selected"<#assign isProductId = content.product.productId!><#else> id="tabHeader${id}"</#if>><a href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>exportProductListing</@ofbizUrl>?isProductId=${content.product.productId!}';document.getElementById('ProductsExportToEbay').submit();" class="${styles.menu_button_itemlink!}">${content.product.productName!}[${content.product.productId}]</a></li>
-                                 <#else>
-                                    <li<#if isProductId?? && isProductId! == content.product.productId!> class="selected"<#assign isProductId = content.product.productId!><#else> id="tabHeader${id}"</#if>><a href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>exportProductListing</@ofbizUrl>?isProductId=${content.product.productId!}';document.getElementById('ProductsExportToEbay').submit();" class="${styles.menu_button_itemlink!}">${content.product.productName!}[${content.product.productId}]</a></li>
-                                 </#if>
-                                 <#assign id = id+1>
-                           </#list>
-                       </#if>
-                    </@menu>
+            <@menu type="button">
+             <#assign id = 1>
+             <#if contentList?has_content>
+               <#list contentList as content>
+                 <#if !isProductId?has_content>
+                   <#assign href>javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>exportProductListing</@ofbizUrl>?isProductId=${content.product.productId!}';document.getElementById('ProductsExportToEbay').submit();</#assign>
+                   <#assign text = "${content.product.productName!}[${content.product.productId}]">
+                   <#if id == 1> 
+                     <@menuitem type="link" href=href text=text selected=true />
+                     <#assign isProductId = content.product.productId!>
+                   <#else> 
+                     <@menuitem type="link" href=href text=text id="tabHeader${id}" />
+                   </#if>
+                 <#else>
+                   <#assign href>javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>exportProductListing</@ofbizUrl>?isProductId=${content.product.productId!}';document.getElementById('ProductsExportToEbay').submit();</#assign>
+                   <#assign text = "${content.product.productName!}[${content.product.productId}]">
+                   <#if isProductId?? && isProductId! == content.product.productId!> 
+                     <@menuitem type="link" href=href text=text selected=true />
+                     <#assign isProductId = content.product.productId!>
+                   <#else>
+                     <@menuitem type="link" href=href text=text id="tabHeader${id}" />
+                   </#if>
+                 </#if>
+                 <#assign id = id + 1>
+               </#list>
+             </#if>
+            </@menu>
         <#assign addItemList = addItemObj.itemListing!>
         <#if addItemList?has_content>
             <#list addItemList as addItemObj>
@@ -562,7 +576,15 @@ under the License.
                                                <#if listingType.type.equals("Chinese") || listingType.type == "FixedPriceItem">
                                                     <#if listingType.type.equals("Chinese") > <#assign tabName = "Auction"></#if>
                                                     <#if listingType.type.equals("FixedPriceItem") > <#assign tabName = "Fixed Price"></#if>
-                                                    <li<#if id==1> style="margin-left: 1px" id="tabHeaderActive_"<#else> id="tabHeader_${id}"</#if>><a href="javascript:void(0)" onclick="toggleTab(${id},2)" class="${styles.menu_button_itemlink!}"><span>${tabName!}</span></a></li>
+                                                    
+                                                    <#if id==1>
+                                                      <#assign style>margin-left: 1px</#assign>
+                                                      <#assign id>tabHeaderActive_</#assign>
+                                                    <#else>
+                                                      <#assign style></#assign>
+                                                      <#assign id>tabHeader_${id}</#assign>
+                                                    </#if>
+                                                    <@menuitem type="link" onClick="toggleTab(${id},2)" text="${tabName!}" style=style id=id />
                                                     <#assign id = id + 1>
                                                </#if>
                                             </#list>

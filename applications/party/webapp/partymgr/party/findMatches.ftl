@@ -19,10 +19,10 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-  <@menuitem type="link" ofbizHref="addressMatchMap" text="${uiLabelMap.PageTitleAddressMatchMap}" />
+    <@menuitem type="link" ofbizHref="addressMatchMap" text="${uiLabelMap.PageTitleAddressMatchMap}" />
   </@menu>
 </#assign>
-<@section id="address-match-map">
+<@section id="address-match-map" menuHtml=menuHtml>
 
       <form name="matchform" method="post" action="<@ofbizUrl>findAddressMatch?match=true</@ofbizUrl>">
         <@field type="input" name="lastName" label="${uiLabelMap.PartyLastName}" value="${parameters.lastName!}" required=true />

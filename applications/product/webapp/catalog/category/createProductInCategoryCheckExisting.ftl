@@ -19,9 +19,9 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-<#if productCategoryId?has_content>
+  <#if productCategoryId?has_content>
     <@menuitem type="link" ofbizHref="EditCategory?productCategoryId=${productCategoryId}" text="[${uiLabelMap.ProductBackToEditCategory}]" />
-</#if>
+  </#if>
   </@menu>
 </#assign>
 <#assign sectionTitle>
@@ -57,7 +57,7 @@ under the License.
           </@tbody>
         </@table>
         <#else>
-            <@resultMsg>${uiLabelMap.ProductNoExistingProductsFound}.</@resultMsg>
+          <@resultMsg>${uiLabelMap.ProductNoExistingProductsFound}.</@resultMsg>
         </#if>
 
         <form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>" style="margin: 0;">

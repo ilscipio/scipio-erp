@@ -29,9 +29,9 @@ under the License.
 <@section title="${uiLabelMap.PageTitleEditCategoryProducts}" menuHtml=menuHtml>
       <#macro categoryProductsNav>
         <@menu type="button">
-          <@menuitem type="link" ofbizHref="EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;activeOnly=${activeOnly.toString()}" text="${uiLabelMap.CommonPrevious}" disabled=((viewIndex <= 1)) />
+          <@menuitem type="link" ofbizHref="EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;activeOnly=${activeOnly.toString()}" text="${uiLabelMap.CommonPrevious}" disabled=(viewIndex <= 1) />
           <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-          <li><a class="${styles.button_default!}" href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="${styles.button_default!}<#if (listSize <= highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
+          <@menuitem type="link" ofbizHref="EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;activeOnly=${activeOnly.toString()}" text="${uiLabelMap.CommonNext}" disabled=(listSize <= highIndex) />
         </@menu>
       </#macro>
       

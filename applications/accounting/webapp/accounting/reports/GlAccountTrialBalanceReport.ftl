@@ -20,7 +20,7 @@ under the License.
     <#if glAcctgTrialBalanceList?has_content>
         <#assign menuHtml>
           <@menu type="section" inlineItems=true>
-          <@menuitem type="link" ofbizHref="GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}" text="${uiLabelMap.AccountingInvoicePDF}" target="_BLANK" />
+            <@menuitem type="link" ofbizHref="GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}" text="${uiLabelMap.AccountingInvoicePDF}" target="_BLANK" />
           </@menu>
         </#assign>
         <@section menuHtml=menuHtml>

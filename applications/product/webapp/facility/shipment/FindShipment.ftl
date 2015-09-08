@@ -31,11 +31,11 @@ function lookupShipments() {
 </script>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-            <#if requestParameters.facilityId?has_content>
-                <@menuitem type="link" ofbizHref="quickShipOrder?facilityId=${requestParameters.facilityId}" text="${uiLabelMap.ProductQuickShipOrder}" />
-            </#if>
-            <@menuitem type="link" ofbizHref="EditShipment" text="${uiLabelMap.ProductNewShipment}" />
-            <#--<@menuitem type="link" href="javascript:lookupShipments();" text="${uiLabelMap.ProductFindShipment}" />-->
+  <#if requestParameters.facilityId?has_content>
+    <@menuitem type="link" ofbizHref="quickShipOrder?facilityId=${requestParameters.facilityId}" text="${uiLabelMap.ProductQuickShipOrder}" />
+  </#if>
+    <@menuitem type="link" ofbizHref="EditShipment" text="${uiLabelMap.ProductNewShipment}" />
+    <#--<@menuitem type="link" href="javascript:lookupShipments();" text="${uiLabelMap.ProductFindShipment}" />-->
   </@menu>
 </#assign>
 <@section id="findOrders" menuHtml=menuHtml> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->
@@ -152,18 +152,18 @@ function lookupShipments() {
             </@table>
         </form>
 </@section>
-<#if shipmentList??>
 
-<#assign menuHtml>
-  <@menu type="section" inlineItems=true>
-            <#if (0 < shipmentList?size)>
-                <li><a href="<#if !(viewIndex > 1)>javascript:void(0);<#else><@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y</@ofbizUrl></#if>" class="nav-previous ${styles.button_default!}<#if !(viewIndex > 1)> disabled</#if>">${uiLabelMap.CommonPrevious}</a></li>
-                <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${shipmentList?size}" />
-                <li><a href="<#if !(shipmentList?size > highIndex)>javascript:void(0);<#else><@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y</@ofbizUrl></#if>" class="nav-next ${styles.button_default!}<#if !(shipmentList?size > highIndex)> disabled</#if>">${uiLabelMap.CommonNext}</a></li>
-            </#if>
-  </@menu>
-</#assign>
-<@section id="findOrders_2" title="${uiLabelMap.ProductShipmentsFound}" menuHtml=menuHtml>
+<#if shipmentList??>
+  <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
+    <#if (0 < shipmentList?size)>
+      <@menuitem type="link" ofbizHref="FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 1)) contentClass="+nav-previous" />
+      <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${shipmentList?size}" />
+      <@menuitem type="link" ofbizHref="FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y" text="${uiLabelMap.CommonPrevious}" disabled=(!(shipmentList?size > highIndex)) contentClass="+nav-next" />
+    </#if>
+    </@menu>
+  </#assign>
+  <@section id="findOrders_2" title="${uiLabelMap.ProductShipmentsFound}" menuHtml=menuHtml>
       <#if shipmentList?has_content>  
         <@table type="data-list" autoAltRows=true cellspacing="0" cellpadding="2" class="basic-table hover-bar">
         <@thead>
@@ -198,5 +198,5 @@ function lookupShipments() {
       <#else>
         <@resultMsg>${uiLabelMap.ProductNoShipmentsFound}.</@resultMsg>
       </#if>  
-</@section>
+  </@section>
 </#if>

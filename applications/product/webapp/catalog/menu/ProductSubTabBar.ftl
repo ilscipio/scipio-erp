@@ -21,9 +21,9 @@ under the License.
     <@menu type="subtab">
         <@menuitem type="link" ofbizHref="EditProduct" text="${uiLabelMap.ProductNewProduct}" contentClass="+success" />
         <#if product?has_content>
-            <li><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>?product_id=${productId!}" class="${styles.menu_subtab_itemlink!} success">${uiLabelMap.ProductNewVirtualProduct}</a></li>
-            <li><a href="/ecommerce/control/product?product_id=${productId!}" class="${styles.menu_subtab_itemlink!} success">${uiLabelMap.ProductProductPage}</a></li>
-            <li><a href="<@ofbizUrl>ProductBarCode.pdf</@ofbizUrl>?productId=${productId!}" class="${styles.menu_subtab_itemlink!}" target="_blank">${uiLabelMap.ProductBarcode}</a></li>
+          <@menuitem type="link" ofbizHref="CreateVirtualWithVariantsForm?product_id=${productId!}" text="${uiLabelMap.ProductNewVirtualProduct}" contentClass="+success" />
+          <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId!}" text="${uiLabelMap.ProductProductPage}" contentClass="+success" />
+          <@menuitem type="link" ofbizHref="ProductBarCode.pdf?productId=${productId!}" text="${uiLabelMap.ProductBarcode}" target="_blank" />
         </#if>
         <@menuitem type="link" ofbizHref="EditProductTag" text="${uiLabelMap.ProductTags}" />
         <#--<#if tabButtonItem?has_content && tabButtonItem="EditProduct">

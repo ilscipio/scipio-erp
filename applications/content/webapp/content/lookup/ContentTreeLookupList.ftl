@@ -19,15 +19,15 @@
   
 <@menu type="button">
   <#if (arraySize > 0)>
-        <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexFirst>
-        <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonFirst}" disabled=(!(viewIndex > 0)) />
-          <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexPrevious>
-        <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 0)) />
-        <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${arraySize}" />
-        <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexNext>|
-        <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonNext}" disabled=(!(arraySize > highIndex)) />
-        <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexLast>|
-        <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonLast}" disabled=(!(arraySize > highIndex)) />
+    <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexFirst>
+    <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonFirst}" disabled=(!(viewIndex > 0)) />
+      <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexPrevious>
+    <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 0)) />
+    <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${arraySize}" />
+    <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexNext>|
+    <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonNext}" disabled=(!(arraySize > highIndex)) />
+    <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexLast>|
+    <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonLast}" disabled=(!(arraySize > highIndex)) />
   </#if>
 </@menu>
 

@@ -17,37 +17,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<@menu type="button">
 <#if curProductFeatureCategory??>
-<a href="<@ofbizUrl>EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductCreateNewFeature}</a>
+  <@menuitem type="link" ofbizHref="EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}" text="${uiLabelMap.ProductCreateNewFeature}" />
 <#elseif productFeatureGroup??>
-<a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit} ${productFeatureGroup.description!}</a>
+  <@menuitem type="link" ofbizHref="EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}" text="${uiLabelMap.CommonEdit} ${productFeatureGroup.description!}" />
 </#if>
 <#if productId?has_content>
-    <a href="<@ofbizUrl>EditProduct?productId=${productId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductReturnToEditProduct}</a>
-    <a href="<@ofbizUrl>EditProductFeatures?productId=${productId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductReturnToEditProductFeatures}</a>
+  <@menuitem type="link" ofbizHref="EditProduct?productId=${productId}" text="${uiLabelMap.ProductReturnToEditProduct}" />
+  <@menuitem type="link" ofbizHref="EditProductFeatures?productId=${productId}" text="${uiLabelMap.ProductReturnToEditProductFeatures}" />
 </#if>
+</@menu>
 
 <#if (listSize > 0)>
-<#assign selectedFeatureApplTypeId = selFeatureApplTypeId!>
-
-    <#if productId?has_content>
-      <#assign productString = "&amp;productId=" + productId>
-    </#if>
+  <#assign selectedFeatureApplTypeId = selFeatureApplTypeId!>
+  <#if productId?has_content>
+    <#assign productString = "&amp;productId=" + productId>
+  </#if>
     
-    <#if (listSize > 0)>
-      <@menu type="button">
-        <@menuitem type="link" ofbizHref="ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}" text="[${uiLabelMap.CommonPrevious}]" disabled=(!(viewIndex > 0)) />
-        <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-        <@menuitem type="link" ofbizHref="ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}" text="[${uiLabelMap.CommonNext}]" disabled=(!(listSize > highIndex)) />
-      </@menu>
-    </#if>
-
+  <@menu type="button">
+    <@menuitem type="link" ofbizHref="ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}" text="[${uiLabelMap.CommonPrevious}]" disabled=(!(viewIndex > 0)) />
+    <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
+    <@menuitem type="link" ofbizHref="ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}" text="[${uiLabelMap.CommonNext}]" disabled=(!(listSize > highIndex)) />
+  </@menu>
 </#if>
-<@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
+
 <form method="post" action="<@ofbizUrl>ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">
   <input type="hidden" name="_useRowSubmit" value="Y" />
   <input type="hidden" name="_checkGlobalScope" value="Y" />
   <input type="hidden" name="productId" value="${productId}" />
+  
+<@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
   <@thead>
   <@tr class="header-row">
     <@th>${uiLabelMap.CommonId}</@th>
@@ -65,7 +65,7 @@ under the License.
 <#if (listSize > 0)>
 <#list productFeatures as productFeature>
   <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
-    <@tr id="productFeatureId_tableRow_${rowCount}"  valign="middle">
+    <@tr id="productFeatureId_tableRow_${rowCount}" valign="middle">
         <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
         <@td><a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.button_default!}">${productFeature.productFeatureId}</a></@td>
         <@td>${productFeature.description!}</@td>
@@ -91,10 +91,11 @@ under the License.
     </@tr>
     <#assign rowCount = rowCount + 1>
 </#list>
-<@tfoot>
-<@tr><@td colspan="9" align="center"><input type="submit" value="${uiLabelMap.CommonApply}" /></@td></@tr>
-</@tfoot>
+  <@tfoot>
+    <@tr><@td colspan="9" align="center"><input type="submit" value="${uiLabelMap.CommonApply}" /></@td></@tr>
+  </@tfoot>
 </#if>
-<input type="hidden" name="_rowCount" value="${rowCount!}"/>
-</form>
 </@table>
+
+  <input type="hidden" name="_rowCount" value="${rowCount!}"/>
+</form>

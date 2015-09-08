@@ -245,15 +245,19 @@
 <@menu type="button">
   <@menuitem type="link" text="Menu Button 1" />
   <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
-  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.color_green}"/>
+  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.color_green}">
+    <!-- nested menu item comment -->
+  </@menuitem>
 </@menu>
 
 <#assign menuItems = [
   {"type":"link", "text":"Menu Tab 2", "disabled":true},
   {"type":"link", "text":"Menu Tab 1", "ofbizHref":"WebtoolsLayoutDemo"},
   {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
-  {"type":"text", "text":"Menu Tab 3 (text entry)"}
+  {"type":"text", "text":"Menu Tab 3 (text entry)", "nestedHtml":"<!-- hidden nested menu item comment -->"}
   {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true}
+  {"type":"link", "text":"Menu Tab 6", "selected":true}
+  {"type":"link", "text":"Menu Tab 7", "active":true}
 ]>
 <@menu type="button" items=menuItems sort=true sortDesc=true/>
 </@section>

@@ -29,11 +29,11 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
   <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-      <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-          <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelSelectedOrderItems</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelSelectedItems}</a></li>
-          <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.submit()" class="${styles.button_default!}">${uiLabelMap.OrderCancelAllItems}</a></li>
-          <@menuitem type="link" ofbizHref="orderview?${paramString}" text="${uiLabelMap.OrderViewOrder}" />
-      </#if>
+    <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
+      <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelSelectedItems}" />
+      <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelAllItems}" />
+      <@menuitem type="link" ofbizHref="orderview?${paramString}" text="${uiLabelMap.OrderViewOrder}" />
+    </#if>
   </#if>
   </@menu>
 </#assign>
@@ -235,12 +235,12 @@ under the License.
                                         <#if downloadContents?has_content>
                                             <#list downloadContents as downloadContent>
                                                 <@menuitem type="link" href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" text="${uiLabelMap.ContentDownload}" target="_blank" />
-                              </#list>
-                            </#if>
+                                          </#list>
+                                        </#if>
                                         <@menuitem type="link" href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCatalog}" target="_blank" />
                                         <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId}" text="${uiLabelMap.OrderEcommerce}" target="_blank" />
                                         <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
-                                            <li><a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.button_default!}">${uiLabelMap.OrderViewImage}</a></li>
+                                            <@menuitem type="link" ofbizHref="viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL" text="${uiLabelMap.OrderViewImage}" target="_orderImage" />
                                         </#if>
                                       </@menu>
                             </@td>
@@ -308,7 +308,7 @@ under the License.
                                     <@td>
                                       <@menu type="button">
                                         <#if itemSelectable>
-                                              <li><a href="javascript:document.updateItemInfo.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" class="${styles.button_default!} alert">${uiLabelMap.CommonCancel} ${uiLabelMap.CommonItem}</a></li>
+                                          <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" text="${uiLabelMap.CommonCancel} ${uiLabelMap.CommonItem}" target="_orderImage" contentClass="+alert" />
                                         </#if>
                                       </@menu>
                                     </@td>
@@ -358,7 +358,7 @@ under the License.
                         <@td colspan="6">&nbsp;</@td>
                     <@td>
                             <@menu type="button">
-                                <li><input type="submit" value="${uiLabelMap.OrderUpdateItems}" class="${styles.button_default!}"/></li>
+                              <@menuitem type="submit" text="${uiLabelMap.OrderUpdateItems}" />
                             </@menu>
                     </@td>
                 </@tr>

@@ -18,18 +18,20 @@ under the License.
 -->
 
 <#if hasPermission>
-<@section title="${uiLabelMap.OrderScheduleDelivery}">
-      <@menu type="button">
-        <#if orderId??>
-          <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}" text="${uiLabelMap.OrderViewOrder}" />
-        </#if>
-      </@menu>
-        <#if orderId?has_content>
-          ${updatePODeliveryInfoWrapper.renderFormString(context)}
-        <#else>
-          ${uiLabelMap.OrderNoPurchaseSpecified}
-        </#if>
-    </@section>
+  <#assign menuHtml>
+    <@menu type="button">
+    <#if orderId??>
+      <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}" text="${uiLabelMap.OrderViewOrder}" />
+    </#if>
+    </@menu>
+  </#assign>
+  <@section title="${uiLabelMap.OrderScheduleDelivery}" menuHtml=menuHtml>
+    <#if orderId?has_content>
+      ${updatePODeliveryInfoWrapper.renderFormString(context)}
+    <#else>
+      ${uiLabelMap.OrderNoPurchaseSpecified}
+    </#if>
+  </@section>
 <#else>
- <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
+  <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

@@ -26,12 +26,12 @@ under the License.
     <@menu type="section" inlineItems=true>
       <@menuitem type="link" ofbizHref="EditFinAccountReconciliations?finAccountId=${finAccountId}&amp;glReconciliationId=${glReconciliationId}" text="${uiLabelMap.CommonEdit}" />
       <#assign finAcctTransCondList = delegator.findByAnd("FinAccountTrans", {"glReconciliationId" : glReconciliationId, "statusId" : "FINACT_TRNS_CREATED"}, null, false)>
-      <#if finAcctTransCondList?has_content>
-        <@menuitem type="link" href="javascript:document.CancelBankReconciliationForm.submit();" text="${uiLabelMap.AccountingCancelBankReconciliation}" />
-      </#if>
+    <#if finAcctTransCondList?has_content>
+      <@menuitem type="link" href="javascript:document.CancelBankReconciliationForm.submit();" text="${uiLabelMap.AccountingCancelBankReconciliation}" />
+    </#if>
     </@menu>
   </#assign>
-  <@section title="${uiLabelMap.AccountingCurrentBankReconciliation}">
+  <@section title="${uiLabelMap.AccountingCurrentBankReconciliation}" menuHtml=menuHtml>
       <#if currentGlReconciliation?has_content>
         <@table type="fields" class="" cellspacing="">
           <@tr>

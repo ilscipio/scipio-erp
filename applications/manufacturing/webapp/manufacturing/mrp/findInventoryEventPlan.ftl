@@ -103,9 +103,9 @@ document.lookupinventory.productId.focus();
              <div class="boxhead" align="right">
                <#if (0 < listSize)>
                 <@menu type="button">
-                  <@menuitem type="link" ofbizHref="FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${requestParameters.hideFields?default("N")}${paramList}" text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex)) />
+                  <@menuitem type="link" ofbizHref="FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex)) />
                   <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-                  <@menuitem type="link" ofbizHref="FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${requestParameters.hideFields?default("N")}${paramList}" text="${uiLabelMap.CommonNext}" disabled=(!(highIndex < listSize)) />
+                  <@menuitem type="link" ofbizHref="FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonNext}" disabled=(!(highIndex < listSize)) />
                 </@menu>
               </#if>
             </div>

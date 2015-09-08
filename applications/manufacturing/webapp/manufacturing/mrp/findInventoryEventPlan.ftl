@@ -56,9 +56,7 @@ function lookupInventory() {
                     <@td width='20%' align='right'>${uiLabelMap.ManufacturingProductId}</@td>
                     <@td width='5%'>&nbsp;</@td>
                     <@td>
-                      <span>
                         <@htmlTemplate.lookupField value='${requestParameters.productId!}' formName="lookupinventory" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                      </span>
                      </@td>
                   </@tr>
                   <@tr>

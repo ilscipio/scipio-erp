@@ -65,7 +65,7 @@ under the License.
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <@table type="fields" cellspacing="0" class="basic-table">
                 <@tr>
-                  <@td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></@td>
+                  <@td width="25%" align="right">${uiLabelMap.ProductOrderId}</@td>
                   <@td width="1">&nbsp;</@td>
                   <@td width="25%">
                     <input type="text" name="orderId" size="20" maxlength="20" value="${orderId!}"/>
@@ -91,7 +91,7 @@ under the License.
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <@table type="fields" cellspacing="0" class="basic-table">
                 <@tr>
-                  <@td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></@td>
+                  <@td width="25%" align='right'>${uiLabelMap.FormFieldTitle_picklistBinId}</@td>
                   <@td width="1">&nbsp;</@td>
                   <@td width="25%">
                     <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>

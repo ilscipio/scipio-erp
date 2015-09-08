@@ -293,8 +293,7 @@ function submitForm(form, mode, value) {
                     <@td width="1%">
                       <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == checkOutPaymentId>checked="checked"</#if>/>
                     </@td>
-                    <@td width="50%">
-                      <span>${uiLabelMap.OrderMoneyOrder}</span>
+                    <@td width="50%">${uiLabelMap.OrderMoneyOrder}
                     </@td>
                   </@tr>
                   </#if>
@@ -303,8 +302,7 @@ function submitForm(form, mode, value) {
                     <@td width="1%">
                       <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == checkOutPaymentId>checked="checked"</#if>/>
                     </@td>
-                    <@td width="50%">
-                      <span>${uiLabelMap.OrderCOD}</span>
+                    <@td width="50%">${uiLabelMap.OrderCOD}
                     </@td>
                   </@tr>
                   </#if>
@@ -313,8 +311,7 @@ function submitForm(form, mode, value) {
                     <@td width="1%">
                       <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == checkOutPaymentId>checked="checked"</#if>/>
                     </@td>
-                    <@td width="50%">
-                      <span>${uiLabelMap.AccountingPayWithWorldPay}</span>
+                    <@td width="50%">${uiLabelMap.AccountingPayWithWorldPay}
                     </@td>
                   </@tr>
                   </#if>
@@ -323,8 +320,7 @@ function submitForm(form, mode, value) {
                     <@td width="1%">
                       <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == checkOutPaymentId>checked="checked"</#if>/>
                     </@td>
-                    <@td width="50%">
-                      <span>${uiLabelMap.AccountingPayWithPayPal}</span>
+                    <@td width="50%">${uiLabelMap.AccountingPayWithPayPal}
                     </@td>
                   </@tr>
                   </#if>
@@ -336,8 +332,7 @@ function submitForm(form, mode, value) {
                         <@td width="1%">
                           <input type="radio" name="checkOutPaymentId" value="FIN_ACCOUNT|${finAccount.finAccountId}" <#if "FIN_ACCOUNT" == checkOutPaymentId>checked="checked"</#if>/>
                         </@td>
-                        <@td width="50%">
-                          <span>${uiLabelMap.AccountingFinAccount} #${finAccount.finAccountId}</span>
+                        <@td width="50%">${uiLabelMap.AccountingFinAccount} #${finAccount.finAccountId}
                         </@td>
                       </@tr>
                   </#list>
@@ -429,8 +424,7 @@ function submitForm(form, mode, value) {
                             </#list>
                         </select>
                       </@td>
-                      <@td width="50%">
-                        <span>${uiLabelMap.FormFieldTitle_billingAccountId}</span>
+                      <@td width="50%">${uiLabelMap.FormFieldTitle_billingAccountId}
                       </@td>
                     </@tr>
                     <@tr>
@@ -451,8 +445,7 @@ function submitForm(form, mode, value) {
                     <@td width="1%">
                       <input type="checkbox" name="addGiftCard" value="Y"/>
                     </@td>
-                    <@td width="50%">
-                      <span>${uiLabelMap.AccountingUseGiftCardNotOnFile}</span>
+                    <@td width="50%">${uiLabelMap.AccountingUseGiftCardNotOnFile}
                     </@td>
                   </@tr>
                   <@tr>

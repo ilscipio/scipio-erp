@@ -112,7 +112,7 @@ under the License.
                 <#list quoteItemAdjustments as quoteItemAdjustment>
                     <#assign adjustmentType = quoteItemAdjustment.getRelatedOne("OrderAdjustmentType", false)>
                     <@tr groupLast=true>
-                        <@td align="right" colspan="4"><span>${adjustmentType.get("description",locale)!}</span></@td>
+                        <@td align="right" colspan="4">${adjustmentType.get("description",locale)!}</@td>
                         <@td align="right"><@ofbizCurrency amount=quoteItemAdjustment.amount isoCode=quote.currencyUomId/></@td>
                         <@td>&nbsp;</@td>
                     </@tr>
@@ -131,7 +131,7 @@ under the License.
                 <#if !quoteAdjustment.quoteItemSeqId??>
                     <#assign totalQuoteHeaderAdjustmentAmount = quoteAdjustment.amount?default(0) + totalQuoteHeaderAdjustmentAmount>
                     <@tr useAlt=false>
-                      <@td align="right" colspan="6"><span>${adjustmentType.get("description",locale)!}</span></@td>
+                      <@td align="right" colspan="6">${adjustmentType.get("description",locale)!}</@td>
                       <@td align="right"><@ofbizCurrency amount=quoteAdjustment.amount isoCode=quote.currencyUomId/></@td>
                     </@tr>
                 </#if>

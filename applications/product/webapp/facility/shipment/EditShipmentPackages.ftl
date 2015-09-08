@@ -168,7 +168,7 @@ under the License.
         <form action="<@ofbizUrl>createShipmentPackage</@ofbizUrl>" name="createShipmentPackageForm">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <@tr>
-                <@td><span>${uiLabelMap.ProductNewPackage}</span></@td>
+                <@td>${uiLabelMap.ProductNewPackage}</@td>
                 <@td>&nbsp;</@td>
                 <@td><span>${uiLabelMap.ProductWeight}</span> <input type="text" size="5" name="weight"/></@td>
                 <@td><span>${uiLabelMap.ProductWeightUnit}</span>

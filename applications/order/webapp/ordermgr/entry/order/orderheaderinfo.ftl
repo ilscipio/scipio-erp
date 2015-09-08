@@ -22,8 +22,7 @@ under the License.
         <#-- order name -->
         <#if (orderName?has_content)>
             <@tr>
-                <@td class="${styles.grid_large!}3">
-                    <span>&nbsp;<b>${uiLabelMap.OrderOrderName}</b> </span>
+                <@td class="${styles.grid_large!}3">&nbsp;<b>${uiLabelMap.OrderOrderName}</b>
                 </@td>
                 <@td colspan="2">
                     ${orderName}
@@ -33,8 +32,7 @@ under the License.
         <#-- order for party -->
         <#if (orderForParty??)>
             <@tr>
-                <@td class="${styles.grid_large!}3">
-                    <span>&nbsp;<b>${uiLabelMap.OrderOrderFor}</b> </span>
+                <@td class="${styles.grid_large!}3">&nbsp;<b>${uiLabelMap.OrderOrderFor}</b>
                 </@td>
                 <@td colspan="2">
                     ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(orderForParty, false)} [${orderForParty.partyId}]
@@ -43,8 +41,7 @@ under the License.
         </#if>
         <#if (cart.getPoNumber()?has_content)>
             <@tr>
-                <@td class="${styles.grid_large!}3">
-                    <span>&nbsp;<b>${uiLabelMap.OrderPONumber}</b> </span>
+                <@td class="${styles.grid_large!}3">&nbsp;<b>${uiLabelMap.OrderPONumber}</b>
                 </@td>
                 <@td colspan="2">
                     ${cart.getPoNumber()}

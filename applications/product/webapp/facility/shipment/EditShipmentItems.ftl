@@ -121,7 +121,7 @@ under the License.
         <@tr>
             <form action="<@ofbizUrl>createShipmentItem</@ofbizUrl>" method="post" name="createShipmentItemForm">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-                <@td><span>${uiLabelMap.ProductNewItem}</span></@td>
+                <@td>${uiLabelMap.ProductNewItem}</@td>
                 <@td colspan="2"><span>${uiLabelMap.ProductProductId}</span> 
                   <@htmlTemplate.lookupField formName="createShipmentItemForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
                 </@td>

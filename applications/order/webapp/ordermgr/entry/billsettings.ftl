@@ -64,8 +64,7 @@ function makeExpDate() {
                         </#list>
                     </select>
                   </@td>
-                  <@td>
-                    <span>${uiLabelMap.FormFieldTitle_billingAccountId}</span>
+                  <@td>${uiLabelMap.FormFieldTitle_billingAccountId}
                   </@td>
                   <@td></@td>
                 </@tr>

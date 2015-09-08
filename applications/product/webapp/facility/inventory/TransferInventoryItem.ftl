@@ -55,7 +55,7 @@ under the License.
             <input type="hidden" name="locationSeqId" value="${(inventoryItem.locationSeqId)!}" />
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%"align="right"><span>${uiLabelMap.ProductInventoryItemId}</span></@td>
+                <@td width="6%"align="right">${uiLabelMap.ProductInventoryItemId}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">${inventoryItemId}</@td>
             </@tr>
@@ -71,7 +71,7 @@ under the License.
             </@tr>
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductProductId}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductProductId}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">
                     <#if inventoryItem?? && (inventoryItem.productId)??>
@@ -81,21 +81,21 @@ under the License.
             </@tr>
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.CommonStatus}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.CommonStatus}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">${(inventoryStatus.get("description",locale))?default("--")}</@td>
             </@tr>
 
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductComments}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductComments}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">${(inventoryItem.comments)?default("--")}</@td>
             </@tr>
 
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductSerialAtpQoh}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductSerialAtpQoh}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
                     <@td width="74%">
@@ -114,7 +114,7 @@ under the License.
         </@tr>
         <@tr>
             <@td width="14%">&nbsp;</@td>
-            <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductTransferStatus}</span></@td>
+            <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductTransferStatus}</@td>
             <@td width="6%">&nbsp;</@td>
             <@td width="74%">
             <select name="statusId">
@@ -130,7 +130,7 @@ under the License.
         </@tr>
         <@tr>
            <@td width="14%">&nbsp;</@td>
-            <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductTransferSendDate}</span></@td>
+            <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductTransferSendDate}</@td>
             <@td width="6%">&nbsp;</@td>
             <@td width="74%">
             <input type="text" name="sendDate" value="${(inventoryTransfer.sendDate)!}" size="22" />
@@ -140,7 +140,7 @@ under the License.
         <#if !(inventoryTransfer??)>
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductToFacilityContainer}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductToFacilityContainer}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">
                         <select name="facilityIdTo">
@@ -156,7 +156,7 @@ under the License.
             </@tr>
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductToLocation}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductToLocation}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">
                   <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation"/>
@@ -164,7 +164,7 @@ under the License.
             </@tr>
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductComments}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductComments}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">
                 <input type="text" name="comments" size="60" maxlength="250" />
@@ -172,7 +172,7 @@ under the License.
             </@tr>
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductQuantityToTransfer}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductQuantityToTransfer}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">
                 <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
@@ -188,7 +188,7 @@ under the License.
         <#else>
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductTransferReceiveDate}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductTransferReceiveDate}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">
                 <input type="text" name="receiveDate" value="${(inventoryTransfer.receiveDate)!}" size="22" />
@@ -197,14 +197,14 @@ under the License.
             </@tr>
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductToFacilityContainer}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductToFacilityContainer}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <#assign fac = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", inventoryTransfer.facilityIdTo), false)>
                 <@td width="74%">${(fac.facilityName)?default("&nbsp;")}</@td>
             </@tr>
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductToLocation}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductToLocation}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">
                   <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
@@ -212,7 +212,7 @@ under the License.
             </@tr>
             <@tr>
                 <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap"><span>${uiLabelMap.ProductComments}</span></@td>
+                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductComments}</@td>
                 <@td width="6%">&nbsp;</@td>
                 <@td width="74%">
                 <input type="text" name="comments" value="${(inventoryTransfer.comments)!}" size="60" maxlength="250" />

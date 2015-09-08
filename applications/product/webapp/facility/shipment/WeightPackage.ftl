@@ -60,7 +60,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
             <@table type="fields" cellspacing="0" class="basic-table">
               <@tr>
-                <@td width="25%" align="right"><span>${uiLabelMap.ProductOrderId}</span></@td>
+                <@td width="25%" align="right">${uiLabelMap.ProductOrderId}</@td>
                 <@td width="1">&nbsp;</@td>
                 <@td width="25%">
                   <input type="text" name="orderId" size="20" maxlength="20" value="${primaryOrderId!}"/>
@@ -84,7 +84,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
             <@table type="fields" cellspacing="0" class="basic-table">
               <@tr>
-                <@td width="25%" align='right'><span>${uiLabelMap.FormFieldTitle_picklistBinId}</span></@td>
+                <@td width="25%" align='right'>${uiLabelMap.FormFieldTitle_picklistBinId}</@td>
                 <@td width="1">&nbsp;</@td>
                 <@td width="25%">
                   <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
@@ -126,10 +126,8 @@ under the License.
                     <input type="hidden" name="weightPackageSeqId" value ="${packedLine.getWeightPackageSeqId()}"/>
                     <@tr>
                       <@td>
-                        <span>
                           ${uiLabelMap.ProductPackage} ${packedLine.getWeightPackageSeqId()}
                           <input type="text" size="7" name="packageWeight" value="${(packedLine.getPackageWeight())!}" />
-                        </span>
                       </@td>
                       <@td>
                         <span>${uiLabelMap.CommonLength}<input type="text" name="packageLength" value="${(packedLine.getPackageLength())!}" size="5"/></span>
@@ -185,12 +183,10 @@ under the License.
                   <hr/>
                 </#if>
                 <@tr>
-                  <@td>
-                    <span>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
+                  <@td>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
                       <br />
                       ${uiLabelMap.ProductPackage}
                       <input type="text" size="7" name="packageWeight" value=""/>
-                    </span>
                   </@td>
                   <@td>
                     <span>${uiLabelMap.CommonDimension} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultDimensionUomId)?eval}):</span>
@@ -241,10 +237,8 @@ under the License.
                 <#list shipmentPackages?sort_by("shipmentPackageSeqId") as shipmentPackage>
                   <@tr>
                     <@td>
-                      <span>
                         ${uiLabelMap.ProductPackage} ${(shipmentPackage_index + 1)}
                         <input type="text" size="7" readonly="readonly" name="packageWeight" value="${(shipmentPackage.weight)!}" />
-                      </span>
                     </@td>
                     <@td>
                       <span>${uiLabelMap.CommonLength}<input type="text" readonly="readonly" name="packageLength" value="${(shipmentPackage.boxLength)!}" size="5"/></span>

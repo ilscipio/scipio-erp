@@ -103,11 +103,11 @@ under the License.
                                     <widgets>
                                         <horizontal-separator/>
                                         <label style="h1" text="H1."/>
-                                        <label style="h2" text="H2."/>
-                                        <label style="h3" text="H3."/>
-                                        <label style="h4" text="H4."/>
-                                        <label style="h5" text="H5."/>
-                                        <label style="h6" text="H6."/>
+                                        <label style="heading" text="H2."/>
+                                        <label style="heading+1" text="H3."/>
+                                        <label style="heading+2" text="H4."/>
+                                        <label style="heading+3" text="H5."/>
+                                        <label style="heading+4" text="H6."/>
                                     </widgets>
                                 </section>
                                  

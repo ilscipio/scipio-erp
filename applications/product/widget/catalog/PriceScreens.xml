@@ -102,11 +102,11 @@ under the License.
                         <platform-specific><html><html-template location="component://product/webapp/catalog/price/setPriceRulesCondEventJs.ftl"/></html></platform-specific>
                         <include-menu name="PriceRulesButtonBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                         <screenlet title="${uiLabelMap.ProductPriceRuleId} [${parameters.productPriceRuleId}]">
-                            <label style="h6" text="${uiLabelMap.ProductConditionsActionsRemoveBefore}"/>
+                            <label style="heading+4" text="${uiLabelMap.ProductConditionsActionsRemoveBefore}"/>
                             <horizontal-separator/>
                             <include-form name="EditProductPriceRule" location="component://product/widget/catalog/PriceForms.xml"/>
                             <horizontal-separator/>
-                            <label style="h6" text="${uiLabelMap.ProductConditionsThenActions}"/>
+                            <label style="heading+4" text="${uiLabelMap.ProductConditionsThenActions}"/>
                             <horizontal-separator/>
                             <screenlet title="${uiLabelMap.ProductConditions}">
                                 <include-form name="EditProductPriceRulesCond" location="component://product/widget/catalog/PriceForms.xml"/>

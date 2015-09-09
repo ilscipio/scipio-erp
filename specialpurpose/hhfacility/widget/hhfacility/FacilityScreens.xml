@@ -156,7 +156,7 @@ under the License.
             <widgets>
                 <decorator-screen name="FacilityDecorator">
                     <decorator-section name="body">
-                        <label style="h2">${uiLabelMap.ProductReceiptPurchaseOrder}</label>
+                        <label style="heading">${uiLabelMap.ProductReceiptPurchaseOrder}</label>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -203,7 +203,7 @@ under the License.
             <widgets>
                 <decorator-screen name="FacilityDecorator">
                     <decorator-section name="body">
-                        <label style="h2">${uiLabelMap.ProductFacilityMovement}</label>
+                        <label style="heading">${uiLabelMap.ProductFacilityMovement}</label>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -215,7 +215,7 @@ under the License.
             <widgets>
                 <decorator-screen name="FacilityDecorator">
                     <decorator-section name="body">
-                        <label style="h2">${uiLabelMap.ProductPicking}</label>
+                        <label style="heading">${uiLabelMap.ProductPicking}</label>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -227,7 +227,7 @@ under the License.
             <widgets>
                 <decorator-screen name="FacilityDecorator">
                     <decorator-section name="body">
-                        <label style="h2">${uiLabelMap.ProductPacking}</label>
+                        <label style="heading">${uiLabelMap.ProductPacking}</label>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

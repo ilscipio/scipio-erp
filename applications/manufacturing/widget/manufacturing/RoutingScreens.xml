@@ -43,7 +43,7 @@ under the License.
                                         <include-menu name="RoutingTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                                     </widgets>
                                 </section>
-                                <label style="h2">[${uiLabelMap.CommonId} ${routing.workEffortId}] ${routing.workEffortName}</label>
+                                <label style="heading">[${uiLabelMap.CommonId} ${routing.workEffortId}] ${routing.workEffortName}</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -78,7 +78,7 @@ under the License.
                                         <include-menu name="RoutingTaskTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                                     </widgets>
                                 </section>
-                                <label style="h2">[${uiLabelMap.CommonId} ${routingTask.workEffortId}] ${routingTask.workEffortName}</label>
+                                <label style="heading">[${uiLabelMap.CommonId} ${routingTask.workEffortId}] ${routingTask.workEffortName}</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

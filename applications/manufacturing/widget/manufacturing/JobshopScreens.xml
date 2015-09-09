@@ -39,7 +39,7 @@ under the License.
                                         <include-menu name="ProductionRunTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                                     </widgets>
                                 </section>
-                                <label style="h2">[${uiLabelMap.CommonId} ${productionRunId}]</label>
+                                <label style="heading">[${uiLabelMap.CommonId} ${productionRunId}]</label>
                                 <container style="button-bar">
                                     <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.button_default}"/>
                                 </container>

@@ -54,12 +54,12 @@ under the License.
                                                         </condition>
                                                         <widgets>
                                                             <!-- list all accounts -->
-                                                            <label style="h2" text="${uiLabelMap.SfaAllAccounts}"/>
+                                                            <label style="heading" text="${uiLabelMap.SfaAllAccounts}"/>
                                                             <include-form name="ListAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
                                                         </widgets>
                                                         <fail-widgets>
                                                             <!-- list my accounts -->
-                                                            <label style="h2" text="${uiLabelMap.SfaMyAccounts}"/>
+                                                            <label style="heading" text="${uiLabelMap.SfaMyAccounts}"/>
                                                             <include-form name="ListMyAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
                                                         </fail-widgets>
                                                     </section>

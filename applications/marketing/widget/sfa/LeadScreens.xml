@@ -52,12 +52,12 @@ under the License.
                                                 </condition>
                                                 <widgets>
                                                     <!-- list all leads -->
-                                                    <label style="h2" text="${uiLabelMap.SfaAllLeads}"/>
+                                                    <label style="heading" text="${uiLabelMap.SfaAllLeads}"/>
                                                     <include-form name="ListLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
                                                 </widgets>
                                                 <fail-widgets>
                                                     <!-- list my leads -->
-                                                    <label style="h2" text="${uiLabelMap.SfaMyLeads}"/>
+                                                    <label style="heading" text="${uiLabelMap.SfaMyLeads}"/>
                                                     <include-form name="ListMyLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
                                                 </fail-widgets>
                                             </section>

@@ -100,7 +100,7 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="contactListId"/></not></condition>
                                     <widgets>
-                                        <label style="h2">${uiLabelMap.MarketingContactList} ${contactList.contactListName} [${contactListId}]</label>
+                                        <label style="heading">${uiLabelMap.MarketingContactList} ${contactList.contactListName} [${contactListId}]</label>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

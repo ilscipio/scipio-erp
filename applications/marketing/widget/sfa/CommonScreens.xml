@@ -189,7 +189,7 @@ under the License.
                                         </and>
                                     </condition>
                                     <widgets>
-                                        <label style="h2" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/>
+                                        <label style="heading" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

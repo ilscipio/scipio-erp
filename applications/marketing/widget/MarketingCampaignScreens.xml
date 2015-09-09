@@ -148,7 +148,7 @@ under the License.
                         </container>
                         <include-form name="EditMarketingCampaignRoles" location="component://marketing/widget/MarketingCampaignForms.xml" />
                         <!-- 
-                        <label style="h2" text="${uiLabelMap.CommonStatusHistory}" />
+                        <label style="heading" text="${uiLabelMap.CommonStatusHistory}" />
                          -->
                     </decorator-section>
                 </decorator-screen>

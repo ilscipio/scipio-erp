@@ -197,7 +197,7 @@ under the License.
                                                     </entity-condition>
                                                 </actions>
                                                 <widgets>
-                                                    <label style="h3" text="${contact.partyIdTo}"/>
+                                                    <label style="heading+1" text="${contact.partyIdTo}"/>
                                                     <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                                 </widgets>
                                             </section>
@@ -241,7 +241,7 @@ under the License.
                                             <widgets>
                                                 <horizontal-separator/>
                                                 <label style="heading" text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/>
-                                                <label style="h3" text="${partyIdFrom}"/>  
+                                                <label style="heading+1" text="${partyIdFrom}"/>  
                                                 <iterate-section entry="account" list="accounts">
                                                     <section>
                                                         <widgets>
@@ -266,7 +266,7 @@ under the License.
                                                                     <if-compare field="contact.partyIdTo" operator="not-equals" value="${partyId}"/>
                                                                 </condition>
                                                                 <widgets>
-                                                                    <label style="h3" text="${contact.partyIdTo}"/>
+                                                                    <label style="heading+1" text="${contact.partyIdTo}"/>
                                                                     <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                                                 </widgets>
                                                             </section>
@@ -811,7 +811,7 @@ under the License.
                                     <widgets>
                                         <screenlet title="${uiLabelMap.PartyViewImage}">
                                             <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="uploadCommContent"/>
-                                            <label text="${uiLabelMap.PartyViewImage}" style="h3"/>
+                                            <label style="heading+1" text="${uiLabelMap.PartyViewImage}"/>
                                             <content dataresource-id="${commEventContentDataResource.drDataResourceId}"/>
                                         </screenlet>
                                     </widgets>

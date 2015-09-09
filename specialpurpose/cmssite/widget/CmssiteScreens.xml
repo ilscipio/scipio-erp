@@ -48,7 +48,7 @@
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <label style="h2" text="example with screen decorator and widget"/>
+                        <label style="heading" text="example with screen decorator and widget"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

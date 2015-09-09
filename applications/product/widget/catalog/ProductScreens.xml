@@ -84,7 +84,7 @@ under the License.
                                             <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
                                         </platform-specific>
                                         
-                                        <label style="heading"">${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
+                                        <label style="heading">${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
                                         <image src="${product.smallImageUrl}" url-mode="content" alt="${product.internalName}" style="cssImgSmall"/>
                                         
                                     </widgets>
@@ -450,7 +450,7 @@ under the License.
                         <screenlet title="${uiLabelMap.ProductRoutings}">
                             <include-form name="ListProductRoutings" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
-                        <label style="heading"">${uiLabelMap.ProductLowLevelCode}: ${product.billOfMaterialLevel}</label>
+                        <label style="heading">${uiLabelMap.ProductLowLevelCode}: ${product.billOfMaterialLevel}</label>
                         <screenlet title="${uiLabelMap.ProductComponents}">
                             <include-form name="ListProductComponents" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
@@ -509,7 +509,7 @@ under the License.
                                 </service>
                             </actions>
                             <widgets>
-                                <label style="heading"">${uiLabelMap.CommonTotal}: ${totalCostMap.productCost}</label>
+                                <label style="heading">${uiLabelMap.CommonTotal}: ${totalCostMap.productCost}</label>
                             </widgets>
                         </section>
                         <screenlet title="${uiLabelMap.ProductCosts}">

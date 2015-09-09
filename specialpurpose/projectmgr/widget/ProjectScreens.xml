@@ -242,7 +242,7 @@ under the License.
                             </condition>
                             <!-- Add a new Task -->
                             <widgets>
-                                <label style="h2">${uiLabelMap.PageTitleEditTask}</label>
+                                <label style="heading">${uiLabelMap.PageTitleEditTask}</label>
                                 <platform-specific>
                                     <html><html-template location="component://projectmgr/webapp/projectmgr/project/edittask.ftl"/></html>
                                 </platform-specific>
@@ -268,8 +268,8 @@ under the License.
                                                 <parameter param-name="workEffortTypeId" value="TASK"/>
                                             </link>
                                         </container>
-                                        <label style="h2">${uiLabelMap.ProjectMgrSubTaskName}: ${task.workEffortName}</label>
-                                        <label style="h2">${uiLabelMap.PageTitleEditSubTask}</label>
+                                        <label style="heading">${uiLabelMap.ProjectMgrSubTaskName}: ${task.workEffortName}</label>
+                                        <label style="heading">${uiLabelMap.PageTitleEditSubTask}</label>
                                         <platform-specific>
                                             <html><html-template location="component://projectmgr/webapp/projectmgr/project/edittaskandassoc.ftl"/></html>
                                         </platform-specific>
@@ -676,7 +676,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.PageTitleNewPartyNote}" style="h2"/>
+                        <label text="${uiLabelMap.PageTitleNewPartyNote}" style="heading"/>
                         <include-form name="AddPartyNote" location="component://party/widget/partymgr/PartyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -761,10 +761,10 @@ under the License.
                                         <not><if-empty field="communicationEvent"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h2" text="${uiLabelMap.PartyEditCommunicationEvent}"/>
+                                        <label style="heading" text="${uiLabelMap.PartyEditCommunicationEvent}"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h2" text="${uiLabelMap.PartyNewCommunication}"/>
+                                        <label style="heading" text="${uiLabelMap.PartyNewCommunication}"/>
                                     </fail-widgets>
                                 </section>
                                 <section>
@@ -993,7 +993,7 @@ under the License.
                             <set field="project" from-field="result.projectInfo"/>
                         </actions>
                         <widgets>
-                            <label style="h2" text="${uiLabelMap.ProjectMgrProjectCurrent}: ${project.projectName}[${project.projectId}]"/>
+                            <label style="heading" text="${uiLabelMap.ProjectMgrProjectCurrent}: ${project.projectName}[${project.projectId}]"/>
                             <container style="${styles.grid_large}6">
                                 <screenlet title="${uiLabelMap.PageTitleProjectInformation}">
                                     <include-form name="ProjectInfo" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
@@ -1093,7 +1093,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProjectDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="h2" text="${uiLabelMap[titleProperty]}"/>
+                        <label style="heading" text="${uiLabelMap[titleProperty]}"/>
                         <section>
                             <condition>
                                 <or>

@@ -476,7 +476,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTaskDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="h2" text="${uiLabelMap.OrderRequest} : ${custRequest.custRequestName} [${parameters.custRequestId}] ${uiLabelMap.CommonFrom} ${partyName.firstName} ${partyName.middleName} ${partyName.lastName} ${partyName.groupName} "/>
+                        <label style="heading" text="${uiLabelMap.OrderRequest} : ${custRequest.custRequestName} [${parameters.custRequestId}] ${uiLabelMap.CommonFrom} ${partyName.firstName} ${partyName.middleName} ${partyName.lastName} ${partyName.groupName} "/>
                         <container style="${styles.grid_large}6">
                             <screenlet title="${uiLabelMap.PageTitleCreateTaskbyRequest}">
                                 <include-form name="EditTaskFromRequest" location="component://projectmgr/widget/forms/TaskForms.xml"/>

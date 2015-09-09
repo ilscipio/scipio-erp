@@ -195,7 +195,7 @@ under the License.
                             <widgets>
                                 <include-menu name="PaymentTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                 <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <label style="h2" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
+                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -232,10 +232,10 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        <label style="h2">${uiLabelMap.AccountingPaymentGroupOverviewFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
+                                        <label style="heading">${uiLabelMap.AccountingPaymentGroupOverviewFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h2">${uiLabelMap.AccountingNewPaymentGroup}</label>
+                                        <label style="heading">${uiLabelMap.AccountingNewPaymentGroup}</label>
                                     </fail-widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

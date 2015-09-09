@@ -53,7 +53,7 @@ under the License.
                                     <widgets>
                                         <include-menu name="InvoiceSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                         <container style="leftclear">
-                                            <label style="h2" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${invoice.description} [${invoiceId}]  ${${extraFunctionName}}"/>
+                                            <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${invoice.description} [${invoiceId}]  ${${extraFunctionName}}"/>
                                         </container>
                                     </widgets>
                                 </section>

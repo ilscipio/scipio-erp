@@ -33,7 +33,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="h2" text="${uiLabelMap.PageTitleFinancialSummaryReportOptions}"/>
+                        <label style="heading" text="${uiLabelMap.PageTitleFinancialSummaryReportOptions}"/>
                         <screenlet title="${uiLabelMap.PageTitleSalesInvoiceByProductCategorySummary}">
                             <include-form name="SalesInvoiceByProductCategorySummaryOptions" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
@@ -399,7 +399,7 @@ under the License.
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <label style="h2" text="${uiLabelMap.AccountingBalanceSheet}"/>
+                            <label style="heading" text="${uiLabelMap.AccountingBalanceSheet}"/>
                             <include-form name="BalanceSheetParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label text="${uiLabelMap.AccountingAssets}"/>
                             <include-form name="BalanceSheetAssets" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -584,7 +584,7 @@ under the License.
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <label style="h2" text="${uiLabelMap.AccountingComparativeBalanceSheet}"/>
+                            <label style="heading" text="${uiLabelMap.AccountingComparativeBalanceSheet}"/>
                             <include-form name="ComparativeBalanceSheetParametersOneColumn" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label text="${uiLabelMap.AccountingAssets}"/>
                             <include-form name="ComparativeBalanceSheetAssets" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -874,7 +874,7 @@ under the License.
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <label style="h2" text="${uiLabelMap.AccountingIncomeStatement}"/>
+                            <label style="heading" text="${uiLabelMap.AccountingIncomeStatement}"/>
                             <include-form name="FindTransactionTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label text="${uiLabelMap.AccountingRevenues}"/>
                             <include-form name="IncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -1081,7 +1081,7 @@ under the License.
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <label style="h2" text="${uiLabelMap.AccountingComparativeIncomeStatement}"/>
+                            <label style="heading" text="${uiLabelMap.AccountingComparativeIncomeStatement}"/>
                             <include-form name="ComparativeIncomeStatementParametersOneColumn" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label text="${uiLabelMap.AccountingRevenues}"/>
                             <include-form name="ComparativeIncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -1377,7 +1377,7 @@ under the License.
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <label style="h2" text="${uiLabelMap.AccountingInventoryValuation}"/>
+                            <label style="heading" text="${uiLabelMap.AccountingInventoryValuation}"/>
                             <include-form name="InventoryValuationList" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </container>
                     </decorator-section>
@@ -1472,7 +1472,7 @@ under the License.
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <label style="h2" text="${uiLabelMap.AccountingCashFlowStatement}"/>
+                            <label style="heading" text="${uiLabelMap.AccountingCashFlowStatement}"/>
                             <include-form name="FindCashFlowTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label text="${uiLabelMap.AccountingOpeningCashBalance}"/>
                             <include-form name="CashFlowStatementOpeningCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -1645,7 +1645,7 @@ under the License.
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <label style="h2" text="${uiLabelMap.AccountingComparativeCashFlowStatement}"/>
+                            <label style="heading" text="${uiLabelMap.AccountingComparativeCashFlowStatement}"/>
                             <include-form name="ComparativeCashFlowStatementParametersOneColumn" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label text="${uiLabelMap.AccountingOpeningCashBalance}"/>
                             <include-form name="ComparativeCashFlowStatementOpeningCashBalance" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>

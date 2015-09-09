@@ -64,7 +64,7 @@ under the License.
                                                 <include-menu name="AgreementItemTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                             </widgets>
                                         </section>
-                                        <label style="h2">${agreement.description} [${agreement.agreementId}] </label>
+                                        <label style="heading">${agreement.description} [${agreement.agreementId}] </label>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -664,7 +664,7 @@ under the License.
             <fail-widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="h2">${uiLabelMap.AccountingAgreementIsNotSetForSupplierProducts}</label>
+                        <label style="heading">${uiLabelMap.AccountingAgreementIsNotSetForSupplierProducts}</label>
                     </decorator-section>
                 </decorator-screen>
             </fail-widgets>

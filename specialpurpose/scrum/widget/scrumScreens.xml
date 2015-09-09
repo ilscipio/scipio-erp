@@ -2531,7 +2531,7 @@ under the License.
                                 <widgets>
                                     <screenlet>
                                         <label style="heading" text="${uiLabelMap.PartyOriginEmailNotKnown}"/>
-                                        <label style="h3" text="${uiLabelMap.PartyEmailMessage}"/>
+                                        <label style="heading+1" text="${uiLabelMap.PartyEmailMessage}"/>
                                         <include-form name="allocateMsgToPartyForm" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                                     </screenlet>
                                 </widgets>

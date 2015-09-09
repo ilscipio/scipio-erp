@@ -64,7 +64,7 @@ under the License.
                                     </widgets>
                                     <fail-widgets>
                                         <screenlet title="${uiLabelMap.ScrumAssignATaskToMe}" id="titleMyWorkOpenError" collapsible="true" initially-collapsed="false">
-                                            <label style="h3" text="${uiLabelMap.ScrumTaskMember}"/>
+                                            <label style="heading+1" text="${uiLabelMap.ScrumTaskMember}"/>
                                         </screenlet>
                                     </fail-widgets>
                                 </section>

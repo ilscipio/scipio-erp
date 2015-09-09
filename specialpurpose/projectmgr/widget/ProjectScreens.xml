@@ -534,14 +534,14 @@ under the License.
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.ProjectMgrResources}">
-                    <label style="h3" text="${uiLabelMap.ProjectMgrProviders}"/>
+                    <label style="heading+1" text="${uiLabelMap.ProjectMgrProviders}"/>
                     <include-form name="ListProjectProviderParties" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
                     <section>
                         <condition>
                             <not><if-empty field="clientAssigns"/></not>
                         </condition>
                         <widgets>
-                            <label style="h3" text="${uiLabelMap.ProjectMgrClientContacts}"/>
+                            <label style="heading+1" text="${uiLabelMap.ProjectMgrClientContacts}"/>
                             <include-form name="ListProjectClientParties" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
                         </widgets>
                     </section>
@@ -550,7 +550,7 @@ under the License.
                             <not><if-empty field="companyAssigns"/></not>
                         </condition>
                         <widgets>
-                            <label style="h3" text="${uiLabelMap.ProjectMgrCompanies}"/>
+                            <label style="heading+1" text="${uiLabelMap.ProjectMgrCompanies}"/>
                             <include-form name="ListProjectCompanyParties" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
                         </widgets>
                     </section>

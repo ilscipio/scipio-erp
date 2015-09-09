@@ -50,13 +50,13 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <if-has-permission permission="FACILITY" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="FacilityGroupTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                <include-menu name="FacilityGroupSideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

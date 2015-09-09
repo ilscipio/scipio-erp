@@ -40,25 +40,24 @@ under the License.
           <@tr><@td>&nbsp;</@td></@tr>
           <@tr>
               <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></@td>
-              <@td><div>${fromName!}</div></@td>
+              <@td>${fromName!}</@td>
           </@tr>
           <@tr>
               <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonTo}:</div></@td>
-              <@td><div>${toName!}</div></@td>
+              <@td>${toName!}</@td>
           </@tr>
           <@tr>
               <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonDate}:</div></@td>
-              <@td><div>${communicationEvent.entryDate}</div></@td>
+              <@td>${communicationEvent.entryDate}</@td>
           </@tr>
           <@tr>
               <@td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></@td>
-              <@td><div>&nbsp;${(communicationEvent.subject)?default("[${uiLabelMap.EcommerceNoSubject}]")}</div></@td>
+              <@td>&nbsp;${(communicationEvent.subject)?default("[${uiLabelMap.EcommerceNoSubject}]")}</@td>
           </@tr>
           <@tr><@td>&nbsp;</@td></@tr>
           <@tr>
             <@td>&nbsp;</@td>
-            <@td>
-              <div>${StringUtil.wrapString(communicationEvent.content)?default("[${uiLabelMap.EcommerceEmptyBody}]")}</div>
+            <@td>${StringUtil.wrapString(communicationEvent.content)?default("[${uiLabelMap.EcommerceEmptyBody}]")}
             </@td>
           </@tr>
         </@table>

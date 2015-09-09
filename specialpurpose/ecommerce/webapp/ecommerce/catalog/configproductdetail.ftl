@@ -422,8 +422,7 @@ function getConfigDetails(event) {
 
   <#-- Long description of product -->
   <@tr>
-    <@td colspan="2">
-      <div>${productContentWrapper.get("LONG_DESCRIPTION")!}</div>
+    <@td colspan="2">${productContentWrapper.get("LONG_DESCRIPTION")!}
     </@td>
   </@tr>
 
@@ -442,9 +441,7 @@ function getConfigDetails(event) {
         <@table>
           <@tr>
             <@td>
-                <div>
                     <a href="javascript:verifyConfig();" class="${styles.button_default!}">${uiLabelMap.OrderVerifyConfiguration}</a>
-                </div>
             </@td>
           </@tr>
 
@@ -616,24 +613,19 @@ function getConfigDetails(event) {
         <@td colspan="2">
           <@table border="0" cellpadding="0" cellspacing='0'>
             <@tr>
-              <@td>
-                <div>${uiLabelMap.CommonBy}: <#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.OrderAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
+              <@td>${uiLabelMap.CommonBy}: <#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.OrderAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if>
               </@td>
-              <@td>
-                <div>${uiLabelMap.CommonOn}: ${productReview.postedDateTime!}</div>
+              <@td>${uiLabelMap.CommonOn}: ${productReview.postedDateTime!}
               </@td>
-              <@td>
-                <div>${uiLabelMap.OrderRanking}: ${productReview.productRating!?string}</div>
+              <@td>${uiLabelMap.OrderRanking}: ${productReview.productRating!?string}
               </@td>
             </@tr>
             <@tr>
-              <@td colspan="3">
-                <div>&nbsp;</div>
+              <@td colspan="3">&nbsp;
               </@td>
             </@tr>
             <@tr>
-              <@td colspan="3">
-                <div>${productReview.productReview!}</div>
+              <@td colspan="3">${productReview.productReview!}
               </@td>
             </@tr>
 
@@ -648,8 +640,7 @@ function getConfigDetails(event) {
     </@tr>
   <#else>
     <@tr>
-      <@td colspan="2">
-        <div>${uiLabelMap.ProductProductNotReviewedYet}.</div>
+      <@td colspan="2">${uiLabelMap.ProductProductNotReviewedYet}.
       </@td>
     </@tr>
     <@tr>
@@ -672,12 +663,10 @@ function getConfigDetails(event) {
 
     <#list assocProducts as productAssoc>
       <@tr><@td>
-        <div>
           <a href='<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>' class="${styles.button_default!}">
             ${productAssoc.productIdTo!}
           </a>
           - ${productAssoc.reason!}
-        </div>
       </@td></@tr>
       ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
       ${setRequestAttribute("listIndex", listIndex)}

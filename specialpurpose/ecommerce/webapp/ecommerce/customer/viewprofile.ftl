@@ -199,7 +199,7 @@ under the License.
               <div>(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>
               <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
             </@td>
-            <@td align="center" valign="top"><div>(${partyContactMech.allowSolicitation!})</div></@td>
+            <@td align="center" valign="top">(${partyContactMech.allowSolicitation!})</@td>
             <@td>&nbsp;</@td>
             <@td align="right" valign="top">
               <a href="<@ofbizUrl>editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="button">${uiLabelMap.CommonUpdate}</a>
@@ -242,7 +242,6 @@ under the License.
               <@tr>
                 <#if paymentMethod.paymentMethodTypeId! == "CREDIT_CARD">
                 <@td valign="top">
-                  <div>
                     ${uiLabelMap.AccountingCreditCard}:
                     <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}&nbsp;</#if>
                     <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp;</#if>
@@ -254,7 +253,6 @@ under the License.
                     <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                     <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
                     <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
-                  </div>
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td align="right" valign="top">
@@ -279,12 +277,10 @@ under the License.
                   </#if>
 
                   <@td valign="top">
-                    <div>
                       ${uiLabelMap.AccountingGiftCard}: ${giftCardNumber}
                       <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                       <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
                       <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
-                    </div>
                   </@td>
                   <@td>&nbsp;</@td>
                   <@td align="right" valign="top">
@@ -293,12 +289,10 @@ under the License.
                   </@td>
                   <#elseif paymentMethod.paymentMethodTypeId! == "EFT_ACCOUNT">
                   <@td valign="top">
-                    <div>
                       ${uiLabelMap.AccountingEFTAccount}: ${eftAccount.nameOnAccount!} - <#if eftAccount.bankName?has_content>${uiLabelMap.AccountingBank}: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}</#if>
                       <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                       <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
                       <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
-                    </div>
                   </@td>
                   <@td>&nbsp;</@td>
                   <@td align="right" valign="top">
@@ -381,8 +375,7 @@ under the License.
             <#assign shippingMethod = shipMeth.shipmentMethodTypeId + "@" + shipMeth.partyId />
             <@tr>
               <@td>&nbsp;</@td>
-              <@td>
-                <div><span style="white-space:;"><#if shipMeth.partyId != "_NA_">${shipMeth.partyId!}&nbsp;</#if>${shipMeth.get("description",locale)!}</span></div>
+              <@td><span style="white-space:;"><#if shipMeth.partyId != "_NA_">${shipMeth.partyId!}&nbsp;</#if>${shipMeth.get("description",locale)!}</span>
               </@td>
               <@td><input type="radio" name="defaultShipMeth" value="${shippingMethod}" <#if profiledefs.defaultShipMeth?default("") == shippingMethod>checked="checked"</#if> /></@td>
             </@tr>
@@ -482,7 +475,7 @@ under the License.
       <@tr><@td colspan="7"></@td></@tr>
       <@tr>
         <@td>${contactList.contactListName!}<#if contactList.description?has_content>&nbsp;-&nbsp;${contactList.description}</#if></@td>
-        <#-- <@td><div>${contactListType.get("description",locale)!}</div></@td> -->
+        <#-- <@td>${contactListType.get("description",locale)!}</@td> -->
         <@td>${contactListParty.fromDate!}</@td>
         <@td>${contactListParty.thruDate!}</@td>
         <@td>${(statusItem.get("description",locale))!}</@td>
@@ -567,7 +560,7 @@ under the License.
         <#assign survey = surveyAppl.getRelatedOne("Survey", false) />
         <@tr>
           <@td>&nbsp;</@td>
-          <@td valign="top"><div>${survey.surveyName!}&nbsp;-&nbsp;${survey.description!}</div></@td>
+          <@td valign="top">${survey.surveyName!}&nbsp;-&nbsp;${survey.description!}</@td>
           <@td>&nbsp;</@td>
           <@td valign="top">
             <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>

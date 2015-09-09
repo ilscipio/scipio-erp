@@ -45,7 +45,7 @@ under the License.
 
       <#-- seperator options -->
       <#if surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_TEXT">
-        <@td colspan="5"><div>${surveyQuestionAndAppl.question!}</div></@td>
+        <@td colspan="5">${surveyQuestionAndAppl.question!}</@td>
       <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_LINE">
         <@td colspan="5"><hr /></@td>
       <#else>

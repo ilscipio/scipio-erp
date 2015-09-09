@@ -25,12 +25,10 @@ under the License.
        <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
         <@table width="100%" cellpadding="1" cellspacing="0" border="0">
           <@tr>
-            <@td width="30%">
-              <div><b>${uiLabelMap.ProductProductName}</b></div>
+            <@td width="30%"><b>${uiLabelMap.ProductProductName}</b>
             </@td>
             <@td width="5">&nbsp;</@td>
-            <@td width="45%">
-              <div><b>${uiLabelMap.CommonDescription}</b></div>
+            <@td width="45%"><b>${uiLabelMap.CommonDescription}</b>
             </@td>
             <@td width="5">&nbsp;</@td>
             <@td width="20%">&nbsp;</@td>
@@ -39,12 +37,10 @@ under the License.
             <#assign product = supplierProduct.getRelatedOne("Product", true)/>
             <@tr><@td colspan="5"><hr /></@td></@tr>
             <@tr>
-              <@td>
-                <div>${(product.productName)!}</div>
+              <@td>${(product.productName)!}
               </@td>
               <@td width="5">&nbsp;</@td>
-              <@td>
-                <div>${(product.description)!}</div>
+              <@td>${(product.description)!}
               </@td>
               <@td width="5">&nbsp;</@td>
               <@td align="right">

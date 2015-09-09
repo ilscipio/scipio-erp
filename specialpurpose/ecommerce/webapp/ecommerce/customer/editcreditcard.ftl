@@ -77,15 +77,13 @@ under the License.
                </@tr>
              <#else>
            <#-- <@tr>
-            <@td valign="top" colspan="2">
-              <div>${uiLabelMap.PartyBillingAddressNotSelected}</div>
+            <@td valign="top" colspan="2">${uiLabelMap.PartyBillingAddressNotSelected}
             </@td>
           </@tr> -->
              </#if>
           <#-- is confusing
           <@tr>
-            <@td valign="top" colspan="2">
-              <div>${uiLabelMap.EcommerceMessage3}</div>
+            <@td valign="top" colspan="2">${uiLabelMap.EcommerceMessage3}
             </@td>
           </@tr>
           -->
@@ -120,14 +118,14 @@ under the License.
                </@tr>
                </#list>
                <#if !postalAddressInfos?has_content && !curContactMech??>
-                 <@tr><@td colspan="2"><div>${uiLabelMap.PartyNoContactInformation}.</div></@td></@tr>
+                 <@tr><@td colspan="2">${uiLabelMap.PartyNoContactInformation}.</@td></@tr>
                </#if>
                <@tr>
                  <@td align="right" valign="top">
                    <input type="radio" name="contactMechId" value="_NEW_" <#if !hasCurrent>checked="checked"</#if> />
                  </@td>
                  <@td valign="middle">
-                   <span>${uiLabelMap.PartyCreateNewBillingAddress}.</span>
+                   ${uiLabelMap.PartyCreateNewBillingAddress}.
                  </@td>
                </@tr>
              </@table>

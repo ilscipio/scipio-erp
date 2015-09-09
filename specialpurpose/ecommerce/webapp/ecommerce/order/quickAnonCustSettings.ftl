@@ -66,7 +66,7 @@ under the License.
                  <@td width="72%">&nbsp;</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyFirstName}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyFirstName}</@td>
                 <@td width="2%">&nbsp;</@td>
                 <@td width="72%">
                   <@fieldErrors fieldName="firstName"/>
@@ -74,14 +74,14 @@ under the License.
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyMiddleInitial}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyMiddleInitial}</@td>
                 <@td width="2%">&nbsp;</@td>
                 <@td width="72%">
                   <input type="text" class="inputBox"  name="middleName" value="${parameters.middleName!}" size="4" maxlength="4"/>
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyLastName} </div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyLastName}</@td>
                 <@td width="2%">&nbsp;</@td>
                 <@td width="72%">
                   <@fieldErrors fieldName="lastName"/>
@@ -89,12 +89,12 @@ under the License.
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="top"><div></div></@td>
+                <@td width="26%" align="right" valign="top"></@td>
                 <@td width="2%">&nbsp;</@td>
-                <@td width="72%"><div>[${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]</div></@td>
+                <@td width="72%">[${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]</@td>
               </@tr>
               <@tr>
-                <@td width="10%" align="right"><div>${uiLabelMap.PartyHomePhone}</div></@td>
+                <@td width="10%" align="right">${uiLabelMap.PartyHomePhone}</@td>
                 <@td width="2%">&nbsp;</@td>
                 <@td width="88%">
                   <@fieldErrorsMulti fieldName1="homeCountryCode" fieldName2="homeAreaCode" fieldName3="homeContactNumber" fieldName4="homeExt"/>
@@ -108,7 +108,7 @@ under the License.
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyBusinessPhone}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyBusinessPhone}</@td>
                 <@td width="2%">&nbsp;</@td>
                 <@td width="72%">
                   <input type="hidden" name="workPhoneContactMechId" value="${parameters.workPhoneContactMechId!}"/>
@@ -119,7 +119,7 @@ under the License.
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyEmailAddress}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyEmailAddress}</@td>
                 <@td width="2%">&nbsp;</@td>
                 <@td width="72%">
                   <@fieldErrors fieldName="emailAddress"/>
@@ -147,7 +147,7 @@ under the License.
                  <@td width="72%">&nbsp;</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyToName}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyToName}</@td>
                 <@td width="2%">&nbsp;</@td>
                 <@td width="72%">
                   <@fieldErrors fieldName="shipToName"/>
@@ -155,7 +155,7 @@ under the License.
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyAttentionName}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyAttentionName}</@td>
                 <@td width="2%">&nbsp;</@td>
                 <@td width="72%">
                   <@fieldErrors fieldName="shipToAttnName"/>
@@ -163,7 +163,7 @@ under the License.
                 </@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.PartyAddressLine1}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyAddressLine1}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="shipToAddress1"/>
@@ -171,14 +171,14 @@ under the License.
                  *</@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.PartyAddressLine2}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyAddressLine2}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <input type="text" class="inputBox" size="30" maxlength="30" id="shipToAddress2" name="shipToAddress2" value="${parameters.shipToAddress2!}" />
                  </@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.PartyCity}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyCity}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="shipToCity"/>
@@ -186,7 +186,7 @@ under the License.
                  *</@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.PartyState}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyState}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="shipToStateProvinceGeoId"/>
@@ -202,7 +202,7 @@ under the License.
                  *</@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.PartyZipCode}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyZipCode}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="shipToPostalCode"/>
@@ -210,7 +210,7 @@ under the License.
                  *</@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.CommonCountry}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonCountry}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="shipToCountryGeoId"/>
@@ -230,10 +230,8 @@ under the License.
            <@table width="100%" border="0" cellpadding="1" cellspacing="0">
               <@tr>
                 <@td align="center" valign="top" colspan="3">
-                  <div>
                     <input type="checkbox" class="checkbox" id="useShippingPostalAddressForBilling" name="useShippingPostalAddressForBilling" value="Y"/>
                     ${uiLabelMap.FacilityBillingAddressSameShipping}
-                  </div>
                 </@td>
               </@tr>
               <@tr>
@@ -242,7 +240,7 @@ under the License.
                  <@td width="72%">&nbsp;</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyToName}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyToName}</@td>
                 <@td width="2%">&nbsp;</@td>
                 <@td width="72%">
                   <@fieldErrors fieldName="billToName"/>
@@ -250,7 +248,7 @@ under the License.
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right"><div>${uiLabelMap.PartyAttentionName}</div></@td>
+                <@td width="26%" align="right">${uiLabelMap.PartyAttentionName}</@td>
                 <@td width="2%">&nbsp;</@td>
                 <@td width="72%">
                   <@fieldErrors fieldName="billToAttnName"/>
@@ -258,7 +256,7 @@ under the License.
                 </@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.PartyAddressLine1}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyAddressLine1}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="billToAddress1"/>
@@ -266,14 +264,14 @@ under the License.
                  *</@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.PartyAddressLine2}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyAddressLine2}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <input type="text" class="inputBox" id="billToAddress2" size="30" maxlength="30" name="billToAddress2" value="${parameters.billToAddress2!}" />
                  </@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.PartyCity}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyCity}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="billToCity"/>
@@ -281,7 +279,7 @@ under the License.
                  *</@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.PartyState}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyState}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="billToStateProvinceGeoId"/>
@@ -297,7 +295,7 @@ under the License.
                  *</@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.PartyZipCode}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyZipCode}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="billToPostalCode"/>
@@ -305,7 +303,7 @@ under the License.
                  *</@td>
               </@tr>
               <@tr>
-                 <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.CommonCountry}</div></@td>
+                 <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonCountry}</@td>
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="billToCountryGeoId"/>

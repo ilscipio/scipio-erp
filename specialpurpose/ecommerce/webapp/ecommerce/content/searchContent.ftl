@@ -36,14 +36,11 @@ under the License.
   <@td colspan="3">
   <@table>
     <@tr>
-      <@td align="right" valign="middle">
-        <div>${uiLabelMap.ProductFeatures}:</div>
+      <@td align="right" valign="middle">${uiLabelMap.ProductFeatures}:
       </@td>
       <@td align="right" valign="middle">
-        <div>
           ${uiLabelMap.CommonAll} <input type="radio" name="any_or_all" value="all" checked="checked" />
           ${uiLabelMap.CommonAny} <input type="radio" name="any_or_all" value="any" />
-        </div>
       </@td>
     </@tr>
     <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
@@ -51,25 +48,21 @@ under the License.
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
       <@tr>
-        <@td align="right" valign="middle">
-          <div>${(productFeatureType.get("description",locale))!}:</div>
+        <@td align="right" valign="middle">${(productFeatureType.get("description",locale))!}:
         </@td>
         <@td valign="middle">
-          <div>
             <select class="selectBox" name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
             </select>
-          </div>
         </@td>
       </@tr>
     </#list>
     <#if searchConstraintStrings?has_content>
       <@tr>
-        <@td align="right" valign="top">
-          <div>${uiLabelMap.ProductLastSearch}:</div>
+        <@td align="right" valign="top">${uiLabelMap.ProductLastSearch}:
         </@td>
         <@td valign="top">
             <#list searchConstraintStrings as searchConstraintString>

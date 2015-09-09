@@ -22,20 +22,16 @@ under the License.
     <div class="screenlet-body">
         <@table>
             <@tr>
-                <@td width="10%">
-                    <div><span style="white-space: nowrap;">${uiLabelMap.OrderQuote} ${uiLabelMap.CommonNbr}</span></div>
+                <@td width="10%"><span style="white-space: nowrap;">${uiLabelMap.OrderQuote} ${uiLabelMap.CommonNbr}</span>
                 </@td>
                 <@td width="10">&nbsp;</@td>
-                <@td width="20%">
-                    <div>${uiLabelMap.CommonName}</div>
+                <@td width="20%">${uiLabelMap.CommonName}
                 </@td>
                 <@td width="10">&nbsp;</@td>
-                <@td width="40%">
-                    <div>${uiLabelMap.CommonDescription}</div>
+                <@td width="40%">${uiLabelMap.CommonDescription}
                 </@td>
                 <@td width="10">&nbsp;</@td>
-                <@td width="10%">
-                    <div>${uiLabelMap.CommonStatus}</div>
+                <@td width="10%">${uiLabelMap.CommonStatus}
                 </@td>
                 <@td width="10">&nbsp;</@td>
                 <@td width="20%">
@@ -50,20 +46,16 @@ under the License.
                 <#assign status = quote.getRelatedOne("StatusItem", true)>
                 
                 <@tr>
-                    <@td>
-                        <div>${quote.quoteId}</div>
+                    <@td>${quote.quoteId}
                     </@td>
                     <@td width="10">&nbsp;</@td>
-                    <@td>
-                        <div>${quote.quoteName!}</div>
+                    <@td>${quote.quoteName!}
                     </@td>
                     <@td width="10">&nbsp;</@td>
-                    <@td>
-                        <div>${quote.description!}</div>
+                    <@td>${quote.description!}
                     </@td>
                     <@td width="10">&nbsp;</@td>
-                    <@td>
-                        <div>${status.get("description",locale)}</div>
+                    <@td>${status.get("description",locale)}
                     </@td>
                     <@td width="10">&nbsp;</@td>
                     <@td>

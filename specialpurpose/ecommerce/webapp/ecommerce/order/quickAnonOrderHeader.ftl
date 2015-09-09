@@ -44,22 +44,18 @@ under the License.
                       <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
                   </#if>
                   <@tr>
-                    <@td align="right" valign="top" width="15%">
-                      <div>&nbsp;<b>${uiLabelMap.PartyName}</b></div>
+                    <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.PartyName}</b>
                     </@td>
                     <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">
-                      <div>
                         ${(displayPartyNameResult.fullName)?default("[Name Not Found]")}
-                      </div>
                     </@td>
                   </@tr>
                   <@tr><@td colspan="7"><hr /></@td></@tr>
                 </#if>
                 <#-- order status information -->
                 <@tr>
-                  <@td align="right" valign="top" width="15%">
-                    <div>&nbsp;<b>${uiLabelMap.CommonStatus}</b></div>
+                  <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.CommonStatus}</b>
                   </@td>
                   <@td width="5">&nbsp;</@td>
                   <@td valign="top" width="80%">
@@ -74,24 +70,20 @@ under the License.
                 <#if orderHeader?has_content>
                   <@tr><@td colspan="7"><hr /></@td></@tr>
                   <@tr>
-                    <@td align="right" valign="top" width="15%">
-                      <div>&nbsp;<b>${uiLabelMap.CommonDate}</b></div>
+                    <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.CommonDate}</b>
                     </@td>
                     <@td width="5">&nbsp;</@td>
-                    <@td valign="top" width="80%">
-                      <div>${orderHeader.orderDate.toString()}</div>
+                    <@td valign="top" width="80%">${orderHeader.orderDate.toString()}
                     </@td>
                   </@tr>
                 </#if>
                 <#if distributorId??>
                   <@tr><@td colspan="7"><hr /></@td></@tr>
                   <@tr>
-                    <@td align="right" valign="top" width="15%">
-                      <div>&nbsp;<b>${uiLabelMap.OrderDistributor}</b></div>
+                    <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.OrderDistributor}</b>
                     </@td>
                     <@td width="5">&nbsp;</@td>
-                    <@td valign="top" width="80%">
-                      <div>${distributorId}</div>
+                    <@td valign="top" width="80%">${distributorId}
                     </@td>
                   </@tr>
                 </#if>
@@ -126,12 +118,10 @@ under the License.
               <@table width="100%" border="0" cellpadding="1">
                 <#if shippingAddress?has_content>
                   <@tr>
-                    <@td align="right" valign="top" width="15%">
-                      <div>&nbsp;<b>${uiLabelMap.OrderDestination}</b> [${groupNumber}]</div>
+                    <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.OrderDestination}</b> [${groupNumber}]
                     </@td>
                     <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">
-                      <div>
                         <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br /></#if>
                         <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${shippingAddress.attnName}<br /></#if>
                         ${shippingAddress.address1}<br />
@@ -139,7 +129,6 @@ under the License.
                         ${shippingAddress.city}<#if shippingAddress.stateProvinceGeoId?has_content>, ${shippingAddress.stateProvinceGeoId} </#if>
                         ${shippingAddress.postalCode!}<br />
                         ${shippingAddress.countryGeoId!}
-                      </div>
                     </@td>
                   </@tr>
                   <@tr><@td colspan="7"><hr /></@td></@tr>

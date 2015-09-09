@@ -52,7 +52,6 @@ under the License.
   <@tr>
     <@td width="40px">&nbsp;</@td>
     <@td class="blogtext">
-      <div>
         by:<#if authorName?has_content>${authorName!}
         <#else>
         <#if content?has_content>${content.createdByUserLogin!}</#if>
@@ -67,7 +66,6 @@ under the License.
           </#if>
           ${shortTime!}
         </#if>
-      </div>
     </@td>
     <@td>
         <#if content?has_content>${content.contentName!}</#if>

@@ -158,10 +158,10 @@ function submitForm(form, mode, value) {
     <div class="screenlet-body">
         <@table width="100%" cellspacing="0" cellpadding="1" border="0">
           <@tr>
-            <@td><div><b>${uiLabelMap.OrderProduct}</b></div></@td>
-            <@td align="center"><div><b>${uiLabelMap.OrderTotalQty}</b></div></@td>
+            <@td><b>${uiLabelMap.OrderProduct}</b></@td>
+            <@td align="center"><b>${uiLabelMap.OrderTotalQty}</b></@td>
             <@td>&nbsp;</@td>
-            <@td align="center"><div><b>${uiLabelMap.OrderMoveQty}</b></div></@td>
+            <@td align="center"><b>${uiLabelMap.OrderMoveQty}</b></@td>
             <@td>&nbsp;</@td>
             <@td>&nbsp;</@td>
           </@tr>
@@ -210,30 +210,24 @@ function submitForm(form, mode, value) {
                   </div>
 
                 </@td>
-                <@td align="right">
-                  <div>${cartLine.getQuantity()?string.number}&nbsp;&nbsp;&nbsp;</div>
+                <@td align="right">${cartLine.getQuantity()?string.number}&nbsp;&nbsp;&nbsp;
                 </@td>
-                <@td>
-                  <div>&nbsp;</div>
+                <@td>&nbsp;
                 </@td>
                 <@td align="center">
                   <input size="6" class="inputBox" type="text" name="quantity" value="${cartLine.getQuantity()?string.number}"/>
                 </@td>
-                <@td>
-                  <div>&nbsp;</div>
+                <@td>&nbsp;
                 </@td>
-                <@td>
-                  <div>${uiLabelMap.CommonFrom}:
+                <@td>${uiLabelMap.CommonFrom}:
                     <select name="fromGroupIndex" class="selectBox">
                       <#list itemShipGroups.entrySet() as group>
                         <#assign groupNumber = group.getKey() + 1>
                         <option value="${group.getKey()}">${uiLabelMap.CommonGroup} ${groupNumber}</option>
                       </#list>
                     </select>
-                  </div>
                 </@td>
-                <@td>
-                  <div>${uiLabelMap.CommonTo}:
+                <@td>${uiLabelMap.CommonTo}:
                     <select name="toGroupIndex" class="selectBox">
                       <#list 0..(cart.getShipGroupSize() - 1) as groupIdx>
                         <#assign groupNumber = groupIdx + 1>
@@ -241,7 +235,6 @@ function submitForm(form, mode, value) {
                       </#list>
                       <option value="-1">${uiLabelMap.CommonNew} ${uiLabelMap.CommonGroup}</option>
                     </select>
-                  </div>
                 </@td>
                 <@td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSubmit}"/></@td>
               </form>

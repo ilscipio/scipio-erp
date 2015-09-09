@@ -22,24 +22,19 @@ under the License.
     <div class="screenlet-body">
         <@table>
             <@tr>
-                <@td width="10%">
-                    <div><span style="white-space: nowrap;">${uiLabelMap.OrderRequest} ${uiLabelMap.CommonNbr}</span></div>
+                <@td width="10%"><span style="white-space: nowrap;">${uiLabelMap.OrderRequest} ${uiLabelMap.CommonNbr}</span>
                 </@td>
                 <@td width="10">&nbsp;</@td>
-                <@td width="10%">
-                    <div><span style="white-space: nowrap;">${uiLabelMap.CommonType}</span></div>
+                <@td width="10%"><span style="white-space: nowrap;">${uiLabelMap.CommonType}</span>
                 </@td>
                 <@td width="10">&nbsp;</@td>
-                <@td width="20%">
-                    <div>${uiLabelMap.CommonName}</div>
+                <@td width="20%">${uiLabelMap.CommonName}
                 </@td>
                 <@td width="10">&nbsp;</@td>
-                <@td width="40%">
-                    <div>${uiLabelMap.CommonDescription}</div>
+                <@td width="40%">${uiLabelMap.CommonDescription}
                 </@td>
                 <@td width="10">&nbsp;</@td>
-                <@td width="10%">
-                    <div>${uiLabelMap.CommonStatus}</div>
+                <@td width="10%">${uiLabelMap.CommonStatus}
                 </@td>
                 <@td width="10">&nbsp;</@td>
                 <@td width="20%">
@@ -55,24 +50,19 @@ under the License.
                 <#assign type = custRequest.getRelatedOne("CustRequestType", true)>
                 
                 <@tr>
-                    <@td>
-                        <div>${custRequest.custRequestId}</div>
+                    <@td>${custRequest.custRequestId}
                     </@td>
                     <@td width="10">&nbsp;</@td>
-                    <@td>
-                        <div>${type.get("description",locale)!}</div>
+                    <@td>${type.get("description",locale)!}
                     </@td>
                     <@td width="10">&nbsp;</@td>
-                    <@td>
-                        <div>${custRequest.custRequestName!}</div>
+                    <@td>${custRequest.custRequestName!}
                     </@td>
                     <@td width="10">&nbsp;</@td>
-                    <@td>
-                        <div>${custRequest.description!}</div>
+                    <@td>${custRequest.description!}
                     </@td>
                     <@td width="10">&nbsp;</@td>
-                    <@td>
-                        <div>${status.get("description",locale)}</div>
+                    <@td>${status.get("description",locale)}
                     </@td>
                     <@td width="10">&nbsp;</@td>
                     <@td>

@@ -34,11 +34,11 @@ under the License.
       </@td>
     </@tr>
     <@tr>
-      <@td><div>${uiLabelMap.AccountingCardNumber}</div></@td>
+      <@td>${uiLabelMap.AccountingCardNumber}</@td>
       <@td><input type="text" class="inputBox" name="physicalCard" size="20" /></@td>
     </@tr>
     <@tr>
-      <@td><div>${uiLabelMap.AccountingPINNumber}</div></@td>
+      <@td>${uiLabelMap.AccountingPINNumber}</@td>
       <@td><input type="text" class="inputBox" name="physicalPin" size="20" /></@td>
     </@tr>
     <@tr>
@@ -50,11 +50,11 @@ under the License.
       </@td>
     </@tr>
     <@tr>
-      <@td><div>${uiLabelMap.AccountingCardNumber}</div></@td>
+      <@td>${uiLabelMap.AccountingCardNumber}</@td>
       <@td><input type="text" class="inputBox" name="virtualCard" size="20" /></@td>
     </@tr>
     <@tr>
-      <@td><div>${uiLabelMap.AccountingPINNumber}</div></@td>
+      <@td>${uiLabelMap.AccountingPINNumber}</@td>
       <@td><input type="text" class="inputBox" name="virtualPin" size="20" /></@td>
     </@tr>
     <@tr>

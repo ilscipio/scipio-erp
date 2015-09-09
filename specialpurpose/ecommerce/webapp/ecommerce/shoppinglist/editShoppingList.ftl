@@ -324,12 +324,10 @@ under the License.
               <@tr><@td colspan="9"><hr /></@td></@tr>
               <@tr>
                 <@td align="right" colspan="9">
-                  <div>
                     <a href="javascript:document.reorderinfo.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
                     <a href="<@ofbizUrl>editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&amp;contactMechPurposeTypeId=SHIPPING_LOCATION&amp;DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PartyAddNewAddress}</a>
                     <a href="<@ofbizUrl>editcreditcard?DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceNewCreditCard}</a>
                     <a href="<@ofbizUrl>editeftaccount?DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceNewEFTAccount}</a>
-                  </div>
                 </@td>
               </@tr>
               <#if shoppingList.isActive?default("N") == "Y">
@@ -351,12 +349,12 @@ under the License.
                         <@tr>
                           <@td><div class="tableheadtext">${uiLabelMap.OrderLastOrderedDate}</div></@td>
                           <@td><div class="tableheadtext">:</div></@td>
-                          <@td><div>${lastOrderedString?default("${uiLabelMap.OrderNotYetOrdered}")}</div></@td>
+                          <@td>${lastOrderedString?default("${uiLabelMap.OrderNotYetOrdered}")}</@td>
                         </@tr>
                         <@tr>
                           <@td><div class="tableheadtext">${uiLabelMap.EcommerceEstimateNextOrderDate}</div></@td>
                           <@td><div class="tableheadtext">:</div></@td>
-                          <@td><div>${nextTimeString?default("${uiLabelMap.EcommerceNotYetKnown}")}</div></@td>
+                          <@td>${nextTimeString?default("${uiLabelMap.EcommerceNotYetKnown}")}</@td>
                         </@tr>
                       </@table>
                     </div>
@@ -380,8 +378,8 @@ under the License.
     <div class="screenlet-body">
         <@table width="100%" cellspacing="0" cellpadding="1" border="0">
           <@tr>
-            <@td><div><b>${uiLabelMap.EcommerceListName}</b></div></@td>
-            <@td align="right"><div><b>${uiLabelMap.EcommerceTotalPrice}</b></div></@td>
+            <@td><b>${uiLabelMap.EcommerceListName}</b></@td>
+            <@td align="right"><b>${uiLabelMap.EcommerceTotalPrice}</b></@td>
             <@td>&nbsp;</@td>
             <@td>&nbsp;</@td>
           </@tr>
@@ -392,8 +390,7 @@ under the License.
                 <@td nowrap="nowrap">
                   <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.button_default!}">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
                 </@td>
-                <@td nowrap="nowrap" align="right">
-                  <div><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/></div>
+                <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/>
                 </@td>
                 <@td align="right">
                   <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceGoToList}</a>
@@ -404,11 +401,11 @@ under the License.
           </#list>
           <@tr><@td colspan="6"><hr /></@td></@tr>
           <@tr>
-            <@td><div>&nbsp;</div></@td>
+            <@td>&nbsp;</@td>
             <@td nowrap="nowrap" align="right">
               <div class="tableheadtext"><@ofbizCurrency amount=shoppingListChildTotal isoCode=currencyUomId/></div>
             </@td>
-            <@td><div>&nbsp;</div></@td>
+            <@td>&nbsp;</@td>
           </@tr>
         </@table>
     </div>
@@ -428,11 +425,11 @@ under the License.
             <@paginationControls/>
             <@table width="100%" cellspacing="0" cellpadding="1" border="0">
               <@tr>
-                <@td><div><b>${uiLabelMap.OrderProduct}</b></div></@td>
+                <@td><b>${uiLabelMap.OrderProduct}</b></@td>
                 <@td><@table><@tr><@td nowrap="nowrap" align="center"><b>- ${uiLabelMap.EcommerceStartdate} -</b></@td><@td nowrap="nowrap"><b>- ${uiLabelMap.EcommerceNbrOfDays} -</b></@td></@tr><@tr><@td nowrap="nowrap"><b>- ${uiLabelMap.EcommerceNbrOfPersons} -</b></@td><@td nowrap="nowrap" align="center"><b>- ${uiLabelMap.CommonQuantity} -</b></@td></@tr></@table></@td>
-                <#-- <@td nowrap="nowrap" align="center"><div><b>Purchased</b></div></@td> -->
-                <@td align="right"><div><b>${uiLabelMap.EcommercePrice}</b></div></@td>
-                <@td align="right"><div><b>${uiLabelMap.OrderTotal}</b></div></@td>
+                <#-- <@td nowrap="nowrap" align="center"><b>Purchased</b></@td> -->
+                <@td align="right"><b>${uiLabelMap.EcommercePrice}</b></@td>
+                <@td align="right"><b>${uiLabelMap.OrderTotal}</b></@td>
                 <@td>&nbsp;</@td>
               </@tr>
               <#list shoppingListItemDatas[lowIndex-1..highIndex-1] as shoppingListItemData>
@@ -445,10 +442,8 @@ under the License.
                 <#assign isVirtual = product.isVirtual?? && product.isVirtual.equals("Y")/>
                   <@tr>
                     <@td>
-                      <div>
                          <a href="<@ofbizUrl>product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class="${styles.button_default!}">${shoppingListItem.productId} -
                          ${productContentWrapper.get("PRODUCT_NAME")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION")!}
-                      </div>
                     </@td>
                     <@td nowrap="nowrap" align="center">
                       <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name="listform_${shoppingListItem.shoppingListItemSeqId}" style="margin: 0;">
@@ -488,15 +483,12 @@ under the License.
                       </form>
                     </@td>
                     <#--
-                    <@td nowrap="nowrap" align="center">
-                      <div>${shoppingListItem.quantityPurchased?default(0)?string.number}</div>
+                    <@td nowrap="nowrap" align="center">${shoppingListItem.quantityPurchased?default(0)?string.number}
                     </@td>
                     -->
-                    <@td nowrap="nowrap" align="right">
-                      <div><@ofbizCurrency amount=unitPrice isoCode=currencyUomId/></div>
+                    <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=unitPrice isoCode=currencyUomId/>
                     </@td>
-                    <@td nowrap="nowrap" align="right">
-                      <div><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/></div>
+                    <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/>
                     </@td>
                     <@td align="right">
                         <a href="#" onclick="javascript:TimestampSubmit(listform_${shoppingListItem.shoppingListItemSeqId});" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
@@ -531,14 +523,14 @@ under the License.
               </#list>
               <@tr><@td colspan="6"><hr /></@td></@tr>
               <@tr>
-                <@td><div>&nbsp;</div></@td>
-                <@td><div>&nbsp;</div></@td>
-                <#--<@td><div>&nbsp;</div></@td>-->
-                <@td><div>&nbsp;</div></@td>
+                <@td>&nbsp;</@td>
+                <@td>&nbsp;</@td>
+                <#--<@td>&nbsp;</@td>-->
+                <@td>&nbsp;</@td>
                 <@td nowrap="nowrap" align="right">
                   <div class="tableheadtext"><@ofbizCurrency amount=shoppingListItemTotal isoCode=currencyUomId/></div>
                 </@td>
-                <@td><div>&nbsp;</div></@td>
+                <@td>&nbsp;</@td>
               </@tr>
             </@table>
         <#else>
@@ -554,22 +546,18 @@ under the License.
     <div class="screenlet-body">
       <@table width="100%" border="0" cellspacing="1" cellpadding="1">
         <@tr>
-          <@td width="5%" nowrap="nowrap">
-              <div>${uiLabelMap.EcommerceChildListTotalPrice}</div>
+          <@td width="5%" nowrap="nowrap">${uiLabelMap.EcommerceChildListTotalPrice}
           </@td>
-          <@td align="right" width="5%" nowrap="nowrap">
-              <div><@ofbizCurrency amount=shoppingListChildTotal isoCode=currencyUomId/></div>
+          <@td align="right" width="5%" nowrap="nowrap"><@ofbizCurrency amount=shoppingListChildTotal isoCode=currencyUomId/>
           </@td>
-          <@td width="90%"><div>&nbsp;</div></@td>
+          <@td width="90%">&nbsp;</@td>
         </@tr>
         <@tr>
-          <@td nowrap="nowrap">
-              <div>${uiLabelMap.EcommerceListItemsTotalPrice}&nbsp;</div>
+          <@td nowrap="nowrap">${uiLabelMap.EcommerceListItemsTotalPrice}&nbsp;
           </@td>
-          <@td align="right" nowrap="nowrap">
-              <div><@ofbizCurrency amount=shoppingListItemTotal isoCode=currencyUomId/></div>
+          <@td align="right" nowrap="nowrap"><@ofbizCurrency amount=shoppingListItemTotal isoCode=currencyUomId/>
           </@td>
-          <@td><div>&nbsp;</div></@td>
+          <@td>&nbsp;</@td>
         </@tr>
         <@tr>
           <@td nowrap="nowrap">
@@ -578,7 +566,7 @@ under the License.
           <@td align="right" nowrap="nowrap">
               <div class="tableheadtext"><@ofbizCurrency amount=shoppingListTotalPrice isoCode=currencyUomId/></div>
           </@td>
-          <@td><div>&nbsp;</div></@td>
+          <@td>&nbsp;</@td>
         </@tr>
       </@table>
     </div>

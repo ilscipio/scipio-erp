@@ -75,13 +75,11 @@ function submitForm(form, mode, value) {
                     <input type="radio" name="shipping_method" value="${shippingMethod}" <#if shippingMethod == StringUtil.wrapString(chosenShippingMethod!"N@A")>checked="checked"</#if> />
                   </@td>
                   <@td valign="top">
-                    <div>
                       <#if shoppingCart.getShippingContactMechId()??>
                         <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                       </#if>
                       <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
                       <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
-                    </div>
                   </@td>
                 </@tr>
               </#list>
@@ -90,8 +88,7 @@ function submitForm(form, mode, value) {
                   <@td width="1%" valign="top">
                     <input type="radio" name="shipping_method" value="Default" checked="checked" />
                   </@td>
-                  <@td valign="top">
-                    <div>${uiLabelMap.OrderUseDefault}.</div>
+                  <@td valign="top">${uiLabelMap.OrderUseDefault}.
                   </@td>
                 </@tr>
               </#if>
@@ -105,16 +102,14 @@ function submitForm(form, mode, value) {
                 <@td valign="top">
                   <input type="radio" <#if "Y" != shoppingCart.getMaySplit()?default("N")>checked="checked"</#if> name="may_split" value="false" />
                 </@td>
-                <@td valign="top">
-                  <div>${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</div>
+                <@td valign="top">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.
                 </@td>
               </@tr>
               <@tr>
                 <@td valign="top">
                   <input <#if "Y" == shoppingCart.getMaySplit()?default("N")>checked="checked"</#if> type="radio" name="may_split" value="true" />
                 </@td>
-                <@td valign="top">
-                  <div>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</div>
+                <@td valign="top">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.
                 </@td>
               </@tr>
               <@tr><@td colspan="2"><hr /></@td></@tr>
@@ -142,11 +137,9 @@ function submitForm(form, mode, value) {
               <@tr><@td colspan="2"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="2">
-                  <div>
                     <h2>${uiLabelMap.OrderIsThisGift}</h2>
                     <input type="radio" <#if "Y" == shoppingCart.getIsGift()?default("N")>checked="checked"</#if> name="is_gift" value="true" /><span>${uiLabelMap.CommonYes}</span>
                     <input type="radio" <#if "Y" != shoppingCart.getIsGift()?default("N")>checked="checked"</#if> name="is_gift" value="false" /><span>${uiLabelMap.CommonNo}</span>
-                  </div>
                 </@td>
               </@tr>
               <@tr><@td colspan="2"><hr /></@td></@tr>

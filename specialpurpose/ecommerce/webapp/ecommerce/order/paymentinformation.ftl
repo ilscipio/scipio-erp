@@ -86,8 +86,7 @@ function shipBillAddr() {
                 <@td width="26%" align="right" valign="top">
                   <input type="checkbox" name="useShipAddr" value="Y" onclick="javascript:shipBillAddr();" <#if useShipAddr??>checked="checked"</#if>/>
                 </@td>
-                <@td colspan="2" valign="middle">
-                  <div>${uiLabelMap.FacilityBillingAddressSameShipping}</div>
+                <@td colspan="2" valign="middle">${uiLabelMap.FacilityBillingAddressSameShipping}
                 </@td>
               </@tr>
               <@tr>
@@ -135,35 +134,35 @@ function shipBillAddr() {
                 <@td width="74%">&nbsp;</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.AccountingNameOnAccount}</div></@td>
+                <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingNameOnAccount}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="30" maxlength="60" name="nameOnAccount" value="${eftAccount.nameOnAccount!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.AccountingCompanyNameOnAccount}</div></@td>
+                <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingCompanyNameOnAccount}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount!}"/>
                 </@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.AccountingBankName}</div></@td>
+                <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingBankName}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="30" maxlength="60" name="bankName" value="${eftAccount.bankName!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.AccountingRoutingNumber}</div></@td>
+                <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingRoutingNumber}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.AccountingAccountType}</div></@td>
+                <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAccountType}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <select name="accountType" class="selectBox">
@@ -175,14 +174,14 @@ function shipBillAddr() {
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.AccountingAccountNumber}</div></@td>
+                <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAccountNumber}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.CommonDescription}</div></@td>
+                <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonDescription}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${eftAccount.description!}"/>
@@ -205,21 +204,21 @@ function shipBillAddr() {
                 <@td width="74%">&nbsp;</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.AccountingGiftCardNumber}</div></@td>
+                <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingGiftCardNumber}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="20" maxlength="60" name="giftCardNumber" value="${giftCard.cardNumber!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.AccountingPINNumber}</div></@td>
+                <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingPINNumber}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="10" maxlength="60" name="giftCardPin" value="${giftCard.pinNumber!}"/>
                 *</@td>
               </@tr>
               <@tr>
-                <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.CommonDescription}</div></@td>
+                <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonDescription}</@td>
                 <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${giftCard.description!}"/>
@@ -227,7 +226,7 @@ function shipBillAddr() {
               </@tr>
               <#if paymentMethodTypeId! != "GIFT_CARD">
                 <@tr>
-                  <@td width="26%" align="right" valign="middle"><div>${uiLabelMap.AccountingAmountToUse}</div></@td>
+                  <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAmountToUse}</@td>
                   <@td width="5">&nbsp;</@td>
                   <@td width="74%">
                     <input type="text" class="inputBox" size="5" maxlength="10" name="giftCardAmount" value="${giftCard.pinNumber!}"/>

@@ -29,10 +29,10 @@ under the License.
     <#assign partyNameTo = "${uiLabelMap.CommonNA}">
   </#if>
               <@tr>
-                <@td><div>${partyNameFrom}</div></@td>
-                <@td><div>${partyNameTo}</div></@td>
-                <@td><div>${communicationEvent.subject?default("")}</div></@td>
-                <@td><div>${communicationEvent.entryDate}</div></@td>
+                <@td>${partyNameFrom}</@td>
+                <@td>${partyNameTo}</@td>
+                <@td>${communicationEvent.subject?default("")}</@td>
+                <@td>${communicationEvent.entryDate}</@td>
                 <@td align="right">
                   <form method="post" action="<@ofbizUrl>readmessage</@ofbizUrl>" name="ecomm_read_mess${index}">
                     <input name="communicationEventId" value="${communicationEvent.communicationEventId}" type="hidden"/>
@@ -63,7 +63,7 @@ under the License.
     <div class="screenlet-body">
         <@table width="100%" border="0" cellpadding="1">
           <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
-            <@tr><@td><div>${uiLabelMap.EcommerceNoMessages}.</div></@td></@tr>
+            <@tr><@td>${uiLabelMap.EcommerceNoMessages}.</@td></@tr>
           <#else/>
             <@tr>
               <@td><div class="tableheadtext">${uiLabelMap.CommonFrom}</div></@td>

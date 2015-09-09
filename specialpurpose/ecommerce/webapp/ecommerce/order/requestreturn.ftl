@@ -74,19 +74,16 @@ under the License.
 
                 <@tr>
                   <@td>
-                    <div>
                       <#if orderItem.productId??>
                         &nbsp;<a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="${styles.button_default!}">${orderItem.productId}</a>
                         <input type="hidden" name="productId_o_${rowCount}" value="${orderItem.productId}"/>
                       </#if>
                       ${orderItem.itemDescription}
-                    </div>
                   </@td>
                   <@td>
                     <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnableQuantity")}"/>
                   </@td>
-                  <@td>
-                    <div><@ofbizCurrency amount=returnableItems.get(orderItem).get("returnablePrice") isoCode=orderHeader.currencyUom/></div>
+                  <@td><@ofbizCurrency amount=returnableItems.get(orderItem).get("returnablePrice") isoCode=orderHeader.currencyUom/>
                   </@td>
                   <@td>
                     <select name="returnReasonId_o_${rowCount}" class="selectBox">
@@ -125,7 +122,6 @@ under the License.
                           <input type="radio" name="originContactMechId" value="${shippingAddress.contactMechId}"/>
                         </@td>
                         <@td width="99%" valign="top" nowrap="nowrap">
-                          <div>
                             <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                             <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
                             <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
@@ -135,7 +131,6 @@ under the License.
                             <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                             <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                             <a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonUpdate}]</a>
-                          </div>
                         </@td>
                       </@tr>
                     </#list>
@@ -149,7 +144,7 @@ under the License.
                 </@td>
               </@tr>
             <#else>
-              <@tr><@td colspan="6"><div>${uiLabelMap.OrderNoReturnableItems} ${uiLabelMap.CommonNbr}${orderId}</div></@td></@tr>
+              <@tr><@td colspan="6">${uiLabelMap.OrderNoReturnableItems} ${uiLabelMap.CommonNbr}${orderId}</@td></@tr>
             </#if>
           </@table>
         </form>

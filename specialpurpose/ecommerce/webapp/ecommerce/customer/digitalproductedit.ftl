@@ -44,22 +44,22 @@ under the License.
 
     <@table width="90%" border="0" cellpadding="2" cellspacing="0">
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.ProductProductName}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.ProductProductName}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%"><input type="text" class="inputBox" size="30" maxlength="60" name="productName" value="${(product.productName)!}"/>*</@td>
     </@tr>
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.ProductProductDescription}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.ProductProductDescription}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%"><input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${(product.description)!}"/></@td>
     </@tr>
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.ProductPrice}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.ProductPrice}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%"><input type="text" class="inputBox" size="30" maxlength="60" name="price" value="${(productPrice.price)!}"/>*</@td>
     </@tr>
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>&nbsp;</div></@td>
+      <@td width="26%" align="right" valign="top">&nbsp;</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%"><a href="javascript:document.editdigitaluploadform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a></@td>
     </@tr>

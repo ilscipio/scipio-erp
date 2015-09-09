@@ -34,35 +34,35 @@ under the License.
     <p/>
     <@table width="90%" border="0" cellpadding="2" cellspacing="0">
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.AccountingNameOnAccount}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingNameOnAccount}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <input type="text" class="inputBox" size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount!}" />
       *</@td>
     </@tr>
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.AccountingCompanyNameOnAccount}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingCompanyNameOnAccount}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <input type="text" class="inputBox" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccountData.companyNameOnAccount!}" />
       </@td>
     </@tr>
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.AccountingBankName}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingBankName}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <input type="text" class="inputBox" size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName!}" />
       *</@td>
     </@tr>
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.AccountingRoutingNumber}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingRoutingNumber}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <input type="text" class="inputBox" size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber!}" />
       *</@td>
     </@tr>
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.AccountingAccountType}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingAccountType}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <select name="accountType" class="selectBox">
@@ -74,14 +74,14 @@ under the License.
       *</@td>
     </@tr>
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.AccountingAccountNumber}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingAccountNumber}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <input type="text" class="inputBox" size="20" maxlength="40" name="accountNumber" value="${eftAccountData.accountNumber!}" />
       *</@td>
     </@tr>
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.CommonDescription}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.CommonDescription}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
@@ -89,7 +89,7 @@ under the License.
     </@tr>
 
     <@tr>
-      <@td width="26%" align="right" valign="top"><div>${uiLabelMap.PartyBillingAddress}</div></@td>
+      <@td width="26%" align="right" valign="top">${uiLabelMap.PartyBillingAddress}</@td>
       <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
@@ -127,15 +127,13 @@ under the License.
           </@tr>
         <#else>
            <#-- <@tr>
-            <@td valign="top" colspan="2">
-              <div>${uiLabelMap.PartyNoBillingAddress}</div>
+            <@td valign="top" colspan="2">${uiLabelMap.PartyNoBillingAddress}
             </@td>
           </@tr> -->
         </#if>
           <#-- is confusing
           <@tr>
-            <@td valign="top" colspan="2">
-              <div><b>${uiLabelMap.EcommerceMessage3}</b></div>
+            <@td valign="top" colspan="2"><b>${uiLabelMap.EcommerceMessage3}</b>
             </@td>
           </@tr>
           -->
@@ -170,7 +168,7 @@ under the License.
             </@tr>
           </#list>
           <#if !postalAddressInfos?has_content && !curContactMech??>
-              <@tr><@td colspan="2"><div>${uiLabelMap.PartyNoContactInformation}.</div></@td></@tr>
+              <@tr><@td colspan="2">${uiLabelMap.PartyNoContactInformation}.</@td></@tr>
           </#if>
         </@table>
       </@td>

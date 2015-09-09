@@ -779,13 +779,13 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <not><if-empty field="workEffort"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="ICalendarTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                                <include-menu name="ICalendarSideBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

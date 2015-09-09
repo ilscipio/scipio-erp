@@ -95,10 +95,10 @@
                                         <not><if-empty field="facility"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h2" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
+                                        <label style="heading" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h2" text="${uiLabelMap.ProductNewFacility}"></label>
+                                        <label style="heading" text="${uiLabelMap.ProductNewFacility}"></label>
                                     </fail-widgets>
                                 </section>
                                 <section>
@@ -141,7 +141,7 @@
                                 <section>
                                     <condition><not><if-empty field="productStoreId"/></not></condition>
                                     <widgets>
-                                        <label style="h2" text="${uiLabelMap.PageTitleEditProductStore} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]"/>
+                                        <label style="heading" text="${uiLabelMap.PageTitleEditProductStore} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]"/>
                                     </widgets>
                                 </section>
                                 <screenlet title="${uiLabelMap.SetupEditProductStore}">
@@ -186,7 +186,7 @@
                                 <section>
                                     <condition><not><if-empty field="webSite"/></not></condition>
                                     <widgets>
-                                        <label style="h2" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>
+                                        <label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>
                                     </widgets>
                                 </section>
                                 <section>
@@ -231,7 +231,7 @@
                                 <if-compare field="showScreen" operator="equals" value="origin"/>
                             </condition>
                             <widgets>
-                                <label style="h2">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
+                                <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
                                 <screenlet title="${uiLabelMap.PageTitleEditProductCatalog}">
                                     <include-form name="EditProdCatalog" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                                 </screenlet>
@@ -262,7 +262,7 @@
                                 <if-compare field="showErrorMsg" operator="equals" value="N"/>
                             </condition>
                             <widgets>
-                                <label style="h2">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.description} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
+                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.description} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
                                 <screenlet name="CreateProductCategory" title="${uiLabelMap.PageTitleEditProductCategory}">
                                     <include-form name="EditProductCategory" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                                 </screenlet>
@@ -296,7 +296,7 @@
                             </condition>
                             <widgets>
                                 <container>
-                                    <label style="h2">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
+                                    <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
                                 </container>
                                 <include-form name="EditProduct" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                             </widgets>

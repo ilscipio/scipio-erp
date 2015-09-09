@@ -29,7 +29,6 @@ under the License.
     <@table type="fields" border='0' cellpadding='2' cellspacing='0'>
       <@tr>
         <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonPaymentMethodType}</b></@td>
-        <@td width="5">&nbsp;</@td>
         <@td width='74%'>
           <#if paymentMethodType?has_content>
             <div>${paymentMethodType.get("description",locale)}</div>
@@ -43,7 +42,6 @@ under the License.
       </@tr>
       <@tr>
         <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.ProductProductStore}</b></@td>
-        <@td width="5">&nbsp;</@td>
         <@td width='74%'>
           <#if currentStore?has_content>
             <div><#if currentStore.storeName??>${currentStore.storeName}<#else>${currentStore.productStoreId}</#if></div>
@@ -59,7 +57,6 @@ under the License.
       </@tr>
       <@tr>
         <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingTransactionType}</b></@td>
-        <@td width="5">&nbsp;</@td>
         <@td width='74%'>
           <#if currentTx?has_content>
             <div>${currentTx.get("description",locale)}</div>
@@ -84,11 +81,10 @@ under the License.
       </#if>
 
      <#if requestAttributes.validTx?default("false") == "true">
-        <@tr><@td colspan="3"><hr/></@td></@tr>
+        <@tr><@td colspan="2"><hr/></@td></@tr>
         <#-- amount field -->
         <@tr>
           <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonAmount}</b></@td>
-          <@td width="5">&nbsp;</@td>
           <@td width="74%">
             <input type="text" size="20" maxlength="30" name="amount" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
@@ -97,15 +93,14 @@ under the License.
         <#-- submit button -->
         <@tr>
           <@td width="26%" align="right" valign="middle">&nbsp;</@td>
-          <@td width="5">&nbsp;</@td>
           <@td width="74%">
             <input type="submit" value="${uiLabelMap.CommonSubmit}" />
           </@td>
         </@tr>
       <#elseif txType?has_content>
-        <@tr>
-          <@td colspan="3" align="center">
-            <h2>${uiLabelMap.AccountingTransactionTypeNotYetSupported}</h2>
+        <@tr metaRow=true>
+          <@td colspan="2" align="center">
+            <@resultMsg>${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@resultMsg>
           </@td>
         </@tr>
       </#if>

@@ -44,7 +44,6 @@ under the License.
         ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
         <@tr>
           <@td>${uiLabelMap.AccountingBillingAddress}</@td>
-          <@td width="5">&nbsp;</@td>
           <@td>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
             <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.button_default!}">
@@ -123,7 +122,7 @@ under the License.
                 </@tr>
               </#list>
               <#if !postalAddressInfos?has_content && !curContactMech??>
-                  <@tr><@td colspan="2">${uiLabelMap.PartyNoContactInformation}.</@td></@tr>
+                  <@tr metaRow=true><@td colspan="2">${uiLabelMap.PartyNoContactInformation}.</@td></@tr>
               </#if>
               <#-- not yet supported in party manager
               <@tr>

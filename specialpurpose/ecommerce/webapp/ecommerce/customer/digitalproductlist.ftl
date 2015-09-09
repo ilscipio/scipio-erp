@@ -27,29 +27,25 @@ under the License.
           <@tr>
             <@td width="30%"><b>${uiLabelMap.ProductProductName}</b>
             </@td>
-            <@td width="5">&nbsp;</@td>
             <@td width="45%"><b>${uiLabelMap.CommonDescription}</b>
             </@td>
-            <@td width="5">&nbsp;</@td>
             <@td width="20%">&nbsp;</@td>
           </@tr>
           <#list supplierProductList as supplierProduct>
             <#assign product = supplierProduct.getRelatedOne("Product", true)/>
-            <@tr><@td colspan="5"><hr /></@td></@tr>
+            <@tr><@td colspan="3"><hr /></@td></@tr>
             <@tr>
               <@td>${(product.productName)!}
               </@td>
-              <@td width="5">&nbsp;</@td>
               <@td>${(product.description)!}
               </@td>
-              <@td width="5">&nbsp;</@td>
               <@td align="right">
                 <a href="<@ofbizUrl>digitalproductedit?productId=${supplierProduct.productId}&amp;currencyUomId=${supplierProduct.currencyUomId}&amp;minimumOrderQuantity=${supplierProduct.minimumOrderQuantity}&amp;availableFromDate=${supplierProduct.availableFromDate}</@ofbizUrl>" class="${styles.button_default!}">Edit</a>
               </@td>
             </@tr>
           </#list>
           <#if !supplierProductList?has_content>
-            <@tr><@td colspan="5"><@resultMsg>${uiLabelMap.EcommerceNoDigitalProductsFound}</@resultMsg></@td></@tr>
+            <@tr><@td colspan="3"><@resultMsg>${uiLabelMap.EcommerceNoDigitalProductsFound}</@resultMsg></@td></@tr>
           </#if>
         </@table>
     </div>

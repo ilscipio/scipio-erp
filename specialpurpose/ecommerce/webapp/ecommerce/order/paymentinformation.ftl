@@ -90,14 +90,13 @@ function shipBillAddr() {
                 </@td>
               </@tr>
               <@tr>
-                <@td colspan="3"><hr /></@td>
+                <@td colspan="2"><hr /></@td>
               </@tr>
             </#if>
 
             <#if (paymentMethodTypeId! == "CREDIT_CARD" || paymentMethodTypeId! == "EFT_ACCOUNT")>
               <@tr>
                 <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.PartyBillingAddress}</div></@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">&nbsp;</@td>
               </@tr>
               ${screens.render("component://ecommerce/widget/OrderScreens.xml#genericaddress")}
@@ -109,11 +108,10 @@ function shipBillAddr() {
                 <#assign creditCard = requestParameters>
               </#if>
               <@tr>
-                <@td colspan="3"><hr /></@td>
+                <@td colspan="2"><hr /></@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.AccountingCreditCardInformation}</div></@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">&nbsp;</@td>
               </@tr>
 
@@ -126,44 +124,38 @@ function shipBillAddr() {
                 <#assign eftAccount = requestParameters>
               </#if>
               <@tr>
-                <@td colspan="3"><hr /></@td>
+                <@td colspan="2"><hr /></@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.AccountingEFTAccountInformation}</div></@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">&nbsp;</@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingNameOnAccount}</@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="30" maxlength="60" name="nameOnAccount" value="${eftAccount.nameOnAccount!}"/>
                 *</@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingCompanyNameOnAccount}</@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount!}"/>
                 </@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingBankName}</@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="30" maxlength="60" name="bankName" value="${eftAccount.bankName!}"/>
                 *</@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingRoutingNumber}</@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber!}"/>
                 *</@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAccountType}</@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <select name="accountType" class="selectBox">
                     <option>${eftAccount.accountType!}</option>
@@ -175,14 +167,12 @@ function shipBillAddr() {
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAccountNumber}</@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber!}"/>
                 *</@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonDescription}</@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${eftAccount.description!}"/>
                 </@td>
@@ -195,31 +185,27 @@ function shipBillAddr() {
               <#assign giftCard = giftCard!>
               <#if paymentMethodTypeId! != "GIFT_CARD">
                 <@tr>
-                  <@td colspan="3"><hr /></@td>
+                  <@td colspan="2"><hr /></@td>
                 </@tr>
               </#if>
               <@tr>
                 <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.AccountingGiftCardInformation}</div></@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">&nbsp;</@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingGiftCardNumber}</@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="20" maxlength="60" name="giftCardNumber" value="${giftCard.cardNumber!}"/>
                 *</@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingPINNumber}</@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="10" maxlength="60" name="giftCardPin" value="${giftCard.pinNumber!}"/>
                 *</@td>
               </@tr>
               <@tr>
                 <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonDescription}</@td>
-                <@td width="5">&nbsp;</@td>
                 <@td width="74%">
                   <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${giftCard.description!}"/>
                 </@td>
@@ -227,19 +213,19 @@ function shipBillAddr() {
               <#if paymentMethodTypeId! != "GIFT_CARD">
                 <@tr>
                   <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAmountToUse}</@td>
-                  <@td width="5">&nbsp;</@td>
                   <@td width="74%">
                     <input type="text" class="inputBox" size="5" maxlength="10" name="giftCardAmount" value="${giftCard.pinNumber!}"/>
                   *</@td>
                 </@tr>
               </#if>
             </#if>
-
-            <@tr>
-              <@td align="center" colspan="3">
-                <input type="submit" class="smallsubmit" value="Continue"/>
-              </@td>
-            </@tr>
+            <@tfoot>
+              <@tr>
+                <@td align="center" colspan="2">
+                  <input type="submit" class="smallsubmit" value="Continue"/>
+                </@td>
+              </@tr>
+            </@tfoot>
           </@table>
         </form>
     </div>

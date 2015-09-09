@@ -46,10 +46,9 @@ under the License.
         </#if>
         <@table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <@tr>
-            <@td colspan="3">&nbsp;</@td>
+            <@td colspan="2">&nbsp;</@td>
           </@tr>
           <@tr>
-            <@td width="5">&nbsp;</@td>
             <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></@td>
             <@td>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClickHere}</a>)</@td>
           </@tr>
@@ -57,16 +56,15 @@ under the License.
             <#assign partyToName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>
             <input type="hidden" name="partyIdTo" value="${partyIdTo}"/>
             <@tr>
-              <@td colspan="3">&nbsp;</@td>
+              <@td colspan="2">&nbsp;</@td>
             </@tr>
             <@tr>
-              <@td width="5">&nbsp;</@td>
               <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonTo}:</div></@td>
               <@td>&nbsp;${partyToName}</@td>
             </@tr>
           </#if>
           <@tr>
-            <@td colspan="3">&nbsp;</@td>
+            <@td colspan="2">&nbsp;</@td>
           </@tr>
           <#assign defaultSubject = (communicationEvent.subject)?default("")>
           <#if (defaultSubject?length == 0)>
@@ -79,15 +77,13 @@ under the License.
             </#if>
           </#if>
           <@tr>
-            <@td width="5">&nbsp;</@td>
             <@td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></@td>
             <@td><input type="input" class="inputBox" name="subject" size="20" value="${defaultSubject}"/></@td>
           </@tr>
           <@tr>
-            <@td colspan="3">&nbsp;</@td>
+            <@td colspan="2">&nbsp;</@td>
           </@tr>
           <@tr>
-            <@td width="5">&nbsp;</@td>
             <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonMessage}:</div></@td>
             <@td>&nbsp;</@td>
           </@tr>
@@ -98,12 +94,14 @@ under the License.
             </@td>
           </@tr>
           <@tr>
-            <@td colspan="3">&nbsp;</@td>
-          </@tr>
-          <@tr>
             <@td colspan="2">&nbsp;</@td>
-            <@td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSend}"/></@td>
           </@tr>
+          <@tfoot>
+            <@tr>
+              <@td colspan="2">&nbsp;</@td>
+              <@td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSend}"/></@td>
+            </@tr>
+          </@tfoot>
         </@table>
       </form>
     </div>

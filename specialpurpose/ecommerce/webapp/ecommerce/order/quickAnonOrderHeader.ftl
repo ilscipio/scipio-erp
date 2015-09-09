@@ -46,7 +46,6 @@ under the License.
                   <@tr>
                     <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.PartyName}</b>
                     </@td>
-                    <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">
                         ${(displayPartyNameResult.fullName)?default("[Name Not Found]")}
                     </@td>
@@ -57,7 +56,6 @@ under the License.
                 <@tr>
                   <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.CommonStatus}</b>
                   </@td>
-                  <@td width="5">&nbsp;</@td>
                   <@td valign="top" width="80%">
                     <#if orderHeader?has_content>
                       <div>${localOrderReadHelper.getStatusString(locale)}</div>
@@ -72,7 +70,6 @@ under the License.
                   <@tr>
                     <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.CommonDate}</b>
                     </@td>
-                    <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">${orderHeader.orderDate.toString()}
                     </@td>
                   </@tr>
@@ -82,7 +79,6 @@ under the License.
                   <@tr>
                     <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.OrderDistributor}</b>
                     </@td>
-                    <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">${distributorId}
                     </@td>
                   </@tr>
@@ -120,7 +116,6 @@ under the License.
                   <@tr>
                     <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.OrderDestination}</b> [${groupNumber}]
                     </@td>
-                    <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">
                         <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br /></#if>
                         <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${shippingAddress.attnName}<br /></#if>

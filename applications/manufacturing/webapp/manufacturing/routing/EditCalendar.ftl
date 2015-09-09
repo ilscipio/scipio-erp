@@ -40,24 +40,20 @@ under the License.
     <#if techDataCalendar?has_content>
     <@tr>
       <@td width='26%' align='right' valign='top'>${uiLabelMap.ManufacturingCalendarId}</@td>
-      <@td width="5">&nbsp;</@td>
       <@td width="74%" valign="top"><span>${techDataCalendar.calendarId!}</span> <span class="tooltip">(${uiLabelMap.CommonNotModifRecreat})</span></@td>
     </@tr>
     <#else>
     <@tr>
       <@td width='26%' align='right' valign="top">${uiLabelMap.ManufacturingCalendarId}</@td>
-      <@td width="5">&nbsp;</@td>
       <@td width="74%"><input type="text" size="12" name="calendarId" value="${calendarData.calendarId!}" /></@td>
     </@tr>
     </#if>
     <@tr>
       <@td width='26%' align='right' valign='top'>${uiLabelMap.CommonDescription}</@td>
-      <@td width="5">&nbsp;</@td>
       <@td width="74%"><input type="text" size="40" name="description" value="${calendarData.description!}" /></@td>
     </@tr>
     <@tr>
       <@td width='26%' align='right' valign='top'>${uiLabelMap.ManufacturingCalendarWeekId}</@td>
-      <@td width="5">&nbsp;</@td>
       <@td width="74%">
          <select name="calendarWeekId">
           <#list calendarWeeks as calendarWeek>
@@ -68,7 +64,6 @@ under the License.
     </@tr>
     <@tr>
       <@td width="26%" align="right" valign="top"></@td>
-      <@td width="5">&nbsp;</@td>
       <@td width="74%"><input type="submit" value="${uiLabelMap.CommonUpdate}" /></@td>
     </@tr>
   </@table>

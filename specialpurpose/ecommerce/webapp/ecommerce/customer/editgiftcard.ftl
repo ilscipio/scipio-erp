@@ -35,7 +35,6 @@ under the License.
     <@table width="90%" border="0" cellpadding="2" cellspacing="0">
     <@tr>
       <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingCardNumber}</@td>
-      <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <#if giftCardData?has_content && giftCardData.cardNumber?has_content>
           <#assign pcardNumberDisplay = "">
@@ -57,14 +56,12 @@ under the License.
     </@tr>
     <@tr>
       <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingPINNumber}</@td>
-      <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <input type="password" class="inputBox" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber!}" />
       </@td>
     </@tr>
     <@tr>
       <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingExpirationDate}</@td>
-      <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <#assign expMonth = "">
         <#assign expYear = "">
@@ -101,7 +98,6 @@ under the License.
     </@tr>
     <@tr>
       <@td width="26%" align="right" valign="top">${uiLabelMap.CommonDescription}</@td>
-      <@td width="5">&nbsp;</@td>
       <@td width="74%">
         <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
       </@td>

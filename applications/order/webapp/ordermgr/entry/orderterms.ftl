@@ -67,7 +67,6 @@ under the License.
                             <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTermType}
                                         </@td>
-                                        <@td width="5">&nbsp;</@td>
                                         <@td width="74%">
                                             <select name="termTypeId">
                                                 <option value=""></option>
@@ -83,7 +82,6 @@ under the License.
                         <@td class="${styles.grid_large!}3">
                                         ${uiLabelMap.OrderOrderTermValue}
                                     </@td>
-                                    <@td width="5">&nbsp;</@td>
                                     <@td width="74%">
                                         <input type="text" size="30" maxlength="60" name="termValue" value="${termValue!}" />
                                     </@td>
@@ -92,7 +90,6 @@ under the License.
                             <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTermDays}
                                         </@td>
-                                        <@td width="5">&nbsp;</@td>
                                         <@td width="74%">
                                             <input type="text" size="30" maxlength="60" name="termDays" value="${termDays!}" />
                                         </@td>
@@ -101,7 +98,6 @@ under the License.
                             <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTextValue}
                                         </@td>
-                                        <@td width="5">&nbsp;</@td>
                                         <@td width="74%">
                                             <input type="text" size="30" maxlength="60" name="textValue" value="${textValue?if_exists}" />
                                         </@td>
@@ -110,14 +106,12 @@ under the License.
                             <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.CommonDescription}
                                         </@td>
-                                        <@td width="5">&nbsp;</@td>
                                         <@td width="74%">
                                             <input type="text" size="30" maxlength="255" name="description" value="${description?if_exists}" />
                                         </@td>
                                     </@tr>
                                     <@tr>
                                         <@td width="26%" align="right" valign="top">&nbsp;</@td>
-                                        <@td width="5">&nbsp;</@td>
                                         <@td width="74%">
                                             <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}" />
                                         </@td>

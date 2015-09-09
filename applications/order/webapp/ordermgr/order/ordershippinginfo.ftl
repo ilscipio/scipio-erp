@@ -231,7 +231,6 @@ under the License.
                     <@td scope="row" class="${styles.grid_large!}3">
                         ${uiLabelMap.OrderAddress}
                     </@td>
-                    <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">
                             <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
                             <select name="contactMechId">
@@ -258,7 +257,6 @@ under the License.
                     <@td scope="row" class="${styles.grid_large!}3">
                         <b>${uiLabelMap.CommonMethod}</b>
                     </@td>
-                    <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">
                             <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
                             <#-- passing the shipmentMethod value as the combination of three fields value
@@ -290,7 +288,6 @@ under the License.
                 <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
                 <@tr>
                     <@td scope="row" class="${styles.grid_large!}3">&nbsp;</@td>
-                    <@td width="5">&nbsp;</@td>
                     <@td valign="top" width="80%">
                         <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/>
                         <a class="${styles.button_default!}" id="newShippingAddress" href="javascript:void(0);">${uiLabelMap.OrderNewShippingAddress}</a>
@@ -302,8 +299,8 @@ under the License.
                 </#if>
                 <#if !shipGroup.contactMechId?has_content && !shipGroup.shipmentMethodTypeId?has_content>
                 <#assign noShipment = "true">
-                <@tr>
-                    <@td colspan="3" align="center">${uiLabelMap.OrderNotShipped}</@td>
+                <@tr metaRow=true>
+                    <@td colspan="2" align="center"><@resultMsg>${uiLabelMap.OrderNotShipped}</@resultMsg></@td>
                 </@tr>
                 </#if>
       </@table>
@@ -385,7 +382,7 @@ under the License.
            <#-- New in Ofbiz 14.12 -->
            <#if OISGAContent.size() == 0>
            <@tr>
-              <@td colspan="3" valign="top" width="100%" align="center">
+              <@td colspan="2" valign="top" width="100%" align="center">
                    <a href="javascript:document.deleteOISG_${shipGroup.shipGroupSeqId}.submit()" class="${styles.button_default!}">${uiLabelMap.DeleteOrderItemShipGroup}</a>
                    <form name="deleteOISG_${shipGroup.shipGroupSeqId}" method="post" action="/ordermgr/control/DeleteOrderItemShipGroup">
                      <input type="hidden" name="orderId" value="${orderId}"/>
@@ -398,7 +395,6 @@ under the License.
             <@td scope="row" class="${styles.grid_large!}3">
               ${uiLabelMap.ProductDropShipment} - ${uiLabelMap.PartySupplier}
             </@td>
-            <@td width="5">&nbsp;</@td>
             <@td valign="top" width="80%">
               ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, shipGroup.supplierPartyId, false)!shipGroup.supplierPartyId}
             </@td>
@@ -411,7 +407,7 @@ under the License.
           <#if orderReadHelper.getOrderTypeId() != "PURCHASE_ORDER">
   
             <@tr>
-              <@td colspan="3">
+              <@td colspan="2">
                 <@table type="fields">
                   <@tr>
                     <@td>
@@ -460,7 +456,6 @@ under the License.
             <@td scope="row" class="${styles.grid_large!}3">
               ${uiLabelMap.OrderTrackingNumber}
             </@td>
-            <@td width="5">&nbsp;</@td>
             <@td valign="top" width="80%">
               <#-- TODO: add links to UPS/FEDEX/etc based on carrier partyId  -->
               <#if shipGroup.trackingNumber?has_content>
@@ -487,7 +482,6 @@ under the License.
             <@td scope="row" class="${styles.grid_large!}3">
               ${uiLabelMap.OrderSplittingPreference}
             </@td>
-            <@td width="5">&nbsp;</@td>
             <@td valign="top" width="80%">
                 <#if shipGroup.maySplit?upper_case == "N">
                     ${uiLabelMap.FacilityWaitEntireOrderReady}
@@ -512,7 +506,6 @@ under the License.
           <@td scope="row" class="${styles.grid_large!}3">
             ${uiLabelMap.OrderInstructions}
           </@td>
-          <@td width="5">&nbsp;</@td>
           <@td align="left" valign="top" width="80%">
             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
               <form id="updateShippingInstructionsForm_${shipGroup.shipGroupSeqId}" name="updateShippingInstructionsForm" method="post" action="<@ofbizUrl>setShippingInstructions</@ofbizUrl>">
@@ -551,7 +544,6 @@ under the License.
           <@td scope="row" class="${styles.grid_large!}3">
             ${uiLabelMap.OrderGiftMessage}
           </@td>
-          <@td width="5">&nbsp;</@td>
           <@td>
             <form id="setGiftMessageForm_${shipGroup.shipGroupSeqId}" name="setGiftMessageForm" method="post" action="<@ofbizUrl>setGiftMessage</@ofbizUrl>">
               <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
@@ -574,7 +566,6 @@ under the License.
               ${uiLabelMap.OrderShipAfterDate}<br/>
               ${uiLabelMap.OrderShipBeforeDate}
             </@td>
-            <@td width="5">&nbsp;</@td>
             <@td valign="top" width="80%">
               <form name="setShipGroupDates_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizUrl>updateOrderItemShipGroup</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
@@ -593,7 +584,6 @@ under the License.
             <@td scope="row" class="${styles.grid_large!}3">
               ${uiLabelMap.FacilityShipments}
             </@td>
-            <@td width="5">&nbsp;</@td>
             <@td valign="top" width="80%">
                 <#list shipGroupShipments as shipment>
                     <div>
@@ -626,7 +616,7 @@ under the License.
          <#-- Manual shipment options -->
 
          <@tr>
-            <@td colspan="3" valign="top" width="100%" align="center">
+            <@td colspan="2" valign="top" width="100%" align="center">
              <#if orderHeader.orderTypeId == "SALES_ORDER">
                <#if !shipGroup.supplierPartyId?has_content>
                  <#if orderHeader.statusId == "ORDER_APPROVED">

@@ -25,7 +25,7 @@ under the License.
         <#if !paymentMethod?has_content && paymentMethodType?has_content>
           <@tr>
             <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
-              <@td colspan="3" valign="top">
+              <@td colspan="2" valign="top">
                 <div align="center"><b>${uiLabelMap.AccountingOfflinePayment}</b></div>
                 <#if orderHeader?has_content && paymentAddress?has_content>
                   <div align="center"><hr /></div>
@@ -42,7 +42,7 @@ under the License.
               </@td>
             <#else>
               <#assign outputted = true>
-              <@td colspan="3" valign="top">
+              <@td colspan="2" valign="top">
                 <div align="center"><b>${uiLabelMap.AccountingPaymentVia} ${paymentMethodType.get("description",locale)}</b></div>
               </@td>
             </#if>
@@ -54,7 +54,6 @@ under the License.
           <#if creditCard?has_content>
             <@tr>
               <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.AccountingCreditCard}</b></@td>
-              <@td width="5">&nbsp;</@td>
               <@td valign="top" width="80%">
                   <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br /></#if>
                   <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp;</#if>
@@ -70,7 +69,6 @@ under the License.
           <#elseif eftAccount?has_content>
             <@tr>
               <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.AccountingEFTAccount}</b></@td>
-              <@td width="5">&nbsp;</@td>
               <@td valign="top" width="80%">
                   ${eftAccount.nameOnAccount}<br />
                   <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br /></#if>
@@ -83,12 +81,11 @@ under the License.
         <#-- billing account info -->
         <#if billingAccount?has_content>
           <#if outputted?default(false)>
-            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr><@td colspan="2"><hr /></@td></@tr>
           </#if>
           <#assign outputted = true/>
           <@tr>
             <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.AccountingBillingAccount}</b></@td>
-            <@td width="5">&nbsp;</@td>
             <@td valign="top" width="80%">
                 #${billingAccount.billingAccountId!} - ${billingAccount.description!}
               </@td>

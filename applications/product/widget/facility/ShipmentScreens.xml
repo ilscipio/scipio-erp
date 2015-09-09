@@ -63,7 +63,7 @@ under the License.
                                         <not><if-empty field="shipment"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h2" text="${uiLabelMap.ProductShipmentId}: ${shipment.shipmentId}"/>
+                                        <label style="heading" text="${uiLabelMap.ProductShipmentId}: ${shipment.shipmentId}"/>
                                         <container>
                                             <link style="${styles.button_default}" text="${uiLabelMap.ProductGenerateShipmentManifestReport}" target="ShipmentManifest.pdf" target-window="_BLANK">
                                                 <parameter param-name="shipmentId" from-field="shipment.shipmentId"/>
@@ -240,7 +240,7 @@ under the License.
                         </section>
                         <screenlet title="${uiLabelMap.ProductShipmentPlanList}">
                             <include-form name="listShipmentPlan" location="component://product/widget/facility//ShipmentForms.xml"/>
-                            <label style="h2" text="${uiLabelMap.ProductShipmentTotalWeight}: ${totWeight} ${uiLabelMap.ProductShipmentTotalVolume}: ${totVolume}"/>
+                            <label style="heading" text="${uiLabelMap.ProductShipmentTotalWeight}: ${totWeight} ${uiLabelMap.ProductShipmentTotalVolume}: ${totVolume}"/>
                         </screenlet>
                         <section>
                             <condition>

@@ -41,7 +41,7 @@ under the License.
                                         <container style="button-bar">
                                             <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.button_default}"/>
                                         </container>
-                                        <label style="h2">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productPromo.promoName} [${uiLabelMap.CommonId}:${productPromoId}]  ${${extraFunctionName}}</label>
+                                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productPromo.promoName} [${uiLabelMap.CommonId}:${productPromoId}]  ${${extraFunctionName}}</label>
                                     </widgets>
                                 </section>
 

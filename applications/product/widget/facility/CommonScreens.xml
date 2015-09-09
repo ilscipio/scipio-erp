@@ -183,7 +183,7 @@ under the License.
                                         <not><if-empty field="inventoryItemLabel"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="h2">${uiLabelMap.ProductInventoryItemLabel} [${inventoryItemLabelId}]</label>
+                                        <label style="heading">${uiLabelMap.ProductInventoryItemLabel} [${inventoryItemLabelId}]</label>
                                         <decorator-section-include name="body"/>
                                     </widgets>
                                     <fail-widgets>

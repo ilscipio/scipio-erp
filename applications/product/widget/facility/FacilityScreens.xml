@@ -681,9 +681,9 @@ under the License.
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/InventoryItemTotals.groovy"/>
             </actions>
             <widgets>
-                <label style="h2" text="${uiLabelMap.ProductInventoryItemTotals} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
+                <label style="heading" text="${uiLabelMap.ProductInventoryItemTotals} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
                 <include-form name="InventoryItemTotalsExport" location="component://product/widget/facility/FacilityForms.xml"/>
-                <label style="h2" text="${uiLabelMap.ProductInventoryItemGrandTotals} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
+                <label style="heading" text="${uiLabelMap.ProductInventoryItemGrandTotals} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
                 <include-form name="InventoryItemGrandTotalsExport" location="component://product/widget/facility/FacilityForms.xml"/>
             </widgets>
         </section>

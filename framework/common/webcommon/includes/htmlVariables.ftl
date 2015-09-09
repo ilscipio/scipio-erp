@@ -80,10 +80,15 @@ under the License.
     
 <#-- Data and Tables -->  
     "table_default" : "",
+    "table_default_cellspacing" : "",
     "table_data_list" : "basic-table",
+    "table_data_list_cellspacing" : 0,
     "table_data_complex" : "basic-table",
+    "table_data_complex_cellspacing" : 0,
     "table_summary" : "basic-table",
+    "table_summary_cellspacing" : 0,
     "table_fields" : "",
+    "table_fields_cellspacing" : 0,
     "row_reg" : "even",
     "row_alt" : "odd",
     "row_selected" : "selected",

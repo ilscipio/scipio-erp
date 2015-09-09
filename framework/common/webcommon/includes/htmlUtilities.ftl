@@ -363,7 +363,10 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     <@field attr="" />
     
     * General Attributes *
-    type            = form element of type [input,textarea,datetime,select,checkbox,radio]
+    type            = form element of type [input,textarea,datetime,select,checkbox,radio,generic],
+                      default generic meaning input defined manually with #nested
+                      (discouraged; prefer specific; but sometimes required and useful
+                      for transition)
     label           = form label
     columns         = int value for columns for field (overrides classes)
     tooltip         = Small field description - to be displayed to the customer
@@ -428,10 +431,10 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     progressOptions = if this is an upload form, specify progress upload options, enables progress next to buttons. 
                       see @progress[Script] macro[s]. should specify formSel, (progBarId and/or progTextBoxId), and others.
 -->
-<#macro field type="" label="" name="" value="" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
+<#macro field type="generic" label="" name="" value="" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={}>
+        fieldFormName="" formName="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} requireTitleArea=false>
 
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum = (fieldIdNum!0)+1 />
@@ -458,7 +461,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 </#if>
 
 <@row collapse=collapse!false norows=norows class="form-field-entry">
-    <#if label?has_content && type != "submitarea">
+    <#if (label?has_content && type != "submitarea") || requireTitleArea>
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         
@@ -469,11 +472,13 @@ Set current heading level manually. For advanced markup, bypassing @section (but
         
         <#if !radioSingle>
             <@cell class=(subclasses+" field-entry-title")?trim nocells=nocells>
+              <#if label?has_content>
                 <#if type=="checkbox" || collapse==false>
                     <label class="form-field-label"<#if id?has_content> for="${id}"</#if>>${label}</label>
                 <#else>
                     <span class="prefix form-field-label">${label}</span>
-                </#if>           
+                </#if>     
+              </#if>       
             </@cell>
         </#if>
     </#if>
@@ -592,7 +597,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
                     <@renderRadioField items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
-                    <div <@renderClass class alert />>
+                    <div<@renderClass class alert />>
                       <@renderRadioField items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
                     </div>
                 </#if>
@@ -636,7 +641,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
               </#if>
             </@row>
             <#break> 
-          <#default>
+          <#default> <#-- "generic", empty or unrecognized -->
             <#if value?has_content>
                 <@renderField text=value/>
             <#else>
@@ -1004,16 +1009,16 @@ levels manually, but most often should let @section menu handle them.
 * alert box
 ************
     Usage example:  
-    <@alert type="">
+    <@alert type="info">
         <#nested>
     </@alert>            
                     
    * General Attributes *
-    type           = (info|success|warning|secondary|alert|error)
+    type           = (info|success|warning|secondary|alert|error), default info
     class          = classes or additional classes for nested container
                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
-<#macro alert type="" class=true id="">
+<#macro alert type="info" class=true id="">
 <#local classes = makeClassesArg(class, "${styles.grid_large!}12")>
 <#if type="error"><#local type = "alert"></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
@@ -1344,29 +1349,15 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <#local autoAltRows = (type == "data-list") || inheritAltRows>-->
     <#local autoAltRows = inheritAltRows>
   </#if>
-  <#if !catoDefaultTableStyles?has_content>
-    <#assign catoDefaultTableStyles = {
-      "generic": styles.table_default!,
-      "data-list": styles.table_data_list!,
-      "data-complex": styles.table_data_complex!,
-      "summary": styles.table_summary!,
-      "fields": styles.table_fields!
-    }>
+  <#local styleName = type?replace("-","_")>
+  <#if (!styleName?has_content) || styleName == "generic" || (!(styles["table_" + styleName]!false)?is_string)>
+    <#local styleName = "default">
   </#if>
-  <#local defaultClass = catoDefaultTableStyles[type]!"">
+  <#local defaultClass = styles["table_" + styleName]!"">
   <#local classes = makeClassesArg(class, defaultClass)>
   <#if cellspacing?is_boolean>
     <#if cellspacing>
-      <#if !catoDefaultTableCellspacings?has_content>
-        <#-- TODO: set in styles? -->
-        <#assign catoDefaultTableCellspacings = {
-          "data-list": 0,
-          "data-complex": 0,
-          "summary": 0,
-          "fields": 0
-        }>
-      </#if>
-      <#local cellspacing = catoDefaultTableCellspacings[type]!"">
+      <#local cellspacing = styles["table_" + styleName + "_cellspacing"]!"">
     <#else>
       <#local cellspacing = "">
     </#if>
@@ -2011,7 +2002,7 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
                       usually use only one of alternatives but versatile.
 -->
 <#macro menu args={} inlineArgs...>
-  <#local type = inlineArgs.type!args.type!"">
+  <#local type = inlineArgs.type!args.type!"generic">
   <#local inlineItems = inlineArgs.inlineItems!args.inlineItems!false>
   <#local class = inlineArgs.class!args.class!true>
   <#local id = inlineArgs.id!args.id!"">
@@ -2025,7 +2016,10 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#t>
   <#local prevMenuInfo = catoCurrentMenuInfo!>
   <#local prevMenuItemIndex = catoCurrentMenuItemIndex!>
-  <#local styleName = (type == "generic")?string("default", type)>
+  <#local styleName = type>
+  <#if (!styleName?has_content) || styleName == "generic" || (!(styles["menu_" + styleName]!false)?is_string)>
+    <#local styleName = "default">
+  </#if>
   <#global catoCurrentMenuInfo = {"type":type, "styleName":styleName}>
   <#global catoCurrentMenuItemIndex = 0>
   <#t>
@@ -2103,7 +2097,7 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
     nestedFirst     = if true, nested content comes before content elem. default false (comes after content elem/text).
 -->
 <#macro menuitem args={} inlineArgs...>
-  <#local type = inlineArgs.type!args.type!"">
+  <#local type = inlineArgs.type!args.type!"generic">
   <#local class = inlineArgs.class!args.class!true>
   <#local id = inlineArgs.id!args.id!"">
   <#local style = inlineArgs.style!args.style!"">

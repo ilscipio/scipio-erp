@@ -2463,13 +2463,13 @@ under the License.
                 <container style="${styles.grid_large}6">
                     <section>
                         <widgets>
-                            <label style="h2" text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
+                            <label style="heading" text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
                             <include-screen name="commEvent"/>
                         </widgets>
                     </section>
                 </container>
                 <container style="${styles.grid_large}6">
-                    <label style="h2" text="${uiLabelMap.CommonRelatedInformation}"/>
+                    <label style="heading" text="${uiLabelMap.CommonRelatedInformation}"/>
                     <section>
                         <condition>
                             <if-empty field="communicationEvent.contactListId"/>
@@ -2530,7 +2530,7 @@ under the License.
                                 </condition>
                                 <widgets>
                                     <screenlet>
-                                        <label style="h2" text="${uiLabelMap.PartyOriginEmailNotKnown}"/>
+                                        <label style="heading" text="${uiLabelMap.PartyOriginEmailNotKnown}"/>
                                         <label style="h3" text="${uiLabelMap.PartyEmailMessage}"/>
                                         <include-form name="allocateMsgToPartyForm" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                                     </screenlet>

@@ -100,7 +100,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <include-menu name="ProjectMenu" location="component://scrum/widget/scrumMenus.xml"/>
-                                <label style="h2" text="${uiLabelMap.ScrumProjectCurrent}: ${project.workEffortName}[${project.workEffortId}]"/>
+                                <label style="heading" text="${uiLabelMap.ScrumProjectCurrent}: ${project.workEffortName}[${project.workEffortId}]"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -143,7 +143,7 @@ under the License.
                                                  <include-menu name="TaskSubTabBar" location="component://scrum/widget/scrumMenus.xml"/>
                                             </widgets>
                                         </section>
-                                        <label style="h2" text="${uiLabelMap.ScrumTaskCurrent}: ${task.workEffortName}[${task.workEffortId}]"/>
+                                        <label style="heading" text="${uiLabelMap.ScrumTaskCurrent}: ${task.workEffortName}[${task.workEffortId}]"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -208,7 +208,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="ProductSubTabBar" location="component://scrum/widget/scrumMenus.xml" />
-                                        <label style="h2" text="Product: ${product.internalName}[${product.productId}]"/>
+                                        <label style="heading" text="Product: ${product.internalName}[${product.productId}]"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -279,7 +279,7 @@ under the License.
                                                 </container>
                                             </widgets>
                                         </section>
-                                        <label style="h2" text="Product Backlog Item: ${custRequestMap.description}[${custRequestMap.custRequestId}]"/>
+                                        <label style="heading" text="Product Backlog Item: ${custRequestMap.description}[${custRequestMap.custRequestId}]"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -349,7 +349,7 @@ under the License.
                                                 </container>
                                             </widgets>
                                         </section>
-                                        <label style="h2" text="Product Backlog Item: ${custRequestMap.description}[${custRequestMap.custRequestId}]"/>
+                                        <label style="heading" text="Product Backlog Item: ${custRequestMap.description}[${custRequestMap.custRequestId}]"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -463,7 +463,7 @@ under the License.
                                                  <include-menu name="ProjectSubTabBar" location="component://scrum/widget/scrumMenus.xml"/>
                                             </widgets>
                                         </section>
-                                        <label style="h2" text="${uiLabelMap.ScrumProjectCurrent}: ${workEffort.workEffortName}[${workEffort.workEffortId}]"/>
+                                        <label style="heading" text="${uiLabelMap.ScrumProjectCurrent}: ${workEffort.workEffortName}[${workEffort.workEffortId}]"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -557,7 +557,7 @@ under the License.
                     </decorator-section>
                     <decorator-section name="body">
                         <include-menu name="SprintSubMenu" location="component://scrum/widget/scrumMenus.xml"/>
-                        <label text="Current Sprint: ${sprint.workEffortName} [${sprint.workEffortId}]" style="h2"/>
+                        <label text="Current Sprint: ${sprint.workEffortName} [${sprint.workEffortId}]" style="heading"/>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>

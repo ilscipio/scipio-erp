@@ -123,7 +123,7 @@ under the License.
                                     </widgets>
                                 </section>
                                 <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommFindTabBar"/>
-                                <label style="h2" text="${uiLabelMap.PartyPendingCommunicationEvents}"/>
+                                <label style="heading" text="${uiLabelMap.PartyPendingCommunicationEvents}"/>
                                 <container>
                                     <link style="${styles.button_default}" target="ViewCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}">
                                         <parameter param-name="partyId"/>
@@ -176,7 +176,7 @@ under the License.
                                 <if-service-permission service-name="partyCommunicationEventPermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <label style="h2" text="${uiLabelMap.PageTitleListCommunications} ${partyId}"/>
+                                <label style="heading" text="${uiLabelMap.PageTitleListCommunications} ${partyId}"/>
                                 <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                 <section>
                                     <condition>
@@ -184,7 +184,7 @@ under the License.
                                     </condition>
                                     <widgets> 
                                         <horizontal-separator/>
-                                        <label style="h2" text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/>
+                                        <label style="heading" text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/>
                                         <iterate-section entry="contact" list="contacts">
                                             <section>
                                                 <condition>
@@ -240,7 +240,7 @@ under the License.
                                             </condition>
                                             <widgets>
                                                 <horizontal-separator/>
-                                                <label style="h2" text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/>
+                                                <label style="heading" text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/>
                                                 <label style="h3" text="${partyIdFrom}"/>  
                                                 <iterate-section entry="account" list="accounts">
                                                     <section>
@@ -421,7 +421,7 @@ under the License.
                         </section>
                     </container>
                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                        <label style="h2" text="${uiLabelMap.CommonRelatedInformation}"/>
+                        <label style="heading" text="${uiLabelMap.CommonRelatedInformation}"/>
                         <section>
                             <condition>
                                 <if-empty field="communicationEvent.contactListId"/>
@@ -785,7 +785,7 @@ under the License.
                                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
                                     </widgets>
                                 </section>
-                                <label style="h2" text="${uiLabelMap.PageTitleEditCommContent}"/>
+                                <label style="heading" text="${uiLabelMap.PageTitleEditCommContent}"/>
                                 <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="editCommContent"/>
                                 <section>
                                     <condition>
@@ -1065,7 +1065,7 @@ under the License.
                         <not><if-empty field="commEventsUnknown"/></not>
                     </condition>
                     <widgets>
-                        <label style="h2" text="${uiLabelMap.PartyEmailsFromUnknownOrigin}"/>
+                        <label style="heading" text="${uiLabelMap.PartyEmailsFromUnknownOrigin}"/>
                         <include-form name="ListMyUnknownPartyEmails" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                     </widgets>
                 </section>
@@ -1075,7 +1075,7 @@ under the License.
                         <not><if-empty field="commEventDraft"/></not>
                     </condition>
                     <widgets>
-                        <label style="h2" text="${uiLabelMap.PartyDraftEmails}"/>
+                        <label style="heading" text="${uiLabelMap.PartyDraftEmails}"/>
                         <include-form name="ListDraftEmails" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                     </widgets>
                 </section>
@@ -1084,7 +1084,7 @@ under the License.
                         <not><if-empty field="commEventProgress"/></not>
                     </condition>
                     <widgets>
-                        <label style="h2" text="${uiLabelMap.PartyInProgresstEmails}"/>
+                        <label style="heading" text="${uiLabelMap.PartyInProgresstEmails}"/>
                         <include-form name="ListProgressEmails" location="component://party/widget/partymgr/CommunicationEventForms.xml"/>
                     </widgets>
                 </section>

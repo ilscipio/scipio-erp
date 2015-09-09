@@ -345,7 +345,7 @@
                                 </section>
                             </iterate-section>
                             <container id="apply-service-credit">
-                                <label style="h2" text="${uiLabelMap.AccountingApplyServiceCredit}"/>
+                                <label style="heading" text="${uiLabelMap.AccountingApplyServiceCredit}"/>
                                 <include-form name="ApplyServiceCredit" location="component://party/widget/partymgr/PartyForms.xml"/>
                             </container>
                         </screenlet>

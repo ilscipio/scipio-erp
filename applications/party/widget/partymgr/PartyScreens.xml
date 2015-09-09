@@ -175,12 +175,12 @@ under the License.
                             <widgets>
                                 <screenlet title="${uiLabelMap.PartyAddToRole}">
                                     <container>
-                                        <label style="h2">${uiLabelMap.PartyAddToMainRole}</label>
+                                        <label style="heading">${uiLabelMap.PartyAddToMainRole}</label>
                                         <include-form name="AddPartyMainRole" location="component://party/widget/partymgr/PartyForms.xml"/>
                                         <container id="addPartySecondaryRole"/>
                                     </container>
                                     <container>
-                                        <label style="h2">${uiLabelMap.PartyAddToRoleViewAll}</label>
+                                        <label style="heading">${uiLabelMap.PartyAddToRoleViewAll}</label>
                                         <include-form name="AddPartyRole" location="component://party/widget/partymgr/PartyForms.xml"/>
                                     </container>
                                 </screenlet>
@@ -214,7 +214,7 @@ under the License.
                 <property-map map-name="uiLabelMap" resource="PartyUiLabels"/>
             </actions>
             <widgets>
-                <label style="h2">${uiLabelMap.PartyAddToSecondRole}</label>
+                <label style="heading">${uiLabelMap.PartyAddToSecondRole}</label>
                 <include-form name="AddPartySecondaryRoles" location="component://party/widget/partymgr/PartyForms.xml"/>
             </widgets>
         </section>
@@ -1014,7 +1014,7 @@ under the License.
                                                     <set field="actualCurrencyUomId" from-field="party.preferredCurrencyUomId"/>
                                                 </actions>
                                                 <widgets>
-                                                    <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
+                                                    <label style="heading" text="${uiLabelMap.PartyCurrency}"></label>
                                                     <include-form name="ListInvoicesApplPayments" location="component://party/widget/partymgr/PartyForms.xml"/>
                                                 </widgets>
                                             </section>
@@ -1043,7 +1043,7 @@ under the License.
                                             <set field="actualCurrencyUomId" from-field="party.preferredCurrencyUomId"/>
                                         </actions>
                                         <widgets>
-                                            <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
+                                            <label style="heading" text="${uiLabelMap.PartyCurrency}"></label>
                                             <include-form name="ListUnAppliedInvoices" location="component://party/widget/partymgr/PartyForms.xml"/>
                                         </widgets>
                                     </section>
@@ -1070,7 +1070,7 @@ under the License.
                                             <set field="actualCurrencyUomId" from-field="party.preferredCurrencyUomId"/>
                                         </actions>
                                         <widgets>
-                                            <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
+                                            <label style="heading" text="${uiLabelMap.PartyCurrency}"></label>
                                             <include-form name="ListUnAppliedPayments" location="component://party/widget/partymgr/PartyForms.xml"/>
                                         </widgets>
                                     </section>
@@ -1097,7 +1097,7 @@ under the License.
                                             <set field="actualCurrencyUomId" from-field="party.preferredCurrencyUomId"/>
                                         </actions>
                                         <widgets>
-                                            <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
+                                            <label style="heading" text="${uiLabelMap.PartyCurrency}"></label>
                                             <include-form name="partyFinancialSummary" location="component://party/widget/partymgr/PartyForms.xml"/>
                                         </widgets>
                                     </section>
@@ -1340,7 +1340,7 @@ under the License.
                             <label text="${uiLabelMap.PartyParty} ${uiLabelMap.CommonImportExport} ID Name, single role (employee, customer, supplier) and contactmechs" />
                             <container style="${styles.grid_row}">
                                 <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                    <label style="h2">${uiLabelMap.CommonImport}</label>
+                                    <label style="heading">${uiLabelMap.CommonImport}</label>
                                     <section>
                                         <actions>          
                                             <set field="showProgress" type="Boolean" value="true" /> 
@@ -1353,7 +1353,7 @@ under the License.
                                     </section>
                                 </container>
                                 <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                    <label style="h2">${uiLabelMap.CommonExport}</label>
+                                    <label style="heading">${uiLabelMap.CommonExport}</label>
                                     <include-form name="ExportParty" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </container>
                             </container>

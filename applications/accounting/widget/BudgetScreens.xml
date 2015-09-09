@@ -86,13 +86,13 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <not><if-empty field="budgetId"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="BudgetTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-menu name="BudgetSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                             </widgets>
                         </section>
                         <decorator-section-include name="pre-body"/>

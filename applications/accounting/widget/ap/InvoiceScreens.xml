@@ -179,7 +179,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">                        
+                    <decorator-section name="body"> 
                         <platform-specific><html><html-template location="component://common/webcommon/includes/setMultipleSelectJs.ftl"/></html></platform-specific>
                         <section>
                             <widgets>

@@ -31,7 +31,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/>
@@ -40,10 +40,10 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="finAccountId"/></not></condition>
                                     <widgets>
-                                        <include-menu name="FinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                        <include-menu name="FinAccountSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <include-menu name="FinAccountMainTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                        <include-menu name="FinAccountMainSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                     </fail-widgets>
                                 </section>
                             </widgets>

@@ -28,13 +28,13 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="PaymentTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-menu name="PaymentSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

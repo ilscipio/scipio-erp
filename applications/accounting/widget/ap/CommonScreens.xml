@@ -168,8 +168,8 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
-                        <include-menu location="component://accounting/widget/ap/ApMenus.xml" name="ApInvoiceTabBar"/>
+                    <decorator-section name="left-column">
+                        <include-menu location="component://accounting/widget/ap/ApMenus.xml" name="ApInvoiceSideBar"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -220,8 +220,8 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
-                    <decorator-section name="pre-body">
-                        <include-menu name="PaymentGroupTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    <decorator-section name="left-columm">
+                        <include-menu name="PaymentGroupSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -254,6 +254,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -273,8 +274,8 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
-                        <include-menu name="ApReportTabBar" location="component://accounting/widget/ap/ApMenus.xml"/>
+                    <decorator-section name="left-column"> <!-- one way to make the left-column overridable by screens: use-when="${sections['left-column']==null}" fallback-auto-include="true" -->
+                        <include-menu name="ApReportSideBar" location="component://accounting/widget/ap/ApMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>

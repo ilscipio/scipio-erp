@@ -82,13 +82,13 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <not><if-empty field="fixedAssetId"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="FixedAssetTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-menu name="FixedAssetSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                             </widgets>
                         </section>
                         <decorator-section-include name="pre-body"/>
@@ -318,6 +318,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <!-- Fixed Asset Maintenance -->
     <screen name="CommonFixedAssetMaintDecorator">
         <section>
@@ -326,11 +327,11 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition><not><if-empty field="maintHistSeqId"/></not></condition>
                             <widgets>
-                                <include-menu name="FixedAssetMaintTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-menu name="FixedAssetMaintSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

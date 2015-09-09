@@ -21,26 +21,26 @@ under the License.
 <div class="screenlet">
   <h3>${uiLabelMap.ProductReviews}</h3>
   <div class="screenlet-body">
-    <table width="100%" border="0" cellpadding="1">
-      <tr>
-        <th>${uiLabelMap.EcommerceSentDate}</th>
-        <th>${uiLabelMap.ProductProductId}</th>
-        <th>${uiLabelMap.ProductReviews}</th>
-        <th>${uiLabelMap.ProductRating}</th>
-        <th>${uiLabelMap.CommonIsAnonymous}</th>
-        <th>${uiLabelMap.CommonStatus}</th>
-      </tr>
+    <@table width="100%" border="0" cellpadding="1">
+      <@tr>
+        <@th>${uiLabelMap.EcommerceSentDate}</@th>
+        <@th>${uiLabelMap.ProductProductId}</@th>
+        <@th>${uiLabelMap.ProductReviews}</@th>
+        <@th>${uiLabelMap.ProductRating}</@th>
+        <@th>${uiLabelMap.CommonIsAnonymous}</@th>
+        <@th>${uiLabelMap.CommonStatus}</@th>
+      </@tr>
       <#list reviews as review>
-        <tr>
-          <td>${review.postedDateTime!}</td>
-          <td><a href="<@ofbizCatalogAltUrl productId=review.productId/>">${review.productId}</a></td>
-          <td>${review.productReview!}</td>
-          <td>${review.productRating}</td>
-          <td>${review.postedAnonymous!}</td>
-          <td>${review.getRelatedOne("StatusItem", false).get("description", locale)}</td>
-        </tr>
+        <@tr>
+          <@td>${review.postedDateTime!}</@td>
+          <@td><a href="<@ofbizCatalogAltUrl productId=review.productId/>">${review.productId}</a></@td>
+          <@td>${review.productReview!}</@td>
+          <@td>${review.productRating}</@td>
+          <@td>${review.postedAnonymous!}</@td>
+          <@td>${review.getRelatedOne("StatusItem", false).get("description", locale)}</@td>
+        </@tr>
       </#list>
-    </table>
+    </@table>
   </div>
 </div>
 </#if>

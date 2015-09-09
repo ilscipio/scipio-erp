@@ -22,50 +22,50 @@ under the License.
 <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
   <input type="hidden" name="VIEW_SIZE" value="10"/>
   <input type="hidden" name="PAGING" value="Y"/>
-  <table>
+  <@table>
     <input type="hidden" name="SEARCH_CATALOG_ID" value="${currentCatalogId}" />
     <#if searchCategory?has_content>
         <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}"/>
-        <tr valign="middle">
-          <td>${uiLabelMap.ProductCategory}</td>
-          <td>${(searchCategory.description)!}</td>
-        </tr>
-        <tr valign="middle">
-          <td>${uiLabelMap.ProductIncludeSubCategories}</td>
-          <td>
+        <@tr valign="middle">
+          <@td>${uiLabelMap.ProductCategory}</@td>
+          <@td>${(searchCategory.description)!}</@td>
+        </@tr>
+        <@tr valign="middle">
+          <@td>${uiLabelMap.ProductIncludeSubCategories}</@td>
+          <@td>
               ${uiLabelMap.CommonYes} <input type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked="checked"/>
               ${uiLabelMap.CommonNo} <input type="radio" name="SEARCH_SUB_CATEGORIES" value="N"/>
-          </td>
-        </tr>
+          </@td>
+        </@tr>
     </#if>
-    <tr valign="middle">
-      <td>${uiLabelMap.ProductKeywords}</td>
-      <td>
+    <@tr valign="middle">
+      <@td>${uiLabelMap.ProductKeywords}</@td>
+      <@td>
           <input type="text" name="SEARCH_STRING" size="32" value="${requestParameters.SEARCH_STRING!}" />
           <br />
           ${uiLabelMap.CommonAny} <input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if> />
           ${uiLabelMap.CommonAll} <input type="radio" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked="checked"</#if> />
-      </td>
-    </tr>
+      </@td>
+    </@tr>
     <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-      <tr valign="middle">
-        <td>${(productFeatureType.get("description",locale))!}</td>
-        <td>
+      <@tr valign="middle">
+        <@td>${(productFeatureType.get("description",locale))!}</@td>
+        <@td>
             <select name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default(productFeature.productFeatureId)}</option>
               </#list>
             </select>
-        </td>
-      </tr>
+        </@td>
+      </@tr>
     </#list>
-    <tr valign="middle">
-      <td>${uiLabelMap.ProductSortedBy}</td>
-      <td>
+    <@tr valign="middle">
+      <@td>${uiLabelMap.ProductSortedBy}</@td>
+      <@td>
           <select name="sortOrder" class="selectBox">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
@@ -83,12 +83,12 @@ under the License.
           <br />
           ${uiLabelMap.EcommerceLowToHigh} <input type="radio" name="sortAscending" value="Y" checked="checked"/>
           ${uiLabelMap.EcommerceHighToLow} <input type="radio" name="sortAscending" value="N"/>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
     <#if searchConstraintStrings?has_content>
-      <tr valign="top">
-        <td>${uiLabelMap.ProductLastSearch}</td>
-        <td>
+      <@tr valign="top">
+        <@td>${uiLabelMap.ProductLastSearch}</@td>
+        <@td>
             <#list searchConstraintStrings as searchConstraintString>
                 <div>&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
@@ -97,14 +97,14 @@ under the License.
               ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked="checked"/>
               ${uiLabelMap.CommonRefineSearch}<input type="radio" name="clearSearch" value="N"/>
             </div>
-        </td>
-      </tr>
+        </@td>
+      </@tr>
     </#if>
-    <tr>
-      <td>&nbsp;</td>
-      <td><a href="javascript:document.advtokeywordsearchform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a></td>
-    </tr>
-  </table>
+    <@tr>
+      <@td>&nbsp;</@td>
+      <@td><a href="javascript:document.advtokeywordsearchform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a></@td>
+    </@tr>
+  </@table>
 
   <#if searchOptionsHistoryList?has_content>
     

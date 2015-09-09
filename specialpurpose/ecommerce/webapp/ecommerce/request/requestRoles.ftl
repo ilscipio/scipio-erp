@@ -21,25 +21,25 @@ under the License.
         <div class="h3">${uiLabelMap.OrderRequestRoles}</div>
     </div>
     <div class="screenlet-body">
-        <table cellspacing="0" class="basic-table">
+        <@table cellspacing="0" class="basic-table">
          <#assign row = 1>
          <#list requestParties as requestParty>
             <#assign roleType = requestParty.getRelatedOne("RoleType", false)>
             <#assign party = requestParty.getRelatedOne("Party", false)>
-              <tr>
-                  <td align="right" valign="top" width="15%" class="label">
+              <@tr>
+                  <@td align="right" valign="top" width="15%" class="label">
                       &nbsp;${roleType.get("description", locale)!}
-                  </td>
-                  <td width="5%">&nbsp;</td>
-                  <td valign="top" width="80%">
+                  </@td>
+                  <@td width="5%">&nbsp;</@td>
+                  <@td valign="top" width="80%">
                       ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(party)}
-                  </td>
-              </tr>
+                  </@td>
+              </@tr>
               <#if requestParties.size() != row>
-                <tr><td colspan="3"><hr /></td></tr>
+                <@tr><@td colspan="3"><hr /></@td></@tr>
               </#if>
               <#assign row = row + 1>
           </#list>
-        </table>
+        </@table>
     </div>
 </div>

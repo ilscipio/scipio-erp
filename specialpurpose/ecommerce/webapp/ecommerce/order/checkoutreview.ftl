@@ -41,12 +41,12 @@ under the License.
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}
   <br />
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
-  <table border="0" cellpadding="1" width="100%">
-   <tr>
-      <td colspan="4">
+  <@table border="0" cellpadding="1" width="100%">
+   <@tr>
+      <@td colspan="4">
         &nbsp;
-      </td>
-      <td align="right">
+      </@td>
+      <@td align="right">
         <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
           <#if (requestParameters.checkoutpage)?has_content>
             <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}" />
@@ -57,9 +57,9 @@ under the License.
           <input type="button" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="processOrder();" class="mediumSubmit" />
         </form>
         <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="${styles.button_default!}">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
-      </td>
-    </tr>
-  </table>
+      </@td>
+    </@tr>
+  </@table>
 <#else>
   <h3>${uiLabelMap.OrderErrorShoppingCartEmpty}.</h3>
 </#if>

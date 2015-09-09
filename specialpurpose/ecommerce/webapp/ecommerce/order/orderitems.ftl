@@ -29,70 +29,70 @@ under the License.
       </#if>
       ${uiLabelMap.OrderOrderItems}
   </h3>
-  <table>
-    <thead>
-    <tr>
-      <th>${uiLabelMap.OrderProduct}</th>
+  <@table>
+    <@thead>
+    <@tr>
+      <@th>${uiLabelMap.OrderProduct}</@th>
       <#if maySelectItems?default("N") == "Y">
-        <th>${uiLabelMap.OrderQtyOrdered}</th>
-        <th>${uiLabelMap.OrderQtyPicked}</th>
-        <th>${uiLabelMap.OrderQtyShipped}</th>
-        <th>${uiLabelMap.OrderQtyCanceled}</th>
+        <@th>${uiLabelMap.OrderQtyOrdered}</@th>
+        <@th>${uiLabelMap.OrderQtyPicked}</@th>
+        <@th>${uiLabelMap.OrderQtyShipped}</@th>
+        <@th>${uiLabelMap.OrderQtyCanceled}</@th>
       <#else>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th>${uiLabelMap.OrderQtyOrdered}</th>
+        <@th></@th>
+        <@th></@th>
+        <@th></@th>
+        <@th>${uiLabelMap.OrderQtyOrdered}</@th>
       </#if>
-      <th>${uiLabelMap.EcommerceUnitPrice}</th>
-      <th>${uiLabelMap.OrderAdjustments}</th>
-      <th>${uiLabelMap.CommonSubtotal}</th>
+      <@th>${uiLabelMap.EcommerceUnitPrice}</@th>
+      <@th>${uiLabelMap.OrderAdjustments}</@th>
+      <@th>${uiLabelMap.CommonSubtotal}</@th>
       <#if maySelectItems?default("N") == "Y" && roleTypeId! == "PLACING_CUSTOMER">
-        <th colspan="3"></th>
+        <@th colspan="3"></@th>
       </#if>
-    </tr>
-    </thead>
-    <tfoot>
-    <tr>
-      <th colspan="7">${uiLabelMap.CommonSubtotal}</th>
-      <td><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></td>
-      <#if maySelectItems?default("N") == "Y"><td colspan="3"></td></#if>
-    </tr>
+    </@tr>
+    </@thead>
+    <@tfoot>
+    <@tr>
+      <@th colspan="7">${uiLabelMap.CommonSubtotal}</@th>
+      <@td><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></@td>
+      <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
+    </@tr>
     <#list headerAdjustmentsToShow as orderHeaderAdjustment>
-      <tr>
-        <th colspan="7">${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</th>
-        <td><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></td>
-        <#if maySelectItems?default("N") == "Y"><td colspan="3"></td></#if>
-      </tr>
+      <@tr>
+        <@th colspan="7">${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</@th>
+        <@td><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></@td>
+        <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
+      </@tr>
     </#list>
-    <tr>
-      <th colspan="7">${uiLabelMap.OrderShippingAndHandling}</th>
-      <td><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></td>
-      <#if maySelectItems?default("N") == "Y"><td colspan="3"></td></#if>
-    </tr>
-    <tr>
-      <th colspan="7">${uiLabelMap.OrderSalesTax}</th>
-      <td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></td>
-      <#if maySelectItems?default("N") == "Y"><td colspan="3"></td></#if>
-    </tr>
-    <tr>
-      <td colspan="3"></td>
+    <@tr>
+      <@th colspan="7">${uiLabelMap.OrderShippingAndHandling}</@th>
+      <@td><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></@td>
+      <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
+    </@tr>
+    <@tr>
+      <@th colspan="7">${uiLabelMap.OrderSalesTax}</@th>
+      <@td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
+      <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
+    </@tr>
+    <@tr>
+      <@td colspan="3"></@td>
       <#if maySelectItems?default("N") == "Y">
-        <td colspan="${numColumns - 6}"></td>
-        <td colspan="3"></td>
+        <@td colspan="${numColumns - 6}"></@td>
+        <@td colspan="3"></@td>
       <#else>
-        <td colspan="${numColumns - 3}"></td>
+        <@td colspan="${numColumns - 3}"></@td>
       </#if>
-    </tr>
-    <tr>
-      <th colspan="7">${uiLabelMap.OrderGrandTotal}</th>
-      <td>
+    </@tr>
+    <@tr>
+      <@th colspan="7">${uiLabelMap.OrderGrandTotal}</@th>
+      <@td>
         <@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/>
-      </td>
-      <#if maySelectItems?default("N") == "Y"><td colspan="3"></td></#if>
-    </tr>
-    </tfoot>
-    <tbody>
+      </@td>
+      <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
+    </@tr>
+    </@tfoot>
+    <@tbody>
     <#list orderItems as orderItem>
       <#-- get info from workeffort and calculate rental quantity, if it was a rental item -->
       <#assign rentalQuantity = 1> <#-- no change if no rental item -->
@@ -113,15 +113,15 @@ under the License.
            </#list>
         </#if>
       </#if>
-      <tr><td colspan="${numColumns}"></td></tr>
-      <tr>
+      <@tr><@td colspan="${numColumns}"></@td></@tr>
+      <@tr>
         <#if !orderItem.productId?? || orderItem.productId == "_?_">
-          <td>
+          <@td>
             ${orderItem.itemDescription?default("")}
-          </td>
+          </@td>
         <#else>
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
-          <td>
+          <@td>
             <a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="linktext">${orderItem.productId} - ${orderItem.itemDescription?default("")}</a>
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
             <#if orderItemAttributes?has_content>
@@ -174,55 +174,55 @@ under the License.
                 </#list>
               </#if>
             </#if>
-          </td>
+          </@td>
           <#if !(maySelectItems?default("N") == "Y")>
-            <td></td>
-            <td></td>
-            <td></td>
+            <@td></@td>
+            <@td></@td>
+            <@td></@td>
           </#if>
-          <td>
+          <@td>
             ${orderItem.quantity?string.number}
-          </td>
+          </@td>
           <#if maySelectItems?default("N") == "Y">
-          <td>
+          <@td>
             <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
             <#if pickedQty gt 0 && orderHeader.statusId == "ORDER_APPROVED">${pickedQty?default(0)?string.number}<#else>${pickedQty?default(0)?string.number}</#if>
-          </td>
-          <td>
+          </@td>
+          <@td>
             <#assign shippedQty = localOrderReadHelper.getItemShippedQuantity(orderItem)>
             ${shippedQty?default(0)?string.number}
-          </td>
-          <td>
+          </@td>
+          <@td>
             <#assign canceledQty = localOrderReadHelper.getItemCanceledQuantity(orderItem)>
             ${canceledQty?default(0)?string.number}
-          </td>
+          </@td>
           </#if>
-          <td>
+          <@td>
             <@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/>
-          </td>
-          <td>
+          </@td>
+          <@td>
             <@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/>
-          </td>
-          <td>
+          </@td>
+          <@td>
             <#if workEfforts??>
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem)*rentalQuantity isoCode=currencyUomId/>
             <#else>
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem) isoCode=currencyUomId/>
             </#if>
-          </td>
+          </@td>
           <#if maySelectItems?default("N") == "Y" && roleTypeId! == "PLACING_CUSTOMER">
-            <td></td>
-            <td>
+            <@td></@td>
+            <@td>
               <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox"/>
-            </td>
-            <td></td>
+            </@td>
+            <@td></@td>
           </#if>
         </#if>
-      </tr>
+      </@tr>
       <#-- now cancel reason and comment field -->
       <#if maySelectItems?default("N") == "Y" && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
-        <tr>
-          <td colspan="7">${uiLabelMap.OrderReturnReason}
+        <@tr>
+          <@td colspan="7">${uiLabelMap.OrderReturnReason}
             <select name="irm_${orderItem.orderItemSeqId}" class="selectBox">
               <option value=""></option>
               <#list orderItemChangeReasons as reason>
@@ -231,23 +231,23 @@ under the License.
             </select>
             ${uiLabelMap.CommonComments}
             <input class="inputBox" type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60"/>
-          </td>
-          <td colspan="4"><a href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCancel}</a>
+          </@td>
+          <@td colspan="4"><a href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCancel}</a>
             <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
-          </td>
-        </tr>
+          </@td>
+        </@tr>
       </#if>
       <#-- show info from workeffort if it was a rental item -->
       <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM">
         <#if workEffortSave??>
-          <tr><td></td><td colspan="${numColumns}">${uiLabelMap.CommonFrom}: ${workEffortSave.estimatedStartDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonUntil} ${workEffortSave.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonFor} ${workEffortSave.reservPersons} ${uiLabelMap.CommonPerson}(s)</td></tr>
+          <@tr><@td></@td><@td colspan="${numColumns}">${uiLabelMap.CommonFrom}: ${workEffortSave.estimatedStartDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonUntil} ${workEffortSave.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonFor} ${workEffortSave.reservPersons} ${uiLabelMap.CommonPerson}(s)</@td></@tr>
         </#if>
       </#if>
       <#-- now show adjustment details per line item -->
       <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>
       <#list itemAdjustments as orderItemAdjustment>
-        <tr>
-          <td>
+        <@tr>
+          <@td>
             ${uiLabelMap.EcommerceAdjustment}: ${StringUtil.wrapString(localOrderReadHelper.getAdjustmentType(orderItemAdjustment))}
             <#if orderItemAdjustment.description?has_content>: ${StringUtil.wrapString(orderItemAdjustment.description)}</#if>
             <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
@@ -265,14 +265,14 @@ under the License.
               <#if orderItemAdjustment.customerReferenceId?has_content>${uiLabelMap.OrderCustomerTaxId}: ${orderItemAdjustment.customerReferenceId}</#if>
               <#if orderItemAdjustment.exemptAmount??>${uiLabelMap.EcommerceExemptAmount}: ${orderItemAdjustment.exemptAmount}</#if>
             </#if>
-          </td>
-          <td colspan="5"></td>
-          <td>
+          </@td>
+          <@td colspan="5"></@td>
+          <@td>
             <@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/>
-          </td>
-          <td></td>
-          <#if maySelectItems?default("N") == "Y"><td colspan="3"></td></#if>
-        </tr>
+          </@td>
+          <@td></@td>
+          <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
+        </@tr>
       </#list>
       <#-- show the order item ship group info -->
       <#assign orderItemShipGroupAssocs = orderItem.getRelated("OrderItemShipGroupAssoc", null, null, false)!>
@@ -280,22 +280,22 @@ under the License.
         <#list orderItemShipGroupAssocs as shipGroupAssoc>
           <#assign shipGroup = shipGroupAssoc.getRelatedOne("OrderItemShipGroup", false)!>
           <#assign shipGroupAddress = (shipGroup.getRelatedOne("PostalAddress", false))!>
-          <tr>
-            <td>
+          <@tr>
+            <@td>
               ${uiLabelMap.OrderShipGroup}: [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("N/A")}
-            </td>
-            <td>
+            </@td>
+            <@td>
               ${shipGroupAssoc.quantity?string.number}
-            </td>
-            <td colspan="${numColumns - 2}"></td>
-          </tr>
+            </@td>
+            <@td colspan="${numColumns - 2}"></@td>
+          </@tr>
         </#list>
       </#if>
     </#list>
     <#if orderItems?size == 0 || !orderItems?has_content>
-      <tr><td colspan="${numColumns}">${uiLabelMap.OrderSalesOrderLookupFailed}</td></tr>
+      <@tr><@td colspan="${numColumns}">${uiLabelMap.OrderSalesOrderLookupFailed}</@td></@tr>
     </#if>
-    <tr><td colspan="${numColumns}"></td></tr>
-    </tbody>
-  </table>
+    <@tr><@td colspan="${numColumns}"></@td></@tr>
+    </@tbody>
+  </@table>
 </div>

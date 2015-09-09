@@ -649,7 +649,7 @@ $(function(){
                     <label>Start Date(yyyy-mm-dd)</label><@htmlTemplate.renderDateTimeField event="" action="" name="reservStart" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${startDate}" size="25" maxlength="30" id="reservStart1" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                   </div>
                   <div>
-                    <#--td nowrap="nowrap" align="right">Number<br />of days</td><td><input type="textt" size="4" name="reservLength"/></td></tr><tr><td>&nbsp;</td><td align="right" nowrap="nowrap">&nbsp;</td-->
+                    <#--td nowrap="nowrap" align="right">Number<br />of days</@td><@td><input type="textt" size="4" name="reservLength"/></@td></@tr><@tr><@td>&nbsp;</@td><@td align="right" nowrap="nowrap">&nbsp;</td-->
                     Number of days<input type="text" size="4" name="reservLength" value=""/>
                     Number of persons<input type="text" size="4" name="reservPersons" value="2"/>
                     Number of rooms<input type="text" size="5" name="quantity" value="1"/>

@@ -20,15 +20,15 @@ under the License.
 <#if productCategoryList?has_content>
     <h1>Popular Categories</h1>
     <div class="productsummary-container matrix">
-       <table>
-           <tbody>
+       <@table>
+           <@tbody>
 
             <#list productCategoryList as childCategoryList>
-                   <tr>
+                   <@tr openOnly=true />
                    <#assign cateCount = 0/>
                    <#list childCategoryList as productCategory>
                        <#if (cateCount > 2)>
-                            <tr>
+                            <@tr openOnly=true />
                             <#assign cateCount = 0/>
                        </#if>
                        <#assign productCategoryId = productCategory.productCategoryId/>
@@ -43,7 +43,7 @@ under the License.
                                 <#assign categoryImageUrl = product.smallImageUrl/>
                             </#if>
                        </#if>
-                        <td>
+                        <@td>
                             <div class="productsummary">
                                 <div class="smallimage">
                                     <a href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
@@ -80,12 +80,12 @@ under the License.
                                     </ul>
                                 </div>
                             </div>
-                        </td>
+                        </@td>
                         <#assign cateCount = cateCount + 1/>
                  </#list>
-               <tr/>
+               <@tr closeOnly=true />
             </#list>
-        </tbody>
-      </table>
+        </@tbody>
+      </@table>
     </div>
 </#if>

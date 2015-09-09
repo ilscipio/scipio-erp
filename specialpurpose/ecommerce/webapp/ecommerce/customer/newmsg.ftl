@@ -44,30 +44,30 @@ under the License.
           </#if>
           <input type="hidden" name="origCommEventId" value="${orgComm}"/>
         </#if>
-        <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-          <tr>
-            <td colspan="3">&nbsp;</td>
-          </tr>
-          <tr>
-            <td width="5">&nbsp;</td>
-            <td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></td>
-            <td><div>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClickHere}</a>)</div></td>
-          </tr>
+        <@table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <@tr>
+            <@td colspan="3">&nbsp;</@td>
+          </@tr>
+          <@tr>
+            <@td width="5">&nbsp;</@td>
+            <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></@td>
+            <@td><div>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClickHere}</a>)</div></@td>
+          </@tr>
           <#if partyIdTo?has_content>
             <#assign partyToName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>
             <input type="hidden" name="partyIdTo" value="${partyIdTo}"/>
-            <tr>
-              <td colspan="3">&nbsp;</td>
-            </tr>
-            <tr>
-              <td width="5">&nbsp;</td>
-              <td align="right"><div class="tableheadtext">${uiLabelMap.CommonTo}:</div></td>
-              <td><div>&nbsp;${partyToName}</div></td>
-            </tr>
+            <@tr>
+              <@td colspan="3">&nbsp;</@td>
+            </@tr>
+            <@tr>
+              <@td width="5">&nbsp;</@td>
+              <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonTo}:</div></@td>
+              <@td><div>&nbsp;${partyToName}</div></@td>
+            </@tr>
           </#if>
-          <tr>
-            <td colspan="3">&nbsp;</td>
-          </tr>
+          <@tr>
+            <@td colspan="3">&nbsp;</@td>
+          </@tr>
           <#assign defaultSubject = (communicationEvent.subject)?default("")>
           <#if (defaultSubject?length == 0)>
             <#assign replyPrefix = "RE: ">
@@ -78,33 +78,33 @@ under the License.
               <#assign defaultSubject = defaultSubject + parentEvent.subject?default("")>
             </#if>
           </#if>
-          <tr>
-            <td width="5">&nbsp;</td>
-            <td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></td>
-            <td><input type="input" class="inputBox" name="subject" size="20" value="${defaultSubject}"/>
-          </tr>
-          <tr>
-            <td colspan="3">&nbsp;</td>
-          </tr>
-          <tr>
-            <td width="5">&nbsp;</td>
-            <td align="right"><div class="tableheadtext">${uiLabelMap.CommonMessage}:</div></td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">&nbsp;</td>
-            <td colspan="2">
+          <@tr>
+            <@td width="5">&nbsp;</@td>
+            <@td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></@td>
+            <@td><input type="input" class="inputBox" name="subject" size="20" value="${defaultSubject}"/></@td>
+          </@tr>
+          <@tr>
+            <@td colspan="3">&nbsp;</@td>
+          </@tr>
+          <@tr>
+            <@td width="5">&nbsp;</@td>
+            <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonMessage}:</div></@td>
+            <@td>&nbsp;</@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2">&nbsp;</@td>
+            <@td colspan="2">
               <textarea name="content" class="textAreaBox" cols="40" rows="5"></textarea>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">&nbsp;</td>
-            <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSend}"/></td>
-          </tr>
-        </table>
+            </@td>
+          </@tr>
+          <@tr>
+            <@td colspan="3">&nbsp;</@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2">&nbsp;</@td>
+            <@td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSend}"/></@td>
+          </@tr>
+        </@table>
       </form>
     </div>
 </div>

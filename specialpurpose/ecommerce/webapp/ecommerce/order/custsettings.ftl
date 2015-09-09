@@ -57,24 +57,24 @@ under the License.
     </div>
   </fieldset>
 
-  <table summary="Tabular form for entering multiple telecom numbers for different purposes. Each row allows user to enter telecom number for a purpose">
+  <@table summary="Tabular form for entering multiple telecom numbers for different purposes. Each row allows user to enter telecom number for a purpose">
   <caption>${uiLabelMap.PartyPhoneNumbers}</caption>
-    <tr>
-      <th></th>
-      <th scope="col">${uiLabelMap.CommonCountry}</th>
-      <th scope="col">${uiLabelMap.PartyAreaCode}</th>
-      <th scope="col">${uiLabelMap.PartyContactNumber}</th>
-      <th scope="col">${uiLabelMap.PartyExtension}</th>
-      <th scope="col">${uiLabelMap.PartyAllowSolicitation}</th>
-    </tr>
-    <tr>
-    <th scope="row">${uiLabelMap.PartyHomePhone}</th>
+    <@tr>
+      <@th></@th>
+      <@th scope="col">${uiLabelMap.CommonCountry}</@th>
+      <@th scope="col">${uiLabelMap.PartyAreaCode}</@th>
+      <@th scope="col">${uiLabelMap.PartyContactNumber}</@th>
+      <@th scope="col">${uiLabelMap.PartyExtension}</@th>
+      <@th scope="col">${uiLabelMap.PartyAllowSolicitation}</@th>
+    </@tr>
+    <@tr>
+    <@th scope="row">${uiLabelMap.PartyHomePhone}</@th>
     <input type="hidden" name="homePhoneContactMechId" value="${parameters.homePhoneContactMechId!}"/>
-    <td><input type="text" name="homeCountryCode" value="${parameters.homeCountryCode!}" /></td>
-    <td><input type="text" name="homeAreaCode" value="${parameters.homeAreaCode!}" /></td>
-    <td><input type="text" name="homeContactNumber" value="${parameters.homeContactNumber!}" /></td>
-    <td><input type="text" name="homeExt" value="${parameters.homeExt!}" /></td>
-    <td>
+    <@td><input type="text" name="homeCountryCode" value="${parameters.homeCountryCode!}" /></@td>
+    <@td><input type="text" name="homeAreaCode" value="${parameters.homeAreaCode!}" /></@td>
+    <@td><input type="text" name="homeContactNumber" value="${parameters.homeContactNumber!}" /></@td>
+    <@td><input type="text" name="homeExt" value="${parameters.homeExt!}" /></@td>
+    <@td>
       <select name="homeSol">
         <#if (((parameters.homeSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
         <#if (((parameters.homeSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
@@ -82,16 +82,16 @@ under the License.
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
       </select>
-    </td>
-  </tr>
-  <tr>
-    <th scope="row">${uiLabelMap.PartyBusinessPhone}</th>
+    </@td>
+  </@tr>
+  <@tr>
+    <@th scope="row">${uiLabelMap.PartyBusinessPhone}</@th>
     <input type="hidden" name="workPhoneContactMechId" value="${parameters.workPhoneContactMechId!}"/>
-    <td><input type="text" name="workCountryCode" value="${parameters.workCountryCode!}" /></td>
-    <td><input type="text" name="workAreaCode" value="${parameters.workAreaCode!}" /></td>
-    <td><input type="text" name="workContactNumber" value="${parameters.workContactNumber!}" /></td>
-    <td><input type="text" name="workExt" value="${parameters.workExt!}" /></td>
-    <td>
+    <@td><input type="text" name="workCountryCode" value="${parameters.workCountryCode!}" /></@td>
+    <@td><input type="text" name="workAreaCode" value="${parameters.workAreaCode!}" /></@td>
+    <@td><input type="text" name="workContactNumber" value="${parameters.workContactNumber!}" /></@td>
+    <@td><input type="text" name="workExt" value="${parameters.workExt!}" /></@td>
+    <@td>
       <select name="workSol">
         <#if (((parameters.workSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
         <#if (((parameters.workSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
@@ -99,9 +99,9 @@ under the License.
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
       </select>
-    </td>
-  </tr>
-</table>
+    </@td>
+  </@tr>
+</@table>
   <fieldset>
     <div>
     <span>

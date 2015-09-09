@@ -31,7 +31,7 @@ under the License.
 </#if>
 
 <#assign sz=0/>
-<table border="0">
+<@table border="0">
 <@loopSubContent contentId=contentIdx viewIndex=viewIdx viewSize=viewSz contentAssocTypeId="PUBLISH_LINK"
     pickWhen="purposes.contains(\"ARTICLE\") && \"CTNT_PUBLISHED\".equals(content.get(\"statusId\"))"
     returnAfterPickWhen="purposes.contains(\"ARTICLE\")"
@@ -49,9 +49,9 @@ under the License.
   </#if>
   <#assign authorName=Static["org.ofbiz.content.ContentManagementWorker"].getUserName(request,userLoginId!)/>
 
-  <tr>
-    <td width="40px">&nbsp;</td>
-    <td class="blogtext">
+  <@tr>
+    <@td width="40px">&nbsp;</@td>
+    <@td class="blogtext">
       <div>
         by:<#if authorName?has_content>${authorName!}
         <#else>
@@ -68,49 +68,49 @@ under the License.
           ${shortTime!}
         </#if>
       </div>
-    </td>
-    <td>
+    </@td>
+    <@td>
         <#if content?has_content>${content.contentName!}</#if>
         --
         <#if content?has_content>${content.description!}</#if>
-    </td>
-    <td width="40px" valign="bottom">
+    </@td>
+    <@td width="40px" valign="bottom">
 <a class="tabButton" href="<@ofbizUrl>showforumarticle?contentId=${thisSubContentId}&amp;nodeTrailCsv=${thisNodeTrailCsv!}&amp;forumId=${contentIdx!}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
-    </td>
+    </@td>
 <@checkPermission mode="equals" entityOperation="_UPDATE" subContentId=content.contentId targetOperation="CONTENT_UPDATE" contentPurposeList="ARTICLE">
-    <td width="40px" valign="bottom">
+    <@td width="40px" valign="bottom">
 <a class="tabButton" style="height:14pt;" href="<@ofbizUrl>editforumarticle?contentIdTo=${content.contentId}&amp;nodeTrailCsv=${contentIdx!},${content.contentId}</@ofbizUrl>" >${uiLabelMap.CommonEdit}</a>
-    </td>
+    </@td>
 </@checkPermission>
-  </tr>
+  </@tr>
 <#assign sz=listSize/>
 
 </@loopSubContent>
 
 
 <#if sz == 0 >
-  <tr><td align="center">${uiLabelMap.CommonNoRecordFound}</td></tr>
+  <@tr><@td align="center">${uiLabelMap.CommonNoRecordFound}</@td></@tr>
 </#if>
 <@wrapSubContentCache subContentId=contentIdx wrapTemplateId=stdWrapId contentPurposeList="ARTICLE">
 </@wrapSubContentCache>
-</table>
-<table border="0" class="summary">
+</@table>
+<@table border="0" class="summary">
 <#assign targOp="HAS_USER_ROLE"/>
 <#assign pageTargOp=targetOperation!/>
 <#if pageTargOp?has_content>
     <#assign targOp=pageTargOp/>
 </#if>
 <@checkPermission mode="equals" entityOperation="_CREATE" subContentId=contentDept statusId="CTNT_PUBLISHED" targetOperation=targOp contentPurposeList="ARTICLE" quickCheckContentId=contentIdx>
-<tr><td align="right">
+<@tr><@td align="right">
 <a class="tabButton" style="height:14pt;" href="<@ofbizUrl>createforumarticle?forumId=${contentIdx!}&amp;nodeTrailCsv=${contentIdx!}</@ofbizUrl>" >${uiLabelMap.ProductNewArticle}</a>
-</td></tr>
+</@td></@tr>
 </@checkPermission>
 <@checkPermission mode="not-equals" entityOperation="_CREATE" subContentId=contentDept statusId="CTNT_PUBLISHED" targetOperation=targOp contentPurposeList="ARTICLE" quickCheckContentId=contentIdx>
-<tr><td align="right">
+<@tr><@td align="right">
 ${uiLabelMap.EcommerceLoggedToPost}
-</td></tr>
+</@td></@tr>
 </@checkPermission>
-</table>
+</@table>
 <#--
 <@checkPermission mode="not-equals" entityOperation="_CREATE" subContentId=contentIdx statusId="CTNT_PUBLISHED" targetOperation="HAS_USER_ROLE" contentPurposeList="ARTICLE">
             ${permissionErrorMsg!}
@@ -124,16 +124,16 @@ ${uiLabelMap.EcommerceLoggedToPost}
     <#local csv = "">
     <#local counter = 0>
     <#local len = trail?size>
-    <table border="0" cellspacing="4">
+    <@table border="0" cellspacing="4">
     <#list trail as content>
-      <#if counter < (len - endIndexOffset) && startIndex <= counter >
-        <#if 0 < counter >
+      <#if (counter < (len - endIndexOffset)) && (startIndex <= counter)>
+        <#if (0 < counter)>
             <#local csv = csv + ","/>
         </#if>
         <#local csv = csv + content.contentId/>
-        <#if counter < len && startIndex <= counter >
-       <tr>
-         <td>
+        <#if (counter < len) && (startIndex <= counter)>
+       <@tr openOnly=true />
+         <@td>
             ${indent}
             <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
               <a class="tabButton" href="<@ofbizUrl>showforum?forumId=${content.contentId!}&amp;nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName!}
@@ -141,14 +141,14 @@ ${uiLabelMap.EcommerceLoggedToPost}
               <a class="tabButton" href="<@ofbizUrl>showforumarticle?contentId=${content.contentId!}&amp;nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}to</a> &nbsp;${content.contentName!}
             </#if>
             <#local indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
-            [${content.contentId!}]</td>
+            [${content.contentId!}]</@td>
         </#if>
-       </tr>
+       <@tr closeOnly=true />
       </#if>
       <#local counter = counter + 1>
-    <#if 20 < counter > <#break/></#if>
+    <#if (20 < counter)> <#break/></#if>
     </#list>
-    </table>
+    </@table>
 </#macro>
 
 <#macro nextPrev listSize requestURL queryString lowIndex=0 highIndex=10 viewSize=10 viewIndex=0 >
@@ -173,8 +173,8 @@ ${uiLabelMap.EcommerceLoggedToPost}
 <#if highIdx < lowIdxShow >
   <#assign lowIdxShow = highIdx/>
 </#if>
-<table border="0">
-<tr><td>
+<@table border="0">
+<@tr><@td>
              <#if 0 < listSz?number>
                 <#if 0 < viewIdx?number>
                   <a href="${requestURL}?${queryString}&amp;viewSz=${viewSz}&amp;viewIdx=${viewIdx?number-1}" class="submenutext">${uiLabelMap.CommonPrevious}</a>
@@ -190,6 +190,6 @@ ${uiLabelMap.EcommerceLoggedToPost}
                   <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>
               </#if>
-</td></tr>
-    </table>
+</@td></@tr>
+    </@table>
 </#macro>

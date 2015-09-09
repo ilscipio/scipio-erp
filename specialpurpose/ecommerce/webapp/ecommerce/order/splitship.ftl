@@ -50,7 +50,7 @@ function submitForm(form, mode, value) {
         <div class="h3">${uiLabelMap.OrderItemGroups}</div>
     </div>
     <div class="screenlet-body">
-        <table width="100%" cellspacing="0" cellpadding="1" border="0">
+        <@table width="100%" cellspacing="0" cellpadding="1" border="0">
           <#assign shipGroups = cart.getShipGroups()>
           <#if (shipGroups.size() > 0)>
             <#assign groupIdx = 0>
@@ -60,15 +60,15 @@ function submitForm(form, mode, value) {
               <#assign groupNumber = groupIdx + 1>
               <form method="post" action="#" name="editgroupform${groupIdx}" style="margin: 0;">
                 <input type="hidden" name="groupIndex" value="${groupIdx}"/>
-                <tr>
-                  <td>
+                <@tr>
+                  <@td>
                     <div><b>${uiLabelMap.CommonGroup} ${groupNumber}:</b></div>
                     <#list group.getShipItems() as item>
                       <#assign groupItem = group.getShipItemInfo(item)>
                       <div>&nbsp;&nbsp;&nbsp;${item.getName()} - (${groupItem.getItemQuantity()})</div>
                     </#list>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <div>
                       <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
                       <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="${styles.button_default!}">${uiLabelMap.PartyAddNewAddress}</a>
@@ -112,8 +112,8 @@ function submitForm(form, mode, value) {
 
                     <h2>${uiLabelMap.OrderSpecialInstructions}</h2>
                     <textarea class='textAreaBox' cols="35" rows="3" wrap="hard" name="shippingInstructions">${cart.getShippingInstructions(groupIdx)!}</textarea>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <div>
                       <select name="maySplit" class="selectBox">
                         <#assign maySplitStr = cart.getMaySplit(groupIdx)?default("")>
@@ -133,21 +133,21 @@ function submitForm(form, mode, value) {
 
                     <h2>${uiLabelMap.OrderGiftMessage}</h2>
                     <textarea class='textAreaBox' cols="30" rows="3" wrap="hard" name="giftMessage">${cart.getGiftMessage(groupIdx)!}</textarea>
-                  </td>
-                  <td><input type="button" class="smallSubmit" value="${uiLabelMap.CommonSave}" onclick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></td>
-                </tr>
+                  </@td>
+                  <@td><input type="button" class="smallSubmit" value="${uiLabelMap.CommonSave}" onclick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>
+                </@tr>
                 <#assign groupIdx = groupIdx + 1>
                 <#if group_has_next>
-                  <tr>
-                    <td colspan="6"><hr /></td>
-                  </tr>
+                  <@tr>
+                    <@td colspan="6"><hr /></@td>
+                  </@tr>
                 </#if>
               </form>
             </#list>
           <#else>
             <div>${uiLabelMap.OrderNoShipGroupsDefined}.</div>
           </#if>
-        </table>
+        </@table>
     </div>
 </div>
 
@@ -156,22 +156,22 @@ function submitForm(form, mode, value) {
         <div class="h3">${uiLabelMap.EcommerceAssignItems}</div>
     </div>
     <div class="screenlet-body">
-        <table width="100%" cellspacing="0" cellpadding="1" border="0">
-          <tr>
-            <td><div><b>${uiLabelMap.OrderProduct}</b></div></td>
-            <td align="center"><div><b>${uiLabelMap.OrderTotalQty}</b></div></td>
-            <td>&nbsp;</td>
-            <td align="center"><div><b>${uiLabelMap.OrderMoveQty}</b></div></td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
+        <@table width="100%" cellspacing="0" cellpadding="1" border="0">
+          <@tr>
+            <@td><div><b>${uiLabelMap.OrderProduct}</b></div></@td>
+            <@td align="center"><div><b>${uiLabelMap.OrderTotalQty}</b></div></@td>
+            <@td>&nbsp;</@td>
+            <@td align="center"><div><b>${uiLabelMap.OrderMoveQty}</b></div></@td>
+            <@td>&nbsp;</@td>
+            <@td>&nbsp;</@td>
+          </@tr>
 
           <#list cart.items() as cartLine>
             <#assign cartLineIndex = cart.getItemIndex(cartLine)>
-            <tr>
+            <@tr>
               <form method="post" action="<@ofbizUrl>updatesplit</@ofbizUrl>" name="editgroupform" style="margin: 0;">
                 <input type="hidden" name="itemIndex" value="${cartLineIndex}"/>
-                <td>
+                <@td>
                   <div>
                     <#if cartLine.getProductId()??>
                       <#-- product item -->
@@ -209,20 +209,20 @@ function submitForm(form, mode, value) {
                     </#if>
                   </div>
 
-                </td>
-                <td align="right">
+                </@td>
+                <@td align="right">
                   <div>${cartLine.getQuantity()?string.number}&nbsp;&nbsp;&nbsp;</div>
-                </td>
-                <td>
+                </@td>
+                <@td>
                   <div>&nbsp;</div>
-                </td>
-                <td align="center">
+                </@td>
+                <@td align="center">
                   <input size="6" class="inputBox" type="text" name="quantity" value="${cartLine.getQuantity()?string.number}"/>
-                </td>
-                <td>
+                </@td>
+                <@td>
                   <div>&nbsp;</div>
-                </td>
-                <td>
+                </@td>
+                <@td>
                   <div>${uiLabelMap.CommonFrom}:
                     <select name="fromGroupIndex" class="selectBox">
                       <#list itemShipGroups.entrySet() as group>
@@ -231,8 +231,8 @@ function submitForm(form, mode, value) {
                       </#list>
                     </select>
                   </div>
-                </td>
-                <td>
+                </@td>
+                <@td>
                   <div>${uiLabelMap.CommonTo}:
                     <select name="toGroupIndex" class="selectBox">
                       <#list 0..(cart.getShipGroupSize() - 1) as groupIdx>
@@ -242,22 +242,22 @@ function submitForm(form, mode, value) {
                       <option value="-1">${uiLabelMap.CommonNew} ${uiLabelMap.CommonGroup}</option>
                     </select>
                   </div>
-                </td>
-                <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSubmit}"/></td>
+                </@td>
+                <@td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSubmit}"/></@td>
               </form>
-            </tr>
+            </@tr>
           </#list>
-        </table>
+        </@table>
     </div>
 </div>
 
-<table>
-  <tr valign="top">
-    <td>
+<@table>
+  <@tr valign="top">
+    <@td>
       &nbsp;<a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
-    </td>
-    <td align="right">
+    </@td>
+    <@td align="right">
       <a href="<@ofbizUrl>view/checkoutpayment</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a>
-    </td>
-  </tr>
-</table>
+    </@td>
+  </@tr>
+</@table>

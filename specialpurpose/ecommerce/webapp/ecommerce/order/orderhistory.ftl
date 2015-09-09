@@ -20,106 +20,106 @@ under the License.
 <div>
   <div class="screenlet">
     <h3>${uiLabelMap.OrderSalesHistory}</h3>
-    <table id="orderSalesHistory" summary="This table display order sales history.">
-      <thead>
-        <tr>
-          <th>${uiLabelMap.CommonDate}</th>
-          <th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</th>
-          <th>${uiLabelMap.CommonAmount}</th>
-          <th>${uiLabelMap.CommonStatus}</th>
-          <th>${uiLabelMap.OrderInvoices}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
+    <@table id="orderSalesHistory" summary="This table display order sales history.">
+      <@thead>
+        <@tr>
+          <@th>${uiLabelMap.CommonDate}</@th>
+          <@th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
+          <@th>${uiLabelMap.CommonAmount}</@th>
+          <@th>${uiLabelMap.CommonStatus}</@th>
+          <@th>${uiLabelMap.OrderInvoices}</@th>
+          <@th></@th>
+        </@tr>
+      </@thead>
+      <@tbody>
         <#if orderHeaderList?has_content>
           <#list orderHeaderList as orderHeader>
             <#assign status = orderHeader.getRelatedOne("StatusItem", true) />
-            <tr>
-              <td>${orderHeader.orderDate.toString()}</td>
-              <td>${orderHeader.orderId}</td>
-              <td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom /></td>
-              <td>${status.get("description",locale)}</td>
+            <@tr>
+              <@td>${orderHeader.orderDate.toString()}</@td>
+              <@td>${orderHeader.orderId}</@td>
+              <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom /></@td>
+              <@td>${status.get("description",locale)}</@td>
               <#-- invoices -->
               <#assign invoices = delegator.findByAnd("OrderItemBilling", Static["org.ofbiz.base.util.UtilMisc"].toMap("orderId", "${orderHeader.orderId}"), Static["org.ofbiz.base.util.UtilMisc"].toList("invoiceId"), false) />
               <#assign distinctInvoiceIds = Static["org.ofbiz.entity.util.EntityUtil"].getFieldListFromEntityList(invoices, "invoiceId", true)>
               <#if distinctInvoiceIds?has_content>
-                <td>
+                <@td>
                   <#list distinctInvoiceIds as invoiceId>
                      <a href="<@ofbizUrl>invoice.pdf?invoiceId=${invoiceId}</@ofbizUrl>" class="${styles.button_default!}">(${invoiceId} PDF) </a>
                   </#list>
-                </td>
+                </@td>
               <#else>
-                <td></td>
+                <@td></@td>
               </#if>
-              <td><a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="button">${uiLabelMap.CommonView}</a></td>
-            </tr>
+              <@td><a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="button">${uiLabelMap.CommonView}</a></@td>
+            </@tr>
           </#list>
         <#else>
-          <tr><td colspan="6">${uiLabelMap.OrderNoOrderFound}</td></tr>
+          <@tr><@td colspan="6">${uiLabelMap.OrderNoOrderFound}</@td></@tr>
         </#if>
-      </tbody>
-    </table>
+      </@tbody>
+    </@table>
   </div>
   <div class="screenlet">
     <h3>${uiLabelMap.OrderPurchaseHistory}</h3>
-    <table id="orderPurchaseHistory" summary="This table display order purchase history.">
-      <thead>
-        <tr>
-          <th>${uiLabelMap.CommonDate}</th>
-          <th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</th>
-          <th>${uiLabelMap.CommonAmount}</th>
-          <th>${uiLabelMap.CommonStatus}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
+    <@table id="orderPurchaseHistory" summary="This table display order purchase history.">
+      <@thead>
+        <@tr>
+          <@th>${uiLabelMap.CommonDate}</@th>
+          <@th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
+          <@th>${uiLabelMap.CommonAmount}</@th>
+          <@th>${uiLabelMap.CommonStatus}</@th>
+          <@th></@th>
+        </@tr>
+      </@thead>
+      <@tbody>
         <#if porderHeaderList?has_content>
           <#list porderHeaderList as porderHeader>
             <#assign pstatus = porderHeader.getRelatedOne("StatusItem", true) />
-            <tr>
-              <td>${porderHeader.orderDate.toString()}</td>
-              <td>${porderHeader.orderId}</td>
-              <td><@ofbizCurrency amount=porderHeader.grandTotal isoCode=porderHeader.currencyUom /></td>
-              <td>${pstatus.get("description",locale)}</td>
-              <td><a href="<@ofbizUrl>orderstatus?orderId=${porderHeader.orderId}</@ofbizUrl>" class="button">${uiLabelMap.CommonView}</a></td>
-            </tr>
+            <@tr>
+              <@td>${porderHeader.orderDate.toString()}</@td>
+              <@td>${porderHeader.orderId}</@td>
+              <@td><@ofbizCurrency amount=porderHeader.grandTotal isoCode=porderHeader.currencyUom /></@td>
+              <@td>${pstatus.get("description",locale)}</@td>
+              <@td><a href="<@ofbizUrl>orderstatus?orderId=${porderHeader.orderId}</@ofbizUrl>" class="button">${uiLabelMap.CommonView}</a></@td>
+            </@tr>
           </#list>
         <#else>
-          <tr><td colspan="5">${uiLabelMap.OrderNoOrderFound}</td></tr>
+          <@tr><@td colspan="5">${uiLabelMap.OrderNoOrderFound}</@td></@tr>
         </#if>
-      </tbody>
-    </table>
+      </@tbody>
+    </@table>
   </div>
   <div class="screenlet">
     <h3>${uiLabelMap.EcommerceDownloadsAvailableTitle}</h3>
-    <table id="availableTitleDownload" summary="This table display available title for download.">
-      <thead>
-        <tr>
-          <th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</th>
-          <th>${uiLabelMap.ProductProductName}</th>
-          <th>${uiLabelMap.CommonName}</th>
-          <th>${uiLabelMap.CommonDescription}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
+    <@table id="availableTitleDownload" summary="This table display available title for download.">
+      <@thead>
+        <@tr>
+          <@th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
+          <@th>${uiLabelMap.ProductProductName}</@th>
+          <@th>${uiLabelMap.CommonName}</@th>
+          <@th>${uiLabelMap.CommonDescription}</@th>
+          <@th></@th>
+        </@tr>
+      </@thead>
+      <@tbody>
         <#if downloadOrderRoleAndProductContentInfoList?has_content>
           <#list downloadOrderRoleAndProductContentInfoList as downloadOrderRoleAndProductContentInfo>
-            <tr>
-              <td>${downloadOrderRoleAndProductContentInfo.orderId}</td>
-              <td>${downloadOrderRoleAndProductContentInfo.productName}</td>
-              <td>${downloadOrderRoleAndProductContentInfo.contentName!}</td>
-              <td>${downloadOrderRoleAndProductContentInfo.description!}</td>
-              <td>
+            <@tr>
+              <@td>${downloadOrderRoleAndProductContentInfo.orderId}</@td>
+              <@td>${downloadOrderRoleAndProductContentInfo.productName}</@td>
+              <@td>${downloadOrderRoleAndProductContentInfo.contentName!}</@td>
+              <@td>${downloadOrderRoleAndProductContentInfo.description!}</@td>
+              <@td>
                 <a href="<@ofbizUrl>downloadDigitalProduct?dataResourceId=${downloadOrderRoleAndProductContentInfo.dataResourceId}</@ofbizUrl>" class="button">Download</a>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           </#list>
         <#else>
-          <tr><td colspan="5">${uiLabelMap.EcommerceDownloadNotFound}</td></tr>
+          <@tr><@td colspan="5">${uiLabelMap.EcommerceDownloadNotFound}</@td></@tr>
         </#if>
-      </tbody>
-    </table>
+      </@tbody>
+    </@table>
   </div>
 </div>

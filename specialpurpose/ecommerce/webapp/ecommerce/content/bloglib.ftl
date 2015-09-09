@@ -22,16 +22,16 @@ under the License.
     <#local csv = "">
     <#local counter = 0>
     <#local len = trail?size>
-    <table border="0" cellspacing="4">
+    <@table border="0" cellspacing="4">
     <#list trail as content>
-      <#if counter < (len - endIndexOffset) && startIndex <= counter >
-        <#if 0 < counter >
+      <#if (counter < (len - endIndexOffset)) && (startIndex <= counter)>
+        <#if (0 < counter)>
             <#local csv = csv + ","/>
         </#if>
         <#local csv = csv + content.contentId/>
-        <#if counter < len && startIndex <= counter >
-       <tr>
-         <td>
+        <#if (counter < len) && (startIndex <= counter)>
+       <@tr openOnly=true />
+         <@td openOnly=true />
             ${indent}
             <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
               <a class="tabButton" href="<@ofbizUrl>showcontenttree?contentId=${content.contentId!}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName!}
@@ -45,11 +45,11 @@ under the License.
               <a class="tabButton" href="<@ofbizUrl>searchContent?siteId=${siteId!}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonSearch}</a>
             </#if>
         </#if>
-         </td>
-       </tr>
+         <@td closeOnly=true />
+       <@tr closeOnly=true />
       </#if>
       <#local counter = counter + 1>
-    <#if 20 < counter > <#break/></#if>
+    <#if (20 < counter)> <#break/></#if>
     </#list>
-    </table>
+    </@table>
 </#macro>

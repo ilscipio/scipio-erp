@@ -20,16 +20,16 @@ under the License.
 <@blog.renderAncestryPath trail=ancestorList?default([]) endIndexOffset=1/>
 <#-- Main Heading -->
 <#--
-<table width='100%' cellpadding='0' cellspacing='0' border='0'>
-  <tr>
-    <td>
+<@table width='100%' cellpadding='0' cellspacing='0' border='0'>
+  <@tr>
+    <@td>
       <h1>${contentIdTo!}
       </h1>
-    </td>
-    <td align="right">
-    </td>
-  </tr>
-</table>
+    </@td>
+    <@td align="right">
+    </@td>
+  </@tr>
+</@table>
 <br />
 -->
 
@@ -41,11 +41,11 @@ under the License.
         <h3>${uiLabelMap.EcommerceContentInformation}</h3>
    
     <div class="screenlet-body">
-  <table>
-    <tr><td align="right" nowrap="nowrap"><div class='tabletext'><b>${uiLabelMap.ProductContentId}</b></div></td><td>&nbsp;</td><td><div class='tabletext'>${contentId!}</div></td></tr>
-    <tr><td align="right" nowrap="nowrap"><div class='tabletext'><b>${uiLabelMap.EcommerceContentName}</b></div></td><td>&nbsp;</td><td><div class='tabletext'>${contentName!}</div></td></tr>
-    <tr><td align="right" nowrap="nowrap"><div class='tabletext'><b>${uiLabelMap.CommonDescription}</b></div></td><td>&nbsp;</td><td><div class='tabletext'>${description!}<div></td></tr>
-  </table>
+  <@table>
+    <@tr><@td align="right" nowrap="nowrap"><div class='tabletext'><b>${uiLabelMap.ProductContentId}</b></div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>${contentId!}</div></@td></@tr>
+    <@tr><@td align="right" nowrap="nowrap"><div class='tabletext'><b>${uiLabelMap.EcommerceContentName}</b></div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>${contentName!}</div></@td></@tr>
+    <@tr><@td align="right" nowrap="nowrap"><div class='tabletext'><b>${uiLabelMap.CommonDescription}</b></div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>${description!}<div></@td></@tr>
+  </@table>
     </div>
 </div>
 
@@ -57,11 +57,11 @@ under the License.
         <h3>${uiLabelMap.EcommerceImageInformation}</h3>
     
     <div class="screenlet-body">
-  <table>
-    <tr><td align="right" nowrap="nowrap"><div class='tabletext'>${uiLabelMap.EcommerceImage}</div></td><td>&nbsp;</td><td><div class='tabletext'>
+  <@table>
+    <@tr><@td align="right" nowrap="nowrap"><div class='tabletext'>${uiLabelMap.EcommerceImage}</div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>
         <img src="<@ofbizUrl>img?imgId=${imgDataResourceId!}</@ofbizUrl>" alt="" class='cssImgStandard' />
-<div></td></tr>
-  </table>
+<div></@td></@tr>
+  </@table>
     </div>
 </div>
 
@@ -71,11 +71,11 @@ under the License.
         </div>
         <h3>${uiLabelMap.EcommerceSummaryInformation}</h3>
     <div class="screenlet-body">
-  <table>
-    <tr><td><div class='tabletext'>${uiLabelMap.ContentSummary}</div></td><td>&nbsp;</td><td><div class='tabletext'>
+  <@table>
+    <@tr><@td><div class='tabletext'>${uiLabelMap.ContentSummary}</div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>
 ${summaryData!}
-<div></td></tr>
-  </table>
+<div></@td></@tr>
+  </@table>
     </div>
 </div>
 
@@ -85,10 +85,10 @@ ${summaryData!}
         </div>
         <h3>&nbsp;${uiLabelMap.EcommerceArticleInformation}</h3>
     <div class="screenlet-body">
-  <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align="right" nowrap="nowrap"><div class='tabletext'><b>Article</b></div></td><td>&nbsp;</td><td><div class='tabletext'>
+  <@table width="100%" border="0" cellpadding="0" cellspacing='0'>
+    <@tr><@td align="right" nowrap="nowrap"><div class='tabletext'><b>Article</b></div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>
 ${textData!}
-<div></td></tr>
-  </table>
+<div></@td></@tr>
+  </@table>
     </div>
 </div>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<table width="100%" border="0" cellpadding="2" cellspacing="0">
+<@table width="100%" border="0" cellpadding="2" cellspacing="0">
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
 
     <#-- get an answer from the answerMap -->
@@ -30,23 +30,23 @@ under the License.
       <#assign results = surveyResults.get(surveyQuestionAndAppl.surveyQuestionId)!>
     </#if>
 
-    <tr>
+    <@tr>
       <#-- standard question options -->
-      <td align='left'>
+      <@td align='left'>
         <#assign answerString = "answers">
         <#if (results._total?default(0) == 1)>
            <#assign answerString = "answer">
         </#if>
         <div>${surveyQuestionAndAppl.question!} (${results._total?default(0)?string.number} ${answerString})</div>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
 
-    <tr>
-      <td><hr /></td>
-    </tr>
+    <@tr>
+      <@td><hr /></@td>
+    </@tr>
 
-    <tr>
-      <td>
+    <@tr>
+      <@td>
         <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
           <#assign selectedOption = (answer.booleanResponse)?default("Y")>
           <div><span style="white-space: nowrap;">
@@ -73,7 +73,7 @@ under the License.
         <#else>
           <div>${uiLabelMap.EcommerceUnsupportedQuestionType}${surveyQuestionAndAppl.surveyQuestionTypeId}</div>
         </#if>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
   </#list>
-</table>
+</@table>

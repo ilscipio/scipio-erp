@@ -165,13 +165,13 @@ function setAlternateGwp(field) {
     <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
       <fieldset>
       <input type="hidden" name="removeSelected" value="false" />
-      <table>
-        <thead>
-            <tr>
-              <th></th>
-              <th scope="row">${uiLabelMap.OrderProduct}</th>
+      <@table>
+        <@thead>
+            <@tr>
+              <@th></@th>
+              <@th scope="row">${uiLabelMap.OrderProduct}</@th>
               <#if asslGiftWraps?has_content && (productStore.showCheckoutGiftOptions!) != "N">
-                <th scope="row">
+                <@th scope="row">
                   <select class="selectBox" name="GWALL" onchange="javascript:gwAll(this);">
                     <option value="">${uiLabelMap.EcommerceGiftWrapAllItems}</option>
                     <option value="NO^">${uiLabelMap.EcommerceNoGiftWrap}</option>
@@ -179,32 +179,33 @@ function setAlternateGwp(field) {
                       <option value="${option.productFeatureId}">${option.description} : ${option.defaultAmount?default(0)}</option>
                     </#list>
                   </select>
+                </@th>
               <#else>
-                <th scope="row">&nbsp;</th>
+                <@th scope="row">&nbsp;</@th>
               </#if>
               <#if fixedAssetExist == true>
-                <td>
-                    <table>
-                        <tr>
-                            <td>- ${uiLabelMap.EcommerceStartDate} -</td>
-                            <td>- ${uiLabelMap.EcommerceNbrOfDays} -</td>
-                        </tr>
-                        <tr>
-                            <td>- ${uiLabelMap.EcommerceNbrOfPersons} -</td>
-                            <td>- ${uiLabelMap.CommonQuantity} -</td>
-                        </tr>
-                    </table>
-                </td>
+                <@td>
+                    <@table>
+                        <@tr>
+                            <@td>- ${uiLabelMap.EcommerceStartDate} -</@td>
+                            <@td>- ${uiLabelMap.EcommerceNbrOfDays} -</@td>
+                        </@tr>
+                        <@tr>
+                            <@td>- ${uiLabelMap.EcommerceNbrOfPersons} -</@td>
+                            <@td>- ${uiLabelMap.CommonQuantity} -</@td>
+                        </@tr>
+                    </@table>
+                </@td>
               <#else>
-                <th scope="row">${uiLabelMap.CommonQuantity}</th>
+                <@th scope="row">${uiLabelMap.CommonQuantity}</@th>
               </#if>
-              <th scope="row">${uiLabelMap.EcommerceUnitPrice}</th>
-              <th scope="row">${uiLabelMap.EcommerceAdjustments}</th>
-              <th scope="row">${uiLabelMap.EcommerceItemTotal}</th>
-              <th scope="row"><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);" /></th>
-            </tr>
-        </thead>
-        <tbody>
+              <@th scope="row">${uiLabelMap.EcommerceUnitPrice}</@th>
+              <@th scope="row">${uiLabelMap.EcommerceAdjustments}</@th>
+              <@th scope="row">${uiLabelMap.EcommerceItemTotal}</@th>
+              <@th scope="row"><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);" /></@th>
+            </@tr>
+        </@thead>
+        <@tbody>
         <#assign itemsFromList = false />
         <#assign promoItems = false />
         <#list shoppingCart.items() as cartLine>
@@ -216,8 +217,8 @@ function setAlternateGwp(field) {
             <!-- cart line ${cartLineIndex} adjustment: ${cartLineAdjustment} -->
           </#list>
 
-          <tr id="cartItemDisplayRow_${cartLineIndex}">
-            <td>
+          <@tr id="cartItemDisplayRow_${cartLineIndex}">
+            <@td>
                 <#if cartLine.getShoppingListId()??>
                   <#assign itemsFromList = true />
                   <a href="<@ofbizUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="linktext">L</a>&nbsp;&nbsp;
@@ -227,8 +228,8 @@ function setAlternateGwp(field) {
                 <#else>
                   &nbsp;
                 </#if>
-            </td>
-            <td>
+            </@td>
+            <@td>
                   <#if cartLine.getProductId()??>
                     <#-- product item -->
                     <#-- start code to display a small image of the product -->
@@ -302,11 +303,11 @@ function setAlternateGwp(field) {
                   </ul>
                   -->
                 </#if>
-            </td>
+            </@td>
 
             <#-- gift wrap option -->
             <#assign showNoGiftWrapOptions = false />
-            <td>
+            <@td>
               <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP! />
               <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")! />
               <#if giftWrapOption?has_content>
@@ -323,100 +324,99 @@ function setAlternateGwp(field) {
               <#else>
                 &nbsp;
               </#if>
-            </td>
+            </@td>
             <#-- end gift wrap option -->
 
-            <td>
+            <@td>
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
-                       <#if fixedAssetExist == true>
+                    <#if fixedAssetExist == true>
+                      <@table>
                         <#if cartLine.getReservStart()??>
-                            <table>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>${cartLine.getReservStart()?string("yyyy-mm-dd")}</td>
-                                    <td>${cartLine.getReservLength()?string.number}</td></tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>${cartLine.getReservPersons()?string.number}</td>
-                                    <td>
+                                <@tr>
+                                    <@td>&nbsp;</@td>
+                                    <@td>${cartLine.getReservStart()?string("yyyy-mm-dd")}</@td>
+                                    <@td>${cartLine.getReservLength()?string.number}</@td></@tr>
+                                <@tr openOnly=true />
+                                    <@td>&nbsp;</@td>
+                                    <@td>${cartLine.getReservPersons()?string.number}</@td>
                         <#else>
-                            <table>
-                                <tr>
-                                    <td>--</td>
-                                    <td>--</td>
-                                </tr>
-                                <tr>
-                                    <td>--</td>
-                                    <td>    
+                                <@tr>
+                                    <@td>--</@td>
+                                    <@td>--</@td>
+                                </@tr>
+                                <@tr openOnly=true />
+                                    <@td>--</@td>       
                         </#if>
-                        ${cartLine.getQuantity()?string.number}</td></tr></table>
+                                    <@td>${cartLine.getQuantity()?string.number}</@td>
+                                <@tr closeOnly=true />
+                      </@table>
                     <#else><#-- fixedAssetExist -->
                         ${cartLine.getQuantity()?string.number}
                     </#if>
                 <#else><#-- Is Promo or Shoppinglist -->
-                       <#if fixedAssetExist == true><#if cartLine.getReservStart()??><table><tr><td>&nbsp;</td><td><input type="text" class="inputBox" size="10" name="reservStart_${cartLineIndex}" value=${cartLine.getReservStart()?string}/></td><td><input type="text" class="inputBox" size="2" name="reservLength_${cartLineIndex}" value="${cartLine.getReservLength()?string.number}"/></td></tr><tr><td>&nbsp;</td><td><input type="text" class="inputBox" size="3" name="reservPersons_${cartLineIndex}" value=${cartLine.getReservPersons()?string.number} /></td><td><#else>
-                           <table><tr><td>--</td><td>--</td></tr><tr><td>--</td><td></#if>
-                        <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" /></td></tr></table>
+                       <#if fixedAssetExist == true><@table><#if cartLine.getReservStart()??><@tr><@td>&nbsp;</@td><@td><input type="text" class="inputBox" size="10" name="reservStart_${cartLineIndex}" value=${cartLine.getReservStart()?string}/></@td><@td><input type="text" class="inputBox" size="2" name="reservLength_${cartLineIndex}" value="${cartLine.getReservLength()?string.number}"/></@td></@tr><@tr openOnly=true /><@td>&nbsp;</@td><@td><input type="text" class="inputBox" size="3" name="reservPersons_${cartLineIndex}" value=${cartLine.getReservPersons()?string.number} /></@td><#else>
+                           <@tr><@td>--</@td><@td>--</@td></@tr><@tr openOnly=true /><@td>--</@td></#if>
+                        <@td><input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" /></@td><@tr closeOnly=true /></@table>
                     <#else><#-- fixedAssetExist -->
                         <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" />
                     </#if>
                 </#if>
-            </td>
-            <td><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></td>
-            <td><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></td>
-            <td><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></td>
-            <td><#if !cartLine.getIsPromo()><input type="checkbox" name="selectedItem" value="${cartLineIndex}" onclick="javascript:checkToggle(this);" /><#else>&nbsp;</#if></td>
-          </tr>
+            </@td>
+            <@td><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></@td>
+            <@td><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></@td>
+            <@td><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></@td>
+            <@td><#if !cartLine.getIsPromo()><input type="checkbox" name="selectedItem" value="${cartLineIndex}" onclick="javascript:checkToggle(this);" /><#else>&nbsp;</#if></@td>
+          </@tr>
         </#list>
-    </tbody>
-    </table>
-    <table>
+    </@tbody>
+    </@table>
+    <@table>
         <#if shoppingCart.getAdjustments()?has_content>
-            <tr>
-              <th>${uiLabelMap.CommonSubTotal}:</th>
-              <td><@ofbizCurrency amount=shoppingCart.getDisplaySubTotal() isoCode=shoppingCart.getCurrency()/></td>
-              <td>&nbsp;</td>
-            </tr>
+            <@tr>
+              <@th>${uiLabelMap.CommonSubTotal}:</@th>
+              <@td><@ofbizCurrency amount=shoppingCart.getDisplaySubTotal() isoCode=shoppingCart.getCurrency()/></@td>
+              <@td>&nbsp;</@td>
+            </@tr>
             <#if (shoppingCart.getDisplayTaxIncluded() > 0.0)>
-              <tr>
-                <th>${uiLabelMap.OrderSalesTaxIncluded}:</th>
-                <td><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></td>
-                <td>&nbsp;</td>
-              </tr>
+              <@tr>
+                <@th>${uiLabelMap.OrderSalesTaxIncluded}:</@th>
+                <@td><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
+                <@td>&nbsp;</@td>
+              </@tr>
             </#if>
             <#list shoppingCart.getAdjustments() as cartAdjustment>
               <#assign adjustmentType = cartAdjustment.getRelatedOne("OrderAdjustmentType", true) />
-              <tr>
-                <th>
+              <@tr>
+                <@th>
                     ${uiLabelMap.EcommerceAdjustment} - ${adjustmentType.get("description",locale)!}
                     <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="button">${uiLabelMap.CommonDetails}</a></#if>:
-                </th>
-                <td><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/></td>
-                <td>&nbsp;</td>
-              </tr>
+                </@th>
+                <@td><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/></@td>
+                <@td>&nbsp;</@td>
+              </@tr>
             </#list>
         </#if>
-        <tr>
-          <th>${uiLabelMap.EcommerceCartTotal}:</th>
-          <td><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/></td>
-        </tr>
+        <@tr>
+          <@th>${uiLabelMap.EcommerceCartTotal}:</@th>
+          <@td><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/></@td>
+        </@tr>
         <#if itemsFromList>
-        <tr>
-          <td>L - ${uiLabelMap.EcommerceItemsfromShopingList}.</td>
-        </tr>
+        <@tr>
+          <@td>L - ${uiLabelMap.EcommerceItemsfromShopingList}.</@td>
+        </@tr>
         </#if>
         <#if promoItems>
-        <tr>
-          <td>P - ${uiLabelMap.EcommercePromotionalItems}.</td>
-        </tr>
+        <@tr>
+          <@td>P - ${uiLabelMap.EcommercePromotionalItems}.</@td>
+        </@tr>
         </#if>
         <#if !itemsFromList && !promoItems>
-        <tr>
-          <td>&nbsp;</td>
-        </tr>
+        <@tr>
+          <@td>&nbsp;</@td>
+        </@tr>
         </#if>
-        <tr>
-          <td>
+        <@tr>
+          <@td>
               <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
               <select name="shoppingListId" class="selectBox">
                 <#if shoppingLists?has_content>
@@ -433,10 +433,10 @@ function setAlternateGwp(field) {
                ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="button">${uiLabelMap.CommonBeLogged}</a>
                 ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
               </#if>
-          </td>
-        </tr>
-        <tr>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td>
               <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
               &nbsp;&nbsp;
               <a href="<@ofbizUrl>createCustRequestFromCart</@ofbizUrl>" class="button">${uiLabelMap.OrderCreateCustRequestFromCart}</a>&nbsp;&nbsp;
@@ -446,14 +446,14 @@ function setAlternateGwp(field) {
                ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="button">${uiLabelMap.CommonBeLogged}</a>
                 ${uiLabelMap.EcommerceToOrderCreateCustRequestFromCart}.&nbsp;
               </#if>
-          </td>
-        </tr>
-        <tr>
-          <td>
+          </@td>
+        </@tr>
+        <@tr>
+          <@td>
             <input type="checkbox" onclick="javascript:document.cartform.submit()" name="alwaysShowcart" <#if shoppingCart.viewCartOnAdd()>checked="checked"</#if>/>${uiLabelMap.EcommerceAlwaysViewCartAfterAddingAnItem}.
-          </td>
-        </tr>
-      </table>
+          </@td>
+        </@tr>
+      </@table>
       </fieldset>
     </form>
   <#else>

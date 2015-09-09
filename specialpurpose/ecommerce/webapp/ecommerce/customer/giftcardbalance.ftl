@@ -23,17 +23,17 @@ under the License.
 <br />
 
 <br />
-<table align="center">
+<@table align="center">
   <#if requestAttributes.processResult??>
-    <tr>
-      <td colspan="2">
+    <@tr>
+      <@td colspan="2">
         <div align="center">
           ${uiLabelMap.AccountingCurrentBalance}
         </div>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
+      </@td>
+    </@tr>
+    <@tr>
+      <@td colspan="2">
         <div class="graybox">
           <#if (requestAttributes.balance?default(0) > 0)>
             ${requestAttributes.balance}
@@ -41,25 +41,25 @@ under the License.
             ${uiLabelMap.AccountingCurrentBalanceProblem}
           </#if>
         </div>
-      </td>
-    </tr>
-    <tr><td colspan="2">&nbsp;</td></tr>
+      </@td>
+    </@tr>
+    <@tr><@td colspan="2">&nbsp;</@td></@tr>
   </#if>
   <form method="post" action="<@ofbizUrl>querygcbalance</@ofbizUrl>">
     <input type="hidden" name="currency" value="USD" />
     <input type="hidden" name="paymentConfig" value="${paymentProperties?default("payment.properties")}" />
-    <tr>
-      <td><div class="tableheadtext">${uiLabelMap.AccountingCardNumber}</div></td>
-      <td><input type="text" class="inputBox" name="cardNumber" size="20" value="${(requestParameters.cardNumber)!}" /></td>
-    </tr>
-    <tr>
-      <td><div class="tableheadtext">${uiLabelMap.AccountingPINNumber}</div></td>
-      <td><input type="text" class="inputBox" name="pin" size="15" value="${(requestParameters.pin)!}" /></td>
-    </tr>
-    <tr><td colspan="2">&nbsp;</td></tr>
-    <tr>
-      <td colspan="2" align="center"><input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceCheckBalance}" /></td>
-    </tr>
+    <@tr>
+      <@td><div class="tableheadtext">${uiLabelMap.AccountingCardNumber}</div></@td>
+      <@td><input type="text" class="inputBox" name="cardNumber" size="20" value="${(requestParameters.cardNumber)!}" /></@td>
+    </@tr>
+    <@tr>
+      <@td><div class="tableheadtext">${uiLabelMap.AccountingPINNumber}</div></@td>
+      <@td><input type="text" class="inputBox" name="pin" size="15" value="${(requestParameters.pin)!}" /></@td>
+    </@tr>
+    <@tr><@td colspan="2">&nbsp;</@td></@tr>
+    <@tr>
+      <@td colspan="2" align="center"><input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceCheckBalance}" /></@td>
+    </@tr>
   </form>
-</table>
+</@table>
 <br />

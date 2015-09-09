@@ -22,23 +22,23 @@ under the License.
         <span class="h3">${uiLabelMap.ProductSerializedInventorySummary}</span>
     </div>
     <div class="screenlet-body">
-        <table width="100%" cellspacing="0" cellpadding="2">
-            <thead>
-                <tr class="header-row">
-                    <th>${uiLabelMap.ProductInventoryItemId}</th>
-                    <th>${uiLabelMap.ProductProductName}</th>
-                    <th>${uiLabelMap.ProductSerialNumber}</th>
-                    <th>${uiLabelMap.ProductSoftIdentifier}</th>
-                    <th>${uiLabelMap.ProductActivationNumber}</th>
-                    <th>${uiLabelMap.ProductActivationNumber} ${uiLabelMap.CommonValidThruDate}</th>
-                </tr>
-            </thead>
-            <tbody>
+        <@table width="100%" cellspacing="0" cellpadding="2">
+            <@thead>
+                <@tr class="header-row">
+                    <@th>${uiLabelMap.ProductInventoryItemId}</@th>
+                    <@th>${uiLabelMap.ProductProductName}</@th>
+                    <@th>${uiLabelMap.ProductSerialNumber}</@th>
+                    <@th>${uiLabelMap.ProductSoftIdentifier}</@th>
+                    <@th>${uiLabelMap.ProductActivationNumber}</@th>
+                    <@th>${uiLabelMap.ProductActivationNumber} ${uiLabelMap.CommonValidThruDate}</@th>
+                </@tr>
+            </@thead>
+            <@tbody>
                 <#list inventoryItemList as inventoryItem>
                     <#assign product = inventoryItem.getRelatedOne('Product', false)!>
-                    <tr>
-                        <td>${inventoryItem.inventoryItemId}</td>
-                        <td>
+                    <@tr>
+                        <@td>${inventoryItem.inventoryItemId}</@td>
+                        <@td>
                             <#if product?has_content>
                                 <#if product.isVariant?default('N') == 'Y'>
                                     <#assign product = Static['org.ofbiz.product.product.ProductWorker'].getParentProduct(product.productId, delegator)!>
@@ -48,15 +48,15 @@ under the License.
                                     <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="linktext">${productName?default(product.productId)}</a>
                                 </#if>
                             </#if>
-                        </td>
-                        <td>${inventoryItem.serialNumber!}</td>
-                        <td>${inventoryItem.softIdentifier!}</td>
-                        <td>${inventoryItem.activationNumber!}</td>
-                        <td>${inventoryItem.activationValidThru!}</td>
-                    </tr>
+                        </@td>
+                        <@td>${inventoryItem.serialNumber!}</@td>
+                        <@td>${inventoryItem.softIdentifier!}</@td>
+                        <@td>${inventoryItem.activationNumber!}</@td>
+                        <@td>${inventoryItem.activationValidThru!}</@td>
+                    </@tr>
                 </#list>
-            </tbody>
-        </table>
+            </@tbody>
+        </@table>
     </div>
 </div>
 

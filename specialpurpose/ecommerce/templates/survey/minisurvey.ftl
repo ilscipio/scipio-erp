@@ -36,25 +36,25 @@ under the License.
 <#-- survey ID -->
 <input type="hidden" name="surveyId" value="${survey.surveyId}"/>
 
-<table width="100%" border="0" cellpadding="2" cellspacing="0">
+<@table width="100%" border="0" cellpadding="2" cellspacing="0">
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
     <#-- get an answer from the answerMap -->
     <#if surveyAnswers?has_content>
       <#assign answer = surveyAnswers.get(surveyQuestionAndAppl.surveyQuestionId)!>
     </#if>
 
-    <tr>
+    <@tr>
       <#-- standard question options -->
-      <td align='left'>
+      <@td align='left'>
         <div>${surveyQuestionAndAppl.question!}</div>
         <#if surveyQuestionAndAppl.hint?has_content>
           <div>${surveyQuestionAndAppl.hint}</div>
         </#if>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
 
-      <tr>
-        <td align="center">
+      <@tr>
+        <@td align="center">
           <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
             <#assign selectedOption = (answer.booleanResponse)?default("Y")>
             <select class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
@@ -111,11 +111,11 @@ under the License.
           <#else>
             <span>[optional]</span>
           </#if>
-        </td>
+        </@td>
 
-    </tr>
+    </@tr>
   </#list>
-  <tr>
-    <td align="center"><input type="submit" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>" class="smallSubmit"/></td>
-  </tr>
-</table>
+  <@tr>
+    <@td align="center"><input type="submit" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>" class="smallSubmit"/></@td>
+  </@tr>
+</@table>

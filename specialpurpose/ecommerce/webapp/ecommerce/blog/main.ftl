@@ -37,15 +37,16 @@ under the License.
     </#if>
 </head>
 <body>
-<table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
-  <tr>
-    <td width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="headerboxtop">
-        <tr>
+<@table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
+  <@tr>
+    <@td width="100%">
+      <@table width="100%" border="0" cellspacing="0" cellpadding="0" class="headerboxtop">
+        <@tr>
           <#if layoutSettings.headerImageUrl??>
-          <td width="1%"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>"/></td>
+          <@td width="1%"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>"/></@td>
           </#if>
-          <td align="right" width="1%" nowrap="nowrap" <#if layoutSettings.headerRightBackgroundUrl?has_content>background="${layoutSettings.headerRightBackgroundUrl}"</#if>>
+          <#assign background><#if layoutSettings.headerRightBackgroundUrl?has_content>background="${layoutSettings.headerRightBackgroundUrl}"</#if></#assign>
+          <@td align="right" width="1%" nowrap="nowrap" background=background>
             <div class="insideHeaderText">
                 <#if userLogin?has_content>
                   Logged in as&nbsp;<a href="#" class="linktext">${userLogin.userLoginId}</a>&nbsp;|&nbsp;<a href="<@ofbizUrl>/logoff</@ofbizUrl>" class="linktext">Logout</a>&nbsp;|&nbsp;<a href="#" class="linktext">Help Center</a>
@@ -59,12 +60,12 @@ under the License.
                     <input type="submit" class="smallSubmit" value="Search" />
                 </form>
             </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
+          </@td>
+        </@tr>
+      </@table>
+    </@td>
+  </@tr>
+</@table>
             ${sections.render("header")}
     <div class="centerarea">
     <!--

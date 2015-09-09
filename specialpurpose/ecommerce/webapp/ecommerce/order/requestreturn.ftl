@@ -37,23 +37,23 @@ under the License.
           <#if (orderHeader.currencyUom)?has_content>
           <input type="hidden" name="currencyUomId" value="${orderHeader.currencyUom}"/>
           </#if>
-          <table border="0" width="100%" cellpadding="2" cellspacing="0">
-            <tr>
-              <td colspan="5"><h3>${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</h3></td>
-              <td align="right">
+          <@table border="0" width="100%" cellpadding="2" cellspacing="0">
+            <@tr>
+              <@td colspan="5"><h3>${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</h3></@td>
+              <@td align="right">
                 <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
                 <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');"/>
-              </td>
-            </tr>
-            <tr>
-              <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
-              <td><div class="tableheadtext">${uiLabelMap.CommonQuantity}</div></td>
-              <td><div class="tableheadtext">${uiLabelMap.EcommercePrice}</div></td>
-              <td><div class="tableheadtext">${uiLabelMap.OrderReason}</div></td>
-              <td><div class="tableheadtext">${uiLabelMap.OrderRequestedResponse}</div></td>
-              <td>&nbsp;</td>
-            </tr>
-            <tr><td colspan="6"><hr /></td></tr>
+              </@td>
+            </@tr>
+            <@tr>
+              <@td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></@td>
+              <@td><div class="tableheadtext">${uiLabelMap.CommonQuantity}</div></@td>
+              <@td><div class="tableheadtext">${uiLabelMap.EcommercePrice}</div></@td>
+              <@td><div class="tableheadtext">${uiLabelMap.OrderReason}</div></@td>
+              <@td><div class="tableheadtext">${uiLabelMap.OrderRequestedResponse}</div></@td>
+              <@td>&nbsp;</@td>
+            </@tr>
+            <@tr><@td colspan="6"><hr /></@td></@tr>
             <#if returnableItems?has_content>
               <#assign rowCount = 0>
               <#list returnableItems.keySet() as orderItem>
@@ -72,8 +72,8 @@ under the License.
                 <#assign itemPrice = orderItem.unitPrice>
                 <#-- end of order item information -->
 
-                <tr>
-                  <td>
+                <@tr>
+                  <@td>
                     <div>
                       <#if orderItem.productId??>
                         &nbsp;<a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="${styles.button_default!}">${orderItem.productId}</a>
@@ -81,50 +81,50 @@ under the License.
                       </#if>
                       ${orderItem.itemDescription}
                     </div>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnableQuantity")}"/>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <div><@ofbizCurrency amount=returnableItems.get(orderItem).get("returnablePrice") isoCode=orderHeader.currencyUom/></div>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <select name="returnReasonId_o_${rowCount}" class="selectBox">
                       <#list returnReasons as reason>
                         <option value="${reason.returnReasonId}">${reason.get("description",locale)?default(reason.returnReasonId)}</option>
                       </#list>
                     </select>
-                  </td>
-                  <td>
+                  </@td>
+                  <@td>
                     <select name="returnTypeId_o_${rowCount}" class="selectBox">
                       <#list returnTypes as type>
                         <option value="${type.returnTypeId}">${type.get("description",locale)?default(type.returnTypeId)}</option>
                       </#list>
                     </select>
-                  </td>
-                  <td align="right">
+                  </@td>
+                  <@td align="right">
                     <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');"/>
-                  </td>
-                </tr>
-                <tr><td colspan="6"><hr /></td></tr>
+                  </@td>
+                </@tr>
+                <@tr><@td colspan="6"><hr /></@td></@tr>
                 <#assign rowCount = rowCount + 1>
               </#if>
               </#list>
               <input type="hidden" name="_rowCount" value="${rowCount}"/>
-              <tr>
-                <td colspan="6"><div class="tableheadtext">${uiLabelMap.OrderSelectShipFromAddress}:</td>
-              </tr>
-              <tr><td colspan="6"><hr /></td></tr>
-              <tr>
-                <td colspan="6">
-                  <table cellspacing="1" cellpadding="2" width="100%">
+              <@tr>
+                <@td colspan="6"><div class="tableheadtext">${uiLabelMap.OrderSelectShipFromAddress}:</@td>
+              </@tr>
+              <@tr><@td colspan="6"><hr /></@td></@tr>
+              <@tr>
+                <@td colspan="6">
+                  <@table cellspacing="1" cellpadding="2" width="100%">
                     <#list shippingContactMechList as shippingContactMech>
                       <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
-                      <tr>
-                        <td align="right" width="1%" valign="top" nowrap="nowrap">
+                      <@tr>
+                        <@td align="right" width="1%" valign="top" nowrap="nowrap">
                           <input type="radio" name="originContactMechId" value="${shippingAddress.contactMechId}"/>
-                        </td>
-                        <td width="99%" valign="top" nowrap="nowrap">
+                        </@td>
+                        <@td width="99%" valign="top" nowrap="nowrap">
                           <div>
                             <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                             <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
@@ -136,22 +136,22 @@ under the License.
                             <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                             <a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonUpdate}]</a>
                           </div>
-                        </td>
-                      </tr>
+                        </@td>
+                      </@tr>
                     </#list>
-                  </table>
-                </td>
-              </tr>
-              <tr><td colspan="6"><hr /></td></tr>
-              <tr>
-                <td colspan="6" align="right">
+                  </@table>
+                </@td>
+              </@tr>
+              <@tr><@td colspan="6"><hr /></@td></@tr>
+              <@tr>
+                <@td colspan="6" align="right">
                   <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.OrderReturnSelectedItems}</a>
-                </td>
-              </tr>
+                </@td>
+              </@tr>
             <#else>
-              <tr><td colspan="6"><div>${uiLabelMap.OrderNoReturnableItems} ${uiLabelMap.CommonNbr}${orderId}</div></td></tr>
+              <@tr><@td colspan="6"><div>${uiLabelMap.OrderNoReturnableItems} ${uiLabelMap.CommonNbr}${orderId}</div></@td></@tr>
             </#if>
-          </table>
+          </@table>
         </form>
     </div>
 </div>

@@ -37,21 +37,21 @@ under the License.
 <#if !thisContentId?has_content>
     <#assign thisContentId=contentId!>
 </#if>
-<table border="0" width="100%" class="blogtext">
-    <tr>
-    <td width="40">&nbsp;</td>
-    <td>
+<@table border="0" width="100%" class="blogtext">
+    <@tr>
+    <@td width="40">&nbsp;</@td>
+    <@td>
     <@renderSubContentCache subContentId=thisContentId />
-    </td>
-    <td width="40" valign="bottom">
+    </@td>
+    <@td width="40" valign="bottom">
 <@checkPermission subContentId=subContentId targetOperation="HAS_USER_ROLE" contentPurposeList="RESPONSE" >
 <a class="tabButton" href="<@ofbizUrl>createforumresponse?contentIdTo=${subContentId}&amp;nodeTrailCsv=${nodeTrailCsv!}</@ofbizUrl>" >${uiLabelMap.EcommerceRespond}</a>
 </@checkPermission>
 <br />
 
-    </td>
-    </tr>
-</table>
+    </@td>
+    </@tr>
+</@table>
 <hr />
 <#--
 <@checkPermission mode="not-equals" subContentId=subContentId targetOperation="CONTENT_CREATE|CONTENT_RESPOND" contentPurposeList="RESPONSE" >
@@ -59,7 +59,7 @@ under the License.
 </@checkPermission>
 -->
 
-<table border="0" width="100%" class="tableheadtext">
+<@table border="0" width="100%" class="tableheadtext">
 <!-- Note that the "...When" arguments in the loopSubContent must be compatible with those in
      any embedded transformSubContent, because it will assume that the first node has already
      had its conditions checked.
@@ -90,13 +90,13 @@ under the License.
             </#if>
         </#if>
         <#if content??>
-  <tr>
-  <td>
+  <@tr>
+  <@td>
         ${indentFill}
         <a class="tabButton" href="<@ofbizUrl>ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv!}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
                      ${content.contentId!}-${content.description!}<br />
-  </td>
-  </tr>
+  </@td>
+  </@tr>
         </#if>
     </#if>
     </@traverseSubContentCache>
@@ -107,7 +107,7 @@ under the License.
 </@wrapSubContentCache >
 -->
 
-</table>
+</@table>
 </div>
 </div>
 
@@ -142,19 +142,19 @@ ${uiLabelMap.CommonDescription}[${currentValue.contentId!}]:${description}
     <#assign csv = "">
     <#assign counter = 0>
     <#assign len = trail?size>
-    <table border="0" cellspacing="4">
+    <@table border="0" cellspacing="4">
     <#list trail as webSitePublishPoint>
-        <#if counter < len && startIndex <= counter >
-       <tr>
-         <td>
+        <#if (counter < len) && (startIndex <= counter)>
+       <@tr openOnly=true />
+         <@td>
             ${indent}
             <a class="tabButton" href="<@ofbizUrl>main?pubPt=${webSitePublishPoint.contentId!}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${webSitePublishPoint.templateTitle!}
                 <#assign indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
-         [${webSitePublishPoint.contentId!}]</td>
+         [${webSitePublishPoint.contentId!}]</@td>
         </#if>
-       </tr>
+       <@tr closeOnly=true />
         <#assign counter = counter + 1>
-    <#if 20 < counter > <#break/></#if>
+    <#if (20 < counter)> <#break/></#if>
     </#list>
-    </table>
+    </@table>
 </#macro>

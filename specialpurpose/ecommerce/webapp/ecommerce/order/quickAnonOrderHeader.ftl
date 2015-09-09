@@ -21,10 +21,10 @@ under the License.
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
+<@table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <@tr>
     <#-- left side -->
-    <td width="50%" valign="top">
+    <@td width="50%" valign="top">
 
     <div class="screenlet">
         <div class="screenlet-title-bar">
@@ -36,75 +36,75 @@ under the License.
             <div class="h3">${uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderHeader.orderId}</a>&nbsp;</#if>${uiLabelMap.CommonInformation}</div>
         </div>
         <div class="screenlet-body">
-            <table width="100%" border="0" cellpadding="1">
+            <@table width="100%" border="0" cellpadding="1">
                 <#-- placing customer information -->
                 <#if localOrderReadHelper?? && orderHeader?has_content>
                   <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
                   <#if displayParty?has_content>
                       <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
                   </#if>
-                  <tr>
-                    <td align="right" valign="top" width="15%">
+                  <@tr>
+                    <@td align="right" valign="top" width="15%">
                       <div>&nbsp;<b>${uiLabelMap.PartyName}</b></div>
-                    </td>
-                    <td width="5">&nbsp;</td>
-                    <td valign="top" width="80%">
+                    </@td>
+                    <@td width="5">&nbsp;</@td>
+                    <@td valign="top" width="80%">
                       <div>
                         ${(displayPartyNameResult.fullName)?default("[Name Not Found]")}
                       </div>
-                    </td>
-                  </tr>
-                  <tr><td colspan="7"><hr /></td></tr>
+                    </@td>
+                  </@tr>
+                  <@tr><@td colspan="7"><hr /></@td></@tr>
                 </#if>
                 <#-- order status information -->
-                <tr>
-                  <td align="right" valign="top" width="15%">
+                <@tr>
+                  <@td align="right" valign="top" width="15%">
                     <div>&nbsp;<b>${uiLabelMap.CommonStatus}</b></div>
-                  </td>
-                  <td width="5">&nbsp;</td>
-                  <td valign="top" width="80%">
+                  </@td>
+                  <@td width="5">&nbsp;</@td>
+                  <@td valign="top" width="80%">
                     <#if orderHeader?has_content>
                       <div>${localOrderReadHelper.getStatusString(locale)}</div>
                     <#else>
                       <div><b>${uiLabelMap.OrderNotYetOrdered}</b></div>
                     </#if>
-                  </td>
-                </tr>
+                  </@td>
+                </@tr>
                 <#-- ordered date -->
                 <#if orderHeader?has_content>
-                  <tr><td colspan="7"><hr /></td></tr>
-                  <tr>
-                    <td align="right" valign="top" width="15%">
+                  <@tr><@td colspan="7"><hr /></@td></@tr>
+                  <@tr>
+                    <@td align="right" valign="top" width="15%">
                       <div>&nbsp;<b>${uiLabelMap.CommonDate}</b></div>
-                    </td>
-                    <td width="5">&nbsp;</td>
-                    <td valign="top" width="80%">
+                    </@td>
+                    <@td width="5">&nbsp;</@td>
+                    <@td valign="top" width="80%">
                       <div>${orderHeader.orderDate.toString()}</div>
-                    </td>
-                  </tr>
+                    </@td>
+                  </@tr>
                 </#if>
                 <#if distributorId??>
-                  <tr><td colspan="7"><hr /></td></tr>
-                  <tr>
-                    <td align="right" valign="top" width="15%">
+                  <@tr><@td colspan="7"><hr /></@td></@tr>
+                  <@tr>
+                    <@td align="right" valign="top" width="15%">
                       <div>&nbsp;<b>${uiLabelMap.OrderDistributor}</b></div>
-                    </td>
-                    <td width="5">&nbsp;</td>
-                    <td valign="top" width="80%">
+                    </@td>
+                    <@td width="5">&nbsp;</@td>
+                    <@td valign="top" width="80%">
                       <div>${distributorId}</div>
-                    </td>
-                  </tr>
+                    </@td>
+                  </@tr>
                 </#if>
-            </table>
+            </@table>
         </div>
     </div>
         ${screens.render("component://ecommerce/widget/OrderScreens.xml#quickAnonPaymentInformation")}
-    </td>
+    </@td>
 
-    <td width="1">&nbsp;&nbsp;</td>
+    <@td width="1">&nbsp;&nbsp;</@td>
     <#-- right side -->
 
-    <td width="50%" valign="top">
+    <@td width="50%" valign="top">
       <#if orderItemShipGroups?has_content>
 
     <div class="screenlet">
@@ -123,14 +123,14 @@ under the License.
                   <#assign groupNumber = groupIdx + 1>
                 </#if>
 
-              <table width="100%" border="0" cellpadding="1">
+              <@table width="100%" border="0" cellpadding="1">
                 <#if shippingAddress?has_content>
-                  <tr>
-                    <td align="right" valign="top" width="15%">
+                  <@tr>
+                    <@td align="right" valign="top" width="15%">
                       <div>&nbsp;<b>${uiLabelMap.OrderDestination}</b> [${groupNumber}]</div>
-                    </td>
-                    <td width="5">&nbsp;</td>
-                    <td valign="top" width="80%">
+                    </@td>
+                    <@td width="5">&nbsp;</@td>
+                    <@td valign="top" width="80%">
                       <div>
                         <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br /></#if>
                         <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${shippingAddress.attnName}<br /></#if>
@@ -140,14 +140,14 @@ under the License.
                         ${shippingAddress.postalCode!}<br />
                         ${shippingAddress.countryGeoId!}
                       </div>
-                    </td>
-                  </tr>
-                  <tr><td colspan="7"><hr /></td></tr>
+                    </@td>
+                  </@tr>
+                  <@tr><@td colspan="7"><hr /></@td></@tr>
                 </#if>
-                  <tr><td colspan="7">
+                  <@tr><@td colspan="7">
                      ${screens.render("component://ecommerce/widget/OrderScreens.xml#quickAnonOptionSettings")}
-                  </td></tr>
-              </table>
+                  </@td></@tr>
+              </@table>
 
                 <#assign groupIdx = groupIdx + 1>
             </#list><#-- end list of orderItemShipGroups -->
@@ -155,6 +155,6 @@ under the License.
     </div>
 
       </#if>
-    </td>
-  </tr>
-</table>
+    </@td>
+  </@tr>
+</@table>

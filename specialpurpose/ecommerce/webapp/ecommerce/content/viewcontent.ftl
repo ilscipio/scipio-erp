@@ -59,13 +59,13 @@ under the License.
 <#assign dummy=Static["org.ofbiz.base.util.Debug"].logInfo("in viewcontent, subContent:" + subContent, "")/>
 <br />
 <h1>${uiLabelMap.EcommerceContentFor} [${subContentId}] ${subContent.contentName!} - ${subContent.description!}:</h1><br />
-<table border="0" class="blogtext">
-    <tr>
-    <td width="40">&nbsp;</td>
-    <td>
+<@table border="0" class="blogtext">
+    <@tr>
+    <@td width="40">&nbsp;</@td>
+    <@td>
         <@renderSubContentCache subContentId=subContentId />
-    </td>
-    <td width="40" valign="bottom">
+    </@td>
+    <@td width="40" valign="bottom">
 <#--
 <@wrapSubContentCache subContentId=subContentId wrapTemplateId="WRAP_VIEW" >
 </@wrapSubContentCache >
@@ -75,18 +75,18 @@ under the License.
 -->
 <br />
 
-    </td>
-    </tr>
+    </@td>
+    </@tr>
     <#assign thisContentId = subContentId/>
     <@loopSubContent contentId=thisContentId viewIndex=0 viewSize=9999 contentAssocTypeId="RELATED_CONTENT">
       <#assign thisNodeTrailCsv = nodeTrailCsv />
-      <tr>
-        <td colspan="3" align="right">
+      <@tr>
+        <@td colspan="3" align="right">
           <a class="tabButton" href="<@ofbizUrl>viewcontent?contentId=${subContentId}&amp;nodeTrailCsv=${thisNodeTrailCsv!}</@ofbizUrl>" >${content.contentName!}</a>
-        </td>
-      </tr>
+        </@td>
+      </@tr>
     </@loopSubContent>
-</table>
+</@table>
 <hr />
 <#--
 <@checkPermission mode="not-equals" subContentId=subContentId targetOperation="CONTENT_CREATE|CONTENT_RESPOND" contentPurposeList="RESPONSE" >
@@ -103,16 +103,16 @@ under the License.
     <#local csv = "">
     <#local counter = 0>
     <#local len = trail?size>
-    <table border="0" cellspacing="4">
+    <@table border="0" cellspacing="4">
     <#list trail as content>
-      <#if counter < (len - endIndexOffset) && startIndex <= counter >
+      <#if (counter < (len - endIndexOffset)) && (startIndex <= counter)>
         <#if 0 < counter >
             <#local csv = csv + ","/>
         </#if>
         <#local csv = csv + content.contentId/>
-        <#if counter < len && startIndex <= counter >
-       <tr>
-         <td>
+        <#if (counter < len) && (startIndex <= counter)>
+       <@tr openOnly=true />
+         <@td openOnly=true />
             ${indent}
             <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
               <a class="tabButton" href="<@ofbizUrl>showcontenttree?contentId=${content.contentId!}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName!}
@@ -126,11 +126,11 @@ under the License.
               <a class="tabButton" href="<@ofbizUrl>searchContent?siteId=${siteId!}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonSearch}</a>
             </#if>
         </#if>
-         </td>
-       </tr>
+         <@td closeOnly=true />
+       <@tr closeOnly=true />
       </#if>
       <#local counter = counter + 1>
-    <#if 20 < counter > <#break/></#if>
+    <#if (20 < counter)> <#break/></#if>
     </#list>
-    </table>
+    </@table>
 </#macro>

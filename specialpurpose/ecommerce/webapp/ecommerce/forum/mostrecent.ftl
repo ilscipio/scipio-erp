@@ -28,47 +28,47 @@ under the License.
     }
 </script>
 
-<table width="100%" border="0">
+<@table width="100%" border="0">
 
  <form name="mostrecent" mode="post" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
   <#assign row=0/>
   <#list entityList as content>
     <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_PUBLISH" subContentId=forumId >
-        <tr>
-          <td> ${uiLabelMap.CommonId}:${content.contentId} </td>
-          <td> ${uiLabelMap.CommonName}:${content.contentName} </td>
+        <@tr openOnly=true />
+          <@td> ${uiLabelMap.CommonId}:${content.contentId} </@td>
+          <@td> ${uiLabelMap.CommonName}:${content.contentName} </@td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
-          <td>
+          <@td>
   <a class="tabButton" href="<@ofbizUrl>showforumresponse?contentId=${content.contentId}&nodeTrailCsv=${nodeTrailCsv!}</@ofbizUrl>" >${uiLabelMap.CommonView}</a>
-          </td>
-          <td>
+          </@td>
+          <@td>
           ${uiLabelMap.CommonSubmitted}:
           <input type="radio" name="statusId_o_${row}" value="CTNT_IN_PROGRESS" checked="checked" />
-          </td>
-          <td>
+          </@td>
+          <@td>
           ${uiLabelMap.CommonPublish}:
           <input type="radio" name="statusId_o_${row}" value="CTNT_PUBLISHED"/>
-          </td>
-        </tr>
+          </@td>
+        <@tr closeOnly=true />
           <input type="hidden" name="contentId_o_${row}" value="${content.contentId}"/>
-        <tr>
-          <td colspan="5">
+        <@tr>
+          <@td colspan="5">
           ${uiLabelMap.CommonContent}:<br />
             <@renderSubContentCache subContentId=content.contentId/>
-          </td>
-        </tr>
+          </@td>
+        </@tr>
         
         <#assign row = row + 1/>
       </@injectNodeTrailCsv >
     </@checkPermission >
   </#list>
-    <#if 0 < entityList?size >
-        <tr>
-          <td colspan="5">
+    <#if (0 < entityList?size)>
+        <@tr>
+          <@td colspan="5">
 <div class="smallSubmit"><a href="javascript:submitRows('${row?default(0)}')">${uiLabelMap.CommonUpdate}</a></div>
-          </td>
-        </tr>
+          </@td>
+        </@tr>
     </#if>
           <input type="hidden" name="forumId" value="${forumId}"/>
  </form>
-</table>
+</@table>

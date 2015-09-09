@@ -28,10 +28,10 @@ under the License.
   &nbsp;<a href="javascript:document.editpersonform.submit()" class="button">${uiLabelMap.CommonSave}</a>
   <p/>    
   <input type="hidden" name="partyId" value="${person.partyId!}" />
-  <table width="90%" border="0" cellpadding="2" cellspacing="0">
-  <tr>
-    <td align="right">${uiLabelMap.CommonTitle}</td>
-    <td>
+  <@table width="90%" border="0" cellpadding="2" cellspacing="0">
+  <@tr>
+    <@td align="right">${uiLabelMap.CommonTitle}</@td>
+    <@td>
       <select name="personalTitle" class="selectBox">
         <#if personData.personalTitle?has_content >
           <option>${personData.personalTitle}</option>
@@ -44,41 +44,41 @@ under the License.
         <option>${uiLabelMap.CommonTitleMs}</option>
         <option>${uiLabelMap.CommonTitleDr}</option>
       </select>
-    </td>
-  </tr>
-  <tr>
-    <td align="right">${uiLabelMap.PartyFirstName}</td>
-      <td>
+    </@td>
+  </@tr>
+  <@tr>
+    <@td align="right">${uiLabelMap.PartyFirstName}</@td>
+      <@td>
         <input type="text" class='inputBox' size="30" maxlength="30" name="firstName" value="${personData.firstName!}"/>
-      *</td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyMiddleInitial}</td>
-      <td>
+      *</@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyMiddleInitial}</@td>
+      <@td>
         <input type="text" class='inputBox' size="4" maxlength="4" name="middleName" value="${personData.middleName!}"/>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyLastName}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyLastName}</@td>
+      <@td>
         <input type="text" class='inputBox' size="30" maxlength="30" name="lastName" value="${personData.lastName!}"/>
-      *</td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartySuffix}</td>
-      <td>
+      *</@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartySuffix}</@td>
+      <@td>
         <input type="text" class='inputBox' size="10" maxlength="30" name="suffix" value="${personData.suffix!}"/>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyNickName}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyNickName}</@td>
+      <@td>
         <input type="text" class='inputBox' size="30" maxlength="60" name="nickname" value="${personData.nickname!}"/>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyGender}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyGender}</@td>
+      <@td>
         <select name="gender" class='selectBox'>
           <#if personData.gender?has_content >
             <option value="${personData.gender}">
@@ -92,37 +92,37 @@ under the License.
           <option value="M">${uiLabelMap.CommonMale}</option>
           <option value="F">${uiLabelMap.CommonFemale}</option>
         </select>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyBirthDate}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyBirthDate}</@td>
+      <@td>
         <input type="text" class='inputBox' size="11" maxlength="20" name="birthDate" value="${(personData.birthDate.toString())!}"/>
         <div>${uiLabelMap.CommonFormatDate}</div>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyHeight}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyHeight}</@td>
+      <@td>
         <input type="text" class='inputBox' size="30" maxlength="60" name="height" value="${personData.height!}"/>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyWeight}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyWeight}</@td>
+      <@td>
         <input type="text" class='inputBox' size="30" maxlength="60" name="weight" value="${personData.weight!}"/>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
 
-    <tr>
-      <td align="right">${uiLabelMap.PartyMaidenName}</td>
-      <td>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyMaidenName}</@td>
+      <@td>
         <input type="text" class='inputBox' size="30" maxlength="60" name="mothersMaidenName" value="${personData.mothersMaidenName!}"/>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyMaritalStatus}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyMaritalStatus}</@td>
+      <@td>
         <select name="maritalStatus" class='selectBox'>
           <#if personData.maritalStatus?has_content>
              <option value="${personData.maritalStatus}">
@@ -138,40 +138,40 @@ under the License.
           <option value="M">${uiLabelMap.PartyMarried}</option>
           <option value="D">${uiLabelMap.PartyDivorced}</option>
         </select>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartySocialSecurityNumber}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartySocialSecurityNumber}</@td>
+      <@td>
         <input type="text" class='inputBox' size="30" maxlength="60" name="socialSecurityNumber" value="${personData.socialSecurityNumber!}"/>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyPassportNumber}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyPassportNumber}</@td>
+      <@td>
         <input type="text" class='inputBox' size="30" maxlength="60" name="passportNumber" value="${personData.passportNumber!}"/>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyPassportExpireDate}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyPassportExpireDate}</@td>
+      <@td>
         <input type="text" class='inputBox' size="11" maxlength="20" name="passportExpireDate" value="${personData.passportExpireDate!}"/>
         <div>${uiLabelMap.CommonFormatDate}</div>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.PartyTotalYearsWorkExperience}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.PartyTotalYearsWorkExperience}</@td>
+      <@td>
         <input type="text" class='inputBox' size="30" maxlength="60" name="totalYearsWorkExperience" value="${personData.totalYearsWorkExperience!}"/>
-      </td>
-    </tr>
-    <tr>
-      <td align="right">${uiLabelMap.CommonComment}</td>
-      <td>
+      </@td>
+    </@tr>
+    <@tr>
+      <@td align="right">${uiLabelMap.CommonComment}</@td>
+      <@td>
         <input type="text" class='inputBox' size="30" maxlength="60" name="comments" value="${personData.comments!}"/>
-      </td>
-    </tr>
-</table>
+      </@td>
+    </@tr>
+</@table>
 </div>
 </form>
 &nbsp;<a href='<@ofbizUrl>${donePage}</@ofbizUrl>' class="button">${uiLabelMap.CommonGoBack}</a>

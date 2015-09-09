@@ -30,29 +30,29 @@ under the License.
         </#if>
         <input type="hidden" name="webSiteId" value="${context.webSiteId!}">
       <#if !cancel??>
-        <table>
-          <tr>
-            <td>${uiLabelMap.CommonYouremail}:</td>
-            <td><input type="text" name="sendFrom" size="30" /></td>
-          </tr>
-          <tr>
-            <td>${uiLabelMap.CommonEmailTo}:</td>
-            <td><input type="text" name="sendTo" size="30" /></td>
-          </tr>
-          <tr>
-            <td colspan="2" align="center">${uiLabelMap.CommonMessage}</td>
-          </tr>
-          <tr>
-            <td colspan="2" align="center">
+        <@table>
+          <@tr>
+            <@td>${uiLabelMap.CommonYouremail}:</@td>
+            <@td><input type="text" name="sendFrom" size="30" /></@td>
+          </@tr>
+          <@tr>
+            <@td>${uiLabelMap.CommonEmailTo}:</@td>
+            <@td><input type="text" name="sendTo" size="30" /></@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2" align="center">${uiLabelMap.CommonMessage}</@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2" align="center">
               <textarea cols="40"  rows="5" name="message"></textarea>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2" align="center">
+            </@td>
+          </@tr>
+          <@tr>
+            <@td colspan="2" align="center">
               <input type="submit" value="${uiLabelMap.CommonSend}" />
-            </td>
-          </tr>
-        </table>
+            </@td>
+          </@tr>
+        </@table>
       <#else>
         <script language="JavaScript" type="text/javascript">
         <!-- //

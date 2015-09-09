@@ -23,39 +23,39 @@ under the License.
     </div>
     <div class="screenlet-body">
        <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
-        <table width="100%" cellpadding="1" cellspacing="0" border="0">
-          <tr>
-            <td width="30%">
+        <@table width="100%" cellpadding="1" cellspacing="0" border="0">
+          <@tr>
+            <@td width="30%">
               <div><b>${uiLabelMap.ProductProductName}</b></div>
-            </td>
-            <td width="5">&nbsp;</td>
-            <td width="45%">
+            </@td>
+            <@td width="5">&nbsp;</@td>
+            <@td width="45%">
               <div><b>${uiLabelMap.CommonDescription}</b></div>
-            </td>
-            <td width="5">&nbsp;</td>
-            <td width="20%">&nbsp;</td>
-          </tr>
+            </@td>
+            <@td width="5">&nbsp;</@td>
+            <@td width="20%">&nbsp;</@td>
+          </@tr>
           <#list supplierProductList as supplierProduct>
             <#assign product = supplierProduct.getRelatedOne("Product", true)/>
-            <tr><td colspan="5"><hr /></td></tr>
-            <tr>
-              <td>
+            <@tr><@td colspan="5"><hr /></@td></@tr>
+            <@tr>
+              <@td>
                 <div>${(product.productName)!}</div>
-              </td>
-              <td width="5">&nbsp;</td>
-              <td>
+              </@td>
+              <@td width="5">&nbsp;</@td>
+              <@td>
                 <div>${(product.description)!}</div>
-              </td>
-              <td width="5">&nbsp;</td>
-              <td align="right">
+              </@td>
+              <@td width="5">&nbsp;</@td>
+              <@td align="right">
                 <a href="<@ofbizUrl>digitalproductedit?productId=${supplierProduct.productId}&amp;currencyUomId=${supplierProduct.currencyUomId}&amp;minimumOrderQuantity=${supplierProduct.minimumOrderQuantity}&amp;availableFromDate=${supplierProduct.availableFromDate}</@ofbizUrl>" class="${styles.button_default!}">Edit</a>
-              </td>
-            </tr>
+              </@td>
+            </@tr>
           </#list>
           <#if !supplierProductList?has_content>
-            <tr><td colspan="5"><@resultMsg>${uiLabelMap.EcommerceNoDigitalProductsFound}</@resultMsg></td></tr>
+            <@tr><@td colspan="5"><@resultMsg>${uiLabelMap.EcommerceNoDigitalProductsFound}</@resultMsg></@td></@tr>
           </#if>
-        </table>
+        </@table>
     </div>
 </div>
 

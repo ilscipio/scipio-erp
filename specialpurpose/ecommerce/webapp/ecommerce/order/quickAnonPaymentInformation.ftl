@@ -125,11 +125,11 @@ function getPaymentInformation() {
             <input type="hidden" name="contactMechId" value="${session.getAttribute("billingContactMechId")!}"/>
           </#if>
 
-          <table width="100%" border="0" cellpadding="1" cellspacing="0">
-              <tr><td colspan="3"><div class="errorMessage" id="noPaymentMethodSelectedError"></div></td></tr>
-              <tr>
-                 <td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.OrderSelectPaymentMethod}</div></td>
-                 <td colspan="2">
+          <@table width="100%" border="0" cellpadding="1" cellspacing="0">
+              <@tr><@td colspan="3"><div class="errorMessage" id="noPaymentMethodSelectedError"></div></@td></@tr>
+              <@tr>
+                 <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.OrderSelectPaymentMethod}</div></@td>
+                 <@td colspan="2">
                    <select name="paymentMethodTypeOptionList" class="selectBox"  onchange="javascript:getPaymentInformation();">
                        <option value="none">Select One</option>
                      <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
@@ -142,21 +142,21 @@ function getPaymentInformation() {
                        <option value="EXT_OFFLINE" <#if (parameters.paymentMethodTypeId?default("") == "EXT_OFFLINE")> selected="selected"</#if>>${uiLabelMap.OrderPaymentOfflineCheckMoney}</option>
                      </#if>
                    </select>
-                 </td>
-              </tr>
-              <tr><td nowrap="nowrap" colspan="3"><div id="paymentInfoSection"></div></td></tr>
-              <tr><td colspan="3"><hr /></td></tr>
+                 </@td>
+              </@tr>
+              <@tr><@td nowrap="nowrap" colspan="3"><div id="paymentInfoSection"></div></@td></@tr>
+              <@tr><@td colspan="3"><hr /></@td></@tr>
               <#-- gift card fields -->
               <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-              <tr>
-                <td width='26%' nowrap="nowrap" align="right">
+              <@tr>
+                <@td width='26%' nowrap="nowrap" align="right">
                   <input type="checkbox" id="addGiftCard" name="addGiftCard" value="Y" onclick="javascript:getGCInfo();"/>
-                </td>
-                <td colspan="2" nowrap="nowrap"><div>${uiLabelMap.AccountingCheckGiftCard}</div></td>
-              </tr>
-              <tr><td colspan="3"><div id="giftCardSection"></div></td></tr>
+                </@td>
+                <@td colspan="2" nowrap="nowrap"><div>${uiLabelMap.AccountingCheckGiftCard}</div></@td>
+              </@tr>
+              <@tr><@td colspan="3"><div id="giftCardSection"></div></@td></@tr>
               </#if>
-          </table>
+          </@table>
     </div>
 </div>
 </form>

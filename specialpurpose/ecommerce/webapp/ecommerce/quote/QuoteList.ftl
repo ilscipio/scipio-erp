@@ -20,67 +20,67 @@ under the License.
 <div class="screenlet">
     <h3>${uiLabelMap.EcommerceQuoteHistory}</h3>
     <div class="screenlet-body">
-        <table>
-            <tr>
-                <td width="10%">
+        <@table>
+            <@tr>
+                <@td width="10%">
                     <div><span style="white-space: nowrap;">${uiLabelMap.OrderQuote} ${uiLabelMap.CommonNbr}</span></div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="20%">
+                </@td>
+                <@td width="10">&nbsp;</@td>
+                <@td width="20%">
                     <div>${uiLabelMap.CommonName}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="40%">
+                </@td>
+                <@td width="10">&nbsp;</@td>
+                <@td width="40%">
                     <div>${uiLabelMap.CommonDescription}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="10%">
+                </@td>
+                <@td width="10">&nbsp;</@td>
+                <@td width="10%">
                     <div>${uiLabelMap.CommonStatus}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="20%">
+                </@td>
+                <@td width="10">&nbsp;</@td>
+                <@td width="20%">
                     <div>${uiLabelMap.OrderOrderQuoteIssueDate}</div>
                     <div>${uiLabelMap.CommonValidFromDate}</div>
                     <div>${uiLabelMap.CommonValidThruDate}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="10">&nbsp;</td>
-            </tr>
+                </@td>
+                <@td width="10">&nbsp;</@td>
+                <@td width="10">&nbsp;</@td>
+            </@tr>
             <#list quoteList as quote>
                 <#assign status = quote.getRelatedOne("StatusItem", true)>
                 
-                <tr>
-                    <td>
+                <@tr>
+                    <@td>
                         <div>${quote.quoteId}</div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td>
+                    </@td>
+                    <@td width="10">&nbsp;</@td>
+                    <@td>
                         <div>${quote.quoteName!}</div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td>
+                    </@td>
+                    <@td width="10">&nbsp;</@td>
+                    <@td>
                         <div>${quote.description!}</div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td>
+                    </@td>
+                    <@td width="10">&nbsp;</@td>
+                    <@td>
                         <div>${status.get("description",locale)}</div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td>
+                    </@td>
+                    <@td width="10">&nbsp;</@td>
+                    <@td>
                         <div><span style="white-space: nowrap;">${quote.issueDate!}</span></div>
                         <div><span style="white-space: nowrap;">${quote.validFromDate!}</span></div>
                         <div><span style="white-space: nowrap;">${quote.validThruDate!}</span></div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td align="right">
+                    </@td>
+                    <@td width="10">&nbsp;</@td>
+                    <@td align="right">
                         <a href="<@ofbizUrl>ViewQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonView}</a>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                </tr>
+                    </@td>
+                    <@td width="10">&nbsp;</@td>
+                </@tr>
             </#list>
             <#if !quoteList?has_content>
-                <tr><td colspan="9"><@resultMsg>${uiLabelMap.OrderNoQuoteFound}</@resultMsg></td></tr>
+                <@tr><@td colspan="9"><@resultMsg>${uiLabelMap.OrderNoQuoteFound}</@resultMsg></@td></@tr>
             </#if>
-        </table>
+        </@table>
     </div>
 </div>

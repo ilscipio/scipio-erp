@@ -19,43 +19,42 @@ under the License.
 
 
 <form method="post"  action="<@ofbizUrl>searchContent</@ofbizUrl>"  name="searchQuery">
-<table border="0" cellpadding="2" cellspacing="0">
+<@table border="0" cellpadding="2" cellspacing="0">
 
-<tr>
-<td width="20%" align="right">
+<@tr>
+<@td width="20%" align="right">
 <span class="tableheadtext">${uiLabelMap.EcommerceEnterQueryParameters}</span>
-</td>
-<td>&nbsp;</td>
-<td width="80%">
+</@td>
+<@td>&nbsp;</@td>
+<@td width="80%">
 <input type="text" class="inputBox" name="queryLine" size="60"/>
-</td>
-</tr>
-<tr>
-
+</@td>
+</@tr>
 
 <!-- category form -->
-<tr>
-  <table>
-    <tr>
-      <td align="right" valign="middle">
+<@tr>
+  <@td colspan="3">
+  <@table>
+    <@tr>
+      <@td align="right" valign="middle">
         <div>${uiLabelMap.ProductFeatures}:</div>
-      </td>
-      <td align="right" valign="middle">
+      </@td>
+      <@td align="right" valign="middle">
         <div>
           ${uiLabelMap.CommonAll} <input type="radio" name="any_or_all" value="all" checked="checked" />
           ${uiLabelMap.CommonAny} <input type="radio" name="any_or_all" value="any" />
         </div>
-      </td>
-    </tr>
+      </@td>
+    </@tr>
     <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-      <tr>
-        <td align="right" valign="middle">
+      <@tr>
+        <@td align="right" valign="middle">
           <div>${(productFeatureType.get("description",locale))!}:</div>
-        </td>
-        <td valign="middle">
+        </@td>
+        <@td valign="middle">
           <div>
             <select class="selectBox" name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
@@ -64,15 +63,15 @@ under the License.
               </#list>
             </select>
           </div>
-        </td>
-      </tr>
+        </@td>
+      </@tr>
     </#list>
     <#if searchConstraintStrings?has_content>
-      <tr>
-        <td align="right" valign="top">
+      <@tr>
+        <@td align="right" valign="top">
           <div>${uiLabelMap.ProductLastSearch}:</div>
-        </td>
-        <td valign="top">
+        </@td>
+        <@td valign="top">
             <#list searchConstraintStrings as searchConstraintString>
                 <div>&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
@@ -81,18 +80,23 @@ under the License.
               ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked="checked" />
               ${uiLabelMap.CommonRefineSearch}<input type="radio" name="clearSearch" value="N" />
             </div>
-        </td>
-      </tr>
+        </@td>
+      </@tr>
     </#if>
-<td width="20%" align="right">
-&nbsp;</td>
-<td>&nbsp;</td>
-<td width="80%" colspan="4">
+  </@table>
+  </@td>
+</@tr>    
+    
+<@tr>    
+<@td width="20%" align="right">
+&nbsp;</@td>
+<@td>&nbsp;</@td>
+<@td width="80%" colspan="4">
 <input type="submit" class="smallSubmit" name="submitButton" value="${uiLabelMap.CommonQuery}"/>
-</td>
+</@td>
 
-</tr>
-</table>
+</@tr>
+</@table>
 </form>
 
 
@@ -103,7 +107,7 @@ under the License.
   <#assign dummy=Static["org.ofbiz.base.util.Debug"].logInfo("in listSiteIds, contentId:" + contentId,"")/>
   <#assign dummy=Static["org.ofbiz.base.util.Debug"].logInfo("in listSiteIds, indentIndex:" + indentIndex,"")/>
   <#local indent = ""/>
-  <#if 0 < indentIndex >
+  <#if (0 < indentIndex)>
     <#list 0..(indentIndex - 1) as idx>
       <#local indent = indent + "&nbsp;&nbsp;"/>
     </#list>

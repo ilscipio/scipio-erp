@@ -77,28 +77,26 @@ under the License.
         style="position: relative; margin-top: ${height}px;"
       </#if>
       class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
-      <#if (numCol?int > 1)>
-        <table>
-      </#if>
+
+      <@table wrapIf=(numCol?int > 1)>
+
         <#list productIds as productId>
           <#if (numCol?int == 1)>
             ${setRequestAttribute("optProductId", productId)}
             ${setRequestAttribute("listIndex", productId_index)}
             ${screens.render(productsummaryScreen)}
           <#else>
-              <#if (tabCol?int = 1)><tr></#if>
-                  <td>
+              <#if (tabCol?int = 1)><@tr openOnly=true /></#if>
+                  <@td>
                       ${setRequestAttribute("optProductId", productId)}
                       ${setRequestAttribute("listIndex", productId_index)}
                       ${screens.render(productsummaryScreen)}
-                  </td>
-              <#if (tabCol?int = numCol)></tr></#if>
+                  </@td>
+              <#if (tabCol?int = numCol)><@tr closeOnly=true /></#if>
               <#assign tabCol = tabCol+1><#if (tabCol?int > numCol)><#assign tabCol = 1></#if>
            </#if>
         </#list>
-      <#if (numCol?int > 1)>
-        </table>
-      </#if>
+      </@table>
       </div>
     <@paginationControls/>
 <#else>

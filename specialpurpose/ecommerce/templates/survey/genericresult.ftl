@@ -22,7 +22,7 @@ under the License.
 <h1>${survey.description!}</h1>
 <br />
 
-<table width="100%" border="0" cellpadding="2" cellspacing="0">
+<@table width="100%" border="0" cellpadding="2" cellspacing="0">
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
 
     <#-- special formatting for select boxes -->
@@ -41,17 +41,17 @@ under the License.
       <#assign results = surveyResults.get(surveyQuestionAndAppl.surveyQuestionId)!>
     </#if>
 
-    <tr>
+    <@tr>
 
       <#-- seperator options -->
       <#if surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_TEXT">
-        <td colspan="5"><div>${surveyQuestionAndAppl.question!}</div></td>
+        <@td colspan="5"><div>${surveyQuestionAndAppl.question!}</div></@td>
       <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_LINE">
-        <td colspan="5"><hr /></td>
+        <@td colspan="5"><hr /></@td>
       <#else>
 
         <#-- standard question options -->
-        <td align='right' nowrap="nowrap">
+        <@td align='right' nowrap="nowrap">
           <#assign answerString = "answers">
           <#if (results._total?default(0) == 1)>
              <#assign answerString = "answer">
@@ -60,10 +60,10 @@ under the License.
           <#if surveyQuestionAndAppl.hint?has_content>
             <div>${surveyQuestionAndAppl.hint}</div>
           </#if>
-        </td>
-        <td width='1'>&nbsp;</td>
+        </@td>
+        <@td width='1'>&nbsp;</@td>
 
-        <td align="${align}">
+        <@td align="${align}">
           <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
             <#assign selectedOption = (answer.booleanResponse)?default("Y")>
             <div><span style="white-space: nowrap;">
@@ -118,9 +118,9 @@ under the License.
           <#else>
             <div>${uiLabelMap.EcommerceUnsupportedQuestionType}: ${surveyQuestionAndAppl.surveyQuestionTypeId}</div>
           </#if>
-        </td>
-        <td width="90%">&nbsp;</td>
+        </@td>
+        <@td width="90%">&nbsp;</@td>
       </#if>
-    </tr>
+    </@tr>
   </#list>
-</table>
+</@table>

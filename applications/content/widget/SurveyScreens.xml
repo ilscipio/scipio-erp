@@ -147,7 +147,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonSurveyDecorator">
                     <decorator-section name="body">
-                        <label style="h2">${uiLabelMap.PageTitleEditSurveyMultiResps} ${uiLabelMap.ContentSurveySurveyId} ${surveyId}</label>
+                        <label style="heading">${uiLabelMap.PageTitleEditSurveyMultiResps} ${uiLabelMap.ContentSurveySurveyId} ${surveyId}</label>
                         <iterate-section entry="surveyMultiResp" list="surveyMultiRespList">
                             <section>
                                 <widgets>
@@ -294,7 +294,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonSurveyDecorator">
                     <decorator-section name="body">
-                        <label style="h2">${uiLabelMap.PageTitleEditSurveyResponse}, ${uiLabelMap.ContentSurveyResponse}: ${parameters.surveyResponseId}, ${uiLabelMap.ContentSurveySurveyId}: ${surveyId}</label>
+                        <label style="heading">${uiLabelMap.PageTitleEditSurveyResponse}, ${uiLabelMap.ContentSurveyResponse}: ${parameters.surveyResponseId}, ${uiLabelMap.ContentSurveySurveyId}: ${surveyId}</label>
                         <platform-specific><html><html-template location="component://content/webapp/content/survey/EditSurveyResponse.ftl"/></html></platform-specific>
                         <include-form name="BuildSurveyResponseFromPdf" location="component://content/widget/survey/SurveyForms.xml"/>
                     </decorator-section>

@@ -1074,7 +1074,7 @@ under the License.
             </actions>
             <widgets>
                 <container>
-                    <label text="${uiLabelMap.ContentCompDocApprovalStatus}: ${statusItem.description}" style="h2"/>
+                    <label style="heading" text="${uiLabelMap.ContentCompDocApprovalStatus}: ${statusItem.description}"/>
                     <section>
                         <condition>
                             <and>

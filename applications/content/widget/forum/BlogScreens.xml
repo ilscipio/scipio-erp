@@ -92,7 +92,7 @@ under the License.
                             <widgets>
                                 <include-menu name="blogArt" location="component://content/widget/content/ContentMenus.xml"/>
                                 <include-menu name="blogArtSub" location="component://content/widget/content/ContentMenus.xml"/>
-                                <label style="h2" text="${blogContent.contentName}"/>
+                                <label style="heading" text="${blogContent.contentName}"/>
                                 <link style="h1" text=" [${blogContent.contentId}]" target="blogContent">
                                     <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
                                 </link>
@@ -224,7 +224,7 @@ under the License.
             <widgets>
                 <decorator-screen name="blogArtDecorator">
                     <decorator-section name="body">
-                        <label text="${blogEntry.contentName}: ${blogEntry.description}" style="h2"/>
+                        <label style="heading" text="${blogEntry.contentName}: ${blogEntry.description}"/>
                         <horizontal-separator/>
                         <container style="${styles.grid_large}6">
                             <label text="${uiLabelMap.ContentImage}"/>

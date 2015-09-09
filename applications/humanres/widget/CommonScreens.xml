@@ -199,8 +199,8 @@ under the License.
                                                 <container style="button-bar">
                                                     <link target="EditEmployment" text="${uiLabelMap.HumanResNewEmployment}" style="${styles.button_default}"/>
                                                 </container>
-                                                <label style="h2" text="${emplName.lastName},${emplName.firstName} ${emplName.middleName} [${emplName.partyId}] ${uiLabelMap.CommonFor}"></label>
-                                                <label style="h2" text="${orgName.groupName} [${orgName.partyId}]"></label>
+                                                <label style="heading" text="${emplName.lastName},${emplName.firstName} ${emplName.middleName} [${emplName.partyId}] ${uiLabelMap.CommonFor}"></label>
+                                                <label style="heading" text="${orgName.groupName} [${orgName.partyId}]"></label>
                                             </widgets>
                                         </section>
                                     </widgets>
@@ -241,7 +241,7 @@ under the License.
                                     </actions>
                                     <widgets>
                                         <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                                        <label style="h2" text="${uiLabelMap.HumanResPerfReview} [${perfReview.perfReviewId}] ${partyNameView.lastName} ${partyNameView.firstName} ${partyNameView.middleName}"></label>
+                                        <label style="heading" text="${uiLabelMap.HumanResPerfReview} [${perfReview.perfReviewId}] ${partyNameView.lastName} ${partyNameView.firstName} ${partyNameView.middleName}"></label>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -288,14 +288,14 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="partyId"/></not></condition>
                                     <widgets>
-                                        <container style="h2">
+                                        <container style="heading">
                                             <section>
                                                 <condition><not><if-empty field="lookupPerson"/></not></condition>
                                                 <widgets>
-                                                    <label style="h2" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} [${partyId}]"/>
+                                                    <label style="heading" text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} [${partyId}]"/>
                                                 </widgets>
                                                 <fail-widgets>
-                                                    <label style="h2" text="${uiLabelMap.HumanResNewEmployee}"/>
+                                                    <label style="heading" text="${uiLabelMap.HumanResNewEmployee}"/>
                                                 </fail-widgets>
                                             </section>
                                         </container>
@@ -346,7 +346,7 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="partyId"/></not></condition>
                                     <widgets>
-                                        <container style="h2">
+                                        <container style="heading">
                                             <section>
                                                 <condition>
                                                     <or>
@@ -358,7 +358,7 @@ under the License.
                                                     <label text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/>
                                                 </widgets>
                                                 <fail-widgets>
-                                                    <label style="h2" text="${uiLabelMap.PartyNewUser}"/>
+                                                    <label style="heading" text="${uiLabelMap.PartyNewUser}"/>
                                                 </fail-widgets>
                                             </section>
                                         </container>

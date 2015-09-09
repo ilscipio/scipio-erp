@@ -854,7 +854,7 @@ under the License.
                     </condition>
                     <widgets>
                         <screenlet padded="false">
-                            <label style="h2" text="${uiLabelMap.CommonSearchResults}"/>
+                            <label style="heading" text="${uiLabelMap.CommonSearchResults}"/>
                             <container id="search-results">
                                 <decorator-section-include name="search-results"/>
                             </container>

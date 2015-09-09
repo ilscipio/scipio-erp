@@ -59,13 +59,13 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="PartyClassificationTabBar"/>
+                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="PartyClassificationSideBar"/>
                             </widgets>
                         </section>
                     </decorator-section>

@@ -29,29 +29,29 @@ under the License.
       <input type="hidden" name="requirePasswordChange" value="Y"/>
       <input type="hidden" name="USERNAME" value="${username}"/>
       <input type="hidden" name="userTenantId" value="${tenantId!}"/>
-      <table cellspacing="0">
-        <tr>
-          <td class="label">${uiLabelMap.CommonUsername}</td>
-          <td>${username}</td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.CommonCurrentPassword}</td>
-          <td><input type="password" name="PASSWORD" value="" size="20"/></td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.CommonNewPassword}</td>
-          <td><input type="password" name="newPassword" value="" size="20"/></td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.CommonNewPasswordVerify}</td>
-          <td><input type="password" name="newPasswordVerify" value="" size="20"/></td>
-        </tr>
-        <tr>
+      <@table cellspacing="0">
+        <@tr>
+          <@td class="label">${uiLabelMap.CommonUsername}</@td>
+          <@@td>${username}</@td>
+        </@tr>
+        <@tr>
+          <@td class="label">${uiLabelMap.CommonCurrentPassword}</@td>
+          <@@td><input type="password" name="PASSWORD" value="" size="20"/></@td>
+        </@tr>
+        <@tr>
+          <td class="label">${uiLabelMap.CommonNewPassword}</@td>
+          <@td><input type="password" name="newPassword" value="" size="20"/></@td>
+        </@tr>
+        <@tr>
+          <td class="label">${uiLabelMap.CommonNewPasswordVerify}</@td>
+          <@td><input type="password" name="newPasswordVerify" value="" size="20"/></@td>
+        </@tr>
+        <@tr>
           <td colspan="2" align="center">
             <input type="submit" value="${uiLabelMap.CommonSubmit}"/>
-          </td>
-        </tr>
-      </table>
+          </@td>
+        </@tr>
+      </@table>
     </form>
 </@section>
 

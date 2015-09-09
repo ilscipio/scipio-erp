@@ -104,7 +104,7 @@ under the License.
             <widgets>
                    <container style="${styles.grid_row}">
                        <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                           <label style="h2" text="${uiLabelMap.OrderInfo}"/>
+                           <label style="heading" text="${uiLabelMap.OrderInfo}"/>
                            <include-screen name="orderactions"/>
                        </container>
                    </container>
@@ -474,7 +474,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderViewDecorator">
                     <decorator-section name="body">
-                        <label text="${uiLabelMap.OrderOrderHistory} #${orderId}" style="h2"/>
+                        <label style="heading" text="${uiLabelMap.OrderOrderHistory} #${orderId}"/>
                         <screenlet>
                             <container>
                                 <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.button_default}"/>

@@ -37,7 +37,7 @@ under the License.
                                         <include-menu name="RequirementTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                                     </widgets>
                                 </section>
-                                <label style="h2">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
+                                <label style="heading">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

@@ -70,7 +70,7 @@ under the License.
                                 <not><if-empty field="parameters.showList"/></not>
                             </condition>
                             <widgets>
-                                <label style="h2" text="${uiLabelMap.OrderRequirementsList}"/>
+                                <label style="heading" text="${uiLabelMap.OrderRequirementsList}"/>
                                 <include-form name="RequirementsList" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
                             </widgets>
                         </section>

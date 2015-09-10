@@ -74,7 +74,7 @@ under the License.
             <link target="EditDataResourceProductFeatures" name="EditDataResourceProductFeatures" target-window="_top" style="tabButton"/>
         </menu-item>
     </menu>
-    <menu name="dataresourceTopMenu" menu-container-style="button-bar tab-bar" default-selected-style="selected" type="simple" selected-menuitem-context-field-name="tabButtonItem">
+    <menu name="DataResourceButtonBar" menu-container-style="button-bar tab-bar" default-selected-style="selected" type="simple" selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="findDataResource" title="${uiLabelMap.CommonFind}">
             <link target="findDataResource"/>
         </menu-item>
@@ -82,6 +82,12 @@ under the License.
             <link target="navigateDataResource"/>
         </menu-item>
     </menu>
+    
+    <menu name="DataResourceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="DataResourceButtonBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="dataresource" menu-container-style="button-bar tab-bar" default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="editDataResource" title="${uiLabelMap.CommonEdit}">
             <condition>

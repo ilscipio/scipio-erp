@@ -29,6 +29,16 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="BlogSideBar" location="component://content/widget/content/ContentMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -61,8 +71,7 @@ under the License.
                                 <entity-one entity-name="Content" value-field="blogContent"/>
                             </actions>
                             <widgets>
-                                <include-menu name="blog" location="component://content/widget/content/ContentMenus.xml"/>
-                                <include-menu name="blogSub" location="component://content/widget/content/ContentMenus.xml"/>
+                                <include-menu name="BlogSubTabBar" location="component://content/widget/content/ContentMenus.xml"/>
                                 <label style="${styles.button_default}" text="${blogContent.contentName}"/>
                                 <link style="${styles.button_default}" text=" [${blogContent.contentId}]" target="blogContent">
                                     <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
@@ -76,7 +85,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="blogArtDecorator">
+    <screen name="BlogArticleDecorator">
         <section>
             <widgets>
                 <decorator-screen name="commonBlogDecorator">
@@ -90,8 +99,8 @@ under the License.
                                 <entity-one entity-name="Content" value-field="blogContent"/>
                             </actions>
                             <widgets>
-                                <include-menu name="blogArt" location="component://content/widget/content/ContentMenus.xml"/>
-                                <include-menu name="blogArtSub" location="component://content/widget/content/ContentMenus.xml"/>
+                                <include-menu name="BlogArticleTabBar" location="component://content/widget/content/ContentMenus.xml"/>
+                                <include-menu name="BlogArticleButtonBar" location="component://content/widget/content/ContentMenus.xml"/>
                                 <label style="heading" text="${blogContent.contentName}"/>
                                 <link style="h1" text=" [${blogContent.contentId}]" target="blogContent">
                                     <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
@@ -127,7 +136,7 @@ under the License.
             <widgets>
                 <decorator-screen name="commonBlogDecorator">
                     <decorator-section name="body">
-                        <include-menu name="blogSub" location="component://content/widget/content/ContentMenus.xml"/>
+                        <include-menu name="BlogSubTabBar" location="component://content/widget/content/ContentMenus.xml"/>
                         <screenlet title="${uiLabelMap.ContentBlogList}" navigation-form-name="ListBlogs">
                             <include-form name="ListBlogs" location="component://content/widget/forum/BlogForms.xml"/>
                         </screenlet>
@@ -199,7 +208,7 @@ under the License.
                         <service service-name="getBlogEntry" result-map="blogEntry" auto-field-map="true"/>
                     </actions>
                     <widgets>
-                        <decorator-screen name="blogArtDecorator">
+                        <decorator-screen name="BlogArticleDecorator">
                             <decorator-section name="body">
                                 <sub-content content-id="${contentId}" map-key="IMAGE"/>
                                 <include-form name="EditArticle" location="component://content/widget/forum/BlogForms.xml"/>
@@ -222,7 +231,7 @@ under the License.
                 <entity-one entity-name="Content" value-field="blogEntry"/>
             </actions>
             <widgets>
-                <decorator-screen name="blogArtDecorator">
+                <decorator-screen name="BlogArticleDecorator">
                     <decorator-section name="body">
                         <label style="heading" text="${blogEntry.contentName}: ${blogEntry.description}"/>
                         <horizontal-separator/>

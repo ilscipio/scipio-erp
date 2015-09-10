@@ -20,7 +20,7 @@ under the License.
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
-    <menu name="dataresourcesetup" default-menu-item-name="content" default-associated-content-id="${userLogin.userLoginId}" title="" type="simple"
+    <menu name="DataResourceSetupButtonBar" default-menu-item-name="content" default-associated-content-id="${userLogin.userLoginId}" title="" type="simple"
         menu-container-style="button-bar tab-bar" default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="EditDataResourceType" title="${uiLabelMap.CommonType}" >
             <link target="EditDataResourceType" target-window="_top" style="tabButton"/>
@@ -47,4 +47,10 @@ under the License.
             <link target="EditMimeTypeHtmlTemplate" target-window="_top" style="tabButton"/>
         </menu-item>
     </menu>
+    
+    <menu name="DataResourceSetupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="DataResourceSetupButtonBar" recursive="includes-only" />
+    </menu>
+    
 </menus>

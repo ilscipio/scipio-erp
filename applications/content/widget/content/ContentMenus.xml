@@ -37,10 +37,9 @@ under the License.
         <include-elements menu-name="ContentAppBar" recursive="includes-only" />
     </menu>
 
-    <menu name="content"  menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+    <menu name="ContentTabBar"  menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
-
         <menu-item name="content" title="${uiLabelMap.ContentContent}">
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
@@ -49,7 +48,6 @@ under the License.
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
             </link>
         </menu-item>
-
         <menu-item name="association" title="${uiLabelMap.ContentAssociation}">
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
@@ -58,7 +56,6 @@ under the License.
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
             </link>
         </menu-item>
-
         <menu-item name="role" title="${uiLabelMap.FormFieldTitle_roles}" >
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
@@ -67,7 +64,6 @@ under the License.
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
             </link>
         </menu-item>
-
         <menu-item name="purpose" title="${uiLabelMap.FormFieldTitle_purposes}" >
             <condition>
                 <not>
@@ -78,7 +74,6 @@ under the License.
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
             </link>
         </menu-item>
-
         <menu-item name="attribute" title="${uiLabelMap.ContentAttribute}" >
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
@@ -87,7 +82,6 @@ under the License.
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
             </link>
         </menu-item>
-
         <menu-item name="websites" title="${uiLabelMap.ContentWebSites}">
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
@@ -96,7 +90,6 @@ under the License.
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
             </link>
         </menu-item>
-
         <menu-item name="metaData" title="${uiLabelMap.ContentMetadata}" >
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
@@ -105,7 +98,6 @@ under the License.
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
             </link>
         </menu-item>
-
         <menu-item name="workEffort" title="${uiLabelMap.WorkEffortWorkEffort}" >
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
@@ -114,7 +106,6 @@ under the License.
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
             </link>
         </menu-item>
-        
         <menu-item name="keywords" title="${uiLabelMap.ContentKeywords}" >
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
@@ -125,10 +116,14 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="contentSub" menu-container-style="button-bar button-style-2" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+    <menu name="ContentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="ContentTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="ContentSubButtonBar" menu-container-style="button-bar button-style-2" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-
         <menu-item name="NewContent" title="${uiLabelMap.CommonCreateNew}">
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
@@ -145,7 +140,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="website"  menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
+    <menu name="WebSiteButtonBar"  menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
         <menu-item name="EditWebSite" title="${uiLabelMap.ContentWebSite}">
@@ -189,7 +184,13 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    <menu name="blog"  menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
+    
+    <menu name="WebSiteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="WebSiteButtonBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="BlogButtonBar"  menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
         <menu-item name="ListBlog" title="${uiLabelMap.CommonList}">
@@ -211,8 +212,13 @@ under the License.
             </link>
         </menu-item>
     </menu>
-
-    <menu name="blogSub" menu-container-style="button-bar" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+    
+    <menu name="BlogSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="BlogButtonBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="BlogSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
         <menu-item name="NewBlog" title="${uiLabelMap.ContentCreateNewBlog}" widget-style="+create">
@@ -228,7 +234,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="blogArt"  menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
+    <menu name="BlogArticleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-selected-style="selected" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
         <menu-item name="ListlogArt" title="${uiLabelMap.CommonList}">
@@ -254,7 +260,8 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    <menu name="blogArtSub" menu-container-style="button-bar button-style-2" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+    
+    <menu name="BlogArticleButtonBar" menu-container-style="button-bar button-style-2" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
         <menu-item name="NewBlogArticle" title="${uiLabelMap.ContentCreateNewBlogArticle}">
@@ -263,7 +270,8 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    <menu name="contentTopMenu" menu-container-style="button-bar tab-bar" default-selected-style="selected" type="simple" selected-menuitem-context-field-name="tabButtonItem">
+    
+    <menu name="ContentTopButtonBar" menu-container-style="button-bar tab-bar" default-selected-style="selected" type="simple" selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="findContent" title="${uiLabelMap.CommonFind}">
             <link target="findContent"/>
         </menu-item>
@@ -271,6 +279,12 @@ under the License.
             <link target="navigateContent"/>
         </menu-item>
     </menu>
+    
+    <menu name="ContentTopSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="ContentTopButtonBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="lookupMenu" menu-container-style="button-bar tab-bar" default-selected-style="selected" type="simple" selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="close" title="${uiLabelMap.CommonClose}">
             <link target="javascript:window.close();" url-mode="plain"/>

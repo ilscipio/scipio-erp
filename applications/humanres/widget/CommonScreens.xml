@@ -127,7 +127,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <and>
@@ -136,7 +136,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="EmplPostionBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                                <include-menu name="EmplPositionSideBar" location="component://humanres/widget/HumanresMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -266,7 +266,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <and>
@@ -275,7 +275,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="EmployeeProfileTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                                <include-menu name="EmployeeProfileSideBar" location="component://humanres/widget/HumanresMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -323,7 +323,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <and>
@@ -332,7 +332,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="EmployeeProfileTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                                <include-menu name="EmployeeProfileSideBar" location="component://humanres/widget/HumanresMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -382,8 +382,8 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
-                        <include-menu name="GlobalHRSettingMenus" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <decorator-section name="left-column">
+                        <include-menu name="GlobalHRSettingSideBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -400,8 +400,8 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
-                        <include-menu name="RecruitmentTypeMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <decorator-section name="left-column">
+                        <include-menu name="RecruitmentTypeSideBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -410,6 +410,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="CommonTrainingDecorator">
         <section>
             <actions>
@@ -418,8 +419,8 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
-                        <include-menu name="TrainingTypeMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <decorator-section name="left-column">
+                        <include-menu name="TrainingTypeSideBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -428,6 +429,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="CommonMyCommunicationEventDecorator">
         <section>
             <actions>
@@ -435,8 +437,8 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
-                        <include-menu name="EmployeeProfileTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <decorator-section name="left-column">
+                        <include-menu name="EmployeeProfileSideBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

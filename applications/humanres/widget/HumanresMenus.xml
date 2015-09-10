@@ -96,9 +96,10 @@
                 <parameter param-name="partyIdTo"/>
                 <parameter param-name="fromDate"/>
             </link>
-    </menu-item>
+        </menu-item>
     </menu>
-    <menu name="EmplPostionBar" default-menu-item-name="EmplPositionView" type="simple" menu-container-style="button-bar tab-bar" default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
+    
+    <menu name="EmplPositionBar" default-menu-item-name="EmplPositionView" type="simple" menu-container-style="button-bar tab-bar" default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="EmplPositionView" title="${uiLabelMap.CommonSummary}">
             <link target="emplPositionView">
                 <parameter param-name="emplPositionId"/>
@@ -125,6 +126,12 @@
             </link>
         </menu-item>
     </menu>
+    
+    <menu name="EmplPositionSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="EmplPositionBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="PerfReviewBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="Find" title="${uiLabelMap.CommonFind}">
             <link target="FindPerfReviews"/>
@@ -192,7 +199,12 @@
             <link target="PublicHoliday"/>
         </menu-item>
     </menu>
-
+    
+    <menu name="GlobalHRSettingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="GlobalHRSettingMenus" recursive="includes-only" />
+    </menu>
+    
     <menu name="EmployeeProfileTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditEmployeeSkills">
         <menu-item name="EmployeeProfile" title="${uiLabelMap.PartyProfile}">
@@ -252,7 +264,12 @@
             </link>
         </menu-item>
     </menu>
-
+    
+    <menu name="EmployeeProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="EmployeeProfileTabBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="EmplPositionTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditEmplPositionType" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="EditEmplPositionType" title="${uiLabelMap.HumanResEmplPositionType}">
@@ -277,6 +294,11 @@
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
             <link target="FindInternalJobPosting"/>
         </menu-item>
+    </menu>
+    
+    <menu name="RecruitmentTypeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="RecruitmentTypeMenu" recursive="includes-only" />
     </menu>
     
     <menu name="InternalJobPostingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -313,6 +335,12 @@
         </menu-item>
     </menu>
     
+    <menu name="TrainingTypeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="TrainingTypeMenu" recursive="includes-only" />
+    </menu>
+    
+    
     <menu name="EmplLeaveReasonTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="Employee Leave Reason Type" type="simple" menu-container-style="button-bar tab-bar" 
         default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
@@ -335,5 +363,10 @@
             <link target="FindLeaveApprovals"/>
         </menu-item>
     </menu>
-
+    
+    <menu name="EmplLeaveSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="EmplLeaveTabBar" recursive="includes-only" />
+    </menu>
+    
 </menus>

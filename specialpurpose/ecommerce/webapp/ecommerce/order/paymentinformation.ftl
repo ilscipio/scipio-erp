@@ -36,7 +36,7 @@ function shipBillAddr() {
 
 <div class="screenlet">
     <div class="screenlet-title-bar">
-        <div class='h3'>${uiLabelMap.AccountingPaymentInformation}</div>
+        <div class="h3">${uiLabelMap.AccountingPaymentInformation}</div>
     </div>
     <div class="screenlet-body">
           <#-- after initial screen; show detailed screens for selected type -->

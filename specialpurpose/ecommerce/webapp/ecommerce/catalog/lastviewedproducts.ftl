@@ -44,7 +44,7 @@ under the License.
 <@table>
   <@tr>
     <@td>
-      <div class='tabletext'>${uiLabelMap.ProductNotViewedAnyProducts}.</div>
+      <div class="tabletext">${uiLabelMap.ProductNotViewedAnyProducts}.</div>
     </@td>
   </@tr>
 </@table>

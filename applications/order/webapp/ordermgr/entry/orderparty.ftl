@@ -38,7 +38,7 @@ under the License.
             <#if person?has_content>
               <div><a href="${customerDetailLink}${partyId}" class="${styles.button_default!}">${person.firstName!}&nbsp;${person.lastName!}</a></div>
             <#elseif partyGroup?has_content>
-                              <div class='tabletext'><a href="${customerDetailLink}${partyId}" class="${styles.button_default!}">${partyGroup.groupName!}</a></div>
+                              <div class="tabletext"><a href="${customerDetailLink}${partyId}" class="${styles.button_default!}">${partyGroup.groupName!}</a></div>
             </#if>
             <form method="post" action="<@ofbizUrl>orderentry</@ofbizUrl>" name="setpartyform">
               <div><input type="text" name="partyId" size='10' value="${partyId!}" /></div>

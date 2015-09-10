@@ -20,7 +20,7 @@ under the License.
 <div>
   <#assign shoppingCart = sessionAttributes.shoppingCart! />
   <h2>${uiLabelMap.OrderCheckout}</h2>
-    <#if shoppingCart?has_content && shoppingCart.size() &gt; 0>
+    <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
       <div id="checkoutPanel">
 
 <#-- ========================================================================================================================== -->
@@ -489,7 +489,7 @@ under the License.
     </#if>
 
 <#-- ========================================================================================================================== -->
-    <div id="emptyCartCheckoutPanel" <#if shoppingCart?has_content && shoppingCart.size() &gt; 0> style="display: none;"</#if>>
+    <div id="emptyCartCheckoutPanel" <#if shoppingCart?has_content && (shoppingCart.size() > 0)> style="display: none;"</#if>>
         <h3>${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}</h3>
         <span>You currently have no items in your cart. Click <a href="<@ofbizUrl>main</@ofbizUrl>">here</a> to view our products.</span>
         <h3>${uiLabelMap.EcommerceStep} 2: ${uiLabelMap.FacilityShipping}</h3>

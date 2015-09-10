@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if requestAttributes._ERROR_MESSAGE_??>
-<br /><div class='errorMessage'>${requestAttributes._ERROR_MESSAGE_}</div><br />
+<br /><div class="errorMessage">${requestAttributes._ERROR_MESSAGE_}</div><br />
 <#else>
     <#if trailList??>
         <#assign indent = "">

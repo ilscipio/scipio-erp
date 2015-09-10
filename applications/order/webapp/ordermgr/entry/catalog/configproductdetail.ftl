@@ -232,23 +232,23 @@ function getConfigDetails() {
         <div>${uiLabelMap.ProductAggregatedPrice}: <span id='totalPrice' class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
       <#else>
       <#if price.competitivePrice?? && price.price?? && price.price?double < price.competitivePrice?double>
-        <div>${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
+        <div>${uiLabelMap.ProductCompareAtPrice}: <span class="basePrice"><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
       </#if>
       <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
-        <div>${uiLabelMap.ProductListPrice}: <span class='basePrice'><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></div>
+        <div>${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></div>
       </#if>
       <#if price.listPrice?? && price.defaultPrice?? && price.price?? && price.price?double < price.defaultPrice?double && price.defaultPrice?double < price.listPrice?double>
-        <div>${uiLabelMap.ProductRegularPrice}: <span class='basePrice'><@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed/></span></div>
+        <div>${uiLabelMap.ProductRegularPrice}: <span class="basePrice"><@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed/></span></div>
       </#if>
       <div>
         <b>
           <#if price.isSale?? && price.isSale>
-            <span class='salePrice'>${uiLabelMap.OrderOnSale}!</span>
+            <span class="salePrice">${uiLabelMap.OrderOnSale}!</span>
             <#assign priceStyle = "salePrice">
           <#else>
             <#assign priceStyle = "regularPrice">
           </#if>
-            ${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> from </#if><span class='${priceStyle}'><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+            ${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> from </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
         </b>
       </div>
       <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
@@ -301,7 +301,7 @@ function getConfigDetails() {
           <#else>
             <input type='hidden' name="product_id" value='${product.productId}' />
             <input type='hidden' name="add_product_id" value='NULL' />
-            <div class='tabletext'><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
+            <div class="tabletext"><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
             <#assign inStock = false>
           </#if>
         <#else>
@@ -310,10 +310,10 @@ function getConfigDetails() {
           <#if productNotAvailable??>
             <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
             <#if isStoreInventoryRequired>
-              <div class='tabletext'><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
+              <div class="tabletext"><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
               <#assign inStock = false>
             <#else>
-              <div class='tabletext'><b>${product.inventoryMessage!}</b></div>
+              <div class="tabletext"><b>${product.inventoryMessage!}</b></div>
             </#if>
           </#if>
         </#if>

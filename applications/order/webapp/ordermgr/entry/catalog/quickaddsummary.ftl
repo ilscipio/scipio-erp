@@ -39,7 +39,7 @@ under the License.
   </span>
   <span class="totalPrice">
     <#if totalPrice??>
-        <div>${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
+        <div>${uiLabelMap.ProductAggregatedPrice}: <span class="basePrice"><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
     <#else>
       <div class="<#if price.isSale?? && price.isSale>salePrice<#else>normalPrice</#if>">
         <b><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></b>

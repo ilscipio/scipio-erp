@@ -70,7 +70,7 @@ function submitForm(form, mode, value) {
                   </@td>
                   <@td>
                     <div>
-                      <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
+                      <span class="tabletext">${uiLabelMap.CommonAdd}:</span>
                       <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="${styles.button_default!}">${uiLabelMap.PartyAddNewAddress}</a>
                     </div>
                     <div>

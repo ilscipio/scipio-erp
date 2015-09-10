@@ -72,7 +72,7 @@ under the License.
                             <@td width="10%">${orderTerm.textValue?default("")}</@td>
                             <@td width="35%">${orderTerm.description?default("")}</@td>
                         </@tr>
-                            <#if orderTerms.size()&lt;index>
+                            <#if (orderTerms.size() < index)>
                         <@tr><@td colspan="5"><hr /></@td></@tr>
                             </#if>
                             <#assign index=index+1/>

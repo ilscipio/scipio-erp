@@ -223,23 +223,23 @@ function getConfigDetails(event) {
         <div>${uiLabelMap.ProductAggregatedPrice}: <span id='totalPrice' class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
       <#else>
       <#if price.competitivePrice?? && price.price?? && price.price < price.competitivePrice>
-        <div>${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
+        <div>${uiLabelMap.ProductCompareAtPrice}: <span class="basePrice"><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
       </#if>
       <#if price.listPrice?? && price.price?? && price.price < price.listPrice>
-        <div>${uiLabelMap.ProductListPrice}: <span class='basePrice'><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></div>
+        <div>${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></div>
       </#if>
       <#if price.listPrice?? && price.defaultPrice?? && price.price?? && price.price < price.defaultPrice && price.defaultPrice < price.listPrice>
-        <div>${uiLabelMap.ProductRegularPrice}: <span class='basePrice'><@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed/></span></div>
+        <div>${uiLabelMap.ProductRegularPrice}: <span class="basePrice"><@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed/></span></div>
       </#if>
       <div>
 
           <#if price.isSale?? && price.isSale>
-            <span class='salePrice'>${uiLabelMap.OrderOnSale}!</span>
+            <span class="salePrice">${uiLabelMap.OrderOnSale}!</span>
             <#assign priceStyle = "salePrice">
           <#else>
             <#assign priceStyle = "regularPrice">
           </#if>
-            ${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> from </#if><span class='${priceStyle}'><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+            ${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> from </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
 
       </div>
       <#if price.listPrice?? && price.price?? && price.price < price.listPrice>
@@ -298,7 +298,7 @@ function getConfigDetails(event) {
           <#else>
             <input type='hidden' name="product_id" value='${product.productId}' />
             <input type='hidden' name="add_product_id" value='NULL' />
-            <div class='tabletext'><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
+            <div class="tabletext"><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
             <#assign inStock = false>
           </#if>
         <#else>
@@ -307,10 +307,10 @@ function getConfigDetails(event) {
           <#if productNotAvailable??>
             <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
             <#if isStoreInventoryRequired>
-              <div class='tabletext'><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
+              <div class="tabletext"><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
               <#assign inStock = false>
             <#else>
-              <div class='tabletext'><b>${product.inventoryMessage!}</b></div>
+              <div class="tabletext"><b>${product.inventoryMessage!}</b></div>
             </#if>
           </#if>
         </#if>
@@ -342,7 +342,7 @@ function getConfigDetails(event) {
             <#else>
               <a href="javascript:addItem()" class="${styles.button_default!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
               <input type="text" size="5" name="quantity" value="1" />
-                <#if minimumQuantity?? &&  minimumQuantity &gt; 0>
+                <#if minimumQuantity?? && (minimumQuantity > 0)>
                   Minimum order quantity is ${minimumQuantity}.
                </#if>
             </#if>

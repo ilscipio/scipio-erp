@@ -110,7 +110,7 @@ function getPaymentInformation() {
 <form id="setPaymentInformation" method="post" action="<@ofbizUrl>quickAnonAddGiftCardToCart</@ofbizUrl>" name="setPaymentInformation">
 <div class="screenlet">
     <div class="screenlet-title-bar">
-        <div class='h3'>${uiLabelMap.AccountingPaymentInformation}</div>
+        <div class="h3">${uiLabelMap.AccountingPaymentInformation}</div>
     </div>
     <div class="screenlet-body">
           <#if requestParameters.singleUsePayment?default("N") == "Y">

@@ -183,10 +183,10 @@ ${virtualJavaScript!}
           <div>
               <b>${product.productId!}</b>
                 <#if totalPrice??>
-                  <div>${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
+                  <div>${uiLabelMap.ProductAggregatedPrice}: <span class="basePrice"><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
                 <#else>
                 <#if price.competitivePrice?? && price.price?? && price.price?double < price.competitivePrice?double>
-                  ${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span>
+                  ${uiLabelMap.ProductCompareAtPrice}: <span class="basePrice"><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span>
                 </#if>
                 <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
                   ${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span>

@@ -51,13 +51,13 @@ under the License.
           <div class="lefthalf margin-left"><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);"/> <strong>${uiLabelMap.ProductProduct}</strong></div>
           <div class="right">
             <strong>
-              <#if 0 &lt; viewIndex?int>
+              <#if (0 < viewIndex?int)>
                 <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
               </#if>
-              <#if 0 &lt; listSize?int>
+              <#if (0 < listSize?int)>
                 ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
               </#if>
-              <#if highIndex?int &lt; listSize?int>
+              <#if (highIndex?int < listSize?int)>
                 | <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
               </#if>
               <#if paging == "Y">

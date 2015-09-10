@@ -33,7 +33,7 @@ under the License.
         </style>
     </head>
     <body>
-        <div class='listtext'>
+        <div class="listtext">
             <#if !forstatic>
                 <a href="<@ofbizUrl>main</@ofbizUrl>" target='main'>${uiLabelMap.WebtoolsPopupWebToolsMain}</a><br/>
                 <a href="<@ofbizUrl>view/entityref_main</@ofbizUrl>" target="entityFrame">${uiLabelMap.WebtoolsEntityReferenceMainPage}</a><br/>

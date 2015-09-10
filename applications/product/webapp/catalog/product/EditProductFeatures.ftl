@@ -118,7 +118,7 @@ under the License.
         <option value='${(productFeatureGroup.productFeatureGroupId)!}'>${(productFeatureGroup.description)!} [${(productFeatureGroup.productFeatureGroupId)!}]</option>
   </#list>
       </select>
-      <span class='label'>${uiLabelMap.ProductFeatureApplicationType}: </span>
+      <span class="label">${uiLabelMap.ProductFeatureApplicationType}: </span>
       <select name='productFeatureApplTypeId' size="1">
   <#list productFeatureApplTypes as productFeatureApplType>
         <option value='${(productFeatureApplType.productFeatureApplTypeId)!}'
@@ -134,15 +134,15 @@ under the License.
 <@section title="${uiLabelMap.ProductAddProductFeatureTypeId}">
     <form method="post" action="<@ofbizUrl>ApplyFeatureToProductFromTypeAndCode</@ofbizUrl>" name='addFeatureByTypeIdCode'>
       <input type="hidden" name="productId" value="${productId}"/>
-      <span class='label'>${uiLabelMap.ProductFeatureType}: </span>
+      <span class="label">${uiLabelMap.ProductFeatureType}: </span>
       <select name='productFeatureTypeId' size="1">
   <#list productFeatureTypes as productFeatureType>
         <option value='${(productFeatureType.productFeatureTypeId)!}'>${(productFeatureType.get("description",locale))!} </option>
   </#list>
       </select>
-      <span class='label'>${uiLabelMap.CommonIdCode}: </span><input type="text" size='10' name='idCode' value=''/>
+      <span class="label">${uiLabelMap.CommonIdCode}: </span><input type="text" size='10' name='idCode' value=''/>
       <br />
-      <span class='label'>${uiLabelMap.ProductFeatureApplicationType}: </span>
+      <span class="label">${uiLabelMap.ProductFeatureApplicationType}: </span>
       <select name='productFeatureApplTypeId' size="1">
   <#list productFeatureApplTypes as productFeatureApplType>
         <option value='${(productFeatureApplType.productFeatureApplTypeId)!}'
@@ -152,11 +152,11 @@ under the License.
   </#list>
       </select>
       <br />
-      <span class='label'>${uiLabelMap.CommonFrom} : </span>
+      <span class="label">${uiLabelMap.CommonFrom} : </span>
       <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-      <span class='label'>${uiLabelMap.CommonThru} : </span>
+      <span class="label">${uiLabelMap.CommonThru} : </span>
       <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-      <span class='label'>${uiLabelMap.CommonSequence} : </span><input type="text" size='5' name='sequenceNum'/>
+      <span class="label">${uiLabelMap.CommonSequence} : </span><input type="text" size='5' name='sequenceNum'/>
       <input type="submit" value="${uiLabelMap.CommonAdd}"/>
     </form>
 </@section>
@@ -165,7 +165,7 @@ under the License.
     <form method="post" action="<@ofbizUrl>ApplyFeatureToProduct</@ofbizUrl>" name="addFeatureById">
       <input type="hidden" name="productId" value="${productId}"/>
       <span>${uiLabelMap.CommonId}: </span>
-      <span class='label'>
+      <span class="label">
         <@htmlTemplate.lookupField formName="addFeatureById" name="productFeatureId" id="productFeatureId" fieldFormName="LookupProductFeature"/>
       </span>
       <span>${uiLabelMap.ProductFeatureApplicationType}: </span>

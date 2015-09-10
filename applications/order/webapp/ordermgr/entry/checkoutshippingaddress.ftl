@@ -100,7 +100,7 @@ function toggleBillingAccount(box) {
                      <@tr>
                        <@td>&nbsp;</@td>
                        <@td align='left' valign='top' nowrap="nowrap">
-                         <div class='tableheadtext'>
+                         <div class="tableheadtext">
                            ${uiLabelMap.OrderSelectAgreement}
                          </div>
                        </@td>

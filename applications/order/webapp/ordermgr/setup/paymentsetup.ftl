@@ -32,7 +32,7 @@ under the License.
       <@table type="fields" width='100%' border='0' cellpadding='0' cellspacing='0' class='boxtop'>
         <@tr>
           <@td>
-            <div class='boxhead'>&nbsp;Payment Processor Setup</div>
+            <div class="boxhead">&nbsp;Payment Processor Setup</div>
           </@td>
         </@tr>
       </@table>
@@ -102,9 +102,9 @@ under the License.
         <@tr>
           <@td width='90%'>
             <#if webSitePayment?has_content>
-              <div class='boxhead'>&nbsp;Update&nbsp;Setting</div>
+              <div class="boxhead">&nbsp;Update&nbsp;Setting</div>
             <#else>
-              <div class='boxhead'>&nbsp;Add&nbsp;New&nbsp;Setting</div>
+              <div class="boxhead">&nbsp;Add&nbsp;New&nbsp;Setting</div>
             </#if>
           </@td>
           <#if webSitePayment?has_content>

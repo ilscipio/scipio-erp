@@ -145,7 +145,7 @@ under the License.
                                         </#list>
                                     </#if>
                             </@td>
-                            <#if availableToReceive &gt; 0 >
+                            <#if (availableToReceive > 0)>
                                 <@td>
                                     <input type="hidden" name="productId_o_${rowCount}" value="${(product.productId)!}"/>
                                     <input type="hidden" name="facilityId_o_${rowCount}" value="${facilityId}"/>

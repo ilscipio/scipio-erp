@@ -321,7 +321,7 @@ not "current" context (too intrusive in current renderer design). still relies o
         </select>:<select name="${timeMinutesName}" <#if classString?has_content>class="${classString}"</#if>><#rt/>
           <#local values = Static["org.ofbiz.base.util.StringUtil"].toList(timeValues)>
           <#list values as i>
-            <option value="${i}"<#if minutes?has_content><#if i?number== minutes ||((i?number==(60 -step?number)) && (minutes &gt; 60 - (step?number/2))) || ((minutes &gt; i?number )&& (minutes &lt; i?number+(step?number/2))) || ((minutes &lt; i?number )&& (minutes &gt; i?number-(step?number/2)))> selected="selected"</#if></#if>>${i}</option><#rt/>
+            <option value="${i}"<#if minutes?has_content><#if i?number == minutes || ((i?number == (60 - step?number)) && (minutes > (60 - (step?number/2)))) || ((minutes > i?number)&& (minutes < (i?number+(step?number/2)))) || ((minutes < i?number)&& (minutes > (i?number-(step?number/2))))> selected="selected"</#if></#if>>${i}</option><#rt/>
           </#list>
         </select>
         <#rt/>
@@ -516,10 +516,10 @@ not "current" context (too intrusive in current renderer design). still relies o
   <form method="post" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this)"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
-      <#if linkUrl?index_of("VIEW_INDEX") &lt;= 0 && linkUrl?index_of(viewIndexField) &lt;= 0>
+      <#if (linkUrl?index_of("VIEW_INDEX") <= 0) && (linkUrl?index_of(viewIndexField) <= 0)>
         <input type="hidden" name="${viewIndexField}" value="${viewIndex}"/>
       </#if>
-      <#if linkUrl?index_of("VIEW_SIZE") &lt;= 0 && linkUrl?index_of(viewSizeField) &lt;= 0>
+      <#if (linkUrl?index_of("VIEW_SIZE") <= 0) && (linkUrl?index_of(viewSizeField) <= 0)>
         <input type="hidden" name="${viewSizeField}" value="${viewSize}"/>
       </#if>
     </#if>
@@ -1284,20 +1284,20 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#macro makeHiddenFormLinkForm actionUrl name parameters targetWindow>
-  <form method="post" action="${actionUrl}" <#if targetWindow?has_content>target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${name}">
+  <form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${name}">
     <#list parameters as parameter>
       <input name="${parameter.name}" value="${parameter.value}" type="hidden"/>
     </#list>
   </form>
 </#macro>
 <#macro makeHiddenFormLinkAnchor linkStyle hiddenFormName event action imgSrc description confirmation>
-  <a <#if linkStyle?has_content>class="${linkStyle}"</#if> href="javascript:document.${hiddenFormName}.submit()"
+  <a<#if linkStyle?has_content> class="${linkStyle}"</#if> href="javascript:document.${hiddenFormName}.submit()"
     <#if action?has_content && event?has_content> ${event}="${action}"</#if>
     <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}')"</#if>>
       <#if imgSrc?has_content><img src="${imgSrc}" alt=""/></#if>${description}</a>
 </#macro>
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title alternate linkUrl targetWindow description confirmation>
-    <a <#if linkStyle?has_content>class="${linkStyle}"</#if> 
+    <a<#if linkStyle?has_content> class="${linkStyle}"</#if> 
       href="${linkUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if>
       <#if action?has_content && event?has_content> ${event}="${action}"</#if>
       <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}')"</#if>

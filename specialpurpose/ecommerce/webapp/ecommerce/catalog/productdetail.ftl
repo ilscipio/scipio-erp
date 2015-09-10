@@ -445,13 +445,13 @@ $(function(){
                   - if price < defaultPrice and defaultPrice < listPrice, show default
                   - if isSale show price with salePrice style and print "On Sale!"
           -->
-          <#if price.competitivePrice?? && price.price?? && price.price &lt; price.competitivePrice>
+          <#if price.competitivePrice?? && price.price?? && (price.price < price.competitivePrice)>
             <div>${uiLabelMap.ProductCompareAtPrice}: <span class="basePrice"><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed /></span></div>
           </#if>
-          <#if price.listPrice?? && price.price?? && price.price &lt; price.listPrice>
+          <#if price.listPrice?? && price.price?? && (price.price < price.listPrice)>
             <div>${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed /></span></div>
           </#if>
-          <#if price.listPrice?? && price.defaultPrice?? && price.price?? && price.price &lt; price.defaultPrice && price.defaultPrice &lt; price.listPrice>
+          <#if price.listPrice?? && price.defaultPrice?? && price.price?? && (price.price < price.defaultPrice) && (price.defaultPrice < price.listPrice)>
             <div>${uiLabelMap.ProductRegularPrice}: <span class="basePrice"><@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed /></span></div>
           </#if>
           <#if price.specialPromoPrice??>
@@ -473,7 +473,7 @@ $(function(){
                  </#if>
              </strong>
           </div>
-          <#if price.listPrice?? && price.price?? && price.price &lt; price.listPrice>
+          <#if price.listPrice?? && price.price?? && (price.price < price.listPrice)>
             <#assign priceSaved = price.listPrice - price.price />
             <#assign percentSaved = (priceSaved / price.listPrice) * 100 />
             <div>${uiLabelMap.OrderSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed /> (${percentSaved?int}%)</span></div>
@@ -535,7 +535,7 @@ $(function(){
               <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}<#if categoryId??>&categoryId=${categoryId}/</#if></@ofbizUrl>','tellafriend');" class="${styles.button_default!}">${uiLabelMap.CommonTellAFriend}</a>
           </div>
     
-          <#if disFeatureList?? && 0 &lt; disFeatureList.size()>
+          <#if disFeatureList?? && (0 < disFeatureList.size())>
           <p>&nbsp;</p>
             <#list disFeatureList as currentFeature>
                 <#assign disFeatureType = currentFeature.getRelatedOne("ProductFeatureType", true) />
@@ -586,7 +586,7 @@ $(function(){
                 </div>
               </#if>
               <#if !product.virtualVariantMethodEnum?? || product.virtualVariantMethodEnum == "VV_VARIANTTREE">
-               <#if variantTree?? && (variantTree.size() &gt; 0)>
+               <#if variantTree?? && (variantTree.size() > 0)>
                 <#list featureSet as currentType>
                   <div>
                     <select name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
@@ -676,11 +676,11 @@ $(function(){
                 <#assign variantName = vpricing.get("variantName")!>
                 <#assign secondVariantName = vpricing.get("secondVariantName")!>
                 <#assign minimumQuantity = vpricing.get("minimumQuantity")>
-                <#if minimumQuantity &gt; 0>
+                <#if (minimumQuantity > 0)>
                   <div>minimum order quantity for ${secondVariantName!} ${variantName!} is ${minimumQuantity!}</div>
                 </#if>
               </#list>
-            <#elseif minimumQuantity?? && minimumQuantity?has_content && minimumQuantity &gt; 0>
+            <#elseif minimumQuantity?? && minimumQuantity?has_content && (minimumQuantity > 0)>
                <div>minimum order quantity for ${productContentWrapper.get("PRODUCT_NAME")!} is ${minimumQuantity!}</div>
             </#if>
             </fieldset>
@@ -724,12 +724,12 @@ $(function(){
           </#if>
           </div>
           <#-- Prefill first select box (virtual products only) -->
-          <#if variantTree?? && 0 &lt; variantTree.size()>
+          <#if variantTree?? && (0 < variantTree.size())>
             <script type="text/javascript">eval("list" + "${featureOrderFirst}" + "()");</script>
           </#if>
     
           <#-- Swatches (virtual products only) -->
-          <#if variantSample?? && 0 &lt; variantSample.size()>
+          <#if variantSample?? && (0 < variantSample.size())>
             <#assign imageKeys = variantSample.keySet() />
             <#assign imageMap = variantSample />
             <p>&nbsp;</p>
@@ -737,7 +737,7 @@ $(function(){
                 <#assign indexer = 0 />
                 <#list imageKeys as key>
                   <#assign swatchProduct = imageMap.get(key) />
-                  <#if swatchProduct?has_content && indexer &lt; maxIndex>
+                  <#if swatchProduct?has_content && (indexer < maxIndex)>
                     <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request)! />
                     <#if !imageUrl?string?has_content>
                       <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL")! />
@@ -777,7 +777,7 @@ $(function(){
       <#-- Product Reviews -->
         <div id="reviews">
           <div>${uiLabelMap.OrderCustomerReviews}:</div>
-          <#if averageRating?? && (averageRating &gt; 0) && numRatings?? && (numRatings &gt; 1)>
+          <#if averageRating?? && (averageRating > 0) && numRatings?? && (numRatings > 1)>
               <div>${uiLabelMap.OrderAverageRating}: ${averageRating} <#if numRatings??>(${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</#if></div>
           </#if>
     <hr />

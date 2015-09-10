@@ -77,7 +77,7 @@ under the License.
     </@section>
     </#if>
 
-<#else/>
+<#else>
 
     <h2>${uiLabelMap.WebtoolsArtifactInfo} (${artifactInfo.getDisplayType()}): ${artifactInfo.getDisplayName()}</h2>
     <#if artifactInfo.getLocationURL()??>
@@ -149,7 +149,7 @@ under the License.
                     <@thead><@tr><@td>Name</@td><@td>Type</@td><@td>Optional</@td><@td>Mode</@td><@td>Entity.field</@td></@tr></@thead>
                   <#list artifactInfo.modelService.getAllParamNames() as paramName>
                     <#assign modelParam = artifactInfo.modelService.getParam(paramName)/>
-                    <@tr><@td>${modelParam.getName()}<#if modelParam.getInternal()> (internal)</#if></@td><@td>${modelParam.getType()}</@td><@td><#if modelParam.isOptional()>optional<#else/>required</#if></@td><@td>${modelParam.getMode()}</@td><@td>${modelParam.getEntityName()!}.${modelParam.getFieldName()!}</@td></@tr>
+                    <@tr><@td>${modelParam.getName()}<#if modelParam.getInternal()> (internal)</#if></@td><@td>${modelParam.getType()}</@td><@td><#if modelParam.isOptional()>optional<#else>required</#if></@td><@td>${modelParam.getMode()}</@td><@td>${modelParam.getEntityName()!}.${modelParam.getFieldName()!}</@td></@tr>
                 </#list>
                 </@table>
             </@section>

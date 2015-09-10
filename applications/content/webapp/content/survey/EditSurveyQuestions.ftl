@@ -45,7 +45,7 @@ under the License.
           <#assign currentSurveyMultiResp = surveyQuestionAndAppl.getRelatedOne("SurveyMultiResp", true)!/>
           <#if currentSurveyMultiResp?has_content>
             <#assign currentSurveyMultiRespColumns = currentSurveyMultiResp.getRelated("SurveyMultiRespColumn", null, null, false)/>
-          <#else/>
+          <#else>
             <#assign currentSurveyMultiRespColumns = []/>
           </#if>
           

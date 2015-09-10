@@ -41,7 +41,7 @@ function shipBillAddr() {
               </div>
             </#if>
         </div>
-        <div class='h3'>${uiLabelMap.AccountingPaymentInformation}</div>
+        <div class="h3">${uiLabelMap.AccountingPaymentInformation}</div>
     </div>
     <div class="screenlet-body">
         <#if (paymentMethodType?? && !requestParameters.resetType?has_content) || finalizeMode?default("") == "payment">

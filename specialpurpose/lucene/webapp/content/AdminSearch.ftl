@@ -122,7 +122,7 @@ under the License.
   <#assign dummy=Static["org.ofbiz.base.util.Debug"].logInfo("in listSiteIds, contentId:" + contentId,"")/>
   <#assign dummy=Static["org.ofbiz.base.util.Debug"].logInfo("in listSiteIds, indentIndex:" + indentIndex,"")/>
   <#local indent = ""/>
-  <#if 0 < indentIndex >
+  <#if (0 < indentIndex)>
     <#list 0..(indentIndex - 1) as idx>
       <#local indent = indent + "&nbsp;&nbsp;"/>
     </#list>

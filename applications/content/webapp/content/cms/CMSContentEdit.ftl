@@ -186,7 +186,7 @@ ${menuWrapper.renderMenuString()}
         <@tr>
           <@td>
   <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <@tr><@td align="right" nowrap="nowrap"><div class='tabletext'><b>Image</b></div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>
+    <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Image</b></div></@td><@td>&nbsp;</@td><@td><div class="tabletext">
         <img src="<@ofbizUrl>img?imgId=${imgDataResourceId!}</@ofbizUrl>" alt="" />
 <div></@td></@tr>
   </@table>
@@ -247,8 +247,8 @@ ${menuWrapper.renderMenuString()}
         <@tr>
           <@td>
   <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <@tr><@td align="right" nowrap="nowrap"><div class='tabletext'><b>Content Name</b></div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>${content.contentName!}</div></@td></@tr>
-    <@tr><@td align="right" nowrap="nowrap"><div class='tabletext'><b>Description</b></div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>${content.description!}<div></@td></@tr>
+    <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Content Name</b></div></@td><@td>&nbsp;</@td><@td><div class="tabletext">${content.contentName!}</div></@td></@tr>
+    <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Description</b></div></@td><@td>&nbsp;</@td><@td><div class="tabletext">${content.description!}<div></@td></@tr>
   </@table>
           </@td>
         </@tr>
@@ -261,7 +261,7 @@ ${menuWrapper.renderMenuString()}
         <@tr>
           <@td>
   <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <@tr><@td align="right" nowrap="nowrap"><div class='tabletext'><b></b></div></@td><@td>&nbsp;</@td><@td><div class='tabletext'>
+    <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b></b></div></@td><@td>&nbsp;</@td><@td><div class="tabletext">
 <#-- ${textData!} -->
 <@renderContentAsText subContentId=content.contentId  editRequestName="/EditAddContent"/>
 <div></@td></@tr>

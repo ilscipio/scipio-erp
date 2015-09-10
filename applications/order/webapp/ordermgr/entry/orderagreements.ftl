@@ -33,7 +33,7 @@ under the License.
       <@tr>
         <@td>&nbsp;</@td>
         <@td align='right' valign='top' nowrap="nowrap">
-          <div class='tableheadtext'>
+          <div class="tableheadtext">
             ${uiLabelMap.OrderSelectAgreement}
           </div>
         </@td>
@@ -56,13 +56,13 @@ under the License.
         <@tr>
           <@td>&nbsp;</@td>
           <@td align='right' valign='top' nowrap="nowrap">
-            <div class='tableheadtext'>
+            <div class="tableheadtext">
               ${uiLabelMap.OrderSelectAgreementRoles}
             </div>
           </@td>
           <@td>&nbsp;</@td>
           <@td valign='middle'>
-            <div class='tabletext'>
+            <div class="tabletext">
               <select name="agreementId">
               <option value="">${uiLabelMap.CommonNone}</option>
               <#list agreementRoles as agreementRole>
@@ -114,7 +114,7 @@ under the License.
       <@tr>
         <@td>&nbsp;</@td>
         <@td align='right' valign='middle' nowrap="nowrap">
-          <div class='tableheadtext'>
+          <div class="tableheadtext">
             <#if agreements??>${uiLabelMap.OrderSelectCurrencyOr}
             <#else>${uiLabelMap.OrderSelectCurrency}
             </#if>
@@ -122,7 +122,7 @@ under the License.
         </@td>
         <@td>&nbsp;</@td>
         <@td valign='middle'>
-          <div class='tabletext'>
+          <div class="tabletext">
             <select name="currencyUomId">
               <option value=""></option>
               <#list currencies as currency>
@@ -167,7 +167,7 @@ under the License.
       <@tr>
         <@td>&nbsp;</@td>
         <@td align='right' valign='top' nowrap="nowrap">
-          <div class='tableheadtext'>
+          <div class="tableheadtext">
             ${uiLabelMap.OrderShipAfterDateDefault}
           </div>
         </@td>
@@ -180,7 +180,7 @@ under the License.
       <@tr>
         <@td>&nbsp;</@td>
         <@td align='right' valign='top' nowrap="nowrap">
-          <div class='tableheadtext'>
+          <div class="tableheadtext">
             ${uiLabelMap.OrderShipBeforeDateDefault}
           </div>
         </@td>
@@ -194,7 +194,7 @@ under the License.
         <@tr>
           <@td>&nbsp;</@td>
           <@td align='right' valign='top'>
-            <div class='tableheadtext'>
+            <div class="tableheadtext">
               ${uiLabelMap.FormFieldTitle_cancelBackOrderDate}
             </div>
           </@td>

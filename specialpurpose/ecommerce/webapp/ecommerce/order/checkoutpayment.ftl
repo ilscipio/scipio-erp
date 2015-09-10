@@ -163,7 +163,7 @@ var issuerId = "";
                     <#assign pcardNumber = giftCard.cardNumber />
                     <#if pcardNumber?has_content>
                       <#assign psize = pcardNumber?length - 4 />
-                      <#if 0 &lt; psize>
+                      <#if (0 < psize)>
                         <#list 0 .. psize-1 as foo>
                           <#assign giftCardNumber = giftCardNumber + "*" />
                         </#list>

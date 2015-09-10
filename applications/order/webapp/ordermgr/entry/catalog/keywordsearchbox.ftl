@@ -24,7 +24,7 @@ under the License.
         <input type="hidden" name="PAGING" value="Y" />
         <@field type="input" name="SEARCH_STRING" size="14" maxlength="50" value="${requestParameters.SEARCH_STRING!}" />
         
-        <#if 0 &lt; otherSearchProdCatalogCategories?size>
+        <#if (0 < otherSearchProdCatalogCategories?size)>
           <@field type="select" label="${uiLabelMap.ProductCategoryId}" name="SEARCH_CATEGORY_ID" size="1">
               <option value="${searchCategoryId!}">${uiLabelMap.ProductEntireCatalog}</option>
               <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
@@ -45,7 +45,7 @@ under the License.
     </form>
     <form name="advancedsearchform" id="keywordsearchbox_advancedsearchform" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>">
       <@fieldset title="${uiLabelMap.CommonAdvancedSearch}" collapsed=true>
-        <#if 0 &lt; otherSearchProdCatalogCategories?size>
+        <#if (0 < otherSearchProdCatalogCategories?size)>
             <@field type="select" label="${uiLabelMap.ProductAdvancedSearchIn}" name="SEARCH_CATEGORY_ID" id="SEARCH_CATEGORY_ID">
               <option value="${searchCategoryId!}">${uiLabelMap.ProductEntireCatalog}</option>
               <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>

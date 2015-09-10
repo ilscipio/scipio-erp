@@ -47,7 +47,7 @@ under the License.
         </style>
     </head>
     <body>
-        <div class='toptext'>${uiLabelMap.WebtoolsEntityReferenceChart}<br />
+        <div class="toptext">${uiLabelMap.WebtoolsEntityReferenceChart}<br />
             ${numberOfEntities} ${uiLabelMap.WebtoolsTotalEntities}
         </div>
         <#assign numberShowed = 0>
@@ -75,7 +75,7 @@ under the License.
                                    <div>${entity.description}</div>
                             </#if>
                             <#if entity.location?has_content>
-                                <div class='description'>${entity.location}</div>
+                                <div class="description">${entity.location}</div>
                             </#if>
                         </@td>
                     </@tr>
@@ -89,7 +89,7 @@ under the License.
                     <#list entity.javaNameList as javaName>
                         <@tr class='entitytext'>
                             <@td>
-                              <div class='enametext<#if javaName.isPk> pktext</#if>'>${javaName.name}</div>
+                              <div class="enametext<#if javaName.isPk> pktext</#if>">${javaName.name}</div>
                               <#if javaName.description?has_content>
                                 <div class="descriptiontext">${javaName.description}</div>
                               </#if>
@@ -124,7 +124,7 @@ under the License.
                                         <br />${uiLabelMap.WebtoolsFKName}: ${relation.fkName}
                                     </#if>
                                     <#if relation.description?has_content>
-                                        <br /><span class='descriptiontext'>${relation.description}</span>
+                                        <br /><span class="descriptiontext">${relation.description}</span>
                                     </#if>
                                 </@td>
                                 <@td width="60%" colspan='4'>

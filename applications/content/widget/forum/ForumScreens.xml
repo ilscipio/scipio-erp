@@ -30,7 +30,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition>
                                 <and>
@@ -91,7 +91,7 @@ under the License.
             <actions>
                 <set field="tabButtonItem" value="forums"/>
                 <set field="titleProperty" value="PageTitleFindForums"/>
-                <set field="tabBar" value="ForumGroupTabBar"/>
+                <set field="tabBar" value="ForumGroupSideBar"/>
                 <set field="forumGroupId" from-field="parameters.forumGroupId" default-value="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="forumGroup">
                     <field-map field-name="contentId" from-field="forumGroupId"/>
@@ -120,7 +120,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleForumGroupRoles"/>
                 <set field="tabButtonItem" value="roles"/>
-                <set field="tabBar" value="ForumGroupTabBar"/>
+                <set field="tabBar" value="ForumGroupSideBar"/>
                 <entity-one entity-name="Content" value-field="forumGroup">
                     <field-map field-name="contentId" from-field="parameters.forumGroupId"/>
                 </entity-one>
@@ -149,7 +149,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleForumGroupPurposes"/>
                 <set field="tabButtonItem" value="purposes"/>
-                <set field="tabBar" value="ForumGroupTabBar"/>
+                <set field="tabBar" value="ForumGroupSideBar"/>
                 <entity-one entity-name="Content" value-field="forumGroup">
                     <field-map field-name="contentId" from-field="parameters.forumGroupId"/>
                 </entity-one>
@@ -178,7 +178,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindForumMessages"/>
                 <set field="headerItem" value="ForumMessages"/>
-                <set field="tabBar" value="ForumMessagesTabBar"/>
+                <set field="tabBar" value="ForumMessagesSideBar"/>
                 <set field="tabButtonItem" value="messageList"/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
                 <entity-one entity-name="Content" value-field="forum">
@@ -223,7 +223,7 @@ under the License.
                 <set field="rsp.contentName" value="${content.contentName}"/>
                 <set field="titleProperty" value="PageTitleFindForumMessages"/>
                 <set field="headerItem" value="ForumMessages"/>
-                <set field="tabBar" value="ForumMessagesTabBar"/>
+                <set field="tabBar" value="ForumMessagesSideBar"/>
                 <set field="tabButtonItem" value="messageThread"/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
                 <entity-one entity-name="Content" value-field="forum">
@@ -280,7 +280,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditForumMessage"/>
                 <set field="tabButtonItem" value="EditForumMessage"/>
                 <set field="labelTitleProperty" value="PageTitleEditForumMessage"/>
-                <set field="tabBar" value="ForumMessagesTabBar"/>
+                <set field="tabBar" value="ForumMessagesSideBar"/>
                 <set field="tabButtonItem" value=""/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
             </actions>
@@ -302,7 +302,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditForumMessage"/>
                 <set field="tabButtonItem" value="EditForumMessage"/>
                 <set field="labelTitleProperty" value="PageTitleEditForumMessage"/>
-                <set field="tabBar" value="ForumMessagesTabBar"/>
+                <set field="tabBar" value="ForumMessagesSideBar"/>
                 <set field="tabButtonItem" value=""/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
                 <entity-one entity-name="Content" value-field="forumMessage">
@@ -327,7 +327,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditForumMessage"/>
                 <set field="tabButtonItem" value="EditForumMessage"/>
                 <set field="labelTitleProperty" value="PageTitleEditForumMessage"/>
-                <set field="tabBar" value="ForumMessagesTabBar"/>
+                <set field="tabBar" value="ForumMessagesSideBar"/>
                 <set field="tabButtonItem" value=""/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
                 <entity-one entity-name="Content" value-field="forumMessage">

@@ -29,11 +29,11 @@
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <condition><not><if-empty field="maintHistSeqId"/></not></condition>
                             <widgets>
-                                <include-menu name="FixedAssetMaintTabBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
+                                <include-menu name="FixedAssetMaintSideBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

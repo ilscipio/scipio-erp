@@ -53,10 +53,10 @@ under the License.
     <webapp name="birt"
             title="BIRT"
             server="default-server"
+            menu-name="secondary"
             location="webapp/birt"
             base-permission="OFBTOOLS,WEBTOOLS"
-            mount-point="/birt"
-            app-bar-display="false"/>
+            mount-point="/birt"/>
 
     <container name="birt-container" loaders="main" class="org.ofbiz.birt.container.BirtContainer"/>
 

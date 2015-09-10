@@ -74,14 +74,14 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <!-- do check for WEBTOOLS, _VIEW permission -->
                             <condition>
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
-                                <include-menu name="BirtTabBar" location="component://birt/widget/birt/BirtMenus.xml"/>
+                                <include-menu name="BirtSideBar" location="component://birt/widget/birt/BirtMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

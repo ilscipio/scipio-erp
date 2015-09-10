@@ -190,7 +190,7 @@ under the License.
                     <decorator-section name="left-column">
                         <include-screen name="ProductStoreGroupTree"/>
                     </decorator-section>
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <include-menu name="ProductStoreGroupButtonBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">

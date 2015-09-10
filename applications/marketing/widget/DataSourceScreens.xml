@@ -31,14 +31,14 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->
                             <condition>
                                 <if-has-permission permission="MARKETING" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="DataSourceTabBar" location="component://marketing/widget/DataSourceMenus.xml"/>
+                                <include-menu name="DataSourceSideBar" location="component://marketing/widget/DataSourceMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

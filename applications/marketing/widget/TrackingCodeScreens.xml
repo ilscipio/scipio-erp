@@ -30,7 +30,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->
                             <condition>
@@ -39,7 +39,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="TrackingCodeTabBar" location="component://marketing/widget/TrackingCodeMenus.xml"/>
+                                        <include-menu name="TrackingCodeSideBar" location="component://marketing/widget/TrackingCodeMenus.xml"/>
                                     </widgets>
                                 </section>
                             </widgets>

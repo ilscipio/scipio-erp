@@ -31,7 +31,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
+                    <decorator-section name="left-column">
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->
                             <condition>
@@ -41,7 +41,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="MarketingCampaignTabBar" location="component://marketing/widget/MarketingCampaignMenus.xml"/>
+                                <include-menu name="MarketingCampaignSideBar" location="component://marketing/widget/MarketingCampaignMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

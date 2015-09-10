@@ -48,7 +48,12 @@ under the License.
             </link>
         </menu-item>
     </menu>
-
+    
+    <menu name="ContactListSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="active">
+        <include-elements menu-name="ContactListTabBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="ContactListCommBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="Preview" title="Preview">
             <condition>

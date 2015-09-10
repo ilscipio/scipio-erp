@@ -363,13 +363,14 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     <@field attr="" />
     
     * General Attributes *
-    type            = form element of type [input,textarea,datetime,select,checkbox,radio,generic],
+    type            = form element of type [input,textarea,datetime,select,checkbox,radio,display,generic],
                       default generic meaning input defined manually with #nested
                       (discouraged; prefer specific; but sometimes required and useful
                       for transition)
     label           = form label
     columns         = int value for columns for field (overrides classes)
     tooltip         = Small field description - to be displayed to the customer
+    description     = alternative to tooltip
     name            = field name
     value           = field value
     class           = css classes for the field element (NOT the cell container!)
@@ -430,11 +431,24 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     <#nested>       = button(s) (<input, <a, <button) to include
     progressOptions = if this is an upload form, specify progress upload options, enables progress next to buttons. 
                       see @progress[Script] macro[s]. should specify formSel, (progBarId and/or progTextBoxId), and others.
+                      
+    * display *
+    valueType       = [image|text|currency|date|date-time|accounting-number|generic], default generic (treated as text)
+                      TODO: currently all are handled as text/generic (because formatting done in java in stock ofbiz)
+    value           = display value or image URL
+    description     = for image type: image alt
 -->
-<#macro field type="generic" label="" name="" value="" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
+<#macro field type="generic" label="" name="" value="" valueType="generic" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} requireTitleArea=false>
+        fieldFormName="" formName="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
+        noTitleArea=false requireTitleArea=false description="">
+<#-- treat these as synonyms for now -->
+<#if tooltip?has_content>
+  <#local description = tooltip>
+<#elseif description?has_content>
+  <#local tooltip = description>
+</#if>
 
 <#-- fieldIdNum will always increment throughout the page -->
 <#global fieldIdNum = (fieldIdNum!0)+1 />
@@ -461,7 +475,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 </#if>
 
 <@row collapse=collapse!false norows=norows class="form-field-entry">
-    <#if (label?has_content && type != "submitarea") || requireTitleArea>
+    <#if !noTitleArea && ((label?has_content && type != "submitarea") || type == "display" || requireTitleArea)>
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         
@@ -640,6 +654,27 @@ Set current heading level manually. For advanced markup, bypassing @section (but
                 </#if>
               </#if>
             </@row>
+            <#break> 
+          <#case "display">
+            <#-- TODO? may need formatting here based on valueType... not done by renderDisplayField... done in java OOTB... 
+                 can also partially detect type of value with ?is_, but is not enough... -->
+            <#if !valueType?has_content || (valueType=="generic")>
+              <#local displayType = "text">
+            <#else>
+              <#local displayType = valueType>
+            </#if>
+            <#if !value?has_content>
+              <#local value><#nested></#local>
+            </#if>
+            <#if displayType == "image">
+              <#local imageLocation = value>
+              <#local desc = "">
+            <#else>
+              <#local imageLocation = "">
+              <#local desc = value>
+            </#if>
+            <#-- FIXME: maybe use div or span with a class instead of p, but this blends nicely for now -->
+            <p><@renderDisplayField type=displayType imageLocation=imageLocation idName="" description=desc title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=description/></p>
             <#break> 
           <#default> <#-- "generic", empty or unrecognized -->
             <#if value?has_content>

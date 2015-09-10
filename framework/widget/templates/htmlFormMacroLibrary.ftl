@@ -27,9 +27,9 @@ not "current" context (too intrusive in current renderer design). still relies o
   </#if>
 </#macro>
 
-<#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorUrl="" inPlaceEditorParams="">
+<#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt="">
   <#if type?has_content && type=="image">
-    <img src="${imageLocation}" alt=""><#lt/>
+    <img src="${imageLocation}" alt="${imageAlt}"><#lt/>
   <#else>
     <#--
     <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>

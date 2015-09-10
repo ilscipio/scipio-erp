@@ -29,7 +29,7 @@ under the License.
             <widgets>
                 <!-- main defines the regions of the HTML page -->
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <include-menu name="PaymentGatewayConfigSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">

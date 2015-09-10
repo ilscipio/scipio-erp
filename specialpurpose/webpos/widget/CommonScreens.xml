@@ -136,7 +136,7 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <widgets>
                                 <include-menu name="ManagerSideBar" location="component://webpos/widget/WebPosMenus.xml"/>

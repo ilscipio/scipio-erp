@@ -63,7 +63,7 @@
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <include-menu name="EbayStoreFunctionSideBar"  location="component://ebaystore/widget/EbayStoreMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -114,7 +114,7 @@
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <include-menu name="EbayConfigSideBar"  location="component://ebay/widget/EbayMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -149,7 +149,7 @@
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <include-menu location="component://ebaystore/widget/EbayStoreMenus.xml" name="EbaySellingManagerSideBar"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -170,7 +170,7 @@
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <include-menu location="component://ebaystore/widget/EbayStoreMenus.xml" name="EbayAccountSideBar"/>
                     </decorator-section>
                     <decorator-section name="body">

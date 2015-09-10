@@ -72,7 +72,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
                                 <not><if-empty field="fixedAssetId"/></not>
@@ -126,7 +126,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                 <!--
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
                                 <not><if-empty field="fixedAssetId"/></not>
@@ -137,7 +137,7 @@ under the License.
                         </section>
                     </decorator-section>
                      -->
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <include-menu name="FixedAssetSubSideBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">

@@ -141,7 +141,7 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <include-menu name="ArPaymentSideBar" location="component://accounting/widget/ar/ArMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -163,7 +163,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
-                    <decorator-section name="left-column">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <include-menu name="PaymentGroupSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">

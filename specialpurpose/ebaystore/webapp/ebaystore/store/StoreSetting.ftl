@@ -135,7 +135,7 @@ under the License.
       <fieldset>
         <@table type="fields" cellspacing="0" class="basic-table">
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreName} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreName} :</@td>
               <@td valign="middle">
                     <input type="text" name="storeName" value="${ebayStore.storeName!}" onKeyDown="countAreaChars(document.StoreSettingForm.storeName,35,document.getElementById('charsleft1'));"
                     onKeyUp="countAreaChars(document.StoreSettingForm.storeName,35,document.getElementById('charsleft1'));" />
@@ -143,7 +143,7 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreDesc} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreDesc} :</@td>
               <@td valign="middle">
                     <textarea rows="4" cols="80" name="storeDesc"
                     onKeyDown="countAreaChars(document.StoreSettingForm.storeDesc,300,document.getElementById('charsleft2'));"
@@ -152,19 +152,19 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreURL} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreURL} :</@td>
               <@td valign="middle">
                    <a href="${ebayStore.storeUrl!}" target="_blank">${ebayStore.storeUrl!}</a>
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreLogoURL} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreLogoURL} :</@td>
               <@td valign="middle">
                    <input type="text" name="storeLogoURL" size="50" value="${ebayStore.storeLogoURL!}"/>
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle"></@td>
+              <@td align="right" valign="middle"></@td>
               <@td valign="middle">
                    <div onclick="javascript:switchTheme();">
                    <input type="radio" name="storeThemeType" <#if themeType! == "Basic">checked="checked"</#if> value="Basic" default="default" /> Basic Theme
@@ -174,7 +174,7 @@ under the License.
             </@tr>
             <#-- advance Theme -->
              <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreAdvancedTheme} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreAdvancedTheme} :</@td>
               <@td valign="middle">
                 <select id="storeAdvancedTheme" name="storeAdvancedTheme">
                    <#if storeAdvanceThemeOptList?has_content>
@@ -189,7 +189,7 @@ under the License.
             </@tr>
             <#if storeAdvancedThemeColorOptList?has_content>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreAdvancedThemeColor} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreAdvancedThemeColor} :</@td>
               <@td valign="middle">
                 <select name="storeAdvancedThemeColor">
                         <#list storeAdvancedThemeColorOptList as storeAdvancedThemeColorOpt>
@@ -203,7 +203,7 @@ under the License.
             </#if>
             <#-- Basic Theme -->
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreBasicTheme} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreBasicTheme} :</@td>
               <@td valign="middle">
                 <#assign currentStoreThemeIdAndSchemeId = ebayStore.storeThemeId?string+"-"+ebayStore.storeColorSchemeId?string>
                 <select id="storeBasicTheme" name="storeBasicTheme" onchange="javascript:retrieveThemeColorSchemeByThemeId('<@ofbizUrl>retrieveThemeColorSchemeByThemeId</@ofbizUrl>',this.value,'${parameters.productStoreId!}');">
@@ -226,19 +226,19 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStorePrimaryColor} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStorePrimaryColor} :</@td>
               <@td valign="middle">
                    ${uiLabelMap.CommonNbr}<input type="text" id="storePrimaryColor" name="storePrimaryColor" size="10" value="${ebayStore.storeColorPrimary!}"/>
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreSecondColor} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreSecondColor} :</@td>
               <@td valign="middle">
                    ${uiLabelMap.CommonNbr}<input type="text" id="storeSecondaryColor" name="storeSecondaryColor" size="10" value="${ebayStore.storeColorSecondary!}"/>
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreAccentColor} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreAccentColor} :</@td>
               <@td valign="middle">
                    ${uiLabelMap.CommonNbr}<input type="text" id="storeAccentColor" name="storeAccentColor" size="10" value="${ebayStore.storeColorAccent!}"/>
               </@td>
@@ -261,7 +261,7 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreName} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreName} :</@td>
               <@td valign="middle">
                <#if storeFontTheme??>
                     <#if ebayStore.storeNameColor??>
@@ -294,7 +294,7 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreSectionTitle} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreSectionTitle} :</@td>
               <@td valign="middle">
                <#if storeFontTheme??>
                     <#if ebayStore.storeTitleColor??>
@@ -327,7 +327,7 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreDesc} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreDesc} :</@td>
               <@td valign="middle">
               <#if storeFontTheme??>
                     <#if ebayStore.storeDescColor??>
@@ -360,7 +360,7 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreHeaderDisplay} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreHeaderDisplay} :</@td>
               <@td valign="middle">
                     <select id="storeCustomHeaderLayout" name="storeCustomHeaderLayout">
                         <#list ebayStore.storeCustomHeaderLayoutList as storeCustomHeaderLayout>
@@ -370,14 +370,14 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle"></@td>
+              <@td align="right" valign="middle"></@td>
               <@td valign="middle">
                     <textarea rows="8" cols="40" name="storeCustomHeader">
                     ${ebayStore.storeCustomHeader!}</textarea>
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreHeaderStyle} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreHeaderStyle} :</@td>
               <@td valign="middle">
                     <select id="storeHeaderStyle" name="storeHeaderStyle">
                         <#list ebayStore.storeHeaderStyleList as storeHeaderStyle>
@@ -387,13 +387,13 @@ under the License.
               </@td>
             </@tr>
             <#--tr>
-              <@td class="label" align="right" valign="middle">Home Page :</@td>
+              <@td align="right" valign="middle">Home Page :</@td>
               <@td valign="middle">
                     <input type="text" id="homePage" name="homePage" value="${ebayStore.storeHomePage!}"/>
               </@td>
             </tr-->
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreItemListDesplay} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreItemListDesplay} :</@td>
               <@td valign="middle">
                     <select id="storeItemLayout" name="storeItemLayout">
                         <#list ebayStore.storeItemLayoutList as storeItemLayout>
@@ -403,7 +403,7 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreItemSortOrder} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreItemSortOrder} :</@td>
               <@td valign="middle">
                     <select id="storeItemSortOrder" name="storeItemSortOrder">
                         <#list ebayStore.storeItemSortOrderList as storeItemSortOrder>
@@ -413,7 +413,7 @@ under the License.
               </@td>
             </@tr>
             <#--tr>
-              <@td class="label" align="right" valign="middle">Custom Listing Header Display :</@td>
+              <@td align="right" valign="middle">Custom Listing Header Display :</@td>
               <@td valign="middle">
                     <select id="storeCustomListingHeaderDisplay" name="storeCustomListingHeaderDisplay">
                         <#list ebayStore.storeCustomListingHeaderDisplayList as storeCustomListingHeaderDisplay>
@@ -423,7 +423,7 @@ under the License.
               </@td>
             </tr-->
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreMerchDisplay} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreMerchDisplay} :</@td>
               <@td valign="middle">
                     <select id="storeMerchDisplay" name="storeMerchDisplay">
                         <#list ebayStore.storeMerchDisplayList as storeMerchDisplay>
@@ -433,7 +433,7 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle">${uiLabelMap.EbayStoreStoreSubscriptionLevel} :</@td>
+              <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreSubscriptionLevel} :</@td>
               <@td valign="middle">
                     <select id="storeMerchDisplay" name="storeSubscriptionDisplay">
                         <#list ebayStore.storeSubscriptionLevelList as storeSubscriptionLevel>
@@ -443,7 +443,7 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="middle"></@td>
+              <@td align="right" valign="middle"></@td>
               <@td valign="middle">
                     <input type="submit" value="${uiLabelMap.CommonSubmit}" name="submitButton" class="smallSubmit" />
               </@td>

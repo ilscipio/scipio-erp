@@ -22,7 +22,7 @@
         <div class="h3">${uiLabelMap.ContentRenameFolder}</div>
         ${uiLabelMap.ContentRenameFolder} : ${content.contentName}<br />
         <input type="text" name="contentName" value="${content.contentName}" />
-        <br/ <a class="${styles.button_default!}" href="javascript:document.editContentTree.submit();">${uiLabelMap.ContentRenameFolder}</a><a class="${styles.button_default!}" href="<@ofbizUrl>navigateContent</@ofbizUrl>">${uiLabelMap.CommonCancel}</a>
+        <br /><a class="${styles.button_default!}" href="javascript:document.editContentTree.submit();">${uiLabelMap.ContentRenameFolder}</a><a class="${styles.button_default!}" href="<@ofbizUrl>navigateContent</@ofbizUrl>">${uiLabelMap.CommonCancel}</a>
     <#else>
         <div class="h3">${uiLabelMap.ContentNewFolder}</div>
         ${uiLabelMap.ContentRoot} : ${content.contentName}

@@ -54,7 +54,7 @@ under the License.
               <@td width="20%"></@td>
             </@tr>
             <@tr>
-              <@td width="30"><br /><@heading relLevel=1>${uiLabelMap.PartyGeneralCorrespondenceAddress}</@heading></@td>
+              <@td width="30"><@heading relLevel=1>${uiLabelMap.PartyGeneralCorrespondenceAddress}</@heading></@td>
               <@td width="30"></@td>
             </@tr>
             <@tr>
@@ -95,7 +95,7 @@ under the License.
               <@td width="30%">${contactInfo2.country!}</@td>
               <@td width="20%"></@td>
             </@tr>
-            <@tr><@td><br /><@heading relLevel=1>${uiLabelMap.PartyPrimaryPhone}</@heading></@td></@tr>
+            <@tr><@td><@heading relLevel=1>${uiLabelMap.PartyPrimaryPhone}</@heading></@td></@tr>
             <@tr>
               <@td width="20%">${uiLabelMap.CommonCountryCode}</@td>
               <@td width="30%">${contactInfo1.countryCode!}</@td>

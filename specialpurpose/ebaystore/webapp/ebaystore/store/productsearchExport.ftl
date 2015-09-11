@@ -254,9 +254,9 @@ under the License.
                      <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
                           <@table type="fields" cellspacing="0" width="70%">
                             <@tr>
-                                <@td class="label">ItemID</@td>
+                                <@td>ItemID</@td>
                                 <@td><input type="text" readonly="readonly" name="item" value="${item.getItemID()!}"/></@td>
-                                <@td class="label">Item Fee</@td>
+                                <@td>Item Fee</@td>
                                 <@td>
                                         <input type="text" readonly="readonly" name="itemFee" value="${request.getAttribute("itemFee")!}"/>
                                         <!-- itemlisting buttons bar -->
@@ -278,7 +278,7 @@ under the License.
                                      <@td width="60%"  valign="top">
                                         <@table type="fields" class="" cellspacing="0">
                                         <@tr>
-                                            <@td class="label">SiteId</@td>
+                                            <@td>SiteId</@td>
                                             <@td>
                                                 <#assign site = item.getSite().value()!>
                                                 <input type="text" readonly="readonly" name="site" value="${item.getSite().name()!} [${item.getSite()!}]"/>
@@ -286,7 +286,7 @@ under the License.
                                         </@tr>
                                         <!-- set ebay category -->
                                         <@tr>
-                                            <@td class="label">${uiLabelMap.FormFieldTitle_ebayCategory}</@td>
+                                            <@td>${uiLabelMap.FormFieldTitle_ebayCategory}</@td>
                                             <@td>
                                               <div>
                                                   <div id="loading"></div>
@@ -322,7 +322,7 @@ under the License.
                                         </@tr>
                                         <!-- end of set category -->
                                         <@tr>
-                                            <@td class="label">Store category 1</@td>
+                                            <@td>Store category 1</@td>
                                             <@td>
                                               <div>
                                                   <div id="loading"></div>
@@ -356,7 +356,7 @@ under the License.
                                             </@td>
                                         </@tr>
                                         <@tr>
-                                            <@td class="label">Store category 2</@td>
+                                            <@td>Store category 2</@td>
                                             <@td>
                                               <div>
                                                   <div id="loading"></div>
@@ -389,15 +389,15 @@ under the License.
                                             </@td>
                                         </@tr>
                                         <@tr>
-                                            <@td class="label">Title</@td>
+                                            <@td>Title</@td>
                                             <@td><input type="text" size="60"  name="title" value="${item.getTitle()!}"/></@td>
                                         </@tr>
                                         <@tr>
-                                            <@td class="label">SKU</@td>
+                                            <@td>SKU</@td>
                                             <@td><input type="text" readonly="readonly" name="sku" value="${item.getSKU()!}"/></@td>
                                         </@tr>
                                         <@tr>
-                                            <@td class="label">PictureURL</@td>
+                                            <@td>PictureURL</@td>
                                             <@td>
                                                 <#assign pic = item.getPictureDetails()!>
                                                 <#assign picUrls = pic.getPictureURL()!>
@@ -406,12 +406,12 @@ under the License.
                                             </@td>
                                         </@tr>
                                         <#--tr>
-                                            <@td class="label">Description</@td>
+                                            <@td>Description</@td>
                                             <input type="text" rows="3" cols="50" rows="4" name="description" size="50" value=""/>
                                             <@td><textarea  name="description" style="height:88px;width:350px;"><#if item.getDescription()??>Description of item<#else>${item.getDescription()!}</#if></textarea></@td>
                                         </tr-->
                                         <@tr>
-                                            <@td class="label">${uiLabelMap.CommonCountry}</@td>
+                                            <@td>${uiLabelMap.CommonCountry}</@td>
                                              <#if item.getCountry().value()??>
                                                 <#assign country = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("Geo", {"geoCode": item.getCountry().value()}, null, false))/>
                                                 <#if country?has_content>
@@ -421,22 +421,22 @@ under the License.
                                             <@td><input type="text" readonly="readonly" name="country" size="20" value="${countryname!?default(item.getCountry().value()!)}"/></@td>
                                         </@tr>
                                         <@tr>
-                                            <@td class="label">${uiLabelMap.FormFieldTitle_location}</@td>
+                                            <@td>${uiLabelMap.FormFieldTitle_location}</@td>
                                             <@td><input type="text" name="location" size="50" maxlength="50" value="${item.getLocation()!}" /></@td>
                                         </@tr>
                                         <@tr>
-                                            <@td class="label"><b>Enable auto-relist item</b></@td>
+                                            <@td><b>Enable auto-relist item</b></@td>
                                             <@td><input type="checkbox" name="isAutoRelist" value="Y" <#if isAutoRelist == "Y">checked="checked"</#if>/></@td>
                                         </@tr>
                                         <#if isReserve?? && isReserve == true>
                                         <@tr>
-                                            <@td class="label"><b>Require eBay Inventory</b></@td>
+                                            <@td><b>Require eBay Inventory</b></@td>
                                             <@td><input type="checkbox" name="requireEbayInventory" value="Y" <#if requireEbayInventory == "Y">checked="checked"</#if>/></@td>
                                         </@tr>
                                         </#if>
                                         <@tr>
-                                            <@td class="label"></@td>
-                                            <@td><br /></@td>
+                                            <@td></@td>
+                                            <@td></@td>
                                         </@tr>
                                      </@table>
                                     </@td>
@@ -467,7 +467,7 @@ under the License.
                                             <#assign itemSpecifics = values.get(nameSpecific)!/>
                                                 <#if itemSpecifics?has_content>
                                                     <@tr>
-                                                        <@td class="label">${nameSpecific!}</@td>
+                                                        <@td>${nameSpecific!}</@td>
                                                         <input type="hidden" name="nameValueListType_o_${i}" value="${nameSpecific!}"/>
                                                         <@td>
                                                             <select id="categorySpecifics" name="categorySpecifics_o_${i}">
@@ -524,7 +524,7 @@ under the License.
                                                         <@td><input type="checkbox" value="Y" onclick="javascript:enabledItemTemplate(this.value);" id="enabledTheme" name="enabledTheme" /><b>Add a theme</b></checkbox></@td>
                                                     </@tr>
                                                     <@tr>
-                                                        <@td class="label">Select Theme</@td>
+                                                        <@td>Select Theme</@td>
                                                         <@td>
                                                              <#if adItemTemplates?has_content>
                                                                 <select id="themeGroup" disabled onchange="javascript:retrieveTemplateByTemGroupId(this.value,'${productStoreId!}','${primaryCate.getCategoryID()!}');" name="themeGroup">
@@ -536,7 +536,7 @@ under the License.
                                                         </@td>
                                                     </@tr>
                                                     <@tr>
-                                                        <@td class="label">Select Design</@td>
+                                                        <@td>Select Design</@td>
                                                         <@td>
                                                              <#if adItemTemplates?has_content>
                                                                 <select id="theme" disabled onchange="javascript:previewPic(this.value);" name="theme">
@@ -599,7 +599,7 @@ under the License.
                                        <div id="tabContent${id}" class="tabContent" <#if id != 1>style="display:none;"</#if>>
                                             <@table type="fields" class="" width="50%" height="100%" id="table2" cellspacing="0">
                                                     <@tr>
-                                                         <@td class="label"></@td>
+                                                         <@td></@td>
                                                         <@td>
                                                             <#if listingType.type.equals("Chinese")>
                                                                 <input type="radio" name="listype" value="auction"/><b>${tabName!}</b>
@@ -609,7 +609,7 @@ under the License.
                                                                 <#--input type="checkbox" value="Y" name="enabledFixedPrice_${id}" /><b>${tabName!}</b></checkbox-->
                                                             </#if>
                                                         </@td>
-                                                        <@td class="label">Duration</@td>
+                                                        <@td>Duration</@td>
                                                         <@td>
                                                             <#assign durations = listingType.durations!>
                                                             <#if durations?has_content>
@@ -627,7 +627,7 @@ under the License.
                                                         </@td>
                                                     </@tr>
                                                     <@tr>
-                                                        <@td class="label">${uiLabelMap.CommonQuantity}</@td>
+                                                        <@td>${uiLabelMap.CommonQuantity}</@td>
                                                         <@td>
                                                             <#if listingType.type.equals("FixedPriceItem") >
                                                                 <input type="text" size="3" value="1" name="quantity_${id}" size="12" maxlength="3"/>
@@ -635,7 +635,7 @@ under the License.
                                                                 <input type="text" size="3" value="1"  disabled  name="quantity_${id}" size="12" maxlength="3"/>
                                                             </#if>
                                                         </@td>
-                                                        <@td class="label">Lot Size</@td>
+                                                        <@td>Lot Size</@td>
                                                         <@td><input type="text" size="10" name="lotsize_${id}" /></@td>
                                                     </@tr>
                                                     <#if productPrices?has_content>
@@ -651,37 +651,37 @@ under the License.
                                                     <@tr>
                                                     <input type="hidden" name="currencyId_${id}" value="${currencyUomId!}"/>
                                                         <#if listingType.type.equals("FixedPriceItem") >
-                                                            <@td class="label">Start Price</@td>
+                                                            <@td>Start Price</@td>
                                                             <@td><input type="text"  size="6" name="startPrice_${id}" value="${min!}" />${currencyUomId!}</@td>
-                                                            <@td class="label"></@td>
+                                                            <@td></@td>
                                                             <@td></@td>
                                                         <#else>
-                                                            <@td class="label">Start Price</@td>
+                                                            <@td>Start Price</@td>
                                                             <@td><input type="text" size="6" name="startPrice_${id}" value="${min!}" />${currencyUomId!}</@td>
-                                                            <@td class="label">BIN Price</@td>
+                                                            <@td>BIN Price</@td>
                                                             <@td><input type="text"  size="6" name="buyItNowPrice_${id}" value="${max!}" <#if listingType.type.equals("FixedPriceItem")>disabled="disabled"</#if> />${currencyUomId!}</@td>
                                                         </#if>
                                                     </@tr>
                                                     <#if !listingType.type.equals("FixedPriceItem") >
                                                     <@tr>
-                                                        <@td class="label">Reserve Price</@td>
+                                                        <@td>Reserve Price</@td>
                                                         <@td><input type="text" size="6" name="reservePrice_${id}" <#if listingType.type.equals("FixedPriceItem")>disabled="disabled"</#if> />${currencyUomId!}</@td>
-                                                        <@td class="label"></@td>
+                                                        <@td></@td>
                                                         <@td></@td>
                                                     </@tr>
                                                     </#if>
                                                     <@tr>
-                                                        <@td class="label">VATPercent</@td>
+                                                        <@td>VATPercent</@td>
                                                         <@td><input type="text" size="6" name="vatPercent_${id}" /></@td>
-                                                         <@td class="label">Postal code</@td>
+                                                         <@td>Postal code</@td>
                                                         <@td><input type="text" size="10" name="postalCode_${id}" /></@td>
                                                     </@tr>
                                                     <#if listingType.type.equals("FixedPriceItem") >
                                                     <@tr>
-                                                        <@td class="label"></@td><!-- use when fixed price and store fixed price -->
+                                                        <@td></@td><!-- use when fixed price and store fixed price -->
                                                         <@td><input type="checkbox" value="true" name="enableBestOffer_${id}" /><b>Enable Best Offer</b></@td>
-                                                        <@td class="label"></@td>
-                                                        <@td><br /></@td>
+                                                        <@td></@td>
+                                                        <@td></@td>
                                                     </@tr>
                                                     </#if>
                                                     <@tr><@td colspan="4"><br /></@td></@tr>
@@ -739,10 +739,10 @@ under the License.
                                                     </@tr>
                                                     <#if is_payPal == true>
                                                     <@tr>
-                                                        <@td class="label">${uiLabelMap.FormFieldTitle_payPalEmail}</@td>
+                                                        <@td>${uiLabelMap.FormFieldTitle_payPalEmail}</@td>
                                                         <@td><input type="text" name="paymentMethodPaypalEmail" id="paymentMethodPaypalEmail" size="50" maxlength="50" value="me@ebay.com" /></@td>
-                                                        <@td class="label"></@td>
-                                                        <@td><br /></@td>
+                                                        <@td></@td>
+                                                        <@td></@td>
                                                     </@tr>
                                                     </#if>
                                          <@tr><@td colspan="4"><br /></@td></@tr>

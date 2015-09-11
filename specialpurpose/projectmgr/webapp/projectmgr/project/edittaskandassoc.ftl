@@ -52,19 +52,19 @@ under the License.
           </@td>
         </@tr>
         <@tr>
-          <@td class="label">${uiLabelMap.ProjectMgrQuickAssignPartyId}</@td>
+          <@td>${uiLabelMap.ProjectMgrQuickAssignPartyId}</@td>
           <@td>
             <@htmlTemplate.lookupField formName="addTaskAndAssocForm" name="quickAssignPartyId" id="quickAssignPartyId" fieldFormName="LookupPartyName"/>
           </@td>
         </@tr>
         <@tr>
           <#if task??>
-            <@td class="label">${uiLabelMap.ProjectMgrWorkEffortId}</@td>
+            <@td>${uiLabelMap.ProjectMgrWorkEffortId}</@td>
             <@td>${task.workEffortId!}</@td>
           </#if>
         </@tr>
         <@tr>
-          <@td class="label">${uiLabelMap.CommonName}*</@td>
+          <@td>${uiLabelMap.CommonName}*</@td>
             <#if task??>
               <@td>${task.workEffortName!}<span class="tooltip">${uiLabelMap.CommonRequired}</span></@td>
             <#else>
@@ -72,7 +72,7 @@ under the License.
             </#if>
         </@tr>
         <@tr>
-          <@td class="label">${uiLabelMap.CommonDescription}</@td>
+          <@td>${uiLabelMap.CommonDescription}</@td>
             <#if task??>
               <@td><input type="text" name="description" value="${task.description!}"/></@td>
             <#else>
@@ -80,7 +80,7 @@ under the License.
           </#if>
         </@tr>
         <@tr>
-          <@td class="label">${uiLabelMap.CommonStatus}</@td>
+          <@td>${uiLabelMap.CommonStatus}</@td>
           <@td>
             <select name="currentStatusId">
               <#if task??>
@@ -88,7 +88,7 @@ under the License.
                 <option selected="selected" value="${currentStatus.currentStatusId}">${currentStatus.description}</option>
                 <#assign statusValidChangeToDetailList = delegator.findByAnd("StatusValidChangeToDetail", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", currentStatus.currentStatusId), null, false)>
                 <#list statusValidChangeToDetailList as statusValidChangeToDetail>
-                  <option value=${statusValidChangeToDetail.statusId}>[${uiLabelMap.WorkEffortGeneral}]${statusValidChangeToDetail.description}</option>
+                  <option value="${statusValidChangeToDetail.statusId}">[${uiLabelMap.WorkEffortGeneral}]${statusValidChangeToDetail.description}</option>
                 </#list>
               <#else>
                 <#assign statusItemGenrals = delegator.findByAnd("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusTypeId", "CALENDAR_STATUS"), null, false)>
@@ -108,7 +108,7 @@ under the License.
           </@td>
         </@tr>
         <@tr>
-          <@td class="label">${uiLabelMap.CommonPriority}</@td>
+          <@td>${uiLabelMap.CommonPriority}</@td>
           <@td>
             <#if task?has_content>
               <#assign priority = task.priority!>
@@ -117,32 +117,32 @@ under the License.
               <#if priority??>
                 <option selected="selected" value="${priority}">${priority}</option>
                 <option></option>
-                <option value=1>${uiLabelMap.WorkEffortPriorityOne}</option>
-                <option value=2>${uiLabelMap.WorkEffortPriorityTwo}</option>
-                <option value=3>${uiLabelMap.WorkEffortPriorityThree}</option>
-                <option value=4>${uiLabelMap.WorkEffortPriorityFour}</option>
-                <option value=5>${uiLabelMap.WorkEffortPriorityFive}</option>
-                <option value=6>${uiLabelMap.WorkEffortPrioritySix}</option>
-                <option value=7>${uiLabelMap.WorkEffortPrioritySeventh}</option>
-                <option value=8>${uiLabelMap.WorkEffortPriorityEight}</option>
-                <option value=9>${uiLabelMap.WorkEffortPriorityNine}</option>
+                <option value="1">${uiLabelMap.WorkEffortPriorityOne}</option>
+                <option value="2">${uiLabelMap.WorkEffortPriorityTwo}</option>
+                <option value="3">${uiLabelMap.WorkEffortPriorityThree}</option>
+                <option value="4">${uiLabelMap.WorkEffortPriorityFour}</option>
+                <option value="5">${uiLabelMap.WorkEffortPriorityFive}</option>
+                <option value="6">${uiLabelMap.WorkEffortPrioritySix}</option>
+                <option value="7">${uiLabelMap.WorkEffortPrioritySeventh}</option>
+                <option value="8">${uiLabelMap.WorkEffortPriorityEight}</option>
+                <option value="9">${uiLabelMap.WorkEffortPriorityNine}</option>
               <#else>
                 <option></option>
-                <option value=1>${uiLabelMap.WorkEffortPriorityOne}</option>
-                <option value=2>${uiLabelMap.WorkEffortPriorityTwo}</option>
-                <option value=3>${uiLabelMap.WorkEffortPriorityThree}</option>
-                <option value=4>${uiLabelMap.WorkEffortPriorityFour}</option>
-                <option value=5>${uiLabelMap.WorkEffortPriorityFive}</option>
-                <option value=6>${uiLabelMap.WorkEffortPrioritySix}</option>
-                <option value=7>${uiLabelMap.WorkEffortPrioritySeventh}</option>
-                <option value=8>${uiLabelMap.WorkEffortPriorityEight}</option>
-                <option value=9>${uiLabelMap.WorkEffortPriorityNine}</option>
+                <option value="1">${uiLabelMap.WorkEffortPriorityOne}</option>
+                <option value="2">${uiLabelMap.WorkEffortPriorityTwo}</option>
+                <option value="3">${uiLabelMap.WorkEffortPriorityThree}</option>
+                <option value="4">${uiLabelMap.WorkEffortPriorityFour}</option>
+                <option value="5">${uiLabelMap.WorkEffortPriorityFive}</option>
+                <option value="6">${uiLabelMap.WorkEffortPrioritySix}</option>
+                <option value="7">${uiLabelMap.WorkEffortPrioritySeventh}</option>
+                <option value="8">${uiLabelMap.WorkEffortPriorityEight}</option>
+                <option value="9">${uiLabelMap.WorkEffortPriorityNine}</option>
               </#if>
             </select>
           </@td>
         </@tr>
         <@tr>
-          <@td class="label">${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}</@td>
+          <@td>${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}</@td>
           <@td>
             <#assign enumerations = delegator.findByAnd("Enumeration", Static["org.ofbiz.base.util.UtilMisc"].toMap("enumTypeId", "WORK_EFF_SCOPE"), null, false)>
             <select name="scopeEnumId">
@@ -160,7 +160,7 @@ under the License.
           </@td>
         </@tr>
         <@tr>
-          <@td class="label">${uiLabelMap.WorkEffortEstimatedStartDate}</@td>
+          <@td>${uiLabelMap.WorkEffortEstimatedStartDate}</@td>
           <@td>
             <#if task??>
               <@htmlTemplate.renderDateTimeField name="estimatedStartDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.estimatedStartDate!}" size="25" maxlength="30" id="estimatedStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
@@ -170,7 +170,7 @@ under the License.
           </@td>
          </@tr>
          <@tr>
-           <@td class="label">${uiLabelMap.WorkEffortEstimatedCompletionDate}</@td>
+           <@td>${uiLabelMap.WorkEffortEstimatedCompletionDate}</@td>
            <@td>
              <#if task??>
                <@htmlTemplate.renderDateTimeField name="estimatedCompletionDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.estimatedCompletionDate!}" size="25" maxlength="30" id="estimatedCompletionDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
@@ -180,10 +180,8 @@ under the License.
            </@td>
          </@tr>
          <@tr>
-           <@td class="label">${uiLabelMap.FormFieldTitle_actualStartDate}</@td>
+           <@td>${uiLabelMap.FormFieldTitle_actualStartDate}</@td>
            <@td>
-
-
              <#if task??>
                <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.actualStartDate!}" size="25" maxlength="30" id="actualStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              <#else>
@@ -192,9 +190,8 @@ under the License.
            </@td>
          </@tr>
          <@tr>
-           <@td class="label">${uiLabelMap.FormFieldTitle_actualCompletionDate}</@td>
+           <@td>${uiLabelMap.FormFieldTitle_actualCompletionDate}</@td>
            <@td>
-
              <#if task??>
                <@htmlTemplate.renderDateTimeField name="actualCompletionDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.actualCompletionDate!}" size="25" maxlength="30" id="actualCompletionDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              <#else>

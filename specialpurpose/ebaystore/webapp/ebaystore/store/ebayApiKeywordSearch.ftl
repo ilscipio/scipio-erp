@@ -51,7 +51,7 @@ under the License.
         <input type="hidden" name="noConditionFind" value="Y"/>
         <@table type="fields" cellspacing="0" class="basic-table">
           <@tr>
-              <@td class="label" align="right" valign="top">
+              <@td align="right" valign="top">
                 ${uiLabelMap.ProductCatalog}:
               </@td>
               <@td valign="middle">
@@ -68,7 +68,7 @@ under the License.
               </@td>
             </@tr>
             <@tr>
-              <@td class="label" align="right" valign="top">
+              <@td align="right" valign="top">
                 ${uiLabelMap.ProductCategory}:
               </@td>
               <@td valign="middle">
@@ -90,7 +90,7 @@ under the License.
               </@td>
           </@tr>
           <@tr>
-            <@td class="label" align="right" valign="top">
+            <@td align="right" valign="top">
               ${uiLabelMap.ProductProductName}:
             </@td>
             <@td valign="middle">
@@ -98,7 +98,7 @@ under the License.
             </@td>
           </@tr>
           <@tr>
-            <@td class="label" align="right" valign="top">
+            <@td align="right" valign="top">
               ${uiLabelMap.ProductInternalName}:
             </@td>
             <@td valign="middle">
@@ -106,7 +106,7 @@ under the License.
             </@td>
           </@tr>
           <@tr>
-            <@td class="label" align="right" valign="top">
+            <@td align="right" valign="top">
               ${uiLabelMap.ProductKeywords}:
             </@td>
             <@td valign="middle">

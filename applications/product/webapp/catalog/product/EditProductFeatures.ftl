@@ -18,6 +18,7 @@ under the License.
 -->
 <#if productId??>
 <@section title="${uiLabelMap.PageTitleEditProductFeatures}">
+  <#if productFeatureAndAppls?has_content>
     <form method="post" action="<@ofbizUrl>UpdateFeatureToProductApplication</@ofbizUrl>" name="selectAllForm">
       <input type="hidden" name="_useRowSubmit" value="Y"/>
       <input type="hidden" name="_checkGlobalScope" value="Y"/>
@@ -67,13 +68,13 @@ under the License.
             <input type="text" size='6' name='amount_o_${productFeatureAndAppl_index}' value='${(productFeatureAndAppl.amount)!}' />
             <input type="text" size='5' name='sequenceNum_o_${productFeatureAndAppl_index}' value='${(productFeatureAndAppl.sequenceNum)!}' />
             <select name='productFeatureApplTypeId_o_${productFeatureAndAppl_index}' size="1">
-    <#if (productFeatureAndAppl.productFeatureApplTypeId)??>
+            <#if (productFeatureAndAppl.productFeatureApplTypeId)??>
               <option value='${(productFeatureAndAppl.productFeatureApplTypeId)!}'><#if curProductFeatureApplType??> ${(curProductFeatureApplType.get("description",locale))!} <#else> [${productFeatureAndAppl.productFeatureApplTypeId}]</#if></option>
               <option value='${productFeatureAndAppl.productFeatureApplTypeId}'> </option>
-    </#if>
-      <#list productFeatureApplTypes as productFeatureApplType>
+            </#if>
+            <#list productFeatureApplTypes as productFeatureApplType>
               <option value='${(productFeatureApplType.productFeatureApplTypeId)!}'>${(productFeatureApplType.get("description",locale))!} </option>
-    </#list>
+            </#list>
             </select>
           </@td>
           <@td align="right">
@@ -95,12 +96,15 @@ under the License.
       </@table>
     </form>
   <#list productFeatureAndAppls as productFeatureAndAppl>
-    <form name= "RemoveFeatureFromProduct_o_${productFeatureAndAppl_index}" method= "post" action= "<@ofbizUrl>RemoveFeatureFromProduct</@ofbizUrl>">
-      <input type= "hidden" name= "productId" value= "${(productFeatureAndAppl.productId)!}"/>
-      <input type= "hidden" name= "productFeatureId" value= "${(productFeatureAndAppl.productFeatureId)!}"/>
-      <input type= "hidden" name= "fromDate" value= "${(productFeatureAndAppl.fromDate)!}"/>
+    <form name="RemoveFeatureFromProduct_o_${productFeatureAndAppl_index}" method="post" action="<@ofbizUrl>RemoveFeatureFromProduct</@ofbizUrl>">
+      <input type="hidden" name="productId" value="${(productFeatureAndAppl.productId)!}"/>
+      <input type="hidden" name="productFeatureId" value="${(productFeatureAndAppl.productFeatureId)!}"/>
+      <input type="hidden" name="fromDate" value="${(productFeatureAndAppl.fromDate)!}"/>
     </form>
   </#list>
+  <#else>
+    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+  </#if>
 </@section>
 
 <@section title="${uiLabelMap.ProductAddProductFeatureFromCategory}">
@@ -108,24 +112,24 @@ under the License.
       <input type="hidden" name="productId" value="${productId}"/>
       <select name='productFeatureCategoryId' size="1">
         <option value='' selected="selected">${uiLabelMap.ProductChooseFeatureCategory}</option>
-  <#list productFeatureCategories as productFeatureCategory>
+      <#list productFeatureCategories as productFeatureCategory>
         <option value='${(productFeatureCategory.productFeatureCategoryId)!}'>${(productFeatureCategory.description)!} [${(productFeatureCategory.productFeatureCategoryId)!}]</option>
-  </#list>
+      </#list>
       </select>
       <select name='productFeatureGroupId' size="1">
-        <option value='' selected="selected">${uiLabelMap.ProductChooseFeatureGroup}</option>
-  <#list productFeatureGroups as productFeatureGroup>
-        <option value='${(productFeatureGroup.productFeatureGroupId)!}'>${(productFeatureGroup.description)!} [${(productFeatureGroup.productFeatureGroupId)!}]</option>
-  </#list>
+        <option value="" selected="selected">${uiLabelMap.ProductChooseFeatureGroup}</option>
+      <#list productFeatureGroups as productFeatureGroup>
+        <option value="${(productFeatureGroup.productFeatureGroupId)!}">${(productFeatureGroup.description)!} [${(productFeatureGroup.productFeatureGroupId)!}]</option>
+      </#list>
       </select>
       <span class="label">${uiLabelMap.ProductFeatureApplicationType}: </span>
       <select name='productFeatureApplTypeId' size="1">
-  <#list productFeatureApplTypes as productFeatureApplType>
+      <#list productFeatureApplTypes as productFeatureApplType>
         <option value='${(productFeatureApplType.productFeatureApplTypeId)!}'
-    <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
-    <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && productFeatureApplType.productFeatureApplTypeId! =="STANDARD_FEATURE")>selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && productFeatureApplType.productFeatureApplTypeId! =="STANDARD_FEATURE")>selected="selected"</#if>
             >${(productFeatureApplType.get("description",locale))!} </option>
-  </#list>
+      </#list>
       </select>
       <input type="submit" value='${uiLabelMap.CommonAdd}'/>
     </form>
@@ -136,20 +140,20 @@ under the License.
       <input type="hidden" name="productId" value="${productId}"/>
       <span class="label">${uiLabelMap.ProductFeatureType}: </span>
       <select name='productFeatureTypeId' size="1">
-  <#list productFeatureTypes as productFeatureType>
+      <#list productFeatureTypes as productFeatureType>
         <option value='${(productFeatureType.productFeatureTypeId)!}'>${(productFeatureType.get("description",locale))!} </option>
-  </#list>
+      </#list>
       </select>
       <span class="label">${uiLabelMap.CommonIdCode}: </span><input type="text" size='10' name='idCode' value=''/>
       <br />
       <span class="label">${uiLabelMap.ProductFeatureApplicationType}: </span>
       <select name='productFeatureApplTypeId' size="1">
-  <#list productFeatureApplTypes as productFeatureApplType>
+      <#list productFeatureApplTypes as productFeatureApplType>
         <option value='${(productFeatureApplType.productFeatureApplTypeId)!}'
-    <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
-    <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && productFeatureApplType.productFeatureApplTypeId =="STANDARD_FEATURE")>selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && productFeatureApplType.productFeatureApplTypeId =="STANDARD_FEATURE")>selected="selected"</#if>
             >${(productFeatureApplType.get("description",locale))!} </option>
-  </#list>
+      </#list>
       </select>
       <br />
       <span class="label">${uiLabelMap.CommonFrom} : </span>
@@ -164,23 +168,23 @@ under the License.
 <@section title="${uiLabelMap.ProductAddProductFeatureID}">
     <form method="post" action="<@ofbizUrl>ApplyFeatureToProduct</@ofbizUrl>" name="addFeatureById">
       <input type="hidden" name="productId" value="${productId}"/>
-      <span>${uiLabelMap.CommonId}: </span>
-      <span class="label">
+      <span class="label">${uiLabelMap.CommonId}: </span>
+      <span>
         <@htmlTemplate.lookupField formName="addFeatureById" name="productFeatureId" id="productFeatureId" fieldFormName="LookupProductFeature"/>
       </span>
-      <span>${uiLabelMap.ProductFeatureApplicationType}: </span>
+      <span class="label">${uiLabelMap.ProductFeatureApplicationType}: </span>
       <select name="productFeatureApplTypeId" size="1">
-  <#list productFeatureApplTypes as productFeatureApplType>
+      <#list productFeatureApplTypes as productFeatureApplType>
         <option value='${(productFeatureApplType.productFeatureApplTypeId)!}'
-    <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
-    <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && productFeatureApplType.productFeatureApplTypeId =="STANDARD_FEATURE")>selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && productFeatureApplType.productFeatureApplTypeId =="STANDARD_FEATURE")>selected="selected"</#if>
             >${(productFeatureApplType.get("description",locale))!} </option>
-  </#list>
+      </#list>
       </select>
       <br />
-      <span>${uiLabelMap.CommonFrom} : </span><@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-      <span>${uiLabelMap.CommonThru} : </span><@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-      <span>${uiLabelMap.CommonSequence} : </span><input type="text" size="5" name="sequenceNum"/>
+      <span class="label">${uiLabelMap.CommonFrom} : </span><@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+      <span class="label">${uiLabelMap.CommonThru} : </span><@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+      <span class="label">${uiLabelMap.CommonSequence} : </span><input type="text" size="5" name="sequenceNum"/>
       <input type="submit" value="${uiLabelMap.CommonAdd}"/>
     </form>
 </@section>

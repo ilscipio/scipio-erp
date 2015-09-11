@@ -37,15 +37,15 @@ under the License.
       <form method="post" action="<@ofbizUrl>Login${previousParams!}</@ofbizUrl>" name="loginform">
         <@table type="fields" class="basic-table" cellspacing="0">
           <@tr>
-            <@td class="label">${uiLabelMap.CommonUsername}</@td>
+            <@td>${uiLabelMap.CommonUsername}</@td>
             <@td><input type="text" name="USERNAME" value="${username}" size="20"/></@td>
           </@tr>
           <@tr>
-            <@td class="label">${uiLabelMap.CommonPassword}</@td>
+            <@td>${uiLabelMap.CommonPassword}</@td>
             <@td><input type="password" name="PASSWORD" value="" size="20"/></@td>
           </@tr>
           <@tr>
-            <@td class="label">${uiLabelMap.WebPosChooseTerminal}</@td>
+            <@td>${uiLabelMap.WebPosChooseTerminal}</@td>
             <@td>
               <select name="posTerminalId" id="posTerminalId">
                 <#list posTerminals as posTerminal>

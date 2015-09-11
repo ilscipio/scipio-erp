@@ -1546,11 +1546,22 @@ Helps define table. Required wrapper for all table sub-elem macros.
 Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
                     
    * General Attributes *
+    type            = [generic|content|meta|util], default generic or content (depends on table type)
+                      generic: free-form row with no assumptions on content.
+                               default for "generic" tables".
+                      content: normal data or content row. exact meaning depends on table type.
+                               default for all non-"generic" tables.
+                               note that for "data-complex" this definition is currently relaxed.
+                      meta: indicates this is a special info/status row (e.g. "No Records Found" message), not an actual content row.
+                            meta rows are treated differently by default as are thead and tfoot rows.
+                            exact meaning depends on table type.
+                      util: indicates this is a special utility-only row meant to hold no real data, 
+                            such as: spacer rows (<@tr type="util"><@td colspan=3><hr /></@td></@tr>)
+                            TODO: this isn't handled yet but SHOULD be used in templates anyhow.
     class           = css classes
                       (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
     id              = row id
-    metaRow         = if true, indicates this is a special info/status row (e.g. "No Records Found" message), not an actual content row.
-                      meta rows are treated differently by default as are thead and tfoot rows.
+    metaRow         = DEPRECATED; use type="meta"
     useAlt          = boolean, if specified, can manually enable/disable whether alternate row code runs per-row
     alt             = boolean, if specified, override the automatic auto-alt styling to specific value true or false (manual mode)
                       note: at current time, alt on non-body rows (except foot rows if enabled in @table) does not affect
@@ -1564,11 +1575,17 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     attribs               = hash of other legacy <tr attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
-<#macro tr class=true id="" metaRow=false useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro tr type="" class=true id="" metaRow="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
+  <#local tableType = (catoCurrentTableInfo.type)!"generic">
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
+  <#if !type?has_content>
+    <#local type = (!tableType?has_content || tableType == "generic")?string("generic", "content")>
+  </#if>
+  <!-- tableType: ${tableType} row type: ${type} -->
+  <#local metaRow = (metaRow?is_boolean && metaRow == true) || type == "meta">
   <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
   <#if !(useAlt?is_boolean && useAlt == false)>
     <#if !alt?is_boolean>
@@ -1593,7 +1610,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#global catoCurrentTableRowStack = pushStack(catoCurrentTableRowStack!, 
-        {"useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
+        {"type":type, "useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
   </#if>
   <#local classes = makeClassesArg(class, "")>
   <#if alt?is_boolean>
@@ -1610,6 +1627,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#if !open>
     <#local stackValues = readStack(catoCurrentTableRowStack!)>
     <#global catoCurrentTableRowStack = popStack(catoCurrentTableRowStack!)>
+    <#local type = stackValues.type>
     <#local useAlt = stackValues.useAlt>
     <#local alt = stackValues.alt>
     <#local isRegAltRow = stackValues.isRegAltRow>

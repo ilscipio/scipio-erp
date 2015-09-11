@@ -209,7 +209,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#-- Cato:
      fromWidgets: hint of whether called by renderer or ftl macros
      hasContent: hint to say there will be content, workaround for styling -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2>
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 addClasses="">
 
 <#-- level logic begin -->
     <#-- note: request obj only available because of macro renderer initial context mod -->
@@ -329,7 +329,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <div class="section-screenlet${contentFlagClasses}<#if collapsed> toggleField</#if>">
 <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
-<div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!} section-screenlet-container${contentFlagClasses}">
+<div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if><#if addClasses?has_content> ${addClasses}</#if> ${styles.grid_cell!} section-screenlet-container${contentFlagClasses}">
 
 <#if showMore>
 <#if title?has_content>

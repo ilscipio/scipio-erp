@@ -833,8 +833,9 @@ levels manually, but most often should let @section menu handle them.
     </@section>            
                     
    * General Attributes *
-    class               = css classes 
+    class               = css classes, on outer columns element (affects title)
                           (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                          note: boolean false has no effect here
     id                  = set id
     title               = section title
     titleClass          = section title class (supports complex expressions; rarely needed, usually headingLevel enough)
@@ -860,10 +861,10 @@ levels manually, but most often should let @section menu handle them.
         <#local contentId = "">
         <#local menuId = "">
     </#if>
-    <#local class = (class + " " + addClass)?trim>
+    <#-- note: addClass logic is only partially implemented (doesn't support booleans and "" means use default; otherwise may conflict with stock API?), but good enough for now -->
     <#-- note: autoHeadingLevel logic now implemented in renderScreenletBegin -->
     <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=class padded=padded menuString=menuHtml fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu 
-        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass/>
+        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass addClasses=addClass />
         <#nested />
     <@renderScreenletEnd />
 </#macro>

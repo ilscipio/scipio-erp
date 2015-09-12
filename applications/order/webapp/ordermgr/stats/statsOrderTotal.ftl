@@ -25,14 +25,14 @@ under the License.
 <#assign fieldIdNum=fieldIdNum!0/>
 <#-- OrderOrdersTotals -->
 
-<#if title?has_content><h3>${title!}</h3></#if>
+<#if title?has_content><@heading relLevel=1>${title!}</@heading></#if>
 <@chart type=chartType library=library>
     <#list currData.keySet() as key>
-        <#if chartType=="line">
+      <#if chartType=="line">
         <@chartdata value="${currData[key][chartValue]}" value2="${currData[key].pos}" title="${key}"/>
-        <#else>
+      <#else>
         <@chartdata value="${currData[key][chartValue]}" title="${key}"/>
-        </#if>
+      </#if>
     </#list>  
 </@chart>
         

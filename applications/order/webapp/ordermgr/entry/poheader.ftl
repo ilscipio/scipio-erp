@@ -19,29 +19,27 @@ under the License.
 
 <@section title="PO For ${partyId!}" class="${styles.grid_large!}6">
 
-                <@row>
-                  <@cell>
-                    Supplier Information Here
-                  </@cell>
-                </@row>
+    <@row>
+      <@cell>
+        Supplier Information Here
+      </@cell>
+    </@row>
 
-      <#-- end of header box -->
+  <#-- end of header box -->
 
-      <#-- payment box -->
-        <@section title="Place Holder">
-                  <@row>
-                    <@cell>
-                    </@cell>
-                  </@row>
-        </@section>
+  <#-- payment box -->
+    <@section title="Place Holder">
+      <@row>
+        <@cell>
+        </@cell>
+      </@row>
+    </@section>
 </@section>
 
 <#-- content box -->
 <@section title="Place Holder" class="${styles.grid_large!}3">
-
 </@section>
 
-      <#-- shipping info box -->
+<#-- shipping info box -->
 <@section title="Place Holder" class="${styles.grid_large!}3">
-
 </@section>

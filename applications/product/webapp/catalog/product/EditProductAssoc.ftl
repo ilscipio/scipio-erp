@@ -37,23 +37,20 @@ under the License.
             <input type="hidden" name="FROM_DATE" value="${fromDate!}" />
         </#if>
 
-        <@table type="fields" cellspacing="0" class="basic-table">
+    <@table type="fields" cellspacing="0" class="basic-table">
 
         <#if !(productAssoc??)>
             <#if productId?? && productIdTo?? && productAssocTypeId?? && fromDate??>
-                <@tr>
+              <@tr>
                 <@td align="right">${uiLabelMap.ProductProductId}</@td>
-                <@td>&nbsp;</@td>
                 <@td><input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="${productId!}" /></@td>
-                </@tr>
-                <@tr>
+              </@tr>
+              <@tr>
                 <@td align="right">${uiLabelMap.ProductProductIdTo}</@td>
-                <@td>&nbsp;</@td>
                 <@td><input type="text" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo!}" /></@td>
-                </@tr>
-                <@tr>
+              </@tr>
+              <@tr>
                 <@td align="right">${uiLabelMap.ProductAssociationTypeId}</@td>
-                <@td>&nbsp;</@td>
                 <@td>
                     <select name="PRODUCT_ASSOC_TYPE_ID" size="1">
                     <#if productAssocTypeId?has_content>
@@ -68,31 +65,27 @@ under the License.
                     </#list>
                     </select>
                 </@td>
-                </@tr>
-                <@tr>
+              </@tr>
+              <@tr>
                 <@td align="right">${uiLabelMap.CommonFromDate}</@td>
-                <@td>&nbsp;</@td>
                 <@td>
                         <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         ${uiLabelMap.CommonSetNowEmpty}
                 </@td>
-                </@tr>
+              </@tr>
             <#else>
-                <@tr>
+              <@tr>
                 <@td align="right">${uiLabelMap.ProductProductId}</@td>
-                <@td>&nbsp;</@td>
                 <@td><input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="${productId!}" /></@td>
-                </@tr>
-                <@tr>
+              </@tr>
+              <@tr>
                 <@td align="right">${uiLabelMap.ProductProductIdTo}</@td>
-                <@td>&nbsp;</@td>
                 <@td>
                   <@htmlTemplate.lookupField formName="editProductAssocForm" name="PRODUCT_ID_TO" id="PRODUCT_ID_TO" fieldFormName="LookupProduct"/>
                 </@td>
-                </@tr>
-                <@tr>
+              </@tr>
+              <@tr>
                 <@td align="right">${uiLabelMap.ProductAssociationTypeId}</@td>
-                <@td>&nbsp;</@td>
                 <@td>
                     <select name="PRODUCT_ASSOC_TYPE_ID" size="1">
                     <!-- <option value="">&nbsp;</option> -->
@@ -101,43 +94,37 @@ under the License.
                     </#list>
                     </select>
                 </@td>
-                </@tr>
-                <@tr>
+              </@tr>
+              <@tr>
                 <@td align="right">${uiLabelMap.CommonFromDate}</@td>
-                <@td>&nbsp;</@td>
                 <@td>
-                        ${fromDate!}
-                        <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        ${uiLabelMap.CommonSetNowEmpty}
+                    ${fromDate!}
+                    <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    ${uiLabelMap.CommonSetNowEmpty}
                 </@td>
-                </@tr>
+              </@tr>
             </#if>
         <#else>
             <@tr>
                 <@td align="right">${uiLabelMap.ProductProductId}</@td>
-                <@td>&nbsp;</@td>
                 <@td><b>${productId!}</b> ${uiLabelMap.ProductRecreateAssociation}</@td>
             </@tr>
             <@tr>
                 <@td align="right">${uiLabelMap.ProductProductIdTo}</@td>
-                <@td>&nbsp;</@td>
                 <@td><b>${productIdTo!}</b> ${uiLabelMap.ProductRecreateAssociation}</@td>
             </@tr>
             <@tr>
                 <@td align="right">${uiLabelMap.ProductAssociationType}</@td>
-                <@td>&nbsp;</@td>
                 <@td><b><#if curProductAssocType??>${(curProductAssocType.get("description",locale))!}<#else> ${productAssocTypeId!}</#if></b> ${uiLabelMap.ProductRecreateAssociation}</@td>
             </@tr>
             <@tr>
                 <@td align="right">${uiLabelMap.CommonFromDate}</@td>
-                <@td>&nbsp;</@td>
                 <@td><b>${fromDate!}</b> ${uiLabelMap.ProductRecreateAssociation}</@td>
             </@tr>
         </#if>
         
         <@tr>
             <@td width="26%" align="right">${uiLabelMap.CommonThruDate}</@td>
-            <@td>&nbsp;</@td>
             <@td width="74%">
               <#if useValues> 
                 <#assign value = productAssoc.thruDate!>
@@ -149,35 +136,31 @@ under the License.
         </@tr>
         <@tr>
             <@td width="26%" align="right">${uiLabelMap.ProductSequenceNum}</@td>
-            <@td>&nbsp;</@td>
             <@td width="74%"><input type="text" name="SEQUENCE_NUM" <#if useValues>value="${(productAssoc.sequenceNum)!}"<#else>value="${(request.getParameter("SEQUENCE_NUM"))!}"</#if> size="5" maxlength="10" /></@td>
         </@tr>
         <@tr>
             <@td width="26%" align="right">${uiLabelMap.ProductReason}</@td>
-            <@td>&nbsp;</@td>
             <@td width="74%"><input type="text" name="REASON" <#if useValues>value="${(productAssoc.reason)!}"<#else>value="${(request.getParameter("REASON"))!}"</#if> size="60" maxlength="255" /></@td>
         </@tr>
         <@tr>
             <@td width="26%" align="right">${uiLabelMap.ProductInstruction}</@td>
-            <@td>&nbsp;</@td>
             <@td width="74%"><input type="text" name="INSTRUCTION" <#if useValues>value="${(productAssoc.instruction)!}"<#else>value="${(request.getParameter("INSTRUCTION"))!}"</#if> size="60" maxlength="255" /></@td>
         </@tr>
 
         <@tr>
             <@td width="26%" align="right">${uiLabelMap.ProductQuantity}</@td>
-            <@td>&nbsp;</@td>
             <@td width="74%"><input type="text" name="QUANTITY" <#if useValues>value="${(productAssoc.quantity)!}"<#else>value="${(request.getParameter("QUANTITY"))!}"</#if> size="10" maxlength="15" /></@td>
         </@tr>
 
         <@tr>
-            <@td colspan="2">&nbsp;</@td>
+            <@td>&nbsp;</@td>
             <@td><input type="submit" <#if isCreate>value="${uiLabelMap.CommonCreate}"<#else>value="${uiLabelMap.CommonUpdate}"</#if> /></@td>
         </@tr>
-        </@table>
+    </@table>
         </form>
 </@section>
 <#if productId?? && product??>
-<@section title="${uiLabelMap.ProductAssociationsFromProduct}">
+    <@section title="${uiLabelMap.ProductAssociationsFromProduct}">
         <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
          <@thead>
             <@tr class="header-row">
@@ -220,8 +203,8 @@ under the License.
             </#list>
           </@tbody>
         </@table>
-</@section>
-<@section title="${uiLabelMap.ProductAssociationsToProduct}">
+    </@section>
+    <@section title="${uiLabelMap.ProductAssociationsToProduct}">
         <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
           <@thead>
             <@tr class="header-row">
@@ -230,7 +213,7 @@ under the License.
             <@th>${uiLabelMap.CommonFromDateTime}</@th>
             <@th>${uiLabelMap.CommonThruDateTime}</@th>
             <@th>${uiLabelMap.ProductAssociationType}</@th>
-            <@th>&nbsp;</b></@th>
+            <@th>&nbsp;</@th>
             </@tr>
           </@thead>
           <@tbody>  
@@ -251,7 +234,7 @@ under the License.
             </#list>
           </@tbody>
         </@table>
-</@section>
+    </@section>
 </#if>
 <br />
 <span class="tooltip">${uiLabelMap.CommonNote} : ${uiLabelMap.ProductHighlightedExplanation}</span>

@@ -22,9 +22,9 @@ under the License.
 <@row>
     <@cell>
     ${uiLabelMap.ProductYouSearchedFor}
-<#list searchConstraintStrings as searchConstraintString>
-    <a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${searchConstraintString}</li>
-</#list>
+    <#list searchConstraintStrings as searchConstraintString>
+      <a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${searchConstraintString}</li>
+    </#list>
     </@cell>
 </@row>
 
@@ -37,7 +37,7 @@ under the License.
 
 
 <#if !productIds?has_content>
-  <h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>
+  <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
 </#if>
 
 <#if productIds?has_content>
@@ -99,4 +99,5 @@ under the License.
         </b>
     </div>
 </#if>
+
 </@section>

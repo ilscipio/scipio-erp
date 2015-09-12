@@ -43,10 +43,10 @@ under the License.
         <@cell>
           <@row class="prefix-radius">
             <@cell columns=3>
-              <span class="">${uiLabelMap.CommonStatus}</span>
+              ${uiLabelMap.CommonStatus}
             </@cell>
             <@cell columns=9>
-                <span class=" text-left">
+                <span class="text-left">
                 <input type="checkbox" name="viewall" value="Y" onclick="javascript:setCheckboxes()" <#if state.hasAllStatus()>checked="checked"</#if> /><label>${uiLabelMap.CommonAll}</label>
                 <input type="checkbox" name="viewcreated" value="Y" <#if state.hasStatus('viewcreated')>checked="checked"</#if> /><label>${uiLabelMap.CommonCreated}</label>
                 <input type="checkbox" name="viewprocessing" value="Y" <#if state.hasStatus('viewprocessing')>checked="checked"</#if> /><label>${uiLabelMap.CommonProcessing}</label>
@@ -129,7 +129,7 @@ under the License.
         </@cell>
        </@row>
       </form>
-   </@section>
+</@section>
  
 
 <#if hasPermission>
@@ -235,7 +235,7 @@ under the License.
           <@paginateOrders />
         </#if>
         
-    </@section>
+  </@section>
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

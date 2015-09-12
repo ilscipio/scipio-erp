@@ -19,21 +19,10 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 
-<form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
-  <input type="hidden" name="finalizeMode" value="ship"/>
-  <@table type="fields" width="100%" border="0" align="center" cellspacing='0' cellpadding='0' class='boxoutside'>
-    <@tr><@td>
-
-      <#-- header table -->
-
-      <@table type="fields" width="100%" border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <@tr>
-          <@td valign="middle">
-            <div class="boxhead">${uiLabelMap.OrderSelectAShippingAddress}</div>
-          </@td>
-        </@tr>
-      </@table>
-
+  <@section title="${uiLabelMap.OrderSelectAShippingAddress}"> <#-- class='boxoutside' -->
+    <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+      <input type="hidden" name="finalizeMode" value="ship"/>
+    
       <@table type="fields" width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <@tr><@td colspan="3"><hr /></@td></@tr>
 
@@ -66,12 +55,11 @@ under the License.
             </#if>
           </#list>
         </#if>
-
       </@table>
 
-    </@td></@tr>
-  </@table>
-</form>
+    </form>
+  </@section>
+
 
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>

@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if inProcess??>
-<@section title="${uiLabelMap.OrderProcessingStatus}">
+  <@section title="${uiLabelMap.OrderProcessingStatus}">
           <#-- Suspended Processes -->
           <#if workEffortStatus == "WF_SUSPENDED">
             <form action="<@ofbizUrl>releasehold</@ofbizUrl>" method="post" name="activityForm">
@@ -51,7 +51,7 @@ under the License.
 </#if>
 
 <#if wfTransitions?? && wfTransitions?has_content>
-<@section title="${uiLabelMap.OrderProcessingTransitions}">
+  <@section title="${uiLabelMap.OrderProcessingTransitions}">
           <form action="<@ofbizUrl>completeassignment</@ofbizUrl>" method="post" name="transitionForm">
             <input type="hidden" name="workEffortId" value="${workEffortId}" />
             <input type="hidden" name="partyId" value="${assignPartyId}" />

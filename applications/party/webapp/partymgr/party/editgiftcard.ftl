@@ -24,6 +24,15 @@ under the License.
   <#assign sectionTitle = "${uiLabelMap.AccountingEditGiftCard}">
 </#if>
 <@section title=sectionTitle>
+    <#macro saveCancelMenu>
+      <@menu type="button">
+        <@menuitem type="link" ofbizHref="${donePage}?partyId=${partyId}" text="${uiLabelMap.CommonCancelDone}" />
+        <@menuitem type="link" href="javascript:document.editgiftcardform.submit()" text="${uiLabelMap.CommonSave}" />
+      </@menu>
+    </#macro>
+        
+    <@saveCancelMenu />
+     
     <#if !giftCard??>
       <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
     <#else>
@@ -31,10 +40,7 @@ under the License.
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
-        <div class="button-bar">
-          <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
-          <a href="javascript:document.editgiftcardform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-        </div>
+        
         <@table type="fields" class="basic-table" cellspacing="0">
         <@tbody>
         <@tr>
@@ -94,9 +100,7 @@ under the License.
         </@tbody>
         </@table>
       </form>
-      <div class="button-bar">
-        <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
-        <a href="javascript:document.editgiftcardform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-      </div>
+      
+      <@saveCancelMenu />
 </@section>
 <!-- end editgiftcard.ftl -->

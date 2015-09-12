@@ -18,25 +18,25 @@ under the License.
 -->
 
 <@section>
-                        <#-- checkoutsetupform is used for the order entry "continue" link -->
-                        <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
-                            <input type="hidden" name="finalizeMode" value="term" />
-                        </form>
+        <#-- checkoutsetupform is used for the order entry "continue" link -->
+        <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+            <input type="hidden" name="finalizeMode" value="term" />
+        </form>
         <@row>
             <@cell class="${styles.grid_large!}6">
                         <#if orderTerms?has_content && parameters.createNew?default('') != 'Y'>
                             <@table type="data-list" autoAltRows=true class="basic-table hover-bar">
-                  <@thead>
+                              <@thead>
                                 <@tr class="header-row">
-                        <@th>${uiLabelMap.OrderOrderTermType}</@th>
-                        <@th align="center">${uiLabelMap.OrderOrderTermValue}</@th>
-                        <@th align="center">${uiLabelMap.OrderOrderTermDays}</@th>
-                        <@th align="center">${uiLabelMap.OrderOrderTextValue}</@th>
-                        <@th>${uiLabelMap.CommonDescription}</@th>
-                        <@th>&nbsp;</@th>
+                                  <@th>${uiLabelMap.OrderOrderTermType}</@th>
+                                  <@th align="center">${uiLabelMap.OrderOrderTermValue}</@th>
+                                  <@th align="center">${uiLabelMap.OrderOrderTermDays}</@th>
+                                  <@th align="center">${uiLabelMap.OrderOrderTextValue}</@th>
+                                  <@th>${uiLabelMap.CommonDescription}</@th>
+                                  <@th>&nbsp;</@th>
                                 </@tr>
-                   </@thead>
-                                <@tbody>
+                              </@thead>
+                              <@tbody>
                                 <#list orderTerms as orderTerm>
                                     <@tr>
                                         <@td nowrap="nowrap">${orderTerm.getRelatedOne('TermType', false).get('description', locale)}</@td>
@@ -45,26 +45,26 @@ under the License.
                                         <@td nowrap="nowrap">${orderTerm.textValue!}</@td>
                                         <@td nowrap="nowrap">${orderTerm.description?if_exists}</@td>
                                         <@td align="right">
-                                <a href="<@ofbizUrl>setOrderTerm?termIndex=${orderTerm_index}&amp;createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
-                                <a href="<@ofbizUrl>removeCartOrderTerm?termIndex=${orderTerm_index}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
+                                            <a href="<@ofbizUrl>setOrderTerm?termIndex=${orderTerm_index}&amp;createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
+                                            <a href="<@ofbizUrl>removeCartOrderTerm?termIndex=${orderTerm_index}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
                                         </@td>
                                     </@tr>
                                 </#list>
-                                </@tbody>
-                                <@tfoot>
+                              </@tbody>
+                              <@tfoot>
                                 <@tr>
                                     <@td colspan="5">
-                            <a href="<@ofbizUrl>setOrderTerm?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a>
+                                      <a href="<@ofbizUrl>setOrderTerm?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a>
                                     </@td>
                                 </@tr>
-                                </@tfoot>
+                              </@tfoot>
                             </@table>
                         <#else>
                             <form method="post" action="<@ofbizUrl>addOrderTerm</@ofbizUrl>" name="termform">
                                 <input type="hidden" name="termIndex" value="${termIndex!}" />
                                 <@table type="fields" class="basic-table">
                                     <@tr>
-                            <@td class="${styles.grid_large!}3">
+                                        <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTermType}
                                         </@td>
                                         <@td width="74%">
@@ -79,15 +79,15 @@ under the License.
                                         </@td>
                                     </@tr>
                                     <@tr>
-                        <@td class="${styles.grid_large!}3">
-                                        ${uiLabelMap.OrderOrderTermValue}
-                                    </@td>
+                                        <@td class="${styles.grid_large!}3">
+                                            ${uiLabelMap.OrderOrderTermValue}
+                                        </@td>
                                     <@td width="74%">
                                         <input type="text" size="30" maxlength="60" name="termValue" value="${termValue!}" />
                                     </@td>
                                     </@tr>
                                     <@tr>
-                            <@td class="${styles.grid_large!}3">
+                                        <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTermDays}
                                         </@td>
                                         <@td width="74%">
@@ -95,7 +95,7 @@ under the License.
                                         </@td>
                                     </@tr>
                                     <@tr>
-                            <@td class="${styles.grid_large!}3">
+                                        <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTextValue}
                                         </@td>
                                         <@td width="74%">
@@ -103,8 +103,8 @@ under the License.
                                         </@td>
                                     </@tr>
                                     <@tr>
-                            <@td class="${styles.grid_large!}3">
-                                            ${uiLabelMap.CommonDescription}
+                                        <@td class="${styles.grid_large!}3">
+                                          ${uiLabelMap.CommonDescription}
                                         </@td>
                                         <@td width="74%">
                                             <input type="text" size="30" maxlength="255" name="description" value="${description?if_exists}" />

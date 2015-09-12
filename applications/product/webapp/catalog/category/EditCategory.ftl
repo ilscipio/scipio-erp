@@ -21,20 +21,21 @@ function insertImageName(type,nameValue) {
   eval('document.productCategoryForm.' + type + 'ImageUrl.value=nameValue;');
 };
 </script>
+
 <#if fileType?has_content>
     <@section title="${uiLabelMap.ProductResultOfImageUpload}">
-            <#if !(clientFileName?has_content)>
-                <div>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
-            <#else>
-                <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
-                <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
-                <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
-                <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.button_default!}">${imageUrl!}</a></b></div>
-            </#if>
+        <#if !(clientFileName?has_content)>
+            <div>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
+        <#else>
+            <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
+            <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
+            <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
+            <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.button_default!}">${imageUrl!}</a></b></div>
+        </#if>
     </@section>
 </#if>
 
-<#if ! productCategory?has_content>
+<#if !productCategory?has_content>
     <#if productCategoryId?has_content>
         <#assign sectionTitle>${uiLabelMap.ProductCouldNotFindProductCategoryWithId} "${productCategoryId}".</#assign>
         <#assign formAction><@ofbizUrl>createProductCategory</@ofbizUrl></#assign>
@@ -56,38 +57,33 @@ function insertImageName(type,nameValue) {
 
             <@table type="fields" cellspacing="0" class="basic-table">
 
-<#if ! productCategory?has_content>
-    <#if productCategoryId?has_content>
+              <#if ! productCategory?has_content>
+                  <#if productCategoryId?has_content>
                     <@tr>
                         <@td align="right">${uiLabelMap.ProductProductCategoryId}</@td>
-                        <@td>&nbsp;</@td>
                         <@td>
                             <input type="text" name="productCategoryId" size="20" maxlength="40" value="${productCategoryId}"/>
                         </@td>
                     </@tr>
-    <#else>
+                  <#else>
                     <@tr>
                         <@td align="right">${uiLabelMap.ProductProductCategoryId}</@td>
-                        <@td>&nbsp;</@td>
                         <@td>
                             <input type="text" name="productCategoryId" size="20" maxlength="40" value=""/>
                         </@td>
                     </@tr>
-    </#if>
-<#else>
+                  </#if>
+              <#else>
                 <@tr>
                     <@td align="right">${uiLabelMap.ProductProductCategoryId}</@td>
-                    <@td>&nbsp;</@td>
                     <@td>
                       <b>${productCategoryId}</b> (${uiLabelMap.ProductNotModificationRecreationCategory}.)
                     </@td>
                 </@tr>
-</#if>
-
+              </#if>
 
                 <@tr>
                     <@td width="26%" align="right">${uiLabelMap.ProductProductCategoryType}</@td>
-                    <@td>&nbsp;</@td>
                     <@td width="74%">
                         <select name="productCategoryTypeId" size="1">
                             <#assign selectedKey = "">
@@ -104,12 +100,10 @@ function insertImageName(type,nameValue) {
                 </@tr>
                 <@tr>
                     <@td width="26%" align="right">${uiLabelMap.ProductProductCategoryName}</@td>
-                    <@td>&nbsp;</@td>
                     <@td width="74%"><input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/></@td>
                 </@tr>
                 <@tr>
                     <@td width="26%" align="right">${uiLabelMap.ProductProductCategoryDescription}</@td>
-                    <@td>&nbsp;</@td>
                     <@td width="74%"><textarea name="description" cols="60" rows="2"><#if productCategory?has_content>${(productCategory.description)!}</#if></textarea></@td>
                 </@tr>
                 <@tr>
@@ -119,7 +113,6 @@ function insertImageName(type,nameValue) {
                             <a href="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Category Image" src="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
                         </#if>
                     </@td>
-                    <@td>&nbsp;</@td>
                     <@td width="80%" colspan="4" valign="top">
                         <input type="text" name="categoryImageUrl" value="${(productCategory.categoryImageUrl)?default('')}" size="60" maxlength="255"/>
                         <#if productCategory?has_content>
@@ -139,7 +132,6 @@ function insertImageName(type,nameValue) {
                             <a href="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
                         </#if>
                     </@td>
-                    <@td>&nbsp;</@td>
                     <@td width="80%" colspan="4" valign="top">
                         <input type="text" name="linkOneImageUrl" value="${(productCategory.linkOneImageUrl)?default('')}" size="60" maxlength="255"/>
                         <#if productCategory?has_content>
@@ -159,7 +151,6 @@ function insertImageName(type,nameValue) {
                             <a href="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
                         </#if>
                     </@td>
-                    <@td>&nbsp;</@td>
                     <@td width="80%" colspan="4" valign="top">
                         <input type="text" name="linkTwoImageUrl" value="${(productCategory.linkTwoImageUrl)?default('')}" size="60" maxlength="255"/>
                         <#if productCategory?has_content>
@@ -174,7 +165,6 @@ function insertImageName(type,nameValue) {
                 </@tr>
                 <@tr>
                     <@td width="26%" align="right">${uiLabelMap.ProductDetailScreen}</@td>
-                    <@td>&nbsp;</@td>
                     <@td width="74%">
                         <input type="text" <#if productCategory?has_content>value="${productCategory.detailScreen!}"</#if> name="detailScreen" size="60" maxlength="250"/>
                         <br /><span class="tooltip">${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;</span>
@@ -182,13 +172,12 @@ function insertImageName(type,nameValue) {
                 </@tr>
                 <@tr>
                     <@td width="26%" align="right">${uiLabelMap.ProductPrimaryParentCategory}</@td>
-                    <@td>&nbsp;</@td>
                     <@td width="74%">
                         <@htmlTemplate.lookupField value="${(productCategory.primaryParentCategoryId)?default('')}" formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
                     </@td>
                 </@tr>
                 <@tr>
-                    <@td colspan="2">&nbsp;</@td>
+                    <@td>&nbsp;</@td>
                     <@td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}"/></@td>
                 </@tr>
             </@table>

@@ -24,10 +24,17 @@ under the License.
   <#assign sectionTitle = "${uiLabelMap.PageTitleEditEftAccount}">
 </#if>
 <@section title=sectionTitle>
-        <div class="button-bar">
-          <a href="<@ofbizUrl>${donePage}?partyId=${partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
-          <a href="javascript:document.editeftaccountform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-        </div>
+    <#macro saveCancelMenu>
+      <@menu type="button">
+        <#-- this was used at bottom in original FTL, is an error?
+        <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>-->
+        <@menuitem type="link" ofbizHref="${donePage}?partyId=${partyId}" text="${uiLabelMap.CommonCancelDone}" />
+        <@menuitem type="link" href="javascript:document.editeftaccountform.submit()" text="${uiLabelMap.CommonSave}" />
+      </@menu>
+    </#macro>
+    
+    <@saveCancelMenu />
+        
     <#if !eftAccount??>
       <form method="post" action='<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
     <#else>
@@ -173,9 +180,7 @@ under the License.
         </@tbody>
         </@table>
       </form>
-      <div class="button-bar">
-        <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>
-        <a href="javascript:document.editeftaccountform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-      </div>
+      
+      <@saveCancelMenu />
 </@section>
 <!-- end editeftaccount.ftl -->

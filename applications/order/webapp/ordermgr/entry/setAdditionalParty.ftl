@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#-- ==================== Party Selection dialog box ========================= -->
-<@section >
+<@section>
 <@table type="fields" border="0" width="100%" cellspacing="0" cellpadding="0">
   <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
     <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
@@ -35,7 +35,7 @@ under the License.
         <@tr>
           <@td align="right">
             <input type="radio" id="additionalPartyType_Person" name="additionalPartyType" value="Person" onclick="<#if additionalPartyType??>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if (additionalPartyType?? && additionalPartyType == "Person")> checked="checked"</#if> />
-      </@td>
+        </@td>
           <@td>
             <label for="additionalPartyType_Person">${uiLabelMap.CommonPerson}</label>
           </@td>

@@ -19,7 +19,7 @@ under the License.
 
 <#if hasPermission>
   <#assign menuHtml>
-    <@menu type="button">
+    <@menu type="section" inlineItems=true>
     <#if orderId??>
       <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}" text="${uiLabelMap.OrderViewOrder}" />
     </#if>

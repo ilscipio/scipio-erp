@@ -33,9 +33,9 @@ under the License.
 <@section title=sectionTitle menuHtml=menuHtml>
   <#if product??>
         <#if productId??>
-            <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
+          <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
             <@thead>
-            <@tr class="header-row">
+              <@tr class="header-row">
                 <@th>${uiLabelMap.ProductItemId}</@th>
                 <@th>${uiLabelMap.ProductItemType}</@th>
                 <@th>${uiLabelMap.CommonStatus}</@th>
@@ -49,7 +49,7 @@ under the License.
                 <@th>&nbsp;</@th>
                 <@th align="right">${uiLabelMap.ProductInventoryItemInitialQuantity}</@th>
                 <@th align="right">${uiLabelMap.ProductAtpQohSerial}</@th>
-            </@tr>
+              </@tr>
             </@thead>
             <#list productInventoryItems as inventoryItem>
                <#-- NOTE: Delivered for serialized inventory means shipped to customer so they should not be displayed here any more -->

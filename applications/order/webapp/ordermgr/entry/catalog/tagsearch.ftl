@@ -17,10 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h2>${uiLabelMap.ProductProductTaggedWith} "${parameters.SEARCH_STRING}"</h2>
+<@heading>${uiLabelMap.ProductProductTaggedWith} "${parameters.SEARCH_STRING}"</@heading>
 
 <#if !productIds?has_content>
-  <h2>&nbsp;${uiLabelMap.ProductNoResultsFound}.</h2>
+  <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
 </#if>
 
 <#if productIds?has_content>

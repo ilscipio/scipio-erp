@@ -67,31 +67,34 @@ under the License.
     </@tr>
 </#macro>
 
+<#assign menuHtml>
+  <@menu type="section" inlineItems=true>
     <#if returnHeader?has_content>
       <#if returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId?starts_with("CUSTOMER_")>
         <#list returnShipmentIds as returnShipmentId>
-          <a href="/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}</a>
-          <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&amp;returnId=${returnHeader.returnId!}&amp;shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.OrderReceiveReturn}</a>
+          <@menuitem type="link" href="/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}" />
+          <@menuitem type="link" href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&amp;returnId=${returnHeader.returnId!}&amp;shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.OrderReceiveReturn}" />
         </#list>
       <#elseif returnHeader.statusId == "SUP_RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId == "VENDOR_RETURN">
          <#if returnShipmentIds?has_content>
            <#list returnShipmentIds as returnShipmentId>
-             <a href="/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}">${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}</a>
+             <@menuitem type="link" href="/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}" />
            </#list>
          <#else>
-           <a href="/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&amp;partyIdTo=${toPartyId}&amp;statusId=SHIPMENT_INPUT&amp;shipmentTypeId=PURCHASE_RETURN" class="${styles.button_default!}">${uiLabelMap.OrderCreateReturnShipment}</a>
+           <@menuitem type="link" href="/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&amp;partyIdTo=${toPartyId}&amp;statusId=SHIPMENT_INPUT&amp;shipmentTypeId=PURCHASE_RETURN" text="${uiLabelMap.OrderCreateReturnShipment}" />
          </#if>
       </#if>
     </#if>
-
-<@section title="${uiLabelMap.PageTitleReturnItems}">
-<#-- if we're called with loadOrderItems or createReturn, then orderId would exist -->
-<#if !requestParameters.orderId?? && returnHeader?has_content>
+  </@menu>
+</#assign>
+<@section title="${uiLabelMap.PageTitleReturnItems}" menuHtml=menuHtml>
+  <#-- if we're called with loadOrderItems or createReturn, then orderId would exist -->
+  <#if !requestParameters.orderId?? && returnHeader?has_content>
           <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">
           <input type="hidden" name="_useRowSubmit" value="Y" />
         <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
           <#assign readOnly = (returnHeader.statusId != "RETURN_REQUESTED" && returnHeader.statusId != "SUP_RETURN_REQUESTED")>
-          <@tr><@td colspan="10"><h3>${uiLabelMap.OrderOrderReturn} #${returnId}</h3></@td></@tr>
+          <@tr><@td colspan="10"><@heading>${uiLabelMap.OrderOrderReturn} #${returnId}</@heading></@td></@tr>
 
           <#-- information about orders and amount refunded/credited on past returns -->
           <#if orh??>
@@ -341,7 +344,7 @@ under the License.
         <form name="returnItems" method="post" action="<@ofbizUrl>returnItems</@ofbizUrl>">
           <input type="hidden" name="returnId" value="${returnId}" />
           <@table type="fields" class="" border='0' cellpadding='2' cellspacing='0'>
-            <@tr><@td colspan="4"><h3>${uiLabelMap.OrderReturnItems}</h3></@td></@tr>
+            <@tr><@td colspan="4"><@heading>${uiLabelMap.OrderReturnItems}</@heading></@td></@tr>
             <#if partyOrders?has_content>
               <@tr>
                 <@td width='25%' align='right' nowrap="nowrap">${uiLabelMap.OrderOrderId}</@td>
@@ -377,15 +380,15 @@ under the License.
           </@table>
         </form>
         </#if>
-<!-- if no requestParameters.orderId??, then show list of items -->
-<#elseif returnHeader?has_content>
+  <#-- if no requestParameters.orderId??, then show list of items -->
+  <#elseif returnHeader?has_content>
         <#assign selectAllFormName = "returnItems"/>
         <form name="returnItems" method="post" action="<@ofbizUrl>createReturnItems</@ofbizUrl>">
           <input type="hidden" name="returnId" value="${returnId}" />
           <input type="hidden" name="_useRowSubmit" value="Y" />
           <#include "returnItemInc.ftl"/>
         </form>
-<#else>
-  ${uiLabelMap.CommonErrorMessage2} : ${uiLabelMap.CommonPleaseSelect}. ${uiLabelMap.CommonUseBackButton}
-</#if>
-    </@section>
+  <#else>
+    <@alert type="error">${uiLabelMap.CommonErrorMessage2} : ${uiLabelMap.CommonPleaseSelect}. ${uiLabelMap.CommonUseBackButton}</@alert>
+  </#if>
+</@section>

@@ -43,6 +43,7 @@ under the License.
             <input type="submit" value="${uiLabelMap.CommonFind}" class="button" />
           </@field>
     </form>
+    
     <form name="advancedsearchform" id="keywordsearchbox_advancedsearchform" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>">
       <@fieldset title="${uiLabelMap.CommonAdvancedSearch}" collapsed=true>
         <#if (0 < otherSearchProdCatalogCategories?size)>

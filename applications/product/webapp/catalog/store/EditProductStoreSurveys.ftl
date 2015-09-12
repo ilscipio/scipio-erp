@@ -16,9 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign sectionTitle>${uiLabelMap.PageTitleEditProductStoreSurveys}</#assign>
-<@section title=sectionTitle>
-        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
+<@section title="${uiLabelMap.PageTitleEditProductStoreSurveys}">
+    <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
           <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.CommonType}</@th>
@@ -51,10 +50,10 @@ under the License.
                 </@td>
               </@tr>
             </#list>
-        </@table>
+    </@table>
 </@section>
-<#assign sectionTitle>${uiLabelMap.PageTitleAddProductStoreSurveys}</#assign>
-<@section title=sectionTitle>
+
+<@section title="${uiLabelMap.PageTitleAddProductStoreSurveys}">
         <form name="addSurvey" action="<@ofbizUrl>createProductStoreSurveyAppl</@ofbizUrl>" method="post">
             <input type="hidden" name="productStoreId" value="${productStoreId}" />
             <@table type="fields" cellspacing="0" class="basic-table">

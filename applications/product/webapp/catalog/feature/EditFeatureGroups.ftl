@@ -17,16 +17,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.PageTitleEditProductFeatureGroups}">
-        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
-         <@thead>
+    <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
+        <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.CommonId}</@th>
             <@th>${uiLabelMap.CommonDescription}</@th>
             <@th>&nbsp;</@th>
             <@th>&nbsp;</@th>
           </@tr>
-          </@thead>
-          <@tbody>
+        </@thead>
+        <@tbody>
           <#list productFeatureGroups as productFeatureGroup>
             <@tr valign="middle">
                 <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${productFeatureGroup.productFeatureGroupId}</a></@td>
@@ -40,8 +40,8 @@ under the License.
                 <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.ProductFeatureGroupAppls}</a></@td>
             </@tr>
           </#list>
-          </@tbody>
-        </@table>
+        </@tbody>
+    </@table>
 </@section>
 
 <@section title="${uiLabelMap.ProductCreateProductFeatureGroup}">

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if showPromoText?? && showPromoText>
-      <@section title="${uiLabelMap.OrderSpecialOffers}">
+    <@section title="${uiLabelMap.OrderSpecialOffers}">
         <@table type="data-list" class="basic-table">
           <#-- show promotions text -->
           <#list productPromos as productPromo>
@@ -29,7 +29,8 @@ under the License.
           </#list>
         </@table>
         
-        <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderViewAllPromotions}</a>
-        
+        <@menu type="button">
+          <@menuitem type="link" ofbizHref="showAllPromotions" text="${uiLabelMap.OrderViewAllPromotions}" />
+        </@menu>        
     </@section>
 </#if>

@@ -134,11 +134,11 @@ under the License.
 </#assign>
 <@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuHtml=menuHtml>
     <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
-     <@thead>
-      <@tr class="header-row">
-        <@th>${uiLabelMap.PartyListName}</@th>
-        <@th>&nbsp;</@th>
-      </@tr>
+      <@thead>
+        <@tr class="header-row">
+          <@th>${uiLabelMap.PartyListName}</@th>
+          <@th>&nbsp;</@th>
+        </@tr>
       </@thead>
       <@tbody>
       <#list childShoppingListDatas as childShoppingListData>

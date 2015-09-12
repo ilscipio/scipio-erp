@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoId??>
-    <#assign sectionTitle>${uiLabelMap.ProductPromotionUploadSetOfPromotionCodes}</#assign>
-    <@section title=sectionTitle>
+    <@section title="${uiLabelMap.ProductPromotionUploadSetOfPromotionCodes}">
             <form method="post" action="<@ofbizUrl>createBulkProductPromoCode</@ofbizUrl>" enctype="multipart/form-data">
                 <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                 <span>${uiLabelMap.ProductPromoUserEntered}:</span>
@@ -41,8 +40,7 @@ under the License.
             </form>
     </@section>
 
-    <#assign sectionTitle>${uiLabelMap.ProductPromotionAddSetOfPromotionCodes}</#assign>
-    <@section title=sectionTitle>
+    <@section title="${uiLabelMap.ProductPromotionAddSetOfPromotionCodes}">
             <form method="post" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>">
                 <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                 <span>${uiLabelMap.CommonQuantity}:</span><input type="text" size="5" name="quantity" />

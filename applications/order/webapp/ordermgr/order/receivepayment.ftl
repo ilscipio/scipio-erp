@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-<@section title="${uiLabelMap.OrderReceiveOfflinePayments}">
+  <@section title="${uiLabelMap.OrderReceiveOfflinePayments}">
       <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBack}</a>
       <a href="javascript:document.paysetupform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
 
@@ -29,7 +29,7 @@ under the License.
         <input type="hidden" name="partyId" value="${orderRoles[0].partyId}" />
 
         <#if paymentMethods?has_content>
-        <@table type="data-list" class="basic-table" cellspacing='0'>
+        <@table type="data-list" class="basic-table" cellspacing="0">
          <@thead>
           <@tr class="header-row">
             <@th width="30%" align="right">${uiLabelMap.PaymentMethod}</@th>
@@ -77,7 +77,8 @@ under the License.
 
       <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBack}</a>
       <a href="javascript:document.paysetupform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-    </@section>
+  
+  </@section>
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

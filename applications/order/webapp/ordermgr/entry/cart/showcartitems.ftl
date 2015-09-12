@@ -26,6 +26,7 @@ under the License.
     <@td>- ${(assocProduct.productName)!}<i>(${(productAssocType.description)?default("Unknown")})</i></@td>
   </#if>
 </#macro>
+
 <@section title="${uiLabelMap.OrderOrderItems}">
   <#if (shoppingCartSize > 0)>
     <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
@@ -144,7 +145,7 @@ under the License.
                     ${uiLabelMap.ProductAtp} = ${availableToPromiseMap.get(productId)}, ${uiLabelMap.ProductQoh} = ${quantityOnHandMap.get(productId)}
                     <#if Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG")>
                     ${uiLabelMap.ProductMarketingPackageATP} = ${mktgPkgATPMap.get(productId)}, ${uiLabelMap.ProductMarketingPackageQOH} = ${mktgPkgQOHMap.get(productId)}
-                    <#if ( mktgPkgATPMap.get(cartLine.getProductId()) < cartLine.getQuantity()) && (shoppingCart.getOrderType() == 'SALES_ORDER')>
+                    <#if (mktgPkgATPMap.get(cartLine.getProductId()) < cartLine.getQuantity()) && (shoppingCart.getOrderType() == 'SALES_ORDER')>
                       <#assign backOrdered = cartLine.getQuantity() - mktgPkgATPMap.get(cartLine.getProductId())/>
                       <span style="color: red; font-size: 15px;">[${backOrdered!}&nbsp;${uiLabelMap.OrderBackOrdered}]</span>
                     </#if>
@@ -303,13 +304,13 @@ under the License.
                 </@tr>
               </#if>
             </#list>
-            <#if orderShippingTotal != 0>
+            <#if (orderShippingTotal != 0)>
               <@tr>
                 <@td align="right" colspan="4">${uiLabelMap.FacilityShippingAndHandling}</@td>
                 <@td align="right" nowrap="nowrap"><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></@td>
               </@tr>
             </#if>
-            <#if orderTaxTotal != 0>
+            <#if (orderTaxTotal != 0)>
               <@tr>
                 <@td align="right" colspan="4">${uiLabelMap.OrderSalesTax}</@td>
                 <@td align="right" nowrap="nowrap"><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
@@ -334,7 +335,7 @@ under the License.
       </@table>
     </form>
   <#else>
-    ${uiLabelMap.OrderNoOrderItemsToDisplay}
+    <@resultMsg>${uiLabelMap.OrderNoOrderItemsToDisplay}</@resultMsg>
   </#if>
 </@section>
 

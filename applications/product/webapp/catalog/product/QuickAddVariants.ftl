@@ -46,7 +46,7 @@ function clickAll(e) {
 }
 </script>
 <#if (product.isVirtual)! != "Y">
-    <h2>${uiLabelMap.ProductWarningProductNotVirtual}</h2>
+    <@alert type="warning">${uiLabelMap.ProductWarningProductNotVirtual}</@alert>
 </#if>
 <#if featureTypes?has_content && (featureTypes.size() > 0)>
         <form method="post" action="<@ofbizUrl>QuickAddChosenVariants</@ofbizUrl>" name="selectAllForm">
@@ -56,7 +56,7 @@ function clickAll(e) {
       <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
         <#assign rowCount = 0>
         <@thead>
-        <@tr class="header-row">
+          <@tr class="header-row">
             <#list featureTypes as featureType>
                 <@th>${featureType}</@th>
             </#list>
@@ -64,10 +64,11 @@ function clickAll(e) {
             <@th>${uiLabelMap.ProductSequenceNum}</@th>
             <@th>${uiLabelMap.ProductExistingVariant} :</@th>
             <@th align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:clickAll(this);" /></@th>
-        </@tr>
+          </@tr>
         </@thead>
         <#assign defaultSequenceNum = 10>
-        <#list featureCombinationInfos as featureCombinationInfo>
+        <@tbody>
+          <#list featureCombinationInfos as featureCombinationInfo>
             <#assign curProductFeatureAndAppls = featureCombinationInfo.curProductFeatureAndAppls>
             <#assign existingVariantProductIds = featureCombinationInfo.existingVariantProductIds>
             <#assign defaultVariantProductId = featureCombinationInfo.defaultVariantProductId>
@@ -97,15 +98,16 @@ function clickAll(e) {
             </@tr>
             <#assign defaultSequenceNum = defaultSequenceNum + 10>
             <#assign rowCount = rowCount + 1>
-        </#list>
+          </#list>
+        </@tbody>
         <@tfoot>
-        <@tr>
+          <@tr>
             <#assign columns = featureTypes.size() + 4>
             <@td colspan="${columns}" align="center">
                 <input type="hidden" name="_rowCount" value="${rowCount}" />
                 <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonCreate}"/>
             </@td>
-        </@tr>
+          </@tr>
         </@tfoot>
       </@table>
     </form>

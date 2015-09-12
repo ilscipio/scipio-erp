@@ -17,12 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.ProductAddProductFeatureInBulk} ${uiLabelMap.CommonFor} ${featureCategory.description}">
-        <form method='post' action='<@ofbizUrl>BulkAddProductFeatures</@ofbizUrl>' name="selectAllForm">
-          <input type="hidden" name="_useRowSubmit" value="Y" />
-          <input type="hidden" name="_checkGlobalScope" value="N" />
-          <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
-        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
-          <@thead>
+      <form method='post' action='<@ofbizUrl>BulkAddProductFeatures</@ofbizUrl>' name="selectAllForm">
+        <input type="hidden" name="_useRowSubmit" value="Y" />
+        <input type="hidden" name="_checkGlobalScope" value="N" />
+        <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
+      <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
+        <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.CommonDescription}</@th>
             <@th>${uiLabelMap.ProductFeatureType}</@th>
@@ -30,7 +30,7 @@ under the License.
             <@th>${uiLabelMap.ProductIdCode}</@th>
             <@th align="right">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="Y" checked="checked" onclick="javascript:toggleAll(this, 'selectAllForm');highlightAllRows(this, 'productFeatureTypeId_tableRow_', 'selectAllForm');" /></@th>
           </@tr>
-          </@thead>
+        </@thead>
         <@tbody>
         <#list 0..featureNum-1 as feature>
           <@tr id="productFeatureTypeId_tableRow_${feature_index}" valign="middle">
@@ -49,13 +49,13 @@ under the License.
         </#list>
         </@tbody>
         <@tfoot>
-        <@tr><@td colspan="11" align="center">
+          <@tr><@td colspan="11" align="center">
             <input type="hidden" name="_rowCount" value="${featureNum}" />
             <input type="submit" value='${uiLabelMap.CommonCreate}'/>
-        </@td></@tr>
+          </@td></@tr>
         </@tfoot>
-        </@table>
-        </form>
+      </@table>
+      </form>
 </@section>
 
 

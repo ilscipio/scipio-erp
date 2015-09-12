@@ -268,7 +268,7 @@ ${virtualJavaScript!}
       </#if>
     </@td>
     <@td align="right" valign="top" width="100%">
-    <#--    <h2>${productContentWrapper.get("PRODUCT_NAME")!}</h2>  -->
+    <#--    <@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>  -->
         <#assign inStock = true>
         <#if product.isVirtual!?upper_case == "Y">
         <#if product.virtualVariantMethodEnum! == "VV_FEATURETREE" && featureLists?has_content>

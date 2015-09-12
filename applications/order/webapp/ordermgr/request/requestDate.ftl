@@ -48,4 +48,4 @@ under the License.
                 </@td>
             </@tr>
         </@table>
-    </@section>
+</@section>

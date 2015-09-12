@@ -37,12 +37,12 @@ under the License.
                   <#else>
                     ${partyData[party].groupName!}
                   </#if>
-                </@td>
+              </@td>
               <@td>
                   <#if partyData[party].type == "person">
                     ${partyData[party].lastName!}
                   </#if>
-                </@td>
+              </@td>
               <@td align="right">
                 <a href="<@ofbizUrl>removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
               </@td>

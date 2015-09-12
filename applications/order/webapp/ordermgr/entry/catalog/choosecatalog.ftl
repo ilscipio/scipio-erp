@@ -21,12 +21,12 @@ under the License.
 <#if (catalogCol?size > 1)>
     <@section title="${uiLabelMap.ProductChooseCatalog}">
         <form name="choosecatalogform" method="post" action="<@ofbizUrl>choosecatalog</@ofbizUrl>" style='margin: 0;'>
-          <select name='CURRENT_CATALOG_ID'>
-            <option value='${currentCatalogId}'>${currentCatalogName}</option>
-            <option value='${currentCatalogId}'></option>
+          <select name="CURRENT_CATALOG_ID">
+            <option value="${currentCatalogId}">${currentCatalogName}</option>
+            <option value="${currentCatalogId}"></option>
             <#list catalogCol as catalogId>
               <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
-              <option value='${catalogId}'>${thisCatalogName}</option>
+              <option value="${catalogId}">${thisCatalogName}</option>
             </#list>
           </select>
           <div><a href="javascript:document.choosecatalogform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonChange}</a></div>

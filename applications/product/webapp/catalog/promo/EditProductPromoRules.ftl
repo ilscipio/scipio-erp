@@ -20,12 +20,12 @@ under the License.
 <@section title="${uiLabelMap.PageTitleEditProductPromoRules}">
   <#-- ======================= Rules ======================== -->
     <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
-     <@thead>
-      <@tr class="header-row">
-        <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
-        <@th width="80%">${uiLabelMap.ProductRuleName}</@th>
-        <@th width="10%">&nbsp;</@th>
-      </@tr>
+      <@thead>
+        <@tr class="header-row">
+          <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
+          <@th width="80%">${uiLabelMap.ProductRuleName}</@th>
+          <@th width="10%">&nbsp;</@th>
+        </@tr>
       </@thead>
   <#assign ruleClass = "2">
   <#list productPromoRules as productPromoRule>
@@ -454,16 +454,15 @@ under the License.
   -->
 </@section>
 
-<#assign sectionTitle>${uiLabelMap.ProductAddPromoRule}</#assign>
-<@section title=sectionTitle>
+<@section title="${uiLabelMap.ProductAddPromoRule}">
     <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>">
       <input type="hidden" name="productPromoId" value="${productPromoId!}" />
       <span>${uiLabelMap.ProductName}</span><input type="text" size="30" name="ruleName" />
       <input type="submit" value="${uiLabelMap.CommonAdd}" />
     </form>
 </@section>
-<#assign sectionTitle>${uiLabelMap.ProductPromotion} ${uiLabelMap.ProductCategories}</#assign>
-<@section title=sectionTitle>
+
+<@section title="${uiLabelMap.ProductPromotion} ${uiLabelMap.ProductCategories}">
   <#-- ======================= Categories ======================== -->
   <#list promoProductPromoCategories as promoProductPromoCategory>
     <#assign promoProductCategory = promoProductPromoCategory.getRelatedOne("ProductCategory", true)>
@@ -505,8 +504,8 @@ under the License.
       </form>
     </div>
 </@section>
-<#assign sectionTitle>${uiLabelMap.ProductPromotionProducts}</#assign>
-<@section title=sectionTitle>
+
+<@section title="${uiLabelMap.ProductPromotionProducts}">
   <#-- ======================= Products ======================== -->
   <#list promoProductPromoProducts as promoProductPromoProduct>
     <#assign promoProduct = promoProductPromoProduct.getRelatedOne("Product", true)!>
@@ -532,9 +531,9 @@ under the License.
         <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
         <span>${uiLabelMap.ProductProductId}</span>*<@htmlTemplate.lookupField formName="createpromoproductform" name="productId" id="productId" fieldFormName="LookupProduct"/>
         <select name="productPromoApplEnumId">
-  <#list productPromoApplEnums as productPromoApplEnum>
+        <#list productPromoApplEnums as productPromoApplEnum>
           <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
-  </#list>
+        </#list>
         </select>
         <input type="submit" value="${uiLabelMap.CommonAdd}" />
       </form>

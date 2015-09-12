@@ -21,7 +21,6 @@ under the License.
         <form name="idsearchform" method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>" style="margin: 0;">
           <span>${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}:</span> <input type="text" name="idValue" size="20" maxlength="50" value="${idValue!}" />&nbsp;<a href="javascript:document.idsearchform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a>
         </form>
-        <br />
         
         <p>${uiLabelMap.ProductSearchResultsWithIdValue}: ${idValue!}</p>
         <#if !goodIdentifications?has_content && !idProduct?has_content>

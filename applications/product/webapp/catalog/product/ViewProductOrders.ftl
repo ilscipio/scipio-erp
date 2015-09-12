@@ -27,11 +27,11 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-      <#if (orderList?has_content && 0 < orderList?size)>
-          <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" text="${uiLabelMap.CommonNext}" disabled=(!(orderListSize > highIndex)) />
-          <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${orderListSize}" />
-          <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 1)) />
-      </#if>
+  <#if (orderList?has_content && 0 < orderList?size)>
+    <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" text="${uiLabelMap.CommonNext}" disabled=(!(orderListSize > highIndex)) />
+    <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${orderListSize}" />
+    <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 1)) />
+  </#if>
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.OrderOrderFound}" menuHtml=menuHtml>
@@ -81,5 +81,4 @@ under the License.
   <#else>
     <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
   </#if>
-    
 </@section>

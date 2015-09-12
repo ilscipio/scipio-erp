@@ -18,12 +18,12 @@ under the License.
 -->
 
 <#if productCategoryId?has_content>
-<@section title="${uiLabelMap.ProductCategoryRollupParentCategories}">
-        <#if currentProductCategoryRollups.size() == 0>
+    <@section title="${uiLabelMap.ProductCategoryRollupParentCategories}">
+        <#if (currentProductCategoryRollups.size() <= 0)>
             <@resultMsg>${uiLabelMap.ProductNoParentCategoriesFound}.</@resultMsg>
         <#else>        
-           <form method="post" action="<@ofbizUrl>updateProductCategoryToCategory</@ofbizUrl>" name="updateProductCategoryForm">
-           <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
+            <form method="post" action="<@ofbizUrl>updateProductCategoryToCategory</@ofbizUrl>" name="updateProductCategoryForm">
+              <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
             <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
                  <@thead>
                    <@tr class="header-row">
@@ -79,19 +79,20 @@ under the License.
                     </@tr>
                   </@tfoot>
             </@table>
-     </form>
-                <#list currentProductCategoryRollups as productCategoryRollup>
-                    <form name="removeProductCategoryFromCategory_${productCategoryRollup_index}" method="post" action="<@ofbizUrl>removeProductCategoryFromCategory</@ofbizUrl>">
-                        <input type="hidden" name="showProductCategoryId" value="${productCategoryId}"/>
-                        <input type="hidden" name="productCategoryId" value="${productCategoryRollup.productCategoryId}"/>
-                        <input type="hidden" name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}"/>
-                        <input type="hidden" name="fromDate" value="${productCategoryRollup.fromDate}"/>
-                    </form>
-                </#list>
-    </#if>      
-</@section>
+            </form>
+            
+          <#list currentProductCategoryRollups as productCategoryRollup>
+            <form name="removeProductCategoryFromCategory_${productCategoryRollup_index}" method="post" action="<@ofbizUrl>removeProductCategoryFromCategory</@ofbizUrl>">
+                <input type="hidden" name="showProductCategoryId" value="${productCategoryId}"/>
+                <input type="hidden" name="productCategoryId" value="${productCategoryRollup.productCategoryId}"/>
+                <input type="hidden" name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}"/>
+                <input type="hidden" name="fromDate" value="${productCategoryRollup.fromDate}"/>
+            </form>
+          </#list>
+        </#if>      
+    </@section>
 
-<@section title="${uiLabelMap.ProductAddCategoryParent} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
+    <@section title="${uiLabelMap.ProductAddCategoryParent} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
         <@table type="fields" cellspacing="0" class="basic-table">
             <@tr><@td>
                 <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addParentForm">
@@ -99,14 +100,13 @@ under the License.
                     <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
                     <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="addParentForm" name="parentProductCategoryId" id="parentProductCategoryId" fieldFormName="LookupProductCategory"/>
                     <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-
                     <input type="submit" value="${uiLabelMap.CommonAdd}" />
                 </form>
             </@td></@tr>
         </@table>
-</@section>
+    </@section>
 
-<@section title="${uiLabelMap.ProductCategoryRollupChildCategories}">
+    <@section title="${uiLabelMap.ProductCategoryRollupChildCategories}">
         <#if parentProductCategoryRollups.size() == 0>
             <@resultMsg>${uiLabelMap.ProductNoChildCategoriesFound}.</@resultMsg>
         <#else>
@@ -170,18 +170,19 @@ under the License.
                     </@tfoot>
             </@table>
             </form>
-            <#list parentProductCategoryRollups as productCategoryRollup>
-               <form name="removeProductCategoryFromCategory_1_${productCategoryRollup_index}" method="post" action="<@ofbizUrl>removeProductCategoryFromCategory</@ofbizUrl>">
-                   <input type="hidden" name="showProductCategoryId" value="${productCategoryId}"/>
-                   <input type="hidden" name="productCategoryId" value="${productCategoryRollup.productCategoryId}"/>
-                   <input type="hidden" name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}"/>
-                   <input type="hidden" name="fromDate" value="${productCategoryRollup.fromDate}"/>
-               </form>
-            </#list>
+            
+          <#list parentProductCategoryRollups as productCategoryRollup>
+             <form name="removeProductCategoryFromCategory_1_${productCategoryRollup_index}" method="post" action="<@ofbizUrl>removeProductCategoryFromCategory</@ofbizUrl>">
+                 <input type="hidden" name="showProductCategoryId" value="${productCategoryId}"/>
+                 <input type="hidden" name="productCategoryId" value="${productCategoryRollup.productCategoryId}"/>
+                 <input type="hidden" name="parentProductCategoryId" value="${productCategoryRollup.parentProductCategoryId}"/>
+                 <input type="hidden" name="fromDate" value="${productCategoryRollup.fromDate}"/>
+             </form>
+          </#list>
         </#if>
-</@section>
+    </@section>
 
-<@section title="${uiLabelMap.ProductAddCategoryChild} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
+    <@section title="${uiLabelMap.ProductAddCategoryChild} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
         <@table type="fields" cellspacing="0" class="basic-table">
             <@tr><@td>
                 <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addChildForm">
@@ -193,5 +194,5 @@ under the License.
                 </form>
             </@td></@tr>
         </@table>
-</@section>
+    </@section>
 </#if>

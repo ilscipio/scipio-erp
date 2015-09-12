@@ -20,24 +20,24 @@ under the License.
 
 <#if orderHeader?has_content>
 
-<#-- price change rules -->
-<#assign allowPriceChange = false/>
-<#if (orderHeader.orderTypeId == 'PURCHASE_ORDER' || security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
-    <#assign allowPriceChange = true/>
-</#if>
-
-<#assign menuHtml>
-  <@menu type="section" inlineItems=true>
-  <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-    <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-      <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelSelectedItems}" />
-      <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelAllItems}" />
-      <@menuitem type="link" ofbizHref="orderview?${paramString}" text="${uiLabelMap.OrderViewOrder}" />
-    </#if>
+  <#-- price change rules -->
+  <#assign allowPriceChange = false/>
+  <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER' || security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
+      <#assign allowPriceChange = true/>
   </#if>
-  </@menu>
-</#assign>
-<@section title="${uiLabelMap.OrderOrderItems}" menuHtml=menuHtml>
+
+  <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
+    <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+      <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
+        <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelSelectedItems}" />
+        <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelAllItems}" />
+        <@menuitem type="link" ofbizHref="orderview?${paramString}" text="${uiLabelMap.OrderViewOrder}" />
+      </#if>
+    </#if>
+    </@menu>
+  </#assign>
+  <@section title="${uiLabelMap.OrderOrderItems}" menuHtml=menuHtml>
 
         <#if !orderItemList?has_content>
             <@alert type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@alert>
@@ -66,7 +66,7 @@ under the License.
                     <@th width="10%" class="text-right">${uiLabelMap.OrderSubTotal}</@th>
                     <@th width="20%">&nbsp;</@th>
                 </@tr>
-                </@thead>
+              </@thead>
                 <#list orderItemList as orderItem>
                     <#if orderItem.productId??> <#-- a null product may come from a quote -->
                       <#assign orderItemContentWrapper = Static["org.ofbiz.order.order.OrderContentWrapper"].makeOrderContentWrapper(orderItem, request)>
@@ -80,23 +80,24 @@ under the License.
                               </@td>
                           <#else>
                               <@td valign="top">
-                                  <strong>
-                                      <#if orderHeader.statusId = "ORDER_CANCELLED" || orderHeader.statusId = "ORDER_COMPLETED">
+                                    <#if orderHeader.statusId = "ORDER_CANCELLED" || orderHeader.statusId = "ORDER_COMPLETED">
+                                      <strong>
                                       <#if productId??>
-                                      ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription!}
+                                        ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription!}
                                       <#elseif orderItemType??>
-                                      ${orderItemType.description} - ${orderItem.itemDescription!}
+                                        ${orderItemType.description} - ${orderItem.itemDescription!}
                                       <#else>
-                                      ${orderItem.itemDescription!}
+                                        ${orderItem.itemDescription!}
                                       </#if>
-                                      <#else>
+                                      </strong>
+                                    <#else>
                                       <#if productId??>
-                                      <#assign orderItemName = orderItem.productId?default("N/A")/>
+                                        <#assign orderItemName = orderItem.productId?default("N/A")/>
                                       <#elseif orderItemType??>
-                                      <#assign orderItemName = orderItemType.description/>
+                                        <#assign orderItemName = orderItemType.description/>
                                       </#if>
                                       ${uiLabelMap.ProductProduct}&nbsp;${orderItemName}
-                                  </strong>
+                                  
                                       <#if productId??>
                                           <#assign product = orderItem.getRelatedOne("Product", true)>
                                           <#if product.salesDiscontinuationDate?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
@@ -104,7 +105,7 @@ under the License.
                                           </#if>
                                       </#if>
                                       <input type="text" size="20" name="idm_${orderItem.orderItemSeqId}" value="${orderItem.itemDescription!}"/>
-                                      </#if>
+                                    </#if>
                               </@td>
 
                               <#-- now show status details per line item -->
@@ -125,21 +126,21 @@ under the License.
                                   <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
                                   <#list orderItemStatuses as orderItemStatus>
                                                 
-                                  <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem", false)>
+                                    <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem", false)>
                                                 <#if orderItemStatus.statusDatetime?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderItemStatus.statusDatetime, "", locale, timeZone)!}&nbsp;&nbsp;</#if>${loopStatusItem.get("description",locale)?default(orderItemStatus.statusId)}
                                                 <br/>
                                   </#list>
                                         
                                   <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
-                                  <#if returns?has_content>
+                                <#if returns?has_content>
                                   <#list returns as returnItem>
-                                  <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
-                                  <#if returnHeader.statusId != "RETURN_CANCELLED">
+                                    <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
+                                    <#if returnHeader.statusId != "RETURN_CANCELLED">
                                                 <font color="red">${uiLabelMap.OrderReturned}</font>
                                                 ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="${styles.button_default!}">${returnItem.returnId}</a>
-                                  </#if>
+                                    </#if>
                                   </#list>
-                                  </#if>
+                                </#if>
                                    </@modal>
                               </@td>
                               <@td valign="top" class="text-right">
@@ -198,7 +199,7 @@ under the License.
                                                         <#elseif orderHeader.orderTypeId == "SALES_ORDER">
                                                             ${(orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - shippedQuantity?double}
                                                         </#if>
-                              </@td>
+                                                    </@td>
                                                 </@tr>
                                                 <@tr valign="top">
                                                     <@td><b>${uiLabelMap.OrderInvoiced}</b></@td>
@@ -223,18 +224,18 @@ under the License.
                                   <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/>
                               </@td>
                               <@td valign="top" class="text-right">
-                                  <#if orderItem.statusId != "ITEM_CANCELLED">
+                                <#if orderItem.statusId != "ITEM_CANCELLED">
                                   <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemSubTotal(orderItem, orderAdjustments) isoCode=currencyUomId/>
-                                  <#else>
+                                <#else>
                                   <@ofbizCurrency amount=0.00 isoCode=currencyUomId/>
-                                  </#if>
+                                </#if>
                               </@td>
                               <@td>
                                     <@menu type="button">
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
-                                            <#list downloadContents as downloadContent>
-                                                <@menuitem type="link" href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" text="${uiLabelMap.ContentDownload}" target="_blank" />
+                                          <#list downloadContents as downloadContent>
+                                            <@menuitem type="link" href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" text="${uiLabelMap.ContentDownload}" target="_blank" />
                                           </#list>
                                         </#if>
                                         <@menuitem type="link" href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCatalog}" target="_blank" />
@@ -242,8 +243,8 @@ under the License.
                                         <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
                                             <@menuitem type="link" ofbizHref="viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL" text="${uiLabelMap.OrderViewImage}" target="_orderImage" />
                                         </#if>
-                                      </@menu>
-                            </@td>
+                                    </@menu>
+                              </@td>
                           </#if>
                         </@tr>
 
@@ -257,19 +258,19 @@ under the License.
                                       ${uiLabelMap.OrderAdjustment}&nbsp;${adjustmentType.get("description",locale)}&nbsp;
                                       ${orderItemAdjustment.get("description",locale)!} (${orderItemAdjustment.comments?default("")})
 
-                                      <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
-                                      <#if orderItemAdjustment.primaryGeoId?has_content>
+                                  <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
+                                    <#if orderItemAdjustment.primaryGeoId?has_content>
                                       <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>
                                       ${uiLabelMap.OrderJurisdiction}&nbsp;${primaryGeo.geoName} [${primaryGeo.abbreviation!}]
                                       <#if orderItemAdjustment.secondaryGeoId?has_content>
-                                      <#assign secondaryGeo = orderItemAdjustment.getRelatedOne("SecondaryGeo", true)/>
-                                      (${uiLabelMap.CommonIn}&nbsp;${secondaryGeo.geoName} [${secondaryGeo.abbreviation!}])
+                                        <#assign secondaryGeo = orderItemAdjustment.getRelatedOne("SecondaryGeo", true)/>
+                                        (${uiLabelMap.CommonIn}&nbsp;${secondaryGeo.geoName} [${secondaryGeo.abbreviation!}])
                                       </#if>
-                                      </#if>
+                                    </#if>
                                       <#if orderItemAdjustment.sourcePercentage??>Rate&nbsp;${orderItemAdjustment.sourcePercentage}</#if>
                                       <#if orderItemAdjustment.customerReferenceId?has_content>Customer Tax ID&nbsp;${orderItemAdjustment.customerReferenceId}</#if>
                                       <#if orderItemAdjustment.exemptAmount??>Exempt Amount&nbsp;${orderItemAdjustment.exemptAmount}</#if>
-                                      </#if>
+                                  </#if>
                                   </@td>
                                   <@td>&nbsp;</@td>
                                   <@td>&nbsp;</@td>
@@ -355,11 +356,11 @@ under the License.
                       
                     </#if>
                 <@tr>
-                        <@td colspan="6">&nbsp;</@td>
+                    <@td colspan="6">&nbsp;</@td>
                     <@td>
-                            <@menu type="button">
-                              <@menuitem type="submit" text="${uiLabelMap.OrderUpdateItems}" />
-                            </@menu>
+                        <@menu type="button">
+                          <@menuitem type="submit" text="${uiLabelMap.OrderUpdateItems}" />
+                        </@menu>
                     </@td>
                 </@tr>
                     
@@ -462,7 +463,7 @@ under the License.
                     <@td colspan="5"></@td>
                     <@td colspan="1"><hr /></@td>
                     <@td colspan="1"></@td>
-            </@tr>
+                </@tr>
                 <@tr>
                     <@td colspan="5" class="text-right">
                         ${uiLabelMap.OrderItemsSubTotal}
@@ -481,7 +482,7 @@ under the License.
                         <@ofbizCurrency amount=otherAdjAmount isoCode=currencyUomId/>
                     </@td>
                     <@td>&nbsp;</@td>
-            </@tr>
+                </@tr>
             <#-- shipping adjustments -->
                 <@tr>
                     <@td colspan="5" class="text-right">
@@ -491,7 +492,7 @@ under the License.
                             <@ofbizCurrency amount=shippingAmount isoCode=currencyUomId/>
                     </@td>
                     <@td>&nbsp;</@td>
-            </@tr>
+                </@tr>
             <#-- tax adjustments -->
                 <@tr>
                     <@td colspan="5" class="text-right">
@@ -501,13 +502,13 @@ under the License.
                             <@ofbizCurrency amount=taxAmount isoCode=currencyUomId/>
                     </@td>
                     <@td>&nbsp;</@td>
-            </@tr>
+                </@tr>
             <#-- grand total -->
                 <@tr>
                     <@td colspan="5"></@td>
                     <@td colspan="1"><hr /></@td>
                     <@td colspan="1"></@td>
-            </@tr>
+                </@tr>
                 <@tr>
                     <@td colspan="5" class="text-right">
                             <strong>${uiLabelMap.OrderTotalDue}</strong>
@@ -519,5 +520,7 @@ under the License.
                     <@td>&nbsp;</@td>
                 </@tr>
         </@table>
-    </@section>
+        
+  </@section>
+    
 </#if>

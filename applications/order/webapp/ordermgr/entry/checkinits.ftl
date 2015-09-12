@@ -32,17 +32,17 @@ under the License.
 </#if>
 <!-- Sales Order Entry -->
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-<#if shoppingCartOrderType != "PURCHASE_ORDER">
-<#assign sectionTitle>
-${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgress}</#if>
-</#assign>
-<#assign menuHtml>
-  <@menu type="section" inlineItems=true>
-    <@menuitem type="link" href="javascript:document.salesentryform.submit();" text="${uiLabelMap.CommonContinue}" />
-    <@menuitem type="link" href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.PartyFindParty}" />
-  </@menu>
-</#assign>
-<@section class="${styles.grid_large!}9" title=sectionTitle menuHtml=menuHtml>
+  <#if shoppingCartOrderType != "PURCHASE_ORDER">
+    <#assign sectionTitle>
+      ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgress}</#if>
+    </#assign>
+    <#assign menuHtml>
+      <@menu type="section" inlineItems=true>
+        <@menuitem type="link" href="javascript:document.salesentryform.submit();" text="${uiLabelMap.CommonContinue}" />
+        <@menuitem type="link" href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.PartyFindParty}" />
+      </@menu>
+    </#assign>
+    <@section class="${styles.grid_large!}9" title=sectionTitle menuHtml=menuHtml>
       <form method="post" name="salesentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
       <input type="hidden" name="originOrderId" value="${parameters.originOrderId!}"/>
       <input type="hidden" name="finalizeMode" value="type"/>
@@ -87,8 +87,8 @@ ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgr
             </@cell>
         </@row>
       </form>
-  </@section>
-</#if>
+    </@section>
+  </#if>
 </#if>
 
 <!-- Purchase Order Entry -->

@@ -13,7 +13,6 @@
             <#--<#if orderHeader.orderTypeId == "PURCHASE_ORDER">${uiLabelMap.ProductDestinationFacility}</#if>-->
             <#if ownedFacilities?has_content>
               
-              
               <#-- FIXME
               <#if !allShipments?has_content>
                   <@menuitem type="generic">
@@ -133,64 +132,63 @@
         <@menuitem type="link" ofbizHref="order.pdf?orderId=${orderId}" text="PDF" target="_blank" />
       </@menu>
       
-      
       <@menu type="button">
-                <#if currentStatus.statusId == "ORDER_APPROVED" && orderHeader.orderTypeId == "SALES_ORDER">
-                  <@menuitem type="link" href="javascript:document.PrintOrderPickSheet.submit()" text="${uiLabelMap.FormFieldTitle_printPickSheet}"><form name="PrintOrderPickSheet" method="post" action="<@ofbizUrl>orderPickSheet.pdf</@ofbizUrl>" target="_BLANK">
-                    <input type="hidden" name="facilityId" value="${storeFacilityId!}"/>
-                    <input type="hidden" name="orderId" value="${orderHeader.orderId!}"/>
-                    <input type="hidden" name="maxNumberOfOrdersToPrint" value="1"/>
-                  </form></@menuitem>
-                </#if>
-                <#if currentStatus.statusId == "ORDER_CREATED" || currentStatus.statusId == "ORDER_PROCESSING">
-                  <@menuitem type="link" href="javascript:document.OrderApproveOrder.submit()" text="${uiLabelMap.OrderApproveOrder}"><form name="OrderApproveOrder" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
-                    <input type="hidden" name="statusId" value="ORDER_APPROVED"/>
-                    <input type="hidden" name="newStatusId" value="ORDER_APPROVED"/>
-                    <input type="hidden" name="setItemStatus" value="Y"/>
-                    <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
-                    <input type="hidden" name="orderId" value="${orderId!}"/>
-                    <input type="hidden" name="partyId" value="${assignPartyId!}"/>
-                    <input type="hidden" name="roleTypeId" value="${assignRoleTypeId!}"/>
-                    <input type="hidden" name="fromDate" value="${fromDate!}"/>
-                  </form></@menuitem>
-                <#elseif currentStatus.statusId == "ORDER_APPROVED">
-                  <@menuitem type="link" href="javascript:document.OrderHold.submit()" text="${uiLabelMap.OrderHold}"><form name="OrderHold" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
-                    <input type="hidden" name="statusId" value="ORDER_HOLD"/>
-                    <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
-                    <input type="hidden" name="orderId" value="${orderId!}"/>
-                    <input type="hidden" name="partyId" value="${assignPartyId!}"/>
-                    <input type="hidden" name="roleTypeId" value="${assignRoleTypeId!}"/>
-                    <input type="hidden" name="fromDate" value="${fromDate!}"/>
-                  </form></@menuitem>
-                <#elseif currentStatus.statusId == "ORDER_HOLD">
-                  <@menuitem type="link" href="javascript:document.OrderApproveOrder.submit()" text="${uiLabelMap.OrderApproveOrder}"><form name="OrderApproveOrder" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
-                    <input type="hidden" name="statusId" value="ORDER_APPROVED"/>
-                    <input type="hidden" name="setItemStatus" value="Y"/>
-                    <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
-                    <input type="hidden" name="orderId" value="${orderId!}"/>
-                    <input type="hidden" name="partyId" value="${assignPartyId!}"/>
-                    <input type="hidden" name="roleTypeId" value="${assignRoleTypeId!}"/>
-                    <input type="hidden" name="fromDate" value="${fromDate!}"/>
-                  </form></@menuitem>
-                </#if>
-                <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
-                  <@menuitem type="link" href="javascript:document.OrderCancel.submit()" text="${uiLabelMap.OrderCancelOrder}"><form name="OrderCancel" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
-                    <input type="hidden" name="statusId" value="ORDER_CANCELLED"/>
-                    <input type="hidden" name="setItemStatus" value="Y"/>
-                    <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
-                    <input type="hidden" name="orderId" value="${orderId!}"/>
-                    <input type="hidden" name="partyId" value="${assignPartyId!}"/>
-                    <input type="hidden" name="roleTypeId" value="${assignRoleTypeId!}"/>
-                    <input type="hidden" name="fromDate" value="${fromDate!}"/>
-                  </form></@menuitem>
-                </#if>
-                <#if setOrderCompleteOption>
-                  <@menuitem type="link" href="javascript:document.OrderCompleteOrder.submit()" text="${uiLabelMap.OrderCompleteOrder}"><form name="OrderCompleteOrder" method="post" action="<@ofbizUrl>changeOrderStatus</@ofbizUrl>">
-                    <input type="hidden" name="statusId" value="ORDER_COMPLETED"/>
-                    <input type="hidden" name="orderId" value="${orderId!}"/>
-                  </form></@menuitem>
-                </#if>
-            </@menu>
+        <#if currentStatus.statusId == "ORDER_APPROVED" && orderHeader.orderTypeId == "SALES_ORDER">
+          <@menuitem type="link" href="javascript:document.PrintOrderPickSheet.submit()" text="${uiLabelMap.FormFieldTitle_printPickSheet}"><form name="PrintOrderPickSheet" method="post" action="<@ofbizUrl>orderPickSheet.pdf</@ofbizUrl>" target="_BLANK">
+            <input type="hidden" name="facilityId" value="${storeFacilityId!}"/>
+            <input type="hidden" name="orderId" value="${orderHeader.orderId!}"/>
+            <input type="hidden" name="maxNumberOfOrdersToPrint" value="1"/>
+          </form></@menuitem>
+        </#if>
+        <#if currentStatus.statusId == "ORDER_CREATED" || currentStatus.statusId == "ORDER_PROCESSING">
+          <@menuitem type="link" href="javascript:document.OrderApproveOrder.submit()" text="${uiLabelMap.OrderApproveOrder}"><form name="OrderApproveOrder" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
+            <input type="hidden" name="statusId" value="ORDER_APPROVED"/>
+            <input type="hidden" name="newStatusId" value="ORDER_APPROVED"/>
+            <input type="hidden" name="setItemStatus" value="Y"/>
+            <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
+            <input type="hidden" name="orderId" value="${orderId!}"/>
+            <input type="hidden" name="partyId" value="${assignPartyId!}"/>
+            <input type="hidden" name="roleTypeId" value="${assignRoleTypeId!}"/>
+            <input type="hidden" name="fromDate" value="${fromDate!}"/>
+          </form></@menuitem>
+        <#elseif currentStatus.statusId == "ORDER_APPROVED">
+          <@menuitem type="link" href="javascript:document.OrderHold.submit()" text="${uiLabelMap.OrderHold}"><form name="OrderHold" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
+            <input type="hidden" name="statusId" value="ORDER_HOLD"/>
+            <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
+            <input type="hidden" name="orderId" value="${orderId!}"/>
+            <input type="hidden" name="partyId" value="${assignPartyId!}"/>
+            <input type="hidden" name="roleTypeId" value="${assignRoleTypeId!}"/>
+            <input type="hidden" name="fromDate" value="${fromDate!}"/>
+          </form></@menuitem>
+        <#elseif currentStatus.statusId == "ORDER_HOLD">
+          <@menuitem type="link" href="javascript:document.OrderApproveOrder.submit()" text="${uiLabelMap.OrderApproveOrder}"><form name="OrderApproveOrder" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
+            <input type="hidden" name="statusId" value="ORDER_APPROVED"/>
+            <input type="hidden" name="setItemStatus" value="Y"/>
+            <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
+            <input type="hidden" name="orderId" value="${orderId!}"/>
+            <input type="hidden" name="partyId" value="${assignPartyId!}"/>
+            <input type="hidden" name="roleTypeId" value="${assignRoleTypeId!}"/>
+            <input type="hidden" name="fromDate" value="${fromDate!}"/>
+          </form></@menuitem>
+        </#if>
+        <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
+          <@menuitem type="link" href="javascript:document.OrderCancel.submit()" text="${uiLabelMap.OrderCancelOrder}"><form name="OrderCancel" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
+            <input type="hidden" name="statusId" value="ORDER_CANCELLED"/>
+            <input type="hidden" name="setItemStatus" value="Y"/>
+            <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
+            <input type="hidden" name="orderId" value="${orderId!}"/>
+            <input type="hidden" name="partyId" value="${assignPartyId!}"/>
+            <input type="hidden" name="roleTypeId" value="${assignRoleTypeId!}"/>
+            <input type="hidden" name="fromDate" value="${fromDate!}"/>
+          </form></@menuitem>
+        </#if>
+        <#if setOrderCompleteOption>
+          <@menuitem type="link" href="javascript:document.OrderCompleteOrder.submit()" text="${uiLabelMap.OrderCompleteOrder}"><form name="OrderCompleteOrder" method="post" action="<@ofbizUrl>changeOrderStatus</@ofbizUrl>">
+            <input type="hidden" name="statusId" value="ORDER_COMPLETED"/>
+            <input type="hidden" name="orderId" value="${orderId!}"/>
+          </form></@menuitem>
+        </#if>
+      </@menu>
       
   </@section>
 </#if>

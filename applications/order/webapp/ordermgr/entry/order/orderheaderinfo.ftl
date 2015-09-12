@@ -18,7 +18,7 @@ under the License.
 -->
 
 <@section title="${uiLabelMap.OrderOrderHeaderInfo}">
-        <@table type="fields" class="basic-table">
+    <@table type="fields" class="basic-table">
         <#-- order name -->
         <#if (orderName?has_content)>
             <@tr>
@@ -160,5 +160,5 @@ under the License.
                 </@td>
             </@tr>
         </#if>
-        </@table>
+    </@table>
 </@section>

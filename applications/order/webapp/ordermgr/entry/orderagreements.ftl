@@ -20,12 +20,12 @@ under the License.
 
 <form method="post" name="agreementForm" action="<@ofbizUrl>setOrderCurrencyAgreementShipDates</@ofbizUrl>">
 
-<#assign menuHtml>
-  <@menu type="section" inlineItems=true>
-    <@menuitem type="link" href="javascript:document.agreementForm.submit()" text="${uiLabelMap.CommonContinue}" />
-  </@menu>
-</#assign>
-<@section title="${uiLabelMap.OrderOrderEntryCurrencyAgreementShipDates}" menuHtml=menuHtml>
+  <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
+      <@menuitem type="link" href="javascript:document.agreementForm.submit()" text="${uiLabelMap.CommonContinue}" />
+    </@menu>
+  </#assign>
+  <@section title="${uiLabelMap.OrderOrderEntryCurrencyAgreementShipDates}" menuHtml=menuHtml>
     <@table type="fields" class="basic-table">
       <#if agreements??>
       <@tr><@td colspan="4">&nbsp;<input type='hidden' name='hasAgreements' value='Y'/></@td></@tr>
@@ -98,7 +98,7 @@ under the License.
         </@td>
       </@tr>
 
-      <#if cart.getOrderType() != "PURCHASE_ORDER">
+    <#if cart.getOrderType() != "PURCHASE_ORDER">
       <@tr>
         <@td>&nbsp;</@td>
         <@td align='right' valign='middle' class='tableheadtext' nowrap="nowrap">
@@ -109,7 +109,7 @@ under the License.
           <input type="text" class='inputBox' name="correspondingPoId" size="15" />
         </@td>
       </@tr>
-      </#if>
+    </#if>
 
       <@tr>
         <@td>&nbsp;</@td>

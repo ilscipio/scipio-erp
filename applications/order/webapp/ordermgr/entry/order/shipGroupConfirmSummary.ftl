@@ -27,19 +27,18 @@ standard order confirmation page and to be re-usable by other screens.
 <#if !(cart??)><#assign cart = shoppingCart!/></#if>
 
 <#if cart??>
-<@section title="${uiLabelMap.OrderShippingInformation}">
+  <@section title="${uiLabelMap.OrderShippingInformation}">
     <@table type="data-list" class="basic-table">
 
       <#-- header -->
-
       <@thead>
-      <@tr>
-        <@th>${uiLabelMap.OrderDestination}</@th>
-        <@th>${uiLabelMap.PartySupplier}</@th>
-        <@th>${uiLabelMap.ProductShipmentMethod}</@th>
-        <@th>${uiLabelMap.ProductItem}</@th>
-        <@th>${uiLabelMap.ProductQuantity}</@th>
-      </@tr>
+        <@tr>
+          <@th>${uiLabelMap.OrderDestination}</@th>
+          <@th>${uiLabelMap.PartySupplier}</@th>
+          <@th>${uiLabelMap.ProductShipmentMethod}</@th>
+          <@th>${uiLabelMap.ProductItem}</@th>
+          <@th>${uiLabelMap.ProductQuantity}</@th>
+        </@tr>
       </@thead>
 
       <#-- BEGIN LIST SHIP GROUPS -->

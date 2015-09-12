@@ -315,9 +315,7 @@ document.lookuporder.orderId.focus();
 </#if>
 
 <#if (searchPerformed!false)==true>
-<@section title="${uiLabelMap.CommonSearchResults}">
-  <@row>
-    <@cell>
+  <@section title="${uiLabelMap.CommonSearchResults}">
 
   <#if lookupErrorMessage?has_content>
     <@alert type="alert">
@@ -416,6 +414,7 @@ document.lookuporder.orderId.focus();
           <@th width="10%">&nbsp;</@th>
         </@tr>
         </@thead>
+        <@tbody>
           <#list orderList as orderHeader>
             <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
             <#assign statusItem = orderHeader.getRelatedOne("StatusItem", true)!>
@@ -502,6 +501,7 @@ document.lookuporder.orderId.focus();
               </@td>
             </@tr>
           </#list>
+        </@tbody>
       </@table>
       <@massOrderChangeButton id="2"/>
       
@@ -515,9 +515,7 @@ document.lookuporder.orderId.focus();
     <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
   </#if>
     
-    </@cell>
-  </@row>
-</@section>
+  </@section>
 </#if>
 
 <#else>

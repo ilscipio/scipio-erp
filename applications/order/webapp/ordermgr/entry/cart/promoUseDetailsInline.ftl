@@ -18,8 +18,8 @@ under the License.
 -->
 
 <div>
-    <h2>${uiLabelMap.OrderPromotionInformation}:</h2>
-    <h3>${uiLabelMap.OrderPromotionsApplied}:</h3>
+    <@heading>${uiLabelMap.OrderPromotionInformation}:</@heading>
+    <@heading relLevel=1>${uiLabelMap.OrderPromotionsApplied}:</@heading>
         <ul>    
             <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>
                 <li>
@@ -36,7 +36,7 @@ under the License.
                 </#if>
             </#list>
         </ul>
-    <h3>${uiLabelMap.OrderCartItemUseinPromotions}:</h3>
+    <@heading relLevel=1>${uiLabelMap.OrderCartItemUseinPromotions}:</@heading>
     <ul>
         <#list shoppingCart.items() as cartLine>
             <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>

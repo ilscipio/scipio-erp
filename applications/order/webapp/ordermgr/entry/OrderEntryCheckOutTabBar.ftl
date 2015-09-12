@@ -22,16 +22,16 @@ under the License.
 </#if>
 
 <#assign sectionTitle>
-        <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-            ${uiLabelMap.OrderPurchaseOrder}
-        <#else>
-            ${uiLabelMap.OrderSalesOrder}
-        </#if>
-        :&nbsp;${stepTitle!}
+    <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+        ${uiLabelMap.OrderPurchaseOrder}
+    <#else>
+        ${uiLabelMap.OrderSalesOrder}
+    </#if>
+    :&nbsp;${stepTitle!}
 </#assign>
 
 <@section title=sectionTitle>
-      <@menu type="button">
+    <@menu type="button">
       <#list checkoutSteps?reverse as checkoutStep>
         <#assign stepUiLabel = uiLabelMap.get(checkoutStep.label)>
         <#if checkoutStep.enabled == "N">

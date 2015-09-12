@@ -74,20 +74,19 @@ function submitForm(form, mode, value) {
 </script>
 
 <#assign shipping = !shoppingCart.containAllWorkEffortCartItems()> <#-- contains items which need shipping? -->
+
 <form method="post" name="checkoutInfoForm" style="margin:0;">
   <input type="hidden" name="checkoutpage" value="quick"/>
   <input type="hidden" name="BACK_PAGE" value="quickcheckout"/>
 
-
-<#assign sectionTitle>
-                <#if shipping == true>
-    1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?
-                <#else>
-    &nbsp;${uiLabelMap.OrderInformationAboutYou}
-                </#if>
-</#assign>
-
-<@section title=sectionTitle>
+    <#assign sectionTitle>
+      <#if shipping == true>
+        1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?
+      <#else>
+        &nbsp;${uiLabelMap.OrderInformationAboutYou}
+      </#if>
+    </#assign>
+    <@section title=sectionTitle>
                 <@table type="fields" class="" width="100%" border="0" cellpadding="1" cellspacing="0">
                   <@tr>
                     <@td colspan="2">
@@ -149,15 +148,16 @@ function submitForm(form, mode, value) {
                 <div>&nbsp;${uiLabelMap.PartyTaxIdentification}</div>
                 ${screens.render("component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo")}
                 -->
-        </@section>
-        <#assign sectionTitle>
-                <#if shipping == true>
-                    2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?
-                <#else>
-                    2)&nbsp;${uiLabelMap.OrderOptions}?
-                </#if>
-        </#assign>
-        <@section title=sectionTitle>
+    </@section>
+        
+    <#assign sectionTitle>
+        <#if shipping == true>
+            2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?
+        <#else>
+            2)&nbsp;${uiLabelMap.OrderOptions}?
+        </#if>
+    </#assign>
+    <@section title=sectionTitle>
                 <@table type="fields" class="" width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
                  <#if shipping == true>
                   <#list carrierShipmentMethodList as carrierShipmentMethod>
@@ -186,7 +186,7 @@ function submitForm(form, mode, value) {
                   <@tr><@td colspan="2"><hr /></@td></@tr>
                   <@tr>
                     <@td colspan="2">
-                      <h2>${uiLabelMap.OrderShipAllAtOnce}?</h2>
+                      <@heading>${uiLabelMap.OrderShipAllAtOnce}?</@heading>
                     </@td>
                   </@tr>
                   <@tr>
@@ -209,7 +209,7 @@ function submitForm(form, mode, value) {
                  </#if>
                   <@tr>
                     <@td colspan="2">
-                      <h2>${uiLabelMap.OrderSpecialInstructions}</h2>
+                      <@heading>${uiLabelMap.OrderSpecialInstructions}</@heading>
                     </@td>
                   </@tr>
                   <@tr>
@@ -230,7 +230,7 @@ function submitForm(form, mode, value) {
                   <@tr><@td colspan="2"><hr /></@td></@tr>
                   <@tr>
                     <@td colspan="2">
-                      <h2>${uiLabelMap.OrderGiftMessage}</h2>
+                      <@heading>${uiLabelMap.OrderGiftMessage}</@heading>
                     </@td>
                   </@tr>
                   <@tr>
@@ -245,7 +245,7 @@ function submitForm(form, mode, value) {
                   <@tr><@td colspan="2"><hr /></@td></@tr>
                   <@tr>
                     <@td colspan="2">
-                      <h2>${uiLabelMap.PartyEmailAddresses}</h2>
+                      <@heading>${uiLabelMap.PartyEmailAddresses}</@heading>
                     </@td>
                   </@tr>
                   <@tr>
@@ -266,9 +266,9 @@ function submitForm(form, mode, value) {
                     </@td>
                   </@tr>
                 </@table>
-            </@section>
+    </@section>
 
-            <@section title="3)${uiLabelMap.OrderHowShallYouPay}?">
+    <@section title="3)${uiLabelMap.OrderHowShallYouPay}?">
                 <@table type="fields" cellspacing="" class="basic-table">
                   <@tr>
                     <@td colspan="2">
@@ -469,11 +469,17 @@ function submitForm(form, mode, value) {
                     </@td>
                   </@tr>
                 </#if>
-                </@table>
-            </@section>
+            </@table>
+    </@section>                    
+            
 </form>
 
-<@section>
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="${styles.button_default!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="${styles.button_default!}">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
-</@section>
+<@row>
+  <@cell>
+    <@menu type="button">
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text="${uiLabelMap.OrderBacktoShoppingCart}" />
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text="${uiLabelMap.OrderContinueToFinalOrderReview}" />
+    </@menu>
+  </@cell>
+</@row>
+

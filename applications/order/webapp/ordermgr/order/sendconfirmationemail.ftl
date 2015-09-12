@@ -18,9 +18,10 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
-<@section title="${uiLabelMap.OrderSendConfirmationEmail}">
+  <@section title="${uiLabelMap.OrderSendConfirmationEmail}">
     <@row>
-    <@cell class="${styles.grid_large!}6 ${styles.grid_cell!}">
+      <@cell class="${styles.grid_large!}6 ${styles.grid_cell!}">
+    
       <#macro actionMenu>
         <@menu type="button">
           <@menuitem type="link" ofbizHref="authview/${donePage}?orderId=${orderId}" text="${uiLabelMap.CommonGoBack}" />
@@ -86,9 +87,10 @@ under the License.
       </form>
       
       <@actionMenu />
+      
       </@cell>
-      </@row>
-    </@section>
+    </@row>
+  </@section>
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

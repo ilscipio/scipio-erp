@@ -22,8 +22,8 @@ under the License.
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductGlobalPriceRule}" menuHtml=menuHtml>
-        <@table type="fields" cellspacing="0" class="basic-table">
-         <@thead>
+    <@table type="fields" cellspacing="0" class="basic-table">
+        <@thead>
           <@tr class="header-row">
             <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
             <@th width="80%">${uiLabelMap.ProductRuleNameFromDateThruDate}</@th>
@@ -208,5 +208,5 @@ under the License.
             </@td>
           </@tr>
         </#if>
-        </@table>
+    </@table>
 </@section>

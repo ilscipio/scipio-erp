@@ -18,12 +18,13 @@ under the License.
 -->
 
 <@section title="${uiLabelMap.OrderOrderItems}">
-        <div class="boxlink">
-            <#if maySelectItems?default(false)>
-                <a href="javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()" class="${styles.button_default!}">${uiLabelMap.OrderAddAllToCart}</a>
-                <a href="javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()" class="${styles.button_default!}">${uiLabelMap.OrderAddCheckedToCart}</a>
-            </#if>
-        </div>
+        <@menu type="button"> <#-- class="boxlink" -->
+          <#if (maySelectItems!false) == true>
+            <@menuitem type="link" href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' text="${uiLabelMap.OrderAddAllToCart}" />
+            <@menuitem type="link" href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' text="${uiLabelMap.OrderAddCheckedToCart}" />
+          </#if>
+        </@menu>
+        
         <@table type="data-complex" cellspacing="0" class="basic-table">
           <@thead>
           <@tr>

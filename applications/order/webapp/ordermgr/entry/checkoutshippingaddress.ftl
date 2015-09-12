@@ -53,11 +53,13 @@ function toggleBillingAccount(box) {
 
 //]]>
 </script>
+
 <#assign cart = shoppingCart!/>
+
+<@section title="1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?">
 <form method="post" name="checkoutInfoForm" style="margin:0;">
   <fieldset>
     <input type="hidden" name="checkoutpage" value="shippingaddress"/>
-        <@section title="1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?">
             <@table type="fields" class="" width="100%" border="0" cellpadding="1" cellspacing="0">
               <@tr>
                 <@td colspan="2">
@@ -125,12 +127,17 @@ function toggleBillingAccount(box) {
              <br />
             <#-- Party Tax Info -->
             <div>&nbsp;${uiLabelMap.PartyTaxIdentification}</div>
-            ${screens.render("component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo")}
-        </@section>
+            ${screens.render("component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo")} 
   </fieldset>
 </form>
-
-<@section>
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="${styles.button_default!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
 </@section>
+
+<@row>
+  <@cell>
+    <@menu type="button">
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text="${uiLabelMap.OrderBacktoShoppingCart}" />
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text="${uiLabelMap.CommonNext}" />
+    </@menu>
+  </@cell>
+</@row>
+

@@ -24,9 +24,9 @@ under the License.
 </script>
 
 <#if orderHeader?has_content>
-<@section title="${uiLabelMap.OrderAddToOrder}">
+  <@section title="${uiLabelMap.OrderAddToOrder}">
     <@row>
-    <@cell class="${styles.grid_large!}6 columns">
+      <@cell class="${styles.grid_large!}6 columns">
         <form method="post" action="<@ofbizUrl>appendItemToOrder</@ofbizUrl>" name="appendItemForm">
             <input type="hidden" size="25" name="orderId" value="${orderId!}"/>
             <#if !catalogCol?has_content>
@@ -126,7 +126,7 @@ under the License.
                 </@tr>
             </@table>
         </form>
-    </@cell>
+      </@cell>
     </@row>
-</@section>
+  </@section>
 </#if>

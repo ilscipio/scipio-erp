@@ -229,7 +229,7 @@ under the License.
                                                                 <a class=""
                                                                    href="/catalog/control/EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y${StringUtil.wrapString(externalKeyParam)}"
                                                                    target="_blank">${uiLabelMap.ProductInventory}</a>
-                                </@td>
+                                                            </@td>
                                                             <@td>&nbsp;</@td>
                                                         </@tr>
                                                         <@tr>
@@ -242,16 +242,16 @@ under the License.
                                                             <@tr>
                                                                 <@td>
                                                                     ${uiLabelMap.ProductInInventory} [${facility.facilityName!}] ${uiLabelMap.ProductQoh}
-                                </@td>
+                                                                </@td>
                                                                 <@td style="padding-left: 15px; text-align: left;">
                                                                     ${qohQuantityByFacility} (${uiLabelMap.ProductAtp}: ${atpQuantityByFacility})
-                                </@td>
+                                                                </@td>
                                                             </@tr>
-                                    </#if>
+                                                        </#if>
                                                         <@tr>
                                                             <@td>
                                                                 ${uiLabelMap.ProductInInventory} [${uiLabelMap.CommonAll} ${uiLabelMap.ProductFacilities}] ${uiLabelMap.ProductQoh}
-                                </@td>
+                                                            </@td>
                                                             <@td style="padding-left: 15px; text-align: left;">
                                                                 ${qohQuantity} (${uiLabelMap.ProductAtp}: ${atpQuantity})
                                                             </@td>
@@ -263,11 +263,11 @@ under the License.
                                                                     ${mktgPkgQOH} (${uiLabelMap.ProductAtp}: ${mktgPkgATP})
                                                                 </@td>
                                                             </@tr>
-                            </#if>
+                                                        </#if>
                                                         <@tr>
                                                             <@td>${uiLabelMap.OrderOnOrder}</@td>
                                                             <@td style="padding-left: 15px; text-align: left;">${onOrderQuantity}</@td>
-                        </@tr>
+                                                        </@tr>
                                                         <@tr>
                                                             <@td>${uiLabelMap.OrderInProduction}</@td>
                                                             <@td style="padding-left: 15px; text-align: left;">${inProductionQuantity}</@td>

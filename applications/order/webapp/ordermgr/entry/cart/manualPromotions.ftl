@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if allProductPromos?has_content>
-       <@section title="${uiLabelMap.OrderManualPromotions}">
+    <@section title="${uiLabelMap.OrderManualPromotions}">
         <form method="post" action="<@ofbizUrl>doManualPromotions</@ofbizUrl>" name="domanualpromotions" style="margin: 0;">
           <!-- to enter more than two manual promotions, just add a new select box with name="productPromoId_n" -->
           <select name="productPromoId_1">
@@ -35,5 +35,5 @@ under the License.
           </select>
           <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.OrderDoPromotions}" />
         </form>
-      </@section>
+    </@section>
 </#if>

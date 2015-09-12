@@ -19,10 +19,13 @@ under the License.
 <form method="post" action="<@ofbizUrl>attachProductFeaturesToCategory</@ofbizUrl>" name="attachProductFeaturesToCategory">
     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
 </form>
-<a href="javascript:document.attachProductFeaturesToCategory.submit()" class="${styles.button_default!}">${uiLabelMap.ProductFeatureCategoryAttach}</a>
+
+<@menu type="button">
+  <@menuitem type="link" href="javascript:document.attachProductFeaturesToCategory.submit()" text="${uiLabelMap.ProductFeatureCategoryAttach}" />
+</@menu>
 
 <#if productCategoryId?? && productCategory??>
-  <@section title="${uiLabelMap.PageTitleEditCategoryFeatureCategories}">
+    <@section title="${uiLabelMap.PageTitleEditCategoryFeatureCategories}">
             <#-- Feature Groups -->
             <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
               <@thead>

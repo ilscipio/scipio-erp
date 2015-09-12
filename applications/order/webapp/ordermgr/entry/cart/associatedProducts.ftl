@@ -38,5 +38,5 @@ under the License.
           </#if>
         </#list>
       </@table>
-    </@section>
+  </@section>
 </#if>

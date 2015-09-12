@@ -16,8 +16,10 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<@menu type="button">
 <#if showAll = "false">
-    <a href="<@ofbizUrl>requestitemnotes?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;showAll=true</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderShowAllNotes}</a>
+  <@menuitem type="link" ofbizHref="requestitemnotes?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;showAll=true" text="${uiLabelMap.OrderShowAllNotes}" />
 <#else>
-    <a href="<@ofbizUrl>requestitemnotes?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;showAll=false</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderShowThisItemsNotes}</a>
+  <@menuitem type="link" ofbizHref="requestitemnotes?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;showAll=false" text="${uiLabelMap.OrderShowThisItemsNotes}" />
 </#if>
+</@menu>

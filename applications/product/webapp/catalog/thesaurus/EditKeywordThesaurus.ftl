@@ -36,8 +36,8 @@ under the License.
             </#list>
         </div>
         
-        <#assign lastkeyword = "">
-        <#if keywordThesauruses?has_content>
+      <#assign lastkeyword = "">
+      <#if keywordThesauruses?has_content>
         <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
             <#-- TODO: rewrite this somehow without need for openOnly/closeOnly -->
             <#list keywordThesauruses as keyword>
@@ -81,5 +81,5 @@ under the License.
               <@td closeOnly=true />
             <@tr closeOnly=true />
         </@table>
-        </#if>
+      </#if>
 </@section>

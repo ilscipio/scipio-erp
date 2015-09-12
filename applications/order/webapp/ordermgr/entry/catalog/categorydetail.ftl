@@ -59,7 +59,7 @@ under the License.
             <#if ((listSize?int - viewSize?int) > 0)>
                 <span>${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
             </#if>
-            <#if highIndex?int < listSize?int>
+            <#if (highIndex?int < listSize?int)>
              | <a href="javascript: void(0);" onclick="callDocumentByPaginate('${productCategoryId}~${viewSize}~${viewIndex?int + 1}');" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
             </#if>
         </div>
@@ -71,10 +71,10 @@ under the License.
     <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME")!/>
     <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION")!/>
     <#if categoryName?has_content>
-        <h2>${categoryName}</h2>
+        <@heading>${categoryName}</@heading>
     </#if>
     <#if categoryDescription?has_content>
-        <h2>${categoryDescription}</h2>
+        <@heading>${categoryDescription}</@heading>
     </#if>
     <#if hasQuantities??>
       <form method="post" action="<@ofbizUrl>addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>
@@ -133,11 +133,8 @@ under the License.
       <#assign numCol = numCol?default(1)>
       <#assign numCol = numCol?number>
       <#assign tabCol = 1>
-      <div
-<#if categoryImageUrl?string?has_content>
-        style="position: relative; margin-top: ${height}px;"
-      </#if>
-      class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
+      <div<#if categoryImageUrl?string?has_content> style="position: relative; margin-top: ${height}px;"</#if>
+          class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
       <@table type="data-list" class="" autoAltRows=false wrapIf=(numCol?int > 1)>
         <#list productCategoryMembers as productCategoryMember>
           <#if (numCol?int == 1)>

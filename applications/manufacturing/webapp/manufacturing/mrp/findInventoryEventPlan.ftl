@@ -54,21 +54,18 @@ function lookupInventory() {
                  <@table type="fields" class="basic-table" cellspacing="0">
                   <@tr>
                     <@td width='20%' align='right'>${uiLabelMap.ManufacturingProductId}</@td>
-                    <@td width='5%'>&nbsp;</@td>
                     <@td>
                         <@htmlTemplate.lookupField value='${requestParameters.productId!}' formName="lookupinventory" name="productId" id="productId" fieldFormName="LookupProduct"/>
                      </@td>
                   </@tr>
                   <@tr>
                     <@td width='20%' align='right'>${uiLabelMap.CommonFromDate}</@td>
-                    <@td width='5%'>&nbsp;</@td>
                     <@td>
                       <@htmlTemplate.renderDateTimeField name="eventDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     </@td>
                   </@tr>
                   <@tr>
                     <@td width="20%" align="center" valign="top">&nbsp;</@td>
-                    <@td width="5%">&nbsp;</@td>
                     <@td width="75%"> <a href="javascript:lookupInventory();" class="smallSubmit ${styles.button_default!}">&nbsp; ${uiLabelMap.CommonFind} &nbsp;</a></@td>
                   </@tr>
                 </@table>

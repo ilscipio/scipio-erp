@@ -18,18 +18,18 @@ under the License.
 -->
 
 <#if partyId??>
-    <#assign sectionTitleParty = uiLabelMap.PartyParty>
-  <#else>
-    <#assign sectionTitleParty = uiLabelMap.PartyActive>
-  </#if>
+  <#assign sectionTitleParty = uiLabelMap.PartyParty>
+<#else>
+  <#assign sectionTitleParty = uiLabelMap.PartyActive>
+</#if>
   
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-      <#if !partyId?? && showAll?lower_case == "true">
-        <@menuitem type="link" ofbizHref="showvisits?showAll=false" text="${uiLabelMap.PartyShowActive}" />
-      <#elseif !partyId??>
-        <@menuitem type="link" ofbizHref="showvisits?showAll=true" text="${uiLabelMap.PartyShowAll}" />
-      </#if>
+  <#if !partyId?? && showAll?lower_case == "true">
+    <@menuitem type="link" ofbizHref="showvisits?showAll=false" text="${uiLabelMap.PartyShowActive}" />
+  <#elseif !partyId??>
+    <@menuitem type="link" ofbizHref="showvisits?showAll=true" text="${uiLabelMap.PartyShowAll}" />
+  </#if>
   </@menu>
 </#assign>
 <@section title="${sectionTitleParty}&nbsp;${uiLabelMap.PartyVisitListing}" menuHtml=menuHtml>

@@ -30,6 +30,7 @@ under the License.
         <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" text="${uiLabelMap.CommonSave}" />
       </@menu>
     </#macro>
+    
     <@saveCancelMenu />
 
     <#if !creditCard??>

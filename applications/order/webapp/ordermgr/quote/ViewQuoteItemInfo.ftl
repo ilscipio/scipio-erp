@@ -16,12 +16,16 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.OrderOrderQuoteItems}">
-            <#if maySelectItems?default("N") == "Y">
-        <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="${styles.button_default!}">${uiLabelMap.OrderAddAllToCart}</a>
-            </#if>
+<#assign menuHtml>
+  <@menu type="section" inlineItems=true>
+  <#if (maySelectItems!"N") == "Y">
+    <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" text="${uiLabelMap.OrderAddAllToCart}" />
+  </#if>
+  </@menu>
+</#assign>
+<@section title="${uiLabelMap.OrderOrderQuoteItems}" menuHtml=menuHtml>
 
-        <@table type="data-complex" autoAltRows=true cellspacing="0" class="basic-table">
+    <@table type="data-complex" autoAltRows=true cellspacing="0" class="basic-table">
           <@thead>
             <@tr valign="bottom" class="header-row">
                 <@th width="15%">${uiLabelMap.ProductItem}</@th>
@@ -148,5 +152,5 @@ under the License.
                 </@td>
             </@tr>
           </@tbody>
-        </@table>
-    </@section>
+    </@table>
+</@section>

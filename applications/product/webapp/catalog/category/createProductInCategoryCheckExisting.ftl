@@ -25,19 +25,19 @@ under the License.
   </@menu>
 </#assign>
 <#assign sectionTitle>
-            <b>${uiLabelMap.ProductCheckingForExistingProductInCategory} <#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [${uiLabelMap.CommonId}:${productCategoryId!}]</b>
-            <#if productFeatureAndTypeDatas?has_content>
-            ${uiLabelMap.CommonWhere}
-                <#list productFeatureAndTypeDatas as productFeatureAndTypeData>
-                    <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
-                    <#assign productFeature = productFeatureAndTypeData.productFeature>
-                    ${productFeatureType.description} = ${productFeature.description}
-                    <#if productFeatureAndTypeData_has_next>, ${uiLabelMap.CommonAnd} </#if>
-                </#list>
-            </#if>
+    <b>${uiLabelMap.ProductCheckingForExistingProductInCategory} <#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [${uiLabelMap.CommonId}:${productCategoryId!}]</b>
+    <#if productFeatureAndTypeDatas?has_content>
+    ${uiLabelMap.CommonWhere}
+        <#list productFeatureAndTypeDatas as productFeatureAndTypeData>
+            <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
+            <#assign productFeature = productFeatureAndTypeData.productFeature>
+            ${productFeatureType.description} = ${productFeature.description}
+            <#if productFeatureAndTypeData_has_next>, ${uiLabelMap.CommonAnd} </#if>
+        </#list>
+    </#if>
 </#assign>
 <@section title=sectionTitle menuHtml=menuHtml>
-        <#if products?has_content>
+      <#if products?has_content>
         <@table type="data-list" cellspacing="0" class="basic-table">
           <@thead>
             <@tr>
@@ -56,9 +56,9 @@ under the License.
           </#list>
           </@tbody>
         </@table>
-        <#else>
-          <@resultMsg>${uiLabelMap.ProductNoExistingProductsFound}.</@resultMsg>
-        </#if>
+      <#else>
+        <@resultMsg>${uiLabelMap.ProductNoExistingProductsFound}.</@resultMsg>
+      </#if>
 
         <form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />

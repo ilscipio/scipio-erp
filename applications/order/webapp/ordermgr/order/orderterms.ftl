@@ -18,26 +18,28 @@ under the License.
 -->
 
 <#if orderTerms?has_content>
-    <@section title="${uiLabelMap.OrderOrderTerms}">
-      <@table type="data-list" class="basic-table" cellspacing='0'>
+  <@section title="${uiLabelMap.OrderOrderTerms}">
+    <@table type="data-list" class="basic-table" cellspacing="0">
       <@thead> 
-      <@tr class="header-row">
-        <@th width="35%">${uiLabelMap.OrderOrderTermType}</@th>
-        <@th width="10%" align="center">${uiLabelMap.OrderOrderTermValue}</@th>
-        <@th width="10%" align="center">${uiLabelMap.OrderOrderTermDays}</@th>
-        <@th width="10%" align="center">${uiLabelMap.OrderOrderTextValue}</@th>        
-        <@th width="35%" align="center">${uiLabelMap.CommonDescription}</@th>
-      </@tr>
-     </@thead>
-    <#list orderTerms as orderTerm>
-      <@tr>
-        <@td width="35%">${orderTerm.getRelatedOne("TermType", false).get("description", locale)}</@td>
-        <@td width="10%" align="center">${orderTerm.termValue?default("")}</@td>
-        <@td width="10%" align="center">${orderTerm.termDays?default("")}</@td>
-        <@td width="10%" align="center">${orderTerm.textValue?default("")}</@td>
-        <@td width="35%" align="center">${orderTerm.description?default("")}</@td>
-      </@tr>
-    </#list>
-      </@table>
-    </@section>
+        <@tr class="header-row">
+          <@th width="35%">${uiLabelMap.OrderOrderTermType}</@th>
+          <@th width="10%" align="center">${uiLabelMap.OrderOrderTermValue}</@th>
+          <@th width="10%" align="center">${uiLabelMap.OrderOrderTermDays}</@th>
+          <@th width="10%" align="center">${uiLabelMap.OrderOrderTextValue}</@th>        
+          <@th width="35%" align="center">${uiLabelMap.CommonDescription}</@th>
+        </@tr>
+      </@thead>
+      <@tbody>
+      <#list orderTerms as orderTerm>
+        <@tr>
+          <@td width="35%">${orderTerm.getRelatedOne("TermType", false).get("description", locale)}</@td>
+          <@td width="10%" align="center">${orderTerm.termValue?default("")}</@td>
+          <@td width="10%" align="center">${orderTerm.termDays?default("")}</@td>
+          <@td width="10%" align="center">${orderTerm.textValue?default("")}</@td>
+          <@td width="35%" align="center">${orderTerm.description?default("")}</@td>
+        </@tr>
+      </#list>
+      </@tbody>
+    </@table>
+  </@section>
 </#if>

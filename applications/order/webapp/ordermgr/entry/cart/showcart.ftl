@@ -26,18 +26,18 @@ under the License.
         window.location='AddGiftCertificate';
     }
 </script>
+
 <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
   <#assign target="productAvailabalityByFacility">
 <#else>
   <#assign target="getProductInventoryAvailable">
 </#if>
 
-
 <@menu type="button">
     <@menuitem type="link" href="javascript:quicklookup(document.quickaddform.add_product_id)" text="${uiLabelMap.OrderQuickLookup}" />
     <@menuitem type="link" href="javascript:quicklookupGiftCertificate()" text="${uiLabelMap.OrderAddGiftCertificate}" />
   <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>
-        <@menuitem type="link" href="javascript:showQohAtp()" text="${uiLabelMap.ProductAtpQoh}" />
+    <@menuitem type="link" href="javascript:showQohAtp()" text="${uiLabelMap.ProductAtpQoh}" />
   </#if>
 </@menu>
 
@@ -57,15 +57,16 @@ under the License.
 
         <#if parameters.availabalityList?has_content>
         <@row>
-        <@cell>
+          <@cell>
           <@table type="data-list" class="" autoAltRows=false>
             <@thead>
-            <@tr>
+              <@tr>
                   <@th>${uiLabelMap.Facility}</@th>
                   <@th>${uiLabelMap.ProductQuantityOnHand}</@th>
                   <@th>${uiLabelMap.ProductAvailableToPromise}</@th>
-            </@tr>
+              </@tr>
             </@thead>
+            <@tbody>
             <#list parameters.availabalityList as availabality>
                <@tr>
                  <@td>${availabality.facilityId}</@td>
@@ -73,12 +74,14 @@ under the License.
                  <@td>${availabality.availableToPromiseTotal}</@td>
                </@tr>
             </#list>
+            </@tbody>
           </@table>
           </@cell>
         </@row>
         </#if>
         
       </#if>
+      
       <@row>
         <@cell>
             <form name="qohAtpForm" method="post" action="<@ofbizUrl>${target}</@ofbizUrl>">
@@ -86,9 +89,6 @@ under the License.
                 <input type="hidden" name="productId"/>
                 <input type="hidden" id="ownerPartyId" name="ownerPartyId" value="${shoppingCart.getBillToCustomerPartyId()!}" />
             </form>
-                
-                
-
               
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
                       <#if orderType=="PURCHASE_ORDER">                        

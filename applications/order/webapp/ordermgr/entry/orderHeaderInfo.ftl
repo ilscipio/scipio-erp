@@ -32,15 +32,15 @@ under the License.
 
 <@section title="${uiLabelMap.OrderOrderHeaderInfo}">
         <@row>
-            <@cell class="columns">
+            <@cell>
               <form method="post" action="setOrderName" name="setCartOrderNameForm">
                   <@field type="input" id="orderName" name="orderName" size="12" maxlength="200" value="${shoppingCart.getOrderName()?default('')}" label="${uiLabelMap.OrderOrderName}"/>
                   <@field type="submitarea">
                       <input type="submit" value="${uiLabelMap.CommonSet}" />
                   </@field>
               </form>
-                 </@cell>
-            </@row>
+            </@cell>
+        </@row>
             <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
                 <@row>
                     <@cell>
@@ -70,7 +70,7 @@ under the License.
             <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.CommonCurrency}</@td>
                 <@td>
-              ${currencyUomId}
+                  ${currencyUomId}
                 </@td>
             </@tr>
             <#if agreementId?has_content>

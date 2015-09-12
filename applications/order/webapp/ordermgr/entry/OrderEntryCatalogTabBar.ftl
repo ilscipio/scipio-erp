@@ -29,7 +29,7 @@ under the License.
         </#if>
     </#assign>
     <#assign menuHtml>
-      <@menu type="button">
+      <@menu type="section" inlineItems=true>
         <@menuitem type="link" ofbizHref="orderentry" text="${uiLabelMap.OrderOrderItems}" />
       </@menu>
     </#assign>

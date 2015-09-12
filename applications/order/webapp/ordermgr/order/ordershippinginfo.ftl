@@ -51,12 +51,12 @@ under the License.
 <#if shipGroups?has_content && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
   <#if parameters.view?has_content && parameters.view = "OISGA">
   <#-- New in Ofbiz 14.12 -->
-  <@section title="${uiLabelMap.OrderShipmentInformation}">
-        <@menu type="button">
-           <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}" text="${uiLabelMap.OrderShipmentInformationByOISG}" />
-        </@menu>
-        
-    <div>
+  <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
+       <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}" text="${uiLabelMap.OrderShipmentInformationByOISG}" />
+    </@menu>
+  </#assign>
+  <@section title="${uiLabelMap.OrderShipmentInformation}" menuHtml=menuHtml>
       <@table type="data-complex" cellspacing="0" class="basic-table" role="grid">
         <@thead>
           <@tr class="header-row">
@@ -204,14 +204,13 @@ under the License.
           </#list>
         </@tbody>
       </@table>
-    </div>
   </@section>
 <#else>
 <#list shipGroups as shipGroup>
   <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
-    <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}">
-       <@menu type="button">
+    <#assign menuHtml>
+       <@menu type="section" inlineItems=true>
          <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" text="&nbsp;" title="Collapse" />-->
          <@menuitem type="link" ofbizHref="shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}" text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" />
          <#-- Foundation: Button migrated from removed header to access OISGA -->
@@ -219,7 +218,8 @@ under the License.
            <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}&amp;view=OISGA" text="${uiLabelMap.OrderShipmentInformationByOrderItem}" />
          </#if>
        </@menu>
-
+    </#assign>
+    <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}" menuHtml=menuHtml>
     <div id="ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}">
           <form name="updateOrderItemShipGroup" method="post" action="<@ofbizUrl>updateShipGroupShipInfo</@ofbizUrl>">
         <input type="hidden" name="orderId" value="${orderId!}"/>

@@ -181,7 +181,6 @@ under the License.
     </@tr>
     <@tr>   
       <@td>${uiLabelMap.CommonCountry}</@td>
-      
       <@td>     
         <select name="countryGeoId" id="editcontactmechform_countryGeoId">
           ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
@@ -203,7 +202,6 @@ under the License.
       <@td><#if isUsps>${uiLabelMap.CommonY}<#else>${uiLabelMap.CommonN}</#if>
       </@td>
     </@tr>
-
   <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId!>
     <@tr>
       <@td>${uiLabelMap.PartyPhoneNumber}</@td>

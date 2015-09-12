@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div>
-    <h2>${uiLabelMap.OrderSpecialOffers}</h2>
+    <@heading>${uiLabelMap.OrderSpecialOffers}</@heading>
     <div>
         <ul>
         <#-- show promotions text -->

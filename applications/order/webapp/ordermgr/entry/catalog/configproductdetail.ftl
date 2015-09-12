@@ -203,7 +203,7 @@ function getConfigDetails() {
       </#if>
     </@td>
     <@td align="right" valign="top">
-      <h2>${productContentWrapper.get("PRODUCT_NAME")!}</h2>
+      <@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>
       <div>${productContentWrapper.get("DESCRIPTION")!}</div>
       <div><b>${product.productId!}</b></div>
       <#-- example of showing a certain type of feature with the product -->
@@ -616,7 +616,7 @@ function getConfigDetails() {
   </#if>
   <#if assocProducts?has_content>
     <@tr><@td>&nbsp;</@td></@tr>
-    <@tr><@td colspan="2"><h2>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName!}</h2></@td></@tr>
+    <@tr><@td colspan="2"><@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName!}</@heading></@td></@tr>
     <@tr><@td><hr /></@td></@tr>
     <#list assocProducts as productAssoc>
       <@tr><@td>

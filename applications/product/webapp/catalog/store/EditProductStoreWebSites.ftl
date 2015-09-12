@@ -31,7 +31,8 @@ under the License.
               <@th>&nbsp;</@th>
             </@tr>
            </@thead>
-            <#if storeWebSites?has_content>
+         <#if storeWebSites?has_content>
+           <@tbody>
               <#list storeWebSites as webSite>
                 <@tr valign="middle">
                   <@td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.button_default!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
@@ -47,7 +48,8 @@ under the License.
                   </@td>
                 </@tr>
               </#list>
-            </#if>
+            </@tbody>
+          </#if>
         </@table>
 </@section>
 <@section title="${uiLabelMap.ProductSetStoreOnWebSite}">

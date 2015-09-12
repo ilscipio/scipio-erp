@@ -39,8 +39,8 @@ under the License.
 </script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-<#assign tasksFound = false>
-<@section title="${uiLabelMap.OrderOrderNeedingAttention}">
+  <#assign tasksFound = false>
+  <@section title="${uiLabelMap.OrderOrderNeedingAttention}">
         <#-- FIXME: pure structure table, should keep innermost tables only -->
         <@table type="generic" autoAltRows=false cellspacing="0" class="basic-table">
             <@tr>
@@ -50,7 +50,7 @@ under the License.
                   <@table type="generic" autoAltRows=false cellspacing="0" class="basic-table">
                     <@tr>
                       <@td>
-                        <h3>${uiLabelMap.OrderOrderPurchaseToBeScheduled}</h3>
+                        <@heading>${uiLabelMap.OrderOrderPurchaseToBeScheduled}</@heading>
                         <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table hover-bar">
                          <@thead>
                           <@tr class="header-row">
@@ -112,7 +112,7 @@ under the License.
                   <@table type="generic" autoAltRows=false cellspacing="0" class="basic-table hover-bar">
                     <@tr>
                       <@td>
-                        <h3>${uiLabelMap.OrderWorkflow}</h3>
+                        <@heading>${uiLabelMap.OrderWorkflow}</@heading>
                         <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
                          <@thead>
                           <@tr class="header-row">
@@ -173,7 +173,7 @@ under the License.
                   <@table type="generic" autoAltRows=false cellspacing="0" class="basic-table">
                     <@tr>
                       <@td>
-                        <h3>${uiLabelMap.CommonWorkflowActivityUserRole}</h3>
+                        <@heading>${uiLabelMap.CommonWorkflowActivityUserRole}</@heading>
                         <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table hover-bar">
                          <@thead>
                           <@tr class="header-row">
@@ -270,7 +270,7 @@ under the License.
               </@td>
             </@tr>
         </@table>
-    </@section>
+  </@section>
 <#else>
   <@alert type="error">You do not have permission to view this page. (ORDERMGR_VIEW or ORDERMGR_ADMIN needed)</@alert>
 </#if>

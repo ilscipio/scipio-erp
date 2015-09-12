@@ -18,7 +18,8 @@ under the License.
 -->
 <#assign externalKeyParam = "&amp;externalLoginKey=" + requestAttributes.externalLoginKey!>
 <#if product?has_content>
-<!-- First some general forms and scripts -->
+
+<#-- First some general forms and scripts -->
 <form name="removeAssocForm" action="<@ofbizUrl>quickAdminUpdateProductAssoc</@ofbizUrl>">
     <input type="hidden" name="productId" value="${product.productId!}"/>
     <input type="hidden" name="PRODUCT_ID" value="${product.productId!}"/>
@@ -32,6 +33,7 @@ under the License.
     <input type="hidden" name="productId" value="${product.productId!}"/>
     <input type="hidden" name="productFeatureTypeId" value=""/>
 </form>
+
 <script language="JavaScript" type="text/javascript">
 
 function removeAssoc(productIdTo, fromDate) {
@@ -56,8 +58,8 @@ function doPublish() {
 }
 
 </script>
-<#assign sectionTitle>${uiLabelMap.PageTitleEditProductQuickAdmin}</#assign>
-<@section title=sectionTitle>
+
+<@section title="${uiLabelMap.PageTitleEditProductQuickAdmin}">
         <!-- Name update section -->
         <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method="post" style="margin: 0;" name="editProduct">
             <input type="hidden" name="productId" value="${productId!}"/>
@@ -73,9 +75,9 @@ function doPublish() {
             </@table>
         </form>
 </@section>
+
 <#if (product.isVirtual)! == "Y">
-<#assign sectionTitle>${uiLabelMap.ProductSelectableFeatures}</#assign>
-<@section title=sectionTitle>
+<@section title="${uiLabelMap.ProductSelectableFeatures}">
         <!-- ***************************************************** Selectable features section -->
         <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeatureTypeSelector">
             <input type="hidden" name="productId" value="${product.productId!}"/>
@@ -156,9 +158,9 @@ function doPublish() {
         </form>
 </@section>
 </#if>
+
 <#if (product.isVariant)! == "Y">
-<#assign sectionTitle>${uiLabelMap.ProductDistinguishingFeatures}</#assign>
-<@section title=sectionTitle>
+<@section title="${uiLabelMap.ProductDistinguishingFeatures}">
         <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method="post" style="margin: 0;" name="distFeature">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
@@ -180,9 +182,9 @@ function doPublish() {
         </form>
 </@section>
 </#if>
+
 <!-- ***************************************************** end Selectable features section -->
-<#assign sectionTitle>${uiLabelMap.ProductShippingDimensionsAndWeights}</#assign>
-<@section title=sectionTitle>
+<@section title="${uiLabelMap.ProductShippingDimensionsAndWeights}">
         <!-- ***************************************************** Shipping dimensions section -->
         <form action="<@ofbizUrl>updateProductQuickAdminShipping</@ofbizUrl>" method="post" name="updateShipping">
             <input type="hidden" name="productId" value="${product.productId!}"/>
@@ -255,8 +257,8 @@ function doPublish() {
         </form>
     <!--  **************************************************** end - Shipping dimensions section -->
 </@section>
-<#assign sectionTitle>${uiLabelMap.ProductStandardFeatures}</#assign>
-<@section title=sectionTitle>
+
+<@section title="${uiLabelMap.ProductStandardFeatures}">
         <!--  **************************************************** Standard Features section -->
         <#if addedFeatureTypeIds?has_content || standardFeatureAppls?has_content>
         <@table type="generic" cellspacing="0" class="basic-table">
@@ -326,8 +328,8 @@ function doPublish() {
         </form>
         <!--  **************************************************** end - Standard Features section -->
 </@section>
-<#assign sectionTitle>${uiLabelMap.ProductCategories}</#assign>
-<@section title=sectionTitle>
+
+<@section title="${uiLabelMap.ProductCategories}">
         <!--  **************************************************** Categories section -->
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>">
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
@@ -377,8 +379,8 @@ function doPublish() {
         </@table>
         <!--  **************************************************** end - Categories section -->
 </@section>
-<#assign sectionTitle>${uiLabelMap.ProductPublishAndView}</#assign>
-<@section title=sectionTitle>
+
+<@section title="${uiLabelMap.ProductPublishAndView}">
     <!--  **************************************************** publish section -->
     <#if (showPublish == "true")>
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>" name="publish">
@@ -409,6 +411,7 @@ function doPublish() {
     </#if>
     <!--  **************************************************** end - publish section -->
 </@section>
-  <#else>
-    <@alert type="error">${uiLabelMap.ProductProductNotFound} ${productId!}</@alert>
-  </#if>
+
+<#else>
+  <@alert type="error">${uiLabelMap.ProductProductNotFound} ${productId!}</@alert>
+</#if>

@@ -43,28 +43,24 @@ under the License.
         <@table type="fields" cellspacing="0" class="basic-table">
             <@tr>
                 <@td width="20%" align="right" valign="top"><b>${uiLabelMap.ProductProductName}</b></@td>
-                <@td>&nbsp;</@td>
                 <@td width="80%" colspan="4" valign="top">
                     <input type="text" name="productName" value="${(product.productName?html)!}" size="30" maxlength="60"/>
                 </@td>
             </@tr>
             <@tr>
                 <@td width="20%" align="right" valign="top"><b>${uiLabelMap.ProductProductDescription}</b></@td>
-                <@td>&nbsp;</@td>
                 <@td width="80%" colspan="4" valign="top">
                     <textarea name="description" cols="60" rows="2">${(product.description)!}</textarea>
                 </@td>
             </@tr>
             <@tr>
                 <@td width="20%" align="right" valign="top"><b>${uiLabelMap.ProductLongDescription}</b></@td>
-                <@td>&nbsp;</@td>
                 <@td width="80%" colspan="4" valign="top">
                     <textarea class="dojo-ResizableTextArea" name="longDescription" cols="60" rows="7">${(product.longDescription)!}</textarea>
                 </@td>
             </@tr>
             <@tr>
                 <@td width="20%" align="right" valign="top"><b>${uiLabelMap.ProductDetailScreen}</b></@td>
-                <@td>&nbsp;</@td>
                 <@td width="80%" colspan="4" valign="top">
                     <input type="text" name="detailScreen" value="${(product.detailScreen)!}" size="60" maxlength="250"/>
                     <br /><span class="tooltip">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#productdetail&quot;</span>
@@ -77,7 +73,6 @@ under the License.
                     <a href="<@ofbizContentUrl>${(product.smallImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Small Image" src="<@ofbizContentUrl>${(product.smallImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall"/></a>
     </#if>
                 </@td>
-                <@td>&nbsp;</@td>
                 <@td width="80%" colspan="4" valign="top">
                     <input type="text" name="smallImageUrl" value="${(product.smallImageUrl)?default('')}" size="60" maxlength="255"/>
     <#if productId?has_content>
@@ -97,7 +92,6 @@ under the License.
                     <a href="<@ofbizContentUrl>${product.mediumImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Medium Image" src="<@ofbizContentUrl>${product.mediumImageUrl}</@ofbizContentUrl>" class="cssImgSmall"/></a>
     </#if>
                 </@td>
-                <@td>&nbsp;</@td>
                 <@td width="80%" colspan="4" valign="top">
                     <input type="text" name="mediumImageUrl" value="${(product.mediumImageUrl)?default('')}" size="60" maxlength="255"/>
     <#if productId?has_content>
@@ -117,7 +111,6 @@ under the License.
                     <a href="<@ofbizContentUrl>${product.largeImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Large Image" src="<@ofbizContentUrl>${product.largeImageUrl}</@ofbizContentUrl>" class="cssImgSmall"/></a>
     </#if>
                 </@td>
-                <@td>&nbsp;</@td>
                 <@td width="80%" colspan="4" valign="top">
                     <input type="text" name="largeImageUrl" value="${(product.largeImageUrl)?default('')}" size="60" maxlength="255"/>
     <#if productId?has_content>
@@ -137,7 +130,6 @@ under the License.
                     <a href="<@ofbizContentUrl>${product.detailImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Detail Image" src="<@ofbizContentUrl>${product.detailImageUrl}</@ofbizContentUrl>" class="cssImgSmall"/></a>
     </#if>
                 </@td>
-                <@td>&nbsp;</@td>
                 <@td width="80%" colspan="4" valign="top">
                     <input type="text" name="detailImageUrl" value="${(product.detailImageUrl)?default('')}" size="60" maxlength="255"/>
     <#if productId?has_content>
@@ -157,7 +149,6 @@ under the License.
                     <a href="<@ofbizContentUrl>${product.originalImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Original Image" src="<@ofbizContentUrl>${product.originalImageUrl}</@ofbizContentUrl>" class="cssImgSmall"/></a>
     </#if>
                 </@td>
-                <@td>&nbsp;</@td>
                 <@td width="80%" colspan="4" valign="top">
                     <input type="text" name="originalImageUrl" value="${(product.originalImageUrl)?default('')}" size="60" maxlength="255"/>
     <#if productId?has_content>
@@ -171,7 +162,7 @@ under the License.
                 </@td>
             </@tr>
             <@tr>
-                <@td colspan="2">&nbsp;</@td>
+                <@td>&nbsp;</@td>
                 <@td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/></@td>
                 <@td colspan="3">&nbsp;</@td>
             </@tr>
@@ -190,7 +181,6 @@ under the License.
                 <@td width="20%" align="right" valign="top">
                     <input type="file" size="50" name="fname"/>
                 </@td>
-                <@td>&nbsp;</@td>
                 <@td width="80%" colspan="4" valign="top">
                     <input type="radio" name="upload_file_type_bogus" value="small" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=small</@ofbizUrl>");'/>${uiLabelMap.CommonSmall}
                     <input type="radio" name="upload_file_type_bogus" value="medium" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=medium</@ofbizUrl>");'/>${uiLabelMap.CommonMedium}

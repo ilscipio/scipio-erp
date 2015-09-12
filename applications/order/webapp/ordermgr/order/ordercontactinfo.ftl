@@ -67,7 +67,7 @@ under the License.
 </#macro>
 
 <#if displayParty?has_content || orderContactMechValueMaps?has_content>
-<@section title="${uiLabelMap.OrderContactInformation}">
+  <@section title="${uiLabelMap.OrderContactInformation}">
       <@table type="fields" class="basic-table" cellspacing='0'>
         <@tr>
           <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>
@@ -154,5 +154,5 @@ under the License.
           </@tr>
         </#list>
       </@table>
-    </@section>
+  </@section>
 </#if>

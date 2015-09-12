@@ -57,4 +57,4 @@ under the License.
             </#list>
           </@tbody>
         </@table>
-    </@section>
+</@section>

@@ -28,7 +28,8 @@ under the License.
                 <@th>${uiLabelMap.ProductQoh}</@th>
                 <@th>${uiLabelMap.ProductAtp}</@th>
             </@tr>
-            </@thead>
+          </@thead>
+          <@tbody>
             <#list variantInventorySummaries as variantSummary>
             <@tr valign="middle">
                 <@td><a href="<@ofbizUrl>EditProductInventoryItems?productId=${variantSummary.productId}</@ofbizUrl>" class="${styles.button_default!}">${variantSummary.productId}</a></@td>
@@ -39,5 +40,6 @@ under the License.
                 <@td>${variantSummary.availableToPromiseTotal}</@td>
             </@tr>
             </#list>
+          </@tbody>
         </@table>
 </@section>

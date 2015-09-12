@@ -30,7 +30,7 @@ under the License.
                     </@td>
                     <@td width="5%">&nbsp;</@td>
                     <@td valign="top" width="80%">
-                        ${rolePartyNameResult.fullName?default("Name Not Found")}
+                        ${rolePartyNameResult.fullName!"Name Not Found"}
                     </@td>
                 </@tr>
             <#if quoteRoles.size() != row>

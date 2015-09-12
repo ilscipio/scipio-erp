@@ -18,20 +18,7 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <@tr>
-    <@td width='100%'>
-      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <@tr>
-          <@td valign="middle" align="center">
-            <div class="boxhead">&nbsp;${uiLabelMap.PartyParty}</div>
-          </@td>
-        </@tr>
-      </@table>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td width='100%'>
+  <@section title="${uiLabelMap.PartyParty}"> <#-- class='boxoutside' -->
       <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <@tr>
           <@td align="center">
@@ -49,9 +36,7 @@ under the License.
           </@td>
         </@tr>
       </@table>
-    </@td>
-  </@tr>
-</@table>
+  </@section>
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

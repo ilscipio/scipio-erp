@@ -18,34 +18,37 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
-<@section>
-<form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
-      <@row>
-        <@cell class="${styles.grid_large!}6">      
+  <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+  <@section>
+    <@row>
+      <@cell class="${styles.grid_large!}6">      
             <@table type="fields" width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
               <@thead>
-              <@tr>
-                <@th>
-                  ${uiLabelMap.OrderInternalNote}
-                </@th>
-                <@th>
-                  ${uiLabelMap.OrderShippingNotes}
-                </@th>
-              </@tr>
+                <@tr>
+                  <@th>
+                    ${uiLabelMap.OrderInternalNote}
+                  </@th>
+                  <@th>
+                    ${uiLabelMap.OrderShippingNotes}
+                  </@th>
+                </@tr>
               </@thead>
-              <@tr>
-                <@td>
-                  <textarea cols="30" rows="3" name="internal_order_notes"><#if (cart.getInternalOrderNotes().size()>0)>${(cart.getInternalOrderNotes()[0])!}</#if></textarea>
-                </@td>
-                <@td>
-                  <textarea cols="30" rows="3" name="shippingNotes"><#if (cart.getOrderNotes().size()>0)>${(cart.getOrderNotes()[0])!}</#if></textarea>
-                </@td>
-              </@tr>
+              <@tbody>
+                <@tr>
+                  <@td>
+                    <textarea cols="30" rows="3" name="internal_order_notes"><#if (cart.getInternalOrderNotes().size()>0)>${(cart.getInternalOrderNotes()[0])!}</#if></textarea>
+                  </@td>
+                  <@td>
+                    <textarea cols="30" rows="3" name="shippingNotes"><#if (cart.getOrderNotes().size()>0)>${(cart.getOrderNotes()[0])!}</#if></textarea>
+                  </@td>
+                </@tr>
+              </@tbody>
             </@table>
-    </@cell>
-  </@row>
-</@section>
+      </@cell>
+    </@row>
+  </@section>
               <input type="hidden" name="finalizeMode" value="options"/>
+              
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
 
@@ -64,7 +67,7 @@ under the License.
               <@tr>
                      <@td class="${styles.grid_large!}3 top">
                        ${uiLabelMap.ProductShipmentMethod}
-                </@td>
+                     </@td>
                      <@td>
                 <#assign shipEstimateWrapper = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper"].getWrapper(dispatcher, cart, 0)>
                 <#assign carrierShipmentMethods = shipEstimateWrapper.getShippingMethods()>
@@ -129,9 +132,9 @@ under the License.
                   <@td class="${styles.grid_large!}3">
                     ${uiLabelMap.OrderShipAfterDate}
                   </@td>
-                    <@td>
-                      <@htmlTemplate.renderDateTimeField name="sgi${shipGroupIndex?default('0')}_shipAfterDate" event="" action="" value="${(cart.getShipAfterDate(shipGroupIndex))!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="sgi${shipGroupIndex?default('0')}_shipAfterDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    </@td>
+                  <@td>
+                    <@htmlTemplate.renderDateTimeField name="sgi${shipGroupIndex?default('0')}_shipAfterDate" event="" action="" value="${(cart.getShipAfterDate(shipGroupIndex))!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="sgi${shipGroupIndex?default('0')}_shipAfterDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                  </@td>
                 </@tr>
                 <@tr>
                   <@td class="${styles.grid_large!}3">
@@ -168,7 +171,8 @@ under the License.
       </@row>
    </@section>
 </#list>
-</form>
+  </form>
+
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

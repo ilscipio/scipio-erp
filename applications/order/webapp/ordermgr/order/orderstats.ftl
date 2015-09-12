@@ -18,9 +18,9 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-<@section>
-        <@table type="summary" class="basic-table" cellspacing='0'>
-          <@thead>
+  <@section>
+    <@table type="summary" class="basic-table" cellspacing='0'>
+        <@thead>
           <@tr>
             <@th>&nbsp;</@th>
             <@th>&nbsp;</@th>
@@ -29,8 +29,8 @@ under the License.
             <@th scope="column">${uiLabelMap.OrderMTD}</@th>
             <@th scope="column">${uiLabelMap.OrderYTD}</@th>
           </@tr>
-          </@thead>
-          <@tbody>
+        </@thead>
+        <@tbody>
           <@tr>
             <@td scope="row">${uiLabelMap.OrderOrdersTotals}</@td>
             <@td scope="row">${uiLabelMap.OrderGrossDollarAmountsIncludesAdjustmentsAndPendingOrders}</@td>
@@ -144,9 +144,9 @@ under the License.
             <@td align="right">${monthRejected?size?default(0)?string.number}</@td>
             <@td align="right">${yearRejected?size?default(0)?string.number}</@td>
           </@tr>
-          </@tbody>
-        </@table>
-    </@section>
+        </@tbody>
+    </@table>
+  </@section>
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

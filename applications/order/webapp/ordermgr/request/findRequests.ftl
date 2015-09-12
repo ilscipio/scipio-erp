@@ -20,22 +20,18 @@ under the License.
 <input type="hidden" name="viewSize" value="${viewSize}"/>
 <input type="hidden" name="viewIndex" value="${viewIndex}"/>
 
-<h2>${uiLabelMap.OrderFindOrder}</h2>
-<@section>
-    <@row>
+<@section title="${uiLabelMap.OrderFindOrder}">
+  <@row>
     <@cell class="${styles.grid_large!}9 columns">
       <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
-      
-      
-      <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
-      
+
       <@row collapse=true>
-                <@cell class="${styles.grid_large!}2 ${styles.grid_small!}3"> <label>${uiLabelMap.CommonDateFilter}</label></@cell>
-                <@cell class="${styles.grid_large!}10 ${styles.grid_small!}9">
-                    <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" collapse=true/>
-                    <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate" collapse=true/>
-                </@cell>
-        </@row>
+        <@cell class="${styles.grid_large!}2 ${styles.grid_small!}3"> <label>${uiLabelMap.CommonDateFilter}</label></@cell>
+        <@cell class="${styles.grid_large!}10 ${styles.grid_small!}9">
+            <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" collapse=true/>
+            <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate" collapse=true/>
+        </@cell>
+      </@row>
       
         <@fieldset title="${uiLabelMap.CommonAdvancedSearch}" collapsed=true>
           
@@ -44,7 +40,7 @@ under the License.
         <@field type="submitarea">
             <input type="submit" value='${uiLabelMap.CommonFind}'/>
         </@field>
-      </@cell>
+    </@cell>
   </@row>    
 </@section>
 <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:lookupOrders(true);"/>

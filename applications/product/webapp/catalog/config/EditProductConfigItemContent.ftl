@@ -26,7 +26,7 @@ function insertImageName(size,nameValue) {
 </script>
 
 <#if fileType?has_content>
-<@section title="${uiLabelMap.ProductResultOfImageUpload}">
+  <@section title="${uiLabelMap.ProductResultOfImageUpload}">
     <#if !(clientFileName?has_content)>
         <div>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
     <#else>
@@ -35,14 +35,14 @@ function insertImageName(size,nameValue) {
         <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
         <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.button_default!}">${imageUrl!}</a></b></div>
     </#if>
-</@section>
+  </@section>
 </#if>
 
 <#if !(configItem??)>
     <@alert type="error">${uiLabelMap.ProductCouldNotFindProductConfigItem} "${configItemId}".</@alert>
 <#else>
     <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
-       <@thead>
+      <@thead>
         <@tr class="header-row">
             <@th>${uiLabelMap.ProductContent}</@th>
             <@th>${uiLabelMap.ProductType}</@th>
@@ -51,8 +51,8 @@ function insertImageName(size,nameValue) {
             <@th>&nbsp;</@th>
             <@th>&nbsp;</@th>
         </@tr>
-        </@thead>
-        <@tbody>
+      </@thead>
+      <@tbody>
         <#list productContentList as entry>
         <#assign productContent=entry.productContent/>
         <#assign productContentType=productContent.getRelatedOne("ProdConfItemContentType", true)/>
@@ -65,7 +65,7 @@ function insertImageName(size,nameValue) {
             <@td><a href="/content/control/EditContent?contentId=${productContent.contentId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}" class="${styles.button_default!}">${uiLabelMap.ProductEditContent} ${entry.content.contentId}</@td>
          </@tr>
          </#list>
-         </@tbody>
+       </@tbody>
     </@table>
 
     <#if configItemId?has_content && configItem?has_content>
@@ -80,7 +80,7 @@ function insertImageName(size,nameValue) {
     <@section title="${uiLabelMap.ProductOverrideSimpleFields}">
             <form action="<@ofbizUrl>updateProductConfigItemContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
                 <input type="hidden" name="configItemId" value="${configItemId!}" />
-                <@table type="fields" cellspacing="0" class="basic-table">
+              <@table type="fields" cellspacing="0" class="basic-table">
                 <@tr>
                     <@td width="20%" align="right" valign="top">${uiLabelMap.CommonDescription}</@td>
                     <@td>&nbsp;</@td>
@@ -120,7 +120,7 @@ function insertImageName(size,nameValue) {
                     <@td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" /></@td>
                     <@td colspan="3">&nbsp;</@td>
                 </@tr>
-                </@table>
+              </@table>
             </form>
     </@section>
     

@@ -30,8 +30,7 @@ under the License.
           
         <@menu type="button">
           <@menuitem type="link" ofbizHref="setShipping?createNewShipGroup=Y" text="${uiLabelMap.OrderCreateShipGroup}" />
-      </@menu>         
-
+        </@menu>         
 
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
@@ -149,10 +148,12 @@ under the License.
             <#if (cart.getShipGroupSize() > 1)>
             <input type="hidden" name="finalizeReqShipGroups" value="true"/>
             </#if>
+            
     <@menu type="button">
         <@menuitem type="link" ofbizHref="setShipping?createNewShipGroup=Y" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}" />
         <@menuitem type="link" ofbizHref="EditShipAddress" text="${uiLabelMap.OrderCreateShippingAddress}" />
     </@menu> 
+    
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
 
@@ -264,11 +265,7 @@ under the License.
             </form>
 </#if>
 
-
-
     <#-- select a party id to ship to instead -->
-
-    <br />
     <form method="post" action="setShipping" name="partyshipform">
         <@section title="${uiLabelMap.OrderShipToAnotherParty}">
           <@row>
@@ -282,9 +279,9 @@ under the License.
               </@td>
             </@tr>
           </@table>
-          </@cell>
+            </@cell>
           </@row>
-         </@section> 
+        </@section> 
     </form>
  </@section>
 <#else>

@@ -19,9 +19,9 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 
-   <@section>
-     <@row>
-       <@cell class="${styles.grid_large!}12">
+  <@section>
+    <@row>
+      <@cell class="${styles.grid_large!}12">
       <@table type="generic" class="${styles.grid_large!}12" cellspacing="0">
         <@tr>
           <@td>
@@ -115,9 +115,9 @@ under the License.
           </@td>
         </@tr>
       </@table>
-       </@cell>
-     </@row>
-   </@section>
+      </@cell>
+    </@row>
+  </@section>
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
 </#if>

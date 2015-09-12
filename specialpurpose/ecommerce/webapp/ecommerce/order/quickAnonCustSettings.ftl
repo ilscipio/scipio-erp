@@ -130,7 +130,7 @@ under the License.
             </@table>
          </@td>
      </@tr>
-     <@tr>
+     <@tr type="util">
         <@td colspan="3" align="center"><hr /></@td>
      </@tr>
      <@tr>

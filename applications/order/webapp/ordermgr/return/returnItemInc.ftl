@@ -159,7 +159,7 @@ under the License.
         <#-- toggle the row color -->
         <#assign alt_row = !alt_row>
       </#list>
-    <@tr><@td colspan="9"><hr/></@td></@tr>
+    <@tr type="util"><@td colspan="9"><hr/></@td></@tr>
     <@tr>
       <@td colspan="9"><@heading relLevel=1>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></@heading></@td>
     </@tr>

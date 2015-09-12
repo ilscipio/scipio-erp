@@ -262,7 +262,7 @@ under the License.
                               ${uiLabelMap.OrderMarketingPackageComposedBy}
                             </@th>
                           </@tr>
-                          <@tr><@td colspan="8"><hr /></@td></@tr>
+                          <@tr type="util"><@td colspan="8"><hr /></@td></@tr>
                           <#list workEffortInventoryAssigns as workEffortInventoryAssign>
                             <#assign inventoryItem = workEffortInventoryAssign.getRelatedOne("InventoryItem", false)/>
                             <#assign product = inventoryItem.getRelatedOne("Product", false)/>
@@ -274,7 +274,7 @@ under the License.
                               <@td align="right">${workEffortInventoryAssign.quantity!}</@td>
                             </@tr>
                           </#list>
-                          <@tr><@td colspan="8"><hr /></@td></@tr>
+                          <@tr type="util"><@td colspan="8"><hr /></@td></@tr>
                         </#if>
                       </#if>
                     </#if>

@@ -299,7 +299,7 @@ ${virtualJavaScript!}
     </@tr>
   </#if>
 
-  <@tr><@td colspan="2"><hr /></@td></@tr>
+  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
 
   <#-- Product image/name/price -->
   <@tr>

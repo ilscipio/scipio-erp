@@ -84,9 +84,9 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
   <@tr>
     <@td width='100%'>
       <@table type="fields" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-         <@tr><@td><hr /></@td></@tr>
+         <@tr type="util"><@td><hr /></@td></@tr>
          <@tr><@td align="center"><h1>Unapproved entries for forum Id:${requestParameters.moderatedSiteId}</h1></@td></@tr>
-         <@tr><@td><hr /></@td></@tr>
+         <@tr type="util"><@td><hr /></@td></@tr>
          <@moderateSite rootForumId=rootForumId forumId=requestParameters.moderatedSiteId />
       </@table>
     </@td>
@@ -96,9 +96,9 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
   <@tr>
     <@td width='100%'>
       <@table type="fields" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-         <@tr><@td><hr /></@td></@tr>
+         <@tr type="util"><@td><hr /></@td></@tr>
          <@tr><@td align="center"><h1>Associated roles for forum Id:${requestParameters.permRoleSiteId}</h1></@td></@tr>
-         <@tr><@td><hr /></@td></@tr>
+         <@tr type="util"><@td><hr /></@td></@tr>
          <@grantSiteRoles rootForumId=rootForumId forumId=requestParameters.permRoleSiteId/>
       </@table>
     </@td>
@@ -183,7 +183,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
             <@renderSubContentCache subContentId=content.contentId/>
           </@td>
         </@tr>
-        <@tr> <@td colspan="5"> <hr /> </@td> </@tr>
+        <@tr type="util"> <@td colspan="5"> <hr /> </@td> </@tr>
         <#assign row = row + 1/>
       </@injectNodeTrailCsv >
     </@checkPermission >

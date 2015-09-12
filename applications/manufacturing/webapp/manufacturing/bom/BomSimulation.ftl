@@ -85,7 +85,7 @@ under the License.
             </@tr>
           </#list>
         <#else>
-            <@tr metaRow=true>
+            <@tr type="meta">
               <@td colspan="6"><@resultMsg>${uiLabelMap.CommonNoElementFound}.</@resultMsg></@td>
             </@tr>
         </#if>
@@ -128,7 +128,7 @@ under the License.
           </#if>
           -->
         <#else>
-          <@tr metaRow=true>
+          <@tr type="meta">
             <@td colspan="6"><@resultMsg>${uiLabelMap.CommonNoElementFound}.</@resultMsg></@td>
           </@tr>
         </#if>

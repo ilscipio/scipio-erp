@@ -62,7 +62,7 @@ under the License.
                             <@td width="10%"><b>${uiLabelMap.OrderOrderTextValue}</b></@td>
                             <@td width="35%"><b>${uiLabelMap.CommonDescription}</b></@td>
                         </@tr>
-                        <@tr><@td colspan="4"><hr /></@td></@tr>
+                        <@tr type="util"><@td colspan="4"><hr /></@td></@tr>
                         <#assign index=0/>
                         <#list orderTerms as orderTerm>
                         <@tr>
@@ -73,7 +73,7 @@ under the License.
                             <@td width="35%">${orderTerm.description?default("")}</@td>
                         </@tr>
                             <#if (orderTerms.size() < index)>
-                        <@tr><@td colspan="5"><hr /></@td></@tr>
+                        <@tr type="util"><@td colspan="5"><hr /></@td></@tr>
                             </#if>
                             <#assign index=index+1/>
                         </#list>

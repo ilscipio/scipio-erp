@@ -109,7 +109,7 @@ under the License.
                         </@tr>
                     </#list>
                     <#if entity.relationsList?has_content>
-                        <@tr class='entityheader'>
+                        <@tr type="util" class='entityheader'>
                             <@td colspan="5"><hr /></@td>
                         </@tr>
                         <@tr class='headertext'>
@@ -147,7 +147,7 @@ under the License.
                         </#list>
                     </#if>
                     <#if entity.indexList?has_content>
-                        <@tr class='entityheader'>
+                        <@tr type="util" class='entityheader'>
                             <@td colspan="5"><hr /></@td>
                         </@tr>
                         <@tr class='headertext'>

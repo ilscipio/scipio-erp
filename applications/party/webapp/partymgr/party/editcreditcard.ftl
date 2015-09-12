@@ -123,7 +123,7 @@ under the License.
                 </@tr>
               </#list>
               <#if !postalAddressInfos?has_content && !curContactMech??>
-                  <@tr metaRow=true><@td colspan="2">${uiLabelMap.PartyNoContactInformation}.</@td></@tr>
+                  <@tr type="meta"><@td colspan="2">${uiLabelMap.PartyNoContactInformation}.</@td></@tr>
               </#if>
               <#-- not yet supported in party manager
               <@tr>

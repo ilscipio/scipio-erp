@@ -53,7 +53,7 @@ under the License.
               <@td><div class="tableheadtext">${uiLabelMap.OrderRequestedResponse}</div></@td>
               <@td>&nbsp;</@td>
             </@tr>
-            <@tr><@td colspan="6"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
             <#if returnableItems?has_content>
               <#assign rowCount = 0>
               <#list returnableItems.keySet() as orderItem>
@@ -103,7 +103,7 @@ under the License.
                     <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');"/>
                   </@td>
                 </@tr>
-                <@tr><@td colspan="6"><hr /></@td></@tr>
+                <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
                 <#assign rowCount = rowCount + 1>
               </#if>
               </#list>
@@ -111,7 +111,7 @@ under the License.
               <@tr>
                 <@td colspan="6"><div class="tableheadtext">${uiLabelMap.OrderSelectShipFromAddress}:</@td>
               </@tr>
-              <@tr><@td colspan="6"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="6">
                   <@table cellspacing="1" cellpadding="2" width="100%">
@@ -137,7 +137,7 @@ under the License.
                   </@table>
                 </@td>
               </@tr>
-              <@tr><@td colspan="6"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="6" align="right">
                   <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.OrderReturnSelectedItems}</a>

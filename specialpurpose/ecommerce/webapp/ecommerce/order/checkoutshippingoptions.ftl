@@ -92,7 +92,7 @@ function submitForm(form, mode, value) {
                   </@td>
                 </@tr>
               </#if>
-              <@tr><@td colspan="2"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="2">
                   <h2>${uiLabelMap.OrderShipAllAtOnce}?</h2>
@@ -112,7 +112,7 @@ function submitForm(form, mode, value) {
                 <@td valign="top">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.
                 </@td>
               </@tr>
-              <@tr><@td colspan="2"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="2">
                   <h2>${uiLabelMap.OrderSpecialInstructions}</h2>
@@ -123,7 +123,7 @@ function submitForm(form, mode, value) {
                   <textarea class="textAreaBox" cols="30" rows="3" wrap="hard" name="shipping_instructions">${shoppingCart.getShippingInstructions()!}</textarea>
                 </@td>
               </@tr>
-              <@tr><@td colspan="2"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="2">
                   <h2>${uiLabelMap.OrderPoNumber}</h2>&nbsp;
@@ -134,7 +134,7 @@ function submitForm(form, mode, value) {
                 </@td>
               </@tr>
               <#if productStore.showCheckoutGiftOptions! != "N">
-              <@tr><@td colspan="2"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="2">
                     <h2>${uiLabelMap.OrderIsThisGift}</h2>
@@ -142,7 +142,7 @@ function submitForm(form, mode, value) {
                     <input type="radio" <#if "Y" != shoppingCart.getIsGift()?default("N")>checked="checked"</#if> name="is_gift" value="false" /><span>${uiLabelMap.CommonNo}</span>
                 </@td>
               </@tr>
-              <@tr><@td colspan="2"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="2">
                   <h2>${uiLabelMap.OrderGiftMessage}</h2>
@@ -156,7 +156,7 @@ function submitForm(form, mode, value) {
               <#else>
               <input type="hidden" name="is_gift" value="false"/>
               </#if>
-              <@tr><@td colspan="2"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="2">
                   <h2>${uiLabelMap.PartyEmailAddresses}</h2>

@@ -32,7 +32,7 @@ under the License.
                     <@th>${uiLabelMap.CommonFromDate}</@th>
                     <@th>${uiLabelMap.CommonThruDate}</@th>
                 </@tr>
-                <@tr><@td colspan="6"><hr /></@td></@tr>
+                <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
             </@thead>
             <@tbody>
                 <#list subscriptionList as subscription>

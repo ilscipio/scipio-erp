@@ -56,7 +56,7 @@
             </@tr>
         </#list>
       <#else>
-        <@tr metaRow=true>
+        <@tr type="meta">
           <@td colspan="5"><@resultMsg>No aliases currently defined.</@resultMsg></@td>
         </@tr>
       </#if>

@@ -21,7 +21,7 @@ under the License.
   <input type="hidden" name="addGiftCard" value="Y"/>
   <#assign giftCard = giftCard!>
   <#if paymentMethodTypeId! != "GIFT_CARD">
-    <@tr>
+    <@tr type="util">
       <@td colspan="2"><hr /></@td>
     </@tr>
   </#if>

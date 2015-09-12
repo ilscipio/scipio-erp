@@ -219,12 +219,14 @@
                 <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td></@tr>
                 <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
                 <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-                <@tr metaRow=true><@td colspan=2>Special meta row</@td></@tr>
+                <@tr type="meta"><@td colspan=2>Special meta row</@td></@tr>
                 <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
                 <@tr alt=false><@td>Row forced to even alt</@td><@td>Cell</@td></@tr>
                 <@tr alt=false><@td>Row forced to even alt</@td><@td>Cell</@td></@tr>
                 <@tr alt=true><@td>Row forced to odd alt</@td><@td>Cell</@td></@tr>
                 <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                <@tr type="util"><@td colspan=2>Special utility row <hr /></@td></@tr>
                 <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
               </@table>
             </@td></@tr>
@@ -232,7 +234,7 @@
         </@td><@td>Regular row</@td><@td>Cell</@td></@tr>
         <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
         <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-        <@tr metaRow=true><@td colspan=3>Special meta row</@td></@tr>
+        <@tr type="meta"><@td colspan=3>Special meta row</@td></@tr>
         <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
       </@tbody>
       <@tfoot>

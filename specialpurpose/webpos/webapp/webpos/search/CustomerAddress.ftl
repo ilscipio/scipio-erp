@@ -51,7 +51,7 @@ under the License.
             <@tr>
               <@td>&nbsp;</@td>
             </@tr>
-            <@tr metaRow=true>
+            <@tr type="meta">
               <@td align="center"><@resultMsg>${uiLabelMap.WebPosNoPartyInformation}</@resultMsg></@td>
             </@tr>
           </#if>
@@ -84,7 +84,7 @@ under the License.
             <@tr>
               <@td>&nbsp;</@td>
             </@tr>
-            <@tr metaRow=true>
+            <@tr type="meta">
               <@td align="center"><@resultMsg>${uiLabelMap.WebPosNoPartyInformation}</@resultMsg></@td>
             </@tr>
           </#if>

@@ -23,7 +23,7 @@ under the License.
       <#list contactMeches as contactMechMap>
           <#assign contactMech = contactMechMap.contactMech>
           <#assign facilityContactMech = contactMechMap.facilityContactMech>
-          <@tr><@td colspan="3"><hr/></@td></@tr>
+          <@tr type="util"><@td colspan="3"><hr/></@td></@tr>
           <@tr>
             <@td valign="top">
               ${contactMechMap.contactMechType.get("description",locale)}

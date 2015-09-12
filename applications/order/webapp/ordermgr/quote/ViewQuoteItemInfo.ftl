@@ -122,7 +122,7 @@ under the License.
                     </@tr>
                 </#list>
             </#list>
-            <@tr useAlt=false><@td colspan="10"><hr /></@td></@tr>
+            <@tr type="util" useAlt=false><@td colspan="10"><hr /></@td></@tr>
             <@tr useAlt=false>
                 <@td align="right" colspan="7">${uiLabelMap.CommonSubtotal}</@td>
                 <@td align="right"><@ofbizCurrency amount=totalQuoteAmount isoCode=quote.currencyUomId/></@td>

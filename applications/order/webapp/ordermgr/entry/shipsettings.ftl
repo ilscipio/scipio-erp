@@ -75,7 +75,7 @@ under the License.
                     <@td><a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
-                  <@tr><@td colspan="4"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="4"><hr /></@td></@tr>
                   </#if>
                   </#if>
                   <#assign i = i + 1>
@@ -105,7 +105,7 @@ under the License.
         <@table type="data-complex" class='basic-table'>
         
           <@tr><@td colspan="3">${uiLabelMap.OrderShipToAnotherParty}: <b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(shipToParty)}</b></@td></@tr>
-          <@tr><@td colspan="3"><hr /></@td></@tr>
+          <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
           <#list shipToPartyShippingContactMechList as shippingContactMech>
             <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
             <@tr>
@@ -125,7 +125,7 @@ under the License.
               <@td><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></@td>
             </@tr>
             <#if shippingContactMech_has_next>
-              <@tr><@td colspan="3"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             </#if>
           </#list>
           
@@ -225,14 +225,14 @@ under the License.
                     </@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
-                  <@tr><@td colspan="3"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
                   </#if>
                   <#assign i = i + 1>
                 </#list>
             </#if>
             <#if shipToPartyShippingContactMechList?has_content>
                 <@tr><@td colspan="3">${uiLabelMap.OrderShipToAnotherParty}: <b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(shipToParty)}</b></@td></@tr>
-                <@tr><@td colspan="3"><hr /></@td></@tr>
+                <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
                 <#list shipToPartyShippingContactMechList as shippingContactMech>
                   <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                   <@tr>
@@ -252,7 +252,7 @@ under the License.
                     <@td><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
-                  <@tr><@td colspan="3"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
                   </#if>
                 </#list>
             </#if>

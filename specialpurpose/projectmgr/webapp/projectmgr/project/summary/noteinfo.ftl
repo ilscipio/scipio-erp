@@ -59,7 +59,7 @@ under the License.
                   </@td>
                 </@tr>
                 <#if note_has_next>
-                  <@tr><@td colspan="3"><hr/></@td></@tr>
+                  <@tr type="util"><@td colspan="3"><hr/></@td></@tr>
                 </#if>
               </#list>
             </@table>

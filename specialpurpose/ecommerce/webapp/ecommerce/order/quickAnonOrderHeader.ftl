@@ -50,7 +50,7 @@ under the License.
                         ${(displayPartyNameResult.fullName)?default("[Name Not Found]")}
                     </@td>
                   </@tr>
-                  <@tr><@td colspan="7"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
                 </#if>
                 <#-- order status information -->
                 <@tr>
@@ -66,7 +66,7 @@ under the License.
                 </@tr>
                 <#-- ordered date -->
                 <#if orderHeader?has_content>
-                  <@tr><@td colspan="7"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
                   <@tr>
                     <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.CommonDate}</b>
                     </@td>
@@ -75,7 +75,7 @@ under the License.
                   </@tr>
                 </#if>
                 <#if distributorId??>
-                  <@tr><@td colspan="7"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
                   <@tr>
                     <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.OrderDistributor}</b>
                     </@td>
@@ -126,7 +126,7 @@ under the License.
                         ${shippingAddress.countryGeoId!}
                     </@td>
                   </@tr>
-                  <@tr><@td colspan="7"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
                 </#if>
                   <@tr><@td colspan="7">
                      ${screens.render("component://ecommerce/widget/OrderScreens.xml#quickAnonOptionSettings")}

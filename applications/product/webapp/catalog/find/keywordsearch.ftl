@@ -102,7 +102,7 @@ under the License.
             </b>
           </@td>
         </@tr>
-        <@tr><@td colspan="2"><hr /></@td></@tr>
+        <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
     </@table>
   </#macro>
   

@@ -79,7 +79,7 @@ under the License.
               <#assign rowCount = 0>
 
               <#if index != 0>
-          <@tr><@td colspan="4"><hr/></@td></@tr>
+          <@tr type="util"><@td colspan="4"><hr/></@td></@tr>
               </#if>
               <#if (quantityOrdered > 0) >
           <@tr>
@@ -99,7 +99,7 @@ under the License.
                   </#if>
               </@td>
           </@tr>
-          <@tr><@td colspan="4"><hr/></@td></@tr>
+          <@tr type="util"><@td colspan="4"><hr/></@td></@tr>
           <@tr>
             <@td colspan="5">
               <form method="post" action="<@ofbizUrl>UpdateOrderItemShipGroupAssoc?view=OISGA</@ofbizUrl>" name="UpdateOrderItemShipGroupAssoc${index}"/>
@@ -299,7 +299,7 @@ under the License.
                 </#if>
                 <#if !shipGroup.contactMechId?has_content && !shipGroup.shipmentMethodTypeId?has_content>
                 <#assign noShipment = "true">
-                <@tr metaRow=true>
+                <@tr type="meta">
                     <@td colspan="2" align="center"><@resultMsg>${uiLabelMap.OrderNotShipped}</@resultMsg></@td>
                 </@tr>
                 </#if>

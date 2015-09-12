@@ -81,7 +81,7 @@ under the License.
       </#if>
 
      <#if requestAttributes.validTx?default("false") == "true">
-        <@tr><@td colspan="2"><hr/></@td></@tr>
+        <@tr type="util"><@td colspan="2"><hr/></@td></@tr>
         <#-- amount field -->
         <@tr>
           <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonAmount}</b></@td>
@@ -98,7 +98,7 @@ under the License.
           </@td>
         </@tr>
       <#elseif txType?has_content>
-        <@tr metaRow=true>
+        <@tr type="meta">
           <@td colspan="2" align="center">
             <@resultMsg>${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@resultMsg>
           </@td>

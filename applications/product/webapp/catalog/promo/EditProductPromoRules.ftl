@@ -32,7 +32,7 @@ under the License.
     <#assign productPromoConds = productPromoRule.getRelated("ProductPromoCond", null, null, false)>
     <#assign productPromoActions = productPromoRule.getRelated("ProductPromoAction", null, null, false)>
       <#if productPromoRule_index != 0>
-        <@tr><@td colspan="3"><hr /></@td></@tr>
+        <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
       </#if>
       <@tr valign="middle" class="row-level-one" alt=(ruleClass == "1")>
         <@td><b> ${uiLabelMap.ProductRule} ${(productPromoRule.productPromoRuleId)!}</b></@td>

@@ -25,7 +25,7 @@ under the License.
           <@tr>
             <@td valign="bottom">${roleData[role].get("description", locale)}</@td>
           </@tr>
-          <@tr>
+          <@tr type="util">
             <@td colspan="4"><hr /></@td>
           </@tr>
           <#list additionalPartyRoleMap[role] as party>

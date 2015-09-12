@@ -62,7 +62,7 @@ under the License.
             </#list>
         </@tbody>
         <@tfoot>
-            <@tr><@td colspan="6"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
             <@tr>
                 <@td colspan="5"><b>${uiLabelMap.FormFieldTitle_actualBalance}</b></@td>
                 <@td><b><@ofbizCurrency amount=ownedFinAccount.actualBalance isoCode=ownedFinAccount.currencyUomId/></b></@td>
@@ -93,7 +93,7 @@ under the License.
                 </#list>
             </@tbody>
             <@tfoot>
-                <@tr><@td colspan="4"><hr /></@td></@tr>
+                <@tr type="util"><@td colspan="4"><hr /></@td></@tr>
                 <@tr>
                     <@td colspan="3"><b>${uiLabelMap.FormFieldTitle_actualBalance}</b></@td>
                     <@td><b><@ofbizCurrency amount=ownedFinAccount.actualBalance isoCode=ownedFinAccount.currencyUomId/></b></@td>

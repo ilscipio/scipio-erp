@@ -63,7 +63,7 @@ under the License.
           </@table>
           </#if>
           <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr><@td colspan="8"><hr/></@td></@tr>
+            <@tr type="util"><@td colspan="8"><hr/></@td></@tr>
             <@tr>
               <@td colspan="8"><@heading><#if "CUSTOMER_RETURN" == returnHeaderTypeId>${uiLabelMap.OrderReturnShipFromAddress}<#else>${uiLabelMap["checkhelper.select_shipping_destination"]}</#if></@heading></@td>
             </@tr>

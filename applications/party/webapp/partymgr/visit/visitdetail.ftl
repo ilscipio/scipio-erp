@@ -126,8 +126,8 @@ under the License.
           </@tr>
         </#list>
         <#else>
-          <@tr>
-            <@td colspan="6" metaRow=true><@resultMsg>${uiLabelMap.PartyNoServerHitsFound}</@resultMsg></@td>
+          <@tr type="meta">
+            <@td colspan="6"><@resultMsg>${uiLabelMap.PartyNoServerHitsFound}</@resultMsg></@td>
           </@tr>
         </#if>
         </@tbody>
@@ -156,7 +156,7 @@ https://issues.apache.org/jira/browse/OFBIZ-4488
                 </form>
               </@td>
             </@tr>
-            <@tr>
+            <@tr type="util">
               <@td colspan="3"><hr /></@td>
             </@tr>
             <@tr>

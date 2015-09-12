@@ -258,7 +258,7 @@ under the License.
                 </@td>
                 <@td>&nbsp;</@td>
               </@tr>
-              <@tr><@td colspan="9"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="9"><hr /></@td></@tr>
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.OrderShipTo}</div></@td>
                 <@td>
@@ -321,7 +321,7 @@ under the License.
                 </@td>
                 <@td>&nbsp;</@td>
               </@tr>
-              <@tr><@td colspan="9"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="9"><hr /></@td></@tr>
               <@tr>
                 <@td align="right" colspan="9">
                     <a href="javascript:document.reorderinfo.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
@@ -331,7 +331,7 @@ under the License.
                 </@td>
               </@tr>
               <#if shoppingList.isActive?default("N") == "Y">
-                <@tr><@td colspan="9"><hr /></@td></@tr>
+                <@tr type="util"><@td colspan="9"><hr /></@td></@tr>
                 <@tr>
                   <@td colspan="9">
                     <#assign nextTime = recInfo.next(lastSlOrderTime)!>
@@ -399,7 +399,7 @@ under the License.
               </@tr>
             </form>
           </#list>
-          <@tr><@td colspan="6"><hr /></@td></@tr>
+          <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
           <@tr>
             <@td>&nbsp;</@td>
             <@td nowrap="nowrap" align="right">
@@ -521,7 +521,7 @@ under the License.
                     </@td>
                   </@tr>
               </#list>
-              <@tr><@td colspan="6"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
               <@tr>
                 <@td>&nbsp;</@td>
                 <@td>&nbsp;</@td>

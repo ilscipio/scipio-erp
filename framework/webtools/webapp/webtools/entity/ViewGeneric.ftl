@@ -129,7 +129,7 @@ function ShowTab(lname) {
               <#else>
                 <#if hasCreatePermission>
                   <#if newFieldPkList?has_content>
-                    <@tr metaRow=true><@td><p>${uiLabelMap.WebtoolsYouMayCreateAnEntity}</p>
+                    <@tr type="meta"><@td><p>${uiLabelMap.WebtoolsYouMayCreateAnEntity}</p>
                     <input type="hidden" name="UPDATE_MODE" value="CREATE"/></@td></@tr>
                     <#list newFieldPkList as field>
                       <@tr>
@@ -163,7 +163,7 @@ function ShowTab(lname) {
                     </#list>
                   </#if>
                 <#else>
-                  <@tr metaRow=true><@td><@alert type="error">${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}</@alert></@td></@tr>
+                  <@tr type="meta"><@td><@alert type="error">${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}</@alert></@td></@tr>
                   <#assign showFields = false>
                 </#if>
               </#if>

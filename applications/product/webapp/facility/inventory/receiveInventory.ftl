@@ -73,7 +73,7 @@ under the License.
                 </@tr>
               </form>
             </#list>
-            <@tr><@td colspan="10"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="10"><hr /></@td></@tr>
           </@table>
           </@section>
         </#if>
@@ -294,7 +294,7 @@ under the License.
                 <#assign statusItem = shipment.getRelatedOne("StatusItem", true)/>
                 <#assign shipmentType = shipment.getRelatedOne("ShipmentType", true)/>
                 <#assign shipmentDate = shipment.estimatedArrivalDate!/>
-                <@tr>
+                <@tr type="util">
                   <@td><hr /></@td>
                 </@tr>
                 <@tr>
@@ -313,7 +313,7 @@ under the License.
                   </@td>
                 </@tr>
               </#list>
-              <@tr>
+              <@tr type="util">
                 <@td><hr /></@td>
               </@tr>
               <@tr>
@@ -350,7 +350,7 @@ under the License.
             <#assign rowCount = 0/>
             <@table type="fields" class="basic-table" cellspacing="0">
               <#if !purchaseOrderItems?? || purchaseOrderItems.size() == 0>
-                <@tr metaRow=true>
+                <@tr type="meta">
                   <@td colspan="2">${uiLabelMap.ProductNoItemsPoReceive}.</@td>
                 </@tr>
               <#else>
@@ -393,7 +393,7 @@ under the License.
                     <input type="hidden" name="priorityOrderItemSeqId_o_${rowCount}" value="${salesOrderItem.orderItemSeqId}"/>
                   </#if>
 
-                  <@tr>
+                  <@tr type="util">
                     <@td colspan="2"><hr /></@td>
                   </@tr>
                   <@tr>
@@ -519,7 +519,7 @@ under the License.
                   <#assign rowCount = rowCount + 1>
                   </#if>
                 </#list>
-                <@tr>
+                <@tr type="util">
                   <@td colspan="2">
                     <hr />
                   </@td>

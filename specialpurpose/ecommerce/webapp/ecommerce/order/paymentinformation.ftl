@@ -89,7 +89,7 @@ function shipBillAddr() {
                 <@td colspan="2" valign="middle">${uiLabelMap.FacilityBillingAddressSameShipping}
                 </@td>
               </@tr>
-              <@tr>
+              <@tr type="util">
                 <@td colspan="2"><hr /></@td>
               </@tr>
             </#if>
@@ -107,7 +107,7 @@ function shipBillAddr() {
               <#if !creditCard?has_content>
                 <#assign creditCard = requestParameters>
               </#if>
-              <@tr>
+              <@tr type="util">
                 <@td colspan="2"><hr /></@td>
               </@tr>
               <@tr>
@@ -123,7 +123,7 @@ function shipBillAddr() {
               <#if !eftAccount?has_content>
                 <#assign eftAccount = requestParameters>
               </#if>
-              <@tr>
+              <@tr type="util">
                 <@td colspan="2"><hr /></@td>
               </@tr>
               <@tr>
@@ -184,7 +184,7 @@ function shipBillAddr() {
               <input type="hidden" name="addGiftCard" value="Y"/>
               <#assign giftCard = giftCard!>
               <#if paymentMethodTypeId! != "GIFT_CARD">
-                <@tr>
+                <@tr type="util">
                   <@td colspan="2"><hr /></@td>
                 </@tr>
               </#if>

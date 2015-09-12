@@ -33,7 +33,7 @@ under the License.
           </@tr>
           <#list supplierProductList as supplierProduct>
             <#assign product = supplierProduct.getRelatedOne("Product", true)/>
-            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
               <@td>${(product.productName)!}
               </@td>

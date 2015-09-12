@@ -282,7 +282,7 @@ under the License.
               <@td colspan="9">${uiLabelMap.OrderNoReturnItemsFound}</@td>
             </@tr>
         </#if>
-            <@tr><@td colspan="10"><hr/></@td></@tr>
+            <@tr type="util"><@td colspan="10"><hr/></@td></@tr>
         <#-- these are general return adjustments not associated with a particular item (itemSeqId = "_NA_" -->
         <#if (returnAdjustments?has_content)>
             <#list returnAdjustments as returnAdjustment>
@@ -305,7 +305,7 @@ under the License.
                   <input type="submit" class="bottontext" value="${uiLabelMap.CommonUpdate}" /></@td>
               </@tr>
            </#if>
-           <@tr><@td colspan="10"><hr/></@td></@tr>
+           <@tr type="util"><@td colspan="10"><hr/></@td></@tr>
         </@table>
         </form>
         <#if returnItems?has_content>

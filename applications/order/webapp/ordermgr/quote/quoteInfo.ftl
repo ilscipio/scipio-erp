@@ -28,7 +28,7 @@ under the License.
                     ${(quoteType.get("description",locale))?default(quote.quoteTypeId!)}
                 </@td>
             </@tr>
-            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
 
             <#-- quote Channel information -->
             <@tr>
@@ -40,7 +40,7 @@ under the License.
                     ${(salesChannel.get("description",locale))?default(quote.salesChannelEnumId!)}
                 </@td>
             </@tr>
-            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
 
             <#-- quote status information -->
             <@tr>
@@ -53,7 +53,7 @@ under the License.
                 </@td>
             </@tr>
             <#-- party -->
-            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
                 <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.PartyPartyId}
@@ -64,7 +64,7 @@ under the License.
                 </@td>
             </@tr>
             <#-- quote name -->
-            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
                 <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.OrderOrderQuoteName}
@@ -75,7 +75,7 @@ under the License.
                 </@td>
             </@tr>
             <#-- quote description -->
-            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
                 <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonDescription}
@@ -86,7 +86,7 @@ under the License.
                 </@td>
             </@tr>
             <#-- quote currency -->
-            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
                 <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.CommonCurrency}
@@ -97,7 +97,7 @@ under the License.
                 </@td>
             </@tr>
             <#-- quote currency -->
-            <@tr><@td colspan="3"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
                 <@td align="right" valign="top" width="15%">
                     &nbsp;${uiLabelMap.ProductProductStore}

@@ -24,7 +24,7 @@ under the License.
       <input type="hidden" name="finalizeMode" value="ship"/>
     
       <@table type="fields" width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <@tr><@td colspan="3"><hr /></@td></@tr>
+        <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
 
         <#-- postal addresses for chosen id -->
 
@@ -51,7 +51,7 @@ under the License.
                     <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                   </@td>
               </@tr>
-              <@tr><@td colspan="3"><hr /></@td></@tr>
+              <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             </#if>
           </#list>
         </#if>

@@ -81,7 +81,7 @@ under the License.
         <#-- billing account info -->
         <#if billingAccount?has_content>
           <#if outputted?default(false)>
-            <@tr><@td colspan="2"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
           </#if>
           <#assign outputted = true/>
           <@tr>

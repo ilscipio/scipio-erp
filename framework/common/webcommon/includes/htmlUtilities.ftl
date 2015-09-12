@@ -1594,7 +1594,6 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     class           = css classes
                       (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
     id              = row id
-    metaRow         = DEPRECATED; use type="meta"
     useAlt          = boolean, if specified, can manually enable/disable whether alternate row code runs per-row
     alt             = boolean, if specified, override the automatic auto-alt styling to specific value true or false (manual mode)
                       note: at current time, alt on non-body rows (except foot rows if enabled in @table) does not affect
@@ -1608,7 +1607,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     attribs               = hash of other legacy <tr attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
-<#macro tr type="" class=true id="" metaRow="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro tr type="" class=true id="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
@@ -1617,8 +1616,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#if !type?has_content>
     <#local type = (!tableType?has_content || tableType == "generic")?string("generic", "content")>
   </#if>
-  <!-- tableType: ${tableType} row type: ${type} -->
-  <#local metaRow = (metaRow?is_boolean && metaRow == true) || type == "meta">
+  <#local metaRow = (type == "meta")>
   <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
   <#if !(useAlt?is_boolean && useAlt == false)>
     <#if !alt?is_boolean>

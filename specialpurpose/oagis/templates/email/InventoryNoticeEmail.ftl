@@ -42,7 +42,7 @@
           <@th width="10%" align="right">${uiLabelMap.OagisQuantityDiff}.</@th>
         </@tr>
         </@thead>
-        <@tr><@td colspan="10"><hr /></@td></@tr>
+        <@tr type="util"><@td colspan="10"><hr /></@td></@tr>
         <#assign alt_row = false>
         <#list inventoryMapList as inventoryMap>
           <@tr valign="middle" alt=alt_row>
@@ -56,7 +56,7 @@
           <#-- toggle the row color -->
           <#assign alt_row = !alt_row>
         </#list>
-        <@tr><@td colspan="10"><hr /></@td></@tr>
+        <@tr type="util"><@td colspan="10"><hr /></@td></@tr>
       </@table>
     </@section>
   </body>

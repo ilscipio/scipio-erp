@@ -64,7 +64,7 @@ under the License.
                 <@tr><@td><input type="hidden" name="groupName" value="${parameters.groupName!}"/></@td></@tr>
                 <@tr><@td><input type="hidden" name="roleTypeId" value="EMPLOYEE"/></@td></@tr>
             <#if extInfo == "P">
-                <@tr><@td colspan="3"><hr /></@td></@tr><@tr>
+                <@tr type="util"><@td colspan="3"><hr /></@td></@tr><@tr>
                     <@td>${uiLabelMap.CommonAddress1}</@td>
                     <@td><input type="text" name="address1" value="${parameters.address1!}"/></@td>
                 </@tr>
@@ -90,7 +90,7 @@ under the License.
                 </@tr>
             </#if>
             <#if extInfo == "T">
-                <@tr><@td colspan="3"><hr /></@td></@tr>
+                <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
                 <@tr><@td>${uiLabelMap.CommonCountryCode}</@td>
                     <@td><input type="text" name="countryCode" value="${parameters.countryCode!}"/></@td>
                 </@tr>
@@ -102,12 +102,12 @@ under the License.
                 </@tr>
             </#if>
             <#if extInfo == "O">
-                <@tr><@td colspan="3"><hr /></@td></@tr>
+                <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
                 <@tr><@td>${uiLabelMap.PartyContactInformation}</@td>
                     <@td><input type="text" name="infoString" value="${parameters.infoString!}"/></@td>
                 </@tr>
             </#if>
-                <@tr><@td colspan="3"><hr /></@td></@tr>
+                <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
                 <@tr align="center">
                     <@td>&nbsp;</@td>
                     <@td><input type="submit" value="${uiLabelMap.PartyLookupParty}" onclick="javascript:document.lookupparty.submit();"/>

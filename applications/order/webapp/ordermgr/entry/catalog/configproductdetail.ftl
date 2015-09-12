@@ -443,7 +443,7 @@ function getConfigDetails() {
                 <a href="javascript:verifyConfig();" class="${styles.button_default!}">${uiLabelMap.OrderVerifyConfiguration}</a>
             </@td>
           </@tr>
-          <@tr><@td><hr /></@td></@tr>
+          <@tr type="util"><@td><hr /></@td></@tr>
           <#assign counter = 0>
           <#assign questions = configwrapper.questions>
           <#list questions as question>
@@ -598,7 +598,7 @@ function getConfigDetails() {
             </@td>
           </@tr>
           <#if question_has_next>
-            <@tr><@td><hr /></@td></@tr>
+            <@tr type="util"><@td><hr /></@td></@tr>
           </#if>
           <#assign counter = counter + 1>
         </#list>
@@ -617,7 +617,7 @@ function getConfigDetails() {
   <#if assocProducts?has_content>
     <@tr><@td>&nbsp;</@td></@tr>
     <@tr><@td colspan="2"><@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName!}</@heading></@td></@tr>
-    <@tr><@td><hr /></@td></@tr>
+    <@tr type="util"><@td><hr /></@td></@tr>
     <#list assocProducts as productAssoc>
       <@tr><@td>
           <a href='<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>' class="${styles.button_default!}">
@@ -637,7 +637,7 @@ function getConfigDetails() {
         </@td>
       </@tr>
       <#local listIndex = listIndex + 1>
-      <@tr><@td><hr /></@td></@tr>
+      <@tr type="util"><@td><hr /></@td></@tr>
     </#list>
     ${setRequestAttribute("optProductId", "")}
     ${setRequestAttribute("formNamePrefix", "")}

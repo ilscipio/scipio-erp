@@ -120,7 +120,7 @@ document.lookupinventory.productId.focus();
           <@th align="right">${uiLabelMap.ManufacturingTotalQuantity}</@th>
         </@tr>
         </@thead>
-        <@tr>
+        <@tr type="util">
           <@td colspan="7"><hr /></@td>
         </@tr>
         <#assign count = lowIndex>
@@ -174,12 +174,12 @@ document.lookupinventory.productId.focus();
                   </@td>
                 </@tr>
                 <#if additionalErrorMessage?has_content>
-                <@tr metaRow=true>
+                <@tr type="meta">
                     <@td colspan="7"><font color="red">${additionalErrorMessage}</font></@td>
                 </@tr>
                 </#if>
                 <#list errorEvents as errorEvent>
-                <@tr metaRow=true>
+                <@tr type="meta">
                     <@td colspan="7"><font color="red">${errorEvent.eventName!}</font></@td>
                 </@tr>
                 </#list>

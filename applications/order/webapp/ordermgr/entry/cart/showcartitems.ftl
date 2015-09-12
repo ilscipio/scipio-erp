@@ -67,7 +67,7 @@ under the License.
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
           <#assign lineOptionalFeatures = cartLine.getOptionalProductFeatures()>
-          <#--<@tr><@td colspan="8"><hr/></@td></@tr>-->
+          <#--<@tr type="util"><@td colspan="8"><hr/></@td></@tr>-->
           <@tr valign="top">
             <@td>&nbsp;</@td>
             <@td>
@@ -205,7 +205,7 @@ under the License.
               <#assign itemProductAssocList = cartLine.getProduct().getRelated("MainProductAssoc", null, Static["org.ofbiz.base.util.UtilMisc"].toList("productAssocTypeId", "sequenceNum"), false)!/>
             </#if>
             <#if itemProductAssocList?? && itemProductAssocList?has_content>
-              <#--<@tr><@td colspan="8"><hr /></@td></@tr>-->
+              <#--<@tr type="util"><@td colspan="8"><hr /></@td></@tr>-->
               <@tr>
                 <@td>${uiLabelMap.OrderAssociatedProducts}</@td>
                 <@td><a href="<@ofbizUrl>LookupAssociatedProducts?productId=${cartLine.getProductId()!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderQuickLookup}</a></@td>
@@ -284,7 +284,7 @@ under the License.
         </#list>
 
       <@tfoot>
-        <@tr><@td colspan="8"><hr /></@td></@tr>
+        <@tr type="util"><@td colspan="8"><hr /></@td></@tr>
         <#if shoppingCart.getAdjustments()?has_content>
               <@tr>
                 <@td colspan="6" nowrap="nowrap" align="right">${uiLabelMap.OrderSubTotal}:</@td>

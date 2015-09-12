@@ -105,7 +105,7 @@ function submitForm(form, mode, value) {
                     </@td>
                   </@tr>
                   <#if (shoppingCart.getTotalQuantity() > 1) && !shoppingCart.containAllWorkEffortCartItems()> <#-- no splitting when only rental items -->
-                    <@tr><@td colspan="2"><hr /></@td></@tr>
+                    <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                     <@tr>
                       <@td colspan="2" align="center">
                         <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderSplitIntoMultipleShipments}</a>
@@ -116,7 +116,7 @@ function submitForm(form, mode, value) {
                     </@tr>
                   </#if>
                    <#if shippingContactMechList?has_content>
-                     <@tr><@td colspan="2"><hr /></@td></@tr>
+                     <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                      <#list shippingContactMechList as shippingContactMech>
                        <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                        <@tr>
@@ -136,7 +136,7 @@ function submitForm(form, mode, value) {
                            </@td>
                        </@tr>
                        <#if shippingContactMech_has_next>
-                         <@tr><@td colspan="2"><hr /></@td></@tr>
+                         <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                        </#if>
                      </#list>
                    </#if>
@@ -183,7 +183,7 @@ function submitForm(form, mode, value) {
                       <@td valign="top">${uiLabelMap.OrderUseDefault}.</@td>
                     </@tr>
                   </#if>
-                  <@tr><@td colspan="2"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                   <@tr>
                     <@td colspan="2">
                       <@heading>${uiLabelMap.OrderShipAllAtOnce}?</@heading>
@@ -201,7 +201,7 @@ function submitForm(form, mode, value) {
                     </@td>
                     <@td valign="top">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</@td>
                   </@tr>
-                  <@tr><@td colspan="2"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                  <#else>
                     <input type="hidden" name="shipping_method" value="NO_SHIPPING@_NA_"/>
                     <input type="hidden" name="may_split" value="false"/>
@@ -219,7 +219,7 @@ function submitForm(form, mode, value) {
                   </@tr>
                  <#if shipping == true>
                   <#if productStore.showCheckoutGiftOptions! != "N" && giftEnable! != "N">
-                  <@tr><@td colspan="2"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                   <@tr>
                     <@td colspan="2">
                         <span class="h2"><b>${uiLabelMap.OrderIsThisGift}</b></span>
@@ -227,7 +227,7 @@ function submitForm(form, mode, value) {
                         <input type="radio" <#if shoppingCart.getIsGift()?default("N") == "N">checked="checked"</#if> name="is_gift" value="false"><span>${uiLabelMap.CommonNo}</span>
                       </@td>
                   </@tr>
-                  <@tr><@td colspan="2"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                   <@tr>
                     <@td colspan="2">
                       <@heading>${uiLabelMap.OrderGiftMessage}</@heading>
@@ -242,7 +242,7 @@ function submitForm(form, mode, value) {
                   <input type="hidden" name="is_gift" value="false"/>
                   </#if>
                  </#if>
-                  <@tr><@td colspan="2"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                   <@tr>
                     <@td colspan="2">
                       <@heading>${uiLabelMap.PartyEmailAddresses}</@heading>
@@ -281,13 +281,13 @@ function submitForm(form, mode, value) {
                       </#if>
                     </@td>
                   </@tr>
-                  <@tr><@td colspan="2"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                   <@tr>
                     <@td colspan="2" align="center">
                       <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="${styles.button_default!}">${uiLabelMap.AccountingSplitPayment}</a>
                     </@td>
                   </@tr>
-                  <@tr><@td colspan="2"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                   <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
                   <@tr>
                     <@td width="1%">
@@ -324,7 +324,7 @@ function submitForm(form, mode, value) {
                     </@td>
                   </@tr>
                   </#if>
-                  <@tr><@td colspan="2"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
 
                   <#-- financial accounts -->
                   <#list finAccounts as finAccount>
@@ -412,7 +412,7 @@ function submitForm(form, mode, value) {
                 <#-- special billing account functionality to allow use w/ a payment method -->
                 <#if productStorePaymentMethodTypeIdMap.EXT_BILLACT??>
                   <#if billingAccountList?has_content>
-                    <@tr><@td colspan="2"><hr /></@td></@tr>
+                    <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                     <@tr>
                       <@td width="1%">
                         <select name="billingAccountId">
@@ -440,7 +440,7 @@ function submitForm(form, mode, value) {
                 <#-- end of special billing account functionality -->
 
                 <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-                  <@tr><@td colspan="2"><hr /></@td></@tr>
+                  <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                   <@tr>
                     <@td width="1%">
                       <input type="checkbox" name="addGiftCard" value="Y"/>

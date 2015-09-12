@@ -22,7 +22,7 @@ under the License.
          txType?default("") == "PRDS_PAY_RELEASE" || txType?default("") == "PRDS_PAY_REFUND">
       ${setRequestAttribute("validTx", "true")}
       <#assign validTx = true>
-      <@tr><@td colspan="2"><hr /></@td></@tr>
+      <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
       <@tr>
         <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingReferenceNumber}</b></@td>
         <@td width="74%">
@@ -68,7 +68,7 @@ under the License.
       // -->
       </script>
       </@td></@tr>
-      <@tr><@td colspan="2"><hr/></@td></@tr>
+      <@tr type="util"><@td colspan="2"><hr/></@td></@tr>
       <@tr>
         <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.PartyFirstName}</b></@td>
         <@td width="74%">
@@ -90,10 +90,10 @@ under the License.
           <span class="tooltip">${uiLabelMap.CommonRequired}</span>
         </@td>
       </@tr>
-      <@tr><@td colspan="2"><hr/></@td></@tr>
+      <@tr type="util"><@td colspan="2"><hr/></@td></@tr>
       <#assign showToolTip = "true">
       ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
-      <@tr><@td colspan="2"><hr/></@td></@tr>
+      <@tr type="util"><@td colspan="2"><hr/></@td></@tr>
       <#-- first / last name -->
       <@tr>
         <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.PartyFirstName}</b></@td>

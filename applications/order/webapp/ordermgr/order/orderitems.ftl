@@ -32,7 +32,7 @@ under the License.
                 </@tr>
                 </@thead>
                 <#if !orderItemList?has_content>
-                    <@tr metaRow=true>
+                    <@tr type="meta">
                         <@td colspan="7">
                             <@alert type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@alert>
                         </@td>

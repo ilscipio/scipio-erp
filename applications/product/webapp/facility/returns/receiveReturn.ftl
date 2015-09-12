@@ -99,7 +99,7 @@ under the License.
                   <input type="hidden" name="comments_o_${rowCount}" value="${uiLabelMap.OrderReturnedItemRaNumber} ${returnItem.returnId}" />
 
                   <#assign unitCost = Static["org.ofbiz.order.order.OrderReturnServices"].getReturnItemInitialCost(delegator, returnItem.returnId, returnItem.returnItemSeqId)/>
-                  <@tr>
+                  <@tr type="util">
                     <@td colspan="2"><hr/></@td>
                   </@tr>
                   <@tr>
@@ -207,7 +207,7 @@ under the License.
                   <#assign rowCount = rowCount + 1>
                   </#if>
                 </#list>
-                <@tr>
+                <@tr type="util">
                   <@td colspan="2">
                     <hr/>
                   </@td>

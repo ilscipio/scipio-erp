@@ -181,7 +181,7 @@ function makeExpDate() {
               </@td>
               <@td colspan="2" valign="center">${uiLabelMap.FacilityBillingAddressSameShipping}</@td>
             </@tr>
-            <@tr>
+            <@tr type="util">
               <@td colspan="2"><hr /></@td>
             </@tr>
             </#if>
@@ -266,7 +266,7 @@ function makeExpDate() {
                 <#assign creditCard = requestParameters>
               </#if>
               <input type="hidden" name="expireDate" value="${creditCard.expireDate!}"/>
-              <@tr>
+              <@tr type="util">
                 <@td colspan="2"><hr /></@td>
               </@tr>
 
@@ -387,7 +387,7 @@ function makeExpDate() {
                   <#if !eftAccount?has_content>
                     <#assign eftAccount = requestParameters>
                   </#if>
-                  <@tr>
+                  <@tr type="util">
                 <@td colspan="2"><hr /></@td>
               </@tr>
               <@tr>

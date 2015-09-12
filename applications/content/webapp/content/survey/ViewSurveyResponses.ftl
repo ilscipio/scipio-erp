@@ -113,7 +113,7 @@ under the License.
         <@tr><@td colspan="3">&nbsp;</@td></@tr>
       </#list>
     <#else>
-      <@tr metaRow=true>
+      <@tr type="meta">
         <@td><@resultMsg>${uiLabelMap.ContentSurveyNoQuestions}</@resultMsg></@td>
       </@tr>
     </#if>

@@ -82,7 +82,7 @@ under the License.
                   </@tr>
                 </#list>
               <#else>
-                <@tr metaRow=true>
+                <@tr type="meta">
                   <@td colspan="8"><@resultMsg>No settings found.</@resultMsg></@td>
                 </@tr>
               </#if>

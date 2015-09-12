@@ -72,7 +72,7 @@ under the License.
               <@td><div class="tableheadtext">${uiLabelMap.EcommerceSentDate}</div></@td>
               <@td>&nbsp;</@td>
             </@tr>
-            <@tr><@td colspan="5"><hr /></@td></@tr>
+            <@tr type="util"><@td colspan="5"><hr /></@td></@tr>
             <#list receivedCommunicationEvents! as receivedCommunicationEvent>
               <@showMessage communicationEvent=receivedCommunicationEvent isSentMessage=false index=receivedCommunicationEvent_index/>
             </#list>

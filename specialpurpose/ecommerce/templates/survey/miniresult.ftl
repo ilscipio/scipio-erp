@@ -41,7 +41,7 @@ under the License.
       </@td>
     </@tr>
 
-    <@tr>
+    <@tr type="util">
       <@td><hr /></@td>
     </@tr>
 

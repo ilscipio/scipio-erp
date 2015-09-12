@@ -34,7 +34,7 @@ under the License.
             </@td>
           </@tr>
           <#if assocProduct_has_next>
-            <@tr><@td><hr/></@td></@tr>
+            <@tr type="util"><@td><hr/></@td></@tr>
           </#if>
         </#list>
       </@table>

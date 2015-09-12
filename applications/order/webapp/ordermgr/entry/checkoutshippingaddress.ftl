@@ -71,7 +71,7 @@ function toggleBillingAccount(box) {
                 </@td>
               </@tr>
                <#if shippingContactMechList?has_content>
-                 <@tr><@td colspan="2"><hr /></@td></@tr>
+                 <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                  <#list shippingContactMechList as shippingContactMech>
                    <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                    <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || (cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId)/>
@@ -91,7 +91,7 @@ function toggleBillingAccount(box) {
                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
                        </@td>
                    </@tr>
-                   <@tr><@td colspan="2"><hr /></@td></@tr>
+                   <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                  </#list>
                </#if>
               </@table>

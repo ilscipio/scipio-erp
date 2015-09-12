@@ -1042,6 +1042,38 @@ levels manually, but most often should let @section menu handle them.
 
 <#-- 
 *************
+* script
+************
+Inline script wrapper.
+
+    Usage example:  
+    <@script>
+        jQuery(document).ready(function() {
+            alert("Page loaded.");
+        });
+    </@script>         
+                    
+   * General Attributes *
+    type        = script type identifier
+    language    = language identifier
+    src         = source
+-->
+<#macro script type="text/javascript" language="" src="" ofbizContentSrc="">
+<#if ofbizContentSrc?has_content>
+  <script type="${type}"<#if language?has_content> language="${language}"</#if> src="<@ofbizContentUrl>${ofbizContentSrc}</@ofbizContentUrl>"></script>
+<#elseif src?has_content>
+  <script type="${type}"<#if language?has_content> language="${language}"</#if> src="${src}"></script>
+<#else>
+  <script type="${type}"<#if language?has_content> language="${language}"</#if>>
+  //<![CDATA[
+    <#nested>
+  //]]>
+  </script>
+</#if>
+</#macro>
+
+<#-- 
+*************
 * alert box
 ************
     Usage example:  

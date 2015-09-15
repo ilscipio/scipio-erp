@@ -1054,11 +1054,13 @@ Inline script wrapper.
     </@script>         
                     
    * General Attributes *
-    type        = script type identifier
-    language    = language identifier
-    src         = source
+    type            = script type identifier
+    language        = language identifier
+    src             = source
+    forceInline     = if true, the script must be inlined in the markup where the macro is used
+                      and should never be delegated. in most cases this should be omitted.
 -->
-<#macro script type="text/javascript" language="" src="" ofbizContentSrc="">
+<#macro script type="text/javascript" language="" src="" ofbizContentSrc="" forceInline=false>
 <#if ofbizContentSrc?has_content>
   <script type="${type}"<#if language?has_content> language="${language}"</#if> src="<@ofbizContentUrl>${ofbizContentSrc}</@ofbizContentUrl>"></script>
 <#elseif src?has_content>

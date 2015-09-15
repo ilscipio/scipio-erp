@@ -39,5 +39,5 @@ under the License.
     <menu name="CommonButtonBarMenu" type="simple" menu-container-style="menu-button" default-widget-style="" default-link-style="${styles.menu_button_itemlink}" default-selected-style="" />    
     
     <!-- New in Cato -->
-    <menu name="CommonSideBarMenu" type="simple" menu-container-style="menu-sidebar" default-link-style="${styles.menu_sidebar_itemlink}" default-selected-style="active"/>
+    <menu name="CommonSideBarMenu" type="simple" menu-container-style="menu-sidebar" default-link-style="${styles.menu_sidebar_itemlink}" default-selected-style="active" items-sort-mode="displaytext-ignorecase" />
 </menus>

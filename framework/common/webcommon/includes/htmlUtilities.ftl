@@ -795,10 +795,12 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     large           = specific number of large columns (specify as number), overrides large part of general columns value above
     medium          = specific number of medium columns (specify as number), overrides medium part of general columns value above
     offset          = offset in number of columns
-    TODO: smallOffset, mediumOffset, largeOffset
+    smallOffset     = specific offset for small columns
+    mediumOffset    = specific offset for medium columns
+    largeOffset     = specific offset for large columns
     last            = boolean, usually optional, if true indicate last cell in row 
 -->
-<#macro cell columns=0 small=0 medium=0 large=0 offset=0 class=true id="" collapse=false nocells=false last=false>
+<#macro cell columns=-1 small=-1 medium=-1 large=-1 offset=-1 smallOffset=-1 mediumOffset=-1 largeOffset=-1 class=true id="" collapse=false nocells=false last=false>
     <#local addClass = parseAddClassArg(class)>
     <#local class = parseClassArg(class, "")>  
      
@@ -807,9 +809,12 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     <#local medium = medium?number>
     <#local large = large?number>
     <#local offset = offset?number>
+    <#local smallOffset = smallOffset?number>
+    <#local mediumOffset = mediumOffset?number>
+    <#local largeOffset = largeOffset?number>
     
     <#if !nocells>
-        <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
+        <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (large != 0) && (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
         <#if class?has_content>
             <#local colSizeClasses = (class + specColsClasses)?trim>
         <#else>
@@ -818,7 +823,8 @@ Set current heading level manually. For advanced markup, bypassing @section (but
         <#if !colSizeClasses?has_content>
             <#local colSizeClasses = "${styles.grid_large!}12">
         </#if>
-        <div class="${colSizeClasses}<#if (offset > 0)> ${styles.grid_offset!}${offset!}</#if> ${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if><#if addClass?has_content> ${addClass}</#if>" <#if id?has_content> id="${id}"</#if>><#rt/>
+        <#local specOffsetClassesStr><#if (smallOffset > 0)> ${styles.grid_small_offset!}${smallOffset}</#if><#if (mediumOffset > 0)> ${styles.grid_medium_offset!}${mediumOffset}</#if><#if (largeOffset > 0)> ${styles.grid_large_offset!}${largeOffset}<#elseif (largeOffset != 0) && (offset > 0)> ${styles.grid_large_offset!}${offset}</#if></#local>
+        <div class="${colSizeClasses}${specOffsetClassesStr} ${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if><#if addClass?has_content> ${addClass}</#if>" <#if id?has_content> id="${id}"</#if>><#rt/>
     </#if>
         <#nested />
     <#if !nocells></div></#if>
@@ -1634,8 +1640,8 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
         <#local alt = catoCurrentTableLastRowAlt!""> <#-- may be empty string (none) -->
       <#elseif groupParent?is_boolean && groupParent == true>
         <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
-      <#elseif (isRegAltRow && ((catoCurrentTableInfo.autoAltRows)!)==true)>
-        <#if ((catoCurrentTableInfo.inheritAltRows)!)==true>
+      <#elseif (isRegAltRow && ((catoCurrentTableInfo.autoAltRows)!false)==true)>
+        <#if ((catoCurrentTableInfo.inheritAltRows)!false)==true>
           <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
         <#else>
           <#local alt = catoCurrentTableRowAltFlag!false> <#-- always boolean -->

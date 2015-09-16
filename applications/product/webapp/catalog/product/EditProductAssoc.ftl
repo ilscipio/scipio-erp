@@ -37,21 +37,16 @@ under the License.
             <input type="hidden" name="FROM_DATE" value="${fromDate!}" />
         </#if>
 
-    <@table type="fields" cellspacing="0" class="basic-table">
 
         <#if !(productAssoc??)>
             <#if productId?? && productIdTo?? && productAssocTypeId?? && fromDate??>
-              <@tr>
-                <@td align="right">${uiLabelMap.ProductProductId}</@td>
-                <@td><input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="${productId!}" /></@td>
-              </@tr>
-              <@tr>
-                <@td align="right">${uiLabelMap.ProductProductIdTo}</@td>
-                <@td><input type="text" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo!}" /></@td>
-              </@tr>
-              <@tr>
-                <@td align="right">${uiLabelMap.ProductAssociationTypeId}</@td>
-                <@td>
+              <@field type="generic" label="${uiLabelMap.ProductProductId}">
+                  <input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="${productId!}" />
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductProductIdTo}">
+                  <input type="text" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo!}" />
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductAssociationTypeId}">
                     <select name="PRODUCT_ASSOC_TYPE_ID" size="1">
                     <#if productAssocTypeId?has_content>
                         <#assign curAssocType = delegator.findOne("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId), false)>
@@ -64,99 +59,73 @@ under the License.
                         <option value="${(assocType.productAssocTypeId)!}">${(assocType.get("description",locale))!}</option>
                     </#list>
                     </select>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td align="right">${uiLabelMap.CommonFromDate}</@td>
-                <@td>
-                        <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.CommonFromDate}">
+                  <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         ${uiLabelMap.CommonSetNowEmpty}
-                </@td>
-              </@tr>
+              </@field>
             <#else>
-              <@tr>
-                <@td align="right">${uiLabelMap.ProductProductId}</@td>
-                <@td><input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="${productId!}" /></@td>
-              </@tr>
-              <@tr>
-                <@td align="right">${uiLabelMap.ProductProductIdTo}</@td>
-                <@td>
+              <@field type="generic" label="${uiLabelMap.ProductProductId}">
+                  <input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="${productId!}" />
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductProductIdTo}">
                   <@htmlTemplate.lookupField formName="editProductAssocForm" name="PRODUCT_ID_TO" id="PRODUCT_ID_TO" fieldFormName="LookupProduct"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td align="right">${uiLabelMap.ProductAssociationTypeId}</@td>
-                <@td>
-                    <select name="PRODUCT_ASSOC_TYPE_ID" size="1">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductAssociationTypeId}">
+                  <select name="PRODUCT_ASSOC_TYPE_ID" size="1">
                     <!-- <option value="">&nbsp;</option> -->
                     <#list assocTypes as assocType>
                         <option value="${(assocType.productAssocTypeId)!}">${(assocType.get("description",locale))!}</option>
                     </#list>
                     </select>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td align="right">${uiLabelMap.CommonFromDate}</@td>
-                <@td>
-                    ${fromDate!}
+              </@field>
+              <@field type="generic" label="${uiLabelMap.CommonFromDate}">
+                  ${fromDate!}
                     <@htmlTemplate.renderDateTimeField name="FROM_DATE" event="" action="" value="${fromDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                     ${uiLabelMap.CommonSetNowEmpty}
-                </@td>
-              </@tr>
+              </@field>
             </#if>
         <#else>
-            <@tr>
-                <@td align="right">${uiLabelMap.ProductProductId}</@td>
-                <@td><b>${productId!}</b> ${uiLabelMap.ProductRecreateAssociation}</@td>
-            </@tr>
-            <@tr>
-                <@td align="right">${uiLabelMap.ProductProductIdTo}</@td>
-                <@td><b>${productIdTo!}</b> ${uiLabelMap.ProductRecreateAssociation}</@td>
-            </@tr>
-            <@tr>
-                <@td align="right">${uiLabelMap.ProductAssociationType}</@td>
-                <@td><b><#if curProductAssocType??>${(curProductAssocType.get("description",locale))!}<#else> ${productAssocTypeId!}</#if></b> ${uiLabelMap.ProductRecreateAssociation}</@td>
-            </@tr>
-            <@tr>
-                <@td align="right">${uiLabelMap.CommonFromDate}</@td>
-                <@td><b>${fromDate!}</b> ${uiLabelMap.ProductRecreateAssociation}</@td>
-            </@tr>
+            <@field type="generic" label="${uiLabelMap.ProductProductId}">
+                <b>${productId!}</b> ${uiLabelMap.ProductRecreateAssociation}
+            </@field>
+            <@field type="generic" label="${uiLabelMap.ProductProductIdTo}">
+                <b>${productIdTo!}</b> ${uiLabelMap.ProductRecreateAssociation}
+            </@field>
+            <@field type="generic" label="${uiLabelMap.ProductAssociationType}">
+                <b><#if curProductAssocType??>${(curProductAssocType.get("description",locale))!}<#else> ${productAssocTypeId!}</#if></b> ${uiLabelMap.ProductRecreateAssociation}
+            </@field>
+            <@field type="generic" label="${uiLabelMap.CommonFromDate}">
+                <b>${fromDate!}</b> ${uiLabelMap.ProductRecreateAssociation}
+            </@field>
         </#if>
         
-        <@tr>
-            <@td width="26%" align="right">${uiLabelMap.CommonThruDate}</@td>
-            <@td width="74%">
-              <#if useValues> 
-                <#assign value = productAssoc.thruDate!>
-              <#else> 
-                <#assign value = (request.getParameter("THRU_DATE"))!>
-              </#if>            
-                <@htmlTemplate.renderDateTimeField name="THRU_DATE" event="" action="" value="${value}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </@td>
-        </@tr>
-        <@tr>
-            <@td width="26%" align="right">${uiLabelMap.ProductSequenceNum}</@td>
-            <@td width="74%"><input type="text" name="SEQUENCE_NUM" <#if useValues>value="${(productAssoc.sequenceNum)!}"<#else>value="${(request.getParameter("SEQUENCE_NUM"))!}"</#if> size="5" maxlength="10" /></@td>
-        </@tr>
-        <@tr>
-            <@td width="26%" align="right">${uiLabelMap.ProductReason}</@td>
-            <@td width="74%"><input type="text" name="REASON" <#if useValues>value="${(productAssoc.reason)!}"<#else>value="${(request.getParameter("REASON"))!}"</#if> size="60" maxlength="255" /></@td>
-        </@tr>
-        <@tr>
-            <@td width="26%" align="right">${uiLabelMap.ProductInstruction}</@td>
-            <@td width="74%"><input type="text" name="INSTRUCTION" <#if useValues>value="${(productAssoc.instruction)!}"<#else>value="${(request.getParameter("INSTRUCTION"))!}"</#if> size="60" maxlength="255" /></@td>
-        </@tr>
+        <@field type="generic" label="${uiLabelMap.CommonThruDate}">
+          <#if useValues> 
+            <#assign value = productAssoc.thruDate!>
+          <#else> 
+            <#assign value = (request.getParameter("THRU_DATE"))!>
+          </#if>            
+            <@htmlTemplate.renderDateTimeField name="THRU_DATE" event="" action="" value="${value}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ProductSequenceNum}">
+            <input type="text" name="SEQUENCE_NUM" <#if useValues>value="${(productAssoc.sequenceNum)!}"<#else>value="${(request.getParameter("SEQUENCE_NUM"))!}"</#if> size="5" maxlength="10" />
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ProductReason}">
+            <input type="text" name="REASON" <#if useValues>value="${(productAssoc.reason)!}"<#else>value="${(request.getParameter("REASON"))!}"</#if> size="60" maxlength="255" />
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ProductInstruction}">
+            <input type="text" name="INSTRUCTION" <#if useValues>value="${(productAssoc.instruction)!}"<#else>value="${(request.getParameter("INSTRUCTION"))!}"</#if> size="60" maxlength="255" />
+        </@field>
 
-        <@tr>
-            <@td width="26%" align="right">${uiLabelMap.ProductQuantity}</@td>
-            <@td width="74%"><input type="text" name="QUANTITY" <#if useValues>value="${(productAssoc.quantity)!}"<#else>value="${(request.getParameter("QUANTITY"))!}"</#if> size="10" maxlength="15" /></@td>
-        </@tr>
+        <@field type="generic" label="${uiLabelMap.ProductQuantity}">
+            <input type="text" name="QUANTITY" <#if useValues>value="${(productAssoc.quantity)!}"<#else>value="${(request.getParameter("QUANTITY"))!}"</#if> size="10" maxlength="15" />
+        </@field>
 
-        <@tr>
-            <@td>&nbsp;</@td>
-            <@td><input type="submit" <#if isCreate>value="${uiLabelMap.CommonCreate}"<#else>value="${uiLabelMap.CommonUpdate}"</#if> /></@td>
-        </@tr>
-    </@table>
+        <@field type="submitarea">
+            <input type="submit" <#if isCreate>value="${uiLabelMap.CommonCreate}"<#else>value="${uiLabelMap.CommonUpdate}"</#if> />
+        </@field>
+ 
         </form>
 </@section>
 <#if productId?? && product??>

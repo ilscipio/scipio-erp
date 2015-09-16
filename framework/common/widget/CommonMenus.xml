@@ -22,8 +22,8 @@ under the License.
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="CommonAppBarMenu" default-menu-item-name="main" id="app-navigation" type="simple" title="${applicationTitle}&amp;nbsp;"
-        default-selected-style="active" menu-container-style="menu-main" default-link-style="${styles.menu_main_itemlink}" selected-menuitem-context-field-name="headerItem">
-        <menu-item name="main" title="${uiLabelMap.CommonMain}">
+        default-selected-style="active" menu-container-style="menu-main" default-link-style="${styles.menu_main_itemlink}" selected-menuitem-context-field-name="headerItem" items-sort-mode="displaytext-ignorecase">
+        <menu-item name="main" title="${uiLabelMap.CommonMain}" sort-mode="off">
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
         </menu-item>

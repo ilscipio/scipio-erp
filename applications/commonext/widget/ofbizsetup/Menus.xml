@@ -21,7 +21,7 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     
     <menu name="SetupAppBar" title="${uiLabelMap.SetupApp}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="main" title="${uiLabelMap.SetupInitialSetup}">
+        <menu-item name="main" title="${uiLabelMap.SetupInitialSetup}" sort-mode="off">
             <link target="initialsetup"/>
         </menu-item>
         <menu-item name="export" title="${uiLabelMap.PageTitleEntityExportAll}">

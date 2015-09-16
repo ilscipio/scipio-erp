@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="MyPortalAppBar" title="${uiLabelMap.PageTitleMyPortal} ${partyNameView.personalTitle} ${partyNameView.firstName} ${partyNameView.middleName} ${partyNameView.lastName} ${partyNameView.groupName}"
         extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="main" parent-portal-page-value="${parameters.parentPortalPageId}"/>
+        <menu-item name="main" parent-portal-page-value="${parameters.parentPortalPageId}" sort-mode="off"/>
         <menu-item name="Dashboard" title="${uiLabelMap.CommonPreferences}" align-style="opposed">
             <link target="ManagePortalPages" link-type="anchor">
                 <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>

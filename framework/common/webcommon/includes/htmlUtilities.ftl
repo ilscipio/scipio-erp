@@ -368,11 +368,12 @@ Set current heading level manually. For advanced markup, bypassing @section (but
                       (discouraged; prefer specific; but sometimes required and useful
                       for transition)
     label           = form label
-    columns         = int value for columns for field (overrides classes)
+    labelDetail     = extra content (HTML) inserted with (after) label
     tooltip         = Small field description - to be displayed to the customer
     description     = alternative to tooltip
     name            = field name
     value           = field value
+    columns         = int value for columns for field (overrides classes)
     class           = css classes for the field element (NOT the cell container!)
                       (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
     maxlength       = maxLength
@@ -438,16 +439,20 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     value           = display value or image URL
     description     = for image type: image alt
 -->
-<#macro field type="generic" label="" name="" value="" valueType="generic" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
+<#macro field type="generic" label="" labelDetail="" name="" value="" valueType="generic" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
         fieldFormName="" formName="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
         noTitleArea=false requireTitleArea=false description="">
 <#-- treat these as synonyms for now -->
 <#if tooltip?has_content>
-  <#local description = tooltip>
-<#elseif description?has_content>
-  <#local tooltip = description>
+  <#if !description?has_content>
+    <#local description = tooltip>
+  </#if>
+<#else>
+  <#if description?has_content>
+    <#local tooltip = description>
+  </#if>
 </#if>
 
 <#-- fieldIdNum will always increment throughout the page -->
@@ -491,8 +496,11 @@ Set current heading level manually. For advanced markup, bypassing @section (but
                     <label class="form-field-label"<#if id?has_content> for="${id}"</#if>>${label}</label>
                 <#else>
                     <span class="prefix form-field-label">${label}</span>
+                </#if>  
+                <#if labelDetail?has_content>
+                  ${labelDetail}
                 </#if>     
-              </#if>       
+              </#if>   
             </@cell>
         </#if>
     </#if>

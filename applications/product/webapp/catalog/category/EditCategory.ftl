@@ -55,37 +55,24 @@ function insertImageName(type,nameValue) {
             <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
           </#if>
 
-            <@table type="fields" cellspacing="0" class="basic-table">
-
-              <#if ! productCategory?has_content>
+              <#if !productCategory?has_content>
                   <#if productCategoryId?has_content>
-                    <@tr>
-                        <@td align="right">${uiLabelMap.ProductProductCategoryId}</@td>
-                        <@td>
-                            <input type="text" name="productCategoryId" size="20" maxlength="40" value="${productCategoryId}"/>
-                        </@td>
-                    </@tr>
+                    <@field type="generic" label="${uiLabelMap.ProductProductCategoryId}">
+                        <input type="text" name="productCategoryId" size="20" maxlength="40" value="${productCategoryId}"/>
+                    </@field>
                   <#else>
-                    <@tr>
-                        <@td align="right">${uiLabelMap.ProductProductCategoryId}</@td>
-                        <@td>
-                            <input type="text" name="productCategoryId" size="20" maxlength="40" value=""/>
-                        </@td>
-                    </@tr>
+                    <@field type="generic" label="${uiLabelMap.ProductProductCategoryId}">
+                        <input type="text" name="productCategoryId" size="20" maxlength="40" value=""/>
+                    </@field>
                   </#if>
               <#else>
-                <@tr>
-                    <@td align="right">${uiLabelMap.ProductProductCategoryId}</@td>
-                    <@td>
-                      <b>${productCategoryId}</b> (${uiLabelMap.ProductNotModificationRecreationCategory}.)
-                    </@td>
-                </@tr>
+                <@field type="generic" label="${uiLabelMap.ProductProductCategoryId}">
+                    <b>${productCategoryId}</b> (${uiLabelMap.ProductNotModificationRecreationCategory}.)
+                </@field>
               </#if>
 
-                <@tr>
-                    <@td width="26%" align="right">${uiLabelMap.ProductProductCategoryType}</@td>
-                    <@td width="74%">
-                        <select name="productCategoryTypeId" size="1">
+                <@field type="generic" label="${uiLabelMap.ProductProductCategoryType}">
+                    <select name="productCategoryTypeId" size="1">
                             <#assign selectedKey = "">
                             <#list productCategoryTypes as productCategoryTypeData>
                                 <#if requestParameters.productCategoryTypeId?has_content>
@@ -96,25 +83,20 @@ function insertImageName(type,nameValue) {
                                 <option <#if selectedKey == productCategoryTypeData.productCategoryTypeId!>selected="selected"</#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
                             </#list>
                         </select>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="26%" align="right">${uiLabelMap.ProductProductCategoryName}</@td>
-                    <@td width="74%"><input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/></@td>
-                </@tr>
-                <@tr>
-                    <@td width="26%" align="right">${uiLabelMap.ProductProductCategoryDescription}</@td>
-                    <@td width="74%"><textarea name="description" cols="60" rows="2"><#if productCategory?has_content>${(productCategory.description)!}</#if></textarea></@td>
-                </@tr>
-                <@tr>
-                    <@td width="20%" align="right" valign="top">
-                        ${uiLabelMap.ProductCategoryImageUrl}
-                        <#if (productCategory.categoryImageUrl)??>
-                            <a href="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Category Image" src="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
-                        </#if>
-                    </@td>
-                    <@td width="80%" colspan="4" valign="top">
-                        <input type="text" name="categoryImageUrl" value="${(productCategory.categoryImageUrl)?default('')}" size="60" maxlength="255"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductProductCategoryName}">
+                    <input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductProductCategoryDescription}">
+                    <textarea name="description" cols="60" rows="2"><#if productCategory?has_content>${(productCategory.description)!}</#if></textarea>
+                </@field>
+                <#assign labelDetail>
+                    <#if (productCategory.categoryImageUrl)??>
+                        <a href="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Category Image" src="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
+                    </#if>
+                </#assign>
+                <@field type="generic" label="${uiLabelMap.ProductCategoryImageUrl}" labelDetail=labelDetail>
+                    <input type="text" name="categoryImageUrl" value="${(productCategory.categoryImageUrl)?default('')}" size="60" maxlength="255"/>
                         <#if productCategory?has_content>
                             <div>
                             ${uiLabelMap.ProductInsertDefaultImageUrl}:
@@ -123,17 +105,14 @@ function insertImageName(type,nameValue) {
                             <a href="javascript:insertImageName('category','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
                             </div>
                         </#if>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="20%" align="right" valign="top">
-                        ${uiLabelMap.ProductLinkOneImageUrl}
-                        <#if (productCategory.linkOneImageUrl)??>
-                            <a href="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
-                        </#if>
-                    </@td>
-                    <@td width="80%" colspan="4" valign="top">
-                        <input type="text" name="linkOneImageUrl" value="${(productCategory.linkOneImageUrl)?default('')}" size="60" maxlength="255"/>
+                </@field>
+                <#assign labelDetail>
+                    <#if (productCategory.linkOneImageUrl)??>
+                        <a href="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
+                    </#if>
+                </#assign>
+                <@field type="generic" label="${uiLabelMap.ProductLinkOneImageUrl}" labelDetail=labelDetail>
+                    <input type="text" name="linkOneImageUrl" value="${(productCategory.linkOneImageUrl)?default('')}" size="60" maxlength="255"/>
                         <#if productCategory?has_content>
                             <div>
                                 ${uiLabelMap.ProductInsertDefaultImageUrl}:
@@ -142,17 +121,14 @@ function insertImageName(type,nameValue) {
                                 <a href="javascript:insertImageName('linkOne','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
                             </div>
                         </#if>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="20%" align="right" valign="top">
-                        ${uiLabelMap.ProductLinkTwoImageUrl}
-                        <#if (productCategory.linkTwoImageUrl)??>
-                            <a href="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
-                        </#if>
-                    </@td>
-                    <@td width="80%" colspan="4" valign="top">
-                        <input type="text" name="linkTwoImageUrl" value="${(productCategory.linkTwoImageUrl)?default('')}" size="60" maxlength="255"/>
+                </@field>
+                <#assign labelDetail>
+                    <#if (productCategory.linkTwoImageUrl)??>
+                        <a href="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
+                    </#if>
+                </#assign>
+                <@field type="generic" label="${uiLabelMap.ProductLinkTwoImageUrl}" labelDetail=labelDetail>
+                    <input type="text" name="linkTwoImageUrl" value="${(productCategory.linkTwoImageUrl)?default('')}" size="60" maxlength="255"/>
                         <#if productCategory?has_content>
                             <div>
                                 ${uiLabelMap.ProductInsertDefaultImageUrl}:
@@ -161,26 +137,18 @@ function insertImageName(type,nameValue) {
                                 <a href="javascript:insertImageName('linkTwo','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
                             </div>
                         </#if>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="26%" align="right">${uiLabelMap.ProductDetailScreen}</@td>
-                    <@td width="74%">
-                        <input type="text" <#if productCategory?has_content>value="${productCategory.detailScreen!}"</#if> name="detailScreen" size="60" maxlength="250"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductDetailScreen}">
+                    <input type="text" <#if productCategory?has_content>value="${productCategory.detailScreen!}"</#if> name="detailScreen" size="60" maxlength="250"/>
                         <br /><span class="tooltip">${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;</span>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="26%" align="right">${uiLabelMap.ProductPrimaryParentCategory}</@td>
-                    <@td width="74%">
-                        <@htmlTemplate.lookupField value="${(productCategory.primaryParentCategoryId)?default('')}" formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td>&nbsp;</@td>
-                    <@td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}"/></@td>
-                </@tr>
-            </@table>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductPrimaryParentCategory}">
+                    <@htmlTemplate.lookupField value="${(productCategory.primaryParentCategoryId)?default('')}" formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
+                </@field>
+                <@field type="submitarea">
+                    <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}"/>
+                </@field>
+
         </form>
 </@section>
 
@@ -193,42 +161,40 @@ function insertImageName(type,nameValue) {
     </script>
     <@section title="${uiLabelMap.ProductCategoryUploadImage}">
             <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId!}&amp;upload_file_type=category</@ofbizUrl>" name="imageUploadForm">
-                <@table type="fields" cellspacing="0" class="basic-table">
-                    <@tr><@td>
-                        <input type="file" size="50" name="fname"/>
-                        <br />
-                        <span>
-                            <input type="radio" name="upload_file_type_bogus" value="category" checked="checked" onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=category</@ofbizUrl>");'/>${uiLabelMap.ProductCategoryImageUrl}
-                            <input type="radio" name="upload_file_type_bogus" value="linkOne" onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=linkOne</@ofbizUrl>");'/>${uiLabelMap.ProductLinkOneImageUrl}
-                            <input type="radio" name="upload_file_type_bogus" value="linkTwo"onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=linkTwo</@ofbizUrl>");'/>${uiLabelMap.ProductLinkTwoImageUrl}
-                        </span>
-                        <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductUploadImage}"/>
-                    </@td></@tr>
-                </@table>
+                <@field type="file" name="fname" size="50" />
+                    
+                <@field type="generic">
+                    <input type="radio" name="upload_file_type_bogus" value="category" checked="checked" onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=category</@ofbizUrl>");'/>${uiLabelMap.ProductCategoryImageUrl}
+                    <input type="radio" name="upload_file_type_bogus" value="linkOne" onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=linkOne</@ofbizUrl>");'/>${uiLabelMap.ProductLinkOneImageUrl}
+                    <input type="radio" name="upload_file_type_bogus" value="linkTwo"onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=linkTwo</@ofbizUrl>");'/>${uiLabelMap.ProductLinkTwoImageUrl}
+                </@field>
+                
+                <@field type="submitarea">
+                    <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductUploadImage}"/>
+                </@field>
             </form>
     </@section>
     <@section title="${uiLabelMap.ProductDuplicateProductCategory}">
             <form action="<@ofbizUrl>DuplicateProductCategory</@ofbizUrl>" method="post" style="margin: 0;">
-                <@table type="fields" cellspacing="0" class="basic-table">
-                    <@tr><@td>
-                        ${uiLabelMap.ProductDuplicateProductCategorySelected}:
-                        <input type="hidden" name="oldProductCategoryId" value="${productCategoryId}"/>
-                        <div>
-                            <input type="text" size="20" maxlength="20" name="productCategoryId"/>&nbsp;<input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonGo}"/>
-                        </div>
-                        <div>
-                            <b>${uiLabelMap.CommonDuplicate}:</b>
-                            ${uiLabelMap.ProductCategoryContent}&nbsp;<input type="checkbox" name="duplicateContent" value="Y" checked="checked" />
-                            ${uiLabelMap.ProductCategoryRollupParentCategories}&nbsp;<input type="checkbox" name="duplicateParentRollup" value="Y" checked="checked" />
-                            ${uiLabelMap.ProductCategoryRollupChildCategories}&nbsp;<input type="checkbox" name="duplicateChildRollup" value="Y" />
-                            ${uiLabelMap.ProductProducts}&nbsp;<input type="checkbox" name="duplicateMembers" value="Y" checked="checked" />
-                            ${uiLabelMap.ProductCatalogs}&nbsp;<input type="checkbox" name="duplicateCatalogs" value="Y" checked="checked" />
-                            ${uiLabelMap.ProductFeatures}&nbsp;<input type="checkbox" name="duplicateFeatures" value="Y" checked="checked" />
-                            ${uiLabelMap.PartyParties}&nbsp;<input type="checkbox" name="duplicateRoles" value="Y" checked="checked" />
-                            ${uiLabelMap.ProductAttributes}&nbsp;<input type="checkbox" name="duplicateAttributes" value="Y" checked="checked" />
-                        </div>
-                    </@td></@tr>
-                </@table>
+                <input type="hidden" name="oldProductCategoryId" value="${productCategoryId}"/>
+                <@field type="generic" label="${uiLabelMap.ProductDuplicateProductCategorySelected}">
+                  <input type="text" size="20" maxlength="20" name="productCategoryId"/>
+                </@field>
+                         
+                <@field type="generic" label="${uiLabelMap.CommonDuplicate}">
+                    ${uiLabelMap.ProductCategoryContent}&nbsp;<input type="checkbox" name="duplicateContent" value="Y" checked="checked" />
+                    ${uiLabelMap.ProductCategoryRollupParentCategories}&nbsp;<input type="checkbox" name="duplicateParentRollup" value="Y" checked="checked" />
+                    ${uiLabelMap.ProductCategoryRollupChildCategories}&nbsp;<input type="checkbox" name="duplicateChildRollup" value="Y" />
+                    ${uiLabelMap.ProductProducts}&nbsp;<input type="checkbox" name="duplicateMembers" value="Y" checked="checked" />
+                    ${uiLabelMap.ProductCatalogs}&nbsp;<input type="checkbox" name="duplicateCatalogs" value="Y" checked="checked" />
+                    ${uiLabelMap.ProductFeatures}&nbsp;<input type="checkbox" name="duplicateFeatures" value="Y" checked="checked" />
+                    ${uiLabelMap.PartyParties}&nbsp;<input type="checkbox" name="duplicateRoles" value="Y" checked="checked" />
+                    ${uiLabelMap.ProductAttributes}&nbsp;<input type="checkbox" name="duplicateAttributes" value="Y" checked="checked" />
+                </@field> 
+          
+                <@field type="submitarea">
+                  <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonGo}"/>
+                </@field>  
             </form>
     </@section>
 </#if>

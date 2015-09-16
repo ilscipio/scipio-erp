@@ -103,7 +103,7 @@ under the License.
                           
                           <@field type="lookup" formName="quickaddform" name="add_product_id" id="add_product_id" fieldFormName=fieldFormName label="${uiLabelMap.ProductProductId}"/>
                           
-                          <@field type="input" size="6" name="quantity" value="" label="${uiLabelMap.OrderQuantity}"/>
+                          <@field type="input" size="6" name="quantity" value="1" label="${uiLabelMap.OrderQuantity}"/>
                           
                           
                       <#if useAsDefaultDesiredDeliveryDate??> 

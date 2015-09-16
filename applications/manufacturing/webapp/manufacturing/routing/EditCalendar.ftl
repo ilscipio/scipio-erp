@@ -30,42 +30,37 @@ under the License.
 <@section title=sectionTitle menuHtml=menuHtml>
 
 <#if techDataCalendar?has_content>
-  <form name="calendarform" method="post" action="<@ofbizUrl>UpdateCalendar</@ofbizUrl>">
-    <input type="hidden" name="calendarId" value="${techDataCalendar.calendarId}" />
+  <#assign formActionUrl><@ofbizUrl>UpdateCalendar</@ofbizUrl></#assign>
 <#else>
-  <form name="calendarform" method="post" action="<@ofbizUrl>CreateCalendar</@ofbizUrl>">
+  <#assign formActionUrl><@ofbizUrl>CreateCalendar</@ofbizUrl></#assign>
 </#if>
 
-  <@table type="fields" class="basic-table" cellspacing="0">
-    <#if techDataCalendar?has_content>
-    <@tr>
-      <@td width='26%' align='right' valign='top'>${uiLabelMap.ManufacturingCalendarId}</@td>
-      <@td width="74%" valign="top"><span>${techDataCalendar.calendarId!}</span> <span class="tooltip">(${uiLabelMap.CommonNotModifRecreat})</span></@td>
-    </@tr>
-    <#else>
-    <@tr>
-      <@td width='26%' align='right' valign="top">${uiLabelMap.ManufacturingCalendarId}</@td>
-      <@td width="74%"><input type="text" size="12" name="calendarId" value="${calendarData.calendarId!}" /></@td>
-    </@tr>
-    </#if>
-    <@tr>
-      <@td width='26%' align='right' valign='top'>${uiLabelMap.CommonDescription}</@td>
-      <@td width="74%"><input type="text" size="40" name="description" value="${calendarData.description!}" /></@td>
-    </@tr>
-    <@tr>
-      <@td width='26%' align='right' valign='top'>${uiLabelMap.ManufacturingCalendarWeekId}</@td>
-      <@td width="74%">
-         <select name="calendarWeekId">
+  <form name="calendarform" method="post" action="${formActionUrl}">
+
+  <#if techDataCalendar?has_content>
+    <input type="hidden" name="calendarId" value="${techDataCalendar.calendarId}" />
+  </#if>
+
+  <#if techDataCalendar?has_content>
+    <@field type="display" label="${uiLabelMap.ManufacturingCalendarId}" tooltip="(${uiLabelMap.CommonNotModifRecreat})" value="${techDataCalendar.calendarId!}" />
+  <#else>
+    <@field type="generic" label="${uiLabelMap.ManufacturingCalendarId}">
+        <input type="text" size="12" name="calendarId" value="${calendarData.calendarId!}" />
+    </@field>
+  </#if>
+    <@field type="generic" label="${uiLabelMap.CommonDescription}">
+        <input type="text" size="40" name="description" value="${calendarData.description!}" />
+    </@field>
+    <@field type="generic" label="${uiLabelMap.ManufacturingCalendarWeekId}">
+        <select name="calendarWeekId">
           <#list calendarWeeks as calendarWeek>
           <option value="${calendarWeek.calendarWeekId}" <#if calendarData?has_content && calendarData.calendarWeekId?default("") == calendarWeek.calendarWeekId>SELECTED</#if>>${(calendarWeek.get("description",locale))!}</option>
           </#list>
         </select>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td width="26%" align="right" valign="top"></@td>
-      <@td width="74%"><input type="submit" value="${uiLabelMap.CommonUpdate}" /></@td>
-    </@tr>
-  </@table>
+    </@field>
+    <@field type="submitarea">
+        <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+    </@field>
+
   </form>
 </@section>

@@ -17,48 +17,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.ProductOverrideSimpleFields}">
-        <form action="<@ofbizUrl>updateCategoryContent</@ofbizUrl>" method="post" style="margin: 0;" name="categoryForm">
-            <@table type="fields" cellspacing="0" class="basic-table">
-                <@tr>
-                    <@td width="26%" align="right"><input type="hidden" name="productCategoryId" value="${productCategoryId!}" />${uiLabelMap.ProductProductCategoryType}</@td>
-                    <@td width="74%">
-                        <select name="productCategoryTypeId" size="1">
+        <form action="<@ofbizUrl>updateCategoryContent</@ofbizUrl>" method="post" name="categoryForm">
+            <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
+                <@field type="generic" label="${uiLabelMap.ProductProductCategoryType}">
+                    <select name="productCategoryTypeId" size="1">
                         <option value="">&nbsp;</option>
                         <#list productCategoryTypes as productCategoryTypeData>
                             <option <#if productCategory?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected="selected"</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
                         </#list>
-                        </select>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="26%" align="right">${uiLabelMap.ProductName}</@td>
-                    <@td width="74%"><input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/></@td>
-                </@tr>
-                <@tr>
-                    <@td width="26%" align="right">${uiLabelMap.ProductCategoryDescription}</@td>
-                    <@td width="74%" colspan="4" valign="top">
-                        <textarea name="description" cols="60" rows="2">${(productCategory.description)!}</textarea>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="26%" align="right" valign="top">${uiLabelMap.ProductLongDescription}</@td>
-                    <@td width="74%" colspan="4" valign="top">
-                        <textarea name="longDescription" cols="60" rows="7">${(productCategory.longDescription)!}</textarea>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="26%" align="right">${uiLabelMap.ProductDetailScreen}</@td>
-                    <@td width="74%">
-                        <input type="text" <#if productCategory?has_content>value="${productCategory.detailScreen!}"</#if> name="detailScreen" size="60" maxlength="250" />
-                        <br />
-                        <span class="tooltip">${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;</span>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td>&nbsp;</@td>
-                    <@td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" /></@td>
-                    <@td colspan="3">&nbsp;</@td>
-                </@tr>
-            </@table>
+                    </select>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductName}">
+                    <input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductCategoryDescription}">
+                    <textarea name="description" cols="60" rows="2">${(productCategory.description)!}</textarea>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductLongDescription}">
+                    <textarea name="longDescription" cols="60" rows="7">${(productCategory.longDescription)!}</textarea>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductDetailScreen}">
+                    <input type="text" <#if productCategory?has_content>value="${productCategory.detailScreen!}"</#if> name="detailScreen" size="60" maxlength="250" />
+                    <br />
+                    <span class="tooltip">${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;</span>
+                </@field>
+                <@field type="submitarea">
+                    <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" />
+                </@field>
         </form>
 </@section>

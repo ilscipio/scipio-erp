@@ -31,14 +31,14 @@ under the License.
           </@thead>
           <@tbody>
             <#list variantInventorySummaries as variantSummary>
-            <@tr valign="middle">
+              <@tr valign="middle">
                 <@td><a href="<@ofbizUrl>EditProductInventoryItems?productId=${variantSummary.productId}</@ofbizUrl>" class="${styles.button_default!}">${variantSummary.productId}</a></@td>
                     <#list featureTypeIds as featureTypeId>
                         <@td>${(variantSummary[featureTypeId].description)?default(featureTypeId)}</@td>
                     </#list>
                 <@td>${variantSummary.quantityOnHandTotal}</@td>
                 <@td>${variantSummary.availableToPromiseTotal}</@td>
-            </@tr>
+              </@tr>
             </#list>
           </@tbody>
         </@table>

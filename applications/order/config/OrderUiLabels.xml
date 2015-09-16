@@ -9657,6 +9657,23 @@
         <value xml:lang="zh_CN">促销优惠代码</value>
         <value xml:lang="zh_TW">促銷/優惠券代碼</value>
     </property>
+    <property key="OrderPromotionCouponCodes_spaced">
+        <value xml:lang="de">Aktion / Coupon Codes</value>
+        <value xml:lang="en">Promotion / Coupon Codes</value>
+        <value xml:lang="es">Códigos Promoción/Cupón</value>
+        <value xml:lang="fr">Promotion / Codes de coupons</value>
+        <value xml:lang="it">Promozione / Codici Tagliando</value>
+        <value xml:lang="ja">プロモーション / クーポンコード</value>
+        <value xml:lang="nl">Promo- / couponcodes</value>
+        <value xml:lang="pt_BR">Promoção / código de cupom</value>
+        <value xml:lang="ro">Promovare / Coduri Cupoane</value>
+        <value xml:lang="ru">Коды по акциям/купонам</value>
+        <value xml:lang="th">โปรโมชัน / รหัสคูปอง</value>
+        <value xml:lang="vi">Mã khuyến mại / coupon</value>
+        <value xml:lang="zh">促销 / 优惠券代码</value>
+        <value xml:lang="zh_CN">促销优惠代码</value>
+        <value xml:lang="zh_TW">促銷 / 優惠券代碼</value>
+    </property>
     <property key="OrderPromotionDetails">
         <value xml:lang="de">Aktionsdetails</value>
         <value xml:lang="en">Promotion Details</value>

@@ -20,26 +20,21 @@ under the License.
   <#-- When creating a new contact mech, first select the type, then actually create -->
   <#if !preContactMechTypeId?has_content>
     <@section title="${uiLabelMap.PartyCreateNewContact}">
-    <form method="post" action="<@ofbizUrl>editcontactmech</@ofbizUrl>" name="createcontactmechform">
-      <input type="hidden" name="partyId" value="${partyId}" />
-      <@table type="fields" class="basic-table" cellspacing="0">
-        <@tbody>
-        <@tr>
-          <@td>${uiLabelMap.PartySelectContactType}</@td>
-          <@td>
+      <form method="post" action="<@ofbizUrl>editcontactmech</@ofbizUrl>" name="createcontactmechform">
+        <input type="hidden" name="partyId" value="${partyId}" />
+        <@field type="generic" label="${uiLabelMap.PartySelectContactType}">
             <select name="preContactMechTypeId">
               <#list mechMap.contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
             </select>
+        </@field>
+        <@field type="submitarea">
             <a href="javascript:document.createcontactmechform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a>
-          </@td>
-        </@tr>
-        </@tbody>
-      </@table>
-    </form>
+        </@field>
+      </form>
     </@section>
-    </#if>
+  </#if>
 </#if>
 <#if mechMap.contactMechTypeId?has_content>
 
@@ -50,17 +45,13 @@ under the License.
   </#if>
   <@section title=sectionTitle>
   
-  <#if !mechMap.contactMech?has_content>
     <div id="mech-purpose-types">
+  <#if !mechMap.contactMech?has_content>
     <#if contactMechPurposeType??>
       <p>(${uiLabelMap.PartyMsgContactHavePurpose} <b>"${contactMechPurposeType.get("description",locale)!}"</b>)</p>
     </#if>
-  <#else>
-    <div id="mech-purpose-types">
   </#if>
   
-    <@table type="data-list" class="basic-table" cellspacing="0">
-    <@tbody>
     <#-- FIXME: form inside table -->
   <#if !mechMap.contactMech?has_content>
       <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
@@ -244,8 +235,6 @@ under the License.
     </@td>
   </@tr>
   </form>
-  </@tbody>
-  </@table>
   </div>
   
   <@menu type="button">

@@ -100,7 +100,7 @@ under the License.
     </menu>
     <menu name="OrderAppSideBar" title="${uiLabelMap.OrderManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-elements menu-name="OrderAppBar" recursive="includes-only" />
+        <include-elements menu-name="OrderAppBar" recursive="full" />
     </menu>
 
     <menu name="RequirementsTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

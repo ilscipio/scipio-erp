@@ -25,6 +25,6 @@ under the License.
     </menu>
     <menu name="GoogleBaseAppSideBar" title="${uiLabelMap.GoogleBaseApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-elements menu-name="GoogleBaseAppBar" recursive="includes-only" />
+        <include-elements menu-name="GoogleBaseAppBar" recursive="full" />
     </menu>
 </menus>

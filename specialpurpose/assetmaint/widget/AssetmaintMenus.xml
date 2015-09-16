@@ -29,7 +29,7 @@
     </menu>
     <menu name="AssetMaintAppSideBar" title="${uiLabelMap.AssetMaintManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-elements menu-name="AssetMaintAppBar" recursive="includes-only" />
+        <include-elements menu-name="AssetMaintAppBar" recursive="full" />
     </menu>
 
     <menu name="FixedAssetTabBar" extends="FixedAssetTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">

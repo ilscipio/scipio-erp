@@ -35,7 +35,7 @@ under the License.
     </menu>
     <menu name="SfaAppSideBar" title="${uiLabelMap.SfaManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <include-elements menu-name="SfaAppBar" recursive="includes-only" />
+        <include-elements menu-name="SfaAppBar" recursive="full" />
     </menu>
     
     <menu name="AccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

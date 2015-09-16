@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -713,7 +714,15 @@ public class ModelMenu extends ModelWidget {
             if (ignoreCase) {
                 itemsSortMode = itemsSortMode.substring(0, itemsSortMode.length() - "-ignorecase".length());
             }
-            List<ModelMenuItem> sorted = new ArrayList<ModelMenuItem>(menuItemList);
+            
+            // remove non-sortables
+            List<ModelMenuItem> sorted = new ArrayList<ModelMenuItem>(menuItemList.size());
+            for(ModelMenuItem item : menuItemList) {
+                if (!"off".equals(item.getSortMode())) {
+                    sorted.add(item);
+                }
+            }
+
             Comparator<ModelMenuItem> cmp = null;
             if ("name".equals(itemsSortMode)) {
                 if (ignoreCase) {
@@ -824,7 +833,21 @@ public class ModelMenu extends ModelWidget {
             if (cmp != null) {
                 Collections.sort(sorted, cmp);
             }
-            return sorted;
+            
+            // reintegrate with the items that weren't supposed to be sorted; preserve their positions
+            // and insert the sorted ones around them
+            List<ModelMenuItem> finalList = new ArrayList<ModelMenuItem>(menuItemList.size());
+            Iterator<ModelMenuItem> sortedIt = sorted.iterator();
+            for(ModelMenuItem origItem : menuItemList) {
+                if ("off".equals(origItem.getSortMode())) {
+                    finalList.add(origItem);
+                }
+                else {
+                    finalList.add(sortedIt.next());
+                }
+            }
+            
+            return finalList;
         }
         return menuItemList;
     }

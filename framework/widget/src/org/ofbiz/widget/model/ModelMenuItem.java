@@ -92,6 +92,7 @@ public class ModelMenuItem extends ModelWidget {
     private final String linkStyle;
     
     private final String overrideMode;
+    private final String sortMode;
 
     // ===== CONSTRUCTORS =====
 
@@ -112,6 +113,7 @@ public class ModelMenuItem extends ModelWidget {
         this.widgetStyle = menuItemElement.getAttribute("widget-style");
         this.linkStyle = menuItemElement.getAttribute("link-style");
         this.overrideMode = menuItemElement.getAttribute("override-mode");
+        this.sortMode = menuItemElement.getAttribute("sort-mode");
         this.tooltipStyle = menuItemElement.getAttribute("tooltip-style");
         this.selectedStyle = menuItemElement.getAttribute("selected-style");
         String hideIfSelected = menuItemElement.getAttribute("hide-if-selected");
@@ -205,6 +207,7 @@ public class ModelMenuItem extends ModelWidget {
         this.widgetStyle = "";
         this.linkStyle = "";
         this.overrideMode = "";
+        this.sortMode = "";
         this.link = new MenuLink(portalPage, parentMenuItem, locale);
         this.modelMenu = parentMenuItem.modelMenu;
     }
@@ -262,6 +265,11 @@ public class ModelMenuItem extends ModelWidget {
             this.position = overrideMenuItem.position;
         } else {
             this.position = existingMenuItem.position;
+        }
+        if (overrideMenuItem.sortMode != null) {
+            this.sortMode = overrideMenuItem.sortMode;
+        } else {
+            this.sortMode = existingMenuItem.sortMode;
         }
         this.actions = existingMenuItem.actions;
         this.align = existingMenuItem.align;
@@ -558,6 +566,10 @@ public class ModelMenuItem extends ModelWidget {
     
     public String getOverrideMode() {
         return this.overrideMode;
+    }
+    
+    public String getSortMode() {
+        return this.sortMode;
     }
 
     public boolean isSelected(Map<String, Object> context) {

@@ -274,6 +274,20 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="sort-mode" default="auto">
+                <xs:annotation>
+                    <xs:documentation>Cato: controls whether sorting applies to this item or
+                        not. Only meaningful when items-sort-mode is enabled.
+                        If set to off, item will try to remain at the same index of the menu items
+                        in which it was declared.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="auto" />
+                        <xs:enumeration value="off" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="link" type="link"/>

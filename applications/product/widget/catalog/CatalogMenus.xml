@@ -190,7 +190,7 @@ under the License.
             <condition>
                 <not><if-empty field="productCategory"/></not>
             </condition>
-            <link target="/ecommerce/control/category" url-mode="plain">
+            <link target="/ecommerce/control/category" url-mode="plain" target-window="_blank">
                 <parameter param-name="category_id" from-field="productCategoryId"/>
             </link>
         </menu-item>
@@ -566,7 +566,7 @@ under the License.
             <condition>
                 <not><if-empty field="product"/></not>
             </condition>
-            <link target="/ecommerce/control/product" url-mode="inter-app">
+            <link target="/ecommerce/control/product" url-mode="plain" target-window="_blank">
                 <parameter param-name="product_id" from-field="productId"/>
             </link>
         </menu-item>

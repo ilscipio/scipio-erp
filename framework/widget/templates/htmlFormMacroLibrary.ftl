@@ -29,18 +29,6 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=""collapse=false fieldType="" fieldTitleBlank=false>
   <!-- renderDisplayField start -->
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-  <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}3</#if> ${styles.grid_cell!} field-entry-title field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!}</#if><#if collapse></span><#else></label></#if>
-      </div>
-    </#if>
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-    <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}8</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    <#else>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    </#if>
   <#if type?has_content && type=="image">
     <img src="${imageLocation}" alt="${imageAlt}"><#lt/>
   <#else>
@@ -64,25 +52,12 @@ not "current" context (too intrusive in current renderer design). still relies o
       </script><#lt/>
     </#if>-->
     </#if>
-    </div>
     <!-- renderDisplayField end -->
 </#macro>
 <#macro renderHyperlinkField></#macro>
 
 <#macro renderTextField name className alert value textSize maxlength id event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false fieldType="" fieldTitleBlank=false>
   <!-- renderTextField start -->
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-  <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}</#if> ${styles.grid_cell!} field-entry-title field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!}</#if><#if collapse></span><#else></label></#if>
-      </div>
-    </#if>
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-    <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    <#else>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    </#if>
   <#if mask?has_content && mask>
     <script type="text/javascript">
       jQuery(function($){jQuery("#${id}").mask("${mask!}");});
@@ -105,24 +80,11 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#local defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
     <script language="JavaScript" type="text/javascript">ajaxAutoCompleter('${ajaxUrl}', false, ${defaultMinLength!2}, ${defaultDelay!300});</script><#lt/>
   </#if>
-  </div>
   <!-- renderTextField end -->
 </#macro>
 
 <#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable=true buttons="" language="" tooltip="" title="" fieldType="" fieldTitleBlank=false collapse=false fieldType="" fieldTitleBlank=false>
 <!-- renderTextField start -->
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-  <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}</#if> ${styles.grid_cell!} field-entry-title field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!}</#if><#if collapse></span><#else></label></#if>
-      </div>
-    </#if>
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-    <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    <#else>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    </#if>
   <textarea name="${name}"<#t/>
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
     <@renderClass className alert />
@@ -155,7 +117,6 @@ not "current" context (too intrusive in current renderer design). still relies o
     </script>
   </#if>
   -->
-  </div>
   <!-- renderTextarea end -->
 </#macro>
 
@@ -189,18 +150,6 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip=""collapse=false fieldType="" fieldTitleBlank=false>
   <!-- renderDateTimeField start -->
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-  <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}</#if> ${styles.grid_cell!} field-entry-title field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!}</#if><#if collapse></span><#else></label></#if>
-      </div>
-    </#if>
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-    <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    <#else>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    </#if>
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <#-- Note: ofbiz never handled dateType=="date" here because it pass shortDateInput=true in renderer instead-->
   <#-- These should be ~uiLabelMap.CommonFormatDate/Time/DateTime -->
@@ -400,18 +349,6 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false collapse=false fieldType="" fieldTitleBlank=false>
   <!-- renderDropDown Field start -->
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-  <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!} field-entry-title field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!}</#if><#if collapse></span><#else></label></#if>
-      </div>
-    </#if>
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-    <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    <#else>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    </#if>
     <select name="${name!""}<#rt/>" <@renderClass className alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
     <#if !manualItemsOnly>  
@@ -452,7 +389,6 @@ not "current" context (too intrusive in current renderer design). still relies o
       });
     </script>
   </#if>
-  </div>
   <!-- renderDropDownField end -->
 </#macro>
 
@@ -498,17 +434,6 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-  <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!} field-entry-title field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!}</#if><#if collapse></span><#else></label></#if>
-      </div>
-    </#if>
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-    <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    <#else>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
-    </#if>
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
   <#if buttonType!="image">
     <#if !className?has_content || className=="smallSubmit">
@@ -775,7 +700,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan="" style="" positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
+<#macro renderFormatFieldRowWidgetCellOpen collapse=false positionSpan="" style="" positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
   <!-- renderFormatFieldRowWidgetCellOpen start -->
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
@@ -809,10 +734,27 @@ not "current" context (too intrusive in current renderer design). still relies o
   fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
   <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if>">
     <div class="${styles.grid_row!} form-field-entry field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
+    
+    <!-- rendering the first part of the field -->
+  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
+  <#if !isActionField>
+      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}</#if> ${styles.grid_cell!} field-entry-title field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
+        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!}</#if><#if collapse></span><#else></label></#if>
+      </div>
+    </#if>
+  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
+    <#if !isActionField>
+      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
+    <#else>
+      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
+    </#if>
+    
   <!-- renderFormatFieldRowWidgetCellOpen end -->
 </#macro>
+
 <#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false>
 <!-- renderFormatFieldRowWidgetCellClose start -->
+  </div>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
       </div>
     </div>

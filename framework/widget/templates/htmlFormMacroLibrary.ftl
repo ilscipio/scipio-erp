@@ -28,7 +28,6 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=""collapse=false fieldType="" fieldTitleBlank=false>
-  <!-- renderDisplayField start -->
   <#if type?has_content && type=="image">
     <img src="${imageLocation}" alt="${imageAlt}"><#lt/>
   <#else>
@@ -52,12 +51,10 @@ not "current" context (too intrusive in current renderer design). still relies o
       </script><#lt/>
     </#if>-->
     </#if>
-    <!-- renderDisplayField end -->
 </#macro>
 <#macro renderHyperlinkField></#macro>
 
 <#macro renderTextField name className alert value textSize maxlength id event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false fieldType="" fieldTitleBlank=false>
-  <!-- renderTextField start -->
   <#if mask?has_content && mask>
     <script type="text/javascript">
       jQuery(function($){jQuery("#${id}").mask("${mask!}");});
@@ -80,11 +77,9 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#local defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
     <script language="JavaScript" type="text/javascript">ajaxAutoCompleter('${ajaxUrl}', false, ${defaultMinLength!2}, ${defaultDelay!300});</script><#lt/>
   </#if>
-  <!-- renderTextField end -->
 </#macro>
 
 <#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable=true buttons="" language="" tooltip="" title="" fieldType="" fieldTitleBlank=false collapse=false fieldType="" fieldTitleBlank=false>
-<!-- renderTextField start -->
   <textarea name="${name}"<#t/>
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
     <@renderClass className alert />
@@ -117,7 +112,6 @@ not "current" context (too intrusive in current renderer design). still relies o
     </script>
   </#if>
   -->
-  <!-- renderTextarea end -->
 </#macro>
 
 <#-- Merges a yyyy-MM-dd into a full timestamp
@@ -149,7 +143,6 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#assign>
 
 <#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip=""collapse=false fieldType="" fieldTitleBlank=false>
-  <!-- renderDateTimeField start -->
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <#-- Note: ofbiz never handled dateType=="date" here because it pass shortDateInput=true in renderer instead-->
   <#-- These should be ~uiLabelMap.CommonFormatDate/Time/DateTime -->
@@ -343,12 +336,10 @@ not "current" context (too intrusive in current renderer design). still relies o
     <input type="hidden" name="${compositeType}" value="Timestamp"/>
   </span>
   -->
-  <!-- renderDateTime end -->
 </#macro>
 
 
 <#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false collapse=false fieldType="" fieldTitleBlank=false>
-  <!-- renderDropDown Field start -->
     <select name="${name!""}<#rt/>" <@renderClass className alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
     <#if !manualItemsOnly>  
@@ -389,11 +380,9 @@ not "current" context (too intrusive in current renderer design). still relies o
       });
     </script>
   </#if>
-  <!-- renderDropDownField end -->
 </#macro>
 
 <#macro renderCheckBox id="" checked=false currentValue="N" name="" action="" tooltip="">
-<!-- rendeCheckBox start -->
     <div class="switch small">
     <input type="checkbox" id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
       <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -402,7 +391,6 @@ not "current" context (too intrusive in current renderer design). still relies o
       name="${name!""?html}" value="${currentValue!}"<#if action?has_content> onClick="${action}"</#if>/><#rt/>
       <label for="<#if id?has_content>${id}<#else>${name!}</#if>"></label>
     </div>
-<!-- renderCheckBox end -->
 </#macro>
 
 <#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="">
@@ -666,9 +654,8 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#function>
 
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
-<!-- renderFormatFieldRowTitleCellOpen start -->
 <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-  <!-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
+  <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
   <#local gridSize = 12>
   <#local markLast = false>
   <#local fieldEntryOffset = 0>
@@ -690,21 +677,20 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#else>
     <#local fieldEntrySize = gridSize>
   </#if>
-  <!-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} posSpan: ${posSpan!} markLast: ${markLast!?string}
+  <#-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} posSpan: ${posSpan!} markLast: ${markLast!?string}
   fieldEntryOffset: ${fieldEntryOffset}
   renderFormatFieldRow_gridUsed: ${renderFormatFieldRow_gridUsed}
   fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
-<!-- renderFormatFieldRowTitleCellOpen end -->  
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
 </#macro>
 
 <#macro renderFormatFieldRowSpacerCell></#macro>
 <#macro renderFormatFieldRowWidgetCellOpen collapse=false positionSpan="" style="" positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
-  <!-- renderFormatFieldRowWidgetCellOpen start -->
+
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
-  <!--positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
+  <#--positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
   <#local gridSize = 12>
   <#local markLast = false>
   <#local fieldEntryOffset = 0>
@@ -735,7 +721,6 @@ not "current" context (too intrusive in current renderer design). still relies o
   <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if>">
     <div class="${styles.grid_row!} form-field-entry field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
     
-    <!-- rendering the first part of the field -->
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}</#if> ${styles.grid_cell!} field-entry-title field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
@@ -749,16 +734,13 @@ not "current" context (too intrusive in current renderer design). still relies o
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget field-entry-type-<#if fieldType?has_content>${fieldType}<#else>other</#if>">
     </#if>
     
-  <!-- renderFormatFieldRowWidgetCellOpen end -->
 </#macro>
 
 <#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false>
-<!-- renderFormatFieldRowWidgetCellClose start -->
   </div>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
       </div>
     </div>
-<!-- renderFormatFieldRowWidgetCellClose end -->
 </#macro>
 
 

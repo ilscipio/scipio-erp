@@ -847,6 +847,7 @@ levels manually, but most often should let @section menu handle them.
     </@section>            
                     
    * General Attributes *
+    type                = [generic], default generic
     class               = css classes, on outer columns element (affects title)
                           (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
                           note: boolean false has no effect here
@@ -865,7 +866,7 @@ levels manually, but most often should let @section menu handle them.
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
+<#macro section type="generic" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
     <#local addClass = parseAddClassArg(class)>
     <#local class = parseClassArg(class, "")>
     <#if id?has_content>

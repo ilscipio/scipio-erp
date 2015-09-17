@@ -98,36 +98,36 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         
         <sort-order>
-        	<field-group>
-        		<sort-field name="custRequestId"/>
-        		<sort-field name="custRequestName"/>
-        		<sort-field name="description"/>
-        		<sort-field name="parentCustRequestId"/>
-        		<sort-field name="custRequestTypeId"/>
-        		<sort-field name="custRequestCategoryId"/>
-        		<sort-field name="fromPartyId"/>
-        		<sort-field name="statusId"/>
-        		<sort-field name="custRequestDate"/>
-        		<sort-field name="responseRequiredDate"/>
-        		<sort-field name="productStoreId"/>
-        		<sort-field name="salesChannelEnumId"/>
-        		<sort-field name="internalComment"/>
-        		<sort-field name="reason"/>
-        		<sort-field name="priority"/>
-        		<sort-field name="billed"/>
-        		
-        	</field-group>
-        	<field-group title="${uiLabelMap.CommonAdvancedSearchFields}" collapsible="true" initially-collapsed="true">
-        		<sort-field name="openDateTime"/>
-        		<sort-field name="closedDateTime"/>
-        		<sort-field name="custSequenceNum"/>
-        		<sort-field name="custEstimatedMilliSeconds"/>
-        		<sort-field name="createdDate"/>
-        		<sort-field name="lastModifiedDate"/>
-        		<sort-field name="createdByUserLogin"/>
-        		<sort-field name="lastModifiedByUserLogin"/>
-        		        		
-        	</field-group>
+            <field-group>
+                <sort-field name="custRequestId"/>
+                <sort-field name="custRequestName"/>
+                <sort-field name="description"/>
+                <sort-field name="parentCustRequestId"/>
+                <sort-field name="custRequestTypeId"/>
+                <sort-field name="custRequestCategoryId"/>
+                <sort-field name="fromPartyId"/>
+                <sort-field name="statusId"/>
+                <sort-field name="custRequestDate"/>
+                <sort-field name="responseRequiredDate"/>
+                <sort-field name="productStoreId"/>
+                <sort-field name="salesChannelEnumId"/>
+                <sort-field name="internalComment"/>
+                <sort-field name="reason"/>
+                <sort-field name="priority"/>
+                <sort-field name="billed"/>
+                
+            </field-group>
+            <field-group title="${uiLabelMap.CommonAdvancedSearchFields}" collapsible="true" initially-collapsed="true">
+                <sort-field name="openDateTime"/>
+                <sort-field name="closedDateTime"/>
+                <sort-field name="custSequenceNum"/>
+                <sort-field name="custEstimatedMilliSeconds"/>
+                <sort-field name="createdDate"/>
+                <sort-field name="lastModifiedDate"/>
+                <sort-field name="createdByUserLogin"/>
+                <sort-field name="lastModifiedByUserLogin"/>
+                                
+            </field-group>
         </sort-order>
     </form>
 
@@ -293,23 +293,17 @@ under the License.
         <auto-fields-service service-name="updateCustRequest" default-field-type="edit"/>
         <field name="form"><hidden value="list"/></field>
         <field name="portalPageId"><hidden value="${parameters.portalPageId}"/></field>
-        <field name="custRequestId"><hidden/></field>
+        <field name="custRequestId" use-when="custRequestId==null"><hidden/></field>
+        <field name="custRequestId" use-when="custRequest!=null"><display/></field>
         <field name="communicationEventId"><hidden value="${communicationEvent.communicationEventId}"/></field>
+        
+        <field name="custRequestName" encode-output="false"><text default-value="${communicationEvent.subject}"/></field>
         <field name="custRequestTypeId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="CustRequestType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="custRequestName" encode-output="false"><text default-value="${communicationEvent.subject}"/></field>
-        <field name="salesChannelEnumId" title="${uiLabelMap.OrderSalesChannel}">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
-                    <entity-constraint name="enumTypeId" value="ORDER_SALES_CHANNEL"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="custRequestCategoryId">
+        <field name="custRequestCategoryId" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="CustRequestCategory" description="${description}"/>
             </drop-down>
@@ -324,7 +318,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="priority">
+        <field name="priority" position="2">
             <drop-down allow-empty="true">
                 <option key="1" description="${uiLabelMap.WorkEffortPriorityOne}"/>
                 <option key="2" description="${uiLabelMap.WorkEffortPriorityTwo}"/>
@@ -338,28 +332,37 @@ under the License.
             </drop-down>
         </field>
         <field name="story" use-when="custRequest==null" encode-output="false"><textarea cols="60" rows="12" default-value="${communicationEvent.content}"/></field>
-        <field name="maximumAmountUomId">
+        <field name="description" use-when="custRequest==null" encode-output="false"><textarea cols="60" rows="12" default-value="${communicationEvent.content}"/></field>
+        
+        <field name="salesChannelEnumId" title="${uiLabelMap.OrderSalesChannel}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="ORDER_SALES_CHANNEL"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productStoreId" position="2" title="${uiLabelMap.ProductProductStore}">
+            <drop-down allow-empty="false">
+                <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId"/>
+            </drop-down>
+        </field>
+        <field name="custRequestDate" title="${uiLabelMap.OrderRequestDate}"><date-time type="timestamp"/></field>
+        <field name="responseRequiredDate" position="2"><date-time type="timestamp"/></field>
+        <field name="fromPartyId" title="${uiLabelMap.OrderRequestingParty}">
+            <lookup target-form-name="LookupPartyName" default-value="${communicationEvent.partyIdFrom}"/>
+        </field>
+        <field name="fulfillContactMechId" position="2">
+            <lookup target-form-name="LookupPreferredContactMech" target-parameter="fromPartyId"/>
+        </field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>
-        <field name="productStoreId" title="${uiLabelMap.ProductProductStore}">
-            <drop-down allow-empty="false">
-                <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId"/>
-            </drop-down>
-        </field>
-        <field name="custRequestDate" title="${uiLabelMap.OrderRequestDate}"><date-time type="timestamp"/></field>
-        <field name="responseRequiredDate"><date-time type="timestamp"/></field>
-        <field name="fromPartyId" title="${uiLabelMap.OrderRequestingParty}">
-            <lookup target-form-name="LookupPartyName" default-value="${communicationEvent.partyIdFrom}"/>
-        </field>
-        <field name="fulfillContactMechId">
-            <lookup target-form-name="LookupPreferredContactMech" target-parameter="fromPartyId"/>
-        </field>
-        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+        </field><field name="maximumAmountUomId" position="2">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -372,7 +375,42 @@ under the License.
         <field name="lastModifiedDate"><hidden/></field>
         <field name="lastModifiedByUserLogin"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        
+        <sort-order>
+            <field-group>
+                <sort-field name="custRequestId"/>
+                <sort-field name="statusId"/>
+                <sort-field name="custRequestName"/>
+                <sort-field name="description"/>
+                <sort-field name="fromPartyId"/>
+                <sort-field name="fulfillContactMechId"/>
+                <sort-field name="custRequestDate"/>
+                <sort-field name="responseRequiredDate"/>
+                <sort-field name="custRequestTypeId"/>
+                <sort-field name="custRequestCategoryId"/>
+                <sort-field name="currencyUomId"/>
+                <sort-field name="maximumAmountUomId"/>
+                <sort-field name="salesChannelEnumId"/>
+                <sort-field name="productStoreId"/>
+                <sort-field name="billed"/>
+                <sort-field name="priority"/>
+                
+            </field-group>
+            <field-group title="${uiLabelMap.CommonExtraFields}" collapsible="true" initially-collapsed="true">
+                <sort-field name="story"/>
+                <sort-field name="internalComment"/>
+                <sort-field name="reason"/>
+                <sort-field name="openDateTime"/>
+                <sort-field name="closedDateTime"/>
+                <sort-field name="parentCustRequestId"/>
+                <sort-field name="custSequenceNum"/>
+                <sort-field name="custEstimatedMilliSeconds"/>
+                <sort-field name="webSiteId"/>
+            </field-group>
+        </sort-order>
+        
     </form>
+    
     <form name="EditSmallCustRequest" extends="EditCustRequest">
         <field name="salesChannelEnumId"><ignored/></field>
         <field name="custRequestCategoryId"><ignored/></field>

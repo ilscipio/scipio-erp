@@ -3962,6 +3962,10 @@
         <value xml:lang="zh">外部设备用户操作</value>
         <value xml:lang="zh_TW">外部設備使用者操作</value>
     </property>
+    <property key="CommonExtraFields">
+        <value xml:lang="de">Extra (Optionale) Felder</value>>
+        <value xml:lang="nl">Extra (Optional) Fields</value>
+    </property>
     <property key="CommonFalse">
         <value xml:lang="ar">خطأ</value>
         <value xml:lang="cs">Nepravda</value>

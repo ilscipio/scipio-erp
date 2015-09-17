@@ -24,7 +24,8 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="CustRequest" default-field-type="find"/>
         
-        <field name="statusId">
+        <field name="fromPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="statusId" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" operator="equals" value="CUSTREQ_STTS"/>
@@ -32,7 +33,6 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="salesChannelEnumId" title="${uiLabelMap.OrderSalesChannel}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
@@ -41,24 +41,47 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="custRequestTypeId" position="2">
+        <field name="custRequestName" position="2">
+            <text-find/>
+        </field>
+        <field name="custRequestTypeId" position="1">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="CustRequestType" key-field-name="custRequestTypeId"/>
             </drop-down>
         </field>
-        <field name="custRequestName" position-span="1">
-            <text-find/>
+        <field name="custRequestCategoryId" position="2">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="CustRequestCategory" key-field-name="custRequestCategoryId"/>
+            </drop-down>
+        </field>
+        <field name="priority">
+            <drop-down allow-empty="true">
+                <option key="1" description="${uiLabelMap.WorkEffortPriorityOne}"/>
+                <option key="2" description="${uiLabelMap.WorkEffortPriorityTwo}"/>
+                <option key="3" description="${uiLabelMap.WorkEffortPriorityThree}"/>
+                <option key="4" description="${uiLabelMap.WorkEffortPriorityFour}"/>
+                <option key="5" description="${uiLabelMap.WorkEffortPriorityFive}"/>
+                <option key="6" description="${uiLabelMap.WorkEffortPrioritySix}"/>
+                <option key="7" description="${uiLabelMap.WorkEffortPrioritySeventh}"/>
+                <option key="8" description="${uiLabelMap.WorkEffortPriorityEight}"/>
+                <option key="9" description="${uiLabelMap.WorkEffortPriorityNine}"/>
+            </drop-down>
+        </field>
+        <field name="billed" position="2">
+            <drop-down allow-empty="true">
+                <option description="${uiLabelMap.CommonNo}" key="N"/>
+                <option description="${uiLabelMap.CommonYes}" key="Y"/>
+            </drop-down>
         </field>
         <field name="currencyUomId"><ignored/></field>
         <field name="maximumAmountUomId"><ignored/></field>
-        <field name="custRequestCategoryId"><ignored/></field>
         <field name="fulfillContactMechId"><ignored/></field>
-        <field name="priority"><ignored/></field>
-        <field name="description"><ignored/></field>
-        <field name="createdDate"><ignored/></field>
-        <field name="createdByUserLogin"><ignored/></field>
-        <field name="lastModifiedDate"><ignored/></field>
-        <field name="lastModifiedByUserLogin"><ignored/></field>
+        <field name="description"><text-find/></field>
+        <field name="parentCustRequestId" position="2"><text-find/></field>
+        <field name="createdDate"><date-find/></field>
+        <field name="lastModifiedDate" position="2"><date-find/></field>
+        <field name="createdByUserLogin"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="lastModifiedByUserLogin" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="closedDateTime" position="2"><date-find/></field>
         <field name="responseRequiredDate" position="2"><date-find/></field>
         <field name="productStoreId" title="${uiLabelMap.ProductProductStore}">
@@ -68,11 +91,44 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="reason" position="2"><text/></field>
+        <field name="reason" position="2"><text-find/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        
+        <sort-order>
+        	<field-group>
+        		<sort-field name="custRequestId"/>
+        		<sort-field name="custRequestName"/>
+        		<sort-field name="description"/>
+        		<sort-field name="parentCustRequestId"/>
+        		<sort-field name="custRequestTypeId"/>
+        		<sort-field name="custRequestCategoryId"/>
+        		<sort-field name="fromPartyId"/>
+        		<sort-field name="statusId"/>
+        		<sort-field name="custRequestDate"/>
+        		<sort-field name="responseRequiredDate"/>
+        		<sort-field name="productStoreId"/>
+        		<sort-field name="salesChannelEnumId"/>
+        		<sort-field name="internalComment"/>
+        		<sort-field name="reason"/>
+        		<sort-field name="priority"/>
+        		<sort-field name="billed"/>
+        		
+        	</field-group>
+        	<field-group title="${uiLabelMap.CommonAdvancedSearchFields}" collapsible="true" initially-collapsed="true">
+        		<sort-field name="openDateTime"/>
+        		<sort-field name="closedDateTime"/>
+        		<sort-field name="custSequenceNum"/>
+        		<sort-field name="custEstimatedMilliSeconds"/>
+        		<sort-field name="createdDate"/>
+        		<sort-field name="lastModifiedDate"/>
+        		<sort-field name="createdByUserLogin"/>
+        		<sort-field name="lastModifiedByUserLogin"/>
+        		        		
+        	</field-group>
+        </sort-order>
     </form>
 
     <form name="ListRequests" type="list" extends="ListRequestList" list-name="listIt">

@@ -41,23 +41,13 @@ under the License.
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
         
-        <@table type="fields" class="basic-table" cellspacing="0">
-        <@tbody>
-        <@tr>
-          <@td>${uiLabelMap.AccountingCardNumber}</@td>
-          <@td>
+        <@field type="generic" label="${uiLabelMap.AccountingCardNumber}">
             <input type="text" size="20" maxlength="60" name="cardNumber" value="${giftCardData.cardNumber!}" />
-          </@td>
-        </@tr>
-        <@tr>
-          <@td>${uiLabelMap.AccountingPinNumber}</@td>
-          <@td>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.AccountingPinNumber}">
             <input type="text" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber!}" />
-          </@td>
-        </@tr>
-        <@tr>
-          <@td>${uiLabelMap.CommonExpireDate}</@td>
-          <@td>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonExpireDate}">
             <#assign expMonth = "">
             <#assign expYear = "">
             <#if giftCardData?? && giftCardData.expireDate??>
@@ -89,16 +79,11 @@ under the License.
               </#if>
               ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
             </select>
-          </@td>
-        </@tr>
-        <@tr>
-          <@td>${uiLabelMap.CommonDescription}</@td>
-          <@td>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonDescription}">
             <input type="text" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
-          </@td>
-        </@tr>
-        </@tbody>
-        </@table>
+        </@field>
+
       </form>
       
       <@saveCancelMenu />

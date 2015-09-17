@@ -507,7 +507,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     <@cell class=("${classes!}"+" field-entry-widget")?trim nocells=nocells>
         <#switch type>
           <#case "input">
-                <@renderTextField name=name 
+            <@renderTextField name=name 
                                   className=class 
                                   alert=alert 
                                   value=value 
@@ -516,7 +516,8 @@ Set current heading level manually. For advanced markup, bypassing @section (but
                                   id=id 
                                   event="onClick" 
                                   action=onClick 
-                                  disabled=disabled 
+                                  disabled=disabled
+                                  readonly=readonly 
                                   clientAutocomplete="" 
                                   ajaxUrl=autoCompleteUrl 
                                   ajaxEnabled="" 

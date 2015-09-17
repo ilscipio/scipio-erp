@@ -54,7 +54,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 <#macro renderHyperlinkField></#macro>
 
-<#macro renderTextField name className alert value textSize maxlength id event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false fieldType="" fieldTitleBlank=false>
+<#macro renderTextField name className alert value textSize maxlength id event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldType="" fieldTitleBlank=false>
   <#if mask?has_content && mask>
     <script type="text/javascript">
       jQuery(function($){jQuery("#${id}").mask("${mask!}");});
@@ -67,6 +67,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#if textSize?has_content> size="${textSize}"</#if><#rt/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
     <#if disabled?has_content && disabled> disabled="disabled"</#if><#rt/>
+    <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/>
     <#if id?has_content> id="${id}"</#if><#rt/>
     <#if event?has_content && action?has_content> ${event}="${action}"</#if><#rt/>
     <#if clientAutocomplete?has_content && clientAutocomplete=="false"> autocomplete="off"</#if><#rt/>

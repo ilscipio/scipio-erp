@@ -2261,10 +2261,12 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
     </#if>
     <#if !wrapNested && nestedFirst>${nestedHtml}</#if>
     <#if type == "link">
-      <#if ofbizHref?is_string>
-        <#local href = makeOfbizUrl(ofbizHref, fullPath, secure, encode)>
-      <#elseif !href?is_string>
-        <#local href = "javascript:void(0);">
+      <#if !href?is_string>
+        <#if ofbizHref?is_string>
+          <#local href = makeOfbizUrl(ofbizHref, fullPath, secure, encode)>
+        <#else>
+          <#local href = "javascript:void(0);">
+        </#if>
       </#if>
       <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs /></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></a>
     <#elseif type == "text">

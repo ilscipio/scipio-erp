@@ -37,14 +37,16 @@ under the License.
 *************
 * makeOfbizUrl function
 ************
-This is a function version of the @ofbizUrl macro, because sometimes this is easier to use.
-Also this one supports booleans (but strings still work).
+Function version of the @ofbizUrl macro.
+Boolean arguments can be given as booleans, string representation of booleans
+or empty string (signifies use defaults).
+
 Dev note: could be optimized later.
 -->
 <#function makeOfbizUrl uri fullPath=false secure=false encode=true>
-  <#if fullPath?is_boolean><#local fullPath = fullPath?c></#if>
-  <#if secure?is_boolean><#local secure = secure?c></#if>
-  <#if encode?is_boolean><#local encode = encode?c></#if>
+  <#if fullPath?is_boolean><#local fullPath = fullPath?c><#elseif !fullPath?has_content><#local fullPath = "false"></#if>
+  <#if secure?is_boolean><#local secure = secure?c><#elseif !secure?has_content><#local secure = "false"></#if>
+  <#if encode?is_boolean><#local encode = encode?c><#elseif !encode?has_content><#local encode = "true"></#if>
   <#local res><@ofbizUrl fullPath=fullPath secure=secure encode=encode>${uri}</@ofbizUrl></#local>
   <#return res>
 </#function>
@@ -647,7 +649,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
                 </#if>
             <#break>
           <#case "file">
-            <@renderFileField className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") />
+            <@renderFileField className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
             <#break> 
           <#case "password">
             <@renderPasswordField className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") />

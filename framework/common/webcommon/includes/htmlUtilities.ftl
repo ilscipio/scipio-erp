@@ -355,6 +355,40 @@ Set current heading level manually. For advanced markup, bypassing @section (but
   <#return "">
 </#function>
 
+
+<#-- 
+*************
+* Fields Macro
+************ 
+Fields container that helps modify a set of @field definitions, or group of fields.
+Can be omitted. Can not be nested.
+May sometimes need multiple of these per form (so @form insufficient for this purpose, though
+it also supports these attributes). 
+Not associated with an HTML element as is @fieldset.
+
+    Usage example:  
+    <@fields labelArea=false>
+      <@field attr="" />
+      <@field attr="" />
+    </@field>
+    
+    * General Attributes *
+    type            = [generic], default generic. the type of field arrangement.
+    labelType       = [default|none], default based on form type and/or fieldsType. reserved for future use.
+                      could be used as specific type of label arrangement if field arrangement type is not defined.
+                      none: same result as fieldsLabelArea=none (but not forced? TODO)
+    labelArea       = boolean, default based on form type and/or fieldsType.
+                      overrides whether fields are expected to have labels or not. can specify explicit
+                      true or explicit false. logic is influenced by both fieldsType and individual field type.
+                      does not apply to submit and potentially other special fields. (weaker than @field's labelArea arg).
+-->
+<#macro fields type="generic" labelType="" labelArea="">
+    <#local dummy = pushRequestStack("catoCurrentFieldsInfo", 
+        {"type":type, "labelType":labelType, "labelArea":labelArea})>
+    <#nested>
+    <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
+</#macro>
+
 <#-- 
 *************
 * Field Macro
@@ -487,17 +521,23 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 </#if>
 
 <@row collapse=collapse!false norows=norows class="form-field-entry">
-    <#local fieldsType = (request.getAttribute("catoCurrentFormInfo").fieldsType)!"generic">
+    <#local fieldsInfo = readRequestStack("catoCurrentFieldsInfo", {})>
+    <#local fieldsType = (fieldsInfo.type)!"generic">
     <#-- TODO?: in future fieldsLabelArea and fieldsLabelType default might be inferred from form type or fieldsType 
          for now, just set fieldsLabelArea to true so by default generic and display fields will align with other fields
          and not look crazy. 
          fieldsType should be used and it would determine the two others implicitly, though they can be overridden.
          for the time being, not often needed.
     -->
-    <#local fieldsLabelType = (request.getAttribute("catoCurrentFormInfo").fieldsLabelType)!"default">
-    <#local fieldsLabelArea = (request.getAttribute("catoCurrentFormInfo").fieldsLabelArea)!"">
+    <#local fieldsLabelType = (fieldsInfo.labelType)!"default">
+    <#local fieldsLabelArea = (fieldsInfo.labelArea)!"">
     <#if !fieldsLabelArea?is_boolean>
-      <#local fieldsLabelArea = true>
+      <#if fieldsLabelType == "none">
+        <#local fieldsLabelArea = false>
+      <#else>
+        <#-- current default: always label area except submit -->
+        <#local fieldsLabelArea = true>
+      </#if>
     </#if>
 
     <#-- don't use this condition, because if label is present on @field it should override fieldsLabelArea=false: 
@@ -763,26 +803,22 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
                           DEV NOTE: "display" is special for time being, probably rare or unused;
                                     maybe it should cause to omit <form> element
     class               = classes on form element itself
-    fieldsType          = [generic], default generic. reserved for future use
-    fieldsLabelArea     = boolean, default based on form type and/or fieldsType.
-                          overrides whether fields are expected to have labels or not. can specify explicit
-                          true or explicit false. logic is influenced by both fieldsType and individual field type.
-                          does not apply to submit and potentially other special fields. (weaker than @field's labelArea arg).
-    fieldsLabelType     = [default|none], default based on form type and/or fieldsType. reserved for future use.
-                          none: same result as fieldsLabelArea=none (but not forced? TODO)      
+    fieldsType          = shorthand for <@fields> section; see @fields "type" arg
+    fieldsLabelArea     = shorthand for <@fields> section; see @fields "labelArea" arg
+    fieldsLabelType     = shorthand for <@fields> section; see @fields "labelType" arg   
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
 -->
 <#macro form type="input" class=true fieldsType="generic" fieldsLabelArea="" fieldsLabelType="default" attribs={} inlineAttribs...>
     <#local classes = makeClassesArg(class, "")>
     <#-- note: no stacking needed because forms can't nest -->
-    <#local dummy = request.setAttribute("catoCurrentFormInfo", 
-        {"type": type, "fieldsType": fieldsType, "fieldsLabelArea":fieldsLabelArea, "fieldsLabelType":fieldsLabelType})!>
+    <#local dummy = pushRequestStack("catoCurrentFieldsInfo", 
+        {"type":fieldsType, "labelType":fieldsLabelType, "labelArea":fieldsLabelArea})>
     <form<#if classes?has_content> class="${classes}</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
       <#nested>
     </form>
     <#-- must unset this so @field can still work without a @form parent -->
-    <#local dummy = request.removeAttribute("catoCurrentFormInfo")!>
+    <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
 </#macro>
 
 
@@ -2547,6 +2583,63 @@ WARNING: stack type/format is subject to change; assume unknown.
     <#return []>
   </#if>
 </#function>
+
+<#-- 
+*************
+* pushRequestStack
+************
+Pushes a value onto a stack variable in request attributes.
+
+Dev note: currently no pushGlobalStack version of this exists for FTL globals; 
+can be achieved with pushStack/readStack/popStack instead, but in most cases pushRequestStack is better anyhow.
+
+FIXME: this is highly suboptimal; should move much of this to a java method.
+-->
+<#function pushRequestStack stackName val>
+  <#local stack = request.getAttribute(stackName)!"">
+  <#if stack?has_content>
+    <#local stack = stack + [val]>
+  <#else>
+    <#local stack = [val]>
+  </#if>
+  <#local dummy = request.setAttribute(stackName, stack)!>
+  <#return "">
+</#function>
+
+<#-- 
+*************
+* readRequestStack function
+************
+Reads the last value added to the named stack variable in request attributes, without popping.
+-->
+<#function readRequestStack stackName defaultVal="">
+  <#local stack = request.getAttribute(stackName)!"">
+  <#if stack?has_content>
+    <#return stack?last>
+  <#else>
+    <#return defaultVal>
+  </#if>
+</#function>
+
+<#-- 
+*************
+* popRequestStack function
+************
+Pops a stack variable in request attributes and returns the value.
+note: differs from popStack, which returns the stack.
+-->
+<#function popRequestStack stackName defaultVal="">
+  <#local stack = request.getAttribute(stackName)!"">
+  <#if stack?has_content && (stack?size > 1)>
+    <#local stackSize = stack?size>
+    <#local dummy = request.setAttribute(stackName, stack?chunk(stackSize - 1)?first)!>
+    <#return stack?last>
+  <#else>
+    <#local dummy = request.removeAttribute(stackName)!>
+    <#return defaultVal>
+  </#if>
+</#function>
+
 
 <#-- 
 *************

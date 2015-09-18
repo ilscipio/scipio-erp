@@ -29,39 +29,31 @@ under the License.
 <@section menuHtml=menuHtml>
         <form name="createProductInCategoryCheckExistingForm" method="post" action="<@ofbizUrl>CreateProductInCategoryCheckExisting</@ofbizUrl>">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
-            <@table type="fields" cellspacing="0" class="basic-table">
             <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
                 <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
                 <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
                 <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-                <@tr>
-                    <@td width="15%">${productFeatureType.description}:</@td>
-                    <@td>
-                            <select name="pft_${productFeatureTypeId}">
-                                <option value="">- ${uiLabelMap.CommonNone} -</option>
-                                <#list productFeatures as productFeature>
-                                    <option value="${productFeature.productFeatureId}">${productFeature.description}</option>
-                                </#list>
-                            </select>
-                            <input type="checkbox" name="pftsel_${productFeatureTypeId}"/>${uiLabelMap.ProductSelectable}
-                    </@td>
-                </@tr>
-                </#list>
-                <@tr>
-                    <@td width="15%">${uiLabelMap.ProductInternalName}:</@td>
-                    <@td><input type="text" name="internalName" size="30" maxlength="60"/></@td>
-                </@tr>
-                <@tr>
-                    <@td width="15%">${uiLabelMap.ProductProductName}:</@td>
-                    <@td><input type="text" name="productName" size="30" maxlength="60"/></@td>
-                </@tr>
-                <@tr>
-                    <@td width="15%">${uiLabelMap.ProductShortDescription}:</@td>
-                    <@td><input type="text" name="description" size="60" maxlength="250"/></@td>
-                </@tr>
-                <@tr>
-                    <@td width="15%">${uiLabelMap.ProductDefaultPrice}:</@td>
-                    <@td><input type="text" name="defaultPrice" size="8"/>
+                <@field type="generic" label="${productFeatureType.description}">
+                    <select name="pft_${productFeatureTypeId}">
+                        <option value="">- ${uiLabelMap.CommonNone} -</option>
+                        <#list productFeatures as productFeature>
+                            <option value="${productFeature.productFeatureId}">${productFeature.description}</option>
+                        </#list>
+                    </select>
+                    <input type="checkbox" name="pftsel_${productFeatureTypeId}"/>${uiLabelMap.ProductSelectable}
+                </@field>
+            </#list>
+                <@field type="generic" label="${uiLabelMap.ProductInternalName}">
+                    <input type="text" name="internalName" size="30" maxlength="60"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductProductName}">
+                    <input type="text" name="productName" size="30" maxlength="60"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductShortDescription}">
+                    <input type="text" name="description" size="60" maxlength="250"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductDefaultPrice}">
+                    <input type="text" name="defaultPrice" size="8"/>
                     <#assign findCurrenciesMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("uomTypeId", "CURRENCY_MEASURE")>
                     <#assign currencies = delegator.findByAnd('Uom', findCurrenciesMap, null, true) />
                     <#if currencies?has_content && (currencies?size > 0)>
@@ -72,17 +64,12 @@ under the License.
                             </#list>
                         </select>
                     </#if>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="15%">${uiLabelMap.ProductAverageCost}:</@td>
-                    <@td><input type="text" name="averageCost" size="8"/></@td>
-                </@tr>
-                <@tr>
-                    <@td colspan="3">
-                        <a href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductCheckExisting}</a>
-                    </@td>
-                </@tr>
-            </@table>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductAverageCost}">
+                    <input type="text" name="averageCost" size="8"/>
+                </@field>
+                <@field type="submitarea">
+                    <a href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductCheckExisting}</a>
+                </@field>
         </form>
 </@section>

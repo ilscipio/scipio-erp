@@ -26,6 +26,7 @@ under the License.
 
 <#if productCategoryId?? && productCategory??>
     <@section title="${uiLabelMap.PageTitleEditCategoryFeatureCategories}">
+        <#if productFeatureCatGrpAppls?has_content>
             <#-- Feature Groups -->
             <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
               <@thead>
@@ -69,28 +70,32 @@ under the License.
                 </@tr>
                 </#list>
             </@table>
+        <#else>
+            <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+        </#if>
     </@section>
+  <#if productFeatureGroups?has_content>    
     <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
-            <#if productFeatureGroups?has_content>
-            <@table type="fields" cellspacing="0" class="basic-table">
-                <@tr><@td>
-                    <form method="post" action="<@ofbizUrl>createProductFeatureCatGrpAppl</@ofbizUrl>" style="margin: 0;" name="addNewGroupForm">
-                    <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-                    <select name="productFeatureGroupId">
-                    <#list productFeatureGroups as productFeatureGroup>
-                        <option value="${(productFeatureGroup.productFeatureGroupId)!}">${(productFeatureGroup.description)!} [${(productFeatureGroup.productFeatureGroupId)!}]</option>
-                    </#list>
-                    </select>
-                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <input type="submit" value="${uiLabelMap.CommonAdd}" />
-                    </form>
-                </@td></@tr>
-            </@table>
-            <#else>
-                &nbsp;
-            </#if>
+        <@form fieldsLabelArea=false method="post" action=makeOfbizUrl("createProductFeatureCatGrpAppl") name="addNewGroupForm">
+            <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
+            <@field type="generic">
+                <select name="productFeatureGroupId">
+                <#list productFeatureGroups as productFeatureGroup>
+                    <option value="${(productFeatureGroup.productFeatureGroupId)!}">${(productFeatureGroup.description)!} [${(productFeatureGroup.productFeatureGroupId)!}]</option>
+                </#list>
+                </select>
+            </@field>
+            <@field type="generic">
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.CommonAdd}" />
+            </@field>
+        </@form> 
     </@section>
+  </#if>
     <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
+        <#if productFeatureCategoryAppls?has_content>
             <#-- Feature Categories -->
             <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
               <@thead>
@@ -134,21 +139,26 @@ under the License.
                 </@tr>
                 </#list>
             </@table>
+        <#else>
+            <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+        </#if>
     </@section>
     <@section title="${uiLabelMap.ProductApplyFeatureGroupToCategory}">
-            <@table type="fields" cellspacing="0" class="basic-table">
-                <@tr><@td>
-                    <form method="post" action="<@ofbizUrl>createProductFeatureCategoryAppl</@ofbizUrl>" style="margin: 0;" name="addNewCategoryForm">
-                        <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-                        <select name="productFeatureCategoryId">
-                        <#list productFeatureCategories as productFeatureCategory>
-                            <option value="${(productFeatureCategory.productFeatureCategoryId)!}">${(productFeatureCategory.description)!} [${(productFeatureCategory.productFeatureCategoryId)!}]</option>
-                        </#list>
-                        </select>
-                        <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <input type="submit" value="${uiLabelMap.CommonAdd}" />
-                    </form>
-                </@td></@tr>
-            </@table>
+        <@form fieldsLabelArea=false method="post" action=makeOfbizUrl("createProductFeatureCategoryAppl") name="addNewCategoryForm">
+            <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
+            <@field type="generic">
+                <select name="productFeatureCategoryId">
+                <#list productFeatureCategories as productFeatureCategory>
+                    <option value="${(productFeatureCategory.productFeatureCategoryId)!}">${(productFeatureCategory.description)!} [${(productFeatureCategory.productFeatureCategoryId)!}]</option>
+                </#list>
+                </select>
+            </@field>
+            <@field type="generic">
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.CommonAdd}" />
+            </@field>
+        </@form>
     </@section>
 </#if>

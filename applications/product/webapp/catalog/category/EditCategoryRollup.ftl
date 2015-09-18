@@ -93,17 +93,19 @@ under the License.
     </@section>
 
     <@section title="${uiLabelMap.ProductAddCategoryParent} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
-        <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr><@td>
-                <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addParentForm">
-                    <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
-                    <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
-                    <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="addParentForm" name="parentProductCategoryId" id="parentProductCategoryId" fieldFormName="LookupProductCategory"/>
-                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <input type="submit" value="${uiLabelMap.CommonAdd}" />
-                </form>
-            </@td></@tr>
-        </@table>
+        <@form fieldsLabelArea=false method="post" action=makeOfbizUrl("addProductCategoryToCategory") name="addParentForm">
+            <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
+            <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
+            <@field type="generic">
+                <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="addParentForm" name="parentProductCategoryId" id="parentProductCategoryId" fieldFormName="LookupProductCategory"/>
+            </@field>
+            <@field type="generic">
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.CommonAdd}" />
+            </@field>
+        </@form>
     </@section>
 
     <@section title="${uiLabelMap.ProductCategoryRollupChildCategories}">
@@ -161,12 +163,12 @@ under the License.
                     </#list>
                     </@tbody>
                     <@tfoot>
-                    <@tr valign="middle">
+                      <@tr valign="middle">
                         <@td colspan="4" align="center">
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
                             <input type="hidden" value="${lineChild}" name="_rowCount" />
                         </@td>
-                    </@tr>
+                      </@tr>
                     </@tfoot>
             </@table>
             </form>
@@ -183,16 +185,18 @@ under the License.
     </@section>
 
     <@section title="${uiLabelMap.ProductAddCategoryChild} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
-        <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr><@td>
-                <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addChildForm">
-                    <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
-                    <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}" />
-                    <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}"  formName="addChildForm" name="productCategoryId" id="productCategoryId" fieldFormName="LookupProductCategory"/>
-                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <input type="submit" value="${uiLabelMap.CommonAdd}" />
-                </form>
-            </@td></@tr>
-        </@table>
+        <@form fieldsLabelArea=false method="post" action=makeOfbizUrl("addProductCategoryToCategory") name="addChildForm">
+            <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
+            <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}" />
+            <@field type="generic">
+                <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="addChildForm" name="productCategoryId" id="productCategoryId" fieldFormName="LookupProductCategory"/>
+            </@field>
+            <@field type="generic">
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.CommonAdd}" />
+            </@field>
+        </@form>
     </@section>
 </#if>

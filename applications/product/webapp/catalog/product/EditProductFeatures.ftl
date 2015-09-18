@@ -121,14 +121,14 @@ under the License.
       </#list>
       </@field>
       
-      <@field type="select" label="${uiLabelMap.ProductFeatureGroup}" size=1 requireTitleArea=true name="productFeatureGroupId">
+      <@field type="select" label="${uiLabelMap.ProductFeatureGroup}" size=1 name="productFeatureGroupId">
         <option value="" selected="selected">${uiLabelMap.ProductChooseFeatureGroup}</option>
       <#list productFeatureGroups as productFeatureGroup>
         <option value="${(productFeatureGroup.productFeatureGroupId)!}">${(productFeatureGroup.description)!} [${(productFeatureGroup.productFeatureGroupId)!}]</option>
       </#list>
       </@field>
       
-      <@field type="select" label="${uiLabelMap.ProductFeatureApplicationType}" size=1 requireTitleArea=true name="productFeatureApplTypeId">
+      <@field type="select" label="${uiLabelMap.ProductFeatureApplicationType}" size=1 name="productFeatureApplTypeId">
       <#list productFeatureApplTypes as productFeatureApplType>
         <option value="${(productFeatureApplType.productFeatureApplTypeId)!}"
           <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>

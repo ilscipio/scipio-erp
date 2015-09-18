@@ -22,34 +22,52 @@ under the License.
   <#assign productAdditionalImage3 = (Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "ADDITIONAL_IMAGE_3", locale, dispatcher))! />
   <#assign productAdditionalImage4 = (Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "ADDITIONAL_IMAGE_4", locale, dispatcher))! />
 </#if>
-<form id="addAdditionalImagesForm" method="post" action="<@ofbizUrl>addAdditionalImagesForProduct</@ofbizUrl>" enctype="multipart/form-data">
+<@row>
+  <@cell>
+<#-- FIXME?: should specify a form/fields type here that implies manual row/cell markup -->
+<@form fieldsLabelArea=false id="addAdditionalImagesForm" method="post" action=makeOfbizUrl("addAdditionalImagesForProduct") enctype="multipart/form-data">
   <input id="additionalImageProductId" type="hidden" name="productId" value="${productId!}" />
-  <@table type="generic">
-    <@tbody>
-      <@tr>
-        <@td><#if productAdditionalImage1?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage1}</@ofbizContentUrl>"><img src="<@ofbizContentUrl>${productAdditionalImage1}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if></@td>
-        <@td><input id="additionalImageOne" type="file" size="20" name="additionalImageOne" /></@td>
-      </@tr>
-      <@tr>
-        <@td><#if productAdditionalImage2?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage2}</@ofbizContentUrl>" ><img src="<@ofbizContentUrl>${productAdditionalImage2}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if></@td>
-        <@td><input type="file" size="20" name="additionalImageTwo" /></@td>
-      </@tr>
-      <@tr>
-        <@td><#if productAdditionalImage3?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage3}</@ofbizContentUrl>"><img src="<@ofbizContentUrl>${productAdditionalImage3}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if></@td>
-        <@td><input type="file" size="20" name="additionalImageThree" /></@td>
-      </@tr>
-      <@tr>
-        <@td><#if productAdditionalImage4?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage4}</@ofbizContentUrl>"><img src="<@ofbizContentUrl>${productAdditionalImage4}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if></@td>
-        <@td><input type="file" size="20" name="additionalImageFour" /></@td>
-      </@tr>
-      <@tr>
-        <@td></@td>
-        <@td><input type="submit" value='${uiLabelMap.CommonUpload}' /></@td>
-      </@tr>
-    </@tbody>
-  </@table>
+    <#macro imageField name imageHtml id="">
+      <@row>
+        <@cell columns=6>
+          <@field type="generic">
+              <input<#if id?has_content> id="${id}"</#if> type="file" size="20" name="${name}" />
+          </@field>
+        </@cell>
+        <@cell columns=6>
+          ${imageHtml}
+        </@cell>
+      </@row>
+    </#macro>
+     
+      <#assign imageHtml>
+        <#if productAdditionalImage1?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage1}</@ofbizContentUrl>"><img src="<@ofbizContentUrl>${productAdditionalImage1}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if>
+      </#assign>
+      <@imageField id="additionalImageOne" name="additionalImageOne" imageHtml=imageHtml />
+      
+      <#assign imageHtml>
+        <#if productAdditionalImage2?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage2}</@ofbizContentUrl>" ><img src="<@ofbizContentUrl>${productAdditionalImage2}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if>
+      </#assign>
+      <@imageField name="additionalImageTwo" imageHtml=imageHtml />
+  
+      <#assign imageHtml>
+        <#if productAdditionalImage3?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage3}</@ofbizContentUrl>"><img src="<@ofbizContentUrl>${productAdditionalImage3}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if>
+      </#assign>
+      <@imageField name="additionalImageThree" imageHtml=imageHtml />
+      
+      <#assign imageHtml>
+        <#if productAdditionalImage4?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage4}</@ofbizContentUrl>"><img src="<@ofbizContentUrl>${productAdditionalImage4}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if>
+      </#assign>
+      <@imageField name="additionalImageFour" imageHtml=imageHtml />
+      
+      <@field type="submitarea">
+          <input type="submit" value='${uiLabelMap.CommonUpload}' />
+      </@field>
+
   <div class="right" style='margin-top:-250px;'>
     <a href="javascript:void(0);"><img id="detailImage" name="mainImage" vspace="5" hspace="5" width="150" height="150" style='margin-left:50px' src="" alt="" /></a>
     <input type="hidden" id="originalImage" name="originalImage" />
   </div>
-</form>
+</@form>
+  </@cell>
+</@row>

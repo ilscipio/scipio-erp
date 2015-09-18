@@ -84,25 +84,29 @@ under the License.
         </@table>
 
     <@section title="${uiLabelMap.ProductAddCatalogProductCategory}">
-            <@table type="fields" cellspacing="0" class="basic-table">
-                <@tr><@td>
-                    <form method="post" action="<@ofbizUrl>category_addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
-                        <input type="hidden" name="productCategoryId" value="${productCategoryId!}"/>
-                        <select name="prodCatalogId">
-                        <#list prodCatalogs as prodCatalog>
-                            <option value="${(prodCatalog.prodCatalogId)!}">${(prodCatalog.catalogName)!} [${(prodCatalog.prodCatalogId)!}]</option>
-                        </#list>
-                        </select>
-                        <select name="prodCatalogCategoryTypeId" size="1">
-                        <#list prodCatalogCategoryTypes as prodCatalogCategoryType>
-                            <option value="${(prodCatalogCategoryType.prodCatalogCategoryTypeId)!}">${(prodCatalogCategoryType.get("description",locale))!}</option>
-                        </#list>
-                        </select>
-                        <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <input type="submit" value="${uiLabelMap.CommonAdd}"/>
-                    </form>
-                </@td></@tr>
-            </@table>
+        <@form fieldsLabelArea=false method="post" action=makeOfbizUrl("category_addProductCategoryToProdCatalog") name="addNewForm">
+            <input type="hidden" name="productCategoryId" value="${productCategoryId!}"/>
+            <@field type="generic">
+                <select name="prodCatalogId">
+                <#list prodCatalogs as prodCatalog>
+                    <option value="${(prodCatalog.prodCatalogId)!}">${(prodCatalog.catalogName)!} [${(prodCatalog.prodCatalogId)!}]</option>
+                </#list>
+                </select>
+            </@field>
+            <@field type="generic">
+                <select name="prodCatalogCategoryTypeId" size="1">
+                <#list prodCatalogCategoryTypes as prodCatalogCategoryType>
+                    <option value="${(prodCatalogCategoryType.prodCatalogCategoryTypeId)!}">${(prodCatalogCategoryType.get("description",locale))!}</option>
+                </#list>
+                </select>
+            </@field>
+            <@field type="generic">
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.CommonAdd}"/>
+            </@field>
+        </@form>
     </@section>
 </@section>
 </#if>

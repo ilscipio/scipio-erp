@@ -39,18 +39,7 @@ under the License.
         <@categoryProductsNav />
       </#if>
 
-        <#if (listSize == 0)>
-           <@table type="data-complex" autoAltRows=true cellspacing="0" class="basic-table">
-           <@thead>
-              <@tr class="header-row">
-                 <@th>${uiLabelMap.ProductProductNameId}</@th>
-                 <@th>${uiLabelMap.CommonFromDateTime}</@th>
-                 <@th align="center">${uiLabelMap.ProductThruDateTimeSequenceQuantity} ${uiLabelMap.CommonComments}</@th>
-                 <@th>&nbsp;</@th>
-              </@tr>
-           </@thead>
-           </@table>
-        <#else>
+        <#if (listSize > 0)>
            <form method="post" action="<@ofbizUrl>updateCategoryProductMember</@ofbizUrl>" name="updateCategoryProductForm">
               <input type="hidden" name="VIEW_SIZE" value="${viewSize}"/>
               <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
@@ -76,7 +65,7 @@ under the License.
                   <@tr valign="middle">
                     <@td>
                       <#if (product.smallImageUrl)??>
-                         <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>" class="${styles.button_default!}"><img alt="Small Image" src="<@ofbizContentUrl>${product.smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" align="middle" /></a>
+                         <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>"><img alt="Small Image" src="<@ofbizContentUrl>${product.smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" align="middle" /></a>
                       </#if>
                       <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if product??>${(product.internalName)!}</#if> [${(productCategoryMember.productId)!}]</a>
                     </@td>
@@ -117,8 +106,10 @@ under the License.
               <input type="hidden" name="fromDate" value="${(productCategoryMember.fromDate)!}"/>
               <input type="hidden" name="activeOnly" value="${activeOnly.toString()}"/>
            </form>
-           <#assign rowCount = rowCount + 1>
-           </#list>        
+             <#assign rowCount = rowCount + 1>
+           </#list>   
+      <#else>
+        <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>     
       </#if>
     
       <#if (listSize > 0)>
@@ -127,80 +118,68 @@ under the License.
 </@section>
 
 <@section title="${uiLabelMap.ProductAddProductCategoryMember}">
-        <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr><@td>
-                <form method="post" action="<@ofbizUrl>addCategoryProductMember</@ofbizUrl>" style="margin: 0;" name="addProductCategoryMemberForm">
-                    <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-                    <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
-                    <div>
-                        <span>${uiLabelMap.ProductProductId}</span>
-                        <@htmlTemplate.lookupField formName="addProductCategoryMemberForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                        <br/>
-                        <span>${uiLabelMap.CommonFromDate}</span>
-                        <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-                          <br />
-                          <span>${uiLabelMap.CommonComments}</span> <textarea name="comments" rows="2" cols="40"></textarea>
-                          <input type="submit" value="${uiLabelMap.CommonAdd}" />
-                    </div>
-                </form>
-            </@td></@tr>
-        </@table>
+    <form method="post" action="<@ofbizUrl>addCategoryProductMember</@ofbizUrl>" name="addProductCategoryMemberForm">
+        <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
+        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
+        <@field type="generic" label="${uiLabelMap.ProductProductId}" required=true>
+            <@htmlTemplate.lookupField formName="addProductCategoryMemberForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonFromDate}" required=true>
+            <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonComments}">
+            <textarea name="comments" rows="2" cols="40"></textarea>
+        </@field>
+        <@field type="submitarea">
+            <input type="submit" value="${uiLabelMap.CommonAdd}" />
+        </@field>
+    </form>
 </@section>
 
 <@section title="${uiLabelMap.ProductCopyProductCategoryMembersToAnotherCategory}">
-        <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr><@td>
-                <form method="post" action="<@ofbizUrl>copyCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="copyCategoryProductMembersForm">
-                    <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-                    <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
-                    <div>
-                        <span>${uiLabelMap.ProductTargetProductCategory}</span>
-                        <@htmlTemplate.lookupField formName="copyCategoryProductMembersForm" name="productCategoryIdTo" id="productCategoryIdTo" fieldFormName="LookupProductCategory"/>
-                        <br />
-                        <span>${uiLabelMap.ProductOptionalFilterWithDate}</span>
-                        <@htmlTemplate.renderDateTimeField name="validDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="validDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <br />
-                        <span>${uiLabelMap.ProductIncludeSubCategories}</span>
-                        <select name="recurse">
-                            <option value="N">${uiLabelMap.CommonN}</option>
-                            <option value="Y">${uiLabelMap.CommonY}</option>
-                        </select>
-                        <input type="submit" value="${uiLabelMap.CommonCopy}" />
-                    </div>
-                </form>
-            </@td></@tr>
-        </@table>
+    <form method="post" action="<@ofbizUrl>copyCategoryProductMembers</@ofbizUrl>" name="copyCategoryProductMembersForm">
+        <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
+        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
+        <@field type="generic" label="${uiLabelMap.ProductTargetProductCategory}">
+            <@htmlTemplate.lookupField formName="copyCategoryProductMembersForm" name="productCategoryIdTo" id="productCategoryIdTo" fieldFormName="LookupProductCategory"/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ProductOptionalFilterWithDate}">
+            <@htmlTemplate.renderDateTimeField name="validDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="validDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ProductIncludeSubCategories}">
+            <select name="recurse">
+                <option value="N">${uiLabelMap.CommonN}</option>
+                <option value="Y">${uiLabelMap.CommonY}</option>
+            </select>
+        </@field>
+        <@field type="submitarea">
+            <input type="submit" value="${uiLabelMap.CommonCopy}" />
+        </@field>
+    </form>
 </@section>
 
 <@section title="${uiLabelMap.ProductExpireAllProductMembers}">
-        <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr><@td>
-                <form method="post" action="<@ofbizUrl>expireAllCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="expireAllCategoryProductMembersForm">
-                    <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-                    <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
-                    <div>
-                        <span>${uiLabelMap.ProductOptionalExpirationDate}</span>
-                        <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        &nbsp;&nbsp;<input type="submit" value="${uiLabelMap.CommonExpireAll}" />
-                    </div>
-                </form>
-            </@td></@tr>
-        </@table>
+    <form method="post" action="<@ofbizUrl>expireAllCategoryProductMembers</@ofbizUrl>" name="expireAllCategoryProductMembersForm">
+        <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
+        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
+        <@field type="generic" label="${uiLabelMap.ProductOptionalExpirationDate}">
+            <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+        </@field>
+        <@field type="submitarea">
+            <input type="submit" value="${uiLabelMap.CommonExpireAll}" />
+        </@field>
+    </form>
 </@section>
 
 <@section title="${uiLabelMap.ProductRemoveExpiredProductMembers}">
-        <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr><@td>
-                <form method="post" action="<@ofbizUrl>removeExpiredCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="removeExpiredCategoryProductMembersForm">
-                    <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-                    <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
-                    <div>
-                        <span>${uiLabelMap.ProductOptionalExpiredBeforeDate}</span>
-                        <@htmlTemplate.renderDateTimeField name="validDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="validDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        &nbsp;&nbsp;<input type="submit" value="${uiLabelMap.CommonRemoveExpired}" />
-                    </div>
-                </form>
-            </@td></@tr>
-        </@table>
+    <form method="post" action="<@ofbizUrl>removeExpiredCategoryProductMembers</@ofbizUrl>" name="removeExpiredCategoryProductMembersForm">
+        <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
+        <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
+        <@field type="generic" label="${uiLabelMap.ProductOptionalExpiredBeforeDate}">
+            <@htmlTemplate.renderDateTimeField name="validDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="validDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+        </@field>
+        <@field type="submitarea">
+            <input type="submit" value="${uiLabelMap.CommonRemoveExpired}" />
+        </@field>
+    </form>
 </@section>

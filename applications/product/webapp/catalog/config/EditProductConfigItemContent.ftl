@@ -70,40 +70,28 @@ function insertImageName(size,nameValue) {
 
     <#if configItemId?has_content && configItem?has_content>
         <@section title="${uiLabelMap.ProductCreateNewProductConfigItemContent}">
-                ${prepareAddProductContentWrapper.renderFormString(context)}
+            ${prepareAddProductContentWrapper.renderFormString(context)}
         </@section>
         
         <@section title="${uiLabelMap.ProductAddContentProductConfigItem}">
-                ${addProductContentWrapper.renderFormString(context)}
+            ${addProductContentWrapper.renderFormString(context)}
         </@section>
     </#if>
     <@section title="${uiLabelMap.ProductOverrideSimpleFields}">
-            <form action="<@ofbizUrl>updateProductConfigItemContent</@ofbizUrl>" method="post" style="margin: 0;" name="productForm">
+            <@form action=makeOfbizUrl("updateProductConfigItemContent") method="post" name="productForm">
                 <input type="hidden" name="configItemId" value="${configItemId!}" />
-              <@table type="fields" cellspacing="0" class="basic-table">
-                <@tr>
-                    <@td width="20%" align="right" valign="top">${uiLabelMap.CommonDescription}</@td>
-                    <@td>&nbsp;</@td>
-                    <@td width="80%" colspan="4" valign="top">
-                        <textarea name="description" cols="60" rows="2">${(configItem.description)!}</textarea>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="20%" align="right" valign="top">${uiLabelMap.ProductLongDescription}</@td>
-                    <@td>&nbsp;</@td>
-                    <@td width="80%" colspan="4" valign="top">
-                        <textarea name="longDescription" cols="60" rows="7">${(configItem.longDescription)!}</textarea>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="20%" align="right" valign="top">
-                        ${uiLabelMap.ProductSmallImage}
-                        <#if (configItem.imageUrl)??>
-                            <a href="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" target="_blank" class="${styles.button_default!}"><img alt="Image" src="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" class="cssImgSmall" /></a>
-                        </#if>
-                    </@td>
-                    <@td>&nbsp;</@td>
-                    <@td width="80%" colspan="4" valign="top">
+                <@field type="generic" label="${uiLabelMap.CommonDescription}">
+                    <textarea name="description" cols="60" rows="2">${(configItem.description)!}</textarea>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductLongDescription}">
+                    <textarea name="longDescription" cols="60" rows="7">${(configItem.longDescription)!}</textarea>
+                </@field>
+                <#assign labelDetail>
+                    <#if (configItem.imageUrl)??>
+                        <a href="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Image" src="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" class="cssImgSmall" /></a>
+                    </#if>
+                </#assign>
+                <@field type="generic" label="${uiLabelMap.ProductSmallImage}" labelDetail=labelDetail>
                     <input type="text" name="imageUrl" value="${(configItem.imageUrl)?default(imageNameSmall + '.jpg')}" size="60" maxlength="255" />
                     <#if configItemId?has_content>
                         <div>
@@ -113,21 +101,19 @@ function insertImageName(size,nameValue) {
                         <a href="javascript:insertImageName('small','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
                         </div>
                     </#if>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td colspan="2">&nbsp;</@td>
-                    <@td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" /></@td>
-                    <@td colspan="3">&nbsp;</@td>
-                </@tr>
-              </@table>
-            </form>
+                </@field>
+                <@field type="submitarea">
+                    <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" />
+                </@field>
+            </@form>
     </@section>
     
     <@section title="${uiLabelMap.ProductUploadImage}">
-            <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductConfigItemImage?configItemId=${configItemId}&amp;upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
-                <input type="file" size="50" name="fname" />
-                <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductUploadImage}" />
-            </form>
+            <@form method="post" enctype="multipart/form-data" action=makeOfbizUrl("UploadProductConfigItemImage?configItemId=${configItemId}&amp;upload_file_type=small") name="imageUploadForm">
+                <@field type="file" size="50" name="fname" />
+                <@field type="submitarea">
+                    <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductUploadImage}" />
+                </@field>
+            </@form>
     </@section>
 </#if>

@@ -60,70 +60,52 @@ under the License.
         <@resultMsg>${uiLabelMap.ProductNoExistingProductsFound}.</@resultMsg>
       </#if>
 
+      <@row>
+        <@cell>
         <form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
             <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
-            <@table type="fields" cellspacing="0" class="basic-table">
                 <#list productFeatureAndTypeDatas! as productFeatureAndTypeData>
                 <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
                 <#assign productFeature = productFeatureAndTypeData.productFeature>
                 <#assign productFeatureTypeId = productFeatureType.productFeatureTypeId>
-                <@tr>
-                    <@td width="15%">${productFeatureType.description}</@td>
-                    <@td>
-                            ${productFeature.description}
-                            <#if requestParameters["pftsel_" + productFeatureTypeId]??>
-                                <input type="hidden" name="pftsel_${productFeatureTypeId}" value="Y"/>
-                                [${uiLabelMap.ProductSelectable}]
-                            <#else>
-                                <input type="hidden" name="pftsel_${productFeatureTypeId}" value="N"/>
-                                [${uiLabelMap.ProductStandard}]
-                            </#if>
-                    </@td>
-                </@tr>
+                <@field type="display" label="${productFeatureType.description}">
+                    ${productFeature.description}
+                    <#if requestParameters["pftsel_" + productFeatureTypeId]??>
+                        <input type="hidden" name="pftsel_${productFeatureTypeId}" value="Y"/>
+                        [${uiLabelMap.ProductSelectable}]
+                    <#else>
+                        <input type="hidden" name="pftsel_${productFeatureTypeId}" value="N"/>
+                        [${uiLabelMap.ProductStandard}]
+                    </#if>
+                </@field>
                 </#list>
-                <@tr>
-                    <@td width="15%">${uiLabelMap.ProductInternalName}:</@td>
-                    <@td>
-                        <input type="hidden" name="internalName" value="${requestParameters.internalName!}"/>
+                <@field type="display" label="${uiLabelMap.ProductInternalName}">
+                    <input type="hidden" name="internalName" value="${requestParameters.internalName!}"/>
                         <div>&nbsp;${requestParameters.internalName?default("&nbsp;")}</div>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="15%">${uiLabelMap.ProductProductName}:</@td>
-                    <@td>
-                        <input type="hidden" name="productName" value="${requestParameters.productName!}"/>
+                </@field>
+                <@field type="display" label="${uiLabelMap.ProductProductName}">
+                    <input type="hidden" name="productName" value="${requestParameters.productName!}"/>
                         <div>&nbsp;${requestParameters.productName?default("&nbsp;")}</div>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="15%">${uiLabelMap.ProductShortDescription}:</@td>
-                    <@td>
-                        <input type="hidden" name="description" value="${requestParameters.description!}"/>
+                </@field>
+                <@field type="display" label="${uiLabelMap.ProductShortDescription}">
+                    <input type="hidden" name="description" value="${requestParameters.description!}"/>
                         <div>&nbsp;${requestParameters.description?default("&nbsp;")}</div>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="15%">${uiLabelMap.ProductDefaultPrice}:</@td>
-                    <@td>
-                        <input type="hidden" name="defaultPrice" value="${requestParameters.defaultPrice!}"/>
+                </@field>
+                <@field type="display" label="${uiLabelMap.ProductDefaultPrice}">
+                    <input type="hidden" name="defaultPrice" value="${requestParameters.defaultPrice!}"/>
                         <input type="hidden" name="currencyUomId" value="${requestParameters.currencyUomId!}"/>
                         <div>&nbsp;${requestParameters.defaultPrice?default("&nbsp;")}&nbsp;${requestParameters.currencyUomId?default("&nbsp;")}</div>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td width="15%">${uiLabelMap.ProductAverageCost}:</@td>
-                    <@td>
-                        <input type="hidden" name="averageCost" value="${requestParameters.averageCost!}"/>
+                </@field>
+                <@field type="display" label="${uiLabelMap.ProductAverageCost}">
+                    <input type="hidden" name="averageCost" value="${requestParameters.averageCost!}"/>
                         <div>&nbsp;${requestParameters.averageCost?default("&nbsp;")}</div>
-                    </@td>
-                </@tr>
-                <@tr>
-                    <@td colspan="3">
-                            ${uiLabelMap.ProductNewProductId}: <input type="text" name="productId" value=""/>
-                            <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="smallSubmit ${styles.button_default!}"/>
-                    </@td>
-                </@tr>
-            </@table>
+                </@field>
+                <@field type="input" label="${uiLabelMap.ProductNewProductId}" name="productId" value="" />
+                <@field type="submitarea">
+                    <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="smallSubmit ${styles.button_default!}"/>
+                </@field>
         </form>
+        </@cell>
+      </@row>
 </@section>

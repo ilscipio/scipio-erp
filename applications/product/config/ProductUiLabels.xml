@@ -18353,6 +18353,18 @@
         <value xml:lang="zh">HTML搜索参数</value>
         <value xml:lang="zh_TW">HTML搜尋參數</value>
     </property>
+    <property key="ProductSearchParameters">
+        <value xml:lang="de">Suchparameter</value>
+        <value xml:lang="en">Search Parameters</value>
+        <value xml:lang="es">Parámetros de búsqueda</value>
+        <value xml:lang="fr">Paramètres de recherche</value>
+        <value xml:lang="it">Parametri di Ricerca</value>
+        <value xml:lang="ja">検索パラメータ</value>
+        <value xml:lang="th">ค้นหาพารามิเตอร์</value>
+        <value xml:lang="vi">Tham số tìm kiếm</value>
+        <value xml:lang="zh">搜索参数</value>
+        <value xml:lang="zh_TW">搜尋參數</value>
+    </property>
     <property key="ProductIdCode">
         <value xml:lang="de">ID Code</value>
         <value xml:lang="en">ID Code</value>

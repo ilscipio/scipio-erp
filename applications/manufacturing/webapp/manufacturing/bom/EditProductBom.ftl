@@ -62,7 +62,7 @@ function lookupBom() {
             <@field type="generic" label="${uiLabelMap.ProductProductId}">
               <@htmlTemplate.lookupField value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
             </@field>
-            <@field type="generic" requireTitleArea=true>
+            <@field type="generic">
                 <span><a href="javascript:document.searchform.submit();" class="${styles.button_default!}">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
             </@field>
         </@cell>
@@ -72,7 +72,7 @@ function lookupBom() {
             <@field type="generic" label="${uiLabelMap.ManufacturingCopyToProductId}">
                 <@htmlTemplate.lookupField formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
             </@field>
-            <@field type="generic" requireTitleArea=true>
+            <@field type="generic">
                 <span><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="${styles.button_default!}">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
             </@field>
         </@cell>

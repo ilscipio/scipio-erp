@@ -16,26 +16,24 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="post" name="quickCreateVirtualWithVariants">
-<@table type="fields" cellspacing="0" class="basic-table">
-    <@thead>
-    <@tr class="header-row">
-        <@th>${uiLabelMap.ProductQuickCreateVirtualFromVariants}</@th>
-    </@tr>
-    </@thead>
-    <@tr>
-        <@td>
-            <span>${uiLabelMap.ProductVariantProductIds}:</span>
+
+<@section title="${uiLabelMap.ProductQuickCreateVirtualFromVariants}">
+    <form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="post" name="quickCreateVirtualWithVariants">
+        <@field type="generic" label="${uiLabelMap.ProductVariantProductIds}">
             <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
-            <span>Hazmat:</span>
+        </@field>
+        
+        <@field type="generic" label="Hazmat">
             <select name="productFeatureIdOne">
                 <option value="">- ${uiLabelMap.CommonNone} -</option>
                 <#list hazmatFeatures as hazmatFeature>
                     <option value="${hazmatFeature.productFeatureId}">${hazmatFeature.description}</option>
                 </#list>
             </select>
+        </@field>  
+        
+        <@field type="submitarea">
             <input type="submit" value="${uiLabelMap.ProductCreateVirtualProduct}"/>
-        </@td>
-    </@tr>
-</@table>
-</form>
+        </@field> 
+    </form>
+</@section>

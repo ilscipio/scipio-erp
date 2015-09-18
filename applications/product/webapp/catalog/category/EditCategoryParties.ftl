@@ -68,23 +68,24 @@ under the License.
         </@table>
     </@section>
     <@section title="${uiLabelMap.ProductAssociatePartyToCategory}">
-            <@table type="fields" cellspacing="0" class="basic-table">
-                <@tr>
-                    <@td>
-                        <form method="post" action="<@ofbizUrl>addPartyToCategory</@ofbizUrl>" style="margin: 0;" name="addNewForm">
-                            <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
-                            <input type="text" size="20" maxlength="20" name="partyId" value="" />
-                            <select name="roleTypeId" size="1">
-                            <#list roleTypes as roleType>
-                                <option value="${(roleType.roleTypeId)!}" <#if roleType.roleTypeId.equals("_NA_")> selected="selected"</#if>>${(roleType.get("description",locale))!}</option>
-                            </#list>
-                            </select>
-
-                            <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                            <input type="submit" value="${uiLabelMap.CommonAdd}" />
-                        </form>
-                    </@td>
-                </@tr>
-            </@table>
+        <@form fieldsLabelArea=false method="post" action=makeOfbizUrl("addPartyToCategory") name="addNewForm">
+            <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
+            <@field type="generic">
+                <input type="text" size="20" maxlength="20" name="partyId" value="" />
+            </@field>
+            <@field type="generic">
+                <select name="roleTypeId" size="1">
+                <#list roleTypes as roleType>
+                    <option value="${(roleType.roleTypeId)!}" <#if roleType.roleTypeId.equals("_NA_")> selected="selected"</#if>>${(roleType.get("description",locale))!}</option>
+                </#list>
+                </select>
+            </@field>
+            <@field type="generic">
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.CommonAdd}" />
+            </@field>
+        </@form>
     </@section>
 </#if>

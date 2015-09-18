@@ -501,7 +501,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
     <#-- don't use this condition, because if label is present on @field it should override fieldsLabelArea=false: 
               !(fieldsLabelArea?is_boolean && fieldsLabelArea == false) && -->
     <#if (labelArea?is_boolean && labelArea == true) || (!(labelArea?is_boolean && labelArea == false) && 
-          (((label?has_content || (fieldsLabelArea?is_boolean && fieldsLabelArea == true)) && type != "submitarea")))>
+          (((label?has_content || labelDetail?has_content || (fieldsLabelArea?is_boolean && fieldsLabelArea == true)) && type != "submitarea")))>
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         
@@ -518,10 +518,10 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
                 <#else>
                     <span class="prefix form-field-label">${label}</span>
                 </#if>  
-                <#if labelDetail?has_content>
-                  ${labelDetail}
-                </#if>     
-              </#if>   
+              </#if> 
+              <#if labelDetail?has_content>
+                ${labelDetail}
+              </#if>    
             </@cell>
         </#if>
     </#if>

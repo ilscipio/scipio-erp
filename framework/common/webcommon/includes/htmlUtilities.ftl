@@ -249,9 +249,7 @@ this is one such mechanism (other option: layoutSettings? TODO? any way is messy
 Ideally this shouldn't needed and getOfbizUrl should just work, but URLs are generated
 dynamic using controller request defs and can't predict URL patterns unless rewrite
 @ofbizUrl in JS.  
-
-FIXME: #global FTL variable may not be reliable, may need to use request attrib...                  
-                    
+         
    * Parameters *
     url             = controller request uri
 -->
@@ -362,6 +360,8 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     Usage example:  
     <@field attr="" />
     
+FIXME: #globals should be changed to request attributes, otherwise don't survive screens.render
+    
     * General Attributes *
     type            = form element of type [input,textarea,datetime,select,checkbox,radio,display,generic],
                       default generic meaning input defined manually with #nested
@@ -370,6 +370,10 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     label           = field label
                       note: title/label area behavior may also be influenced by containing macros such as @form
     labelDetail     = extra content (HTML) inserted with (after) label
+    labelArea       = boolean, default empty string (don't influence default based on other settings).
+                      if true, forces a title/label area.
+                      if false, prevents a title/label area.
+    labelType       = [default] reserved for future use.
     tooltip         = Small field description - to be displayed to the customer
     description     = alternative to tooltip
     name            = field name
@@ -444,7 +448,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
         fieldFormName="" formName="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
-        noTitleArea=false requireTitleArea=false description="">
+        labelType="default" labelArea="" description="">
 <#-- treat these as synonyms for now -->
 <#if tooltip?has_content>
   <#if !description?has_content>
@@ -481,15 +485,21 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 </#if>
 
 <@row collapse=collapse!false norows=norows class="form-field-entry">
-    <#-- TODO?: in future a fieldsLabels default might be inferred from form type or fieldsType 
-         for now, set to true by default things generic and display fields will align and not look crazy. -->
-    <#local fieldsLabels = (request.getAttribute("catoCurrentFormInfo").fieldsLabels)!"">
-    <#if !fieldsLabels?is_boolean>
-      <#local fieldsLabels = true>
+    <#local fieldsType = (request.getAttribute("catoCurrentFormInfo").fieldsType)!"generic">
+    <#-- TODO?: in future fieldsLabelArea and fieldsLabelType default might be inferred from form type or fieldsType 
+         for now, just set fieldsLabelArea to true so by default generic and display fields will align with other fields
+         and not look crazy. 
+         fieldsType should be used and it would determine the two others implicitly, though they can be overridden.
+         for the time being, not often needed.
+    -->
+    <#local fieldsLabelType = (request.getAttribute("catoCurrentFormInfo").fieldsLabelType)!"default">
+    <#local fieldsLabelArea = (request.getAttribute("catoCurrentFormInfo").fieldsLabelArea)!"">
+    <#if !fieldsLabelArea?is_boolean>
+      <#local fieldsLabelArea = true>
     </#if>
 
-    <#if !noTitleArea && !(fieldsLabels?is_boolean && fieldsLabels == false) && 
-         ((((fieldsLabels?is_boolean && fieldsLabels == true) || label?has_content) && type != "submitarea") || requireTitleArea)>
+    <#if (labelArea?is_boolean && labelArea == true) || (!(labelArea?is_boolean && labelArea == false) && !(fieldsLabelArea?is_boolean && fieldsLabelArea == false) && 
+          (((label?has_content || (fieldsLabelArea?is_boolean && fieldsLabelArea == true)) && type != "submitarea")))>
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         
@@ -750,17 +760,20 @@ Set current heading level manually. For advanced markup, bypassing @section (but
                                     maybe it should cause to omit <form> element
     class               = classes on form element itself
     fieldsType          = [generic], default generic. reserved for future use
-    fieldsLabels        = boolean, default based on form type and/or fieldsType but usually true.
+    fieldsLabelArea     = boolean, default based on form type and/or fieldsType.
                           overrides whether fields are expected to have labels or not. can specify explicit
-                          true or explicit false.
+                          true or explicit false. logic is influenced by both fieldsType and individual field type.
+                          does not apply to submit and potentially other special fields. (weaker than @field's labelArea arg).
+    fieldsLabelType     = [default|none], default based on form type and/or fieldsType. reserved for future use.
+                          none: same result as fieldsLabelArea=none (but not forced? TODO)      
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
 -->
-<#macro form type="input" class=true fieldsType="generic" fieldsLabels="" attribs={} inlineAttribs...>
+<#macro form type="input" class=true fieldsType="generic" fieldsLabelArea="" fieldsLabelType="default" attribs={} inlineAttribs...>
     <#local classes = makeClassesArg(class, "")>
     <#-- note: no stacking needed because forms can't nest -->
     <#local dummy = request.setAttribute("catoCurrentFormInfo", 
-        {"type": type, "fieldsType": fieldsType, "fieldsLabels":fieldsLabels})!>
+        {"type": type, "fieldsType": fieldsType, "fieldsLabelArea":fieldsLabelArea, "fieldsLabelType":fieldsLabelType})!>
     <form<#if classes?has_content> class="${classes}</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
       <#nested>
     </form>
@@ -1421,6 +1434,8 @@ Creates a very basic wrapper for code blocks
 ************
 Helps define table. Required wrapper for all table sub-elem macros.
 
+FIXME: #globals should be changed to request attributes, otherwise don't survive screens.render
+
     Usage example:  
     <@table type="data-list" class="basic-table" id="my-table">
       <@thead>
@@ -1639,6 +1654,8 @@ Helps define table. Required wrapper for all table sub-elem macros.
 * Table row
 ************
 Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
+                 
+FIXME: #globals should be changed to request attributes, otherwise don't survive screens.render
                     
    * General Attributes *
     type            = [generic|content|meta|util], default generic or content (depends on table type)

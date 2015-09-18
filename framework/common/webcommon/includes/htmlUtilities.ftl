@@ -367,7 +367,8 @@ Set current heading level manually. For advanced markup, bypassing @section (but
                       default generic meaning input defined manually with #nested
                       (discouraged; prefer specific; but sometimes required and useful
                       for transition)
-    label           = form label
+    label           = field label
+                      note: title/label area behavior may also be influenced by containing macros such as @form
     labelDetail     = extra content (HTML) inserted with (after) label
     tooltip         = Small field description - to be displayed to the customer
     description     = alternative to tooltip
@@ -480,7 +481,10 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 </#if>
 
 <@row collapse=collapse!false norows=norows class="form-field-entry">
-    <#if !noTitleArea && ((label?has_content && type != "submitarea") || type == "display" || requireTitleArea)>
+    <#local fieldsLabels = (request.getAttribute("catoCurrentFormInfo").fieldsLabels)!"default">
+    <#local labelsExpected = (fieldsLabels != "none")>
+
+    <#if !noTitleArea && (((labelsExpected || label?has_content) && type != "submitarea") || requireTitleArea)>
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         
@@ -722,6 +726,41 @@ Set current heading level manually. For advanced markup, bypassing @section (but
     <@renderFieldGroupOpen style=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip=""/>
         <#nested />
     <@renderFieldGroupClose style="" id="" title=""/>
+</#macro>
+
+<#-- 
+*************
+* Form Macro
+************
+    Usage example:  
+    <@form type="generic" fieldsInfo={labels:false}>
+        <input type="hidden" ... />
+        <@field ... />
+        <@field ... />
+    </@form>            
+                    
+   * General Attributes *
+    type                = [input|display], default input
+                          DEV NOTE: "display" is special for time being, probably rare or unused;
+                                    maybe it should cause to omit <form> element
+    class               = classes on form element itself
+    fieldsType          = [generic], default generic. reserved for future use
+    fieldsLabels        = [default|none], default "default". how labels are used in fields of this form. 
+                          default: TODO: exact default behavior to be determined
+                          none: fields are not expected to have labels.
+    attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
+    inlineAttribs       = other attributes for HTML <form> element
+-->
+<#macro form type="input" class=true fieldsType="generic" fieldsLabels="default" attribs={} inlineAttribs...>
+    <#local classes = makeClassesArg(class, "")>
+    <#-- note: no stacking needed because forms can't nest -->
+    <#local dummy = request.setAttribute("catoCurrentFormInfo", 
+        {"type": type, "fieldsType": fieldsType, "fieldsLabels":fieldsLabels})!>
+    <form<#if classes?has_content> class="${classes}</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+      <#nested>
+    </form>
+    <#-- must unset this so @field can still work without a @form parent -->
+    <#local dummy = request.removeAttribute("catoCurrentFormInfo")!>
 </#macro>
 
 

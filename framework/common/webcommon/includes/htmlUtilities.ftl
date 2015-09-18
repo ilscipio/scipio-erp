@@ -498,7 +498,9 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
       <#local fieldsLabelArea = true>
     </#if>
 
-    <#if (labelArea?is_boolean && labelArea == true) || (!(labelArea?is_boolean && labelArea == false) && !(fieldsLabelArea?is_boolean && fieldsLabelArea == false) && 
+    <#-- don't use this condition, because if label is present on @field it should override fieldsLabelArea=false: 
+              !(fieldsLabelArea?is_boolean && fieldsLabelArea == false) && -->
+    <#if (labelArea?is_boolean && labelArea == true) || (!(labelArea?is_boolean && labelArea == false) && 
           (((label?has_content || (fieldsLabelArea?is_boolean && fieldsLabelArea == true)) && type != "submitarea")))>
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>

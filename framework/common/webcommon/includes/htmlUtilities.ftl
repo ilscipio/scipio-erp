@@ -481,10 +481,15 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 </#if>
 
 <@row collapse=collapse!false norows=norows class="form-field-entry">
-    <#local fieldsLabels = (request.getAttribute("catoCurrentFormInfo").fieldsLabels)!"default">
-    <#local labelsExpected = (fieldsLabels != "none")>
+    <#-- TODO?: in future a fieldsLabels default might be inferred from form type or fieldsType 
+         for now, set to true by default things generic and display fields will align and not look crazy. -->
+    <#local fieldsLabels = (request.getAttribute("catoCurrentFormInfo").fieldsLabels)!"">
+    <#if !fieldsLabels?is_boolean>
+      <#local fieldsLabels = true>
+    </#if>
 
-    <#if !noTitleArea && (((labelsExpected || label?has_content) && type != "submitarea") || requireTitleArea)>
+    <#if !noTitleArea && !(fieldsLabels?is_boolean && fieldsLabels == false) && 
+         ((((fieldsLabels?is_boolean && fieldsLabels == true) || label?has_content) && type != "submitarea") || requireTitleArea)>
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         
@@ -745,13 +750,13 @@ Set current heading level manually. For advanced markup, bypassing @section (but
                                     maybe it should cause to omit <form> element
     class               = classes on form element itself
     fieldsType          = [generic], default generic. reserved for future use
-    fieldsLabels        = [default|none], default "default". how labels are used in fields of this form. 
-                          default: TODO: exact default behavior to be determined
-                          none: fields are not expected to have labels.
+    fieldsLabels        = boolean, default based on form type and/or fieldsType but usually true.
+                          overrides whether fields are expected to have labels or not. can specify explicit
+                          true or explicit false.
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
 -->
-<#macro form type="input" class=true fieldsType="generic" fieldsLabels="default" attribs={} inlineAttribs...>
+<#macro form type="input" class=true fieldsType="generic" fieldsLabels="" attribs={} inlineAttribs...>
     <#local classes = makeClassesArg(class, "")>
     <#-- note: no stacking needed because forms can't nest -->
     <#local dummy = request.setAttribute("catoCurrentFormInfo", 

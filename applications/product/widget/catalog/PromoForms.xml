@@ -125,7 +125,7 @@ under the License.
         <field name="productPromoContentTypeId"><hidden value="ORIGINAL_IMAGE_URL"/></field>
         <field name="fromDate" use-when="productPromoContent == null" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
         <field name="fromDate" use-when="productPromoContent != null" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-time/></field>
         <field name="uploadedFile" title="${uiLabelMap.ProductFile}"><file/></field>
         <field use-when="productPromoContent == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field use-when="productPromoContent != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>

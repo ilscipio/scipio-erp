@@ -88,7 +88,7 @@ under the License.
             <display-entity entity-name="ProductCategoryContentType" also-hidden="false" description="${description}"/>
         </field>
         <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="thruDate" position="2"><display/></field>
         <!--
         jacopoc: I've disabled the ability to update a content record because it was not working
         <field name="thruDate"><date-time type="timestamp"/></field>
@@ -191,7 +191,7 @@ under the License.
         <field name="linkSeqId" use-when="productCategoryLink!=null"><display/></field>
         <field use-when="productCategoryLink != null" name="fromDate" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="productCategoryLink == null" name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-time/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequence}"><text maxlength="5" size="5"/></field>
         <field name="imageUrl" tooltip="${uiLabelMap.ProductImageUrlTooltip}"><text size="60" maxlength="255"/></field>
         <field name="linkTypeEnumId" title="${uiLabelMap.ProductLinkTypeEnumId}">
@@ -296,7 +296,7 @@ under the License.
         <auto-fields-entity entity-name="ProductCategoryContent" map-name="productCategoryContentData"/>
         <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFromDate}*" ><date-time/></field>
         <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFromDate}" ><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
         <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}"></field>
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>

@@ -90,7 +90,7 @@ under the License.
         <field name="roleTypeId" use-when="productStoreRole!=null" title="${uiLabelMap.PartyRoleTypeId}"><display-entity entity-name="RoleType"/></field>
         <field name="fromDate" use-when="productStoreRole==null" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
         <field name="fromDate" use-when="productStoreRole!=null" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="thruDate" position="2"><date-time/></field>
         <field name="sequenceNum"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" use-when="productStoreRole==null" widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -145,9 +145,9 @@ under the License.
             </drop-down>
         </field>
         <field name="sequenceNum" ><text size="3"/></field>
-        <field name="fromDate"   use-when="productStoreFacility != null"><display type="date-time"/></field>
-        <field name="fromDate"   use-when="productStoreFacility == null"><date-time type="date" input-method="time-dropdown"/></field>
-        <field name="thruDate"><date-time type="date" input-method="time-dropdown"/></field>
+        <field name="fromDate" use-when="productStoreFacility != null"><display type="date-time"/></field>
+        <field name="fromDate" use-when="productStoreFacility == null"><date-time type="date" input-method="time-dropdown"/></field>
+        <field name="thruDate" position="2"><date-time type="date" input-method="time-dropdown"/></field>
         <field name="submitButton" title="${groovy: productStoreFacility == null ? uiLabelMap.CommonAdd : uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>

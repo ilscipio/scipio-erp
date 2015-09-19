@@ -1040,7 +1040,7 @@
             </drop-down>
         </field>
         <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="thruDate" position="2"><date-time/></field>
         <field name="manualOnly">
             <drop-down>
                 <option key="N" description="${uiLabelMap.CommonN}"/>

@@ -108,8 +108,8 @@
                 <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
             </drop-down>
         </field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
-        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
+        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}" required-field="true"><date-time type="date"/></field>
+        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}" position="2" required-field="true"><date-time type="date"/></field>
         <field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
         <field name="submitButton" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" use-when="leaveApp!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -171,7 +171,7 @@
         <field name="leaveTypeId"><display/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="thruDate" position="2"><display/></field>
         <field name="description"><display/></field>
         <field name="leaveStatus" title="${uiLabelMap.HumanResLeaveStatus}">
             <drop-down allow-empty="false">

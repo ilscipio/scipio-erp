@@ -33,9 +33,9 @@
         </field>
         <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="firstName"><text-find/></field>
-        <field name="lastName"><text-find/></field>
+        <field name="lastName" position="2"><text-find/></field>
         <field name="fromDate"><date-find/></field>
-        <field name="thruDate"><date-find/></field>
+        <field name="thruDate" position="2"><date-find/></field>
         <field name="terminationReasonId" title="${uiLabelMap.HumanResTerminationReasonId}"><lookup target-form-name="LookupTerminationReason"/></field>
         <field name="terminationTypeId">
             <drop-down allow-empty="true" current-description="">
@@ -122,12 +122,12 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyIdFrom" use-when="employment!=null" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
+        <field name="partyIdFrom" use-when="employment!=null" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}"><hidden/></field>
         <field name="partyIdTo" use-when="employment==null" title="${uiLabelMap.HumanResEmployeePartyIdTo}" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyIdTo" use-when="employment!=null" title="${uiLabelMap.HumanResEmployeePartyIdTo}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
-        <field name="fromDate" use-when="employment==null" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time/></field>
-        <field name="fromDate" use-when="employment!=null" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field name="thruDate" use-when="employment!=null" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="partyIdTo" use-when="employment!=null" title="${uiLabelMap.HumanResEmployeePartyIdTo}"><hidden/></field>
+        <field name="fromDate" use-when="employment==null" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}" required-field="true"><date-time/></field>
+        <field name="fromDate" use-when="employment!=null" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="thruDate" use-when="employment!=null" title="${uiLabelMap.CommonThruDate}" position="2"><date-time/></field>
         <field name="terminationReasonId" use-when="employment!=null" title="${uiLabelMap.HumanResTerminationReasonId}">
             <drop-down allow-empty="true" no-current-selected-key="------">
                 <entity-options description="${description}" key-field-name="terminationReasonId" entity-name="TerminationReason">
@@ -422,10 +422,10 @@
     <form name="AddAgreementEmploymentAppl" type="single" target="createAgreementEmploymentAppl" default-map-name="agreementEmploymentAppl"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createAgreementEmploymentAppl" default-field-type="display"/>
-        <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupAgreement"/></field>
-        <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupAgreementEmploymentAppl"/></field>
+        <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><lookup target-form-name="LookupAgreement"/></field>
+        <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" position="2"><lookup target-form-name="LookupAgreementEmploymentAppl"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.HumanResPartyIdFrom}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyIdTo" title="${uiLabelMap.HumanResPartyIdTo}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdTo" title="${uiLabelMap.HumanResPartyIdTo}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="roleTypeIdFrom" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" key-field-name="roleTypeId" entity-name="RoleType">
@@ -433,7 +433,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="roleTypeIdTo" tooltip="${uiLabelMap.CommonRequired}">
+        <field name="roleTypeIdTo" tooltip="${uiLabelMap.CommonRequired}" position="2" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" key-field-name="roleTypeId" entity-name="RoleType">
                     <entity-order-by field-name="description"/>
@@ -442,7 +442,7 @@
         </field>
         <field name="fromDate"><date-time/></field>
         <field name="agreementDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="thruDate" position="2"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
 </forms>

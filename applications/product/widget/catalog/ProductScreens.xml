@@ -158,9 +158,7 @@ under the License.
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditProduct}">
-                            <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/EditProduct.ftl"/></html>
-                            </platform-specific>
+                            <include-form location="component://product/widget/catalog/ProductForms.xml" name="EditProduct"/>
                         </screenlet>
 
                         <!-- 
@@ -911,6 +909,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProductContent">
         <section>
             <actions>
@@ -951,6 +950,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProductContentContent">
         <section>
             <actions>

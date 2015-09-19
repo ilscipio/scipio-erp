@@ -56,79 +56,46 @@ under the License.
 <@section title="${uiLabelMap.PageTitleAddProductStoreSurveys}">
         <form name="addSurvey" action="<@ofbizUrl>createProductStoreSurveyAppl</@ofbizUrl>" method="post">
             <input type="hidden" name="productStoreId" value="${productStoreId}" />
-            <@table type="fields" cellspacing="0" class="basic-table">
-              <@tr>
-                <@td>${uiLabelMap.CommonType}</@td>
-                <@td>
+              <@field type="generic" label="${uiLabelMap.CommonType}">
                   <select name="surveyApplTypeId">
                     <#list surveyApplTypes as type>
                       <option value="${type.surveyApplTypeId}">${type.get("description",locale)}</option>
                     </#list>
                   </select>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>${uiLabelMap.CommonGroup} ${uiLabelMap.CommonName}</@td>
-                <@td>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.CommonGroup} ${uiLabelMap.CommonName}">
                   <input type="text" size="20" name="groupName" />
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>${uiLabelMap.CommonSurveys}</@td>
-                <@td>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.CommonSurveys}">
                   <select name="surveyId">
                     <#list surveys as survey>
                       <option value="${survey.surveyId}">${survey.description?default("[" + survey.surveyId + "]")}</option>
                     </#list>
                   </select>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>${uiLabelMap.ProductProductId}</@td>
-                <@td>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductProductId}">
                   <input type="text" size="20" name="productId" />
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>${uiLabelMap.ProductCategoryId}</@td>
-                <@td>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductCategoryId}">
                   <@htmlTemplate.lookupField formName="addSurvey" name="productCategoryId" id="productCategoryId" fieldFormName="LookupProductCategory"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>${uiLabelMap.CommonFromDate}</@td>
-                <@td>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.CommonFromDate}">
                   <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>${uiLabelMap.CommonThruDate}</@td>
-                <@td>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.CommonThruDate}">
                   <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>${uiLabelMap.ProductStoreSurveyTemplatePath}</@td>
-                <@td>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductStoreSurveyTemplatePath}">
                   <input type="text" size="30" name="surveyTemplate" />
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>${uiLabelMap.ProductStoreSurveyResultTemplatePath}</@td>
-                <@td>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductStoreSurveyResultTemplatePath}">
                   <input type="text" size="30" name="resultTemplate" />
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>${uiLabelMap.CommonSequenceNum}</@td>
-                <@td>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.CommonSequenceNum}">
                   <input type="text" size="5" name="sequenceNum" />
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>&nbsp;</@td>
-                <@td><input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}" /></@td>
-              </@tr>
-            </@table>
+              </@field>
+              <@field type="submitarea">
+                  <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}" />
+              </@field>
         </form>
 </@section>

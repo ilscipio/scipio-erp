@@ -61,45 +61,44 @@ function doPublish() {
 
 <@section title="${uiLabelMap.PageTitleEditProductQuickAdmin}">
         <!-- Name update section -->
-        <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method="post" style="margin: 0;" name="editProduct">
+        <@form fieldsLabelArea=false action=makeOfbizUrl("updateProductQuickAdminName") method="post" name="editProduct">
             <input type="hidden" name="productId" value="${productId!}"/>
             <#if (product.isVirtual)! == "Y">
                 <input type="hidden" name="isVirtual" value="Y"/>
             </#if>
-            <@table type="fields" cellspacing="0" class="basic-table">
-                <@tr>
-                    <@td><h2>${productId!}</h2></@td>
-                    <@td><input type="text" name="productName" size="40" maxlength="40" value="${product.productName!}"/></@td>
-                    <@td><input type="submit" value="${uiLabelMap.ProductUpdateName}"/></@td>
-                </@tr>
-            </@table>
-        </form>
+            <@heading>${productId!}</@heading>
+            <@field type="input" name="productName" size="40" maxlength="40" value="${product.productName!}" />
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.ProductUpdateName}"/>
+            </@field>
+        </@form>
 </@section>
 
 <#if (product.isVirtual)! == "Y">
 <@section title="${uiLabelMap.ProductSelectableFeatures}">
         <!-- ***************************************************** Selectable features section -->
-        <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeatureTypeSelector">
+    <@row>
+      <@cell>   
+        <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="post" name="selectableFeatureTypeSelector">
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <@table type="fields" cellspacing="0" class="basic-table">
-                <@tr>
-                    <@td colspan="2"><span>${uiLabelMap.CommonType}</span>
-                        <select name="productFeatureTypeId" onchange="javascript:document.selectableFeatureTypeSelector.submit();">
-                            <option value="~~any~~">${uiLabelMap.ProductAnyFeatureType}</option>
-                            <#list featureTypes as featureType>
-                                <#if (featureType.productFeatureTypeId)! == (productFeatureTypeId)!>
-                                    <#assign selected="selected"/>
-                                <#else>
-                                    <#assign selected=""/>
-                                </#if>
-                                <option ${selected} value="${featureType.productFeatureTypeId!}">${featureType.get("description",locale)!}</option>
-                            </#list>
-                        </select>
-                    </@td>
-                </@tr>
-            </@table>
+            <@field type="generic" label="${uiLabelMap.CommonType}">
+                <select name="productFeatureTypeId" onchange="javascript:document.selectableFeatureTypeSelector.submit();">
+                    <option value="~~any~~">${uiLabelMap.ProductAnyFeatureType}</option>
+                    <#list featureTypes as featureType>
+                        <#if (featureType.productFeatureTypeId)! == (productFeatureTypeId)!>
+                            <#assign selected="selected"/>
+                        <#else>
+                            <#assign selected=""/>
+                        </#if>
+                        <option ${selected} value="${featureType.productFeatureTypeId!}">${featureType.get("description",locale)!}</option>
+                    </#list>
+                </select>
+            </@field>
         </form>
-        <br />
+      </@cell>
+    </@row>
+    <@row>
+      <@cell>
         <form action="<@ofbizUrl>updateProductQuickAdminSelFeat</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeature">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
@@ -114,7 +113,7 @@ function doPublish() {
                 <@th>${uiLabelMap.ProductDL}</@th>
             </@tr>
           </@thead>
-        <#assign idx=0/>
+        <#assign idx = 0>
         <#list productAssocs as productAssoc>
             <#assign assocProduct = productAssoc.getRelatedOne("AssocProduct", false)/>
             <@tr valign="middle">
@@ -134,9 +133,9 @@ function doPublish() {
                 <#assign fromDate = Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productAssoc.getTimestamp("fromDate").toString())/>
                 <@td><a class="${styles.button_default!}" href="javascript:removeAssoc('${productAssoc.productIdTo}','${fromDate}');">x</a></@td>
             </@tr>
-            <#assign idx = idx + 1/>
+            <#assign idx = idx + 1>
         </#list>
-            <@tfoot>
+          <@tfoot>
             <@tr>
                 <@td colspan="2">&nbsp;</@td>
                 <@td>
@@ -153,14 +152,16 @@ function doPublish() {
                     </@table>
                 </@td>
             </@tr>
-            </@tfoot>
-            </@table>
+          </@tfoot>
+        </@table>
         </form>
+      </@cell>
+    </@row>
 </@section>
 </#if>
 
 <#if (product.isVariant)! == "Y">
-<@section title="${uiLabelMap.ProductDistinguishingFeatures}">
+    <@section title="${uiLabelMap.ProductDistinguishingFeatures}">
         <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method="post" style="margin: 0;" name="distFeature">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
@@ -168,7 +169,8 @@ function doPublish() {
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductProductId}</@th>
                 </@tr>
-               </@thead>
+              </@thead>
+              <@tbody>
                 <#assign idx=0/>
                 <#list distinguishingFeatures as distinguishingFeature>
                 <@tr valign="middle">
@@ -178,9 +180,10 @@ function doPublish() {
                     </@td>
                 </@tr>
                 </#list>
+              </@tbody>
             </@table>
         </form>
-</@section>
+    </@section>
 </#if>
 
 <!-- ***************************************************** end Selectable features section -->
@@ -260,6 +263,8 @@ function doPublish() {
 
 <@section title="${uiLabelMap.ProductStandardFeatures}">
         <!--  **************************************************** Standard Features section -->
+    <@row>
+      <@cell>
         <#if addedFeatureTypeIds?has_content || standardFeatureAppls?has_content>
         <@table type="generic" cellspacing="0" class="basic-table">
         <@tr>
@@ -309,52 +314,51 @@ function doPublish() {
         </@table>
 
         </#if>
+      </@cell>
+    </@row>
+    <@row>
+      <@cell>
         <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">
-        <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
-        <input type="hidden" name="productId" value="${product.productId!}"/>
-        <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr>
-                <@td align="right">${uiLabelMap.ProductFeatureTypes}</@td>
-                <@td>
-                    <select multiple="multiple" name="addFeatureTypeId">
-                        <#list featureTypes as featureType>
-                            <option value="${featureType.productFeatureTypeId!}">${featureType.get("description",locale)!}</option>
-                        </#list>
-                    </select>
-                </@td>
-                <@td><input type="submit" value="${uiLabelMap.ProductAddFeatureType}"/></@td>
-            </@tr>
-        </@table>
+            <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
+            <input type="hidden" name="productId" value="${product.productId!}"/>
+            <@field type="generic" label="${uiLabelMap.ProductFeatureTypes}">
+                <select multiple="multiple" name="addFeatureTypeId">
+                    <#list featureTypes as featureType>
+                        <option value="${featureType.productFeatureTypeId!}">${featureType.get("description",locale)!}</option>
+                    </#list>
+                </select>
+            </@field>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.ProductAddFeatureType}"/>
+            </@field>
         </form>
+      </@cell>
+    </@row>
         <!--  **************************************************** end - Standard Features section -->
 </@section>
 
 <@section title="${uiLabelMap.ProductCategories}">
         <!--  **************************************************** Categories section -->
-        <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>">
+    <@row>
+      <@cell>
+        <@form fieldsLabelArea=false action=makeOfbizUrl("quickAdminAddCategories")>
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <@table type="fields" cellspacing="0" class="basic-table">
-              <@tr>
-              <@td>
-                  <@table type="fields" cellspacing="0" class="basic-table">
-                      <@tr>
-                          <@td>
-                              <select multiple="multiple" name="categoryId">
-                                  <#list allCategories as category>
-                                      <option value="${category.productCategoryId!}">${category.description!} ${category.productCategoryId}</option>
-                                  </#list>
-                              </select>&nbsp;
-                          </@td>
-                      </@tr>
-                  </@table>
-              </@td>
-              </@tr>
-              <@tr>
-                  <@td colspan="2"><input type="submit" value="${uiLabelMap.ProductUpdateCategories}"/></@td>
-              </@tr>
-            </@table>
-        </form>
+            <@field type="generic">
+                <select multiple="multiple" name="categoryId">
+                  <#list allCategories as category>
+                    <option value="${category.productCategoryId!}">${category.description!} ${category.productCategoryId}</option>
+                  </#list>
+                </select>
+            </@field>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.ProductUpdateCategories}"/>
+            </@field>
+        </@form>
+      </@cell>
+    </@row>
+    <@row>
+      <@cell>
         <@table type="generic">
           <@tr>
             <@td valign="top">
@@ -377,38 +381,44 @@ function doPublish() {
             </@td>
           </@tr>
         </@table>
+      </@cell>
+    </@row>
         <!--  **************************************************** end - Categories section -->
 </@section>
 
 <@section title="${uiLabelMap.ProductPublishAndView}">
     <!--  **************************************************** publish section -->
-    <#if (showPublish == "true")>
-        <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>" name="publish">
-        <input type="hidden" name="productId" value="${product.productId!}"/>
-        <input type="hidden" name="categoryId" value="${allCategoryId!}"/>
-        <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr>
-                <@td>
-                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <input type="button" value="${uiLabelMap.ProductPublishAndView}" onclick="doPublish();"/>
-                </@td>
-            </@tr>
-        </@table>
-        </form>
-    <#else>
-        <form action="<@ofbizUrl>quickAdminUnPublish</@ofbizUrl>" name="unpublish">
-        <input type="hidden" name="productId" value="${product.productId!}"/>
-        <input type="hidden" name="productCategoryId" value="${allCategoryId!}"/>
-        <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr>
-                <@td>
-                    <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <input type="submit" value="${uiLabelMap.ProductRemoveFromSite}"/>
-                </@td>
-            </@tr>
-        </@table>
-        </form>
-    </#if>
+  <#if (showPublish == "true")>
+    <@row>
+      <@cell>
+        <@form fieldsLabelArea=false action=makeOfbizUrl("quickAdminAddCategories") name="publish">
+            <input type="hidden" name="productId" value="${product.productId!}"/>
+            <input type="hidden" name="categoryId" value="${allCategoryId!}"/>
+            <@field type="generic">
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+            <@field type="submitarea">
+                <input type="button" value="${uiLabelMap.ProductPublishAndView}" onclick="doPublish();"/>
+            </@field>
+        </@form>
+      </@cell>
+    </@row>
+  <#else>
+    <@row>
+      <@cell>
+        <@form fieldsLabelArea=false  action=makeOfbizUrl("quickAdminUnPublish") name="unpublish">
+            <input type="hidden" name="productId" value="${product.productId!}"/>
+            <input type="hidden" name="productCategoryId" value="${allCategoryId!}"/>
+            <@field type="generic">
+                <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.ProductRemoveFromSite}"/>
+            </@field>
+        </@form>
+      </@cell>
+    </@row>
+  </#if>
     <!--  **************************************************** end - publish section -->
 </@section>
 

@@ -16,26 +16,20 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<form name="addscarr" method="post" action="<@ofbizUrl>prepareCreateShipMeth</@ofbizUrl>">
-    <input type="hidden" name="newShipMethod" value="Y"/>
-    <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
-    <@table type="fields" cellspacing="0" class="basic-table">
-        <@tr>
-          <@td align="right">${uiLabelMap.ProductCarrierShipmentMethod}</@td>
-          <@td>
+<@section title="${uiLabelMap.ProductCarrierShipmentMethod}">
+    <@form fieldsLabelArea=false name="addscarr" method="post" action=makeOfbizUrl("prepareCreateShipMeth")>
+        <input type="hidden" name="newShipMethod" value="Y"/>
+        <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
+        <@field type="generic">
             <select name="carrierShipmentString">
               <option>${uiLabelMap.ProductSelectOne}</option>
               <#list carrierShipmentMethods as shipmentMethod>
                 <option value="${shipmentMethod.partyId}|${shipmentMethod.roleTypeId}|${shipmentMethod.shipmentMethodTypeId}">${shipmentMethod.shipmentMethodTypeId} (${shipmentMethod.partyId}/${shipmentMethod.roleTypeId})</option>
               </#list>
             </select>
-          </@td>
-        </@tr>
-        <@tr>
-          <@td></@td>
-          <@td>
+        </@field>
+        <@field type="submitarea">
             <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}"/>
-          </@td>
-        </@tr>
-    </@table>
-</form>
+        </@field>
+    </@form>
+</@section>

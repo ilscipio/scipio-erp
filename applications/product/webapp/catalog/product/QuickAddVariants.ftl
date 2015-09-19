@@ -114,18 +114,14 @@ function clickAll(e) {
 <#else>
     <@resultMsg>${uiLabelMap.ProductNoSelectableFeaturesFound}</@resultMsg>
 </#if>
-<form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="post" name="addVariantsToVirtual">
-    <@table type="fields" cellspacing="0" class="basic-table">
-        <@tr class="header-row">
-            <@td><b>${uiLabelMap.ProductVariantAdd}:</b></@td>
-        </@tr>
-        <@tr>
-            <@td>
-                <input type="hidden" name="productId" value="${productId}"/>
-                <span>${uiLabelMap.ProductVariantProductIds}:</span>
-                <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
-                <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductVariantAdd}"/>
-            </@td>
-        </@tr>
-    </@table>
-</form>
+<@section title="${uiLabelMap.ProductVariantAdd}">
+    <form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="post" name="addVariantsToVirtual">
+        <input type="hidden" name="productId" value="${productId}"/>
+        <@field type="generic" label="${uiLabelMap.ProductVariantProductIds}">
+            <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
+        </@field>
+        <@field type="submitarea">
+            <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductVariantAdd}"/>
+        </@field>
+    </form>
+</@section>

@@ -21,13 +21,13 @@ under the License.
 <p>[${product.productId}] ${product.internalName}</p>
 
 <#if searchFeatures?has_content>
+  <@row>
+    <@cell>
   <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
-    <@table type="fields" cellspacing="0" class="basic-table">
         <input type="hidden" name="productId" value="${product.productId}" />
         <#list searchFeatures as searchFeature>
-            <@tr>
-                <@td><b>${searchFeature.featureType}</b></@td>
-                <@td><select name="${searchFeature.featureType}">
+            <@field type="generic" label="<b>${searchFeature.featureType}</b>">
+                <select name="${searchFeature.featureType}">
                     <#assign features = searchFeature.features>
                     <option value=""></option>
                     <#list features as feature>
@@ -37,18 +37,20 @@ under the License.
                             <option value="${feature.productFeatureId}">${feature.get("description",locale)}</option>
                         </#if>
                     </#list>
-                    </select>
-                </@td>
-            </@tr>
+                </select>
+            </@field>
         </#list>
-        <@tr>
-            <@td><input type="submit" value="${uiLabelMap.CommonSearch}" class="smallSubmit ${styles.button_default!}" /></@td>
-    </@tr>
-    </@table>
+        <@field type="submitarea">
+            <input type="submit" value="${uiLabelMap.CommonSearch}" class="smallSubmit ${styles.button_default!}" />
+        </@field>
   </form>
+    </@cell>    
+  </@row>
 </#if>
 
 <#if variantProducts??>
+  <@row>
+    <@cell>
     <@table type="data-list" cellspacing="0" class="basic-table">
        <@thead>
         <@tr class="header-row">
@@ -65,14 +67,21 @@ under the License.
             </@tr>
         </#list>
     </@table>
+    </@cell>
+  </@row>
 </#if>
 <#if productFeatureIds??>
-    <@table type="fields" cellspacing="0" class="basic-table">
-        <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="createNewVariant">
+  <@row>
+    <@cell>
+      <@form fieldsLabelArea=false method="post" action=makeOfbizUrl("LookupVariantProduct") name="createNewVariant">
         <input type="hidden" name="productId" value="${product.productId}" />
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}" />
-        <input type="text" name="productVariantId" value="${productVariantId}" />
-        <input type="submit" value="${uiLabelMap.ProductQuickAddVariants}" class="smallSubmit ${styles.button_default!}" />
-        </form>
-    </@table>
+        <@field type="input" name="productVariantId" value="${productVariantId}" />
+        <@field type="submitarea">
+            <input type="submit" value="${uiLabelMap.ProductQuickAddVariants}" class="smallSubmit ${styles.button_default!}" />
+        </@field>
+      </@form>
+    </@cell>
+  </@row>
 </#if>
+

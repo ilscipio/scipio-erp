@@ -24,18 +24,21 @@ under the License.
 </#if>
 <@row>
   <@cell>
-<#-- FIXME?: should specify a form/fields type here that implies manual row/cell markup -->
+<#-- FIXME?: should specify a form/fields type here that implies manual row/cell markup 
+     instead of norows=true nocells=true-->
 <@form fieldsLabelArea=false id="addAdditionalImagesForm" method="post" action=makeOfbizUrl("addAdditionalImagesForProduct") enctype="multipart/form-data">
   <input id="additionalImageProductId" type="hidden" name="productId" value="${productId!}" />
     <#macro imageField name imageHtml id="">
+      <#if imageHtml?trim?has_content>
       <@row>
-        <@cell columns=6>
-          <@field type="generic">
-              <input<#if id?has_content> id="${id}"</#if> type="file" size="20" name="${name}" />
-          </@field>
-        </@cell>
-        <@cell columns=6>
+        <@cell>
           ${imageHtml}
+        </@cell>
+      </@row>
+      </#if>
+      <@row>
+        <@cell>
+          <@field type="file" id=id size="20" name="${name}" norows=true nocells=true />
         </@cell>
       </@row>
     </#macro>

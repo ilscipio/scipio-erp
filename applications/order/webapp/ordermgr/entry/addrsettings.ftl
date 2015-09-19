@@ -23,7 +23,7 @@ under the License.
     <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
       <input type="hidden" name="finalizeMode" value="ship"/>
     
-      <@table type="fields" width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="data-complex" width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
 
         <#-- postal addresses for chosen id -->
@@ -59,7 +59,6 @@ under the License.
 
     </form>
   </@section>
-
 
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>

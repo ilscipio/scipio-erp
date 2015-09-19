@@ -655,33 +655,6 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#function>
 
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
-<#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-  <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
-  <#local gridSize = 12>
-  <#local markLast = false>
-  <#local fieldEntryOffset = 0>
-  <#if positions?has_content && positionSpan?has_content && position?has_content>
-    <#-- note: positionSpan is one less than you'd expect -->
-    <#local posSpan = positionSpan + 1>
-    <#local fieldEntrySize = ((posSpan*gridSize) / positions)?floor>
-    <#if !nextPositionInRow?has_content && (fieldEntrySize < gridSize)>
-      <#local markLast = true>
-    </#if>
-    <#-- calc offset if needed -->
-    <#if (position > 1)>
-        <#local expectedFieldEntryOffset = (((position-1)*gridSize) / positions)?floor>
-        <#local fieldEntryOffset = (expectedFieldEntryOffset - renderFormatFieldRow_gridUsed)>
-    </#if>
-    
-    <#-- WARN: if style specified manually, isn't taken into account here -->
-    <#global renderFormatFieldRow_gridUsed = renderFormatFieldRow_gridUsed + fieldEntrySize + fieldEntryOffset>
-  <#else>
-    <#local fieldEntrySize = gridSize>
-  </#if>
-  <#-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} posSpan: ${posSpan!} markLast: ${markLast!?string}
-  fieldEntryOffset: ${fieldEntryOffset}
-  renderFormatFieldRow_gridUsed: ${renderFormatFieldRow_gridUsed}
-  fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
 </#macro>

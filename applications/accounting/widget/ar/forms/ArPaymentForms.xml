@@ -47,7 +47,7 @@ under the License.
             <lookup target-form-name="LookupCustomerName"/>
         </field> 
         <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="thruDate" position="2"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="FindBatchPaymentsForDepositSlip" target="NewDepositSlip" extends="FindBatchPayments" extends-resource="component://accounting/widget/ar/forms/ArPaymentForms.xml">

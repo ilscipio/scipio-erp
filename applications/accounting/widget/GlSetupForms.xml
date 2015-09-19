@@ -420,7 +420,7 @@ under the License.
         </field>
         <field name="conversionFactor"><text/></field>
         <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="thruDate" position="2"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.AccountingUpdateFX}"><submit/></field>
     </form>
 
@@ -1183,7 +1183,7 @@ under the License.
             </drop-down>
         </field>
         <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="thruDate" position="2"><date-time/></field>
         <field name="amountPercentage"><text/></field>
         <field name="submit" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>

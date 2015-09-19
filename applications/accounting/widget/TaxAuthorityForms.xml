@@ -320,7 +320,7 @@ under the License.
 
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-find/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-find/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-find/></field>
 
         <field name="partyTaxId"><text-find/></field>
         <field name="isExempt" widget-style="smallSelect">
@@ -397,7 +397,7 @@ under the License.
         <field use-when="partyTaxAuthInfo==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field use-when="partyTaxAuthInfo==null" name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
 
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-time/></field>
         <field name="partyTaxId"><text/></field>
         <field name="isExempt" widget-style="smallSelect"><drop-down no-current-selected-key="N"><option key="Y"  description="${uiLabelMap.CommonY}"/><option key="N"  description="${uiLabelMap.CommonN}"/></drop-down></field>
         <field name="isNexus" widget-style="smallSelect"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>

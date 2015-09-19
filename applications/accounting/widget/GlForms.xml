@@ -241,7 +241,7 @@ under the License.
         <field name="workEffortId"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
         <field name="shipmentId"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
         <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="thruDate" position="2"><date-time/></field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="reportType">
             <drop-down allow-empty="false">
@@ -891,7 +891,7 @@ under the License.
             </drop-down>
         </field>
         <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="thruDate" position="2"><date-time/></field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSearch}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>

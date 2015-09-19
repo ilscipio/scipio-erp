@@ -356,7 +356,7 @@ under the License.
         <field name="periodNum"><text-find/></field>
         <field name="periodName"><text-find/></field>
         <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="thruDate" position="2"><date-time/></field>
         <field name="isClosed">
             <drop-down allow-empty="true">
                 <option key="Y" description="${uiLabelMap.CommonY}"/>
@@ -384,7 +384,7 @@ under the License.
         <field name="periodNum"><display/></field>
         <field name="periodName"><display/></field>
         <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="thruDate" position="2"><display/></field>
         <field name="isClosed"><display/></field>
     </form>
 </forms>

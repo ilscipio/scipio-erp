@@ -28646,6 +28646,9 @@
         <value xml:lang="zh">货运长度</value>
         <value xml:lang="zh_TW">貨運長度</value>
     </property>
+    <property key="ProductShippingDiameter">
+        <value xml:lang="en">Shipping Diameter</value>
+    </property>
     <property key="ProductShippingDimensionsAndWeights">
         <value xml:lang="de">Lieferung Dimensionen und Gewicht</value>
         <value xml:lang="en">Shipping Dimensions and Weights</value>

@@ -20,6 +20,7 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        
     <form name="FindProduct" type="single" target="FindProduct" title="" default-map-name="product"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -56,6 +57,7 @@ under the License.
 
 
     <form name="EditProduct" type="single" target="updateProduct" title="" default-map-name="product"
+        default-positon-span="1" 
         header-row-style="header-row" default-table-style="basic-table">
 
         <alt-target use-when="product==null" target="createProduct"/>
@@ -66,7 +68,7 @@ under the License.
         <field position="1" use-when="product==null&amp;&amp;productId==null" name="productId" title="${uiLabelMap.ProductProductId}"><text size="20" maxlength="20"/></field>
         <field position="1" use-when="product==null&amp;&amp;productId!=null" name="productId" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotFindProductId} [${productId}]"><text size="20" maxlength="20"/></field>
 
-        <field position="2" name="productTypeId" title="${uiLabelMap.ProductProductType}">
+        <field position="3" name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down no-current-selected-key="FINISHED_GOOD">
                 <entity-options entity-name="ProductType" description="${description}"> <!-- [${productTypeId}] -->
                     <entity-order-by field-name="description"/>
@@ -95,21 +97,23 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-
+        
         <field position="1" name="internalName" title="${uiLabelMap.ProductInternalName}" required-field="true"><text size="30" maxlength="255"/></field>
-        <field position="2" name="brandName" title="${uiLabelMap.ProductBrandName}" ><text size="30" maxlength="60"/></field>
-        <field name="manufacturerPartyId" title="${uiLabelMap.ProductOemPartyId}" ><text size="20" maxlength="20"/></field>
-        <field name="comments" title="${uiLabelMap.CommonComments}"><text size="60" maxlength="250"/></field>
+        <field position="3" name="productName" title="${uiLabelMap.ProductProductName}" required-field="true"><text size="30" maxlength="255"/></field>
+        
+        <field position="1" name="brandName" title="${uiLabelMap.ProductBrandName}" ><text size="30" maxlength="60"/></field>
+        <field position="3" name="manufacturerPartyId" title="${uiLabelMap.ProductOemPartyId}" ><text size="20" maxlength="20"/></field>
+        <field position="1" name="comments" title="${uiLabelMap.CommonComments}"><textarea/></field>
 
         <field position="1" name="introductionDate" title="${uiLabelMap.CommonIntroductionDate}" red-when="after-now"><date-time/></field>
-        <field position="2" name="releaseDate" title="${uiLabelMap.CommonReleaseDate}" red-when="after-now"><date-time/></field>
-        <field position="3" name="salesDiscontinuationDate" title="${uiLabelMap.ProductSalesThruDate}" red-when="before-now"><date-time/></field>
-        <field position="4" name="supportDiscontinuationDate" title="${uiLabelMap.ProductSupportThruDate}" red-when="before-now"><date-time/></field>
+        <field position="3" name="releaseDate" title="${uiLabelMap.CommonReleaseDate}" red-when="after-now"><date-time/></field>
+        <field position="1" name="salesDiscontinuationDate" title="${uiLabelMap.ProductSalesThruDate}" red-when="before-now"><date-time/></field>
+        <field position="3" name="supportDiscontinuationDate" title="${uiLabelMap.ProductSupportThruDate}" red-when="before-now"><date-time/></field>
 
         <field name="salesDiscWhenNotAvail" title="${uiLabelMap.ProductSalesDiscontinuationNotAvailable}">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field position="1" name="requirementMethodEnumId" title="${uiLabelMap.ProductRequirementMethodEnumId}">
+        <field position="3" name="requirementMethodEnumId" title="${uiLabelMap.ProductRequirementMethodEnumId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
                     <entity-constraint name="enumTypeId" value="PROD_REQ_METHOD"/>
@@ -118,19 +122,18 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="requireInventory" title="${uiLabelMap.ProductRequireInventory}" tooltip="${uiLabelMap.ProductInventoryRequiredProduct}">
+        <field  position="1" name="requireInventory" title="${uiLabelMap.ProductRequireInventory}" tooltip="${uiLabelMap.ProductInventoryRequiredProduct}">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field name="inventoryMessage" title="${uiLabelMap.ProductInventoryMessage}"><text size="20" maxlength="255"/></field>
-
-        <field name="lotIdFilledIn" title="${uiLabelMap.ProductLotId}">
+        <field position="3" name="lotIdFilledIn" title="${uiLabelMap.ProductLotId}">
             <drop-down allow-empty="false">
                 <option key="Allowed" description="${uiLabelMap.lotIdFilledInAllowed}"/>
                 <option key="Mandatory" description="${uiLabelMap.lotIdFilledInMandatory}"/>
                 <option key="Forbidden" description="${uiLabelMap.lotIdFilledInForbidden}"/>
             </drop-down>
         </field>
-
+        <field name="inventoryMessage" title="${uiLabelMap.ProductInventoryMessage}"><text size="20" maxlength="255"/></field>
+          
         <field position="1" name="ratingTypeEnum" title="${uiLabelMap.ProductRatingTypeEnum}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -139,12 +142,12 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="2" title="${uiLabelMap.ProductRating}" name="productRating"><text size="10" maxlength="20"/></field>
+        <field position="3" title="${uiLabelMap.ProductRating}" name="productRating"><text size="10" maxlength="20"/></field>
 
         <field position="1" name="requireAmount" title="${uiLabelMap.ProductRequireAmount}" tooltip="${uiLabelMap.ProductRequireCustomerAmount}">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field position="2" name="amountUomTypeId" title="${uiLabelMap.ProductAmountUomTypeId}">
+        <field position="3" name="amountUomTypeId" title="${uiLabelMap.ProductAmountUomTypeId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="UomType" key-field-name="uomTypeId" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -160,7 +163,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="3" title="${uiLabelMap.ProductShippingHeight}" name="shippingHeight"><text size="10" maxlength="20"/></field>
+        <field position="4" title="${uiLabelMap.ProductShippingHeight}" name="shippingHeight"><text size="10" maxlength="20"/></field>
 
         <field position="1" title="${uiLabelMap.ProductProductWidth}" name="productWidth"><text size="10" maxlength="20"/></field>
         <field position="2" name="widthUomId" title="${uiLabelMap.ProductWidthUomId}">
@@ -171,8 +174,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="3" title="${uiLabelMap.ProductShippingWidth}" name="shippingWidth"><text size="10" maxlength="20"/></field>
-
+        <field position="4" title="${uiLabelMap.ProductShippingWidth}" name="shippingWidth"><text size="10" maxlength="20"/></field>
+        
         <field position="1" title="${uiLabelMap.ProductProductDepth}" name="productDepth"><text size="10" maxlength="20"/></field>
         <field position="2" name="depthUomId" title="${uiLabelMap.ProductDepthUomId}">
             <drop-down allow-empty="true">
@@ -182,8 +185,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="3" title="${uiLabelMap.ProductShippingDepth}" name="shippingDepth"><text size="10" maxlength="20"/></field>
-
+        <field position="4" title="${uiLabelMap.ProductShippingDepth}" name="shippingDepth"><text size="10" maxlength="20"/></field>
+        
         <field position="1" title="${uiLabelMap.ProductProductDiameter}" name="productDiameter"><text size="10" maxlength="20"/></field>
         <field position="2" name="diameterUomId" title="${uiLabelMap.ProductDiameterUomId}">
             <drop-down allow-empty="true">
@@ -193,6 +196,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field position="4" title="${uiLabelMap.ProductShippingDiameter}" name="shippingDiameter"><text size="10" maxlength="20"/></field>
 
         <field position="1" name="productWeight" title="${uiLabelMap.ProductProductWeight}"><text size="10" maxlength="20"/></field>
         <field position="2" name="weightUomId" title="${uiLabelMap.ProductWeightUomId}">
@@ -203,7 +207,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="3" name="weight" title="${uiLabelMap.ProductWeight}"><text size="10" maxlength="20"/></field>
+        <field position="4" name="weight" title="${uiLabelMap.ProductShippingWeight}"><text size="10" maxlength="20"/></field>
 
         <field position="1" name="quantityIncluded" title="${uiLabelMap.ProductQuantityIncluded}"><text size="10" maxlength="20"/></field>
         <field position="2" name="quantityUomId" title="${uiLabelMap.ProductQuantityUomId}">
@@ -272,9 +276,10 @@ under the License.
             <field-group>
                 <sort-field name="productId"/>
                 <sort-field name="productTypeId"/>
+                <sort-field name="internalName"/>
+                <sort-field name="productName"/>
             </field-group>
             <field-group title="${uiLabelMap.ProductWordingAndComment}" collapsible="true">
-                <sort-field name="internalName"/>
                 <sort-field name="brandName"/>
                 <sort-field name="manufacturerPartyId"/>
                 <sort-field name="comments"/>
@@ -297,8 +302,8 @@ under the License.
                 <sort-field name="salesDiscWhenNotAvail"/>
                 <sort-field name="requirementMethodEnumId"/>
                 <sort-field name="requireInventory"/>
-                <sort-field name="inventoryMessage"/>
                 <sort-field name="lotIdFilledIn"/>
+                <sort-field name="inventoryMessage"/>
             </field-group>
             <field-group title="${uiLabelMap.CommonRate}" collapsible="true" initially-collapsed="true">
                 <sort-field name="ratingTypeEnum"/>
@@ -320,6 +325,7 @@ under the License.
                 <sort-field name="shippingDepth"/>
                 <sort-field name="productDiameter"/>
                 <sort-field name="diameterUomId"/>
+                <sort-field name="shippingDiameter"/>
                 <sort-field name="productWeight"/>
                 <sort-field name="weightUomId"/>
                 <sort-field name="weight"/>
@@ -579,13 +585,13 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="productContentTypeId" title="${uiLabelMap.ProductType}">
+        <field name="productContentTypeId" title="${uiLabelMap.ProductType}" position="3">
             <display-entity entity-name="ProductContentType" also-hidden="false" description="${description}"/>
         </field>
         <field name="fromDate"><display/></field>
         <field name="thruDate" position="2"><display/></field>
         <field name="purchaseFromDate"><display/></field>
-        <field name="purchaseThruDate"><display/></field>
+        <field name="purchaseThruDate" position="3"><display/></field>
         <field name="useCountLimit"><display/></field>
         <field name="useTime"><display/></field>
         <field name="useTimeUomId"><display/></field>
@@ -608,7 +614,7 @@ under the License.
         <auto-fields-entity entity-name="ProductContent"/>
         <field name="productId" title="${uiLabelMap.ProductProductId}" map-name="product"><hidden/></field>
         <field name="contentId" title="${uiLabelMap.ProductContentId}"><lookup target-form-name="LookupContent"/></field>
-        <field name="productContentTypeId" title="${uiLabelMap.ProductProductContentTypeId}">
+        <field name="productContentTypeId" title="${uiLabelMap.ProductProductContentTypeId}" position="3">
             <drop-down>
                 <entity-options entity-name="ProductContentType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -616,12 +622,12 @@ under the License.
             </drop-down>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="3"></field>
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
-        <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}"></field>
+        <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}" position="3"></field>
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
         <field name="useTime" title="${uiLabelMap.ProductUseTime}"></field>
-        <field name="useTimeUomId" title="${uiLabelMap.ProductUseTimeUom}">
+        <field name="useTimeUomId" title="${uiLabelMap.ProductUseTimeUom}" position="3">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description}">
                     <entity-constraint name="uomTypeId" value="TIME_FREQ_MEASURE"/>
@@ -638,6 +644,7 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="PrepareAddProductContentAssoc" type="single" target="prepareAddContentToProduct" title="${uiLabelMap.ProductAddProductContentFromDate}"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="productId" map-name="product"><hidden/></field>
@@ -651,6 +658,7 @@ under the License.
         <!-- <field name="description"><text size="40"/></field> -->
         <field name="submitButton" title="${uiLabelMap.ProductPrepareCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="UpdateProductContentAssoc" type="list" target="updateContentToProduct" title="" list-name="productContentDatas"
         odd-row-style="alternate-row" default-table-style="basic-table">
         <!-- each entry in the list will be a Map with the entries: productContent and content -->
@@ -720,9 +728,9 @@ under the License.
         <alt-target use-when="contentId==null" target="createEmailContentForProduct"/>
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
          <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="3"></field>
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
-        <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}"></field>
+        <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}" position="3"></field>
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
         <field name="useTime" title="${uiLabelMap.ProductUseTime}"></field>
         <field name="useTimeUomId" title="${uiLabelMap.ProductUseTimeUom}">

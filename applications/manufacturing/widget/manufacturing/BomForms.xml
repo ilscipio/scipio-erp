@@ -84,7 +84,7 @@ under the License.
         <field name="quantity"><display/></field>
         <field name="ruleOperator"><display/></field>
         <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="thruDate" position="2"><display/></field>
         <field name="updateLink" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditProductManufacturingRules" description="${uiLabelMap.CommonSelect}" >
                 <parameter param-name="ruleId"/>

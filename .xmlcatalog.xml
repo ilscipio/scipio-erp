@@ -3,12 +3,12 @@
      More at https://cwiki.apache.org/confluence/display/OFBIZ/Eclipse+Tips#EclipseTips-xmlCatalog
 -->
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <nextCatalog catalog="platform:/resource/ofbiz/framework/base/dtd/base-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/ofbiz/framework/datafile/dtd/datafiles-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/ofbiz/framework/entity/dtd/entity-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/ofbiz/framework/minilang/dtd/minilang-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/ofbiz/framework/service/dtd/service-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/ofbiz/framework/testtools/dtd/testtools-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/ofbiz/framework/webapp/dtd/webapp-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/ofbiz/framework/widget/dtd/widget-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/cato-of-ofbiz14.12/framework/base/dtd/base-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/cato-of-ofbiz14.12/framework/datafile/dtd/datafiles-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/cato-of-ofbiz14.12/framework/entity/dtd/entity-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/cato-of-ofbiz14.12/framework/minilang/dtd/minilang-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/cato-of-ofbiz14.12/framework/service/dtd/service-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/cato-of-ofbiz14.12/framework/testtools/dtd/testtools-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/cato-of-ofbiz14.12/framework/webapp/dtd/webapp-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/cato-of-ofbiz14.12/framework/widget/dtd/widget-catalog.xml"/>
 </catalog>

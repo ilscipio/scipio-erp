@@ -32,41 +32,7 @@ under the License.
     </@menu>
   </#assign>
   <@section title="${uiLabelMap.AccountingCurrentBankReconciliation}" menuHtml=menuHtml>
-      <#if currentGlReconciliation?has_content>
-        <@table type="fields" class="" cellspacing="">
-          <@tr>
-            <@td>${uiLabelMap.FormFieldTitle_glReconciliationName}</@td>
-            <@td>${currentGlReconciliation.glReconciliationName!}</@td>
-          </@tr>
-          <#if currentGlReconciliation.statusId??>
-            <@tr>
-              <@td>${uiLabelMap.CommonStatus}</@td>
-              <#assign currentStatus = currentGlReconciliation.getRelatedOne("StatusItem", true)>
-              <@td>${currentStatus.description!}</@td>
-            </@tr>
-          </#if>
-          <@tr>
-            <@td>${uiLabelMap.FormFieldTitle_reconciledDate}</@td>
-            <@td>${currentGlReconciliation.reconciledDate!}</@td>
-          </@tr>
-          <@tr>
-            <@td>${uiLabelMap.AccountingOpeningBalance}</@td>
-            <@td><@ofbizCurrency amount=currentGlReconciliation.openingBalance?default('0')/></@td>
-          </@tr>
-          <#if currentGlReconciliation.reconciledBalance??>
-            <@tr>
-              <@td>${uiLabelMap.FormFieldTitle_reconciledBalance}</@td>
-              <@td><@ofbizCurrency amount=currentGlReconciliation.reconciledBalance?default('0')/></@td>
-            </@tr>
-          </#if>
-          <#if currentClosingBalance??>
-            <@tr>
-              <@td>${uiLabelMap.FormFieldTitle_closingBalance}</@td>
-              <@td><@ofbizCurrency amount=currentClosingBalance/></@td>
-            </@tr>
-          </#if>
-        </@table>
-      </#if>
+      
   </@section>
   <@section title="${uiLabelMap.AccountingPreviousBankReconciliation}">
       <#if previousGlReconciliation?has_content>

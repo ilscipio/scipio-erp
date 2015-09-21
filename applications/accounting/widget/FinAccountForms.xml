@@ -88,21 +88,20 @@ under the License.
             </entity-one>
         </actions>
         <alt-target use-when="finAccount==null" target="createFinAccount"/>
-        <auto-fields-service service-name="updateFinAccount"/>
 
         <field name="finAccountId" use-when="finAccountId!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId==null"><ignored/></field>
         <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId!=null" tooltip="${uiLabelMap.CommonCannotBeFound}: [${finAccountId}]"><display also-hidden="false"/></field>
-
-        <field name="finAccountCode"><text size="20"/></field>
-        <field name="finAccountPin"><text size="10"/></field>
-        <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}">
+        
+        <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}" position="2">
             <drop-down no-current-selected-key="DEPOSIT_ACCOUNT">
                 <entity-options description="${description}" entity-name="FinAccountType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
+        <field name="finAccountCode"><text size="20"/></field>
+        <field name="finAccountPin" position="2"><text size="10"/></field>
         <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
             <drop-down no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
@@ -111,18 +110,14 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="organizationPartyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="ownerPartyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="postToGlAccountId"><lookup target-form-name="LookupGlAccount"/></field>
-        <field name="statusId" use-when="finAccount==null" title="${uiLabelMap.CommonStatus}">
+        <field name="statusId" use-when="finAccount==null" title="${uiLabelMap.CommonStatus}" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" value="FINACCT_STATUS"/>
-
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" use-when="finAccount!=null" title="${uiLabelMap.CommonStatus}">
+        <field name="statusId" use-when="finAccount!=null" title="${uiLabelMap.CommonStatus}" position="2">
             <drop-down allow-empty="false" current-description="${currentStatus.description}">
                 <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
                     <entity-constraint name="statusId" env-name="finAccount.statusId"/>
@@ -130,13 +125,23 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="organizationPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="fromDate"><date-time type="date"/></field>
+        <field name="thruDate" position="2"><date-time type="date"/></field>
         <field name="isRefundable">
-            <drop-down no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down no-current-selected-key="Y">
+                <option key="Y" description="${uiLabelMap.CommonY}"/>
+                <option key="N" description="${uiLabelMap.CommonN}"/>
+            </drop-down>
         </field>
+        <field name="postToGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
+        <field name="replenishPaymentId"><text/></field>
+        <field name="replenishLevel" position="2"><text/></field>
         <field name="submitButton" use-when="finAccountId==null" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" use-when="finAccountId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="actualBalance"><display/></field>
-        <field name="availableBalance"><display/></field>
+        <field name="availableBalance" position="2"><display/></field>
     </form>
 
     <form name="ListFinAccountRoles" type="list"  list-name="finAccountRoles"  target="updateFinAccountRole" separate-columns="true"
@@ -392,8 +397,9 @@ under the License.
         <field name="isDepositWithDrawPayment" title="${uiLabelMap.AccountingWithdrawalPaymentInFinAccount}" position="1"><check/></field>
         <field name="paymentGroupTypeId"><ignored/></field>
     </form>
-    <form name="EditFinAccountReconciliation" type="single" target="createGlReconciliation" default-map-name="glReconciliation" extends="EditGlReconciliation"
-            extends-resource="component://accounting/widget/GlForms.xml" header-row-style="header-row" default-table-style="basic-table">
+    
+    <form name="EditFinAccountReconciliation" type="single" target="createGlReconciliation" default-map-name="glReconciliation" 
+        header-row-style="header-row" default-table-style="basic-table">
         <actions>
             <entity-one entity-name="GlReconciliation" value-field="glReconciliation"/>
         </actions>
@@ -401,11 +407,24 @@ under the License.
         <field name="finAccountId"><hidden value="${finAccountId}"/></field>
         <field name="glReconciliationId" use-when="glReconciliationId == null"><ignored/></field>
         <field name="glReconciliationId" use-when="glReconciliationId != null"><display/></field>
+        <field name="statusId" use-when="glReconciliationId == null" position="2"><hidden value="GLREC_CREATED"/></field>
+        <field name="statusId" use-when="glReconciliationId != null" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down>
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" value="GLREC_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="glReconciliationName"><text/></field>
+        <field name="description"><textarea/></field>
         <field name="glAccountId"><hidden value="${finAccount.postToGlAccountId}"/></field>
         <field name="organizationPartyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="reconciledBalance" use-when="${reconciledBalance == null}"><hidden/></field>
-        <field name="reconciledBalance" use-when="&quot;GLREC_RECONCILED&quot;.equals(&quot;${glReconciliation.statusId}&quot;)"><display type="currency" currency="${defaultOrganizationPartyCurrencyUomId}"/></field>
-        <field name="reconciledDate" title="${uiLabelMap.AccountingReconciliationDate}"><date-time/></field>
+        <field name="createdDate"><date-time type="date"/></field>
+        <field name="lastModifiedDate" position="2"><date-time type="date"/></field>
+        <field name="openingBalance" use-when="&quot;GLREC_RECONCILED&quot;.equals(&quot;${glReconciliation.statusId}&quot;)"><display/></field>
+        <field name="reconciledBalance" use-when="${reconciledBalance == null}" position="2"><hidden/></field>
+        <field name="reconciledBalance" use-when="&quot;GLREC_RECONCILED&quot;.equals(&quot;${glReconciliation.statusId}&quot;)" position="2"><display type="currency" currency="${defaultOrganizationPartyCurrencyUomId}"/></field>
+        <field name="reconciledDate" title="${uiLabelMap.AccountingReconciliationDate}" position="2"><date-time/></field>
         <field name="createButton" use-when="glReconciliationId == null" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -458,5 +477,17 @@ under the License.
         <field name="organizationPartyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="glAccountId"><lookup target-form-name="LookupGlAccount"/></field>
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="FinAccountReconciliationBalance" default-map-name="currentGlReconciliation"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="glReconciliationName"><display/></field>
+        <field name="statusId" position="2">
+            <display-entity entity-name="StatusItem" description="${description}"/>
+        </field>
+        <field name="openingBalance" position="2"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="reconciledDate"><display/></field>
+        <field name="reconciledBalance" position="2"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="currentClosingBalance" position="2"><display description="${currentClosingBalance}" type="currency" currency="${currencyUomId}"/></field>
     </form>
 </forms>

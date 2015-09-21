@@ -20,7 +20,16 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-
+    
+    <form name="FindBillingAccounts" type="single" target="FindBillingAccount" header-row-style="header-row" default-table-style="basic-table">
+        <field name="billingAccountId"><text-find ignore-case="true"/></field>
+        <field name="description"><text-find ignore-case="true"/></field>
+        <field name="accountLimit"><text/></field>
+        <field name="fromDate"><date-time/></field>
+        <field name="thruDate" position="2"><date-time/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
     <form name="ListBillingAccounts" type="list" list-name="listIt" paginate-target="FindBillingAccount" default-entity-name="BillingAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
@@ -133,7 +142,7 @@ under the License.
         <field name="partyId"  use-when="partyId == null" title="${uiLabelMap.AccountingPartyBilledTo}"><lookup target-form-name="LookupPartyName"/></field>
         <field use-when="roleTypeId == null" name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
 
-        <field name="accountCurrencyUomId">
+        <field name="accountCurrencyUomId" position="2">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -141,7 +150,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="contactMechId" tooltip="${uiLabelMap.AccountingBillingContactMechIdMessage}">
+        <field name="contactMechId" tooltip="${uiLabelMap.AccountingBillingContactMechIdMessage}" position="2">
             <drop-down>
                 <entity-options entity-name="BillingAccountRoleAndAddress" description="[${partyId}][${contactMechId}] ${toName}, ${attnName}, ${address1}, ${stateProvinceGeoId} ${postalCode}" key-field-name="contactMechId" filter-by-date="true">
                     <entity-constraint name="billingAccountId" env-name="billingAccountId"/>
@@ -150,6 +159,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="fromDate"><date-time type="date"/></field>
+        <field name="thruDate" position="2"><date-time type="date"/></field>
         <!--
         <field name="netBalance" title="${uiLabelMap.AccountingBillingNetBalance}" tooltip="${uiLabelMap.AccountingBillingNetBalanceMessage}">
             <display description="${groovy:org.ofbiz.accounting.payment.BillingAccountWorker.getBillingAccountNetBalance(delegator, billingAccountId)}" type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
@@ -341,14 +352,5 @@ under the License.
         <field name="maxAmount">
             <display type="currency" currency="${currencyUomId}"/>
         </field>
-    </form>
-    <form name="FindBillingAccounts" type="single" target="FindBillingAccount" header-row-style="header-row" default-table-style="basic-table">
-        <field name="billingAccountId"><text-find ignore-case="true"/></field>
-        <field name="description"><text-find ignore-case="true"/></field>
-        <field name="accountLimit"><text/></field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

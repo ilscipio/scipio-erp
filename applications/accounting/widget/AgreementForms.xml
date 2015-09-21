@@ -550,7 +550,9 @@ under the License.
                 <entity-options description="${promoName}" entity-name="ProductPromo" key-field-name="productPromoId"/>
             </drop-down>
         </field>
-
+        <field name="fromDate"><date-time type="date"/></field>
+        <field name="thruDate" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum" position-span="1"><text/></field>
         <field use-when="agreementPromoAppl!=null" name="fromDate"><display/></field>
         <field use-when="agreementPromoAppl==null" name="fromDate"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
@@ -693,5 +695,31 @@ under the License.
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="CopyAgreement" type="single" target="copyAgreement"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="agreementId"><hidden/></field>
+        <field name="copyAgreementTerms" title="${uiLabelMap.AccountingAgreementTerms}">
+            <check no-current-selected-key="Y">
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+            </check>
+        </field>
+        <field name="copyAgreementProducts" title="${uiLabelMap.ProductProducts}" position="2">
+            <check  no-current-selected-key="Y">
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+            </check>
+        </field>
+        <field name="copyAgreementParties" title="${uiLabelMap.Party}">
+            <check  no-current-selected-key="Y">
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+            </check>
+        </field>
+        <field name="copyAgreementFacilities" title="${uiLabelMap.ProductFacilities}" position="2">
+            <check  no-current-selected-key="Y">
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+            </check>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCopy}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -285,7 +285,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PartyRelationships}" navigation-form-name="ListPartyRelationships">
+                        <screenlet title="${uiLabelMap.PartyRelationships}">
                             <include-form name="ListPartyRelationships" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
                         <container style="${styles.grid_row}">
@@ -1201,6 +1201,22 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="GetPartyGeoLocation">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="PageTitlePartyGeoLocation"/>
+                <set field="tabButtonItem" value="PartyGeoLocation"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/PartyGeoLocation.groovy"/>
+            </actions>
+            <widgets>
+                <label>${uiLabelMap.CommonLatitude} ${latestGeoPoint.latitude}</label>
+                <label>${uiLabelMap.CommonLongitude} ${latestGeoPoint.longitude}</label>
+                <label>${uiLabelMap.CommonElevation} ${latestGeoPoint.elevation} ${elevationUomAbbr}</label>
+                <include-screen name="geoChart" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>

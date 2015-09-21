@@ -67,7 +67,7 @@ under the License.
                       <#if contactMechPurposeType?has_content>
                         <#assign popUptitle = contactMechPurposeType.get("description", locale) + uiLabelMap.CommonGeoLocation>
                       </#if>
-                      <a href="javascript:popUp('<@ofbizUrl>PartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${partyId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="${styles.button_default!}">${uiLabelMap.CommonGeoLocation}</a>
+                      <a href="javascript:popUp('<@ofbizUrl>GetPartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${partyId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="${styles.button_default!}">${uiLabelMap.CommonGeoLocation}</a>
                     </#if>
                   </#if>
                 <#elseif "TELECOM_NUMBER" = contactMech.contactMechTypeId>

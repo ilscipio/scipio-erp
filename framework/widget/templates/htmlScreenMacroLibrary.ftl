@@ -270,7 +270,7 @@ not "current" context (too intrusive in current renderer design). still relies o
           <#local titleClass = true>
         </#if>
         <#local titleElemType = "">
-      <#elseif ['div','span','p']?seq_contains(titleElemType)>
+      <#elseif ['div','span','p','raw']?seq_contains(titleElemType)>
         <#if (titleStyleParts?size <= 1)>
           <#local titleClass = true>
         </#if>
@@ -343,7 +343,12 @@ not "current" context (too intrusive in current renderer design). still relies o
   </#if>
   
   <#if titleElemType?has_content>
-    <#local tElem = titleElemType>
+    <#-- special case: raw! -->
+    <#if titleElemType == "raw">
+      <#local tElem = "">
+    <#else>
+      <#local tElem = titleElemType>
+    </#if>
   <#else>
     <#-- standard case. -->
     <#if (hLevel < 1)>
@@ -356,7 +361,8 @@ not "current" context (too intrusive in current renderer design). still relies o
     </#if>
   </#if>
   <#local titleClasses = makeClassesArg(titleClass, "")>
-      <${tElem} class="heading-level-${hLevel}<#if titleClasses?has_content> ${titleClasses}</#if>">${title}</${tElem}>
+    
+    <#if tElem?has_content><${tElem} class="heading-level-${hLevel}<#if titleClasses?has_content> ${titleClasses}</#if>"></#if>${title}<#if tElem?has_content></${tElem}></#if>
   
   <#if titleContainerStyle?has_content>
     </${tcElem}>

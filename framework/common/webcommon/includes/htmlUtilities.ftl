@@ -496,12 +496,16 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
   </#if>
 </#if>
 
-<#-- fieldIdNum will always increment throughout the page -->
-<#global fieldIdNum = (fieldIdNum!0)+1 />
+<#-- fieldIdNum will always increment throughout the page 
+     now stored in request attributes so survived screens.render though still accessible as a global -->
+<#global fieldIdNum = (request.getAttribute("catoFieldIdNum"))!0>
+<#global fieldIdNum = fieldIdNum + 1 />
+<#local dummy = (request.setAttribute("catoFieldIdNum", fieldIdNum))!>
 
 <#local radioSingle = (type=="radio" && !items?has_content)>
 
 <#if !id?has_content>
+    <#-- FIXME? renderSeqNumber usually empty... where come from? should be as request attribute also? -->
     <#local id = "field_id_${renderSeqNumber!}_${fieldIdNum!0}">
 </#if>
 
@@ -560,6 +564,8 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
                 <#else>
                     <span class="prefix form-field-label">${label}</span>
                 </#if>  
+                <#-- TODO: probably remove asterix later; need for dev -->
+                <#if required>*</#if>
               </#if> 
               <#if labelDetail?has_content>
                 ${labelDetail}
@@ -1926,7 +1932,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 -->
 
 <#macro chart type="pie" library="foundation" title="">
-    <#global fieldIdNum=(fieldIdNum!0)+1 />
+    <#global fieldIdNum = (request.getAttribute("catoFieldIdNum"))!0>
+    <#global fieldIdNum = fieldIdNum + 1 />
+    <#local dummy = (request.setAttribute("catoFieldIdNum", fieldIdNum))!>
     <#global chartLibrary = library!"foundation"/>
     <#if chartLibrary=="foundation">
         <@row>

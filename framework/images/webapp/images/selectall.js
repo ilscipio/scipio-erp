@@ -87,20 +87,25 @@ function removeSelected(formName) {
 }
 
 // highlight the selected row(s)
+// FIXME: this should support presence of extra class names
 
 function highlightRow(e,rowId){
     var currentClassName = document.getElementById(rowId).className;
     if (e.checked) {
-        if (currentClassName == '' ) {
-            document.getElementById(rowId).className = 'selected';
-        } else if (currentClassName == 'alternate-row') {
-            document.getElementById(rowId).className = 'alternate-rowSelected';
+        if (currentClassName == '') {
+            document.getElementById(rowId).className = catoStyles.row_selected;
+        } else if (currentClassName == catoStyles.row_reg) {
+            document.getElementById(rowId).className = catoStyles.row_reg + ' ' + catoStyles.row_selected;
+        } else if (currentClassName == catoStyles.row_alt) {
+            document.getElementById(rowId).className = catoStyles.row_alt + ' ' + catoStyles.row_selected;
         }
     } else {
-        if (currentClassName == 'selected') {
+        if (currentClassName == catoStyles.row_selected) {
             document.getElementById(rowId).className = '';
-        } else if (currentClassName == 'alternate-rowSelected') {
-            document.getElementById(rowId).className = 'alternate-row';
+        } else if (currentClassName == (catoStyles.row_reg + ' ' + catoStyles.row_selected)) {
+            document.getElementById(rowId).className = catoStyles.row_reg;
+        } else if (currentClassName == (catoStyles.row_alt + ' ' + catoStyles.row_selected)) {
+            document.getElementById(rowId).className = catoStyles.row_alt;
         }
     }
 }

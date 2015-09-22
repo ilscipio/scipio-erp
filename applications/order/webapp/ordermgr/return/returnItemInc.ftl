@@ -16,18 +16,22 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@table type="fields" autoAltRows=false cellspacing="0" class="basic-table">
-    <@tr>
-      <@td colspan="7"><@heading relLevel=1>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></@heading></@td>
-      <@td colspan="2" align="right">
-        <span>${uiLabelMap.CommonSelectAll}</span>&nbsp;
-        <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${selectAllFormName}');highlightAllRows(this, 'returnItemId_tableRow_', 'selectAllForm');"/>
-      </@td>
-    </@tr>
+<#assign sectionTitle>
+    <@row>
+        <@cell small=10>
+            <@heading class="">${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></@heading>
+        </@cell>
+        <@cell small=2>
+            <span>${uiLabelMap.CommonSelectAll}</span>&nbsp;
+            <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${selectAllFormName}');highlightAllRows(this, 'returnItemId_tableRow_', 'selectAllForm');"/>
+        </@cell>
+    </@row>
+</#assign>
+<@section title=sectionTitle titleClass="raw">
 
-    <#-- information about orders and amount refunded/credited on past returns -->
-    <#if orh??>
-    <@tr><@td colspan="10">
+  <#-- information about orders and amount refunded/credited on past returns -->
+  <#if orh??>
+  <@section>
         <@table type="summary" cellspacing="0" class="basic-table">
           <@tr>
             <@td width="25%">${uiLabelMap.OrderOrderTotal}</@td>
@@ -42,8 +46,13 @@ under the License.
             <@td><@ofbizCurrency amount=orh.getOrderReturnedRefundTotalBd() isoCode=orh.getCurrency()/></@td>
           </@tr>
         </@table>
-    </@td></@tr>
-    </#if>
+  </@section>
+  </#if>
+
+  <#if returnableItems?has_content>
+  <@section>
+  <@table type="data-list">
+    <@thead>
     <@tr class="header-row">
       <@td>${uiLabelMap.CommonDescription}</@td>
       <@td>${uiLabelMap.OrderOrderQty}</@td>
@@ -55,7 +64,7 @@ under the License.
       <@td>${uiLabelMap.OrderItemStatus}</@td>
       <@td align="right">${uiLabelMap.OrderOrderInclude}?</@td>
     </@tr>
-    <#if returnableItems?has_content>
+    </@thead>
       <#assign rowCount = 0>
       <#assign alt_row = false>
       <#list returnableItems.keySet() as orderItem>
@@ -67,8 +76,8 @@ under the License.
 
             <@tr id="returnItemId_tableRow_${rowCount}" valign="middle" alt=alt_row>
               <@td colspan="4">
-            <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
-            <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${orderItem.orderAdjustmentId}"/>
+                <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
+                <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${orderItem.orderAdjustmentId}"/>
                 ${description?default("N/A")}
               </@td>
               <@td>
@@ -99,10 +108,10 @@ under the License.
 
             <@tr id="returnItemId_tableRow_${rowCount}" valign="middle" alt=alt_row>
               <@td>
-            <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="${returnItemType}"/>
-            <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>
-            <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
-            <input type="hidden" name="description_o_${rowCount}" value="${orderItem.itemDescription!}"/>
+                <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="${returnItemType}"/>
+                <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>
+                <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
+                <input type="hidden" name="description_o_${rowCount}" value="${orderItem.itemDescription!}"/>
 
                 <div>
                   <#if orderItem.productId??>
@@ -159,14 +168,23 @@ under the License.
         <#-- toggle the row color -->
         <#assign alt_row = !alt_row>
       </#list>
-    <@tr type="util"><@td colspan="9"><hr/></@td></@tr>
-    <@tr>
-      <@td colspan="9"><@heading relLevel=1>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></@heading></@td>
-    </@tr>
-    <@tr><@td colspan="9"><br /></@td></@tr>
+  </@table>
+  </@section>
+
+  <#else>
+    <@resultMsg>${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</@resultMsg>
+  </#if>
+  
+</@section>
+  
+  
+<#if returnableItems?has_content>
+  <#assign sectionTitle>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></#assign>
+  <@section title=sectionTitle>
     <#if orderHeaderAdjustments?has_content>
+      <@table type="data-list">
       <@thead>
-      <@tr class="header-row">
+      <@tr type="meta" class="header-row">
         <@th>${uiLabelMap.CommonDescription}</@th>
         <@th>${uiLabelMap.CommonAmount}</@th>
         <@th>${uiLabelMap.OrderReturnType}</@th>
@@ -177,13 +195,12 @@ under the License.
         <#assign returnAdjustmentType = returnItemTypeMap.get(adj.get("orderAdjustmentTypeId"))/>
         <#assign adjustmentType = adj.getRelatedOne("OrderAdjustmentType", false)/>
         <#assign description = adj.description?default(adjustmentType.get("description",locale))/>
-
-        <@tr>
+        <@tr id="returnItemId_tableRow_${rowCount}">
           <@td>
-        <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
-        <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${adj.orderAdjustmentId}"/>
-        <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
-        <input type="hidden" name="description_o_${rowCount}" value="${description}"/>
+            <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
+            <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${adj.orderAdjustmentId}"/>
+            <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
+            <input type="hidden" name="description_o_${rowCount}" value="${description}"/>
             <div>
               ${description?default("N/A")}
             </div>
@@ -204,57 +221,59 @@ under the License.
         </@tr>
         <#assign rowCount = rowCount + 1>
       </#list>
+      </@table>
     <#else>
-      <@tr><@td colspan="9">${uiLabelMap.OrderNoOrderAdjustments}</@td></@tr>
+      <@resultMsg>${uiLabelMap.OrderNoOrderAdjustments}</@resultMsg>
     </#if>
+  </@section>
 
-    <#assign manualAdjRowNum = rowCount/>
-    <@tr>
-        <@td colspan="9">
-    <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="RET_MAN_ADJ"/>
-    <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
-          <hr/>
-        </@td>
-    </@tr>
-    <@tr>
-      <@td colspan="9">
-        <@heading relLevel=1>${uiLabelMap.OrderReturnManualAdjustment} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></@heading>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td>
-        <input type="text" size="30" name="description_o_${rowCount}" />
-      </@td>
-      <@td>
-        <input type="text" size="8" name="amount_o_${rowCount}" value="${0.00?string("##0.00")}"/>
-      </@td>
-      <@td>
-        <select name="returnTypeId_o_${rowCount}">
-          <#list returnTypes as type>
-          <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
-          </#list>
-        </select>
-      </@td>
-      <@td align="right">
-        <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
-      </@td>
-    </@tr>
+    <#assign manualAdjRowNum = rowCount>
+        <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="RET_MAN_ADJ"/>
+        <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
+        
+  <#assign sectionTitle>${uiLabelMap.OrderReturnManualAdjustment} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></#assign>
+  <@section title=sectionTitle>
+        <@table type="data-list">
+          <@thead>
+          <@tr type="meta" class="header-row">
+            <@th>${uiLabelMap.CommonDescription}</@th>
+            <@th>${uiLabelMap.CommonAmount}</@th>
+            <@th>${uiLabelMap.OrderReturnType}</@th>
+            <@th align="right">${uiLabelMap.OrderOrderInclude}?</@th>
+          </@tr>
+          </@thead>
+            <@tr id="returnItemId_tableRow_${rowCount}">
+              <@td>
+                <input type="text" size="30" name="description_o_${rowCount}" />
+              </@td>
+              <@td>
+                <input type="text" size="8" name="amount_o_${rowCount}" value="${0.00?string("##0.00")}"/>
+              </@td>
+              <@td>
+                <select name="returnTypeId_o_${rowCount}">
+                  <#list returnTypes as type>
+                  <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
+                  </#list>
+                </select>
+              </@td>
+              <@td>
+                <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
+              </@td>
+            </@tr>
+        </@table>
+
     <#assign rowCount = rowCount + 1>
+  </@section>
 
-    <!-- final row count -->
-    <@tr>
-      <@td colspan="9" align="right">
-    <input type="hidden" name="_rowCount" value="${rowCount}"/>
+    <#-- final row count -->
+    <@row>
+      <@cell>
+        <input type="hidden" name="_rowCount" value="${rowCount}"/>
         <a href="javascript:document.${selectAllFormName}.submit()" class="${styles.button_default!}">${uiLabelMap.OrderReturnSelectedItems}</a>
-      </@td>
-    </@tr>
-    <#else>
-    <@tr>
-      <@td colspan="9">${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</@td>
-    </@tr>
-    </#if>
-    <@tr>
-      <@td colspan="3" class="tooltip">*${uiLabelMap.OrderReturnPriceNotIncludeTax}</@td>
-      <@td colspan="6">&nbsp;</@td>
-    </@tr>
-</@table>
+      </@cell>
+    </@row>
+
+</#if>
+
+    <p><span class="tooltip">*${uiLabelMap.OrderReturnPriceNotIncludeTax}</span></p>
+     

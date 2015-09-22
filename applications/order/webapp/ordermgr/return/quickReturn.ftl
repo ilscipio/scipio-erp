@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.OrderReturnItems}">
+<@section> <#--  title="${uiLabelMap.OrderReturnItems}" -->
         <#-- DO NOT CHANGE THE NAME OF THIS FORM, it will break the some of the multi-service pattern features -->
         <#assign selectAllFormName = "selectAllForm"/>
         <form name="selectAllForm" method="post" action="<@ofbizUrl>makeQuickReturn</@ofbizUrl>">
@@ -29,15 +29,17 @@ under the License.
           <input type="hidden" name="needsInventoryReceive" value="${parameters.needsInventoryReceive?default("Y")}"/>
           <input type="hidden" name="destinationFacilityId" value="${destinationFacilityId!}"/>
           <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId}"/>
-          <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>
+        <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>
           <input type="hidden" name="currencyUomId" value="${orderHeader.currencyUom}"/>
-          </#if>
-          <#include "returnItemInc.ftl"/>
-          <hr />
-          <#if "CUSTOMER_RETURN" == returnHeaderTypeId>
-          <@heading>${uiLabelMap.FormFieldTitle_paymentMethodId}:</@heading>
-          <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr><@td>
+        </#if>
+
+    <#include "returnItemInc.ftl"/>
+
+        <hr />
+        
+    <@section>
+        <#if "CUSTOMER_RETURN" == returnHeaderTypeId>
+          <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodId}">
               <#if creditCardList?? || eftAccountList??>
                 <select name='paymentMethodId'>
                   <option value=""></option>
@@ -59,17 +61,11 @@ under the License.
               <#if (party.partyId)?has_content>
                 <a href="/partymgr/control/editcreditcard?partyId=${party.partyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="smallSubmit ${styles.button_default!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
-            </@td></@tr>
-          </@table>
-          </#if>
-          <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr type="util"><@td colspan="8"><hr/></@td></@tr>
-            <@tr>
-              <@td colspan="8"><@heading><#if "CUSTOMER_RETURN" == returnHeaderTypeId>${uiLabelMap.OrderReturnShipFromAddress}<#else>${uiLabelMap["checkhelper.select_shipping_destination"]}</#if></@heading></@td>
-            </@tr>
-            <@tr>
-              <@td colspan="8">
-                <@table type="fields" cellspacing="0" class="basic-table">
+          </@field>
+        </#if>
+          <#assign label><#if "CUSTOMER_RETURN" == returnHeaderTypeId>${uiLabelMap.OrderReturnShipFromAddress}<#else>${uiLabelMap["checkhelper.select_shipping_destination"]}</#if></#assign>
+          <@field type="generic" label=label>
+                <@table type="data-list" cellspacing="0" class="basic-table">
                   <#list shippingContactMechList as shippingContactMech>
                     <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                     <@tr>
@@ -90,8 +86,7 @@ under the License.
                     </@tr>
                   </#list>
                 </@table>
-              </@td>
-            </@tr>
-          </@table>
+          </@field>
         </form>
+    </@section>
 </@section>

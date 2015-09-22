@@ -120,7 +120,7 @@ function doPublish() {
                 <@td nowrap="nowrap">
                 <input type="hidden" name="productId${idx}" value="${assocProduct.productId!}"/>
                 <a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.productId!}</a></@td>
-                <@td width="100%"><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName!}</a></@td>
+                <@td nowrap="nowrap"><a class="${styles.button_default!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName!}</a></@td>
                 <@td colspan="2">
                     <input type="text" name="description${idx}" size="70" maxlength="100" value="${selFeatureDesc[assocProduct.productId]!}"/>
                 </@td>
@@ -139,18 +139,17 @@ function doPublish() {
             <@tr>
                 <@td colspan="2">&nbsp;</@td>
                 <@td>
-                    <@table type="fields" cellspacing="0" class="basic-table">
+                    <@table type="data-list" cellspacing="0" class="basic-table">
                         <#list selectableFeatureTypes as selectableFeatureType>
-                        <@tr><@td><a class="${styles.button_default!}" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
+                        <@tr><@td nowrap="nowrap"><a class="${styles.button_default!}" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
                             <a class="${styles.button_default!}" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)!}&amp;productId=${product.productId!}</@ofbizUrl>">${(selectableFeatureType.get("description",locale))!}</a></@td></@tr>
                         </#list>
                     </@table>
                 </@td>
                 <@td align="right">
-                    <@table type="fields" cellspacing="0" class="basic-table">
-                        <@tr><@td align="right"><input name="applyToAll" type="submit" value="${uiLabelMap.ProductAddSelectableFeature}"/></@td></@tr>
-                    </@table>
+                    <input name="applyToAll" type="submit" value="${uiLabelMap.ProductAddSelectableFeature}"/>
                 </@td>
+                <@td colspan="2"></@td>
             </@tr>
           </@tfoot>
         </@table>
@@ -231,8 +230,8 @@ function doPublish() {
             </#list>
               <@tfoot>
                 <@tr>
-                    <@td colspan="10" align="right"><input name="applyToAll" type="submit" value="${uiLabelMap.ProductApplyToAll}"/>
-                    &nbsp;&nbsp;<input name="updateShipping" type="submit" value="${uiLabelMap.ProductUpdateShipping}"/></@td>
+                    <@td colspan="11" align="right"><input name="applyToAll" type="submit" value="${uiLabelMap.ProductApplyToAll}"/>
+                    &nbsp;<input name="updateShipping" type="submit" value="${uiLabelMap.ProductUpdateShipping}"/></@td>
                 </@tr>
               </@tfoot>
         <#else>
@@ -359,28 +358,22 @@ function doPublish() {
     </@row>
     <@row>
       <@cell>
-        <@table type="generic">
-          <@tr>
-            <@td valign="top">
-                <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
-                    <#list productCategoryMembers as prodCatMemb>
-                        <#assign prodCat = prodCatMemb.getRelatedOne("ProductCategory", false)/>
-                        <@tr valign="middle">
-                            <@td colspan="2">
-                              <form name="quickAdminRemoveProductFromCategory_${prodCatMemb_index}" action="<@ofbizUrl>quickAdminRemoveProductFromCategory</@ofbizUrl>" method="post">
-                                <input type="hidden" name="productId" value="${prodCatMemb.productId!}" />
-                                <input type="hidden" name="productCategoryId" value="${prodCatMemb.productCategoryId}" />
-                                <input type="hidden" name="fromDate" value="${(prodCatMemb.fromDate)!}" />
-                                <a href="javascript:document.quickAdminRemoveProductFromCategory_${prodCatMemb_index}.submit();" class="${styles.button_default!}">x</a>
-                                ${prodCat.description!} ${prodCat.productCategoryId}
-                              </form>
-                            </@td>
-                        </@tr>
-                    </#list>
-                </@table>
-            </@td>
-          </@tr>
-        </@table>
+          <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
+            <#list productCategoryMembers as prodCatMemb>
+                <#assign prodCat = prodCatMemb.getRelatedOne("ProductCategory", false)/>
+                <@tr valign="middle">
+                    <@td colspan="2">
+                      <form name="quickAdminRemoveProductFromCategory_${prodCatMemb_index}" action="<@ofbizUrl>quickAdminRemoveProductFromCategory</@ofbizUrl>" method="post">
+                        <input type="hidden" name="productId" value="${prodCatMemb.productId!}" />
+                        <input type="hidden" name="productCategoryId" value="${prodCatMemb.productCategoryId}" />
+                        <input type="hidden" name="fromDate" value="${(prodCatMemb.fromDate)!}" />
+                        <a href="javascript:document.quickAdminRemoveProductFromCategory_${prodCatMemb_index}.submit();" class="${styles.button_default!}">x</a>
+                        ${prodCat.description!} ${prodCat.productCategoryId}
+                      </form>
+                    </@td>
+                </@tr>
+            </#list>
+          </@table>
       </@cell>
     </@row>
         <!--  **************************************************** end - Categories section -->

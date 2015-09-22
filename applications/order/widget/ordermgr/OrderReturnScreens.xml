@@ -72,11 +72,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderReturnDecorator" location="${parameters.orderReturnDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleFindQuickReturn}">
-                            <platform-specific>
-                                <html><html-template location="component://order/webapp/ordermgr/return/quickReturn.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/return/quickReturn.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

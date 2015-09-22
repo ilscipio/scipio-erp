@@ -20,30 +20,15 @@ under the License.
 <#-- TODO: Convert hard-coded text to UI label properties -->
 
 <#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
-  <@menu type="button" class="+button-style-1">
-    <@menuitem type="link" ofbizHref="paysetup" text="Payment&nbsp;Setup" selected=true />
-  </@menu>
-</#if>
 
-<#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
-<@table type="fields" autoAltRows=false border="0" width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
-  <@tr>
-    <@td width='100%'>
-      <@table type="fields" width='100%' border='0' cellpadding='0' cellspacing='0' class='boxtop'>
-        <@tr>
-          <@td>
-            <div class="boxhead">&nbsp;Payment Processor Setup</div>
-          </@td>
-        </@tr>
-      </@table>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td width='100%'>
-      <@table type="fields" autoAltRows=false width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
-        <@tr>
-          <@td>
-            <@table type="data-list" autoAltRows=false width="100%" cellpadding="2" cellspacing="2" border="0">
+    <#assign menuHtml>
+      <@menu type="button" class="+button-style-1">
+        <@menuitem type="link" ofbizHref="paysetup" text="Payment Setup" selected=true />
+      </@menu>
+    </#assign>
+    <@section title="Payment Processor Setup" menuHtml=menuHtml>
+        <#if paymentSetups?has_content> 
+          <@table type="data-list" autoAltRows=false width="100%" cellpadding="2" cellspacing="2" border="0">
             <@thead>
               <@tr class="header-row">
                 <@th nowrap="nowrap">WebSite</@th>
@@ -55,8 +40,8 @@ under the License.
                 <@th nowrap="nowrap">Payment Config</@th>
                 <@th nowrap="nowrap">&nbsp;</@th>
               </@tr>
-              </@thead>
-              <#if paymentSetups?has_content>
+            </@thead>
+            <@tbody>
                 <#list paymentSetups as paymentSetting>
                   <#if rowStyle?? && rowStyle == "alternate-row">
                     <#assign rowStyle = "alternate-rowSelected">
@@ -81,56 +66,33 @@ under the License.
                       </@td>
                   </@tr>
                 </#list>
-              <#else>
-                <@tr type="meta">
-                  <@td colspan="8"><@resultMsg>No settings found.</@resultMsg></@td>
-                </@tr>
-              </#if>
-            </@table>
-          </@td>
-        </@tr>
-      </@table>
-    </@td>
-  </@tr>
-</@table>
+            </@tbody>
+          </@table>
+        <#else>
+            <@resultMsg>No settings found.</@resultMsg>
+        </#if>
+    </@section>
 
 <#if security.hasEntityPermission("PAYPROC", "_CREATE", session)>
-<@table type="fields" border="0" width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
-  <@tr>
-    <@td width='100%'>
-      <@table type="fields" width='100%' border='0' cellpadding='0' cellspacing='0' class='boxtop'>
-        <@tr>
-          <@td width='90%'>
-            <#if webSitePayment?has_content>
-              <div class="boxhead">&nbsp;Update&nbsp;Setting</div>
-            <#else>
-              <div class="boxhead">&nbsp;Add&nbsp;New&nbsp;Setting</div>
-            </#if>
-          </@td>
-          <#if webSitePayment?has_content>
-            <@td align='right' width='10%'><a href="<@ofbizUrl>paysetup</@ofbizUrl>" class="${styles.button_default!}">Add New</a></@td>
-          <#else>
-            <@td align='right' width='10%'></@td>
-          </#if>
-        </@tr>
-      </@table>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td width='100%'>
-      <@table type="fields" width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
-        <@tr>
-          <@td>
+    <#assign menuHtml>
+      <@menu type="section" inlineItems=true>
+      <#if webSitePayment?has_content>
+        <@menuitem type="link" ofbizHref="paysetup" text="Add New" />
+      </#if>
+      </@menu>
+    </#assign>
+    <#if webSitePayment?has_content>
+      <#assign sectionTitle = "Update Setting">
+    <#else>
+      <#assign sectionTitle = "Add New Setting">
+    </#if>
+    <@section title=sectionTitle menuHtml=menuHtml>
             <#if webSitePayment?has_content>
               <form method="post" action="<@ofbizUrl>updateWebSitePaymentSetting</@ofbizUrl>">
             <#else>
               <form method="post" action="<@ofbizUrl>createWebSitePaymentSetting</@ofbizUrl>">
             </#if>
-            <@table type="fields" border='0' cellpadding='2' cellspacing='0'>
-              <@tr>
-                <@td width="26%" align="right">WebSite</@td>
-                <@td>&nbsp;</@td>
-                <@td width="74%">
+              <@field type="generic" label="WebSite">
                   <#if webSitePayment?has_content>
                     <input type='hidden' name='webSiteId' value='${webSitePayment.webSiteId}' />
                     <div>
@@ -143,12 +105,8 @@ under the License.
                       </#list>
                     </select>
                   </#if>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">Payment Method Type</@td>
-                <@td>&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="Payment Method Type">
                   <#if webSitePayment?has_content>
                     <input type='hidden' name='paymentMethodTypeId' value='${webSitePayment.paymentMethodTypeId}' />
                     <div>
@@ -161,46 +119,28 @@ under the License.
                       </#list>
                     </select>
                   </#if>
-                </@td>
-              </@tr>
+              </@field>
 
-              <@tr>
-                <@td width="26%" align="right">Processor Auth Service</@td>
-                <@td>&nbsp;</@td>
-                <@td width="74%"><input type="text" name="paymentAuthService" value="${payInfo.paymentAuthService!}" size="30" maxlength="60" /></@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">Processor Re-Auth Service</@td>
-                <@td>&nbsp;</@td>
-                <@td width="74%"><input type="text" name="paymentReAuthService" value="${payInfo.paymentReAuthService!}" size="30" maxlength="60" /></@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">Processor Capture Service</@td>
-                <@td>&nbsp;</@td>
-                <@td width="74%"><input type="text" name="paymentCaptureService" value="${payInfo.paymentCaptureService!}" size="30" maxlength="60" /></@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">Processor Refund Service</@td>
-                <@td>&nbsp;</@td>
-                <@td width="74%"><input type="text" name="paymentRefundService" value="${payInfo.paymentRefundService!}" size="30" maxlength="60" /></@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">Processor Properties URL</@td>
-                <@td>&nbsp;</@td>
-                <@td width="74%"><input type="text" name="paymentConfiguration" value="${payInfo.paymentConfiguration!}" size="30" maxlength="60" /></@td>
-              </@tr>
-              <@tr>
-                <@td colspan='2'>&nbsp;</@td>
-                <@td colspan='1'><input type="submit" value="${uiLabelMap.CommonUpdate}" /></@td>
-              </@tr>
-            </@table>
+              <@field type="generic" label="Processor Auth Service">
+                  <input type="text" name="paymentAuthService" value="${payInfo.paymentAuthService!}" size="30" maxlength="60" />
+              </@field>
+              <@field type="generic" label="Processor Re-Auth Service">
+                  <input type="text" name="paymentReAuthService" value="${payInfo.paymentReAuthService!}" size="30" maxlength="60" />
+              </@field>
+              <@field type="generic" label="Processor Capture Service">
+                  <input type="text" name="paymentCaptureService" value="${payInfo.paymentCaptureService!}" size="30" maxlength="60" />
+              </@field>
+              <@field type="generic" label="Processor Refund Service">
+                  <input type="text" name="paymentRefundService" value="${payInfo.paymentRefundService!}" size="30" maxlength="60" />
+              </@field>
+              <@field type="generic" label="Processor Properties URL">
+                  <input type="text" name="paymentConfiguration" value="${payInfo.paymentConfiguration!}" size="30" maxlength="60" />
+              </@field>
+              <@field type="submitarea">
+                  <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+              </@field>
             </form>
-          </@td>
-        </@tr>
-      </@table>
-    </@td>
-  </@tr>
-</@table>
+    </@section>
 </#if>
 
 <#else>

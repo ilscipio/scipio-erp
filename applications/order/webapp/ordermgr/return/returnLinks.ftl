@@ -62,7 +62,7 @@ under the License.
     </@menu>
   </#if>
 <#else>
-  <@heading>${uiLabelMap.OrderCreateNewReturn}</@heading>
+  <#--<@heading>${uiLabelMap.OrderCreateNewReturn}</@heading>-->
   <#if requestParameters.returnId?has_content>
     <@alert type="error">${uiLabelMap.OrderNoReturnFoundWithId} : ${requestParameters.returnId}</@alert>
   </#if>

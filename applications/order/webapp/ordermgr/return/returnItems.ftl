@@ -340,45 +340,30 @@ under the License.
         </#if>
 
         <#if returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "SUP_RETURN_REQUESTED">
-        <br />
+        <@section title="${uiLabelMap.OrderReturnItems}">
         <form name="returnItems" method="post" action="<@ofbizUrl>returnItems</@ofbizUrl>">
           <input type="hidden" name="returnId" value="${returnId}" />
-          <@table type="fields" class="" border='0' cellpadding='2' cellspacing='0'>
-            <@tr><@td colspan="4"><@heading>${uiLabelMap.OrderReturnItems}</@heading></@td></@tr>
             <#if partyOrders?has_content>
-              <@tr>
-                <@td width='25%' align='right' nowrap="nowrap">${uiLabelMap.OrderOrderId}</@td>
-                <@td>&nbsp;</@td>
-                <@td width='25%'>
+              <@field type="generic" label="${uiLabelMap.OrderOrderId}" tooltip="${uiLabelMap.OrderReturnLoadItems}">
                   <select name="orderId">
                     <#list partyOrders as order>
                       <option value="${order.orderId}">${order.orderId} - ${order.orderDate}</option>
                     </#list>
                   </select>
-                </@td>
-                <@td><div class="tooltip">${uiLabelMap.OrderReturnLoadItems}</div></@td>
-              </@tr>
+              </@field>
             <#else>
               <@tr>
                 <@td colspan="4" nowrap="nowrap">${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId?default('_NA_')}" class="${styles.button_default!}">${partyId?default('[null]')}</a></@td>
               </@tr>
-              <@tr>
-                <@td width='25%' align='right' nowrap="nowrap">${uiLabelMap.OrderOrderId}</@td>
-                <@td>&nbsp;</@td>
-                <@td width='25%'>
+              <@field type="generic" label="${uiLabelMap.OrderOrderId}" tooltip="${uiLabelMap.OrderReturnLoadItems}">
                   <input type='text' name='orderId' size='20' maxlength='20' />
-                </@td>
-                <@td><div class="tooltip">${uiLabelMap.OrderReturnLoadItems}</div></@td>
-              </@tr>
+              </@field>
             </#if>
-            <@tr>
-              <@td colspan="2">&nbsp;</@td>
-              <@td colspan="2">
+            <@field type="submitarea">
                 <a href="javascript:document.returnItems.submit();" class="${styles.button_default!}">${uiLabelMap.OrderReturnLoadItems}</a>
-              </@td>
-            </@tr>
-          </@table>
+            </@field>
         </form>
+        </@section>
         </#if>
   <#-- if no requestParameters.orderId??, then show list of items -->
   <#elseif returnHeader?has_content>

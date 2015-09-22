@@ -494,6 +494,14 @@ Not associated with an HTML element as is @fieldset.
   </#if>
 </#if>
 
+<#-- parent @fields group elem info (if any; may be omitted) -->
+<#local fieldsInfo = readRequestStack("catoCurrentFieldsInfo", {})>
+<#-- parent @field elem info (if any; is possible) -->
+<#local parentFieldInfo = readRequestStack("catoCurrentFieldInfo", {})>
+<#-- this field's info (popped at end) -->
+<#local dummy = pushRequestStack("catoCurrentFieldInfo", 
+    {"type":type})>
+
 <#-- fieldIdNum will always increment throughout the page 
      now stored in request attributes so survived screens.render though still accessible as a global -->
 <#global fieldIdNum = (request.getAttribute("catoFieldIdNum"))!0>
@@ -523,7 +531,6 @@ Not associated with an HTML element as is @fieldset.
 </#if>
 
 <@row collapse=collapse!false norows=norows class="form-field-entry">
-    <#local fieldsInfo = readRequestStack("catoCurrentFieldsInfo", {})>
     <#local fieldsType = (fieldsInfo.type)!"generic">
     <#-- TODO?: in future fieldsLabelArea and fieldsLabelType default might be inferred from form type or fieldsType 
          for now, just set fieldsLabelArea to true so by default generic and display fields will align with other fields
@@ -776,6 +783,8 @@ Not associated with an HTML element as is @fieldset.
          </@cell>
      </#if>
 </@row>
+<#-- pop field info when done -->
+<#local dummy = popRequestStack("catoCurrentFieldInfo")>
 </#macro>
 
 <#-- 
@@ -831,7 +840,6 @@ Not associated with an HTML element as is @fieldset.
     <form<#if classes?has_content> class="${classes}</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
       <#nested>
     </form>
-    <#-- must unset this so @field can still work without a @form parent -->
     <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
 </#macro>
 

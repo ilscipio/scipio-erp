@@ -43,7 +43,7 @@ under the License.
 //]]>
 </script>
 <@section title="${uiLabelMap.ProductAdvancedSearchInCategory}">
-    <form id="productSearchform" method="post" action="<@ofbizUrl>productsearch</@ofbizUrl>" style="margin: 0;" name="productSearchform">
+    <form id="productSearchform" method="post" action="<@ofbizUrl>productsearch</@ofbizUrl>" name="productSearchform">
     <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
       <fieldset>
         <input type="hidden" name="VIEW_SIZE" value="25"/>

@@ -37,7 +37,7 @@ under the License.
 </#assign>
 <@section title="${uiLabelMap.ProductStockMovesNeeded}" menuHtml=menuHtml>
         <#if moveByOisgirInfoList?has_content || moveByPflInfoList?has_content>
-          <form method="post" action="<@ofbizUrl>processPhysicalStockMove</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
+          <form method="post" action="<@ofbizUrl>processPhysicalStockMove</@ofbizUrl>" name='selectAllForm'>
               <#-- general request fields -->
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <input type="hidden" name="_useRowSubmit" value="Y" />

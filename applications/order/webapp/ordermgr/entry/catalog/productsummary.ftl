@@ -114,7 +114,7 @@ ${virtualJavaScript!}
           <#elseif product.productTypeId! == "ASSET_USAGE_OUT_IN">
             <a href="${productUrl}" class="${styles.button_default!}">${uiLabelMap.OrderRent}...</a>
           <#else>
-            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form">
               <input type="hidden" name="add_product_id" value="${product.productId}"/>
               <input type="text" size="5" name="quantity" value="1"/>
               <input type="hidden" name="clearSearch" value="N"/>
@@ -136,7 +136,7 @@ ${virtualJavaScript!}
             </form>
             
               <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
-                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform">
                   <input type="hidden" name="add_product_id" value="${prodCatMem.productId!}"/>
                   <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                   <input type="hidden" name="clearSearch" value="N"/>
@@ -145,7 +145,7 @@ ${virtualJavaScript!}
                 </form>
                 <#assign productCategory = delegator.findOne("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", prodCatMem.productCategoryId), false)/>
                 <#if productCategory.productCategoryTypeId != "BEST_SELL_CATEGORY">
-                    <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform" style="margin: 0;">
+                    <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform">
                       <input type="hidden" name="add_product_id" value="${prodCatMem.productId!}"/>
                       <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                       <input type="hidden" name="clearSearch" value="N"/>

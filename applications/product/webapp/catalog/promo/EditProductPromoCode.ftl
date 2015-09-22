@@ -29,7 +29,7 @@ under the License.
               </div>                
             </#list>
             <div>
-                <form method="post" action="<@ofbizUrl>createProductPromoCodeEmail</@ofbizUrl>" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>createProductPromoCodeEmail</@ofbizUrl>">
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                     <span>${uiLabelMap.ProductAddEmail}:</span><input type="text" size="40" name="emailAddress" />
@@ -38,7 +38,7 @@ under the License.
                 <#if productPromoCode.requireEmailOrParty! == "N">
                     <div class="tooltip">${uiLabelMap.ProductNoteRequireEmailParty}</div>
                 </#if>
-                <form method="post" action="<@ofbizUrl>createBulkProductPromoCodeEmail?productPromoCodeId=${productPromoCodeId!}</@ofbizUrl>" enctype="multipart/form-data" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>createBulkProductPromoCodeEmail?productPromoCodeId=${productPromoCodeId!}</@ofbizUrl>" enctype="multipart/form-data">
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                     <input type="file" size="40" name="uploadedFile" />

@@ -126,7 +126,7 @@ under the License.
   <#if parameters.ebayStore?has_content>
     <#assign ebayStore = parameters.ebayStore!>
     <#--${ebayStore}-->
-    <form name="StoreSettingForm" id="StoreSettingForm" method="post" action="<@ofbizUrl>editEbayStoreDetail</@ofbizUrl>" style="margin: 0;">
+    <form name="StoreSettingForm" id="StoreSettingForm" method="post" action="<@ofbizUrl>editEbayStoreDetail</@ofbizUrl>">
         <input type="hidden" name="themeType" value="${themeType!}"/>
         <input type="hidden" name="storeUrl" value="${ebayStore.storeUrl!}"/>
         <input type="hidden" name="storeLogoId" value="${ebayStore.storeLogoId!}"/>

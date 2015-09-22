@@ -23,10 +23,10 @@ under the License.
 <#else>
     <#if !giftCard??>
       <h1>${uiLabelMap.AccountingAddNewGiftCard}</h1>
-      <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
     <#else>
       <h1>${uiLabelMap.AccountingEditGiftCard}</h1>
-      <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
     &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>

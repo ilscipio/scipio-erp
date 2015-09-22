@@ -173,7 +173,7 @@ function insertImageName(type,nameValue) {
         </@form>
     </@section>
     <@section title="${uiLabelMap.ProductDuplicateProductCategory}">
-            <form action="<@ofbizUrl>DuplicateProductCategory</@ofbizUrl>" method="post" style="margin: 0;">
+            <form action="<@ofbizUrl>DuplicateProductCategory</@ofbizUrl>" method="post">
                 <input type="hidden" name="oldProductCategoryId" value="${productCategoryId}"/>
                 <@field type="generic" label="${uiLabelMap.ProductDuplicateProductCategorySelected}">
                   <input type="text" size="20" maxlength="20" name="productCategoryId"/>

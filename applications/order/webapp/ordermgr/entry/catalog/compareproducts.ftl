@@ -76,7 +76,7 @@ under the License.
                 <a href="javascript:doPostViaParent('compareFormAdd${product_index}');" class="${styles.button_default!}">${uiLabelMap.OrderAddToCart}</a>
 
         <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
-                <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">additem</@ofbizUrl>" name="compareFormAddDefault${product_index}" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">additem</@ofbizUrl>" name="compareFormAddDefault${product_index}">
                     <input type="hidden" name="add_product_id" value="${prodCatMem.productId!}"/>
                     <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                     <input type="hidden" name="clearSearch" value="N"/>

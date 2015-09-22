@@ -20,7 +20,7 @@ under the License.
 <#-- Only show if there is more than 1 (one) catalog, no sense selecting when there is only one option... -->
 <#if (catalogCol?size > 1)>
     <@section title="${uiLabelMap.ProductChooseCatalog}">
-        <form name="choosecatalogform" method="post" action="<@ofbizUrl>choosecatalog</@ofbizUrl>" style='margin: 0;'>
+        <form name="choosecatalogform" method="post" action="<@ofbizUrl>choosecatalog</@ofbizUrl>">
           <select name="CURRENT_CATALOG_ID">
             <option value="${currentCatalogId}">${currentCatalogName}</option>
             <option value="${currentCatalogId}"></option>

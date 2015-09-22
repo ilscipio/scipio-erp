@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <hr />
-    <form method="post"  action="/content/control/AdminSearch"  name="searchQuery" style="margin: 0;">
+    <form method="post"  action="/content/control/AdminSearch"  name="searchQuery">
 <@table type="fields" class="" border="0" cellpadding="2" cellspacing="0">
 
 <@tr>

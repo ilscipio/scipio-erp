@@ -54,7 +54,7 @@ under the License.
 //]]>
 </script>
 <@section title="${uiLabelMap.ProductAdvancedSearchInCategory}">
-    <form name="advToKeywordSearchform" id="advToKeywordSearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="margin: 0;">
+    <form name="advToKeywordSearchform" id="advToKeywordSearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
       <fieldset>
         <input type="hidden" name="VIEW_SIZE" value="25"/>
         <input type="hidden" name="PAGING" value="Y"/>

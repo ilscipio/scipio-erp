@@ -69,7 +69,7 @@ under the License.
       </form>
       <br />
       <#-- select picklist bin form -->
-      <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>" style="margin: 0;">
+      <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>">
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
         <@table type="fields" cellspacing="0" class="basic-table">
           <@tr>

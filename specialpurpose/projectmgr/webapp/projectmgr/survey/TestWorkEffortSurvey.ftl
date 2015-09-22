@@ -20,7 +20,7 @@ under the License.
 <@section title="${survey.surveyName}">
         <#-- Render the survey -->
         <#if surveyWrapper?has_content>
-            <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>testWorkEffortSurveyResponse</@ofbizUrl>" style="margin: 0;">
+            <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>testWorkEffortSurveyResponse</@ofbizUrl>">
               <input type="hidden" name="productStoreSurveyId" value="${productStoreSurveyId}"/>
               <input type="hidden" name="workEffortId" value="${workEffortId}"/>
               ${surveyWrapper.render()}

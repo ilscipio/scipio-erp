@@ -99,7 +99,7 @@ function doPublish() {
     </@row>
     <@row>
       <@cell>
-        <form action="<@ofbizUrl>updateProductQuickAdminSelFeat</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeature">
+        <form action="<@ofbizUrl>updateProductQuickAdminSelFeat</@ofbizUrl>" method="post" name="selectableFeature">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
         <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
@@ -161,7 +161,7 @@ function doPublish() {
 
 <#if (product.isVariant)! == "Y">
     <@section title="${uiLabelMap.ProductDistinguishingFeatures}">
-        <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method="post" style="margin: 0;" name="distFeature">
+        <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method="post" name="distFeature">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
               <@thead>

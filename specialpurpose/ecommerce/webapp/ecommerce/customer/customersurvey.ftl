@@ -24,7 +24,7 @@ under the License.
     <div class="screenlet-body">
         <#-- Render the survey -->
         <#if surveyWrapper?has_content>
-            <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>profilesurvey/profilesurvey</@ofbizUrl>" style="margin: 0;">
+            <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>profilesurvey/profilesurvey</@ofbizUrl>">
               ${surveyWrapper.render()}
             </form>
         <#else>

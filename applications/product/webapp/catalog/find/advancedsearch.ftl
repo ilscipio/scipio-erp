@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.ProductAdvancedSearchInCategory}">
-    <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="margin: 0;">
+    <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
       <input type="hidden" name="VIEW_SIZE" value="25"/>
       <input type="hidden" name="PAGING" value="Y"/>
       <input type="hidden" name="noConditionFind" value="Y"/>

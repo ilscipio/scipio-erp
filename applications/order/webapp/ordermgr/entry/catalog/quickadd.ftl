@@ -24,7 +24,7 @@ under the License.
         <@heading>${productCategory.categoryName!}</@heading>
       </@td>
       <@td align="right">
-        <form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>" style='margin: 0;'>
+        <form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>">
           <select name='category_id'>
             <option value='${productCategory.productCategoryId}'>${productCategory.categoryName!}</option>
             <option value='${productCategory.productCategoryId}'>--</option>
@@ -56,7 +56,7 @@ under the License.
 <#if productCategoryMembers?? && 0 < productCategoryMembers?size>
   <br />
   <center>
-  <form method="post" action="<@ofbizUrl>addtocartbulk</@ofbizUrl>" name="bulkaddform" style='margin: 0;'>
+  <form method="post" action="<@ofbizUrl>addtocartbulk</@ofbizUrl>" name="bulkaddform">
     <input type='hidden' name='category_id' value='${categoryId}' />
     <div class="quickaddall">
       <a href="javascript:document.bulkaddform.submit()" class="${styles.button_default!}">${uiLabelMap.OrderAddAllToCart}</a>

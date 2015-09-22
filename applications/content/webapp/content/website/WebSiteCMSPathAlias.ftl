@@ -64,7 +64,7 @@
 
 
 
-    <form name="cmspathform" method="post" action="<@ofbizUrl>/createWebSitePathAliasJson</@ofbizUrl>" style="margin: 0;">
+    <form name="cmspathform" method="post" action="<@ofbizUrl>/createWebSitePathAliasJson</@ofbizUrl>">
         <@table type="fields">
             <@tr><@td colspan="2">&nbsp;</@td></@tr>
             <@tr>

@@ -42,7 +42,7 @@ under the License.
         <li><a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id?? productId=miniProduct.productId/>" class="buttons"><span style="white-space: nowrap;">${uiLabelMap.OrderChooseAmount}...</span></a></li>
     <#else>
       <li>
-        <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}">
           <fieldset>
             <input type="hidden" name="add_product_id" value="${miniProduct.productId}"/>
             <input type="hidden" name="quantity" value="${miniProdQuantity?default("1")}"/>

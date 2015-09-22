@@ -36,9 +36,9 @@ under the License.
     <@saveCancelMenu />
         
     <#if !eftAccount??>
-      <form method="post" action='<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
+      <form method="post" action='<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform">
     <#else>
-      <form method="post" action='<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
+      <form method="post" action='<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>

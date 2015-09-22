@@ -58,7 +58,7 @@ function submitForm(form, mode, value) {
 //]]>
 </script>
 
-<form method="post" name="checkoutInfoForm" style="margin:0;">
+<form method="post" name="checkoutInfoForm">
   <fieldset>
     <input type="hidden" name="checkoutpage" value="shippingoptions"/>
 

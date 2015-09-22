@@ -90,7 +90,7 @@ under the License.
                 <input type="hidden" id="ownerPartyId" name="ownerPartyId" value="${shoppingCart.getBillToCustomerPartyId()!}" />
             </form>
               
-            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform">
                       <#if orderType=="PURCHASE_ORDER">                        
                         <#if partyId?has_content>                                               
                           <#assign fieldFormName="LookupSupplierProduct?partyId=${partyId}">
@@ -150,7 +150,7 @@ under the License.
 
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
 
-            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
+            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform">
                     
                         <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
                         <option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option>

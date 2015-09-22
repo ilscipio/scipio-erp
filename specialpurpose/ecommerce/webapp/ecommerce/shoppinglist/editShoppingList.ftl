@@ -446,7 +446,7 @@ under the License.
                          ${productContentWrapper.get("PRODUCT_NAME")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION")!}
                     </@td>
                     <@td nowrap="nowrap" align="center">
-                      <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name="listform_${shoppingListItem.shoppingListItemSeqId}" style="margin: 0;">
+                      <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name="listform_${shoppingListItem.shoppingListItemSeqId}">
                         <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}"/>
                         <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}"/>
                         <input type="hidden" name="reservStart"/>
@@ -497,7 +497,7 @@ under the License.
                         <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_!>
                         <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_!>
                         <br />
-                        <form method="post" action="<@ofbizUrl>${addToCartAction}</@ofbizUrl>" name="listreplform_${shoppingListItem.shoppingListItemSeqId}" style="margin: 0;">
+                        <form method="post" action="<@ofbizUrl>${addToCartAction}</@ofbizUrl>" name="listreplform_${shoppingListItem.shoppingListItemSeqId}">
                           <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}"/>
                           <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}"/>
                           <input type="hidden" name="quantity" value="${shoppingListItem.quantity}"/>

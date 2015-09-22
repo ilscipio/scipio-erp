@@ -23,10 +23,10 @@ under the License.
 <#else>
     <#if !eftAccount??>
       <h1>${uiLabelMap.AccountingAddNewEftAccount}</h1>
-      <form method="post" action="<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
     <#else>
       <h1>${uiLabelMap.PageTitleEditEFTAccount}</h1>
-      <form method="post" action="<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
     &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>

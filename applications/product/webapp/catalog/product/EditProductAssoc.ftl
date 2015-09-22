@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.PageTitleEditProductAssociations}">
-        <form action="<@ofbizUrl>UpdateProductAssoc</@ofbizUrl>" method="post" style="margin: 0;" name="editProductAssocForm">
+        <form action="<@ofbizUrl>UpdateProductAssoc</@ofbizUrl>" method="post" name="editProductAssocForm">
         <input type="hidden" name="productId" value="${productId!}" />
 
         <#if !(productAssoc??)>

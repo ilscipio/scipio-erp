@@ -39,9 +39,9 @@ under the License.
             </form>
         <#else>
            <#if !(inventoryTransfer??)>
-                <form method="post" action="<@ofbizUrl>CreateInventoryTransfer</@ofbizUrl>" name="transferform" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>CreateInventoryTransfer</@ofbizUrl>" name="transferform">
             <#else>
-                <form method="post" action="<@ofbizUrl>UpdateInventoryTransfer</@ofbizUrl>" name="transferform" style="margin: 0;">
+                <form method="post" action="<@ofbizUrl>UpdateInventoryTransfer</@ofbizUrl>" name="transferform">
                 <input type="hidden" name="inventoryTransferId" value="${inventoryTransferId!}" />
             </#if>
 

@@ -27,7 +27,7 @@ under the License.
         <div class="h3">${pageHeader}</div>
     </div>
     <div class="screenlet-body">
-      <form name="contactus" method="post" action="<@ofbizUrl>${submitRequest}</@ofbizUrl>" style="margin: 0;">
+      <form name="contactus" method="post" action="<@ofbizUrl>${submitRequest}</@ofbizUrl>">
         <input type="hidden" name="partyIdFrom" value="${userLogin.partyId}"/>
         <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS"/>
         <input type="hidden" name="communicationEventTypeId" value="WEB_SITE_COMMUNICATI"/>

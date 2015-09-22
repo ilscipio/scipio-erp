@@ -87,7 +87,7 @@ under the License.
             </form>
 
             <!-- select picklist bin form -->
-            <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>" style="margin: 0;">
+            <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>">
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <@table type="fields" cellspacing="0" class="basic-table">
                 <@tr>

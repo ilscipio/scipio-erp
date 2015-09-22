@@ -161,7 +161,7 @@
 
 <#-- main content form -->
 <#if (dataResourceTypeId?has_content)>
-    <form name="cmsform" enctype="multipart/form-data" method="post" action="<@ofbizUrl>${formAction}</@ofbizUrl>" style="margin: 0;">
+    <form name="cmsform" enctype="multipart/form-data" method="post" action="<@ofbizUrl>${formAction}</@ofbizUrl>">
         <#if (content?has_content)>
             <input type="hidden" name="dataResourceId" value="${(dataResource.dataResourceId)!}"/>
             <input type="hidden" name="contentId" value="${content.contentId}"/>

@@ -432,7 +432,7 @@ ${virtualJavaScript!}
             <div>&nbsp;</div>
       </#if>
 
-      <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform"  style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" >
         <#if requestAttributes.paramMap?has_content>
           <input type="hidden" name="itemComment" value="${requestAttributes.paramMap.itemComment!}" />
           <input type="hidden" name="shipBeforeDate" value="${requestAttributes.paramMap.shipBeforeDate!}" />

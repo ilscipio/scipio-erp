@@ -34,9 +34,9 @@ under the License.
     <@saveCancelMenu />
 
     <#if !creditCard??>
-      <form method="post" action="<@ofbizUrl>createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
     <#else>
-      <form method="post" action="<@ofbizUrl>updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>

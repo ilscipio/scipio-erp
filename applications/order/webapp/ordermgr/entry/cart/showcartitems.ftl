@@ -29,7 +29,7 @@ under the License.
 
 <@section title="${uiLabelMap.OrderOrderItems}">
   <#if (shoppingCartSize > 0)>
-    <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
+    <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
       <input type="hidden" name="removeSelected" value="false"/>
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <input type="hidden" name="finalizeReqShipInfo" value="false"/>

@@ -136,7 +136,7 @@ under the License.
   </@section>
   <#assign sectionTitle>${uiLabelMap.ProductAddProduct}</#assign>
   <@section title=sectionTitle>
-        <form method="post" action="<@ofbizUrl>createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
+        <form method="post" action="<@ofbizUrl>createProductFacilityLocation</@ofbizUrl>" name="createProductFacilityLocationForm">
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <input type="hidden" name="locationSeqId" value="${locationSeqId!}" />
             <input type="hidden" name="useValues" value="true" />

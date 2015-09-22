@@ -21,7 +21,7 @@ under the License.
 
 <#if (shoppingLists??) && (shoppingCartSize > 0)>
     <@section title="${uiLabelMap.OrderAddOrderToShoppingList}">
-        <form method="post" name="addBulkToShoppingList" action="<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>" style='margin: 0;'>
+        <form method="post" name="addBulkToShoppingList" action="<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>">
           <#assign index = 0/>
           <#list shoppingCart.items() as cartLine>
             <#if (cartLine.getProductId()??) && !cartLine.getIsPromo()>

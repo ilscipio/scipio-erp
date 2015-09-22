@@ -62,7 +62,7 @@ under the License.
 
       <@row>
         <@cell>
-        <form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>" style="margin: 0;">
+        <form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
             <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
                 <#list productFeatureAndTypeDatas! as productFeatureAndTypeData>

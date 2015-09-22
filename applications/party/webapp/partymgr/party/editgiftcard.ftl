@@ -34,9 +34,9 @@ under the License.
     <@saveCancelMenu />
      
     <#if !giftCard??>
-      <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
     <#else>
-      <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>

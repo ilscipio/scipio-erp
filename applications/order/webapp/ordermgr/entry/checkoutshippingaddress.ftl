@@ -57,7 +57,7 @@ function toggleBillingAccount(box) {
 <#assign cart = shoppingCart!/>
 
 <@section title="1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?">
-<form method="post" name="checkoutInfoForm" style="margin:0;">
+<form method="post" name="checkoutInfoForm">
   <fieldset>
     <input type="hidden" name="checkoutpage" value="shippingaddress"/>
             <@table type="fields" class="" width="100%" border="0" cellpadding="1" cellspacing="0">

@@ -24,7 +24,7 @@ under the License.
 <#if security.hasEntityPermission("CATALOG", "_VIEW", session)>
     <@grid columns=2>
         <li>
-  <form method="post" action="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" style="margin: 0;" name="EditProdCatalogForm">
+  <form method="post" action="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" name="EditProdCatalogForm">
                 <@pul title="${uiLabelMap.ProductEditCatalogWithCatalogId}"> 
                     <@pli><@field type="input" size="20" maxlength="20" name="prodCatalogId" value="" postfix=true/></@pli>
                     <@pli><a href="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" class="${styles.tiny!} success">${uiLabelMap.ProductCreateNewCatalog}</a></@pli>
@@ -32,7 +32,7 @@ under the License.
   </form>
          </li>      
         <li>  
-  <form method="post" action="<@ofbizUrl>EditCategory</@ofbizUrl>" style="margin: 0;" name="EditCategoryForm">
+  <form method="post" action="<@ofbizUrl>EditCategory</@ofbizUrl>" name="EditCategoryForm">
             <@pul title="${uiLabelMap.ProductEditCategoryWithCategoryId}">
                 <@pli><@field type="lookup" name="productCategoryId" id="productCategoryId" formName="EditCategoryForm" fieldFormName="LookupProductCategory" postfix=true/></@pli>
                 <@pli><a href="<@ofbizUrl>EditCategory</@ofbizUrl>" class="${styles.tiny!} success">${uiLabelMap.ProductCreateNewCategory}</a></@pli>
@@ -41,7 +41,7 @@ under the License.
          </li>
           
         <li>  
-  <form method="post" action="<@ofbizUrl>EditProduct</@ofbizUrl>" style="margin: 0;" name="EditProductForm">
+  <form method="post" action="<@ofbizUrl>EditProduct</@ofbizUrl>" name="EditProductForm">
           <@pul title="${uiLabelMap.ProductEditProductWithProductId}">
                 <@pli><@field type="lookup" name="productId" id="productId" formName="EditProductForm" fieldFormName="LookupProduct" postfix=true/></@pli>
                 <@pli><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="${styles.tiny!} success">${uiLabelMap.ProductCreateNewProduct}</a></@pli>
@@ -50,7 +50,7 @@ under the License.
   </form>
         </li>
         <li>
-  <form method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>" style="margin: 0;">
+  <form method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>">
             <@pul title="${uiLabelMap.ProductFindProductWithIdValue}">
                 <@pli><@field type="input" size="20" maxlength="20" name="idValue" value="" postfix=true/></@pli>
                 <@pli><a href="<@ofbizUrl>UpdateAllKeywords</@ofbizUrl>" class=""> ${uiLabelMap.ProductAutoCreateKeywordsForAllProducts}</a></@pli>

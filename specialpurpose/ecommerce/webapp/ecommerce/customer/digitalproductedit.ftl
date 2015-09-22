@@ -30,11 +30,11 @@ under the License.
 
     <#if !supplierProduct??>
       <h1>${uiLabelMap.EcommerceAddNewDigitalProduct}</h1>
-      <form method="post" action="<@ofbizUrl>createCustomerDigitalDownloadProduct</@ofbizUrl>" name="editdigitaluploadform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>createCustomerDigitalDownloadProduct</@ofbizUrl>" name="editdigitaluploadform">
         <input type="hidden" name="productStoreId" value="${productStore.productStoreId}" />
     <#else>
       <h1>${uiLabelMap.EcommerceUpdateDigitalProduct}</h1>
-      <form method="post" action="<@ofbizUrl>updateCustomerDigitalDownloadProduct</@ofbizUrl>" name="editdigitaluploadform" style="margin: 0;">
+      <form method="post" action="<@ofbizUrl>updateCustomerDigitalDownloadProduct</@ofbizUrl>" name="editdigitaluploadform">
         <input type="hidden" name="productId" value="${parameters.productId}" />
         <input type="hidden" name="currencyUomId" value="${parameters.currencyUomId}" />
         <input type="hidden" name="minimumOrderQuantity" value="${parameters.minimumOrderQuantity}" />
@@ -81,7 +81,7 @@ under the License.
         <div><hr /></div>
         <div class="tableheadtext">${uiLabelMap.EcommerceDigitalAddFromMyFiles}</div>
         <div>
-        <form method="post" action="<@ofbizUrl>addCustomerDigitalDownloadProductFile</@ofbizUrl>" name="adddigitaluploadfile" style="margin: 0;">
+        <form method="post" action="<@ofbizUrl>addCustomerDigitalDownloadProductFile</@ofbizUrl>" name="adddigitaluploadfile">
           <input type="hidden" name="productId" value="${parameters.productId}" />
           <input type="hidden" name="currencyUomId" value="${parameters.currencyUomId}" />
           <input type="hidden" name="minimumOrderQuantity" value="${parameters.minimumOrderQuantity}" />

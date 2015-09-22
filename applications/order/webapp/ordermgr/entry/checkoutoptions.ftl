@@ -75,7 +75,7 @@ function submitForm(form, mode, value) {
 
 <#assign shipping = !shoppingCart.containAllWorkEffortCartItems()> <#-- contains items which need shipping? -->
 
-<form method="post" name="checkoutInfoForm" style="margin:0;">
+<form method="post" name="checkoutInfoForm">
   <input type="hidden" name="checkoutpage" value="quick"/>
   <input type="hidden" name="BACK_PAGE" value="quickcheckout"/>
 

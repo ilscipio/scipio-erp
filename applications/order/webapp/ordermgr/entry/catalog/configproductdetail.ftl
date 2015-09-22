@@ -284,7 +284,7 @@ function getConfigDetails() {
             <div>&nbsp;</div>
       </#if>
 
-      <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
+      <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform">
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?? && product.isVirtual?upper_case == "Y">

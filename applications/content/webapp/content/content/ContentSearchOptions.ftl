@@ -18,7 +18,7 @@ under the License.
 -->
 <@section title="${uiLabelMap.CommonAdvancedSearch}">
 
-    <form name="advToKeyWordSearchForm" method="post" action="<@ofbizUrl>ContentSearchResults</@ofbizUrl>" style="margin: 0;">
+    <form name="advToKeyWordSearchForm" method="post" action="<@ofbizUrl>ContentSearchResults</@ofbizUrl>">
       <input type="hidden" name="VIEW_SIZE" value="25"/>
       <@table type="fields" class="basic-table" cellspacing="0">
         <@tr>

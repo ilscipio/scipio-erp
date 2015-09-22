@@ -548,7 +548,7 @@ $(function(){
         </div>
     
         <div id="addItemForm">
-          <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform"  style="margin: 0;">
+          <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform" >
           <fieldset>
             <#assign inStock = true />
             <#assign commentEnable = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("order.properties", "order.item.comment.enable")>

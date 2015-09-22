@@ -396,8 +396,6 @@ Not associated with an HTML element as is @fieldset.
     Usage example:  
     <@field attr="" />
     
-FIXME: #globals should be changed to request attributes, otherwise don't survive screens.render
-    
     * General Attributes *
     type            = form element of type [input,textarea,datetime,select,checkbox,radio,display,generic],
                       default generic meaning input defined manually with #nested

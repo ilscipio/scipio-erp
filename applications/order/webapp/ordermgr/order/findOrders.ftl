@@ -121,13 +121,10 @@ function submitFindForm(val){
 
         <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
       
-        <@row collapse=true>
-          <@cell class="${styles.grid_large!}2 ${styles.grid_small!}3"><label>${uiLabelMap.CommonDateFilter}</label></@cell>
-          <@cell class="${styles.grid_large!}10 ${styles.grid_small!}9">
+        <@field type="generic" label="${uiLabelMap.CommonDateFilter}">
             <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" collapse=true/>
             <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate" collapse=true/>
-          </@cell>
-        </@row>
+        </@field>
       
         <@fieldset title="${uiLabelMap.CommonAdvancedSearch}" collapsed=true>
           <@field type="input" label="${uiLabelMap.OrderExternalId}" name="externalId"/>

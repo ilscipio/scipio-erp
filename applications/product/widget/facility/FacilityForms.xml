@@ -914,10 +914,11 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="information" title="${uiLabelMap.CommonDescription}"><text size="50" maxlength="60"/></field>
         <field name="latitude"><text/></field>
-        <field name="longitude"><text/></field>
+        <field name="longitude" position="2"><text/></field>
         <field name="elevation"><text/></field>
-        <field name="elevationUomId">
+        <field name="elevationUomId" position="2">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="Uom" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
@@ -925,7 +926,6 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="information"><text size="50" maxlength="60"/></field>
         <field name="selectButton" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
     </form>
 

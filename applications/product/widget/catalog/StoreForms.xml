@@ -20,7 +20,27 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-
+    
+    <form name="ListProductStore" type="list" list-name="productStores"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
+        <actions>
+            <set field="parameters.sortField" from-field="parameters.sortField" default-value="storeName"/>
+            <entity-condition entity-name="ProductStore" use-cache="true" list="productStores">
+                <order-by field-name="${parameters.sortField}"/>
+            </entity-condition>
+        </actions>
+        <field name="productStoreId" title="${uiLabelMap.ProductStoreId}" widget-style="${styles.link_default}" sort-field="true">
+            <hyperlink target="EditProductStore" description="${storeName} [${productStoreId}]">
+                <parameter param-name="productStoreId"/>
+            </hyperlink>
+        </field>
+        <field name="companyName" title="${uiLabelMap.CommonCompany}" sort-field="true"><display/></field>
+        <field name="title" title="${uiLabelMap.ProductTitle}" sort-field="true"><display/></field>
+        <field name="inventoryFacilityId" sort-field="true">
+            <display-entity entity-name="Facility" description="${facilityName}" key-field-name="facilityId"/>
+        </field>
+    </form>
+    
     <form name="FindProductStoreRole" type="single" target="FindProductStoreRoles" default-entity-name="ProductStoreRole">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="productStoreId" title="${uiLabelMap.ProductStoreId}"><hidden/></field>

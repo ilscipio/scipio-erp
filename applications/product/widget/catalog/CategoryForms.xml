@@ -25,6 +25,7 @@ under the License.
         <field name="productCategoryId"><display/></field>
         <field name="submitForm" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
+    
     <form name="EditProductCategoryAttributes" odd-row-style="alternate-row" default-table-style="basic-table" type="list" target="updateProductCategoryAttribute" title="" list-name="categoryAttributes">
         <auto-fields-service service-name="updateProductCategoryAttribute" default-field-type="display"/>
         <field name="productCategoryId"><hidden/></field>

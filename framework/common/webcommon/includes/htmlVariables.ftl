@@ -137,6 +137,11 @@ under the License.
     "grid_columns_11" : "large-11 medium-10 columns",
     "grid_columns_12" : "large-12 columns",
 
+<#-- Floats -->
+    "float_left" : "left",
+    "float_right" : "right",
+    "float_clearfix" : "clearfix",
+    
 <#-- Navigation -->
     "nav_subnav" : "sub-nav",
 

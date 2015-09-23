@@ -23,25 +23,17 @@ under the License.
 <#else>
   <form action="<@ofbizUrl>CreateFacility</@ofbizUrl>" name="EditFacilityForm" method="post" class="basic-form">
   <#if facilityId??>
-    <h3>${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityId!}".</h3>
+    <@alert type="error">${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityId!}".</@alert>
   </#if>
 </#if>
 
-<@table type="fields" class="basic-table" cellspacing="0">
-
 <#if facility?? && facilityId?has_content>
-  <@tr>
-    <@td>${uiLabelMap.ProductFacilityId}</@td>
-    <@td>
-      ${facilityId!} <span class="tooltip">${uiLabelMap.ProductNotModificationRecrationFacility}</span>
-    </@td>
-  </@tr>
-<#else>
+  <@field type="generic" label="${uiLabelMap.ProductFacilityId}" tooltip="${uiLabelMap.ProductNotModificationRecrationFacility}">
+      ${facilityId!}
+  </@field>
 </#if>
 
-  <@tr>
-    <@td>${uiLabelMap.ProductFacilityTypeId}</@td>
-    <@td>
+  <@field type="generic" label="${uiLabelMap.ProductFacilityTypeId}">
       <select name="facilityTypeId">
         <option selected="selected" value='${facilityType.facilityTypeId!}'>${facilityType.get("description",locale)!}</option>
         <option value='${facilityType.facilityTypeId!}'>----</option>
@@ -49,24 +41,14 @@ under the License.
           <option value='${nextFacilityType.facilityTypeId!}'>${nextFacilityType.get("description",locale)!}</option>
         </#list>
       </select>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td>${uiLabelMap.FormFieldTitle_parentFacilityId}</@td>
-    <@td>
+  </@field>
+  <@field type="generic" label="${uiLabelMap.FormFieldTitle_parentFacilityId}">
       <@htmlTemplate.lookupField value="${facility.parentFacilityId!}" formName="EditFacilityForm" name="parentFacilityId" id="parentFacilityId" fieldFormName="LookupFacility"/>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td>${uiLabelMap.ProductFacilityOwner}</@td>
-    <@td>
+  </@field>
+  <@field type="generic" label="${uiLabelMap.ProductFacilityOwner}" required=true>
       <@htmlTemplate.lookupField value="${facility.ownerPartyId!}" formName="EditFacilityForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
-      <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td>${uiLabelMap.ProductFacilityDefaultWeightUnit}</@td>
-    <@td>
+  </@field>
+  <@field type="generic" label="${uiLabelMap.ProductFacilityDefaultWeightUnit}">
       <select name="defaultWeightUomId">
           <option value=''>${uiLabelMap.CommonNone}</option>
           <#list weightUomList as uom>
@@ -77,11 +59,8 @@ under the License.
              >${uom.get("description",locale)?default(uom.uomId)}</option>
           </#list>
       </select>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td>${uiLabelMap.ProductFacilityDefaultInventoryItemType}</@td>
-    <@td>
+  </@field>
+  <@field type="generic" label="${uiLabelMap.ProductFacilityDefaultInventoryItemType}">
       <select name="defaultInventoryItemTypeId">
           <#list inventoryItemTypes as nextInventoryItemType>
             <option value='${nextInventoryItemType.inventoryItemTypeId}'
@@ -91,22 +70,14 @@ under the License.
              >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
           </#list>
       </select>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td>${uiLabelMap.ProductName}</@td>
-    <@td>
+  </@field>
+  <@field type="generic" label="${uiLabelMap.ProductName}" required=true>
       <input type="text" name="facilityName" value="${facility.facilityName!}" size="30" maxlength="60" />
-      <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td>${uiLabelMap.ProductFacilitySize}</@td>
-    <@td><input type="text" name="facilitySize" value="${facility.facilitySize!}" size="10" maxlength="20" /></@td>
-  </@tr>
-  <@tr>
-   <@td>${uiLabelMap.ProductFacilityDefaultAreaUnit}</@td>
-    <@td>
+  </@field>
+  <@field type="generic" label="${uiLabelMap.ProductFacilitySize}">
+      <input type="text" name="facilitySize" value="${facility.facilitySize!}" size="10" maxlength="20" />
+  </@field>
+  <@field type="generic" label="${uiLabelMap.ProductFacilityDefaultAreaUnit}">
       <select name="facilitySizeUomId">
           <option value=''>${uiLabelMap.CommonNone}</option>
           <#list areaUomList as uom>
@@ -117,23 +88,20 @@ under the License.
              >${uom.get("description",locale)?default(uom.uomId)}</option>
           </#list>
       </select>
-    </@td>
-  </@tr>  
-  <@tr>
-    <@td>${uiLabelMap.ProductProductDescription}</@td>
-    <@td><input type="text" name="description" value="${facility.description!}" size="60" maxlength="250" /></@td>
-  </@tr>
-  <@tr>
-    <@td>${uiLabelMap.ProductDefaultDaysToShip}</@td>
-    <@td><input type="text" name="defaultDaysToShip" value="${facility.defaultDaysToShip!}" size="10" maxlength="20" /></@td>
-  </@tr>
-  <@tr>
-    <@td>&nbsp;</@td>
+  </@field>  
+  <@field type="generic" label="${uiLabelMap.ProductProductDescription}">
+      <input type="text" name="description" value="${facility.description!}" size="60" maxlength="250" />
+  </@field>
+  <@field type="generic" label="${uiLabelMap.ProductDefaultDaysToShip}">
+      <input type="text" name="defaultDaysToShip" value="${facility.defaultDaysToShip!}" size="10" maxlength="20" />
+  </@field>
+
+  <@field type="submitarea">
     <#if facilityId?has_content>
-      <@td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" /></@td>
+      <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" />
     <#else>
-      <@td><input type="submit" name="Update" value="${uiLabelMap.CommonSave}" /></@td>
+      <input type="submit" name="Update" value="${uiLabelMap.CommonSave}" />
     </#if>
-  </@tr>
-</@table>
+  </@field>
+
 </form>

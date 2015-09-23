@@ -44,23 +44,17 @@ under the License.
 
 <#if facilityId?? || facilityLocation??>
 
-  <@table type="fields" class="basic-table" cellspacing="0">
-
 <#if facilityLocation??>
-    <@tr>
-        <@td>${uiLabelMap.ProductFacilityId}</@td>
-        <@td>${facilityId!}</@td>
-    </@tr>
-    <@tr>
-        <@td>${uiLabelMap.ProductLocationSeqId}</@td>
-        <@td>${locationSeqId}</@td>
-    </@tr>
+    <@field type="generic" label="${uiLabelMap.ProductFacilityId}">
+        ${facilityId!}
+    </@field>
+    <@field type="generic" label="${uiLabelMap.ProductLocationSeqId}">
+        ${locationSeqId}
+    </@field>
 </#if>
 
-    <@tr>
-        <@td>${uiLabelMap.ProductType}</@td>
-        <@td>
-            <select name="locationTypeEnumId">
+    <@field type="generic" label="${uiLabelMap.ProductType}">
+        <select name="locationTypeEnumId">
                 <#if (facilityLocation.locationTypeEnumId)?has_content>
                     <#assign locationTypeEnum = facilityLocation.getRelatedOne("TypeEnumeration", true)!>
                     <option value="${facilityLocation.locationTypeEnumId}">${(locationTypeEnum.get("description",locale))?default(facilityLocation.locationTypeEnumId)}</option>
@@ -70,37 +64,29 @@ under the License.
                     <option value="${locationTypeEnum.enumId}">${locationTypeEnum.get("description",locale)}</option>
                 </#list>
             </select>
-        </@td>
-    </@tr>
-    <@tr>
-        <@td>${uiLabelMap.CommonArea}</@td>
-        <@td><input type="text" name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" /></@td>
-    </@tr>
-    <@tr>
-        <@td>${uiLabelMap.ProductAisle}</@td>
-        <@td><input type="text" name="aisleId" value="${(facilityLocation.aisleId)!}" size="19" maxlength="20" /></@td>
-    </@tr>
-    <@tr>
-        <@td>${uiLabelMap.ProductSection}</@td>
-        <@td><input type="text" name="sectionId" value="${(facilityLocation.sectionId)!}" size="19" maxlength="20" /></@td>
-    </@tr>
-    <@tr>
-        <@td>${uiLabelMap.ProductLevel}</@td>
-        <@td><input type="text" name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" /></@td>
-    </@tr>
-    <@tr>
-        <@td>${uiLabelMap.ProductPosition}</@td>
-        <@td><input type="text" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" /></@td>
-    </@tr>
-    <@tr>
-        <@td>&nbsp;</@td>
+    </@field>
+    <@field type="generic" label="${uiLabelMap.CommonArea}">
+        <input type="text" name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" />
+    </@field>
+    <@field type="generic" label="${uiLabelMap.ProductAisle}">
+        <input type="text" name="aisleId" value="${(facilityLocation.aisleId)!}" size="19" maxlength="20" />
+    </@field>
+    <@field type="generic" label="${uiLabelMap.ProductSection}">
+        <input type="text" name="sectionId" value="${(facilityLocation.sectionId)!}" size="19" maxlength="20" />
+    </@field>
+    <@field type="generic" label="${uiLabelMap.ProductLevel}">
+        <input type="text" name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" />
+    </@field>
+    <@field type="generic" label="${uiLabelMap.ProductPosition}">
+        <input type="text" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" />
+    </@field>
+    <@field type="submitarea">
         <#if locationSeqId??>
-          <@td><input type="submit" value="${uiLabelMap.CommonUpdate}" /></@td>
+          <input type="submit" value="${uiLabelMap.CommonUpdate}" />
         <#else>
-          <@td><input type="submit" value="${uiLabelMap.CommonSave}" /></@td>
+          <input type="submit" value="${uiLabelMap.CommonSave}" />
         </#if>
-    </@tr>
-  </@table>
+    </@field>
   </form>
   
   <#if locationSeqId??>
@@ -134,16 +120,17 @@ under the License.
         </#list>
         </@table>
   </@section>
+
   <#assign sectionTitle>${uiLabelMap.ProductAddProduct}</#assign>
   <@section title=sectionTitle>
         <form method="post" action="<@ofbizUrl>createProductFacilityLocation</@ofbizUrl>" name="createProductFacilityLocationForm">
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <input type="hidden" name="locationSeqId" value="${locationSeqId!}" />
             <input type="hidden" name="useValues" value="true" />
-            <span>${uiLabelMap.ProductProductId}</span><input type="text" size="10" name="productId" />
-            <span>${uiLabelMap.ProductMinimumStock}</span><input type="text" size="10" name="minimumStock" />
-            <span>${uiLabelMap.ProductMoveQuantity}</span><input type="text" size="10" name="moveQuantity" />
-            <input type="submit" value="${uiLabelMap.CommonAdd}" />
+            <@field type="generic" label="${uiLabelMap.ProductProductId}"><input type="text" size="10" name="productId" /></@field>
+            <@field type="generic" label="${uiLabelMap.ProductMinimumStock}"><input type="text" size="10" name="minimumStock" /></@field>
+            <@field type="generic" label="${uiLabelMap.ProductMoveQuantity}"><input type="text" size="10" name="moveQuantity" /></@field>
+            <@field type="submitarea"><input type="submit" value="${uiLabelMap.CommonAdd}" /></@field>
         </form>
   </@section>
   

@@ -49,12 +49,7 @@ under the License.
         <input type="hidden" name="VIEW_SIZE" value="25"/>
         <input type="hidden" name="PAGING" value="Y"/>
         <input type="hidden" name="noConditionFind" value="Y"/>
-        <@table type="fields" cellspacing="0" class="basic-table">
-          <@tr>
-              <@td align="right" valign="top">
-                ${uiLabelMap.ProductCatalog}:
-              </@td>
-              <@td valign="middle">
+          <@field type="generic" label="${uiLabelMap.ProductCatalog}">
                   <select name="SEARCH_CATALOG_ID" id="searchCatalogId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchCatalogId'));" class="required">
                     <#list prodCatalogList as prodCatalog>
                       <#assign displayDesc = prodCatalog.catalogName?default("${uiLabelMap.ProductNoDescription}") />
@@ -65,13 +60,8 @@ under the License.
                     </#list>
                   </select>
                   <span id="catalogErrorMessage" style="display:none;" class="errorMessage">${uiLabelMap.CommonRequired}</span>
-              </@td>
-            </@tr>
-            <@tr>
-              <@td align="right" valign="top">
-                ${uiLabelMap.ProductCategory}:
-              </@td>
-              <@td valign="middle">
+          </@field>
+          <@field type="generic" label="${uiLabelMap.ProductCategory}">
                   <#if categoryIds?has_content>
                     <select name="SEARCH_CATEGORY_ID" id="searchCategoryId">
                       <option value="">- ${uiLabelMap.ProductAnyCategory} -</option>
@@ -87,41 +77,24 @@ under the License.
                   <#else>
                     <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="productSearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
                   </#if>
-              </@td>
-          </@tr>
-          <@tr>
-            <@td align="right" valign="top">
-              ${uiLabelMap.ProductProductName}:
-            </@td>
-            <@td valign="middle">
-                <input type="text" name="SEARCH_PRODUCT_NAME" size="20" value="${requestParameters.SEARCH_PRODUCT_NAME!}" />
-            </@td>
-          </@tr>
-          <@tr>
-            <@td align="right" valign="top">
-              ${uiLabelMap.ProductInternalName}:
-            </@td>
-            <@td valign="middle">
-                <input type="text" name="SEARCH_INTERNAL_PROD_NAME" size="20" value="${requestParameters.SEARCH_INTERNAL_PROD_NAME!}" />
-            </@td>
-          </@tr>
-          <@tr>
-            <@td align="right" valign="top">
-              ${uiLabelMap.ProductKeywords}:
-            </@td>
-            <@td valign="middle">
-                <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}" />&nbsp;
+          </@field>
+          <@field type="generic" label="${uiLabelMap.ProductProductName}">
+              <input type="text" name="SEARCH_PRODUCT_NAME" size="20" value="${requestParameters.SEARCH_PRODUCT_NAME!}" />
+          </@field>
+          <@field type="generic" label="${uiLabelMap.ProductInternalName}">
+              <input type="text" name="SEARCH_INTERNAL_PROD_NAME" size="20" value="${requestParameters.SEARCH_INTERNAL_PROD_NAME!}" />
+          </@field>
+          <@field type="generic" label="${uiLabelMap.ProductKeywords}">
+              <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}" />&nbsp;
                 ${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if> />
                 ${uiLabelMap.CommonAll}<input type="radio" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked="checked"</#if> />
-            </@td>
-          </@tr>
-          <@tr>
-            <@td align="center" colspan="2">
-              <hr />
+          </@field>
+
+          <hr />
+          
+          <@field type="submitarea">
               <a href="javascript:submit('productSearchform');" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a>
-            </@td>
-          </@tr>
-        </@table>
+          </@field>
       </fieldset>
     </form>
 </@section>

@@ -18,78 +18,48 @@ under the License.
 -->
 <hr />
     <form method="post"  action="/content/control/AdminSearch"  name="searchQuery">
-<@table type="fields" class="" border="0" cellpadding="2" cellspacing="0">
 
-<@tr>
-<@td width="20%" align="right">
-<span class="tableheadtext">${uiLabelMap.ContentQueryLine}</span>
-</@td>
-<@td>&nbsp;</@td>
-<@td width="80%">
-<input type="text" class="inputBox" name="queryLine" size="60"/>
-</@td>
-</@tr>
+<@field type="generic" label="${uiLabelMap.ContentQueryLine}">
+    <input type="text" class="inputBox" name="queryLine" size="60"/>
+</@field>
 
-<@tr>
-<@td width="20%" align="right">
-<span class="tableheadtext">${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}</span>
-</@td>
-<@td>&nbsp;</@td>
-<@td width="80%">
-<select name="lcSiteId">
-  <option value=""></option>
-  <@listSiteIds contentId="WebStoreCONTENT" indentIndex=0/>
-</select>
-</@td>
-</@tr>
+<@field type="generic" label="${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}">
+    <select name="lcSiteId">
+      <option value=""></option>
+      <@listSiteIds contentId="WebStoreCONTENT" indentIndex=0/>
+    </select>
+</@field>
 
 
 <!-- category form -->
-<@tr>
-<@td>
-  <@table type="fields" class="" cellspacing="" border="0" width="100%">
-    <@tr>
-      <@td align="right" valign="middle">${uiLabelMap.ProductFeatures}:
-      </@td>
-      <@td align="right" valign="middle">
-          ${uiLabelMap.CommonAll} <input type="radio" name="any_or_all" value="all" checked="checked"/>
+
+    <@field type="generic" label="${uiLabelMap.ProductFeatures}">
+        ${uiLabelMap.CommonAll} <input type="radio" name="any_or_all" value="all" checked="checked"/>
           ${uiLabelMap.CommonAny} <input type="radio" name="any_or_all" value="any"/>
-      </@td>
-    </@tr>
+    </@field>
 <#--
-    <@tr>
-      <@td align="right" valign="middle">Feature IDs:
-      </@td>
-      <@td valign="middle">
-          <input type="text" class="inputBox" name="SEARCH_FEAT" size="15" value="${requestParameters.SEARCH_FEAT!}"/>&nbsp;
+    <@field type="generic" label="Feature IDs">
+        <input type="text" class="inputBox" name="SEARCH_FEAT" size="15" value="${requestParameters.SEARCH_FEAT!}"/>&nbsp;
           <input type="text" class="inputBox" name="SEARCH_FEAT2" size="15" value="${requestParameters.SEARCH_FEAT!}"/>&nbsp;
           <input type="text" class="inputBox" name="SEARCH_FEAT3" size="15" value="${requestParameters.SEARCH_FEAT!}"/>&nbsp;
-      </@td>
-    </@tr>
+    </@field>
 -->
     <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-      <@tr>
-        <@td align="right" valign="middle">${(productFeatureType.description)!}:
-        </@td>
-        <@td valign="middle">
-            <select name="pft_${productFeatureTypeId}">
+      <@field type="generic" label="${(productFeatureType.description)!}">
+          <select name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
             </select>
-        </@td>
-      </@tr>
+      </@field>
     </#list>
     <#if searchConstraintStrings?has_content>
-      <@tr>
-        <@td align="right" valign="top">${uiLabelMap.CommonLast} ${uiLabelMap.CommonSearch}:
-        </@td>
-        <@td valign="top">
-            <#list searchConstraintStrings as searchConstraintString>
+      <@field type="generic" label="${uiLabelMap.CommonLast} ${uiLabelMap.CommonSearch}">
+          <#list searchConstraintStrings as searchConstraintString>
                 <div>&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
             <div>${uiLabelMap.CommonSortedBy}: ${searchSortOrderString}</div>
@@ -97,22 +67,12 @@ under the License.
               ${uiLabelMap.CommonNew} ${uiLabelMap.CommonSearch} <input type="radio" name="clearSearch" value="Y" checked="checked"/>
               ${uiLabelMap.CommonRefineSearch} <input type="radio" name="clearSearch" value="N"/>
             </div>
-        </@td>
-      </@tr>
+      </@field>
     </#if>
-    </@table>
-    </@td>
-</@tr>
-<@tr>
-<@td width="20%" align="right">
-&nbsp;</@td>
-<@td>&nbsp;</@td>
-<@td width="80%" colspan="4">
-<input type="submit" class="smallSubmit" name="submitButton" value="${uiLabelMap.CommonFind}"/>
-</@td>
 
-</@tr>
-</@table>
+<@field type="submitarea">
+    <input type="submit" class="smallSubmit" name="submitButton" value="${uiLabelMap.CommonFind}"/>
+</@field>
 </form>
 
 

@@ -20,21 +20,31 @@ under the License.
 <@section title="${uiLabelMap.FacilitySelectOptionsToGroupBy}">
   <form method="post" name="selectFactors" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>">
     <input type="hidden" name="facilityId" value="${facilityId}"/>
-    <@table type="fields" class="basic-table" cellspacing="0">
-      <@tr>
-        <@td class='label'>${uiLabelMap.FacilityGroupByShippingMethod}</@td>
-        <@td><input type="checkbox" name="groupByShippingMethod" value="Y" <#if "${requestParameters.groupByShippingMethod!}" == "Y">checked="checked"</#if>/></@td>
-        <@td class='label'>${uiLabelMap.FacilityGroupByWarehouseArea}</@td>
-        <@td><input type="checkbox" name="groupByWarehouseArea" value="Y" <#if "${requestParameters.groupByWarehouseArea!}" == "Y">checked="checked"</#if>/></@td>
-        <@td class='label'>${uiLabelMap.FacilityGroupByNoOfOrderItems}</@td>
-        <@td><input type="checkbox" name="groupByNoOfOrderItems" value="Y" <#if "${requestParameters.groupByNoOfOrderItems!}" == "Y">checked="checked"</#if>/></@td>
-      </@tr>
-      <@tr><@td>&nbsp;</@td></@tr>
-    </@table>
-    <div align ='right'>
-      <span>${uiLabelMap.FacilityGroupFirst}</span>
-      <input type="text" size="4" name="maxNumberOfOrders" value="50"/>
+  <@row>
+    <@cell columns=4>
+      <@field type="generic" label="${uiLabelMap.FacilityGroupByShippingMethod}">
+          <input type="checkbox" name="groupByShippingMethod" value="Y" <#if "${requestParameters.groupByShippingMethod!}" == "Y">checked="checked"</#if>/>
+      </@field>
+    </@cell>
+    <@cell columns=4>
+      <@field type="generic" label="${uiLabelMap.FacilityGroupByWarehouseArea}">
+          <input type="checkbox" name="groupByWarehouseArea" value="Y" <#if "${requestParameters.groupByWarehouseArea!}" == "Y">checked="checked"</#if>/>
+      </@field>
+    </@cell>
+    <@cell columns=4>
+      <@field type="generic" label="${uiLabelMap.FacilityGroupByNoOfOrderItems}">
+          <input type="checkbox" name="groupByNoOfOrderItems" value="Y" <#if "${requestParameters.groupByNoOfOrderItems!}" == "Y">checked="checked"</#if>/>
+      </@field>
+    </@cell>
+  </@row>
+ 
+    <#-- TODO: these two were align=right... -->
+    <@field type="generic" label="${uiLabelMap.FacilityGroupFirst}">
+        <input type="text" size="4" name="maxNumberOfOrders" value="50"/>    
+    </@field>      
+    <@field type="submitarea">
       <input type="submit" value="Submit" class="${styles.button_default!}" align='right'/>
+    </@field>
     </div>
   </form>
 </@section>  

@@ -26,41 +26,73 @@ under the License.
 <#else>
   <#assign focusName = true>
 </#if>
-<center>
-  <@section title="${uiLabelMap.CommonRegistered}" class="+login-screenlet">
+
+<@row>
+<@cell class="${styles.grid_large!}6 ${styles.grid_large!}centered" id="login">
+  <@section title="${uiLabelMap.CommonRegistered}" titleClass="h1" class="+login-screenlet">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
-        <@table type="fields" class="basic-table" cellspacing="0">
-          <@tr>
-            <@td>${uiLabelMap.CommonUsername}</@td>
-            <@td><input type="text" name="USERNAME" value="${username}" size="20"/></@td>
-          </@tr>
-          <@tr>
-            <@td>${uiLabelMap.CommonPassword}</@td>
-            <@td><input type="password" name="PASSWORD" value="" size="20"/></@td>
-          </@tr>
+
+      <@row>
+        <@cell>
+          <@row collapse=true>
+            <@cell columns=3>
+                <span class="prefix">${uiLabelMap.CommonUsername}</span>
+            </@cell>
+            <@cell columns=9>
+                <input type="text" name="USERNAME" value="${username}" size="20"/>
+            </@cell>
+          </@row>
+        </@cell>
+      </@row>       
+   
+      <@row>
+        <@cell>
+          <@row collapse=true>
+            <@cell columns=3>
+                <span class="prefix">${uiLabelMap.CommonPassword}</span>
+            </@cell>
+            <@cell columns=9>
+                <input type="password" name="PASSWORD" value="" size="20"/>            
+            </@cell>
+          </@row>
+        </@cell>
+      </@row>   
+       
           <#if ("Y" == useMultitenant) >
-              <#if !requestAttributes.userTenantId??>
-                  <@tr>
-                      <@td>${uiLabelMap.CommonTenantId}</@td>
-                      <@td><input type="text" name="userTenantId" value="${parameters.userTenantId!}" size="20"/></@td>
-                  </@tr>
-              <#else>
-                  <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
-              </#if>
+            <#if !requestAttributes.userTenantId??>
+              <@row>
+                <@cell>
+                  <@row collapse=true>
+                    <@cell columns=3>
+                        <span class="prefix">${uiLabelMap.CommonTenantId}</span>
+                    </@cell>
+                    <@cell columns=9>
+                        <input type="text" name="userTenantId" value="${parameters.userTenantId!}" size="20"/>
+                    </@cell>
+                  </@row>
+                </@cell>
+              </@row>   
+            <#else>
+                <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
+            </#if>
           </#if>
-          <@tr>
-            <@td colspan="2" align="center">
-              <input type="submit" value="${uiLabelMap.CommonLogin}"/>
-            </@td>
-          </@tr>
-        </@table>
+
+        <@row>
+            <@cell class="${styles.grid_large!}6 text-left">
+                <a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a>
+            </@cell>
+            <@cell class="${styles.grid_large!}6 text-right">
+                <input type="submit" value="${uiLabelMap.CommonLogin}"/>
+                <a href="<@ofbizUrl>newRegisterLogin</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.MyPortalNewRegistration}</a>
+            </@cell>
+        </@row>
+
         <input type="hidden" name="JavaScriptEnabled" value="N"/>
-        <br />
-        <a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a>
-        <a href="<@ofbizUrl>newRegisterLogin</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.MyPortalNewRegistration}</a>
+
       </form>
   </@section>
-</center>
+</@cell>
+</@row>
 
 <script language="JavaScript" type="text/javascript">
   document.loginform.JavaScriptEnabled.value = "Y";

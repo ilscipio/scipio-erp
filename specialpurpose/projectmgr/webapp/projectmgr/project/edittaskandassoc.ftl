@@ -19,9 +19,9 @@ under the License.
 
 <#assign sectionTitle>
   <#if task?has_content>
-    <li class="h3">&nbsp;${uiLabelMap.PageTitleEditTask}&nbsp;#${project.workEffortId!} ${uiLabelMap.CommonInformation}</li>
+    ${uiLabelMap.PageTitleEditTask}&nbsp;#${project.workEffortId!} ${uiLabelMap.CommonInformation}
   <#else>
-    <li class="h3">&nbsp;${uiLabelMap.PageTitleAddTask}</li>
+    ${uiLabelMap.PageTitleAddTask}
   </#if>
 </#assign>
 <@section title=sectionTitle>
@@ -31,57 +31,44 @@ under the License.
     <#else>
       <form name="addTaskAndAssocForm" method="get" action="<@ofbizUrl>createTaskAndAssoc</@ofbizUrl>">
     </#if>
-        <@table type="fields" class="" width="100%" cellpadding="2" cellspacing="0">
-        <@tr>
           <#if !(task??)>
-            <@td><input type="hidden" name="workEffortTypeId" value="${parameters.workEffortTypeId!}"/></@td>
+            <input type="hidden" name="workEffortTypeId" value="${parameters.workEffortTypeId!}"/>
           <#else>
-            <@td><input type="hidden" name="workEffortTypeId" value="${task.workEffortTypeId!}"/></@td>
-            <@td><input type="hidden" name="workEffortId" value="${task.workEffortId!}"/></@td>
-            <@td><input type="hidden" name="workEffortName" value="${task.workEffortName!}"/></@td>
+            <input type="hidden" name="workEffortTypeId" value="${task.workEffortTypeId!}"/>
+            <input type="hidden" name="workEffortId" value="${task.workEffortId!}"/>
+            <input type="hidden" name="workEffortName" value="${task.workEffortName!}"/>
           </#if>
-        </@tr>
-        <@tr>
-            <@td><input type="hidden" name="workEffortIdFrom" value="${workEffortIdFrom!}"/></@td>
-            <@td><input type="hidden" name="workEffortParentId" value="${workEffortIdFrom!}"/></@td>
-            <@td><input type="hidden" name="workEffortAssocTypeId" value="WORK_EFF_BREAKDOWN"/></@td>
-        </@tr>
-        <@tr>
-          <@td width="20%">
-            ${uiLabelMap.ProjectMgrTaskDetails}
-          </@td>
-        </@tr>
-        <@tr>
-          <@td>${uiLabelMap.ProjectMgrQuickAssignPartyId}</@td>
-          <@td>
+            <input type="hidden" name="workEffortIdFrom" value="${workEffortIdFrom!}"/>
+            <input type="hidden" name="workEffortParentId" value="${workEffortIdFrom!}"/>
+            <input type="hidden" name="workEffortAssocTypeId" value="WORK_EFF_BREAKDOWN"/>
+            
+        <@heading>${uiLabelMap.ProjectMgrTaskDetails}</@heading>    
+
+        <@field type="generic" label="${uiLabelMap.ProjectMgrQuickAssignPartyId}">
             <@htmlTemplate.lookupField formName="addTaskAndAssocForm" name="quickAssignPartyId" id="quickAssignPartyId" fieldFormName="LookupPartyName"/>
-          </@td>
-        </@tr>
-        <@tr>
-          <#if task??>
-            <@td>${uiLabelMap.ProjectMgrWorkEffortId}</@td>
-            <@td>${task.workEffortId!}</@td>
-          </#if>
-        </@tr>
-        <@tr>
-          <@td>${uiLabelMap.CommonName}*</@td>
+        </@field>
+        
+        <#if task??>
+          <@field type="display" label="${uiLabelMap.ProjectMgrWorkEffortId}">
+            ${task.workEffortId!}
+          </@field>
+        </#if>
+        
+        <@field type="generic" label="${uiLabelMap.CommonName}*">
             <#if task??>
-              <@td>${task.workEffortName!}<span class="tooltip">${uiLabelMap.CommonRequired}</span></@td>
+              ${task.workEffortName!}<span class="tooltip">${uiLabelMap.CommonRequired}</span>
             <#else>
-              <@td><input type="text" name="workEffortName" value=""/><span class="tooltip">${uiLabelMap.CommonRequired}</span></@td>
+              <input type="text" name="workEffortName" value=""/><span class="tooltip">${uiLabelMap.CommonRequired}</span>
             </#if>
-        </@tr>
-        <@tr>
-          <@td>${uiLabelMap.CommonDescription}</@td>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonDescription}">
             <#if task??>
-              <@td><input type="text" name="description" value="${task.description!}"/></@td>
+              <input type="text" name="description" value="${task.description!}"/>
             <#else>
-              <@td><input type="text" name="description" value=""/></@td>
+              <input type="text" name="description" value=""/>
           </#if>
-        </@tr>
-        <@tr>
-          <@td>${uiLabelMap.CommonStatus}</@td>
-          <@td>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonStatus}">
             <select name="currentStatusId">
               <#if task??>
                 <#assign currentStatus = task.geRelatedOne("CurrentStatusItem")!>
@@ -105,11 +92,8 @@ under the License.
                 </#list>
               </#if>
             </select>
-          </@td>
-        </@tr>
-        <@tr>
-          <@td>${uiLabelMap.CommonPriority}</@td>
-          <@td>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonPriority}">
             <#if task?has_content>
               <#assign priority = task.priority!>
             </#if>
@@ -139,11 +123,8 @@ under the License.
                 <option value="9">${uiLabelMap.WorkEffortPriorityNine}</option>
               </#if>
             </select>
-          </@td>
-        </@tr>
-        <@tr>
-          <@td>${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}</@td>
-          <@td>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}">
             <#assign enumerations = delegator.findByAnd("Enumeration", Static["org.ofbiz.base.util.UtilMisc"].toMap("enumTypeId", "WORK_EFF_SCOPE"), null, false)>
             <select name="scopeEnumId">
               <#if task??>
@@ -157,54 +138,37 @@ under the License.
                 </#list>
               </#if>
             </select>
-          </@td>
-        </@tr>
-        <@tr>
-          <@td>${uiLabelMap.WorkEffortEstimatedStartDate}</@td>
-          <@td>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.WorkEffortEstimatedStartDate}">
             <#if task??>
               <@htmlTemplate.renderDateTimeField name="estimatedStartDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.estimatedStartDate!}" size="25" maxlength="30" id="estimatedStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
             <#else>
               <@htmlTemplate.renderDateTimeField name="estimatedStartDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="estimatedStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
             </#if>
-          </@td>
-         </@tr>
-         <@tr>
-           <@td>${uiLabelMap.WorkEffortEstimatedCompletionDate}</@td>
-           <@td>
+        </@field>
+         <@field type="generic" label="${uiLabelMap.WorkEffortEstimatedCompletionDate}">
              <#if task??>
                <@htmlTemplate.renderDateTimeField name="estimatedCompletionDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.estimatedCompletionDate!}" size="25" maxlength="30" id="estimatedCompletionDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              <#else>
                <@htmlTemplate.renderDateTimeField name="estimatedCompletionDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="estimatedCompletionDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              </#if>
-           </@td>
-         </@tr>
-         <@tr>
-           <@td>${uiLabelMap.FormFieldTitle_actualStartDate}</@td>
-           <@td>
+         </@field>
+         <@field type="generic" label="${uiLabelMap.FormFieldTitle_actualStartDate}">
              <#if task??>
                <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.actualStartDate!}" size="25" maxlength="30" id="actualStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              <#else>
                <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              </#if>
-           </@td>
-         </@tr>
-         <@tr>
-           <@td>${uiLabelMap.FormFieldTitle_actualCompletionDate}</@td>
-           <@td>
+         </@field>
+         <@field type="generic" label="${uiLabelMap.FormFieldTitle_actualCompletionDate}">
              <#if task??>
                <@htmlTemplate.renderDateTimeField name="actualCompletionDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${task.actualCompletionDate!}" size="25" maxlength="30" id="actualCompletionDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              <#else>
                <@htmlTemplate.renderDateTimeField name="actualCompletionDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualCompletionDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              </#if>
-           </@td>
-         </@tr>
-         <@tr>
-           <@td>&nbsp;</@td>
-           <@td>
+         </@field>
+         <@field type="submitarea">
              <input type="submit" name="submit" value="${uiLabelMap.CommonSave}"/>
-           </@td>
-         </@tr>
-       </@table>
+         </@field>
      </form>
 </@section>

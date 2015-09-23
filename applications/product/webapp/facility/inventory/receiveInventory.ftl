@@ -82,7 +82,6 @@ under the License.
         <#if requestParameters.initialSelected?? && product?has_content>
           <@section>
           <form method="post" action="<@ofbizUrl>receiveSingleInventoryProduct</@ofbizUrl>" name="selectAllForm">
-            <@table type="fields" class="basic-table" cellspacing="0">
               <#-- general request fields -->
               <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
               <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>
@@ -92,57 +91,28 @@ under the License.
               <#assign unitCost = firstOrderItem.unitPrice?default(standardCosts.get(firstOrderItem.productId)?default(0))/>
               <input type="hidden" name="orderId" value="${purchaseOrder.orderId}"/>
               <input type="hidden" name="orderItemSeqId" value="${firstOrderItem.orderItemSeqId}"/>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductPurchaseOrder}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              <@field type="generic" label="${uiLabelMap.ProductPurchaseOrder}">
                   <b>${purchaseOrder.orderId}</b>&nbsp;/&nbsp;<b>${firstOrderItem.orderItemSeqId}</b>
                   <#if 1 < purchaseOrderItems.size()>
                     (${uiLabelMap.ProductMultipleOrderItemsProduct} - ${purchaseOrderItems.size()}:1 ${uiLabelMap.ProductItemProduct})
                   <#else>
                     (${uiLabelMap.ProductSingleOrderItemProduct} - 1:1 ${uiLabelMap.ProductItemProduct})
                   </#if>
-                </@td>
-              </@tr>
+              </@field>
               </#if>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductProductId}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              <@field type="generic" label="${uiLabelMap.ProductProductId}">
                   <b>${requestParameters.productId!}</b>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductProductName}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductProductName}">
                   <a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.button_default!}">${product.internalName!}</a>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductProductDescription}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductProductDescription}">
                   ${product.description!}
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductItemDescription}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductItemDescription}">
                   <input type="text" name="itemDescription" size="30" maxlength="60"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductInventoryItemType}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductInventoryItemType}">
                   <select name="inventoryItemTypeId" size="1">
                     <#list inventoryItemTypes as nextInventoryItemType>
                       <option value="${nextInventoryItemType.inventoryItemTypeId}"
@@ -152,24 +122,14 @@ under the License.
                       >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
                     </#list>
                   </select>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td colspan="4">&nbsp;</@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductFacilityOwner}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+
+              <hr />
+              
+              <@field type="generic" label="${uiLabelMap.ProductFacilityOwner}">
                   <@htmlTemplate.lookupField formName="selectAllForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductSupplier}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductSupplier}">
                   <select name="partyId">
                     <option value=""></option>
                     <#if supplierPartyIds?has_content>
@@ -180,35 +140,20 @@ under the License.
                       </#list>
                     </#if>
                   </select>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductDateReceived}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductDateReceived}">
                   <input type="text" name="datetimeReceived" size="24" value="${nowTimestamp}" />
                   <#-- <a href="#" onclick="setNow("datetimeReceived")" class="${styles.button_default!}">[Now]</a> -->
-                </@td>
-              </@tr>
+              </@field>
               
               
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.lotId}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              <@field type="generic" label="${uiLabelMap.lotId}">
                   <input type="text" name="lotId" size="10"/>
-                </@td>
-              </@tr>
+              </@field>
 
               <#-- facility location(s) -->
               <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!/>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductFacilityLocation}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              <@field type="generic" label="${uiLabelMap.ProductFacilityLocation}">
                   <#if facilityLocations?has_content>
                     <select name="locationSeqId">
                       <#list facilityLocations as productFacilityLocation>
@@ -227,52 +172,29 @@ under the License.
                     </#if>
                     <@htmlTemplate.lookupField formName="selectAllForm" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
                   </#if>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductRejectedReason}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductRejectedReason}">
                   <select name="rejectionId" size="1">
                     <option></option>
                     <#list rejectReasons as nextRejection>
                       <option value="${nextRejection.rejectionId}">${nextRejection.get("description",locale)?default(nextRejection.rejectionId)}</option>
                     </#list>
                   </select>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductQuantityRejected}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductQuantityRejected}">
                   <input type="text" name="quantityRejected" size="5" value="0" />
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductQuantityAccepted}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductQuantityAccepted}">
                   <input type="text" name="quantityAccepted" size="5" value="${defaultQuantity?default(1)?string.number}"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductPerUnitPrice}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductPerUnitPrice}">
                   <#-- get the default unit cost -->
                   <#if (!unitCost?? || unitCost == 0.0)><#assign unitCost = standardCosts.get(product.productId)?default(0)/></#if>
                   <input type="text" name="unitCost" size="10" value="${unitCost}"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td colspan="2">&nbsp;</@td>
-                <@td colspan="2"><input type="submit" value="${uiLabelMap.CommonReceive}" /></@td>
-              </@tr>
-            </@table>
+              </@field>
+              <@field type="submitarea">
+                  <input type="submit" value="${uiLabelMap.CommonReceive}" />
+              </@field>
             <script language="JavaScript" type="text/javascript">
               document.selectAllForm.quantityAccepted.focus();
             </script>

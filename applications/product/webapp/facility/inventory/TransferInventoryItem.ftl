@@ -27,15 +27,18 @@ under the License.
        <#if !(inventoryItem??)>
             <form method="post" action="<@ofbizUrl>TransferInventoryItem</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${facilityId}" />
-            <@table type="fields" cellspacing="0" class="basic-table">
-            <@tr>
-                <@td>${uiLabelMap.ProductInventoryItemId}</@td>
-                <@td>
-                  <input type="text" name="inventoryItemId" size="20" maxlength="20" />
-                  <input type="submit" value="${uiLabelMap.ProductGetItem}" />
-                </@td>
-            </@tr>
-            </@table>
+        <@row>
+          <@cell columns=9>
+            <@field type="generic" label="${uiLabelMap.ProductInventoryItemId}">
+                <input type="text" name="inventoryItemId" size="20" maxlength="20" />
+            </@field>
+          </@cell>
+          <@cell columns=3>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.ProductGetItem}" />
+            </@field>
+          </@cell>
+        </@row>
             </form>
         <#else>
            <#if !(inventoryTransfer??)>
@@ -49,132 +52,78 @@ under the License.
                 function setNow(field) { eval('document.transferform.' + field + '.value="${nowTimestamp}"'); }
             </script>
 
-            <@table type="fields" cellspacing="0" class="basic-table">
             <input type="hidden" name="inventoryItemId" value="${inventoryItemId!}" />
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <input type="hidden" name="locationSeqId" value="${(inventoryItem.locationSeqId)!}" />
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%"align="right">${uiLabelMap.ProductInventoryItemId}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">${inventoryItemId}</@td>
-            </@tr>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductInventoryItemTypeId}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+            
+            <@field type="generic" label="${uiLabelMap.ProductInventoryItemId}">
+                ${inventoryItemId}
+            </@field>
+            <@field type="generic" label="${uiLabelMap.ProductInventoryItemTypeId}">
                 <#if inventoryItemType??>
                     ${(inventoryItemType.get("description",locale))!}
                 </#if>
-                </@td>
-            </@tr>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductProductId}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
-                    <#if inventoryItem?? && (inventoryItem.productId)??>
+            </@field>
+            <@field type="generic" label="${uiLabelMap.ProductProductId}">
+                <#if inventoryItem?? && (inventoryItem.productId)??>
                         <a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)!}" class="${styles.button_default!}">${(inventoryItem.productId)!}</a>
                     </#if>
-                </@td>
-            </@tr>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.CommonStatus}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">${(inventoryStatus.get("description",locale))?default("--")}</@td>
-            </@tr>
+            </@field>
+            <@field type="generic" label="${uiLabelMap.CommonStatus}">
+                ${(inventoryStatus.get("description",locale))?default("--")}
+            </@field>
 
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductComments}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">${(inventoryItem.comments)?default("--")}</@td>
-            </@tr>
+            <@field type="generic" label="${uiLabelMap.ProductComments}">
+                ${(inventoryItem.comments)?default("--")}
+            </@field>
 
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductSerialAtpQoh}</@td>
-                <@td width="6%">&nbsp;</@td>
+            <@field type="display" label="${uiLabelMap.ProductSerialAtpQoh}">
                 <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
-                    <@td width="74%">
                         ${(inventoryItem.availableToPromiseTotal)!}&nbsp;
                         /&nbsp;${(inventoryItem.quantityOnHandTotal)!}
-                    </@td>
                 <#elseif inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
-                    <@td width="74%">${(inventoryItem.serialNumber)!}</@td>
+                    ${(inventoryItem.serialNumber)!}
                 <#elseif inventoryItem??>
-                    <@td class="alert" width="74%">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSpecifyType}.</@td>
+                    <@alert type="error">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSpecifyType}.</@alert>
                 </#if>
-            </@tr>
-        <@tr>
-            <@td width="14%">&nbsp;</@td>
-            <@td colspan="3"><hr /></@td>
-        </@tr>
-        <@tr>
-            <@td width="14%">&nbsp;</@td>
-            <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductTransferStatus}</@td>
-            <@td width="6%">&nbsp;</@td>
-            <@td width="74%">
-            <select name="statusId">
-                <#if (inventoryTransfer.statusId)??>
-                    <#assign curStatusItem = inventoryTransfer.getRelatedOne("StatusItem", true)>
-                    <option value="${(inventoryTransfer.statusId)!}">${(curStatusItem.get("description",locale))!}</option>
-                </#if>
-                <#list statusItems as statusItem>
-                <option value="${(statusItem.statusId)!}">${(statusItem.get("description",locale))!}</option>
-                </#list>
-            </select>
-            </@td>
-        </@tr>
-        <@tr>
-           <@td width="14%">&nbsp;</@td>
-            <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductTransferSendDate}</@td>
-            <@td width="6%">&nbsp;</@td>
-            <@td width="74%">
+            </@field>
+
+            <hr />
+  
+            <@field type="generic" label="${uiLabelMap.ProductTransferStatus}">
+                <select name="statusId">
+                    <#if (inventoryTransfer.statusId)??>
+                        <#assign curStatusItem = inventoryTransfer.getRelatedOne("StatusItem", true)>
+                        <option value="${(inventoryTransfer.statusId)!}">${(curStatusItem.get("description",locale))!}</option>
+                    </#if>
+                    <#list statusItems as statusItem>
+                    <option value="${(statusItem.statusId)!}">${(statusItem.get("description",locale))!}</option>
+                    </#list>
+                </select>
+            </@field>
+        <@field type="generic" label="${uiLabelMap.ProductTransferSendDate}">
             <input type="text" name="sendDate" value="${(inventoryTransfer.sendDate)!}" size="22" />
             <a href="#" onclick="setNow('sendDate')" class="${styles.button_default!}">${uiLabelMap.CommonNow}</a>
-            </@td>
-        </@tr>
+        </@field>
         <#if !(inventoryTransfer??)>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductToFacilityContainer}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
-                        <select name="facilityIdTo">
-                            <#list facilities as nextFacility>
-                            <option value="${(nextFacility.facilityId)!}">${(nextFacility.facilityName)!} [${(nextFacility.facilityId)!}]</option>
-                            </#list>
-                        </select>
-                        <span class="tooltip">${uiLabelMap.ProductSelectFacility}</span>
-                        <br />
-                        <input type="text" name="containerIdTo" value="${(inventoryTransfer.containerIdTo)!}" size="20" maxlength="20" />
-                        <span class="tooltip">${uiLabelMap.ProductOrEnterContainerId}</span>
-                </@td>
-            </@tr>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductToLocation}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
-                  <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation"/>
-                </@td>
-            </@tr>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductComments}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+            <@field type="generic" label="${uiLabelMap.ProductToFacilityContainer}">
+                <select name="facilityIdTo">
+                    <#list facilities as nextFacility>
+                    <option value="${(nextFacility.facilityId)!}">${(nextFacility.facilityName)!} [${(nextFacility.facilityId)!}]</option>
+                    </#list>
+                </select>
+                <span class="tooltip">${uiLabelMap.ProductSelectFacility}</span>
+                <br />
+                <input type="text" name="containerIdTo" value="${(inventoryTransfer.containerIdTo)!}" size="20" maxlength="20" />
+                <span class="tooltip">${uiLabelMap.ProductOrEnterContainerId}</span>
+            </@field>
+            <@field type="generic" label="${uiLabelMap.ProductToLocation}">
+                <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation"/>
+            </@field>
+            <@field type="generic" label="${uiLabelMap.ProductComments}">
                 <input type="text" name="comments" size="60" maxlength="250" />
-                </@td>
-            </@tr>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductQuantityToTransfer}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+            </@field>
+            <@field type="generic" label="${uiLabelMap.ProductQuantityToTransfer}">
                 <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
                     <input type="text" size="5" name="xferQty" value="${(inventoryItem.availableToPromiseTotal)!}" />
                 <#elseif inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
@@ -183,50 +132,28 @@ under the License.
                 <#elseif inventoryItem??>
                     <span class="alert">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSpecifyType}.</span>
                 </#if>
-                </@td>
-            </@tr>
+            </@field>
         <#else>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductTransferReceiveDate}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+            <@field type="generic" label="${uiLabelMap.ProductTransferReceiveDate}">
                 <input type="text" name="receiveDate" value="${(inventoryTransfer.receiveDate)!}" size="22" />
                 <a href="#" onclick="setNow('receiveDate')" class="${styles.button_default!}">${uiLabelMap.CommonNow}</a>
-                </@td>
-            </@tr>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductToFacilityContainer}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <#assign fac = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", inventoryTransfer.facilityIdTo), false)>
-                <@td width="74%">${(fac.facilityName)?default("&nbsp;")}</@td>
-            </@tr>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductToLocation}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
-                  <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
-                </@td>
-            </@tr>
-            <@tr>
-                <@td width="14%">&nbsp;</@td>
-                <@td width="6%" align="right" nowrap="nowrap">${uiLabelMap.ProductComments}</@td>
-                <@td width="6%">&nbsp;</@td>
-                <@td width="74%">
+            </@field>
+            <@field type="generic" label="${uiLabelMap.ProductToFacilityContainer}">
+                <#assign fac = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", inventoryTransfer.facilityIdTo), false)> ${(fac.facilityName)?default("&nbsp;")}
+            </@field>
+            <@field type="generic" label="${uiLabelMap.ProductToLocation}">
+                <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
+            </@field>
+            <@field type="generic" label="${uiLabelMap.ProductComments}">
                 <input type="text" name="comments" value="${(inventoryTransfer.comments)!}" size="60" maxlength="250" />
-                </@td>
-            </@tr>
+            </@field>
         </#if>
-        <@tr>
-            <@td colspan="2">&nbsp;</@td>
+        <@field type="submitarea">
             <#if !(inventoryTransfer??)>
-                <@td colspan="1"><input type="submit" value="${uiLabelMap.ProductTransfer}" /></@td>
+                <input type="submit" value="${uiLabelMap.ProductTransfer}" />
             <#else>
-                <@td colspan="1"><input type="submit" value="${uiLabelMap.CommonUpdate}" /></@td>
+                <input type="submit" value="${uiLabelMap.CommonUpdate}" />
             </#if>
-        </@tr>
-        </@table>
+        </@field>
         </form>
         </#if>

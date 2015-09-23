@@ -104,26 +104,19 @@
 </form>
 
 <form name="cmsmetaform" action="javascript:void(0);">
-    <@table type="fields">
-        <@tr>
-            <@td>Page Title</@td>
-            <@td><input type="text" name="title" value="${(title.objectInfo)!}" size="40" /></@td>
-        </@tr>
-        <@tr>
-            <@td>Title Property</@td>
-            <@td><input type="text" name="titleProperty" value="${(titleProperty.objectInfo)!}" size="40" /></@td>
-        </@tr>
-        <@tr>
-            <@td>Meta-Description</@td>
-            <@td><input type="text" name="metaDescription" value="${(metaDescription.objectInfo)!}" size="40" /></@td>
-        </@tr>
-        <@tr>
-            <@td>Meta-Keywords</@td>
-            <@td><input type="text" name="metaKeywords" value="${(metaKeywords.objectInfo)!}" size="40" /></@td>
-        </@tr>
-        <@tr><@td colspan="2">&nbsp;</@td></@tr>
-        <@tr>
-            <@td colspan="2" align="center"><input id="submit" type="button" onclick="javascript:saveMetaInfo(cmsmetaform);" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonSave}"/></@td>
-        </@tr>
-    </@table>
+        <@field type="generic" label="Page Title">
+            <input type="text" name="title" value="${(title.objectInfo)!}" size="40" />
+        </@field>
+        <@field type="generic" label="Title Property">
+            <input type="text" name="titleProperty" value="${(titleProperty.objectInfo)!}" size="40" />
+        </@field>
+        <@field type="generic" label="Meta-Description">
+            <input type="text" name="metaDescription" value="${(metaDescription.objectInfo)!}" size="40" />
+        </@field>
+        <@field type="generic" label="Meta-Keywords">
+            <input type="text" name="metaKeywords" value="${(metaKeywords.objectInfo)!}" size="40" />
+        </@field>
+        <@field type="submitarea">
+            <input id="submit" type="button" onclick="javascript:saveMetaInfo(cmsmetaform);" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonSave}"/>
+        </@field>
 </form>

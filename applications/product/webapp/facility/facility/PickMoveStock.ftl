@@ -151,36 +151,23 @@ under the License.
 <@section title="${uiLabelMap.ProductQuickStockMove}">
         <form method="post" action="<@ofbizUrl>processQuickStockMove</@ofbizUrl>" name='quickStockMove'>
             <input type="hidden" name="facilityId" value="${facilityId!}" />
-            <@table type="fields" cellspacing="0" class="basic-table hover-bar">
-              <@thead>
-                <@tr class="header-row">
-                    <@th>${uiLabelMap.ProductProduct}</@th>
-                    <@th>${uiLabelMap.ProductFromLocation}</@th>
-                    <@th>${uiLabelMap.ProductToLocation}</@th>
-                    <@th>${uiLabelMap.ProductMoveQuantity}</@th>
-                    <@th>&nbsp;</@th>
-                </@tr>
-              </@thead>
-                <@tr>
-                  <@td>
+                <@field type="generic" label="${uiLabelMap.ProductProduct}">
                     <@htmlTemplate.lookupField formName="quickStockMove" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                  </@td>
-                  <@td>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductFromLocation}">
                     <input type="text" size="20" name="locationSeqId" maxlength="20" />
                     <a href="javascript:quicklookup('call_fieldlookup2', document.quickStockMove.locationSeqId, document.quickStockMove.facilityId, document.quickStockMove.productId)">
                       <img src="<@ofbizContentUrl>/images/fieldlookup.gif</@ofbizContentUrl>" width="15" height="14" border="0" alt="${uiLabelMap.CommonClickHereForFieldLookup}"/>
                     </a>
-                  </@td>
-                  <@td>
+                </@field>
+                 <@field type="generic" label="${uiLabelMap.ProductToLocation}">
                     <@htmlTemplate.lookupField formName="quickStockMove" name="targetLocationSeqId" id="targetLocationSeqId" fieldFormName="LookupFacilityLocation?facilityId=${facilityId}&amp;locationTypeEnumId=FLT_PICKLOC"/>
-                  </@td> 
-                  <@td><input type="text" name="quantityMoved" size="6" /></@td>
-                </@tr>
-                <@tr>
-                  <@td colspan="13" align="right">
+                </@field>
+                <@field type="generic" label="${uiLabelMap.ProductMoveQuantity}">
+                    <input type="text" name="quantityMoved" size="6" />
+                </@field>
+                 <@field type="submitarea">
                     <a href="javascript:document.quickStockMove.submit();" class="${styles.button_default!}">${uiLabelMap.ProductQuickStockMove}</a>
-                  </@td>
-                </@tr>
-            </@table>
+                </@field>
         </form>
 </@section>

@@ -24,58 +24,32 @@ function lookupInventory() {
 }
 // -->
 </script>
-<@section title="${uiLabelMap.PageTitleFindInventoryEventPlan}">
+<#assign menuHtml>
+  <@menu type="section" inlineItems=true>
+      <#if requestParameters.hideFields?default("N") == "Y">
+        <@menuitem type="link" ofbizHref="FindInventoryEventPlan?hideFields=N${paramList}" text="${uiLabelMap.CommonShowLookupFields}" />
+      <#else>
+        <#if inventoryList??>
+            <@menuitem type="link" ofbizHref="FindInventoryEventPlan?hideFields=Y${paramList}" text="${uiLabelMap.CommonHideFields}" />
+        </#if>
+      </#if>
+  </@menu>
+</#assign>
+<@section title="${uiLabelMap.PageTitleFindInventoryEventPlan}" menuHtml=menuHtml>
     <form method="post" name="lookupinventory" action="<@ofbizUrl>FindInventoryEventPlan</@ofbizUrl>">
     <input type="hidden" name="lookupFlag" value="Y"/>
     <input type="hidden" name="hideFields" value="Y"/>
-    <@table type="generic" class="basic-table" cellspacing="0">
-      <@tr>
-        <@td width='100%'>
-          <@table type="fields" class="basic-table" cellspacing="0">
-            <@tr>
-              <@td></@td>
-              <@td align='right'>
-                <p>
-                  <#if requestParameters.hideFields?default("N") == "Y">
-                    <a href="<@ofbizUrl>FindInventoryEventPlan?hideFields=N${paramList}</@ofbizUrl>" class="smallSubmit ${styles.button_default!}">${uiLabelMap.CommonShowLookupFields}</a>
-                  <#else>
-                    <#if inventoryList??>
-                        <a href="<@ofbizUrl>FindInventoryEventPlan?hideFields=Y${paramList}</@ofbizUrl>" class="smallSubmit ${styles.button_default!}">${uiLabelMap.CommonHideFields}</a>
-                    </#if>
-                  </#if>
-                </p>
-              </@td>
-            </@tr>
-          </@table>
-          <#if requestParameters.hideFields?default("N") != "Y">
-          <@table type="generic" class="basic-table" cellspacing="0">
-            <@tr>
-              <@td align='center' width='100%'>
-                 <@table type="fields" class="basic-table" cellspacing="0">
-                  <@tr>
-                    <@td width='20%' align='right'>${uiLabelMap.ManufacturingProductId}</@td>
-                    <@td>
-                        <@htmlTemplate.lookupField value='${requestParameters.productId!}' formName="lookupinventory" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                     </@td>
-                  </@tr>
-                  <@tr>
-                    <@td width='20%' align='right'>${uiLabelMap.CommonFromDate}</@td>
-                    <@td>
-                      <@htmlTemplate.renderDateTimeField name="eventDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    </@td>
-                  </@tr>
-                  <@tr>
-                    <@td width="20%" align="center" valign="top">&nbsp;</@td>
-                    <@td width="75%"> <a href="javascript:lookupInventory();" class="smallSubmit ${styles.button_default!}">&nbsp; ${uiLabelMap.CommonFind} &nbsp;</a></@td>
-                  </@tr>
-                </@table>
-              </@td>
-            </@tr>
-          </@table>
-          </#if>
-        </@td>
-      </@tr>
-    </@table>
+      <#if requestParameters.hideFields?default("N") != "Y">
+          <@field type="generic" label="${uiLabelMap.ManufacturingProductId}">
+              <@htmlTemplate.lookupField value='${requestParameters.productId!}' formName="lookupinventory" name="productId" id="productId" fieldFormName="LookupProduct"/>
+          </@field>
+          <@field type="generic" label="${uiLabelMap.CommonFromDate}">
+              <@htmlTemplate.renderDateTimeField name="eventDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+          </@field>
+          <@field type="submitarea">
+              <a href="javascript:lookupInventory();" class="smallSubmit ${styles.button_default!}">&nbsp; ${uiLabelMap.CommonFind} &nbsp;</a>
+          </@field>
+      </#if>
     </form>
 </@section>
 
@@ -87,26 +61,20 @@ document.lookupinventory.productId.focus();
 </script>
 </#if>
 <#if requestParameters.lookupFlag?default("N") == "Y">
-<@table type="generic" class="basic-table" cellspacing="0">
-  <@tr>
-    <@td width='100%'>
+    <@section>
       <#if inventoryList?has_content>
-         <@table type="fields" class="basic-table" cellspacing="0">
-          <@tr>
-           <@td width="50%" class="boxhead">${uiLabelMap.CommonElementsFound}</@td>
-            <@td width="50%">
-             <div class="boxhead" align="right">
-               <#if (0 < listSize)>
-                <@menu type="button">
-                  <@menuitem type="link" ofbizHref="FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex)) />
-                  <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-                  <@menuitem type="link" ofbizHref="FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonNext}" disabled=(!(highIndex < listSize)) />
-                </@menu>
-              </#if>
-            </div>
-          </@td>
-        </@tr>
-      </@table>
+        <@row>
+          <@cell class="+${styles.float_clearfix!}">
+           <p class="${styles.float_left!}">${uiLabelMap.CommonElementsFound}</p>
+          <#if (0 < listSize)>
+            <@menu type="button" class="+${styles.float_right!}">
+              <@menuitem type="link" ofbizHref="FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex)) />
+              <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
+              <@menuitem type="link" ofbizHref="FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonNext}" disabled=(!(highIndex < listSize)) />
+            </@menu>
+          </#if>
+          </@cell>
+        </@row>
 
       <@table type="data-complex" autoAltRows=false class="basic-table" cellspacing="0">
        <@thead>
@@ -203,7 +171,5 @@ document.lookupinventory.productId.focus();
       <#else>
        <@resultMsg>${uiLabelMap.CommonNoElementFound}</@resultMsg>
       </#if>
-    </@td>
-  </@tr>
-</@table>
+    </@section>
 </#if>

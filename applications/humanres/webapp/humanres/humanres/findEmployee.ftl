@@ -39,43 +39,39 @@ under the License.
         <form method="post" name="lookupparty" action="<@ofbizUrl>findEmployees</@ofbizUrl>" class="basic-form">
             <input type="hidden" name="lookupFlag" value="Y"/>
             <input type="hidden" name="hideFields" value="Y"/>
-            <@table type="fields" cellspacing="0">
-                <@tr><@td>${uiLabelMap.PartyContactInformation}</@td>
-                    <@td><input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked="checked"</#if>/>${uiLabelMap.CommonNone}&nbsp;
+                <@field type="generic" label="${uiLabelMap.PartyContactInformation}">
+                    <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked="checked"</#if>/>${uiLabelMap.CommonNone}&nbsp;
                         <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked="checked"</#if>/>${uiLabelMap.PartyPostal}&nbsp;
                         <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked="checked"</#if>/>${uiLabelMap.PartyTelecom}&nbsp;
                         <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked="checked"</#if>/>${uiLabelMap.CommonOther}&nbsp;
-                    </@td>
-                </@tr>
-                <@tr><@td class='label'>${uiLabelMap.PartyPartyId}</@td>
-                    <@td>
-                      <@htmlTemplate.lookupField value='${requestParameters.partyId!}' formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
-                    </@td>
-                </@tr>
-                <@tr><@td>${uiLabelMap.PartyUserLogin}</@td>
-                    <@td><input type="text" name="userLoginId" value="${parameters.userLoginId!}"/></@td>
-                </@tr>
-                <@tr><@td>${uiLabelMap.PartyLastName}</@td>
-                    <@td><input type="text" name="lastName" value="${parameters.lastName!}"/></@td>
-                </@tr>
-                <@tr><@td>${uiLabelMap.PartyFirstName}</@td>
-                    <@td><input type="text" name="firstName" value="${parameters.firstName!}"/></@td>
-                </@tr>
-                <@tr><@td><input type="hidden" name="groupName" value="${parameters.groupName!}"/></@td></@tr>
-                <@tr><@td><input type="hidden" name="roleTypeId" value="EMPLOYEE"/></@td></@tr>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.PartyPartyId}">
+                    <@htmlTemplate.lookupField value='${requestParameters.partyId!}' formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.PartyUserLogin}">
+                    <input type="text" name="userLoginId" value="${parameters.userLoginId!}"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.PartyLastName}">
+                    <input type="text" name="lastName" value="${parameters.lastName!}"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.PartyFirstName}">
+                    <input type="text" name="firstName" value="${parameters.firstName!}"/>
+                </@field>
+                <@field type="generic"><input type="hidden" name="groupName" value="${parameters.groupName!}"/></@field>
+                <@field type="generic"><input type="hidden" name="roleTypeId" value="EMPLOYEE"/></@field>
             <#if extInfo == "P">
-                <@tr type="util"><@td colspan="3"><hr /></@td></@tr><@tr>
-                    <@td>${uiLabelMap.CommonAddress1}</@td>
-                    <@td><input type="text" name="address1" value="${parameters.address1!}"/></@td>
-                </@tr>
-                <@tr><@td>${uiLabelMap.CommonAddress2}</@td>
-                    <@td><input type="text" name="address2" value="${parameters.address2!}"/></@td>
-                </@tr>
-                <@tr><@td>${uiLabelMap.CommonCity}</@td>
-                    <@td><input type="text" name="city" value="${parameters.city!}"/></@td>
-                </@tr>
-                <@tr><@td>${uiLabelMap.CommonStateProvince}</@td>
-                    <@td><select name="stateProvinceGeoId">
+                <hr />
+                <@field type="generic" label="${uiLabelMap.CommonAddress1}">
+                    <input type="text" name="address1" value="${parameters.address1!}"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.CommonAddress2}">
+                    <input type="text" name="address2" value="${parameters.address2!}"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.CommonCity}">
+                    <input type="text" name="city" value="${parameters.city!}"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.CommonStateProvince}">
+                    <select name="stateProvinceGeoId">
                         <#if currentStateGeo?has_content>
                             <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
                             <option value="${currentStateGeo.geoId}">---</option>
@@ -83,38 +79,34 @@ under the License.
                             <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
                             ${screens.render("component://common/widget/CommonScreens.xml#states")}
                         </select>
-                    </@td>
-                </@tr>
-                <@tr><@td>${uiLabelMap.PartyPostalCode}</@td>
-                    <@td><input type="text" name="postalCode" value="${parameters.postalCode!}"/></@td>
-                </@tr>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.PartyPostalCode}">
+                    <input type="text" name="postalCode" value="${parameters.postalCode!}"/>
+                </@field>
             </#if>
             <#if extInfo == "T">
-                <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
-                <@tr><@td>${uiLabelMap.CommonCountryCode}</@td>
-                    <@td><input type="text" name="countryCode" value="${parameters.countryCode!}"/></@td>
-                </@tr>
-                <@tr><@td>${uiLabelMap.PartyAreaCode}</@td>
-                    <@td><input type="text" name="areaCode" value="${parameters.areaCode!}"/></@td>
-                </@tr>
-                <@tr><@td>${uiLabelMap.PartyContactNumber}</@td>
-                    <@td><input type="text" name="contactNumber" value="${parameters.contactNumber!}"/></@td>
-                </@tr>
+                <hr />
+                <@field type="generic" label="${uiLabelMap.CommonCountryCode}">
+                    <input type="text" name="countryCode" value="${parameters.countryCode!}"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.PartyAreaCode}">
+                    <input type="text" name="areaCode" value="${parameters.areaCode!}"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.PartyContactNumber}">
+                    <input type="text" name="contactNumber" value="${parameters.contactNumber!}"/>
+                </@field>
             </#if>
             <#if extInfo == "O">
-                <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
-                <@tr><@td>${uiLabelMap.PartyContactInformation}</@td>
-                    <@td><input type="text" name="infoString" value="${parameters.infoString!}"/></@td>
-                </@tr>
+                <hr />
+                <@field type="generic" label="${uiLabelMap.PartyContactInformation}">
+                    <input type="text" name="infoString" value="${parameters.infoString!}"/>
+                </@field>
             </#if>
-                <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
-                <@tr align="center">
-                    <@td>&nbsp;</@td>
-                    <@td><input type="submit" value="${uiLabelMap.PartyLookupParty}" onclick="javascript:document.lookupparty.submit();"/>
+                <hr />
+                <@field type="submitarea">
+                    <input type="submit" value="${uiLabelMap.PartyLookupParty}" onclick="javascript:document.lookupparty.submit();"/>
                         <a href="<@ofbizUrl>findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y</@ofbizUrl>" class="smallSubmit ${styles.button_default!}">${uiLabelMap.CommonShowAllRecords}</a>
-                    </@td>
-                </@tr>
-            </@table>
+                </@field>
         </form>
     </#if>
 </@section>

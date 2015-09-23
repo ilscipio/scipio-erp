@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h2>${uiLabelMap.AccountingManualTransaction}</h2>
+<@heading>${uiLabelMap.AccountingManualTransaction}</@heading>
 
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
   ${setRequestAttribute("validTx", "false")}
@@ -26,10 +26,7 @@ under the License.
       <input type="hidden" name="paymentMethodId" value="${requestParameters.paymentMethodId}" />
     </#if>
 
-    <@table type="fields" border='0' cellpadding='2' cellspacing='0'>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonPaymentMethodType}</b></@td>
-        <@td width='74%'>
+      <@field type="generic" label="${uiLabelMap.CommonPaymentMethodType}">
           <#if paymentMethodType?has_content>
             <div>${paymentMethodType.get("description",locale)}</div>
             <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodType.paymentMethodTypeId}" />
@@ -38,11 +35,8 @@ under the License.
               <option value="CREDIT_CARD">${uiLabelMap.AccountingCreditCard}</option>
             </select>
           </#if>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.ProductProductStore}</b></@td>
-        <@td width='74%'>
+      </@field>
+      <@field type="generic" label="${uiLabelMap.ProductProductStore}">
           <#if currentStore?has_content>
             <div><#if currentStore.storeName??>${currentStore.storeName}<#else>${currentStore.productStoreId}</#if></div>
             <input type="hidden" name="productStoreId" value="${currentStore.productStoreId}" />
@@ -53,11 +47,8 @@ under the License.
               </#list>
             </select>
           </#if>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingTransactionType}</b></@td>
-        <@td width='74%'>
+      </@field>
+      <@field type="generic" label="${uiLabelMap.AccountingTransactionType}">
           <#if currentTx?has_content>
             <div>${currentTx.get("description",locale)}</div>
             <input type="hidden" name="transactionType" value="${currentTx.enumId}" />
@@ -70,8 +61,7 @@ under the License.
               </#list>
             </select>
           </#if>
-        </@td>
-      </@tr>
+      </@field>
 
       <#-- payment method information -->
       <#if paymentMethodType?has_content && paymentMethodTypeId == "CREDIT_CARD">
@@ -83,28 +73,17 @@ under the License.
      <#if requestAttributes.validTx?default("false") == "true">
         <@tr type="util"><@td colspan="2"><hr/></@td></@tr>
         <#-- amount field -->
-        <@tr>
-          <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonAmount}</b></@td>
-          <@td width="74%">
+        <@field type="generic" label="${uiLabelMap.CommonAmount}">
             <input type="text" size="20" maxlength="30" name="amount" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-          </@td>
-        </@tr>
+        </@field>
         <#-- submit button -->
-        <@tr>
-          <@td width="26%" align="right" valign="middle">&nbsp;</@td>
-          <@td width="74%">
+        <@field type="submitarea">
             <input type="submit" value="${uiLabelMap.CommonSubmit}" />
-          </@td>
-        </@tr>
+        </@field>
       <#elseif txType?has_content>
-        <@tr type="meta">
-          <@td colspan="2" align="center">
-            <@resultMsg>${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@resultMsg>
-          </@td>
-        </@tr>
+        <@resultMsg>${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@resultMsg>
       </#if>
-    </@table>
   </form>
 <#else>
   <@alert type="error">${uiLabelMap.AccountingPermissionError}</@alert>

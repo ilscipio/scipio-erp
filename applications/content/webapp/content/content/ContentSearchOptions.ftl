@@ -20,87 +20,55 @@ under the License.
 
     <form name="advToKeyWordSearchForm" method="post" action="<@ofbizUrl>ContentSearchResults</@ofbizUrl>">
       <input type="hidden" name="VIEW_SIZE" value="25"/>
-      <@table type="fields" class="basic-table" cellspacing="0">
-        <@tr>
-          <@td align="right" valign="middle">${uiLabelMap.ContentKeywords}</@td>
-          <@td valign="middle">
-              <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
+        <@field type="generic" label="${uiLabelMap.ContentKeywords}">
+            <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
               ${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if>/>
               ${uiLabelMap.CommonAll}<input type="radio" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked="checked"</#if>/>
-          </@td>
-        </@tr>
-        <@tr>
-          <@td align="right" valign="middle">${uiLabelMap.FormFieldTitle_contentId}</@td>
-          <@td valign="middle">
-              <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CONTENT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_CONTENT_ID" id="SEARCH_CONTENT_ID" fieldFormName="LookupContent"/>
-          </@td>
-        </@tr>
-        <@tr>
-          <@td align="right" valign="middle" nowrap="nowrap">${uiLabelMap.FormFieldTitle_contentAssocTypeId}</@td>
-          <@td valign="middle" nowrap="nowrap">
+        </@field>
+        <@field type="generic" label="${uiLabelMap.FormFieldTitle_contentId}">
+            <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CONTENT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_CONTENT_ID" id="SEARCH_CONTENT_ID" fieldFormName="LookupContent"/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.FormFieldTitle_contentAssocTypeId}">
               <select name="contentAssocTypeId">
                 <option value="">- ${uiLabelMap.ContentAnyAssocType} -</option>
                   <#list contentAssocTypes as contentAssocType>
                       <option value="${contentAssocType.contentAssocTypeId}">${contentAssocType.description}</option>
                   </#list>
-                  </select>
+              </select>
                   ${uiLabelMap.ContentIncludeAllSubContents}?
                   ${uiLabelMap.CommonYes}<input type="radio" name="SEARCH_SUB_CONTENTS" value="Y" checked="checked"/>
                   ${uiLabelMap.CommonNo}<input type="radio" name="SEARCH_SUB_CONTENTS" value="N"/>
-          </@td>
-        </@tr>
-        <@tr>
-          <@td align="right" valign="middle">${uiLabelMap.PartyPartyId}</@td>
-          <@td valign="middle">
-              <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
-          </@td>
-        </@tr>
-        <@tr>
-          <@td align="right" valign="middle">${uiLabelMap.PartyRoleTypeId}</@td>
-          <@td valign="middle">
+        </@field>
+        <@field type="generic" label="${uiLabelMap.PartyPartyId}">
+            <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.PartyRoleTypeId}">
               <select name="partyRoleTypeId">
                 <option value="">- ${uiLabelMap.CommonAnyRoleType} -</option>
                 <#list roleTypes as roleType>
                    <option value="${roleType.roleTypeId}">${roleType.description}</option>
                  </#list>
               </select>
-          </@td>
-        </@tr>
-        <@tr>
-          <@td width='25%' align='right' class='label'>${uiLabelMap.ContentLastUpdatedDateFilter}</@td>
-          <@td>
-            <@table type="fields" class="basic-table" cellspacing="0">
-               <@tr>
-                  <@td nowrap="nowrap">
-                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.fromDate!}" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <span>${uiLabelMap.CommonFrom}</span>
-                  </@td>
-               </@tr>
-               <@tr>
-                  <@td nowrap="nowrap">
-                    <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.thruDate!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <span>${uiLabelMap.CommonThru}</span>
-                  </@td>
-               </@tr>
-            </@table>
-          </@td>
-          </@tr>
-        <@tr>
-          <@td align="right" valign="middle">${uiLabelMap.CommonSortedBy}</@td>
-          <@td valign="middle">
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ContentLastUpdatedDateFilter}">
+            <@field type="generic" label="${uiLabelMap.CommonFrom}">
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.fromDate!}" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+            <@field type="generic" label="${uiLabelMap.CommonThru}">
+                <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.thruDate!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonSortedBy}">
               <select name="sortOrder">
                 <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
                 <option value="SortContentField:contentName">${uiLabelMap.FormFieldTitle_contentName}</option>
               </select>
               ${uiLabelMap.ProductLowToHigh}<input type="radio" name="sortAscending" value="Y" checked="checked"/>
               ${uiLabelMap.ProductHighToLow}<input type="radio" name="sortAscending" value="N"/>
-          </@td>
-        </@tr>
+        </@field>
         <#if searchConstraintStrings?has_content>
-          <@tr>
-            <@td align="right" valign="top">${uiLabelMap.ProductLastSearch}</@td>
-            <@td valign="top">
-                <#list searchConstraintStrings as searchConstraintString>
+          <@field type="generic" label="${uiLabelMap.ProductLastSearch}">
+              <#list searchConstraintStrings as searchConstraintString>
                     <div>&nbsp;-&nbsp;${searchConstraintString}</div>
                 </#list>
                 <div>${uiLabelMap.CommonSortedBy} ${searchSortOrderString}</div>
@@ -108,15 +76,11 @@ under the License.
                   ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked="checked"/>
                   ${uiLabelMap.CommonRefineSearch}<input type="radio" name="clearSearch" value="N"/>
                 </div>
-            </@td>
-          </@tr>
+          </@field>
         </#if>
-        <@tr>
-          <@td colspan="2" align="center">
-              <a href="javascript:document.advToKeyWordSearchForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a>
-          </@td>
-        </@tr>
-      </@table>
+        <@field type="submitarea">
+            <a href="javascript:document.advToKeyWordSearchForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a>
+        </@field>
         <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.advToKeyWordSearchForm.submit();"/>
     </form>
 </@section>

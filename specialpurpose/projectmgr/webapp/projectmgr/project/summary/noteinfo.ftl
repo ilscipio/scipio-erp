@@ -83,35 +83,28 @@ under the License.
             <#if project?has_content> action="<@ofbizUrl>createNewNotesForProject</@ofbizUrl>"
             <#else> action="<@ofbizUrl>createNewNotesForTask</@ofbizUrl>"
             </#if>>
-            <@table type="fields" class="" width="90%" border="0" cellpadding="2" cellspacing="0">
-              <@tr>
                 <#if project?has_content>
-                  <@td><input type="hidden" name="workEffortId" value="${project.workEffortId}" /></@td>
+                  <input type="hidden" name="workEffortId" value="${project.workEffortId}" />
                 <#else>
-                  <@td><input type="hidden" name="workEffortId" value="${task.workEffortId}" /></@td>
+                  <input type="hidden" name="workEffortId" value="${task.workEffortId}" />
                 </#if>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">${uiLabelMap.OrderNote}</@td>
-                <@td width="54%">
+              <@field type="generic" label="${uiLabelMap.OrderNote}">
                   <textarea name="noteInfo" rows="5" cols="70"></textarea>
-                </@td>
-              </@tr>
-              <@tr>
-                <td/><@td>${uiLabelMap.OrderInternalNote} :
-                  <select name="internalNote" size="1"><option value=""></option><option value="Y" selected>${uiLabelMap.CommonYes}</option><option value="N">${uiLabelMap.CommonNo}</option></select></@td>
-              </@tr>
-              <@tr>
-                <td/><@td><i>${uiLabelMap.OrderInternalNoteMessage}</i></@td>
-              </@tr>
-            </@table>
-            <#if project?has_content>
-              &nbsp;<a href="javascript:document.createnoteform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-            <#else>
-              &nbsp;<a href="javascript:document.createnoteform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-            </#if>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.OrderInternalNote}">
+                  <select name="internalNote" size="1"><option value=""></option><option value="Y" selected>${uiLabelMap.CommonYes}</option><option value="N">${uiLabelMap.CommonNo}</option></select>
+              </@field>
+              <@field type="display">
+                <i>${uiLabelMap.OrderInternalNoteMessage}</i>
+              </@field>
+              <@field type="submitarea">
+                <#if project?has_content>
+                  <a href="javascript:document.createnoteform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
+                <#else>
+                  <a href="javascript:document.createnoteform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
+                </#if>
+              </@field>
           </form>
         </@section>
       </#if>
-
 

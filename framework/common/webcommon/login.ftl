@@ -27,10 +27,10 @@ under the License.
   <#assign focusName = true>
 </#if>
 
-<div class="${styles.grid_large!}3 ${styles.grid_large!}centered columns login-box" id="login">
+<div class="${styles.grid_large!}3 ${styles.grid_large!}centered ${styles.grid_cell} login-box" id="login">
 <div id="login-box-title">
     <h1>${logo} ${uiLabelMap.CommonLogin!}</h1>
-    </div>
+</div>
 
 <@section id="login-box-content">
   <#if uiLabelMap.WebtoolsForSomethingInteresting?has_content 

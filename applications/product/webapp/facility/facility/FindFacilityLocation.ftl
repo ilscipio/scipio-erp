@@ -28,49 +28,37 @@ under the License.
         <#if (facilityId??)>
             <input type="hidden" name="facilityId" value="${facilityId}" />
         </#if>        
-        <@table type="fields" class="basic-table" cellspacing="0">
         <#if !(facilityId??)>
-            <@tr>
-                <@td>${uiLabelMap.ProductFacility}</@td>
-                <@td><input type="text" value="" size="19" maxlength="20" /></@td>
-            </@tr>
+            <@field type="generic" label="${uiLabelMap.ProductFacility}">
+                <input type="text" value="" size="19" maxlength="20" />
+            </@field>
         </#if>
-        <@tr>
-            <@td>${uiLabelMap.ProductLocationSeqId}</@td>
-            <@td>
-                <#if parameters.facilityId??>
+        <@field type="generic" label="${uiLabelMap.ProductLocationSeqId}">
+            <#if parameters.facilityId??>
                     <#assign LookupFacilityLocationView="LookupFacilityLocation?facilityId=${facilityId}">
                 <#else>
                     <#assign LookupFacilityLocationView="LookupFacilityLocation">
                 </#if>
                 <@htmlTemplate.lookupField formName="findFacilityLocation" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
-            </@td>
-        </@tr>
-        <@tr>
-            <@td>${uiLabelMap.CommonArea}</@td>
-            <@td><input type="text" name="areaId" value="" size="19" maxlength="20" /></@td>
-        </@tr>
-        <@tr>
-            <@td>${uiLabelMap.ProductAisle}</@td>
-            <@td><input type="text" name="aisleId" value="" size="19" maxlength="20" /></@td>
-        </@tr>
-        <@tr>
-            <@td>${uiLabelMap.ProductSection}</@td>
-            <@td><input type="text" name="sectionId" value="" size="19" maxlength="20" /></@td>
-        </@tr>
-        <@tr>
-            <@td>${uiLabelMap.ProductLevel}</@td>
-            <@td><input type="text" name="levelId" value="" size="19" maxlength="20" /></@td>
-        </@tr>
-        <@tr>
-            <@td>${uiLabelMap.ProductPosition}</@td>
-            <@td><input type="text" name="positionId" value="" size="19" maxlength="20" /></@td>
-        </@tr>
-        <@tr>
-            <@td>&nbsp;</@td>
-            <@td><input type="submit" name="look_up" value="${uiLabelMap.CommonFind}" /></@td>
-        </@tr>
-        </@table>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonArea}">
+            <input type="text" name="areaId" value="" size="19" maxlength="20" />
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ProductAisle}">
+            <input type="text" name="aisleId" value="" size="19" maxlength="20" />
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ProductSection}">
+            <input type="text" name="sectionId" value="" size="19" maxlength="20" />
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ProductLevel}">
+            <input type="text" name="levelId" value="" size="19" maxlength="20" />
+        </@field>
+        <@field type="generic" label="${uiLabelMap.ProductPosition}">
+            <input type="text" name="positionId" value="" size="19" maxlength="20" />
+        </@field>
+        <@field type="submitarea">
+            <input type="submit" name="look_up" value="${uiLabelMap.CommonFind}" />
+        </@field>
     </form>
 
     <#if foundLocations??>

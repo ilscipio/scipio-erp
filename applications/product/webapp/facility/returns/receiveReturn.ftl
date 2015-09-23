@@ -74,10 +74,10 @@ under the License.
               <#else>
                 <@tr>
                   <@td>
-                    <h3>
+                    <@heading>
                       ${uiLabelMap.ProductReceiveReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.button_default!}">#${returnHeader.returnId}</a>
                       <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>ViewShipment?shipmentId=${parameters.shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${parameters.shipmentId}</a></#if>
-                    </h3>
+                    </@heading>
                   </@td>
                   <@td align="right">
                     ${uiLabelMap.ProductSelectAll}&nbsp;
@@ -240,7 +240,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
             <input type="hidden" name="initialSelected" value="Y" />
             <@table type="fields" cellspacing="0" class="basic-table">
-              <@tr><@td colspan="4"><h3>${uiLabelMap.ProductReceiveReturn}</h3></@td></@tr>
+              <@tr><@td colspan="4"><@heading>${uiLabelMap.ProductReceiveReturn}</@heading></@td></@tr>
               <@tr>
                 <@td width="15%" align='right'>${uiLabelMap.ProductReturnNumber}</@td>
                 <@td>&nbsp;</@td>

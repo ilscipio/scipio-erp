@@ -21,14 +21,15 @@ under the License.
           <input type="hidden" name="find" value="true"/>
           <input type="hidden" name="searchOptions_collapsed" value="true"/>
           <@table type="fields" class="basic-table" cellspacing="0">
-           <@thead>
-            <@tr class="header-row-2">
+            <@thead>
+                <@tr class="header-row-2">
                   <@th>${uiLabelMap.WebtoolsFieldName}</@th>
                   <@th>${uiLabelMap.WebtoolsPk}</@th>
                   <@th>${uiLabelMap.WebtoolsFieldType}</@th>
                   <@th>&nbsp;</@th>
-            </@tr>
+                </@tr>
             </@thead>
+            <@tbody>
             <#list fieldList as field>
                 <@tr>
                     <@td>${field.name}</@td>
@@ -37,12 +38,13 @@ under the License.
                     <@td><input type="text" name="${field.name}" value="${field.param}" size="40"/></@td>
                 </@tr>
             </#list>
-              <@tfoot>
+            </@tbody>
+            <@tfoot>
                 <@tr>
                     <@td colspan="3">${uiLabelMap.WebtoolsToFindAll} ${entityName}, ${uiLabelMap.WebtoolsLeaveAllEntriesBlank}</@td>
                     <@td><input type="submit" value="${uiLabelMap.CommonFind}"/></@td>
                 </@tr>
-              </@tfoot>
-            </@table>
+            </@tfoot>
+          </@table>
         </form>
 </@section>

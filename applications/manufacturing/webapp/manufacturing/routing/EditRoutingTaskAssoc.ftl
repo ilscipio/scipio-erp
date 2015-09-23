@@ -36,47 +36,35 @@ function addRoutingTask() {
     <input type="hidden" name="workEffortIdFrom" value="${workEffortId}"/>
     <input type="hidden" name="workEffortAssocTypeId" value="ROUTING_COMPONENT"/>
     <input type="hidden" name="copyTask" value="N"/>
-    <@table type="fields" class="basic-table" cellspacing="0">
-        <@tr>
-            <@th align="right">
-                ${uiLabelMap.ManufacturingRoutingTaskId}
-            </@th>
-            <@td>
-                <@htmlTemplate.lookupField formName="addtaskassocform" name="workEffortIdTo" id="workEffortIdTo" fieldFormName="LookupRoutingTask"/>
-            </@td>
-            <@th align="right">
-                ${uiLabelMap.CommonFromDate}
-            </@th>
-            <@td>
-                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </@td>
-            <@td align="center" width="40%">&nbsp;</@td>
-        </@tr>
-        <@tr>
-            <@th align="right">
-                ${uiLabelMap.CommonSequenceNum}
-            </@th>
-            <@td>
-                <input type="text" name="sequenceNum" size="10"/>
-            </@td>
-            <@th align="right">
-                ${uiLabelMap.CommonThruDate}
-            </@th>
-            <@td>
-                <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </@td>
-            <@td>&nbsp;</@td>
-        </@tr>
+    <@row>
+      <@cell columns=6>
+        <@field type="generic" label="${uiLabelMap.ManufacturingRoutingTaskId}">
+            <@htmlTemplate.lookupField formName="addtaskassocform" name="workEffortIdTo" id="workEffortIdTo" fieldFormName="LookupRoutingTask"/>
+        </@field>
+      </@cell>
+      <@cell columns=6>
+        <@field type="generic" label="${uiLabelMap.CommonFromDate}">
+            <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+        </@field>
+      </@cell>
+    </@row>
+    <@row>
+      <@cell columns=6>
+        <@field type="generic" label="${uiLabelMap.CommonSequenceNum}">
+            <input type="text" name="sequenceNum" size="10"/>
+        </@field>
+      </@cell>
+      <@cell columns=6>
+        <@field type="generic" label="${uiLabelMap.CommonThruDate}">
+            <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+        </@field>
+      </@cell>
+    </@row>
 
-        <@tr>
-            <@td>&nbsp;</@td>
-            <@td colspan="3">
-                <a href="javascript:addRoutingTask();" class="${styles.button_default!}">${uiLabelMap.ManufacturingAddExistingRoutingTask}</a>
+        <@field type="submitarea">
+            <a href="javascript:addRoutingTask();" class="${styles.button_default!}">${uiLabelMap.ManufacturingAddExistingRoutingTask}</a>
                 &nbsp;-&nbsp;
-                <a href="javascript:copyAndAddRoutingTask();" class="${styles.button_default!}">${uiLabelMap.ManufacturingCopyAndAddRoutingTask}</a>
-            </@td>
-            <@td>&nbsp;</@td>
-        </@tr>
-    </@table>
+            <a href="javascript:copyAndAddRoutingTask();" class="${styles.button_default!}">${uiLabelMap.ManufacturingCopyAndAddRoutingTask}</a>
+        </@field>
 </form>
 </#if>

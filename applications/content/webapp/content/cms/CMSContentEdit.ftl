@@ -112,10 +112,12 @@ ${menuWrapper.renderMenuString()}
             <form mode="post" name="updatefeatures" action="<@ofbizUrl>updateFeatures</@ofbizUrl>">
               <input type="hidden" name="contentId" value="${contentId}"/>
               <@table type="fields" width="100%" border="0" cellpadding="1">
+                    <@thead>
                        <@tr>
-                          <@td class="">Product Feature</@td>
-                          <@td class="">Has Feature</@td>
+                          <@th>Product Feature</@th>
+                          <@th>Has Feature</@th>
                        </@tr>
+                    </@thead>
                     <#assign rowCount = 0 />
                     <#list featureList as feature>
                        <#assign checked=""/>
@@ -185,11 +187,11 @@ ${menuWrapper.renderMenuString()}
       <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <@tr>
           <@td>
-  <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Image</b></div></@td><@td>&nbsp;</@td><@td><div class="tabletext">
-        <img src="<@ofbizUrl>img?imgId=${imgDataResourceId!}</@ofbizUrl>" alt="" />
-<div></@td></@tr>
-  </@table>
+              <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
+                <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Image</b></div></@td><@td>&nbsp;</@td><@td><div class="tabletext">
+                    <img src="<@ofbizUrl>img?imgId=${imgDataResourceId!}</@ofbizUrl>" alt="" />
+                    <div></@td></@tr>
+              </@table>
           </@td>
         </@tr>
       </@table>
@@ -246,10 +248,10 @@ ${menuWrapper.renderMenuString()}
       <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <@tr>
           <@td>
-  <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Content Name</b></div></@td><@td><div class="tabletext">${content.contentName!}</div></@td></@tr>
-    <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Description</b></div></@td><@td><div class="tabletext">${content.description!}<div></@td></@tr>
-  </@table>
+              <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
+                <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Content Name</b></div></@td><@td><div class="tabletext">${content.contentName!}</div></@td></@tr>
+                <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Description</b></div></@td><@td><div class="tabletext">${content.description!}<div></@td></@tr>
+              </@table>
           </@td>
         </@tr>
       </@table>
@@ -260,12 +262,12 @@ ${menuWrapper.renderMenuString()}
       <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <@tr>
           <@td>
-  <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b></b></div></@td><@td><div class="tabletext">
-<#-- ${textData!} -->
-<@renderContentAsText subContentId=content.contentId  editRequestName="/EditAddContent"/>
-<div></@td></@tr>
-  </@table>
+              <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
+                <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b></b></div></@td><@td><div class="tabletext">
+                    <#-- ${textData!} -->
+                    <@renderContentAsText subContentId=content.contentId  editRequestName="/EditAddContent"/>
+                    <div></@td></@tr>
+              </@table>
           </@td>
         </@tr>
       </@table>

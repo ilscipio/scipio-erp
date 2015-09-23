@@ -498,6 +498,8 @@ Not associated with an HTML element as is @fieldset.
 <#local fieldsInfo = readRequestStack("catoCurrentFieldsInfo", {})>
 <#-- parent @field elem info (if any; is possible) -->
 <#local parentFieldInfo = readRequestStack("catoCurrentFieldInfo", {})>
+<#local hasParentField = ((parentFieldInfo.type)!"")?has_content>
+<#local isTopLevelField = !hasParentField>
 <#-- this field's info (popped at end) -->
 <#local dummy = pushRequestStack("catoCurrentFieldInfo", 
     {"type":type})>

@@ -399,12 +399,12 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <container style="${styles.grid_large}6">
+                                <container style="${styles.grid_large}12">
                                     <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
                                         <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
                                     </screenlet>
                                 </container>
-                                <container style="${styles.grid_large}6">
+                                <container style="${styles.grid_large}12">
                                     <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
                                         <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>
                                     </screenlet>

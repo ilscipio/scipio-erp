@@ -316,7 +316,6 @@ under the License.
                                 <not><if-empty field="acctgTransId"/></not>
                             </condition>
                             <widgets>
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="EditGlAcctgTransSubTabBar"/>
                                 <section>
                                     <condition>
                                         <if-compare field="acctgTrans.isPosted" operator="equals"  value="Y"/>

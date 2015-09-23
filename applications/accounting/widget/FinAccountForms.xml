@@ -50,9 +50,8 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <auto-fields-entity entity-name="FinAccount" default-field-type="display"/>
-        <field name="finAccountId" widget-style="${styles.button_default}">
-            <hyperlink description="${finAccountId}" target="EditFinAccount">
+        <field name="finAccountId" widget-style="${styles.link_default}">
+            <hyperlink description="${finAccountName} ${finAccountCode}" target="EditFinAccount">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
@@ -63,6 +62,9 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
+        <field name="fromDate"><display type="date"/></field>
+        <field name="currencyUomId"><display/></field>
+        <field name="actualBalance"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="organizationPartyId" widget-style="${styles.button_default}">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
@@ -199,11 +201,12 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="transactionDate"> <date-time/> </field>
-        <field name="entryDate"><date-time/></field>
+        <field name="entryDate" position="2"><date-time/></field>
         <field name="paymentId"><lookup target-form-name="LookupPayment"/></field>
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
+        <field name="orderItemSeqId" position="2"><text/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down>
                 <entity-options entity-name="StatusItem" description="${description}">
@@ -211,7 +214,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}">
+        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}" position="2">
             <drop-down>
                 <entity-options entity-name="GlAccountOrganizationAndClass" description="${accountCode} - ${accountName} [${glAccountId}]" key-field-name="glAccountId">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="defaultOrganizationPartyId"/>

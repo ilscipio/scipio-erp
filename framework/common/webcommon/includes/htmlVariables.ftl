@@ -136,6 +136,10 @@ under the License.
     "grid_columns_10" : "large-10 medium-9 columns",
     "grid_columns_11" : "large-11 medium-10 columns",
     "grid_columns_12" : "large-12 columns",
+    "grid_centered" : "centered",
+    "grid_small_centered" : "small-centered",
+    "grid_medium_centered" : "medium-centered",
+    "grid_large_centered" : "large-centered",
 
 <#-- Floats -->
     "float_left" : "left",

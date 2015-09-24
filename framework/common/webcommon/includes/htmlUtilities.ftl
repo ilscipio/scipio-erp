@@ -2652,17 +2652,17 @@ Pops a stack variable in request attributes and returns the value.
 note: differs from popStack, which returns the stack.
 -->
 <#function popRequestStack stackName defaultVal="">
-  <#local stack = request.getAttribute(stackName)!"">
+  <#local stack = request.getAttribute(stackName)!""> <#-- should be list -->
   <#if stack?has_content>
     <#local res = stack?last>
+    <#local stackSize = stack?size>
+    <#if (stackSize > 1)>
+      <#local dummy = request.setAttribute(stackName, stack?chunk(stackSize - 1)?first)!>
+    <#else>
+      <#local dummy = request.removeAttribute(stackName)!>
+    </#if>
   <#else>
     <#local res = defaultVal>
-  </#if>
-  <#if stack?has_content && (stack?size > 1)>
-    <#local stackSize = stack?size>
-    <#local dummy = request.setAttribute(stackName, stack?chunk(stackSize - 1)?first)!>
-  <#else>
-    <#local dummy = request.removeAttribute(stackName)!>
   </#if>
   <#return res>
 </#function>

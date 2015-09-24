@@ -142,9 +142,9 @@ under the License.
                     <widgets>
                         <decorator-screen name="CommonShipmentDecorator">
                             <decorator-section name="body">
-                                <platform-specific>
-                                    <html><html-template location="component://product/webapp/facility/shipment/ViewShipmentInfo.ftl"/></html>
-                                </platform-specific>
+                                <screenlet>
+                                    <include-form location="component://product/widget/facility/ShipmentForms.xml" name="ViewShipment"/>
+                                </screenlet>
                                 <screenlet id="shipmentItemPanel" title="${uiLabelMap.PageTitleViewShipmentItemInfo}" initially-collapsed="true">
                                     <platform-specific>
                                         <html><html-template location="component://product/webapp/facility/shipment/ViewShipmentItemInfo.ftl"/></html>
@@ -460,7 +460,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+    
     <screen name="ShipmentBarCode.fo">
         <section>
             <actions>

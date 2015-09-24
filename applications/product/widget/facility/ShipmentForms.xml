@@ -57,7 +57,6 @@ under the License.
         <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}" position="2"><date-time/></field>
         <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><date-time/></field>
         <field name="latestCancelDate" title="${uiLabelMap.ProductLatestCancelDate}" position="2"><date-time/></field>
-
         <field use-when="productStoreId!=null" name="originFacilityId" title="${uiLabelMap.ProductOriginFacility} [${shipment.primaryOrderId}]">
             <drop-down allow-empty="true" current="first-in-list">
                 <entity-options entity-name="ProductStoreFacilityByOrder" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
@@ -236,5 +235,83 @@ under the License.
             </hyperlink>
         </field>
     </form>
+    
+    <form name="ViewShipment" type="single" default-map-name="shipment"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <script location="component://product/webapp/facility/WEB-INF/actions/shipment/orgAddressFormatted.groovy"/>
+            <script location="component://product/webapp/facility/WEB-INF/actions/shipment/destAddressFormatted.groovy"/>
+        </actions>
+        <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}"><display/></field>
+        
+        <field name="shipmentTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <display-entity entity-name="ShipmentType"/>
+        </field>
+        <field name="primaryShipGroupSeqId" title="${uiLabelMap.ProductPrimaryShipGroupSeqId}"><display/></field>
+        <field name="statusId" title="${uiLabelMap.ProductStatusId}" position="2">
+            <display-entity entity-name="StatusItem"/>
+        </field>
+        
+        <field name="primaryOrderId" title="${uiLabelMap.ProductPrimaryOrderId}"><display/></field>
+        <field name="primaryReturnId" title="${uiLabelMap.ProductPrimaryReturnId}" position="2"><display/></field>
+        <field name="estimatedReadyDate" title="${uiLabelMap.ProductEstimatedReadyDate}"><display type="date"/></field>
+        <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}" position="2"><display type="date"/></field>
+        <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><display type="date"/></field>
+        <field name="latestCancelDate" title="${uiLabelMap.ProductLatestCancelDate}" position="2"><display type="date"/></field>
+        
+        <field name="originFacilityId" title="${uiLabelMap.ProductOriginFacility}">
+            <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"></display-entity>
+        </field>
 
+        <field name="destinationFacilityId" title="${uiLabelMap.ProductDestinationFacility}" position="2">
+            <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"></display-entity>
+        </field>
+        <field name="partyIdFrom" title="${uiLabelMap.ProductFromParty}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.ProductToParty}" position="2">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
+        </field>
+        
+        <field name="originContactMechId" encode-output="false" title="${uiLabelMap.CommonAddress}">
+            <display description="${orgAddressFormatted}"/>
+        </field>
+        <field name="destinationContactMechId" encode-output="false" title="${uiLabelMap.CommonAddress}" position="2">
+            <display description="${destAddressFormatted}"/>
+        </field>
+        <field name="originTelecomNumberId" title="${uiLabelMap.PartyPhoneNumber}">
+            <display description="${originTelecomNumber.countryCode}  ${originTelecomNumber.areaCode} ${originTelecomNumber.contactNumber}"/>
+        </field>
+        <field name="destinationTelecomNumberId" title="${uiLabelMap.PartyPhoneNumber}" position="2">
+            <display description="${destinationTelecomNumber.countryCode}  ${destinationTelecomNumber.areaCode} ${destinationTelecomNumber.contactNumber}"/>
+        </field>
+        
+        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="${styles.button_default}">
+            <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app">
+                <parameter param-name="workEffortId" from-field="shipment.estimatedShipWorkEffId"/>
+            </hyperlink>
+        </field>
+        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="${styles.button_default}" position="2">
+            <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app">
+                <parameter param-name="workEffortId" from-field="shipment.estimatedArrivalWorkEffId"/>
+            </hyperlink>
+        </field>
+        <field name="estimatedShipCost" title="${uiLabelMap.ProductEstimatedShipCost}">
+            <display type="currency" currency="${currencyUomId}"/>
+        </field>
+        <field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}" position="2">
+                <display-entity entity-name="Uom" key-field-name="uomId" description="${description} - ${abbreviation}"/>
+        </field>
+        <field name="additionalShippingCharge" title="${uiLabelMap.ProductAdditionalShippingCharge}" position="2"><display/></field>
+        <field name="handlingInstructions" title="${uiLabelMap.ProductHandlingInstructions}"><display/></field>
+        <field name="createdDate"><display type="date-time"/></field>
+        <field name="lastModifiedDate" position="2"><display type="date-time"/></field>
+        <field name="createdByUserLogin">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
+        </field>
+        <field name="lastModifiedByUserLogin" position="2">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
+        </field>
+        
+    </form>
 </forms>

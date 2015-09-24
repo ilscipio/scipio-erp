@@ -42,7 +42,7 @@ under the License.
             <#assign totalQuantityToPackage = shipmentItemData.totalQuantityToPackage>
             <@tr valign="middle" alt=alt_row>
                 <@td>${shipmentItem.shipmentItemSeqId}</@td>
-                <@td colspan="2">${(product.internalName)!} <a href="/catalog/control/EditProduct?productId=${shipmentItem.productId!}" class="${styles.button_default!}">${shipmentItem.productId!}</a></@td>
+                <@td colspan="2"><a href="/catalog/control/EditProduct?productId=${shipmentItem.productId!}" target="_blank" class="${styles.link_default!}">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
                 <@td>${shipmentItem.quantity?default("&nbsp;")}</@td>
                 <@td colspan="2">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</@td>
                 <@td><a href="javascript:document.deleteShipmentItem${shipmentItemData_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></@td>
@@ -65,8 +65,8 @@ under the License.
             <#list itemIssuances as itemIssuance>
                 <@tr valign="middle" alt=alt_row>
                     <@td>&nbsp;</@td>
-                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}" class="${styles.button_default!}">${itemIssuance.orderId!}</a> ${itemIssuance.orderItemSeqId!}</@td>
-                    <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" class="${styles.button_default!}">${itemIssuance.inventoryItemId!}</a></@td>
+                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}" target="_blank" class="${styles.link_default!}">${itemIssuance.orderId!} -  ${itemIssuance.orderItemSeqId!}</a></@td>
+                    <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" target="_blank" class="${styles.link_default!}">${itemIssuance.inventoryItemId!}</a></@td>
                     <@td>${itemIssuance.quantity!}</@td>
                     <@td>${itemIssuance.issuedDateTime!}</@td>
                     <@td>${uiLabelMap.ProductFuturePartyRoleList}</@td>
@@ -125,7 +125,7 @@ under the License.
                 <@td colspan="2"><span>${uiLabelMap.ProductProductId}</span> 
                   <@htmlTemplate.lookupField formName="createShipmentItemForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
                 </@td>
-                <@td><input type="text" name="quantity" size="5" value="0"/></@td>
+                <@td><span>${uiLabelMap.CommonQty}</span> <input type="text" name="quantity" size="5" value="0"/></@td>
                 <@td colspan="2"><span>${uiLabelMap.ProductProductDescription}</span> <input name="shipmentContentDescription" size="30" maxlength="255"/></@td>
                 <@td><a href="javascript:document.createShipmentItemForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></@td>
             </form>

@@ -1500,7 +1500,7 @@ Creates a very basic wrapper for code blocks
 ************
 Helps define table. Required wrapper for all table sub-elem macros.
 
-FIXME: #globals should be changed to request attributes, otherwise don't survive screens.render
+FIXME: request attribute globals should support fallback to #globals (for emails!)
 
     Usage example:  
     <@table type="data-list" class="basic-table" id="my-table">
@@ -1550,11 +1550,11 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#-- save previous globals, for nesting -->
-  <#local prevTableInfo = catoCurrentTableInfo!>
-  <#local prevSectionInfo = catoCurrentTableSectionInfo!>
-  <#local prevRowAltFlag = catoCurrentTableRowAltFlag!""> <#-- used to keep track of state (always boolean) -->
-  <#local prevCurrentRowAlt = catoCurrentTableCurrentRowAlt!""> <#-- the actual alt value of current row (may be empty) -->
-  <#local prevLastRowAlt = catoCurrentTableLastRowAlt!""> <#-- the actual alt value of "last" row (may be empty) -->
+  <#local prevTableInfo = request.getAttribute("catoCurrentTableInfo")!>
+  <#local prevSectionInfo = request.getAttribute("catoCurrentTableSectionInfo")!>
+  <#local prevRowAltFlag = request.getAttribute("catoCurrentTableRowAltFlag")!""> <#-- used to keep track of state (always boolean) -->
+  <#local prevCurrentRowAlt = request.getAttribute("catoCurrentTableCurrentRowAlt")!""> <#-- the actual alt value of current row (may be empty) -->
+  <#local prevLastRowAlt = request.getAttribute("catoCurrentTableLastRowAlt")!""> <#-- the actual alt value of "last" row (may be empty) -->
   <#if !autoAltRows?is_boolean>
     <#-- don't enable for all data-list tables by default for now, not sure wanted...
     <#local autoAltRows = (type == "data-list") || inheritAltRows>-->
@@ -1573,27 +1573,29 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
       <#local cellspacing = "">
     </#if>
   </#if>
-  <#global catoCurrentTableInfo = {"type": type, "autoAltRows": autoAltRows,
+  <#local catoCurrentTableInfo = {"type": type, "autoAltRows": autoAltRows,
     "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
-  <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
+  <#local dummy = request.setAttribute("catoCurrentTableInfo", catoCurrentTableInfo)!>
+  <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
+  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- note: catoCurrentTableRowAltFlag should always be boolean
        note: catoCurrentTableCurrentRowAlt probably doesn't need to be set here, but playing it safe -->
   <#if firstRowAlt?is_boolean>
-    <#global catoCurrentTableRowAltFlag = firstRowAlt>
-    <#global catoCurrentTableCurrentRowAlt = firstRowAlt>
+    <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", firstRowAlt)!>
+    <#local dummy = request.setAttribute("catoCurrentTableCurrentRowAlt", firstRowAlt)!>
   <#elseif inheritAltRows>
     <#if prevCurrentRowAlt?is_boolean>
-      <#global catoCurrentTableRowAltFlag = prevCurrentRowAlt> 
+      <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", prevCurrentRowAlt)!>
     <#else>
-      <#global catoCurrentTableRowAltFlag = false> 
+      <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", false)!>
     </#if>
-    <#global catoCurrentTableCurrentRowAlt = prevCurrentRowAlt>
+    <#local dummy = request.setAttribute("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
   <#else>
-    <#global catoCurrentTableRowAltFlag = false> 
-    <#global catoCurrentTableCurrentRowAlt = false>
+    <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", false)!>
+    <#local dummy = request.setAttribute("catoCurrentTableCurrentRowAlt", false)!>
   </#if>
   <#-- note: this var may be empty string (none) -->
-  <#global catoCurrentTableLastRowAlt = prevCurrentRowAlt>
+  <#local dummy = request.setAttribute("catoCurrentTableLastRowAlt", prevCurrentRowAlt)!>
   <#local style = "">
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
@@ -1625,11 +1627,11 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
   <#if scrollable>
   </div>
   </#if>
-  <#global catoCurrentTableInfo = prevTableInfo>
-  <#global catoCurrentTableSectionInfo = prevSectionInfo>
-  <#global catoCurrentTableRowAltFlag = prevRowAltFlag>
-  <#global catoCurrentTableCurrentRowAlt = prevCurrentRowAlt>
-  <#global catoCurrentTableLastRowAlt = prevLastRowAlt>
+  <#local dummy = request.setAttribute("catoCurrentTableInfo", prevTableInfo)!>
+  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", prevSectionInfo)!>
+  <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", prevRowAltFlag)!>
+  <#local dummy = request.setAttribute("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
+  <#local dummy = request.setAttribute("catoCurrentTableLastRowAlt", prevLastRowAlt)!>
 </#if>
 </#macro>
 
@@ -1638,8 +1640,9 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#local classes = makeClassesArg(class, "")>
-  <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
-  <#global catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
+  <#local prevTableSectionInfo = request.getAttribute("catoCurrentTableSectionInfo")!>
+  <#local catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
+  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#local dummy = pushRequestStack("catoCurrentTableHeadStack", 
@@ -1655,7 +1658,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </thead>
-  <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
+  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
 </#if>
 </#macro>
 
@@ -1664,8 +1667,9 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#local classes = makeClassesArg(class, "")>
-  <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
-  <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
+  <#local prevTableSectionInfo = request.getAttribute("catoCurrentTableSectionInfo")!>
+  <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
+  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#local dummy = pushRequestStack("catoCurrentTableBodyStack", 
@@ -1681,7 +1685,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </tbody>
-  <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
+  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
 </#if>
 </#macro>
 
@@ -1690,8 +1694,9 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#local classes = makeClassesArg(class, "")>
-  <#local prevTableSectionInfo = catoCurrentTableSectionInfo!>
-  <#global catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
+  <#local prevTableSectionInfo = request.getAttribute("catoCurrentTableSectionInfo")!>
+  <#local catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
+  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#local dummy = pushRequestStack("catoCurrentTableFootStack", 
@@ -1707,7 +1712,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </tfoot>
-  <#global catoCurrentTableSectionInfo = prevTableSectionInfo>
+  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
 </#if>
 </#macro>
 
@@ -1717,7 +1722,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 ************
 Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
                  
-FIXME: #globals should be changed to request attributes, otherwise don't survive screens.render
+FIXME: request attribute globals should support fallback to #globals (for emails!)
                     
    * General Attributes *
     type            = [generic|content|meta|util], default generic or content (depends on table type)
@@ -1751,6 +1756,10 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 <#macro tr type="" class=true id="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
+<#local catoCurrentTableInfo = request.getAttribute("catoCurrentTableInfo")!>
+<#local catoCurrentTableSectionInfo = request.getAttribute("catoCurrentTableSectionInfo")!>
+<#local catoCurrentTableRowAltFlag = request.getAttribute("catoCurrentTableRowAltFlag")!>
+<#local catoCurrentTableLastRowAlt = request.getAttribute("catoCurrentTableLastRowAlt")!>
 <#if open>
   <#local tableType = (catoCurrentTableInfo.type)!"generic">
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
@@ -1778,7 +1787,8 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
     </#if>
   </#if>
   <#-- save the "effective" or "real" current row alt -->
-  <#global catoCurrentTableCurrentRowAlt = alt>
+  <#local catoCurrentTableCurrentRowAlt = alt>
+  <#local dummy = request.setAttribute("catoCurrentTableCurrentRowAlt", catoCurrentTableCurrentRowAlt)!>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#local dummy = pushRequestStack("catoCurrentTableRowStack", 
@@ -1807,11 +1817,13 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
   <#if !(useAlt?is_boolean && useAlt == false)>
     <#-- note: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
     <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
-      <#global catoCurrentTableRowAltFlag = !alt>
+      <#local catoCurrentTableRowAltFlag = !alt>
+      <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", catoCurrentTableRowAltFlag)!>
     </#if>
   </#if>
   <#-- note: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
-  <#global catoCurrentTableLastRowAlt = alt>
+  <#local catoCurrentTableLastRowAlt = alt>
+  <#local dummy = request.setAttribute("catoCurrentTableLastRowAlt", catoCurrentTableLastRowAlt)!>
 </#if>
 </#macro>
 

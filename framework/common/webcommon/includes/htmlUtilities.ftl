@@ -257,7 +257,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 -->
 
 <#macro requireScriptOfbizUrl uri htmlwrap=false>
-  <#local requiredScriptOfbizUrls = request.getAttribute("requiredScriptOfbizUrls")![]>
+  <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls", [])>
   <#if !requiredScriptOfbizUrls?seq_contains(uri)>
     <#if htmlwrap>
 <script language="JavaScript" type="text/javascript">
@@ -270,7 +270,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     </#if>
     <#-- FIXME: inefficient -->
     <#local requiredScriptOfbizUrls = requiredScriptOfbizUrls + [uri]>
-    <#local dummy = request.setAttribute("requiredScriptOfbizUrls", requiredScriptOfbizUrls)!>
+    <#local dummy = setRequestVar("requiredScriptOfbizUrls", requiredScriptOfbizUrls)>
   </#if>
 </#macro>
 
@@ -288,7 +288,7 @@ Currently must be a function because global var is not always set and request at
                       template code should leave this to true.
 -->
 <#function getCurrentSectionLevel defaultVal=true>
-  <#local sLevel = (request.getAttribute("catoCurrentSectionLevel"))!"">
+  <#local sLevel = getRequestVar("catoCurrentSectionLevel", "")>
   <#if !sLevel?has_content>
     <#if defaultVal?is_boolean>
       <#if defaultVal>
@@ -309,7 +309,7 @@ Set current @section level manually. For advanced markup, bypassing @section.
 -->
 <#function setCurrentSectionLevel sLevel>
   <#-- set as request attrib so survives template environments and screens.render -->
-  <#local dummy = request.setAttribute("catoCurrentSectionLevel", sLevel)!>
+  <#local dummy = setRequestVar("catoCurrentSectionLevel", sLevel)>
   <#global catoCurrentSectionLevel = sLevel>
   <#return "">
 </#function>
@@ -328,7 +328,7 @@ Currently must be a function because global var is not always set and request at
                       template code should leave this to true.
 -->
 <#function getCurrentHeadingLevel defaultVal=true>
-  <#local hLevel = (request.getAttribute("catoCurrentHeadingLevel"))!"">
+  <#local hLevel = getRequestVar("catoCurrentHeadingLevel", "")>
   <#if !hLevel?has_content>
     <#if defaultVal?is_boolean>
       <#if defaultVal>
@@ -350,7 +350,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 -->
 <#function setCurrentHeadingLevel hLevel>
   <#-- set as request attrib so survives template environments and screens.render -->
-  <#local dummy = request.setAttribute("catoCurrentHeadingLevel", hLevel)!>
+  <#local dummy = setRequestVar("catoCurrentHeadingLevel", hLevel)>
   <#global catoCurrentHeadingLevel = hLevel>
   <#return "">
 </#function>
@@ -506,9 +506,9 @@ Not associated with an HTML element as is @fieldset.
 
 <#-- fieldIdNum will always increment throughout the page 
      now stored in request attributes so survived screens.render though still accessible as a global -->
-<#global fieldIdNum = (request.getAttribute("catoFieldIdNum"))!0>
-<#global fieldIdNum = fieldIdNum + 1 />
-<#local dummy = (request.setAttribute("catoFieldIdNum", fieldIdNum))!>
+<#local fieldIdNum = getRequestVar("catoFieldIdNum", 0)>
+<#local fieldIdNum = fieldIdNum + 1 />
+<#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
 
 <#local radioSingle = (type=="radio" && !items?has_content)>
 
@@ -1366,9 +1366,9 @@ Since this is very foundation specific, this function may be dropped in future i
 -->
 <#macro grid type="" class=true columns=4>
     <#if type=="tiles" || type="freetiles">
-        <#global freewallNum = (request.getAttribute("catoFreewallIdNum"))!0>
-        <#global freewallNum = freewallNum + 1 />
-        <#local dummy = (request.setAttribute("catoFreewallIdNum", freewallNum))!>
+        <#local freewallNum = getRequestVar("catoFreewallIdNum", 0)>
+        <#local freewallNum = freewallNum + 1 />
+        <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
         <#local id="freewall_id_${freewallNum!0}">
         <#-- FIXME: the "class" arg is not even used... 
         <#local classes = makeClassesArg(class, "...")>
@@ -1500,8 +1500,6 @@ Creates a very basic wrapper for code blocks
 ************
 Helps define table. Required wrapper for all table sub-elem macros.
 
-FIXME: request attribute globals should support fallback to #globals (for emails!)
-
     Usage example:  
     <@table type="data-list" class="basic-table" id="my-table">
       <@thead>
@@ -1550,11 +1548,11 @@ FIXME: request attribute globals should support fallback to #globals (for emails
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#-- save previous globals, for nesting -->
-  <#local prevTableInfo = request.getAttribute("catoCurrentTableInfo")!>
-  <#local prevSectionInfo = request.getAttribute("catoCurrentTableSectionInfo")!>
-  <#local prevRowAltFlag = request.getAttribute("catoCurrentTableRowAltFlag")!""> <#-- used to keep track of state (always boolean) -->
-  <#local prevCurrentRowAlt = request.getAttribute("catoCurrentTableCurrentRowAlt")!""> <#-- the actual alt value of current row (may be empty) -->
-  <#local prevLastRowAlt = request.getAttribute("catoCurrentTableLastRowAlt")!""> <#-- the actual alt value of "last" row (may be empty) -->
+  <#local prevTableInfo = getRequestVar("catoCurrentTableInfo", {})>
+  <#local prevSectionInfo = getRequestVar("catoCurrentTableSectionInfo", {})>
+  <#local prevRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag", "")> <#-- used to keep track of state (always boolean) -->
+  <#local prevCurrentRowAlt = getRequestVar("catoCurrentTableCurrentRowAlt", "")> <#-- the actual alt value of current row (may be empty) -->
+  <#local prevLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt", "")> <#-- the actual alt value of "last" row (may be empty) -->
   <#if !autoAltRows?is_boolean>
     <#-- don't enable for all data-list tables by default for now, not sure wanted...
     <#local autoAltRows = (type == "data-list") || inheritAltRows>-->
@@ -1575,27 +1573,27 @@ FIXME: request attribute globals should support fallback to #globals (for emails
   </#if>
   <#local catoCurrentTableInfo = {"type": type, "autoAltRows": autoAltRows,
     "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
-  <#local dummy = request.setAttribute("catoCurrentTableInfo", catoCurrentTableInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableInfo", catoCurrentTableInfo)!>
   <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
-  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- note: catoCurrentTableRowAltFlag should always be boolean
        note: catoCurrentTableCurrentRowAlt probably doesn't need to be set here, but playing it safe -->
   <#if firstRowAlt?is_boolean>
-    <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", firstRowAlt)!>
-    <#local dummy = request.setAttribute("catoCurrentTableCurrentRowAlt", firstRowAlt)!>
+    <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", firstRowAlt)!>
+    <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", firstRowAlt)!>
   <#elseif inheritAltRows>
     <#if prevCurrentRowAlt?is_boolean>
-      <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", prevCurrentRowAlt)!>
+      <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevCurrentRowAlt)!>
     <#else>
-      <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", false)!>
+      <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", false)!>
     </#if>
-    <#local dummy = request.setAttribute("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
+    <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
   <#else>
-    <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", false)!>
-    <#local dummy = request.setAttribute("catoCurrentTableCurrentRowAlt", false)!>
+    <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", false)!>
+    <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", false)!>
   </#if>
   <#-- note: this var may be empty string (none) -->
-  <#local dummy = request.setAttribute("catoCurrentTableLastRowAlt", prevCurrentRowAlt)!>
+  <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevCurrentRowAlt)!>
   <#local style = "">
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
@@ -1627,11 +1625,11 @@ FIXME: request attribute globals should support fallback to #globals (for emails
   <#if scrollable>
   </div>
   </#if>
-  <#local dummy = request.setAttribute("catoCurrentTableInfo", prevTableInfo)!>
-  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", prevSectionInfo)!>
-  <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", prevRowAltFlag)!>
-  <#local dummy = request.setAttribute("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
-  <#local dummy = request.setAttribute("catoCurrentTableLastRowAlt", prevLastRowAlt)!>
+  <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevSectionInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevRowAltFlag)!>
+  <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
+  <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevLastRowAlt)!>
 </#if>
 </#macro>
 
@@ -1640,9 +1638,9 @@ FIXME: request attribute globals should support fallback to #globals (for emails
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#local classes = makeClassesArg(class, "")>
-  <#local prevTableSectionInfo = request.getAttribute("catoCurrentTableSectionInfo")!>
+  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo", {})>
   <#local catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
-  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#local dummy = pushRequestStack("catoCurrentTableHeadStack", 
@@ -1658,7 +1656,7 @@ FIXME: request attribute globals should support fallback to #globals (for emails
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </thead>
-  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
 </#if>
 </#macro>
 
@@ -1667,9 +1665,9 @@ FIXME: request attribute globals should support fallback to #globals (for emails
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#local classes = makeClassesArg(class, "")>
-  <#local prevTableSectionInfo = request.getAttribute("catoCurrentTableSectionInfo")!>
+  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo", {})>
   <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
-  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#local dummy = pushRequestStack("catoCurrentTableBodyStack", 
@@ -1685,7 +1683,7 @@ FIXME: request attribute globals should support fallback to #globals (for emails
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </tbody>
-  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
 </#if>
 </#macro>
 
@@ -1694,9 +1692,9 @@ FIXME: request attribute globals should support fallback to #globals (for emails
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#local classes = makeClassesArg(class, "")>
-  <#local prevTableSectionInfo = request.getAttribute("catoCurrentTableSectionInfo")!>
+  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo", {})>
   <#local catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
-  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#local dummy = pushRequestStack("catoCurrentTableFootStack", 
@@ -1712,7 +1710,7 @@ FIXME: request attribute globals should support fallback to #globals (for emails
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </tfoot>
-  <#local dummy = request.setAttribute("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
 </#if>
 </#macro>
 
@@ -1721,9 +1719,7 @@ FIXME: request attribute globals should support fallback to #globals (for emails
 * Table row
 ************
 Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
-                 
-FIXME: request attribute globals should support fallback to #globals (for emails!)
-                    
+                     
    * General Attributes *
     type            = [generic|content|meta|util], default generic or content (depends on table type)
                       generic: free-form row with no assumptions on content.
@@ -1756,10 +1752,10 @@ FIXME: request attribute globals should support fallback to #globals (for emails
 <#macro tr type="" class=true id="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
-<#local catoCurrentTableInfo = request.getAttribute("catoCurrentTableInfo")!>
-<#local catoCurrentTableSectionInfo = request.getAttribute("catoCurrentTableSectionInfo")!>
-<#local catoCurrentTableRowAltFlag = request.getAttribute("catoCurrentTableRowAltFlag")!>
-<#local catoCurrentTableLastRowAlt = request.getAttribute("catoCurrentTableLastRowAlt")!>
+<#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo", {})>
+<#local catoCurrentTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo", {})>
+<#local catoCurrentTableRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag", false)>
+<#local catoCurrentTableLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt", "")>
 <#if open>
   <#local tableType = (catoCurrentTableInfo.type)!"generic">
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
@@ -1788,7 +1784,7 @@ FIXME: request attribute globals should support fallback to #globals (for emails
   </#if>
   <#-- save the "effective" or "real" current row alt -->
   <#local catoCurrentTableCurrentRowAlt = alt>
-  <#local dummy = request.setAttribute("catoCurrentTableCurrentRowAlt", catoCurrentTableCurrentRowAlt)!>
+  <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", catoCurrentTableCurrentRowAlt)!>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
     <#local dummy = pushRequestStack("catoCurrentTableRowStack", 
@@ -1818,12 +1814,12 @@ FIXME: request attribute globals should support fallback to #globals (for emails
     <#-- note: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
     <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
       <#local catoCurrentTableRowAltFlag = !alt>
-      <#local dummy = request.setAttribute("catoCurrentTableRowAltFlag", catoCurrentTableRowAltFlag)!>
+      <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", catoCurrentTableRowAltFlag)!>
     </#if>
   </#if>
   <#-- note: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
   <#local catoCurrentTableLastRowAlt = alt>
-  <#local dummy = request.setAttribute("catoCurrentTableLastRowAlt", catoCurrentTableLastRowAlt)!>
+  <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", catoCurrentTableLastRowAlt)!>
 </#if>
 </#macro>
 
@@ -1949,9 +1945,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 -->
 
 <#macro chart type="pie" library="foundation" title="">
-    <#global fieldIdNum = (request.getAttribute("catoFieldIdNum"))!0>
-    <#global fieldIdNum = fieldIdNum + 1 />
-    <#local dummy = (request.setAttribute("catoFieldIdNum", fieldIdNum))!>
+    <#local fieldIdNum = getRequestVar("catoFieldIdNum", 0)>
+    <#local fieldIdNum = fieldIdNum + 1 />
+    <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
     <#global chartLibrary = library!"foundation"/>
     <#if chartLibrary=="foundation">
         <@row>
@@ -2623,14 +2619,15 @@ WARNING: stack type/format is subject to change; assume unknown.
 *************
 * pushRequestStack
 ************
-Pushes a value onto a stack variable in request attributes.
+Pushes a value onto a global stack variable in request scope (request attributes, or if no request, FTL globals).
 
-Dev note: currently no pushGlobalStack version of this exists for FTL globals; 
+Dev note: currently no pushGlobalStack version of this exists for FTL globals only; 
 can be achieved with pushStack/readStack/popStack instead, but in most cases pushRequestStack is better anyhow.
 
 FIXME: this is highly suboptimal; should move much of this to a java method.
 -->
 <#function pushRequestStack stackName val>
+<#if request??>
   <#local stack = request.getAttribute(stackName)!"">
   <#if stack?has_content>
     <#local stack = stack + [val]>
@@ -2638,32 +2635,55 @@ FIXME: this is highly suboptimal; should move much of this to a java method.
     <#local stack = [val]>
   </#if>
   <#local dummy = request.setAttribute(stackName, stack)!>
-  <#return "">
+  <#return val>
+<#else>
+  <#-- fallback to globals -->
+  <#local stack = .globals[stackName]!"">
+  <#if stack?has_content>
+    <#local stack = stack + [val]>
+  <#else>
+    <#local stack = [val]>
+  </#if>
+  <@"<#global ${stackName}=stack>"?interpret />
+  <#return val>
+</#if>
 </#function>
 
 <#-- 
 *************
 * readRequestStack function
 ************
-Reads the last value added to the named stack variable in request attributes, without popping.
+Reads the last value added to the named global stack variable in request scope
+(request attributes, or if no request, FTL globals), without popping.
 -->
 <#function readRequestStack stackName defaultVal="">
+<#if request??>
   <#local stack = request.getAttribute(stackName)!"">
   <#if stack?has_content>
     <#return stack?last>
   <#else>
     <#return defaultVal>
   </#if>
+<#else>
+  <#-- fallback to globals -->
+  <#local stack = .globals[stackName]!"">
+  <#if stack?has_content>
+    <#return stack?last>
+  <#else>
+    <#return defaultVal>
+  </#if>
+</#if>
 </#function>
 
 <#-- 
 *************
 * popRequestStack function
 ************
-Pops a stack variable in request attributes and returns the value.
+Pops a global stack variable in request scope (request attributes, or if no request, FTL globals).
 note: differs from popStack, which returns the stack.
 -->
 <#function popRequestStack stackName defaultVal="">
+<#if request??>
   <#local stack = request.getAttribute(stackName)!""> <#-- should be list -->
   <#if stack?has_content>
     <#local res = stack?last>
@@ -2677,6 +2697,54 @@ note: differs from popStack, which returns the stack.
     <#local res = defaultVal>
   </#if>
   <#return res>
+<#else>
+  <#-- fallback to globals -->
+  <#local stack = .globals[stackName]!"">
+  <#if stack?has_content>
+    <#local res = stack?last>
+    <#local stackSize = stack?size>
+    <#if (stackSize > 1)>
+      <#local newStack = stack?chunk(stackSize - 1)?first>
+      <@"<#global ${stackName}=newStack>"?interpret />
+    <#else>
+      <@"<#global ${stackName}=''>"?interpret />
+    </#if>
+  <#else>
+    <#local res = defaultVal>
+  </#if>
+  <#return res>
+</#if>
+</#function>
+
+<#-- 
+*************
+* setRequestVar function
+************
+Sets a global var in request scope (request attributes, or if no request, FTL globals).
+-->
+<#function setRequestVar varName val>
+<#if request??>
+  <#local dummy = request.setAttribute(varName, val)!>
+<#else>
+  <#-- fallback to globals -->
+  <@"<#global ${varName}=val>"?interpret />
+</#if>
+  <#return val>
+</#function>
+
+<#-- 
+*************
+* getRequestVar function
+************
+Gets a global var from request scope (request attributes, or if no request, FTL globals).
+-->
+<#function getRequestVar varName defaultVal="">
+<#if request??>
+  <#return request.getAttribute(varName)!defaultVal>
+<#else>
+  <#-- fallback to globals -->
+  <#return .globals[varName]!defaultVal>
+</#if>
 </#function>
 
 

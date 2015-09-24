@@ -1366,7 +1366,9 @@ Since this is very foundation specific, this function may be dropped in future i
 -->
 <#macro grid type="" class=true columns=4>
     <#if type=="tiles" || type="freetiles">
-        <#global freewallNum="${(freewallNum!0)+1}" />
+        <#global freewallNum = (request.getAttribute("catoFreewallIdNum"))!0>
+        <#global freewallNum = freewallNum + 1 />
+        <#local dummy = (request.setAttribute("catoFreewallIdNum", freewallNum))!>
         <#local id="freewall_id_${freewallNum!0}">
         <#-- FIXME: the "class" arg is not even used... 
         <#local classes = makeClassesArg(class, "...")>

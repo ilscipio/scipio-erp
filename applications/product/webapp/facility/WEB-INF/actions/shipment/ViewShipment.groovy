@@ -39,7 +39,9 @@ if (shipment) {
     context.originFacility = shipment.getRelatedOne("OriginFacility", false);
     context.destinationFacility = shipment.getRelatedOne("DestinationFacility", false);
     context.originPostalAddress = shipment.getRelatedOne("OriginPostalAddress", false);
+    context.originTelecomNumber = shipment.getRelatedOne("OriginTelecomNumber", false);
     context.destinationPostalAddress = shipment.getRelatedOne("DestinationPostalAddress", false);
+    context.destinationTelecomNumber = shipment.getRelatedOne("DestinationTelecomNumber", false);
 }
 
 // check permission

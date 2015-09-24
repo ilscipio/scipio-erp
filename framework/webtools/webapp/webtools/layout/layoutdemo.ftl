@@ -236,6 +236,19 @@
         <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
         <@tr type="meta"><@td colspan=3>Special meta row</@td></@tr>
         <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+
+        <@tr openOnly=true colspan=3 />
+            <@td openOnly=true/>Manual open/close rows and table<@td closeOnly=true />
+            <@td openOnly=true colspan=2/>
+                <@table type="data-complex" inheritAltRows=true openOnly=true />
+                    <@thead openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Header<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@thead closeOnly=true />
+                    <@tbody openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Body<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@tbody closeOnly=true />
+                    <@tfoot openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Footer<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@tfoot closeOnly=true />
+                <@table closeOnly=true />
+            <@td closeOnly=true />
+        <@tr closeOnly=true />
+
+        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
       </@tbody>
       <@tfoot>
         <@tr><@td colspan=3>Footer</@td></@tr>

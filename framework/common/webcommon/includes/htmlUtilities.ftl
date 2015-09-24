@@ -1597,7 +1597,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
   <#local style = "">
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
-    <#global catoCurrentTableStack = pushStack(catoCurrentTableStack!, 
+    <#local dummy = pushRequestStack("catoCurrentTableStack", 
         {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
          "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable})>
   </#if>
@@ -1613,8 +1613,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 <#if close>
   <#-- need to get values back from stack if close-only! -->
   <#if !open>
-    <#local stackValues = readStack(catoCurrentTableStack!)>
-    <#global catoCurrentTableStack = popStack(catoCurrentTableStack!)>
+    <#local stackValues = popRequestStack("catoCurrentTableStack", {})>
     <#local prevTableInfo = stackValues.prevTableInfo>
     <#local prevSectionInfo = stackValues.prevSectionInfo>
     <#local prevRowAltFlag = stackValues.prevRowAltFlag>
@@ -1643,7 +1642,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
   <#global catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
-    <#global catoCurrentTableHeadStack = pushStack(catoCurrentTableHeadStack!, 
+    <#local dummy = pushRequestStack("catoCurrentTableHeadStack", 
         {"prevTableSectionInfo":prevTableSectionInfo})>
   </#if>
   <thead<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
@@ -1652,8 +1651,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 <#if close>
   <#-- need to get values back from stack if close-only! -->
   <#if !open>
-    <#local stackValues = readStack(catoCurrentTableHeadStack!)>
-    <#global catoCurrentTableHeadStack = popStack(catoCurrentTableHeadStack!)>
+    <#local stackValues = popRequestStack("catoCurrentTableHeadStack", {})>
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </thead>
@@ -1670,7 +1668,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
   <#global catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
-    <#global catoCurrentTableBodyStack = pushStack(catoCurrentTableBodyStack!, 
+    <#local dummy = pushRequestStack("catoCurrentTableBodyStack", 
         {"prevTableSectionInfo":prevTableSectionInfo})>
   </#if>
   <tbody<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
@@ -1679,8 +1677,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 <#if close>
   <#-- need to get values back from stack if close-only! -->
   <#if !open>
-    <#local stackValues = readStack(catoCurrentTableBodyStack!)>
-    <#global catoCurrentTableBodyStack = popStack(catoCurrentTableBodyStack!)>
+    <#local stackValues = popRequestStack("catoCurrentTableBodyStack", {})>
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </tbody>
@@ -1697,7 +1694,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
   <#global catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
-    <#global catoCurrentTableFootStack = pushStack(catoCurrentTableFootStack!, 
+    <#local dummy = pushRequestStack("catoCurrentTableFootStack", 
         {"prevTableSectionInfo":prevTableSectionInfo})>
   </#if>
   <tfoot<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
@@ -1706,8 +1703,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 <#if close>
   <#-- need to get values back from stack if close-only! -->
   <#if !open>
-    <#local stackValues = readStack(catoCurrentTableFootStack!)>
-    <#global catoCurrentTableFootStack = popStack(catoCurrentTableFootStack!)>
+    <#local stackValues = popRequestStack("catoCurrentTableFootStack", {})>
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </tfoot>
@@ -1785,7 +1781,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
   <#global catoCurrentTableCurrentRowAlt = alt>
   <#-- need to save values on a stack if open-only! -->
   <#if !close>
-    <#global catoCurrentTableRowStack = pushStack(catoCurrentTableRowStack!, 
+    <#local dummy = pushRequestStack("catoCurrentTableRowStack", 
         {"type":type, "useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
   </#if>
   <#local classes = makeClassesArg(class, "")>
@@ -1801,8 +1797,7 @@ FIXME: #globals should be changed to request attributes, otherwise don't survive
 <#if close>
   <#-- need to get values back from stack if close-only! -->
   <#if !open>
-    <#local stackValues = readStack(catoCurrentTableRowStack!)>
-    <#global catoCurrentTableRowStack = popStack(catoCurrentTableRowStack!)>
+    <#local stackValues = popRequestStack("catoCurrentTableRowStack", {})>
     <#local type = stackValues.type>
     <#local useAlt = stackValues.useAlt>
     <#local alt = stackValues.alt>
@@ -2658,14 +2653,18 @@ note: differs from popStack, which returns the stack.
 -->
 <#function popRequestStack stackName defaultVal="">
   <#local stack = request.getAttribute(stackName)!"">
+  <#if stack?has_content>
+    <#local res = stack?last>
+  <#else>
+    <#local res = defaultVal>
+  </#if>
   <#if stack?has_content && (stack?size > 1)>
     <#local stackSize = stack?size>
     <#local dummy = request.setAttribute(stackName, stack?chunk(stackSize - 1)?first)!>
-    <#return stack?last>
   <#else>
     <#local dummy = request.removeAttribute(stackName)!>
-    <#return defaultVal>
   </#if>
+  <#return res>
 </#function>
 
 

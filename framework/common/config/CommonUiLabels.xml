@@ -507,6 +507,10 @@
         <value xml:lang="zh">没有找到地址。</value>
         <value xml:lang="zh_TW">位址找不到.</value>
     </property>
+    <property key="CommonAddress">
+        <value xml:lang="de">Adresse</value>
+        <value xml:lang="en">Address</value>
+    </property>
     <property key="CommonAddresses">
         <value xml:lang="ar">عناوين</value>
         <value xml:lang="cs">Adresy</value>
@@ -6574,6 +6578,9 @@
         <value xml:lang="zh">修改</value>
         <value xml:lang="zh_CN">修改</value>
         <value xml:lang="zh_TW">修改</value>
+    </property>
+    <property key="CommonModifiedBy">
+        <value xml:lang="en">Modified By</value>
     </property>
     <property key="CommonMonday">
         <value xml:lang="ar">الإثنين</value>

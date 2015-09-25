@@ -326,7 +326,7 @@ under the License.
                         </condition>
                         <actions>
                             <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
-                            <set field="noTitle" value="true"/>                        
+                            <set field="noTitle" value="true"/>
                         </actions>
                         <widgets>
                             <container id="content-main-body">
@@ -349,7 +349,7 @@ under the License.
                                     </and>
                                 </condition>
                                 <actions>
-                                    <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>                            
+                                    <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
                                 </actions>
                                 <widgets>
                                     <container id="content-main-body">

@@ -2316,6 +2316,11 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
     href            = content link, for "link" type
     ofbizHref       = for link, convenience attrib, wraps url in <@ofbizUrl></@ofbizUrl> before
                       setting as href
+                      DEV NOTE: it might have been preferable to omit this and let code use href=makeOfbizUrl(...)
+                      because this is bad precedent to need an ofbizXxx in every macro for every url arg.
+                      however menus should support defining all data from ext. data prep and assume makeOfbizUrl not available.
+                      TODO?: implement a special string syntax such as: href="ofbizUrl://"? but needs to contain fullPath/secure/encode, so ugly,
+                      but could then support easily in every macro url arg.
     fullPath,
     secure,
     encode          = options for ofbizHref

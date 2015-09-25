@@ -28,7 +28,7 @@ under the License.
         <field use-when="shipment!=null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProductShipment}"><display/></field>
         <field use-when="shipment==null&amp;&amp;shipmentId!=null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" tooltip="${uiLabelMap.ProductCouldNotFindProductShipmentWithId} [${shipmentId}]"><display description="" also-hidden="false"/></field>
         <field use-when="shipment==null&amp;&amp;shipmentId==null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" ><ignored/></field>
-
+        
         <field name="shipmentTypeId" title="${uiLabelMap.ProductShipmentTypeId}" position="2">
             <drop-down allow-empty="false" current="first-in-list">
                 <entity-options entity-name="ShipmentType" description="${description}"/>
@@ -134,6 +134,89 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 
+    <form name="FindShipment" type="single" target="FindShipment" title="" default-map-name="Shipment"
+        header-row-style="header-row" default-table-style="basic-table" >
+        <field name="shipmentId"><text-find/></field>
+        <field name="shipmentTypeId" title="${uiLabelMap.ProductShipmentTypeId}" position="2">
+            <drop-down allow-empty="true" current="first-in-list">
+                <entity-options entity-name="ShipmentType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="originFacilityId" title="${uiLabelMap.ProductOriginFacility}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
+                    <entity-order-by field-name="facilityName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="destinationFacilityId" title="${uiLabelMap.ProductDestinationFacility}" position="2">
+            <drop-down allow-empty="true" >
+                <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
+                    <entity-order-by field-name="facilityName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="true" current="first-in-list">
+                <option key="" description="${uiLabelMap.ProductSalesShipmentStatus}"/>
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
+                    <entity-constraint name="statusTypeId" value="SHIPMENT_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+                <option key="" description="---"/>
+                <option key="" description="${uiLabelMap.ProductPurchaseShipmentStatus}"/>
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
+                    <entity-constraint name="statusTypeId" value="PURCH_SHIP_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+                <option key="" description="---"/>
+                <option key="" description="${uiLabelMap.ProductOrderReturnStatus}"/>
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
+                    <entity-constraint name="statusTypeId" value="ORDER_RETURN_STTS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromDate"><date-find/></field>
+        <field name="thruDate" position="2"><date-find/></field>
+        <field name="search" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="ListShipment" type="list" list-name="listIt" paginate-target="FindShipment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="results" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Shipment"/>
+                <field-map field-name="orderBy" value="shipmentId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                <field-map field-name="noConditionFind" value="Y"/>
+            </service>
+        </actions>
+        <field name="shipmentId">
+            <hyperlink target="ViewShipment" description="${shipmentId}">
+                <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field>
+        <field name="shipmentTypeId">
+            <display-entity entity-name="ShipmentType"/>
+        </field>
+        <field name="originFacilityId" title="${uiLabelMap.ProductOriginFacility}">
+            <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"></display-entity>
+        </field>
+        
+        <field name="destinationFacilityId" title="${uiLabelMap.ProductDestinationFacility}">
+            <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"></display-entity>
+        </field>
+        <field name="statusId">
+            <display-entity entity-name="StatusItem"/>
+        </field>
+        <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}"><display type="date"/></field>
+        <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><display type="date"/></field>
+        
+    </form>
+    
     <!-- ******************* -->
     <!-- Shipment Plan Forms -->
     <!-- ******************* -->
@@ -262,7 +345,7 @@ under the License.
         <field name="originFacilityId" title="${uiLabelMap.ProductOriginFacility}">
             <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"></display-entity>
         </field>
-
+        
         <field name="destinationFacilityId" title="${uiLabelMap.ProductDestinationFacility}" position="2">
             <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"></display-entity>
         </field>
@@ -312,6 +395,5 @@ under the License.
         <field name="lastModifiedByUserLogin" position="2">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
         </field>
-        
     </form>
 </forms>

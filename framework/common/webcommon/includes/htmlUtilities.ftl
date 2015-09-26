@@ -53,6 +53,34 @@ Dev note: could be optimized later.
 
 <#-- 
 *************
+* interpretRequestUri function
+************
+Interprets the given request URI/URL resource and transforms into a valid URL if and as needed.
+
+If the uri is already a web URL, it is returned as-is.
+The following URI forms are currently interpreted and transformed:
+ ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through @ofbizUrl/makeOfbizUrl.
+               Form (note: order of arguments is strict; args will be stripped): 
+                 ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1
+-->
+<#function interpretRequestUri uri>
+  <#if uri?starts_with("ofbizUrl://")>
+    <#local uriDesc = Static["org.ofbiz.webapp.control.RequestDescriptor"].fromUriStringRepr(request!, response!, uri)>
+    <#if uriDesc.getType() == "ofbizUrl">
+        <#-- note: although there is uriDesc.getWebUrlString(), should pass through FTL macro version instead, hence all this manual work... -->
+        <#local res><@ofbizUrl fullPath=uriDesc.isFullPath()?c secure=uriDesc.isSecure()?c encode=uriDesc.isEncode()?c>${uriDesc.getBaseUriString()}</@ofbizUrl></#local>
+        <#--<#local res = "uri: " + uriDesc.getBaseUriString() + "; fullPath: " + uriDesc.isFullPath()?c + "; secure: " + uriDesc.isSecure()?c + "; encode: " + uriDesc.isEncode()?c>-->
+        <#return res>
+    <#else>
+      <#return uri>
+    </#if>
+  <#else>
+    <#return uri>
+  </#if>
+</#function>
+
+<#-- 
+*************
 * label function
 ************
 Returns empty string if no label is found
@@ -2314,13 +2342,9 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
                       text, not nested content.
                       TODO: clarify nested content usage (because may have nested menus?)
     href            = content link, for "link" type
-    ofbizHref       = for link, convenience attrib, wraps url in <@ofbizUrl></@ofbizUrl> before
+                      Also supports ofbiz request URLs using the notation: ofbizUrl:// (see interpretRequestUri function)
+    ofbizHref       = DEPRECATED: for link, convenience attrib, wraps url in <@ofbizUrl></@ofbizUrl> before
                       setting as href
-                      DEV NOTE: it might have been preferable to omit this and let code use href=makeOfbizUrl(...)
-                      because this is bad precedent to need an ofbizXxx in every macro for every url arg.
-                      however menus should support defining all data from ext. data prep and assume makeOfbizUrl not available.
-                      TODO?: implement a special string syntax such as: href="ofbizUrl://"? but needs to contain fullPath/secure/encode, so ugly,
-                      but could then support easily in every macro url arg.
     fullPath,
     secure,
     encode          = options for ofbizHref
@@ -2407,6 +2431,7 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
           <#local href = "javascript:void(0);">
         </#if>
       </#if>
+      <#local href = interpretRequestUri(href)>
       <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs /></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></a>
     <#elseif type == "text">
       <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs /></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></span>

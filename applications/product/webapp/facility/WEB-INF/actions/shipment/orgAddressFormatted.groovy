@@ -23,20 +23,20 @@ import org.ofbiz.base.util.*
 htmlString = new StringBuffer();
 
 
-orgAddress = originPostalAddress
-contactMechId = originPostalAddress.contactMechId
-attnName = originPostalAddress.attnName
-toName = originPostalAddress.toName
-address1 = originPostalAddress.address1
-address2 = originPostalAddress.address2
-postalCode = originPostalAddress.postalCode
-city = originPostalAddress.city
-stateProvinceGeoId = originPostalAddress.stateProvinceGeoId
-countryGeoId = originPostalAddress.countryGeoId
-geoPointId = originPostalAddress
 
-
-if (originPostalAddress){
+if (originPostalAddress != null){
+    orgAddress = originPostalAddress
+    contactMechId = originPostalAddress.contactMechId
+    attnName = originPostalAddress.attnName
+    toName = originPostalAddress.toName
+    address1 = originPostalAddress.address1
+    address2 = originPostalAddress.address2
+    postalCode = originPostalAddress.postalCode
+    city = originPostalAddress.city
+    stateProvinceGeoId = originPostalAddress.stateProvinceGeoId
+    countryGeoId = originPostalAddress.countryGeoId
+    geoPointId = originPostalAddress
+    
     if(contactMechId){
         htmlString.append(contactMechId + "<br/>")
     }

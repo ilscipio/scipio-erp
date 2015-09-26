@@ -212,8 +212,8 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem"/>
         </field>
-        <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}"><display type="date"/></field>
-        <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><display type="date"/></field>
+        <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}" title-area-style="text-right" widget-area-style="text-right"><display type="date"/></field>
+        <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}" title-area-style="text-right" widget-area-style="text-right"><display type="date"/></field>
         
     </form>
     

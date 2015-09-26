@@ -33,7 +33,7 @@ under the License.
   <#if currentCustomTimePeriod?has_content>
     <#assign menuHtml>
       <@menu type="section" inlineItems=true>
-        <@menuitem type="link" ofbizHref="EditCustomTimePeriod?findOrganizationPartyId=${findOrganizationPartyId!}" text="${uiLabelMap.CommonClearCurrent}" />
+        <@menuitem type="link" href=makeOfbizUrl("EditCustomTimePeriod?findOrganizationPartyId=${findOrganizationPartyId!}") text="${uiLabelMap.CommonClearCurrent}" />
       </@menu>
     </#assign>
   <#else>

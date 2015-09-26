@@ -30,7 +30,7 @@ under the License.
     </#assign>
     <#assign menuHtml>
       <@menu type="section" inlineItems=true>
-        <@menuitem type="link" ofbizHref="orderentry" text="${uiLabelMap.OrderOrderItems}" />
+        <@menuitem type="link" href=makeOfbizUrl("orderentry") text="${uiLabelMap.OrderOrderItems}" />
       </@menu>
     </#assign>
     <@section title=sectionTitle menuHtml=menuHtml />

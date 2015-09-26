@@ -53,7 +53,7 @@ under the License.
   <#-- New in Ofbiz 14.12 -->
   <#assign menuHtml>
     <@menu type="section" inlineItems=true>
-       <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}" text="${uiLabelMap.OrderShipmentInformationByOISG}" />
+       <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text="${uiLabelMap.OrderShipmentInformationByOISG}" />
     </@menu>
   </#assign>
   <@section title="${uiLabelMap.OrderShipmentInformation}" menuHtml=menuHtml>
@@ -212,10 +212,10 @@ under the License.
     <#assign menuHtml>
        <@menu type="section" inlineItems=true>
          <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" text="&nbsp;" title="Collapse" />-->
-         <@menuitem type="link" ofbizHref="shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}" text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" />
+         <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" />
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>
-           <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}&amp;view=OISGA" text="${uiLabelMap.OrderShipmentInformationByOrderItem}" />
+           <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}&amp;view=OISGA") text="${uiLabelMap.OrderShipmentInformationByOrderItem}" />
          </#if>
        </@menu>
     </#assign>

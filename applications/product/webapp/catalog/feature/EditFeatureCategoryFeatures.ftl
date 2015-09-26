@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" ofbizHref="CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}" text="${uiLabelMap.ProductCreateNewFeature}" contentClass="+create" />
+    <@menuitem type="link" href=makeOfbizUrl("CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text="${uiLabelMap.ProductCreateNewFeature}" contentClass="+create" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductEditFeaturesForFeatureCategory} \"${(curProductFeatureCategory.description)!}\"" menuHtml=menuHtml>
@@ -39,9 +39,9 @@ under the License.
             <#local productString = "&amp;productId=" + productId>
           </#if>
           <@menu type="button">
-            <@menuitem type="link" ofbizHref="EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}" text="[${uiLabelMap.CommonPrevious}]" disabled=(viewIndex <= 0) />
+            <@menuitem type="link" href=makeOfbizUrl("EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}") text="[${uiLabelMap.CommonPrevious}]" disabled=(viewIndex <= 0) />
             <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-            <@menuitem type="link" ofbizHref="EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}" text="[${uiLabelMap.CommonNext}]" disabled=(listSize <= highIndex) />
+            <@menuitem type="link" href=makeOfbizUrl("EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}") text="[${uiLabelMap.CommonNext}]" disabled=(listSize <= highIndex) />
           </@menu>
         </#macro>
         

@@ -35,9 +35,9 @@ under the License.
   <#else>
     <@section title="${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
         <@menu type="button">
-          <@menuitem type="link" ofbizHref="${url}" text="${uiLabelMap.CommonListAll}" />
-          <@menuitem type="link" ofbizHref="/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}" text="${uiLabelMap.WebtoolsSchedule}" />
-          <@menuitem type="link" ofbizHref="/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y" text="${uiLabelMap.PageTitleRunService}" />
+          <@menuitem type="link" href=makeOfbizUrl("${url}") text="${uiLabelMap.CommonListAll}" />
+          <@menuitem type="link" href=makeOfbizUrl("/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}") text="${uiLabelMap.WebtoolsSchedule}" />
+          <@menuitem type="link" href=makeOfbizUrl("/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y") text="${uiLabelMap.PageTitleRunService}" />
         </@menu>
 
     <#-- Show a little form for exportServiceEoModelBundle -->
@@ -361,7 +361,7 @@ under the License.
 
   <#assign menuHtml>
     <@menu type="section" inlineItems=true>
-      <@menuitem type="link" ofbizHref="${url}" text="${uiLabelMap.CommonListAll}" />
+      <@menuitem type="link" href=makeOfbizUrl("${url}") text="${uiLabelMap.CommonListAll}" />
     </@menu>
   </#assign>
   <@section menuHtml=menuHtml>

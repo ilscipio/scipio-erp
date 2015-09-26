@@ -21,7 +21,7 @@ under the License.
   <#assign menuHtml>
     <@menu type="section" inlineItems=true>
     <#if orderId??>
-      <@menuitem type="link" ofbizHref="orderview?orderId=${orderId}" text="${uiLabelMap.OrderViewOrder}" />
+      <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text="${uiLabelMap.OrderViewOrder}" />
     </#if>
     </@menu>
   </#assign>

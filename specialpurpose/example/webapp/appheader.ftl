@@ -24,20 +24,20 @@ under the License.
       <h2>${uiLabelMap.ExampleApplication}</h2>
       <@menu type="main">
       <#if userLogin?has_content>
-        <@menuitem type="link" ofbizHref="FindExample?portalPageId=${uiLabelMap.ExampleExample}" text="${uiLabelMap.ExampleExample}" selected=(selected=="${uiLabelMap.ExampleExample}") />
-        <@menuitem type="link" ofbizHref="FindExampleFeature?portalPageId=${uiLabelMap.ExampleFeature}" text="${uiLabelMap.ExampleFeature}" selected=(selected=="${uiLabelMap.ExampleFeature}") />
-        <@menuitem type="link" ofbizHref="FormWidgetExamples?portalPageId=${uiLabelMap.ExampleFormWidgetExamples}" text="${uiLabelMap.ExampleFormWidgetExamples}" selected=(selected=="${uiLabelMap.ExampleFormWidgetExamples}") />
-        <@menuitem type="link" ofbizHref="authview/findExampleAjax?portalPageId=${uiLabelMap.ExampleAjaxExamples}" text="${uiLabelMap.ExampleAjaxExamples}" selected=(selected=="${uiLabelMap.ExampleAjaxExamples}") />
+        <@menuitem type="link" href=makeOfbizUrl("FindExample?portalPageId=${uiLabelMap.ExampleExample}") text="${uiLabelMap.ExampleExample}" selected=(selected=="${uiLabelMap.ExampleExample}") />
+        <@menuitem type="link" href=makeOfbizUrl("FindExampleFeature?portalPageId=${uiLabelMap.ExampleFeature}") text="${uiLabelMap.ExampleFeature}" selected=(selected=="${uiLabelMap.ExampleFeature}") />
+        <@menuitem type="link" href=makeOfbizUrl("FormWidgetExamples?portalPageId=${uiLabelMap.ExampleFormWidgetExamples}") text="${uiLabelMap.ExampleFormWidgetExamples}" selected=(selected=="${uiLabelMap.ExampleFormWidgetExamples}") />
+        <@menuitem type="link" href=makeOfbizUrl("authview/findExampleAjax?portalPageId=${uiLabelMap.ExampleAjaxExamples}") text="${uiLabelMap.ExampleAjaxExamples}" selected=(selected=="${uiLabelMap.ExampleAjaxExamples}") />
 
         <#if portalPages?has_content>
             <#list portalPages as page>
               <#if page.portalPageName?has_content>
                 <#assign text><#if page.portalPageName??>${page.portalPageName}<#else>?</#if></#assign>
-                <@menuitem type="link" ofbizHref="showPortalPage?portalPageId=${page.portalPageId}" text=text selected=(selected=="${page.portalPageId}") />
+                <@menuitem type="link" href=makeOfbizUrl("showPortalPage?portalPageId=${page.portalPageId}") text=text selected=(selected=="${page.portalPageId}") />
               </#if>
             </#list>
         </#if>
-        <@menuitem type="link" ofbizHref="ManagePortalPages?parentPortalPageId=EXAMPLE" text="${uiLabelMap.CommonDashboard}" class="+opposed" />
+        <@menuitem type="link" href=makeOfbizUrl("ManagePortalPages?parentPortalPageId=EXAMPLE") text="${uiLabelMap.CommonDashboard}" class="+opposed" />
       </#if>
       </@menu>
     </li>

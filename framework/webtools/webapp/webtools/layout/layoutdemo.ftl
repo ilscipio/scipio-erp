@@ -267,7 +267,7 @@
 
 <#assign menuItems = [
   {"type":"link", "text":"Menu Tab 2", "disabled":true},
-  {"type":"link", "text":"Menu Tab 1", "ofbizHref":"WebtoolsLayoutDemo"},
+  {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://WebtoolsLayoutDemo"},
   {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
   {"type":"text", "text":"Menu Tab 3 (text entry)", "nestedHtml":"<!-- hidden nested menu item comment -->"}
   {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true}

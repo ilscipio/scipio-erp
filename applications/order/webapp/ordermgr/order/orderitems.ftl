@@ -657,7 +657,7 @@ target="facility"
                                         <@menuitem type="link" href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCatalog}" target="_blank" />
                                         <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId}" text="${uiLabelMap.OrderEcommerce}" target="_blank" />
                                         <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
-                                          <@menuitem type="link" ofbizHref="viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL" text="${uiLabelMap.OrderViewImage}" target="_orderImage" />
+                                          <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL") text="${uiLabelMap.OrderViewImage}" target="_orderImage" />
                                         </#if>
                                       </@menu>
                                 </@td>

@@ -19,12 +19,12 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
   <#if facilityId?? && locationSeqId??>
-    <@menuitem type="link" ofbizHref="EditFacility" text="${uiLabelMap.ProductNewFacility}" />
-    <@menuitem type="link" ofbizHref="EditFacilityLocation?facilityId=${facilityId!}" text="${uiLabelMap.ProductNewFacilityLocation}" />
-    <@menuitem type="link" ofbizHref="EditInventoryItem?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}" text="${uiLabelMap.ProductNewInventoryItem}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacilityLocation?facilityId=${facilityId!}") text="${uiLabelMap.ProductNewFacilityLocation}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditInventoryItem?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}") text="${uiLabelMap.ProductNewInventoryItem}" />
     <#assign latestGeoPoint= Static["org.ofbiz.common.geo.GeoWorker"].findLatestGeoPoint(delegator, "FacilityLocationAndGeoPoint", "facilityId", facilityId, "locationSeqId", locationSeqId)!/>
     <#if latestGeoPoint?has_content>
-      <@menuitem type="link" ofbizHref="FacilityLocationGeoLocation?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}" text="${uiLabelMap.CommonGeoLocation}" />
+      <@menuitem type="link" href=makeOfbizUrl("FacilityLocationGeoLocation?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}") text="${uiLabelMap.CommonGeoLocation}" />
     </#if>
   </#if>
   </@menu>

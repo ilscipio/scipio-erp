@@ -40,15 +40,15 @@ function ShowTab(lname) {
 <@section title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}">
 
     <@menu type="button">
-      <@menuitem type="link" ofbizHref="FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0" text="${uiLabelMap.WebtoolsBackToFindScreen}" />
+      <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0") text="${uiLabelMap.WebtoolsBackToFindScreen}" />
       <#if enableEdit = "false">
         <#if hasCreatePermission>
-          <@menuitem type="link" ofbizHref="ViewGeneric?entityName=${entityName}&amp;enableEdit=true" contentClass="+create" text="${uiLabelMap.CommonCreateNew}" />
-          <@menuitem type="link" ofbizHref="ViewGeneric?${curFindString}&amp;enableEdit=true" text="${uiLabelMap.CommonEdit}" />
+          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&amp;enableEdit=true") contentClass="+create" text="${uiLabelMap.CommonCreateNew}" />
+          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?${curFindString}&amp;enableEdit=true") text="${uiLabelMap.CommonEdit}" />
         </#if>
         <#if value?has_content>
           <#if hasDeletePermission>
-            <@menuitem type="link" ofbizHref="UpdateGeneric?UPDATE_MODE=DELETE&amp;${curFindString}" contentClass="+delete" text="${uiLabelMap.WebtoolsDeleteThisValue}" />
+            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&amp;${curFindString}") contentClass="+delete" text="${uiLabelMap.WebtoolsDeleteThisValue}" />
           </#if>
         </#if>
       </#if>

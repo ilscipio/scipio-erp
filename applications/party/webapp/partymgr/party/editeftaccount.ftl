@@ -28,7 +28,7 @@ under the License.
       <@menu type="button">
         <#-- this was used at bottom in original FTL, is an error?
         <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancelDone}</a>-->
-        <@menuitem type="link" ofbizHref="${donePage}?partyId=${partyId}" text="${uiLabelMap.CommonCancelDone}" />
+        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text="${uiLabelMap.CommonCancelDone}" />
         <@menuitem type="link" href="javascript:document.editeftaccountform.submit()" text="${uiLabelMap.CommonSave}" />
       </@menu>
     </#macro>

@@ -19,13 +19,13 @@ under the License.
 <@row>
     <@cell>
     <@menu type="subtab">
-        <@menuitem type="link" ofbizHref="EditProduct" text="${uiLabelMap.ProductNewProduct}" contentClass="+success" />
+        <@menuitem type="link" href=makeOfbizUrl("EditProduct") text="${uiLabelMap.ProductNewProduct}" contentClass="+success" />
         <#if product?has_content>
-          <@menuitem type="link" ofbizHref="CreateVirtualWithVariantsForm?product_id=${productId!}" text="${uiLabelMap.ProductNewVirtualProduct}" contentClass="+success" />
+          <@menuitem type="link" href=makeOfbizUrl("CreateVirtualWithVariantsForm?product_id=${productId!}") text="${uiLabelMap.ProductNewVirtualProduct}" contentClass="+success" />
           <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId!}" text="${uiLabelMap.ProductProductPage}" contentClass="+success" />
-          <@menuitem type="link" ofbizHref="ProductBarCode.pdf?productId=${productId!}" text="${uiLabelMap.ProductBarcode}" target="_blank" />
+          <@menuitem type="link" href=makeOfbizUrl("ProductBarCode.pdf?productId=${productId!}") text="${uiLabelMap.ProductBarcode}" target="_blank" />
         </#if>
-        <@menuitem type="link" ofbizHref="EditProductTag" text="${uiLabelMap.ProductTags}" />
+        <@menuitem type="link" href=makeOfbizUrl("EditProductTag") text="${uiLabelMap.ProductTags}" />
         <#--<#if tabButtonItem?has_content && tabButtonItem="EditProduct">
             <@menuitem type="link" href="javascript:expandAll(true);" text="${uiLabelMap.CommonExpandAll}" />
             <@menuitem type="link" href="javascript:expandAll(false);" text="${uiLabelMap.CommonCollapseAll}" />

@@ -18,7 +18,7 @@ under the License.
 -->
 
 <@menu type="button">
-  <@menuitem type="link" ofbizHref="EditProductConfigItemContent?configItemId=${configItemId}" text="${uiLabelMap.ProductProduct} ${uiLabelMap.ProductConfigItem} ${uiLabelMap.ProductContent} ${uiLabelMap.CommonList}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditProductConfigItemContent?configItemId=${configItemId}") text="${uiLabelMap.ProductProduct} ${uiLabelMap.ProductConfigItem} ${uiLabelMap.ProductContent} ${uiLabelMap.CommonList}" />
 <#if contentId?has_content>
   <@menuitem type="link" href="/content/control/gotoContent?contentId=${contentId}" target='_blank' text="${uiLabelMap.ProductContent} ${uiLabelMap.CommonPage}" />
 </#if>

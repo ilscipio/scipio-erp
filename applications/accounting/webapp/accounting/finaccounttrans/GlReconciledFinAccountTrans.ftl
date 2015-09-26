@@ -24,7 +24,7 @@ under the License.
   
   <#assign menuHtml>
     <@menu type="section" inlineItems=true>
-      <@menuitem type="link" ofbizHref="EditFinAccountReconciliations?finAccountId=${finAccountId}&amp;glReconciliationId=${glReconciliationId}" text="${uiLabelMap.CommonEdit}" />
+      <@menuitem type="link" href=makeOfbizUrl("EditFinAccountReconciliations?finAccountId=${finAccountId}&amp;glReconciliationId=${glReconciliationId}") text="${uiLabelMap.CommonEdit}" />
       <#assign finAcctTransCondList = delegator.findByAnd("FinAccountTrans", {"glReconciliationId" : glReconciliationId, "statusId" : "FINACT_TRNS_CREATED"}, null, false)>
     <#if finAcctTransCondList?has_content>
       <@menuitem type="link" href="javascript:document.CancelBankReconciliationForm.submit();" text="${uiLabelMap.AccountingCancelBankReconciliation}" />

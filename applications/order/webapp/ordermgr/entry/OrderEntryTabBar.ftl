@@ -33,7 +33,7 @@ under the License.
         <#if shoppingCart.getOrderPartyId() == "_NA_" || (shoppingCart.size() = 0)>
           <@menuitem type="link" text="${uiLabelMap.OrderFinalizeOrder}" disabled=true />
         <#else>
-          <@menuitem type="link" ofbizHref="finalizeOrder?finalizeMode=purchase&amp;finalizeReqCustInfo=false&amp;finalizeReqShipInfo=false&amp;finalizeReqOptions=false&amp;finalizeReqPayInfo=false" text="${uiLabelMap.OrderFinalizeOrder}" />
+          <@menuitem type="link" href=makeOfbizUrl("finalizeOrder?finalizeMode=purchase&amp;finalizeReqCustInfo=false&amp;finalizeReqShipInfo=false&amp;finalizeReqOptions=false&amp;finalizeReqPayInfo=false") text="${uiLabelMap.OrderFinalizeOrder}" />
         </#if>
       <#else>
         <#if shoppingCart.size() = 0>
@@ -41,9 +41,9 @@ under the License.
           <@menuitem type="link" text="${uiLabelMap.OrderFinalizeOrderDefault}" disabled=true />
           <@menuitem type="link" text="${uiLabelMap.OrderFinalizeOrder}" disabled=true />
         <#else>
-          <@menuitem type="link" ofbizHref="quickcheckout" text="${uiLabelMap.OrderQuickFinalizeOrder}" />
-          <@menuitem type="link" ofbizHref="finalizeOrder?finalizeMode=default" text="${uiLabelMap.OrderFinalizeOrderDefault}" />
-          <@menuitem type="link" ofbizHref="finalizeOrder?finalizeMode=init" text="${uiLabelMap.OrderFinalizeOrder}" />
+          <@menuitem type="link" href=makeOfbizUrl("quickcheckout") text="${uiLabelMap.OrderQuickFinalizeOrder}" />
+          <@menuitem type="link" href=makeOfbizUrl("finalizeOrder?finalizeMode=default") text="${uiLabelMap.OrderFinalizeOrderDefault}" />
+          <@menuitem type="link" href=makeOfbizUrl("finalizeOrder?finalizeMode=init") text="${uiLabelMap.OrderFinalizeOrder}" />
         </#if>
       </#if>
 
@@ -54,6 +54,6 @@ under the License.
         <@menuitem type="link" text="${uiLabelMap.OrderRecalculateOrder}" disabled=true />
         <@menuitem type="link" text="${uiLabelMap.OrderRemoveSelected}" disabled=true />
       </#if>
-      <@menuitem type="link" ofbizHref="emptycart" text="${uiLabelMap.OrderClearOrder}" />
+      <@menuitem type="link" href=makeOfbizUrl("emptycart") text="${uiLabelMap.OrderClearOrder}" />
     </@menu>
 </@section>

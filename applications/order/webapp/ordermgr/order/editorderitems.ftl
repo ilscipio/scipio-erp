@@ -32,7 +32,7 @@ under the License.
       <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
         <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelSelectedItems}" />
         <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelAllItems}" />
-        <@menuitem type="link" ofbizHref="orderview?${paramString}" text="${uiLabelMap.OrderViewOrder}" />
+        <@menuitem type="link" href=makeOfbizUrl("orderview?${paramString}") text="${uiLabelMap.OrderViewOrder}" />
       </#if>
     </#if>
     </@menu>
@@ -241,7 +241,7 @@ under the License.
                                         <@menuitem type="link" href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCatalog}" target="_blank" />
                                         <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId}" text="${uiLabelMap.OrderEcommerce}" target="_blank" />
                                         <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
-                                            <@menuitem type="link" ofbizHref="viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL" text="${uiLabelMap.OrderViewImage}" target="_orderImage" />
+                                            <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL") text="${uiLabelMap.OrderViewImage}" target="_orderImage" />
                                         </#if>
                                     </@menu>
                               </@td>

@@ -27,10 +27,10 @@ function lookupInventory() {
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
       <#if requestParameters.hideFields?default("N") == "Y">
-        <@menuitem type="link" ofbizHref="FindInventoryEventPlan?hideFields=N${paramList}" text="${uiLabelMap.CommonShowLookupFields}" />
+        <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=N${paramList}") text="${uiLabelMap.CommonShowLookupFields}" />
       <#else>
         <#if inventoryList??>
-            <@menuitem type="link" ofbizHref="FindInventoryEventPlan?hideFields=Y${paramList}" text="${uiLabelMap.CommonHideFields}" />
+            <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=Y${paramList}") text="${uiLabelMap.CommonHideFields}" />
         </#if>
       </#if>
   </@menu>
@@ -68,9 +68,9 @@ document.lookupinventory.productId.focus();
            <p class="${styles.float_left!}">${uiLabelMap.CommonElementsFound}</p>
           <#if (0 < listSize)>
             <@menu type="button" class="+${styles.float_right!}">
-              <@menuitem type="link" ofbizHref="FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex)) />
+              <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}") text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex)) />
               <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-              <@menuitem type="link" ofbizHref="FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonNext}" disabled=(!(highIndex < listSize)) />
+              <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}") text="${uiLabelMap.CommonNext}" disabled=(!(highIndex < listSize)) />
             </@menu>
           </#if>
           </@cell>

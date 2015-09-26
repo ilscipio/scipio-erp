@@ -160,7 +160,8 @@ function insertImageName(type,nameValue) {
         };
     </script>
     <@section title="${uiLabelMap.ProductCategoryUploadImage}">
-        <@form fieldsLabelArea=false method="post" enctype="multipart/form-data" action=makeOfbizUrl("UploadCategoryImage?productCategoryId=${productCategoryId!}&amp;upload_file_type=category") name="imageUploadForm">
+        <@form method="post" enctype="multipart/form-data" action=makeOfbizUrl("UploadCategoryImage?productCategoryId=${productCategoryId!}&amp;upload_file_type=category") name="imageUploadForm">
+          <@fields labelArea=false>
             <@field type="file" name="fname" size="50" />
             <@field type="generic">
                 <input type="radio" name="upload_file_type_bogus" value="category" checked="checked" onclick='setUploadUrl("<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId}&amp;upload_file_type=category</@ofbizUrl>");'/>${uiLabelMap.ProductCategoryImageUrl}
@@ -170,6 +171,7 @@ function insertImageName(type,nameValue) {
             <@field type="submitarea">
                 <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductUploadImage}"/>
             </@field>
+          </@fields>
         </@form>
     </@section>
     <@section title="${uiLabelMap.ProductDuplicateProductCategory}">

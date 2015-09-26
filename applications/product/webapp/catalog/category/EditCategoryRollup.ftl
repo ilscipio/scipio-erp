@@ -93,7 +93,8 @@ under the License.
     </@section>
 
     <@section title="${uiLabelMap.ProductAddCategoryParent} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
-        <@form fieldsLabelArea=false method="post" action=makeOfbizUrl("addProductCategoryToCategory") name="addParentForm">
+        <@form method="post" action=makeOfbizUrl("addProductCategoryToCategory") name="addParentForm">
+          <@fields labelArea=false>
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
             <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
             <@field type="generic">
@@ -105,6 +106,7 @@ under the License.
             <@field type="submitarea">
                 <input type="submit" value="${uiLabelMap.CommonAdd}" />
             </@field>
+          </@fields>
         </@form>
     </@section>
 
@@ -185,7 +187,8 @@ under the License.
     </@section>
 
     <@section title="${uiLabelMap.ProductAddCategoryChild} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
-        <@form fieldsLabelArea=false method="post" action=makeOfbizUrl("addProductCategoryToCategory") name="addChildForm">
+        <@form method="post" action=makeOfbizUrl("addProductCategoryToCategory") name="addChildForm">
+          <@fields labelArea=false>
             <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
             <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}" />
             <@field type="generic">
@@ -197,6 +200,7 @@ under the License.
             <@field type="submitarea">
                 <input type="submit" value="${uiLabelMap.CommonAdd}" />
             </@field>
+          </@fields>
         </@form>
     </@section>
 </#if>

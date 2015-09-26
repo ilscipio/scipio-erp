@@ -148,7 +148,8 @@ under the License.
     </@section>
     
     <@section title="${uiLabelMap.ProductUploadImage}">
-        <@form fieldsLabelArea=false method="post" enctype="multipart/form-data" action=makeOfbizUrl("UploadProductImage?productId=${productId}&amp;upload_file_type=original") name="imageUploadForm">
+        <@form method="post" enctype="multipart/form-data" action=makeOfbizUrl("UploadProductImage?productId=${productId}&amp;upload_file_type=original") name="imageUploadForm">
+          <@fields labelArea=false>
             <@field type="file" size="50" name="fname"/>
             <@field type="generic">
                 <input type="radio" name="upload_file_type_bogus" value="small" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=small</@ofbizUrl>");'/>${uiLabelMap.CommonSmall}
@@ -162,6 +163,7 @@ under the License.
             </@field>
             <#-- FIXME -->
             <span class="tooltip">${uiLabelMap.ProductOriginalImageMessage} : {ofbiz.home}/applications/product/config/ImageProperties.xml&quot;</span>
+          </@fields>
         </@form>
     </@section>
 </#if>

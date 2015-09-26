@@ -22,9 +22,9 @@ under the License.
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
   <#if parameters.hideFields?default("N") == "Y">
-    <@menuitem type="link" ofbizHref="findEmployees?hideFields=N${paramList}" text="${uiLabelMap.CommonShowLookupFields}" />
+    <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}" text="${uiLabelMap.CommonShowLookupFields}") />
   <#else>
-    <#if partyList??><@menuitem type="link" ofbizHref="findEmployees?hideFields=Y${paramList}" text="${uiLabelMap.CommonHideFields}" /></#if>
+    <#if partyList??><@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y${paramList}" text="${uiLabelMap.CommonHideFields}") /></#if>
     <@menuitem type="link" href="javascript:document.lookupparty.submit();" text="${uiLabelMap.PartyLookupParty}" />
   </#if>
   </@menu>
@@ -123,9 +123,9 @@ under the License.
     <#assign menuHtml>
       <@menu type="section" inlineItems=true>
       <#if (partyListSize > 0)>
-        <@menuitem type="link" ofbizHref="findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonNext}" contentClass="+nav-next" disabled=(!(partyListSize > highIndex)) />
+        <@menuitem type="link" href=makeOfbizUrl("findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonNext}" contentClass="+nav-next") disabled=(!(partyListSize > highIndex)) />
         <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${partyListSize}" />
-        <@menuitem type="link" ofbizHref="findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonPrevious}" contentClass="+nav-previous" disabled=(!(viewIndex > 0)) />
+        <@menuitem type="link" href=makeOfbizUrl("findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}" text="${uiLabelMap.CommonPrevious}" contentClass="+nav-previous") disabled=(!(viewIndex > 0)) />
       </#if>
       </@menu>
     </#assign>

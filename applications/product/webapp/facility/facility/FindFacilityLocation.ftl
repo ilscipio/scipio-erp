@@ -19,8 +19,8 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" ofbizHref="EditFacility" text="${uiLabelMap.ProductNewFacility}" contentClass="+create" />
-    <@menuitem type="link" ofbizHref="EditFacilityLocation?facilityId=${facilityId!}" text="${uiLabelMap.ProductNewFacilityLocation}" contentClass="+ create" />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacility" text="${uiLabelMap.ProductNewFacility}" contentClass="+create") />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacilityLocation?facilityId=${facilityId!}" text="${uiLabelMap.ProductNewFacilityLocation}" contentClass="+ create") />
   </@menu>
 </#assign>
 <@section menuHtml=menuHtml>

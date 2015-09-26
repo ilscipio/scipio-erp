@@ -19,13 +19,13 @@ under the License.
 
 <@menu type="button">
 <#if curProductFeatureCategory??>
-  <@menuitem type="link" ofbizHref="EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}" text="${uiLabelMap.ProductCreateNewFeature}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}" text="${uiLabelMap.ProductCreateNewFeature}") />
 <#elseif productFeatureGroup??>
-  <@menuitem type="link" ofbizHref="EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}" text="${uiLabelMap.CommonEdit} ${productFeatureGroup.description!}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}" text="${uiLabelMap.CommonEdit} ${productFeatureGroup.description!}") />
 </#if>
 <#if productId?has_content>
-  <@menuitem type="link" ofbizHref="EditProduct?productId=${productId}" text="${uiLabelMap.ProductReturnToEditProduct}" />
-  <@menuitem type="link" ofbizHref="EditProductFeatures?productId=${productId}" text="${uiLabelMap.ProductReturnToEditProductFeatures}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId}" text="${uiLabelMap.ProductReturnToEditProduct}") />
+  <@menuitem type="link" href=makeOfbizUrl("EditProductFeatures?productId=${productId}" text="${uiLabelMap.ProductReturnToEditProductFeatures}") />
 </#if>
 </@menu>
 
@@ -36,9 +36,9 @@ under the License.
   </#if>
     
   <@menu type="button">
-    <@menuitem type="link" ofbizHref="ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}" text="[${uiLabelMap.CommonPrevious}]" disabled=(!(viewIndex > 0)) />
+    <@menuitem type="link" href=makeOfbizUrl("ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}" text="[${uiLabelMap.CommonPrevious}]") disabled=(!(viewIndex > 0)) />
     <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-    <@menuitem type="link" ofbizHref="ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}" text="[${uiLabelMap.CommonNext}]" disabled=(!(listSize > highIndex)) />
+    <@menuitem type="link" href=makeOfbizUrl("ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}" text="[${uiLabelMap.CommonNext}]") disabled=(!(listSize > highIndex)) />
   </@menu>
 </#if>
 

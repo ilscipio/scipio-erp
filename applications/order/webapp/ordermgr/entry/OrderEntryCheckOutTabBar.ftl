@@ -37,13 +37,13 @@ under the License.
         <#if checkoutStep.enabled == "N">
             <@menuitem type="link" text="${stepUiLabel}" disabled=true />
         <#else>
-            <@menuitem type="link" ofbizHref="${checkoutStep.uri}" text="${stepUiLabel}" />
+            <@menuitem type="link" href=makeOfbizUrl("${checkoutStep.uri}" text="${stepUiLabel}") />
         </#if>
       </#list>
       <#if isLastStep == "N">
         <@menuitem type="link" href="javascript:document.checkoutsetupform.submit();" text="${uiLabelMap.CommonContinue}" contentClass="+ success" />
       <#else>
-        <@menuitem type="link" ofbizHref="processorder" text="${uiLabelMap.OrderCreateOrder}" contentClass="+alert" />
+        <@menuitem type="link" href=makeOfbizUrl("processorder" text="${uiLabelMap.OrderCreateOrder}" contentClass="+alert") />
       </#if>
     </@menu>
 </@section>

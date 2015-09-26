@@ -23,7 +23,7 @@ under the License.
 
     <#assign menuHtml>
       <@menu type="button" class="+button-style-1">
-        <@menuitem type="link" ofbizHref="paysetup" text="Payment Setup" selected=true />
+        <@menuitem type="link" href=makeOfbizUrl("paysetup" text="Payment Setup") selected=true />
       </@menu>
     </#assign>
     <@section title="Payment Processor Setup" menuHtml=menuHtml>
@@ -77,7 +77,7 @@ under the License.
     <#assign menuHtml>
       <@menu type="section" inlineItems=true>
       <#if webSitePayment?has_content>
-        <@menuitem type="link" ofbizHref="paysetup" text="Add New" />
+        <@menuitem type="link" href=makeOfbizUrl("paysetup" text="Add New") />
       </#if>
       </@menu>
     </#assign>

@@ -18,8 +18,8 @@ under the License.
 -->
 <@menu type="button">
 <#if showAll = "false">
-  <@menuitem type="link" ofbizHref="requestitemnotes?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;showAll=true" text="${uiLabelMap.OrderShowAllNotes}" />
+  <@menuitem type="link" href=makeOfbizUrl("requestitemnotes?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;showAll=true" text="${uiLabelMap.OrderShowAllNotes}") />
 <#else>
-  <@menuitem type="link" ofbizHref="requestitemnotes?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;showAll=false" text="${uiLabelMap.OrderShowThisItemsNotes}" />
+  <@menuitem type="link" href=makeOfbizUrl("requestitemnotes?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;showAll=false" text="${uiLabelMap.OrderShowThisItemsNotes}") />
 </#if>
 </@menu>

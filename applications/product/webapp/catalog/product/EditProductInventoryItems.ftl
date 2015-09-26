@@ -23,9 +23,9 @@ under the License.
   <#if productId?has_content>
     <@menuitem type="link" href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCreateNewInventoryItemProduct}" />
     <#if showEmpty>
-      <@menuitem type="link" ofbizHref="EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductHideEmptyItems}" />
+      <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductHideEmptyItems}") />
     <#else>
-      <@menuitem type="link" ofbizHref="EditProductInventoryItems?productId=${productId}&amp;showEmpty=true" text="${uiLabelMap.ProductShowEmptyItems}" />
+      <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}&amp;showEmpty=true" text="${uiLabelMap.ProductShowEmptyItems}") />
     </#if>
   </#if>
   </@menu>

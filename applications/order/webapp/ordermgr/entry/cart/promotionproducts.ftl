@@ -21,9 +21,9 @@ under the License.
   <@section title="${uiLabelMap.OrderProductsForPromotion}">
     <#if (listSize > 0)>
       <@menu type="button">
-        <@menuitem type="link" ofbizHref="showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 0)) />
+        <@menuitem type="link" href=makeOfbizUrl("showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}" text="${uiLabelMap.CommonPrevious}") disabled=(!(viewIndex > 0)) />
         <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-        <@menuitem type="link" ofbizHref="showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}" text="${uiLabelMap.CommonNext}" disabled=(!(listSize > highIndex)) />
+        <@menuitem type="link" href=makeOfbizUrl("showPromotionDetails?productPromoId=${productPromoId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}" text="${uiLabelMap.CommonNext}") disabled=(!(listSize > highIndex)) />
       </@menu>
     </#if>
 

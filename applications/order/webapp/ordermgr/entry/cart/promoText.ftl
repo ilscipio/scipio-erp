@@ -30,7 +30,7 @@ under the License.
         </@table>
         
         <@menu type="button">
-          <@menuitem type="link" ofbizHref="showAllPromotions" text="${uiLabelMap.OrderViewAllPromotions}" />
+          <@menuitem type="link" href=makeOfbizUrl("showAllPromotions" text="${uiLabelMap.OrderViewAllPromotions}") />
         </@menu>        
     </@section>
 </#if>

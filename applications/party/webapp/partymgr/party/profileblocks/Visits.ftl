@@ -19,7 +19,7 @@ under the License.
 
   <#assign menuHtml>
     <@menu type="section" inlineItems=true>
-    <@menuitem type="link" ofbizHref="findVisits?partyId=${partyId}" text="${uiLabelMap.CommonListAll}" />
+    <@menuitem type="link" href=makeOfbizUrl("findVisits?partyId=${partyId}" text="${uiLabelMap.CommonListAll}") />
     </@menu>
   </#assign>
   <@section id="partyVisits" title="${uiLabelMap.PartyVisits}" menuHtml=menuHtml>

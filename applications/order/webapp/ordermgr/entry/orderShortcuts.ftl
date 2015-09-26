@@ -22,26 +22,26 @@ under the License.
 <@section title="${uiLabelMap.OrderOrderShortcuts}">
     <@menu type="button">
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-          <@menuitem type="link" ofbizHref="RequirementsForSupplier" text="${uiLabelMap.OrderRequirements}" />
+          <@menuitem type="link" href=makeOfbizUrl("RequirementsForSupplier" text="${uiLabelMap.OrderRequirements}") />
         </#if>
         <#if shoppingCart.getOrderType()?has_content && shoppingCart.items()?has_content>
-          <@menuitem type="link" ofbizHref="createQuoteFromCart?destroyCart=Y" text="${uiLabelMap.OrderCreateQuoteFromCart}" />
-          <@menuitem type="link" ofbizHref="FindQuoteForCart" text="${uiLabelMap.OrderOrderQuotes}" />
+          <@menuitem type="link" href=makeOfbizUrl("createQuoteFromCart?destroyCart=Y" text="${uiLabelMap.OrderCreateQuoteFromCart}") />
+          <@menuitem type="link" href=makeOfbizUrl("FindQuoteForCart" text="${uiLabelMap.OrderOrderQuotes}") />
         </#if>
         <#if shoppingCart.getOrderType() == "SALES_ORDER">
-          <@menuitem type="link" ofbizHref="createCustRequestFromCart?destroyCart=Y" text="${uiLabelMap.OrderCreateCustRequestFromCart}" />
+          <@menuitem type="link" href=makeOfbizUrl("createCustRequestFromCart?destroyCart=Y" text="${uiLabelMap.OrderCreateCustRequestFromCart}") />
         </#if>
         <@menuitem type="link" href="/partymgr/control/findparty?${externalKeyParam!}" text="${uiLabelMap.PartyFindParty}" />
         <#if shoppingCart.getOrderType() == "SALES_ORDER">
-          <@menuitem type="link" ofbizHref="setCustomer" text="${uiLabelMap.PartyCreateNewCustomer}" />
+          <@menuitem type="link" href=makeOfbizUrl("setCustomer" text="${uiLabelMap.PartyCreateNewCustomer}") />
         </#if>
-        <@menuitem type="link" ofbizHref="checkinits" text="${uiLabelMap.PartyChangeParty}" />
+        <@menuitem type="link" href=makeOfbizUrl("checkinits" text="${uiLabelMap.PartyChangeParty}") />
         <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
            <@menuitem type="link" href="/catalog/control/EditProduct?${externalKeyParam!}" target="catalog" text="${uiLabelMap.ProductCreateNewProduct}" />
         </#if>
-        <@menuitem type="link" ofbizHref="quickadd" text="${uiLabelMap.OrderQuickAdd}" />
+        <@menuitem type="link" href=makeOfbizUrl("quickadd" text="${uiLabelMap.OrderQuickAdd}") />
         <#if shoppingLists??>
-          <@menuitem type="link" ofbizHref="viewPartyShoppingLists?partyId=${partyId}" text="${uiLabelMap.PageTitleShoppingList}" />
+          <@menuitem type="link" href=makeOfbizUrl("viewPartyShoppingLists?partyId=${partyId}" text="${uiLabelMap.PageTitleShoppingList}") />
         </#if>
     </@menu>
 </@section>

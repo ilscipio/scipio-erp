@@ -30,9 +30,9 @@ under the License.
     <#macro paginateContentResults>
       <#if (0 < listSize?int)>
       <@menu type="button">
-        <@menuitem type="link" ofbizHref="ContentSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N" text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex?int)) />
+        <@menuitem type="link" href=makeOfbizUrl("ContentSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N" text="${uiLabelMap.CommonPrevious}") disabled=(!(0 < viewIndex?int)) />
         <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />        
-        <@menuitem type="link" ofbizHref="ContentSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N" text="${uiLabelMap.CommonNext}" disabled=(!(highIndex?int < listSize?int)) />
+        <@menuitem type="link" href=makeOfbizUrl("ContentSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N" text="${uiLabelMap.CommonNext}") disabled=(!(highIndex?int < listSize?int)) />
       </@menu>
       </#if>
     </#macro>

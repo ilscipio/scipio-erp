@@ -37,12 +37,12 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" ofbizHref="${createUrl}" text="${uiLabelMap.CommonCreateNew}" contentClass="+create" />
+    <@menuitem type="link" href=makeOfbizUrl("${createUrl}" text="${uiLabelMap.CommonCreateNew}" contentClass="+create") />
 <#if partyList?has_content>    
   <#if hideFields == "Y">
-    <@menuitem type="link" ofbizHref="findparty?hideFields=N&amp;sortField=${sortField!}${paramList}" text="${uiLabelMap.CommonShowLookupFields}" class="+collapsed" />
+    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=N&amp;sortField=${sortField!}${paramList}" text="${uiLabelMap.CommonShowLookupFields}" class="+collapsed") />
   <#else>
-    <@menuitem type="link" ofbizHref="findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}" text="${uiLabelMap.CommonHideFields}" class="+expanded" />
+    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}" text="${uiLabelMap.CommonHideFields}" class="+expanded") />
   </#if>
 </#if>  
   </@menu>
@@ -296,7 +296,7 @@ under the License.
         <@td>${partyDate.lastModifiedDate!}</@td>
         <@td class="button-col">
           <@menu type="button">
-          <@menuitem type="link" ofbizHref="viewprofile?partyId=${partyRow.partyId}" text="${uiLabelMap.CommonDetails}" />
+          <@menuitem type="link" href=makeOfbizUrl("viewprofile?partyId=${partyRow.partyId}" text="${uiLabelMap.CommonDetails}") />
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
           <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text="${uiLabelMap.OrderOrders}">
           <form name="searchorders_o_${rowCount}" method="post" action="/ordermgr/control/searchorders">

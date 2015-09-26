@@ -20,7 +20,7 @@ under the License.
 
 <#if facilityId?has_content>
   <@menu type="tab">
-    <@menuitem type="link" ofbizHref="ScheduleShipmentRouteSegment?facilityId=${facilityId}" text="${uiLabelMap.ProductSchedule}" selected=(selected=="ScheduleTabButton") />
-    <@menuitem type="link" ofbizHref="Labels?facilityId=${facilityId}" text="${uiLabelMap.ProductLabels}" selected=(selected=="LabelsTabButton") />
+    <@menuitem type="link" href=makeOfbizUrl("ScheduleShipmentRouteSegment?facilityId=${facilityId}" text="${uiLabelMap.ProductSchedule}" selected=(selected=="ScheduleTabButton")) />
+    <@menuitem type="link" href=makeOfbizUrl("Labels?facilityId=${facilityId}" text="${uiLabelMap.ProductLabels}" selected=(selected=="LabelsTabButton")) />
   </@menu> 
 </#if>

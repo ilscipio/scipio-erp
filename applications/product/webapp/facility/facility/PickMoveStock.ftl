@@ -32,7 +32,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" ofbizHref="PickMoveStockSimple?facilityId=${facilityId!}" text="${uiLabelMap.CommonPrint}" />
+    <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}" text="${uiLabelMap.CommonPrint}") />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductStockMovesNeeded}" menuHtml=menuHtml>

@@ -119,7 +119,7 @@ under the License.
 <#if childShoppingListDatas?has_content>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" ofbizHref="addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes" text="${uiLabelMap.PartyAddChildListsToCart}" />
+    <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes" text="${uiLabelMap.PartyAddChildListsToCart}") />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuHtml=menuHtml>
@@ -148,7 +148,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-<#-- <@menuitem type="link" ofbizHref="addListToCart?shoppingListId=${shoppingList.shoppingListId}" text="${uiLabelMap.PartyAddListToCart}" /> -->
+<#-- <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}" text="${uiLabelMap.PartyAddListToCart}") /> -->
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuHtml=menuHtml>

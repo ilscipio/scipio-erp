@@ -2342,12 +2342,8 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
                       text, not nested content.
                       TODO: clarify nested content usage (because may have nested menus?)
     href            = content link, for "link" type
-                      Also supports ofbiz request URLs using the notation: ofbizUrl:// (see interpretRequestUri function)
-    ofbizHref       = DEPRECATED: for link, convenience attrib, wraps url in <@ofbizUrl></@ofbizUrl> before
-                      setting as href
-    fullPath,
-    secure,
-    encode          = options for ofbizHref
+                      Also supports ofbiz request URLs using the notation: ofbizUrl:// (see interpretRequestUri function)\
+                      (makeOfbizUrl also useful)
     onClick         = onClick (for content elem)
     title           = logical title attribute of content (link)
     disabled        = whether disabled, default false
@@ -2371,7 +2367,6 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
   <#local contentAttribs = inlineArgs.contentAttribs!args.contentAttribs!"">
   <#local text = inlineArgs.text!args.text!"">
   <#local href = inlineArgs.href!args.href!true>
-  <#local ofbizHref = inlineArgs.ofbizHref!args.ofbizHref!false>
   <#local fullPath = inlineArgs.fullPath!args.fullPath!false>
   <#local secure = inlineArgs.secure!args.secure!false>
   <#local encode = inlineArgs.encode!args.encode!true>
@@ -2425,11 +2420,7 @@ Menu item macro. Must ALWAYS be inclosed in a @menu macro (see @menu options if 
     <#if !wrapNested && nestedFirst>${nestedHtml}</#if>
     <#if type == "link">
       <#if !href?is_string>
-        <#if ofbizHref?is_string>
-          <#local href = makeOfbizUrl(ofbizHref, fullPath, secure, encode)>
-        <#else>
-          <#local href = "javascript:void(0);">
-        </#if>
+        <#local href = "javascript:void(0);">
       </#if>
       <#local href = interpretRequestUri(href)>
       <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs /></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></a>

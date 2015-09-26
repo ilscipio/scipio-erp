@@ -26,7 +26,7 @@ under the License.
 <@section title=sectionTitle menuHtml=menuHtml>
     <#macro saveCancelMenu>
       <@menu type="button">
-        <@menuitem type="link" ofbizHref="${donePage}?partyId=${partyId}" text="${uiLabelMap.CommonCancelDone}" />
+        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}" text="${uiLabelMap.CommonCancelDone}") />
         <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" text="${uiLabelMap.CommonSave}" />
       </@menu>
     </#macro>

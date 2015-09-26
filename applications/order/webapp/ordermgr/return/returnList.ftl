@@ -19,7 +19,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" href=makeOfbizUrl("returnMain" text="${uiLabelMap.OrderCreateReturn}") />
+    <@menuitem type="link" ofbizHref="returnMain" text="${uiLabelMap.OrderCreateReturn}" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.OrderReturnsCurrent}" menuHtml=menuHtml>

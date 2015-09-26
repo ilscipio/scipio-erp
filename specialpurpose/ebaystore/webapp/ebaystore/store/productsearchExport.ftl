@@ -194,9 +194,9 @@ under the License.
 </script>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" href=makeOfbizUrl("clearExpListing?productStoreId=${productStoreId!}" text="Clear Listing") />
+    <@menuitem type="link" ofbizHref="clearExpListing?productStoreId=${productStoreId!}" text="Clear Listing" />
     <#if isExportValid?? && isExportValid == "true">
-      <@menuitem type="link" href=makeOfbizUrl("exportListingToEbay?productStoreId=${productStoreId!}" text="Export Products Listing") />
+      <@menuitem type="link" ofbizHref="exportListingToEbay?productStoreId=${productStoreId!}" text="Export Products Listing" />
     </#if>
   </@menu>
 </#assign>

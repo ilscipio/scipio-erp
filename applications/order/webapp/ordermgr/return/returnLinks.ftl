@@ -19,19 +19,19 @@ under the License.
 <#assign selected = tabButtonItem?default("void")>
 <#if returnHeader??>
     <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl("returnMain?returnId=${returnId!}" text="${uiLabelMap.OrderReturnHeader}" selected=(selected=="OrderReturnHeader")) />
-      <@menuitem type="link" href=makeOfbizUrl("returnItems?returnId=${returnId!}" text="${uiLabelMap.OrderReturnItems}" selected=(selected=="OrderReturnItems")) />
-      <@menuitem type="link" href=makeOfbizUrl("ReturnHistory?returnId=${returnId!}" text="${uiLabelMap.OrderReturnHistory}" selected=(selected=="OrderReturnHistory")) />
+      <@menuitem type="link" ofbizHref="returnMain?returnId=${returnId!}" text="${uiLabelMap.OrderReturnHeader}" selected=(selected=="OrderReturnHeader") />
+      <@menuitem type="link" ofbizHref="returnItems?returnId=${returnId!}" text="${uiLabelMap.OrderReturnItems}" selected=(selected=="OrderReturnItems") />
+      <@menuitem type="link" ofbizHref="ReturnHistory?returnId=${returnId!}" text="${uiLabelMap.OrderReturnHistory}" selected=(selected=="OrderReturnHistory") />
     </@menu>
   <#if selected != "OrderReturnHistory">
     <@menu type="button" class="+button-style-1">
-      <@menuitem type="link" href=makeOfbizUrl("return.pdf?returnId=${returnId!}" text="PDF" target="_BLANK") />
+      <@menuitem type="link" ofbizHref="return.pdf?returnId=${returnId!}" text="PDF" target="_BLANK" />
       <#if returnId??>
         <#assign returnItems = delegator.findByAnd("ReturnItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("returnId", returnId, "returnTypeId", "RTN_REFUND"), null, false)/>
         <#if returnItems?has_content>
           <#assign orderId = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(returnItems)).getString("orderId")/>
           <#assign partyId = "${(returnHeader.fromPartyId)!}"/>
-          <@menuitem type="link" href=makeOfbizUrl("setOrderCurrencyAgreementShipDates?partyId=${partyId!}&amp;originOrderId=${orderId!}" text="${uiLabelMap.OrderCreateExchangeOrder} ${uiLabelMap.CommonFor} ${orderId!}") />
+          <@menuitem type="link" ofbizHref="setOrderCurrencyAgreementShipDates?partyId=${partyId!}&amp;originOrderId=${orderId!}" text="${uiLabelMap.OrderCreateExchangeOrder} ${uiLabelMap.CommonFor} ${orderId!}" />
         </#if>
         <#if "RETURN_ACCEPTED" == returnHeader.statusId>
           <#assign returnItems = delegator.findByAnd("ReturnItem", {"returnId" : returnId}, null, false)/>

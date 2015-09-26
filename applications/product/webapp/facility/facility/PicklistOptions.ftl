@@ -51,7 +51,7 @@ under the License.
   
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" href=makeOfbizUrl("ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}" text="${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}") />
+    <@menuitem type="link" ofbizHref="ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}" text="${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}" />
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductFindOrdersToPick}" menuHtml=menuHtml>

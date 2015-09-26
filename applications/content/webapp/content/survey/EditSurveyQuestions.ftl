@@ -210,7 +210,7 @@ under the License.
     <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionCategory}</#assign>
     <#assign menuHtml>
       <@menu type="section" inlineItems=true>  
-        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}") />
+        <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}" />
       </@menu>
     </#assign>
   <#else>
@@ -218,7 +218,7 @@ under the License.
       <#assign sectionTitle>${uiLabelMap.CommonEdit} ${uiLabelMap.ContentSurveyQuestion}</#assign>
       <#assign menuHtml>
         <@menu type="section" inlineItems=true>  
-          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}") />
+          <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}" />
         </@menu>
       </#assign>
     <#else>
@@ -232,7 +232,7 @@ under the License.
     <#assign menuHtml>
       <@menu type="section" inlineItems=true>
         ${menuHtml}
-        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}") />
+        <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y" text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}" />
       </@menu>
     </#assign>
   </#if>
@@ -283,7 +283,7 @@ under the License.
       <#assign sectionTitle>${uiLabelMap.ContentSurveyEditQuestionOption}</#assign>
       <#assign menuHtml>
         <@menu type="section" inlineItems=true>
-          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}" text="[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]") />
+          <@menuitem type="link" ofbizHref="EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}" text="[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]" />
         </@menu>
       </#assign>
     </#if>

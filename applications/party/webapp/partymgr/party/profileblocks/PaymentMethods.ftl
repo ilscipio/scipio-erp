@@ -37,10 +37,10 @@ under the License.
   <#assign menuHtml>
     <@menu type="section" inlineItems=true>
     <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
-      <@menuitem type="link" href=makeOfbizUrl("editeftaccount?partyId=${partyId}" text="${uiLabelMap.AccountingCreateNewEftAccount}") />
-      <@menuitem type="link" href=makeOfbizUrl("editgiftcard?partyId=${partyId}" text="${uiLabelMap.AccountingCreateNewGiftCard}") />
-      <@menuitem type="link" href=makeOfbizUrl("editcreditcard?partyId=${partyId}" text="${uiLabelMap.AccountingCreateNewCreditCard}") />
-      <@menuitem type="link" href=makeOfbizUrl("EditBillingAccount?partyId=${partyId}" text="${uiLabelMap.AccountingCreateBillingAccount}") />
+      <@menuitem type="link" ofbizHref="editeftaccount?partyId=${partyId}" text="${uiLabelMap.AccountingCreateNewEftAccount}" />
+      <@menuitem type="link" ofbizHref="editgiftcard?partyId=${partyId}" text="${uiLabelMap.AccountingCreateNewGiftCard}" />
+      <@menuitem type="link" ofbizHref="editcreditcard?partyId=${partyId}" text="${uiLabelMap.AccountingCreateNewCreditCard}" />
+      <@menuitem type="link" ofbizHref="EditBillingAccount?partyId=${partyId}" text="${uiLabelMap.AccountingCreateBillingAccount}" />
     </#if>  
     </@menu>
   </#assign>

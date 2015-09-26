@@ -29,7 +29,7 @@ under the License.
             </#if>
           
         <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y" text="${uiLabelMap.OrderCreateShipGroup}") />
+          <@menuitem type="link" ofbizHref="setShipping?createNewShipGroup=Y" text="${uiLabelMap.OrderCreateShipGroup}" />
         </@menu>         
 
 <#list 1..cart.getShipGroupSize() as currIndex>
@@ -150,8 +150,8 @@ under the License.
             </#if>
             
     <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}") />
-        <@menuitem type="link" href=makeOfbizUrl("EditShipAddress" text="${uiLabelMap.OrderCreateShippingAddress}") />
+        <@menuitem type="link" ofbizHref="setShipping?createNewShipGroup=Y" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}" />
+        <@menuitem type="link" ofbizHref="EditShipAddress" text="${uiLabelMap.OrderCreateShippingAddress}" />
     </@menu> 
     
 <#list 1..cart.getShipGroupSize() as currIndex>

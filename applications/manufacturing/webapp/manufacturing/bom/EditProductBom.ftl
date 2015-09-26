@@ -31,7 +31,7 @@ function lookupBom() {
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
   <#if product?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("BomSimulation?productId=${productId}&amp;bomType=${productAssocTypeId}" text="${uiLabelMap.ManufacturingBomSimulation}") />
+    <@menuitem type="link" ofbizHref="BomSimulation?productId=${productId}&amp;bomType=${productAssocTypeId}" text="${uiLabelMap.ManufacturingBomSimulation}" />
   </#if>
   </@menu>
 </#assign>

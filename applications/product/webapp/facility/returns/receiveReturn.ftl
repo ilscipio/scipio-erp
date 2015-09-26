@@ -19,7 +19,7 @@ under the License.
 <#assign sectionTitle>${uiLabelMap.ProductReceiveReturn} ${uiLabelMap.CommonInto} <#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId}:${facility.facilityId!}]</#assign>
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" href=makeOfbizUrl("EditFacility" text="${uiLabelMap.ProductNewFacility}") />
+    <@menuitem type="link" ofbizHref="EditFacility" text="${uiLabelMap.ProductNewFacility}" />
   </@menu>
 </#assign>
 <@section title=sectionTitle menuHtml=menuHtml>

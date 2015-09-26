@@ -32,9 +32,9 @@ function lookupShipments() {
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
   <#if requestParameters.facilityId?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${requestParameters.facilityId}" text="${uiLabelMap.ProductQuickShipOrder}") />
+    <@menuitem type="link" ofbizHref="quickShipOrder?facilityId=${requestParameters.facilityId}" text="${uiLabelMap.ProductQuickShipOrder}" />
   </#if>
-    <@menuitem type="link" href=makeOfbizUrl("EditShipment" text="${uiLabelMap.ProductNewShipment}") />
+    <@menuitem type="link" ofbizHref="EditShipment" text="${uiLabelMap.ProductNewShipment}" />
     <#--<@menuitem type="link" href="javascript:lookupShipments();" text="${uiLabelMap.ProductFindShipment}" />-->
   </@menu>
 </#assign>
@@ -124,9 +124,9 @@ function lookupShipments() {
   <#assign menuHtml>
     <@menu type="section" inlineItems=true>
     <#if (0 < shipmentList?size)>
-      <@menuitem type="link" href=makeOfbizUrl("FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 1)) contentClass="+nav-previous") />
+      <@menuitem type="link" ofbizHref="FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 1)) contentClass="+nav-previous" />
       <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${shipmentList?size}" />
-      <@menuitem type="link" href=makeOfbizUrl("FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y" text="${uiLabelMap.CommonPrevious}" disabled=(!(shipmentList?size > highIndex)) contentClass="+nav-next") />
+      <@menuitem type="link" ofbizHref="FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y" text="${uiLabelMap.CommonPrevious}" disabled=(!(shipmentList?size > highIndex)) contentClass="+nav-next" />
     </#if>
     </@menu>
   </#assign>

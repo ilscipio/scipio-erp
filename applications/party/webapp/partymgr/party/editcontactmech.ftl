@@ -196,12 +196,12 @@ under the License.
   </div>
   
     <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl("backHome" text="${uiLabelMap.CommonGoBack}") />
+      <@menuitem type="link" ofbizHref="backHome" text="${uiLabelMap.CommonGoBack}" />
       <@menuitem type="link" href="javascript:document.editcontactmechform.submit()" text="${uiLabelMap.CommonSave}" />
     </@menu>
   </@section>
 <#else>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("backHome" text="${uiLabelMap.CommonGoBack}") />
+    <@menuitem type="link" ofbizHref="backHome" text="${uiLabelMap.CommonGoBack}" />
   </@menu>
 </#if>

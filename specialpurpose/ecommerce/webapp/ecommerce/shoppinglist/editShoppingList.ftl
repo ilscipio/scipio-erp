@@ -443,7 +443,7 @@ under the License.
                   <@tr>
                     <@td>
                          <a href="<@ofbizUrl>product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class="${styles.button_default!}">${shoppingListItem.productId} -
-                         ${productContentWrapper.get("PRODUCT_NAME")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION")!}
+                         ${productContentWrapper.get("PRODUCT_NAME", "html")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION", "html")!}
                     </@td>
                     <@td nowrap="nowrap" align="center">
                       <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name="listform_${shoppingListItem.shoppingListItemSeqId}">
@@ -506,7 +506,7 @@ under the License.
                                 <#assign variantProduct = productVariantAssoc.getRelatedOne("AssocProduct", true)>
                                 <#if variantProduct??>
                                 <#assign variantProductContentWrapper = Static["org.ofbiz.product.product.ProductContentWrapper"].makeProductContentWrapper(variantProduct, request)>
-                                  <option value="${variantProduct.productId}">${variantProductContentWrapper.get("PRODUCT_NAME")?default("No Name")} [${variantProduct.productId}]</option>
+                                  <option value="${variantProduct.productId}">${variantproductContentWrapper.get("PRODUCT_NAME", "html")?default("No Name")} [${variantProduct.productId}]</option>
                                 </#if>
                               </#list>
                           </select>

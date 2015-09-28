@@ -80,6 +80,7 @@ under the License.
                               </@td>
                           <#else>
                               <@td valign="top">
+                                  <div>
                                     <#if orderHeader.statusId = "ORDER_CANCELLED" || orderHeader.statusId = "ORDER_COMPLETED">
                                       <strong>
                                       <#if productId??>
@@ -105,7 +106,17 @@ under the License.
                                           </#if>
                                       </#if>
                                       <input type="text" size="20" name="idm_${orderItem.orderItemSeqId}" value="${orderItem.itemDescription!}"/>
-                                    </#if>
+                                      </#if>
+                                  </div>
+                                  <#if productId??>
+                                  <div>
+                                      <a href="/catalog/control/EditProduct?productId=${productId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
+                                      <a href="/ecommerce/control/product?product_id=${productId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.OrderEcommerce}</a>
+                                      <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
+                                      <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.button_default!}">${uiLabelMap.OrderViewImage}</a>
+                                      </#if>
+                                  </div>
+                                  </#if>
                               </@td>
 
                               <#-- now show status details per line item -->

@@ -68,8 +68,8 @@ under the License.
 
 
 <#if productCategory??>
-    <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME")!/>
-    <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION")!/>
+    <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME", "html")!/>
+    <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html")!/>
     <#if categoryName?has_content>
         <@heading>${categoryName}</@heading>
     </#if>
@@ -90,8 +90,8 @@ under the License.
     <#if searchInCategory?default("Y") == "Y">
         <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductSearchInCategory}</a>
     </#if>
-    <#assign longDescription = categoryContentWrapper.get("LONG_DESCRIPTION")!/>
-    <#assign categoryImageUrl = categoryContentWrapper.get("CATEGORY_IMAGE_URL")!/>
+    <#assign longDescription = categoryContentWrapper.get("LONG_DESCRIPTION", "html")!/>
+    <#assign categoryImageUrl = categoryContentWrapper.get("CATEGORY_IMAGE_URL", "url")!/>
     <#if categoryImageUrl?string?has_content || longDescription?has_content>
       <div>
         <#if categoryImageUrl?string?has_content>

@@ -304,7 +304,7 @@ ${virtualJavaScript!}
   <#-- Product image/name/price -->
   <@tr>
     <@td valign="top" width="0">
-      <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL")!>
+      <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL", "url")!>
       <#-- remove the next two lines to always display the virtual image first (virtual images must exist) -->
       <#if firstLargeImage?has_content>
         <#assign productLargeImageUrl = firstLargeImage>
@@ -314,8 +314,8 @@ ${virtualJavaScript!}
       </#if>
     </@td>
     <@td align="right" valign="top">
-      <@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>
-      <div>${productContentWrapper.get("DESCRIPTION")!}</div>
+      <@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>
+      <div>${productContentWrapper.get("DESCRIPTION", "html")!}</div>
       <div><b>${product.productId!}</b></div>
       <#-- example of showing a certain type of feature with the product -->
       <#if sizeProductFeatureAndAppls?has_content>
@@ -600,9 +600,9 @@ ${virtualJavaScript!}
             <#list imageKeys as key>
               <#assign swatchProduct = imageMap.get(key)>
               <#if swatchProduct?has_content && indexer < maxIndex>
-                <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request)!>
+                <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request, "url")!>
                 <#if !imageUrl?string?has_content>
-                  <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL")!>
+                  <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL", "url")!>
                 </#if>
                 <#if !imageUrl?string?has_content>
                   <#assign imageUrl = "/images/defaultImage.jpg">
@@ -637,8 +637,8 @@ ${virtualJavaScript!}
 
   <#-- Long description of product -->
   <div id="long-description">
-      <div>${productContentWrapper.get("LONG_DESCRIPTION")!}</div>
-      <div>${productContentWrapper.get("WARNINGS")!}</div>
+      <div>${productContentWrapper.get("LONG_DESCRIPTION", "html")!}</div>
+      <div>${productContentWrapper.get("WARNINGS", "html")!}</div>
   </div>
 
   <#-- Any attributes/etc may go here -->
@@ -650,7 +650,7 @@ ${virtualJavaScript!}
     <#assign targetRequest = targetRequestName>
   </#if>
   <#if assocProducts?has_content>
-    <@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName!}</@heading>
+    <@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</@heading>
 
     <div class="productsummary-container">
     <#list assocProducts as productAssoc>

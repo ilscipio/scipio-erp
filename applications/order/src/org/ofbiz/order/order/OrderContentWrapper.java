@@ -73,6 +73,11 @@ public class OrderContentWrapper {
         this.mimeTypeId = "text/html";
     }
 
+    // FIXME: WARNING: SECURITY FLAW: encoderType NOT IMPLEMENTED DUE TO INCOMPLETE OFBIZ PATCH (AWAITING)
+    public String get(String orderContentTypeId, String encoderType) {
+        return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher);
+    }
+    
     public String get(String orderContentTypeId) {
         return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher);
     }

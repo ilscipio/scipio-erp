@@ -150,8 +150,8 @@ under the License.
       </@td>
     </@tr>
   </#if>
- 
-  <#if orderContentWrapper.get("IMAGE_URL")?has_content>
+  
+  <#if orderContentWrapper.get("IMAGE_URL", "url")?has_content>
     <@tr>
       <@td>${uiLabelMap.OrderImage}</@td>
       <@td colspan="3">
@@ -216,3 +216,4 @@ under the License.
   </#if>
   </@table>
 </@section>
+

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div class="breadcrumbs">
-<#assign isDefaultTheme = !layoutSettings.VT_FTR_TMPLT_LOC?contains("multiflex")>        
+<#assign isDefaultTheme = !layoutSettings.VT_FTR_TMPLT_LOC?contains("multiflex")>
 <#if isDefaultTheme>
   <a href="<@ofbizUrl>main</@ofbizUrl>" class="linktext">${uiLabelMap.CommonMain}</a> &gt;
 <#else>
@@ -33,10 +33,10 @@ under the License.
             <#if !isDefaultTheme>         
               <li>
                  <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="<#if crumb_has_next>linktext<#else>${styles.button_default!}disabled</#if>">
-                   <#if catContentWrappers[crumb].get("CATEGORY_NAME")??>
-                     ${catContentWrappers[crumb].get("CATEGORY_NAME")}
-                   <#elseif catContentWrappers[crumb].get("DESCRIPTION")??>
-                     ${catContentWrappers[crumb].get("DESCRIPTION")}
+                   <#if catContentWrappers[crumb].get("CATEGORY_NAME", "html")??>
+                     ${catContentWrappers[crumb].get("CATEGORY_NAME", "html")}
+                   <#elseif catContentWrappers[crumb].get("DESCRIPTION", "html")??>
+                     ${catContentWrappers[crumb].get("DESCRIPTION", "html")}
                    <#else>
                      ${crumb}
                    </#if>
@@ -44,25 +44,25 @@ under the License.
               </li>
             <#else>  
                <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="<#if crumb_has_next>linktext<#else>${styles.button_default!}disabled</#if>">
-                 <#if catContentWrappers[crumb].get("CATEGORY_NAME")??>
-                   ${catContentWrappers[crumb].get("CATEGORY_NAME")}
-                 <#elseif catContentWrappers[crumb].get("DESCRIPTION")??>
-                   ${catContentWrappers[crumb].get("DESCRIPTION")}
+                 <#if catContentWrappers[crumb].get("CATEGORY_NAME", "html")??>
+                   ${catContentWrappers[crumb].get("CATEGORY_NAME", "html")}
+                 <#elseif catContentWrappers[crumb].get("DESCRIPTION", "html")??>
+                   ${catContentWrappers[crumb].get("DESCRIPTION", "html")}
                  <#else>
                    ${crumb}
                  </#if>
                </a>
-               <#if crumb_has_next> &gt;</#if>               
+               <#if crumb_has_next> &gt;</#if>
             </#if>  
             <#assign previousCategoryId = crumb />
          </#if>
     </#list>    
     <#-- Show the product, if there is one -->
     <#if productContentWrapper??>
-      <#if isDefaultTheme>        
-         &nbsp;&gt; ${productContentWrapper.get("PRODUCT_NAME")!}
+      <#if isDefaultTheme>
+         &nbsp;&gt; ${productContentWrapper.get("PRODUCT_NAME", "html")!}
       <#else>
-          <li>${productContentWrapper.get("PRODUCT_NAME")!}</li>
+          <li>${productContentWrapper.get("PRODUCT_NAME", "html")!}</li>
         </ul>  
       </#if>
     </#if>

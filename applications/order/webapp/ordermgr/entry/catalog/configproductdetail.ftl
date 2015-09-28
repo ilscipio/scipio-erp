@@ -193,7 +193,7 @@ function getConfigDetails() {
   <#-- Product image/name/price -->
   <@tr>
     <@td valign="top" width="0">
-      <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL")!>
+      <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL", "url")!>
       <#-- remove the next two lines to always display the virtual image first (virtual images must exist) -->
       <#if firstLargeImage?has_content>
         <#assign productLargeImageUrl = firstLargeImage>
@@ -203,8 +203,8 @@ function getConfigDetails() {
       </#if>
     </@td>
     <@td align="right" valign="top">
-      <@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>
-      <div>${productContentWrapper.get("DESCRIPTION")!}</div>
+      <@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>
+      <div>${productContentWrapper.get("DESCRIPTION", "html")!}</div>
       <div><b>${product.productId!}</b></div>
       <#-- example of showing a certain type of feature with the product -->
       <#if sizeProductFeatureAndAppls?has_content>
@@ -394,9 +394,9 @@ function getConfigDetails() {
             <#list imageKeys as key>
               <#assign swatchProduct = imageMap.get(key)>
               <#if swatchProduct?has_content && indexer < maxIndex>
-                <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request)!>
+                <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request, "url")!>
                 <#if !imageUrl?string?has_content>
-                  <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL")!>
+                  <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL", "url")!>
                 </#if>
                 <#if !imageUrl?string?has_content>
                   <#assign imageUrl = "/images/defaultImage.jpg">
@@ -422,7 +422,7 @@ function getConfigDetails() {
 
   <#-- Long description of product -->
   <@tr>
-    <@td colspan="2">${productContentWrapper.get("LONG_DESCRIPTION")!}</@td>
+    <@td colspan="2">${productContentWrapper.get("LONG_DESCRIPTION", "html")!}</@td>
   </@tr>
 
   <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
@@ -457,7 +457,7 @@ function getConfigDetails() {
                 <#if instructions?has_content>
                   <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${instructions}");" class="${styles.button_default!}">Instructions</a>
                 </#if>
-                <#assign image = question.content.get("IMAGE_URL")!>
+                <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
                   <img src='<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>' vspace='5' hspace='5' class='cssImgSmall' align='left' alt="" />
                 </#if>
@@ -616,7 +616,7 @@ function getConfigDetails() {
   </#if>
   <#if assocProducts?has_content>
     <@tr><@td>&nbsp;</@td></@tr>
-    <@tr><@td colspan="2"><@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME")!}</#if>${afterName!}</@heading></@td></@tr>
+    <@tr><@td colspan="2"><@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</@heading></@td></@tr>
     <@tr type="util"><@td><hr /></@td></@tr>
     <#list assocProducts as productAssoc>
       <@tr><@td>

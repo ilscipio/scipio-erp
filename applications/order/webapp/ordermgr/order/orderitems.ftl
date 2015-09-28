@@ -51,6 +51,7 @@ under the License.
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
                             <#else>
                                 <@td>
+                                    <div>
                                         <strong>
                                         <#if orderItem.supplierProductId?has_content>
                                             ${orderItem.supplierProductId} - ${orderItem.itemDescription!}
@@ -76,6 +77,21 @@ under the License.
                                             </#list>
                                             </ul>
                                         </#if>
+                                    </div>
+                                    <div> <#-- style="float:right;" -->
+                                        <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
+                                        <#if downloadContents?has_content>
+                                            <#list downloadContents as downloadContent>
+                                                <a href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ContentDownload}</a>&nbsp;
+                                            </#list>
+                                        </#if>
+                                        <a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
+                                        <a href="/ecommerce/control/product?product_id=${productId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.OrderEcommerce}</a>
+                                        <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
+                                            <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>"
+                                               target="_orderImage" class="${styles.button_default!}">${uiLabelMap.OrderViewImage}</a>
+                                        </#if>
+                                    </div>
                                 </@td>
                             </#if>
                             <#if productId?? && productId == "shoppingcart.CommentLine">

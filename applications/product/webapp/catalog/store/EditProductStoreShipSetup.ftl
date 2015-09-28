@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.ProductCarrierShipmentMethod}">
-    <@form name="addscarr" method="post" action=makeOfbizUrl("prepareCreateShipMeth")>
+    <form name="addscarr" method="post" action="<@ofbizUrl>prepareCreateShipMeth</@ofbizUrl>">
       <@fields labelArea=false>
         <input type="hidden" name="newShipMethod" value="Y"/>
         <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
@@ -33,5 +33,5 @@ under the License.
             <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}"/>
         </@field>
       </@fields>
-    </@form>
+    </form>
 </@section>

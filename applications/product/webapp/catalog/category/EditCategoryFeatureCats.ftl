@@ -76,7 +76,7 @@ under the License.
     </@section>
   <#if productFeatureGroups?has_content>    
     <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
-        <@form method="post" action=makeOfbizUrl("createProductFeatureCatGrpAppl") name="addNewGroupForm">
+        <form method="post" action="<@ofbizUrl>createProductFeatureCatGrpAppl</@ofbizUrl>" name="addNewGroupForm">
           <@fields labelArea=false>
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <@field type="generic">
@@ -93,7 +93,7 @@ under the License.
                 <input type="submit" value="${uiLabelMap.CommonAdd}" />
             </@field>
           </@fields>
-        </@form> 
+        </form> 
     </@section>
   </#if>
     <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
@@ -146,7 +146,7 @@ under the License.
         </#if>
     </@section>
     <@section title="${uiLabelMap.ProductApplyFeatureGroupToCategory}">
-        <@form method="post" action=makeOfbizUrl("createProductFeatureCategoryAppl") name="addNewCategoryForm">
+        <form method="post" action="<@ofbizUrl>createProductFeatureCategoryAppl</@ofbizUrl>" name="addNewCategoryForm">
           <@fields labelArea=false>
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <@field type="generic">
@@ -163,6 +163,6 @@ under the License.
                 <input type="submit" value="${uiLabelMap.CommonAdd}" />
             </@field>
           </@fields>
-        </@form>
+        </form>
     </@section>
 </#if>

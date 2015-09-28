@@ -78,7 +78,7 @@ function insertImageName(size,nameValue) {
         </@section>
     </#if>
     <@section title="${uiLabelMap.ProductOverrideSimpleFields}">
-            <@form action=makeOfbizUrl("updateProductConfigItemContent") method="post" name="productForm">
+            <form action="<@ofbizUrl>updateProductConfigItemContent</@ofbizUrl>" method="post" name="productForm">
                 <input type="hidden" name="configItemId" value="${configItemId!}" />
                 <@field type="generic" label="${uiLabelMap.CommonDescription}">
                     <textarea name="description" cols="60" rows="2">${(configItem.description)!}</textarea>
@@ -105,15 +105,15 @@ function insertImageName(size,nameValue) {
                 <@field type="submitarea">
                     <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" />
                 </@field>
-            </@form>
+            </form>
     </@section>
     
     <@section title="${uiLabelMap.ProductUploadImage}">
-            <@form method="post" enctype="multipart/form-data" action=makeOfbizUrl("UploadProductConfigItemImage?configItemId=${configItemId}&amp;upload_file_type=small") name="imageUploadForm">
+            <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductConfigItemImage?configItemId=${configItemId}&amp;upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
                 <@field type="file" size="50" name="fname" />
                 <@field type="submitarea">
                     <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductUploadImage}" />
                 </@field>
-            </@form>
+            </form>
     </@section>
 </#if>

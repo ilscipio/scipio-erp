@@ -84,7 +84,7 @@ under the License.
         </@table>
 
     <@section title="${uiLabelMap.ProductAddCatalogProductCategory}">
-        <@form method="post" action=makeOfbizUrl("category_addProductCategoryToProdCatalog") name="addNewForm">
+        <form method="post" action="<@ofbizUrl>category_addProductCategoryToProdCatalog</@ofbizUrl>" name="addNewForm">
           <@fields labelArea=false>
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}"/>
             <@field type="generic">
@@ -108,7 +108,7 @@ under the License.
                 <input type="submit" value="${uiLabelMap.CommonAdd}"/>
             </@field>
           </@fields>
-        </@form>
+        </form>
     </@section>
 </@section>
 </#if>

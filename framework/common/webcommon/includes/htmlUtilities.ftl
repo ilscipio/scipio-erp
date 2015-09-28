@@ -845,10 +845,12 @@ Not associated with an HTML element as is @fieldset.
 * Form Macro
 ************
     Usage example:  
-    <@form type="generic" fieldsInfo={labels:false}>
+    <@form>
+      <@fields>
         <input type="hidden" ... />
         <@field ... />
         <@field ... />
+      </@fields>
     </@form>            
                     
    * General Attributes *

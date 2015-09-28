@@ -73,7 +73,7 @@ under the License.
 <#if productFeatureIds??>
   <@row>
     <@cell>
-      <@form method="post" action=makeOfbizUrl("LookupVariantProduct") name="createNewVariant">
+      <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="createNewVariant">
         <@fields labelArea=false>
         <input type="hidden" name="productId" value="${product.productId}" />
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}" />
@@ -82,7 +82,7 @@ under the License.
             <input type="submit" value="${uiLabelMap.ProductQuickAddVariants}" class="smallSubmit ${styles.button_default!}" />
         </@field>
         </@fields>
-      </@form>
+      </form>
     </@cell>
   </@row>
 </#if>

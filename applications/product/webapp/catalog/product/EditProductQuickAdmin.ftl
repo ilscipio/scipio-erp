@@ -61,7 +61,7 @@ function doPublish() {
 
 <@section title="${uiLabelMap.PageTitleEditProductQuickAdmin}">
         <!-- Name update section -->
-        <@form action=makeOfbizUrl("updateProductQuickAdminName") method="post" name="editProduct">
+        <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method="post" name="editProduct">
           <@fields labelArea=false>
             <input type="hidden" name="productId" value="${productId!}"/>
             <#if (product.isVirtual)! == "Y">
@@ -73,7 +73,7 @@ function doPublish() {
                 <input type="submit" value="${uiLabelMap.ProductUpdateName}"/>
             </@field>
           </@fields>
-        </@form>
+        </form>
 </@section>
 
 <#if (product.isVirtual)! == "Y">
@@ -342,7 +342,7 @@ function doPublish() {
         <!--  **************************************************** Categories section -->
     <@row>
       <@cell>
-        <@form action=makeOfbizUrl("quickAdminAddCategories")>
+        <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>">
           <@fields labelArea=false>
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
             <input type="hidden" name="productId" value="${product.productId!}"/>
@@ -357,7 +357,7 @@ function doPublish() {
                 <input type="submit" value="${uiLabelMap.ProductUpdateCategories}"/>
             </@field>
           </@fields>
-        </@form>
+        </form>
       </@cell>
     </@row>
     <@row>
@@ -388,7 +388,7 @@ function doPublish() {
   <#if (showPublish == "true")>
     <@row>
       <@cell>
-        <@form action=makeOfbizUrl("quickAdminAddCategories") name="publish">
+        <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>" name="publish">
           <@fields labelArea=false>
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="categoryId" value="${allCategoryId!}"/>
@@ -399,13 +399,13 @@ function doPublish() {
                 <input type="button" value="${uiLabelMap.ProductPublishAndView}" onclick="doPublish();"/>
             </@field>
           </@fields>
-        </@form>
+        </form>
       </@cell>
     </@row>
   <#else>
     <@row>
       <@cell>
-        <@form  action=makeOfbizUrl("quickAdminUnPublish") name="unpublish">
+        <form  action="<@ofbizUrl>quickAdminUnPublish</@ofbizUrl>" name="unpublish">
           <@fields labelArea=false>
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="productCategoryId" value="${allCategoryId!}"/>
@@ -416,7 +416,7 @@ function doPublish() {
                 <input type="submit" value="${uiLabelMap.ProductRemoveFromSite}"/>
             </@field>
           </@fields>
-        </@form>
+        </form>
       </@cell>
     </@row>
   </#if>

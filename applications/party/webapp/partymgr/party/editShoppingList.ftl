@@ -28,7 +28,7 @@ under the License.
 </#assign>
 <@section title="${uiLabelMap.PartyShoppingLists}" menuHtml=menuHtml>
     <#if shoppingLists?has_content>
-      <@form name="selectShoppingList" method="post" action=makeOfbizUrl("editShoppingList")>
+      <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
         <@fields labelArea=false>
         <input type="hidden" name="partyId" value="${partyId!}" />
         <@field type="generic">
@@ -46,7 +46,7 @@ under the License.
             <a href="javascript:document.selectShoppingList.submit();" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
         </@field>
         </@fields>
-      </@form>
+      </form>
     <#else>
       <@resultMsg>${uiLabelMap.PartyNoShoppingListsParty}.</@resultMsg>
     </#if>

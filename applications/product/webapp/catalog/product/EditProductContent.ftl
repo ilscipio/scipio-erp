@@ -148,7 +148,7 @@ under the License.
     </@section>
     
     <@section title="${uiLabelMap.ProductUploadImage}">
-        <@form method="post" enctype="multipart/form-data" action=makeOfbizUrl("UploadProductImage?productId=${productId}&amp;upload_file_type=original") name="imageUploadForm">
+        <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>" name="imageUploadForm">
           <@fields labelArea=false>
             <@field type="file" size="50" name="fname"/>
             <@field type="generic">
@@ -164,6 +164,6 @@ under the License.
             <#-- FIXME -->
             <span class="tooltip">${uiLabelMap.ProductOriginalImageMessage} : {ofbiz.home}/applications/product/config/ImageProperties.xml&quot;</span>
           </@fields>
-        </@form>
+        </form>
     </@section>
 </#if>

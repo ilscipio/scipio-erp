@@ -26,7 +26,7 @@ under the License.
   <@cell>
 <#-- FIXME?: should specify a form/fields type here that implies manual row/cell markup 
      instead of norows=true nocells=true-->
-<@form id="addAdditionalImagesForm" method="post" action=makeOfbizUrl("addAdditionalImagesForProduct") enctype="multipart/form-data">
+<form id="addAdditionalImagesForm" method="post" action="<@ofbizUrl>addAdditionalImagesForProduct</@ofbizUrl>" enctype="multipart/form-data">
   <@fields labelArea=false>
   <input id="additionalImageProductId" type="hidden" name="productId" value="${productId!}" />
     <#macro imageField name imageHtml id="">
@@ -73,6 +73,6 @@ under the License.
     <input type="hidden" id="originalImage" name="originalImage" />
   </div>
   </@fields>
-</@form>
+</form>
   </@cell>
 </@row>

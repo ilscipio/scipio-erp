@@ -34,17 +34,19 @@ under the License.
 </#macro>
 
 <@section title="${uiLabelMap.AccountingPaymentInformation}">
-  <@table type="data-complex" class="basic-table">
-     <#assign orderTypeId = orderReadHelper.getOrderTypeId()>
+   <#assign orderTypeId = orderReadHelper.getOrderTypeId()>
+
   <#if orderTypeId == "PURCHASE_ORDER">
-     <@thead>
-       <@tr>
-         <@th>${uiLabelMap.AccountingPaymentID}</@th>
-         <@th>${uiLabelMap.CommonTo}</@th>
-         <@th>${uiLabelMap.CommonAmount}</@th>
-         <@th>${uiLabelMap.CommonStatus}</@th>
-       </@tr>
-       </@thead>
+  <@table type="data-complex" class="basic-table">
+    <#if orderPaymentPreferences?has_content || invoices?has_content>
+      <@thead>
+        <@tr>
+          <@th>${uiLabelMap.AccountingPaymentID}</@th>
+          <@th>${uiLabelMap.CommonTo}</@th>
+          <@th>${uiLabelMap.CommonAmount}</@th>
+          <@th>${uiLabelMap.CommonStatus}</@th>
+        </@tr>
+      </@thead>
        <#list orderPaymentPreferences as orderPaymentPreference>
          <#assign payments = orderPaymentPreference.getRelated("Payment", null, null, false)>
          <#list payments as payment>
@@ -82,9 +84,15 @@ under the License.
            <@td>&nbsp;</@td>
          </@tr>
        </#if>
-       
-  <#else>
 
+     <#else>
+      <@tr>
+        <@td colspan="4" align="center">${uiLabelMap.OrderNoOrderPaymentPreferences}</@td>
+      </@tr>
+     </#if>
+  </@table>       
+  <#else>
+  <@table type="data-complex" class="basic-table">
      <#-- order payment status -->
      <@tr>
        <@td scope="row" class="${styles.grid_large!}3">&nbsp;${uiLabelMap.OrderStatusHistory}</@td>
@@ -574,7 +582,8 @@ under the License.
    </form>
   </#if>
     
+  </@table>    
+    
   </#if>
 
-  </@table>
 </@section>

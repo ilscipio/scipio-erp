@@ -156,23 +156,8 @@ under the License.
   </#if>      
       
   <#if partyList?has_content>
-    <#-- Pagination -->
-    <#include "component://common/webcommon/includes/htmlTemplate.ftl"/>
-    <#assign commonUrl = "findparty?hideFields=" + hideFields + paramList + "&amp;sortField=" + (sortField!) + "&amp;"/>
-    <#assign viewIndexFirst = 0/>
-    <#assign viewIndexPrevious = viewIndex - 1/>
-    <#assign viewIndexNext = viewIndex + 1/>
-    <#assign viewIndexLast = Static["org.ofbiz.base.util.UtilMisc"].getViewLastIndex(partyListSize, viewSize) />
-    <#assign messageMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("lowCount", lowIndex, "highCount", highIndex, "total", partyListSize)/>
-    <#assign commonDisplaying = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)/>
-    <#macro paginateParties>
-      <@nextPrev commonUrl=commonUrl ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=partyListSize viewSize=viewSize ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying=commonDisplaying paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" />
-    </#macro>
-    <#assign paginated = true>
-    
-    <#if paginated>
-      <@paginateParties />
-    </#if>
+    <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": hideFields!"", "sortField" : sortField!""}, "&amp;", false)>
+    <@paginate mode="content" url=makeOfbizUrl("findparty") viewSize=viewSize!1 viewIndex=viewIndex! listSize=partyListSize!0 altParam=false paramStr=paramStr viewIndexFirst=0>
     
     <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
      <@thead>
@@ -321,9 +306,7 @@ under the License.
     </@tbody>
     </@table>
     
-    <#if paginated>
-      <@paginateParties />
-    </#if>
+    </@paginate>
     
   <#else>
     <@resultMsg>${uiLabelMap.PartyNoPartiesFound}</@resultMsg>

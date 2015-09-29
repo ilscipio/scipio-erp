@@ -323,21 +323,10 @@ document.lookuporder.orderId.focus();
   <#-- note: added this check here for simplicity but haven't removed old code inside; no harm, maybe reuse-->
   <#if orderList?has_content>
   
-    <#assign paginated = false>
-    <#if (orderList?has_content && (0 < orderList?size))>
-        <#assign url><@ofbizUrl>searchorders</@ofbizUrl></#assign>
-        <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
-        <#-- forcePost required because search done from service event with https="true" -->
-        <#macro paginateOrders>
-          <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=orderListSize altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1 />
-        </#macro>
-        <#assign paginated = true>
-    </#if>
-    
-    <#if paginated>
-      <@paginateOrders />
-    </#if>
-    
+    <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
+    <#-- forcePost required because search done from service event with https="true" -->
+    <@paginate mode="content" url=makeOfbizUrl("searchorders") viewSize=viewSize!1 viewIndex=viewIndex! listSize=orderListSize!0 altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1>
+   
     <form name="massOrderChangeForm" method="post" action="javascript:void(0);">
         <input type="hidden" name="screenLocation" value="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF"/>
         
@@ -504,9 +493,7 @@ document.lookuporder.orderId.focus();
       
     </form>
     
-    <#if paginated>
-      <@paginateOrders />
-    </#if>
+    </@paginate>
     
   <#else>
     <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>

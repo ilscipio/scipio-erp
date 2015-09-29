@@ -149,6 +149,31 @@ Adds parameters from a hash to a URL param string (no full URL logic).
 
 <#-- 
 *************
+* trimParamStrDelims function
+************
+Strips leading and trailing param delims from a param string.
+                    
+   * Parameters *
+    paramStr        = param string
+    paramDelim      = Param delimiter (escaped, "&amp;" by default)
+-->
+<#function trimParamStrDelims paramStr paramDelim="&amp;">
+  <#local res = paramStr>
+  <#if res?starts_with(paramDelim)>
+    <#local res = res?substring(paramDelim?length)>
+  <#elseif res?starts_with("?") || res?starts_with("&")>
+    <#local res = res?substring(1)>
+  </#if>
+  <#if res?ends_with(paramDelim)>
+    <#local res = res?substring(0, (res?length - paramDelim?length))>
+  <#elseif res?ends_with("?") || res?ends_with("&")>
+    <#local res = res?substring(0, (res?length - 1))>
+  </#if>
+  <#return res>
+</#function> 
+
+<#-- 
+*************
 * splitStyleNames function
 ************
 splits a style classes string into sequence, same order.
@@ -1063,9 +1088,28 @@ levels manually, but most often should let @section menu handle them.
 * Pagination Macro
 ************
     Usage example:  
-    <@paginate >            
+    <@paginate mode="single" ... />
+    <@paginate mode="content">
+      <@table>
+        ...
+      </@table>
+    </@paginate>            
                     
    * General Attributes *
+   mode            = [single|content], default single
+                     single: produces a single pagination menu
+                     content: decorates the nested content with one or more pagination menus
+   type            = [default], default default, type of the pagination menu itself
+                     default: default cato pagination menu (currently @renderNextPrev numbered menu)
+   layout          = [default|top|bottom|both], default default, type of layout, only meaningful for "content" mode
+                     default: cato default layout (currently "both")
+                     top: no more than one menu, always at top
+                     bottom: no more than one menu, always at bottom
+                     both: always two menus, top and bottom
+   noResultsMode   = [default|hide|disable], default default (default may depend on mode)
+                     default: cato default (currently "hide", for both modes)
+                     hide: hide menu when no results
+                     disable: disable but show controls when no results (TODO?: not implemented)
    url             = Base Url to be used for pagination
    class           = css classes 
                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
@@ -1079,7 +1123,7 @@ levels manually, but most often should let @section menu handle them.
    showCount       = If true show "Displaying..." count or string provided in countMsg; if false don't
    countMsg        = Custom message for count, optional
 -->
-<#macro paginate url="" class=true viewIndex=0 listSize=0 viewSize=1 altParam=false forcePost=false paramStr="" viewIndexFirst=0 showCount=true countMsg="">
+<#macro paginate mode="single" type="default" layout="default" noResultsMode="default" url="" class=true viewIndex=0 listSize=0 viewSize=1 altParam=false forcePost=false paramStr="" viewIndexFirst=0 showCount=true countMsg="">
     <#local classes = makeClassesArg(class, "nav-pager")>
     
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
@@ -1132,7 +1176,7 @@ levels manually, but most often should let @section menu handle them.
     <#if (url?has_content)>
         <#local commonUrl = addParamDelimToUrl(url, "&amp;")>
         <#if paramStr?has_content>
-            <#local commonUrl = commonUrl + paramStr + "&amp;">
+            <#local commonUrl = commonUrl + trimParamStrDelims(paramStr) + "&amp;">
         </#if>
         
         <#local firstUrl = "">
@@ -1166,7 +1210,25 @@ levels manually, but most often should let @section menu handle them.
        <#local countMsg = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)!"">
     </#if>
     
-    <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst />
+  <#-- TODO: noResultsMode should be delegated to @renderNextPrev... but generally hiding everything for now... -->
+  <#if noResultsMode == "default">
+    <#local noResultsMode = "hide">
+  </#if>
+  <#local showNextPrev = (noResultsMode != "hide") || (listSize > 0)>  
+  <#-- DEV NOTE: make sure all @renderNextPrev calls same (DO NOT use #local capture; risks duplicate IDs) -->
+  <#if mode == "single">
+      <#if showNextPrev>
+        <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst />
+      </#if>
+  <#else>
+      <#if showNextPrev && layout != "bottom">
+        <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst />
+      </#if>
+        <#nested>
+      <#if showNextPrev && layout != "top">
+        <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst />
+      </#if>
+  </#if>
 </#macro>
 
 

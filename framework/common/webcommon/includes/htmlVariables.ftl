@@ -27,12 +27,48 @@ under the License.
 
 <#-- 
 ******************
+* MISC *
+******************
+-->
+
+<#-- TODO: move this somewhere else; but not clear where else works, and include order is problematic -->
+<#function getRenderContextType>
+  <#local res = "">
+  <#-- check cache -->
+  <#if request??>
+    <#local res = request.getAttribute("catoRenderContextType")!"">
+  <#else>
+    <#local res = .globals["catoRenderContextType"]!"">
+  </#if>
+  <#if res?has_content>
+    <#return res>
+  <#else>
+    <#-- TODO: implement: does not appear to be possible to detect from FTL properly in all cases at current time... -->
+    <#local res = "backend">
+
+    <#-- save in cache -->
+    <#if request??>
+      <#local dummy = request.setAttribute("catoRenderContextType", res)!>
+    </#if>
+    <#global catoRenderContextType = res>
+    <#return res>
+  </#if>
+</#function>
+<#-- getRenderContextType: ${getRenderContextType()} -->
+
+<#-- 
+******************
 * UTILITY VARIABLES *
 ******************
 -->
 
+<#switch getRenderContextType()>
+<#case "backend">
+<#case "frontend">
+<#case "email">
+<#default>
 <#global styles = {
-<#-- Misc -->
+  <#-- Misc -->
     "disabled" : "disabled",
     "active" : "active",
     "button" : "button",
@@ -56,7 +92,7 @@ under the License.
     "icon_arrow" : "fi-arrow-right",
     "icon_list" : "fi-list",
     
-<#-- Menus -->  
+  <#-- Menus -->  
     "menu_default" : "",  
     "menu_default_item" : "", 
     "menu_default_itemlink" : "", 
@@ -79,7 +115,7 @@ under the License.
     "menu_section_item" : "",
     "menu_section_itemlink" : "button tiny", 
     
-<#-- Data and Tables -->  
+  <#-- Data and Tables -->  
     "table_default" : "",
     "table_default_cellspacing" : "",
     "table_data_list" : "basic-table",
@@ -101,7 +137,7 @@ under the License.
     "link_text" : "",
     "link_image" : "",
     
-<#-- Colors -->
+  <#-- Colors -->
     "color_green" : "success",
     "color_red" : "alert",
     "color_grey" : "secondary",
@@ -112,7 +148,7 @@ under the License.
     "color_alert" : "alert",        <#-- Bootstrap: "danger" -->
     "color_error" : "alert",
     
-<#-- Grid -->
+  <#-- Grid -->
     "grid_row" : "row",
     "grid_cell" : "columns",
     "grid_display" : "display",      <#-- display grid -->
@@ -142,18 +178,18 @@ under the License.
     "grid_medium_centered" : "medium-centered",
     "grid_large_centered" : "large-centered",
 
-<#-- Floats -->
+  <#-- Floats -->
     "float_left" : "left",
     "float_right" : "right",
     "float_clearfix" : "clearfix",
     
-<#-- Navigation -->
+  <#-- Navigation -->
     "nav_subnav" : "sub-nav",
 
-<#-- Lists -->
+  <#-- Lists -->
     "list_inline" : "inline-list",
 
-<#-- Tile -->
+  <#-- Tile -->
     "tile_container" : "tile-container",
     "tile_wrap" : "tile",
     "tile_color" : "tile-color-",
@@ -163,22 +199,22 @@ under the License.
     "tile_overlay" : "tile-overlay",
     "tile_image" : "tile-image",
 
-<#-- Breadcrumbs -->
+  <#-- Breadcrumbs -->
     "nav_breadcrumbs" : "breadcrumbs",
     "nav_breadcrumbs_disabled" : "unavailable",
     "nav_breadcrumbs_active" : "current",
 
-<#-- Panels -->
+  <#-- Panels -->
     "panel_wrap" : "panel",
     "panel_head" : "",
     "panel_title" : "",
     "panel_body" : "",
 
-<#-- Alert Box -->
+  <#-- Alert Box -->
     "alert_wrap" : "alert-box",    <#-- Bootstrap: "alert" -->
     "alert_prefix_type" : "",             <#-- Bootstrap: "alert-" -->
 
-<#-- Pricing Tables -->
+  <#-- Pricing Tables -->
     "pricing_wrap" : "pricing-table",
     "pricing_price" : "price",
     "pricing_description" : "description",
@@ -186,19 +222,27 @@ under the License.
     "pricing_cta" : "cta-button",
     "pricing_bullet" : "bullet-item",
 
-<#-- Modal -->
+  <#-- Modal -->
     "modal_wrap" : "reveal-modal",
 
-<#-- Chart -->
+  <#-- Chart -->
     "chart_legend" : "chart-legend",
 
-<#-- Progress Bar -->
+  <#-- Progress Bar -->
     "progress_container" : "progress",   <#-- Bootstrap: "progress" -->
     "progress_wrap" : "",           <#-- Bootstrap: "progress-bar" -->
     "progress_bar" : "meter"       <#-- Bootstrap: "sr-only" -->
+}>
+<#break>
+</#switch>
 
 <#-- UTLITY VARIABLES END -->
-}>
+
+<#-- 
+******************
+* MISC *
+******************
+-->
 
 <#-- compatibility mode: define styles hash entries as individual style_ vars
 <#list styles?keys as name>

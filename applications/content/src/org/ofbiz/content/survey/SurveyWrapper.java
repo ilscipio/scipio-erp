@@ -189,9 +189,16 @@ public class SurveyWrapper {
             }
         }
 
-        if (templateContext == null) {
-            templateContext = FastMap.newInstance();
+        if (this.templateContext == null) {
+            this.templateContext = FastMap.newInstance();
         }
+        
+        // Cato: create local context that includes parent context.
+        Map<String, Object> templateContext = FastMap.newInstance();
+        if (parentContext != null) {
+            templateContext.putAll(parentContext);
+        }
+        templateContext.putAll(this.templateContext);
 
         templateContext.put("partyId", partyId);
         templateContext.put("survey", survey);

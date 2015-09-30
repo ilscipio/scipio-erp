@@ -36,6 +36,6 @@ surveyWrapper.setEdit(true);
 templateUrl = UtilURL.fromOfbizHomePath("applications/content/template/survey/genericsurvey.ftl");
 if (templateUrl) {
     writer = new StringWriter();
-    surveyWrapper.render(templateUrl, writer);
+    surveyWrapper.render(templateUrl, writer, context);
     context.surveyString = writer.toString();
 }

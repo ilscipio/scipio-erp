@@ -32,7 +32,7 @@ under the License.
     </div>
     <div class="screenlet-body">
       <form method="post" action="<@ofbizUrl>minipoll<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
-        ${randomSurvey.render()}
+        ${randomSurvey.render(context)}
       </form>
     </div>
   </div>

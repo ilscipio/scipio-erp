@@ -69,21 +69,21 @@ public class ProductStoreSurveyWrapper extends SurveyWrapper {
         this.callResult = b;
     }
 
-    public Writer render() throws SurveyWrapperException {
+    public Writer render(Map<String, Object> parentContext) throws SurveyWrapperException {
         if (canRespond() && !callResult) {
-            return renderSurvey();
+            return renderSurvey(parentContext);
         } else if (!UtilValidate.isEmpty(resultTemplate)) {
-            return renderResult();
+            return renderResult(parentContext);
         } else {
             throw new SurveyWrapperException("Error template not implemented yet; cannot update survey; no result template defined!");
         }
     }
 
-    public Writer renderSurvey() throws SurveyWrapperException {
-        return this.render(surveyTemplate);
+    public Writer renderSurvey(Map<String, Object> parentContext) throws SurveyWrapperException {
+        return this.render(surveyTemplate, parentContext);
     }
 
-    public Writer renderResult() throws SurveyWrapperException {
-        return this.render(resultTemplate);
+    public Writer renderResult(Map<String, Object> parentContext) throws SurveyWrapperException {
+        return this.render(resultTemplate, parentContext);
     }
 }

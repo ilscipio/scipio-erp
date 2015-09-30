@@ -143,7 +143,7 @@ public class SurveyWrapper {
      * @return Writer object from the parsed Freemarker Template
      * @throws SurveyWrapperException
      */
-    public Writer render(String templatePath) throws SurveyWrapperException {
+    public Writer render(String templatePath, Map<String, Object> parentContext) throws SurveyWrapperException {
         URL templateUrl = null;
         try {
             templateUrl = FlexibleLocation.resolveLocation(templatePath);
@@ -157,7 +157,7 @@ public class SurveyWrapper {
         }
 
         Writer writer = new StringWriter();
-        this.render(templateUrl, writer);
+        this.render(templateUrl, writer, parentContext);
         return writer;
     }
 
@@ -165,9 +165,10 @@ public class SurveyWrapper {
      * Renders the Survey
      * @param templateUrl the template URL
      * @param writer the write
+     * @param parentContext (Cato) the parent rendering context at the point of rendering of this survey
      * @throws SurveyWrapperException
      */
-    public void render(URL templateUrl, Writer writer) throws SurveyWrapperException {
+    public void render(URL templateUrl, Writer writer, Map<String, Object> parentContext) throws SurveyWrapperException {
         String responseId = this.getThisResponseId();
         GenericValue survey = this.getSurvey();
         List<GenericValue> surveyQuestionAndAppls = this.getSurveyQuestionAndAppls();

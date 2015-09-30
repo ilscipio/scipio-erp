@@ -20,7 +20,7 @@ under the License.
 <#-- Render the survey -->
 <#if requestAttributes.surveyWrapper?? && requestAttributes.surveyAction??>
   <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>${requestAttributes.surveyAction}</@ofbizUrl>">
-    ${requestAttributes.surveyWrapper.renderSurvey()}
+    ${requestAttributes.surveyWrapper.renderSurvey(context)}
   </form>
 <#else>
   <@resultMsg>${uiLabelMap.OrderNothingToDoHere}</@resultMsg>

@@ -23,7 +23,7 @@ under the License.
             <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>testWorkEffortSurveyResponse</@ofbizUrl>">
               <input type="hidden" name="productStoreSurveyId" value="${productStoreSurveyId}"/>
               <input type="hidden" name="workEffortId" value="${workEffortId}"/>
-              ${surveyWrapper.render()}
+              ${surveyWrapper.render(context)}
             </form>
         <#else>
             <@resultMsg>${uiLabelMap.OrderNothingToDoHere}</@resultMsg>

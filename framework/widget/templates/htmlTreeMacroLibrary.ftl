@@ -17,8 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#-- 
-Cato: WARN: note that unlike other macro libs, tree lib renderer does NOT currently support
-initial context objects (request, response, etc.) from macro renderer initial context mod.
+Cato: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
+context, such as request, response, etc. however it is only from the initial context,
+not "current" context (too intrusive in current renderer design). still relies on macro params.
 -->
 <#macro renderNodeBegin style>
 <#if style?has_content><ul class="${style}"></#if>

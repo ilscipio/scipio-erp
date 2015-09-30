@@ -44,6 +44,7 @@ import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
+import org.ofbiz.widget.renderer.macro.MacroScreenRenderer.ContextHandler;
 
 import freemarker.core.Environment;
 import freemarker.template.Template;
@@ -57,6 +58,8 @@ public class MacroTreeRenderer implements TreeStringRenderer {
 
     public static final String module = MacroTreeRenderer.class.getName();
     private Template macroLibrary;
+    
+    private ContextHandler contextHandler = new ContextHandler("tree");
     
     /**
      * Cato: environments now stored in WeakHashMap, same as other macro renderers.
@@ -97,6 +100,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         Environment environment = environments.get(writer);
         if (environment == null) {
             Map<String, Object> input = UtilMisc.toMap("key", null);
+            contextHandler.populateInitialContext(writer, input);
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
         }
@@ -142,6 +146,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     }
     
     public void renderNodeBegin(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node, int depth) throws IOException {
+        contextHandler.registerContext(writer, context);
         String currentNodeTrailPiped = null;
         List<String> currentNodeTrail = UtilGenerics.toList(context.get("currentNodeTrail"));
         

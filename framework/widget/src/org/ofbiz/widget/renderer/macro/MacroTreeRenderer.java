@@ -24,6 +24,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -56,23 +57,35 @@ public class MacroTreeRenderer implements TreeStringRenderer {
 
     public static final String module = MacroTreeRenderer.class.getName();
     private Template macroLibrary;
-    private Environment environment;
+    
+    /**
+     * Cato: environments now stored in WeakHashMap, same as other macro renderers.
+     */
+    private final WeakHashMap<Appendable, Environment> environments = new WeakHashMap<Appendable, Environment>();
 
-
-    public MacroTreeRenderer(String macroLibraryPath, Appendable writer) throws TemplateException, IOException {
+    public MacroTreeRenderer(String macroLibraryPath) throws TemplateException, IOException {
         this.macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
-        Map<String, Object> input = UtilMisc.toMap("key", null);
-        this.environment = FreeMarkerWorker.renderTemplate(this.macroLibrary, input, writer);
     }
-
-    private void executeMacro(String macro) throws IOException {
+    
+    /**
+     * Cato: Old tree renderer constructor.
+     * 
+     * @deprecated environments now stored in WeakHashMap so writer from individual calls used instead.
+     */
+    @Deprecated
+    public MacroTreeRenderer(String macroLibraryPath, Appendable writer) throws TemplateException, IOException {
+        this(macroLibraryPath);
+    }
+    
+    private void executeMacro(Appendable writer, String macro) throws IOException {
         try {
+            Environment environment = getEnvironment(writer);
             Reader templateReader = new StringReader(macro);
             // FIXME: I am using a Date as an hack to provide a unique name for the template...
             Template template = new Template((new java.util.Date()).toString(), templateReader,
                     FreeMarkerWorker.getDefaultOfbizConfig());
             templateReader.close();
-            this.environment.include(template);
+            environment.include(template);
         } catch (TemplateException e) {
             Debug.logError(e, "Error rendering tree thru ftl", module);
         } catch (IOException e) {
@@ -80,6 +93,16 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         }
     }
  
+    private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
+        Environment environment = environments.get(writer);
+        if (environment == null) {
+            Map<String, Object> input = UtilMisc.toMap("key", null);
+            environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
+            environments.put(writer, environment);
+        }
+        return environment;
+    }
+    
     /**
      * Renders the beginning boundary comment string.
      * @param writer The writer to write to
@@ -96,7 +119,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append("\" widgetName=\"");
         sr.append(modelWidget.getBoundaryCommentName());
         sr.append("\" />");
-        executeMacro(sr.toString());
+        executeMacro(writer, sr.toString());
     }
     
     /**
@@ -115,7 +138,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append("\" widgetName=\"");
         sr.append(modelWidget.getBoundaryCommentName());
         sr.append("\" />");
-        executeMacro(sr.toString());
+        executeMacro(writer, sr.toString());
     }
     
     public void renderNodeBegin(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node, int depth) throws IOException {
@@ -135,7 +158,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append(" style=\"");
         sr.append(style);
         sr.append("\" />");
-        executeMacro(sr.toString());
+        executeMacro(writer, sr.toString());
 
         String pkName = node.getPkName(context);
         String entityId = null;
@@ -214,7 +237,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append(" isRootNode=");
         sr.append(Boolean.toString(node.isRootNode()));
         sr.append(" />");
-        executeMacro(sr.toString());
+        executeMacro(writer, sr.toString());
         if (node.isRootNode()) {
             if (ModelWidget.widgetBoundaryCommentsEnabled(context)) {
                 renderEndingBoundaryComment(writer, "Tree Widget", node.getModelTree());
@@ -230,7 +253,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
             sr.append("style=\"");
             sr.append("basic-tree");
             sr.append("\" />");
-            executeMacro(sr.toString());
+            executeMacro(writer, sr.toString());
         }
     }
 
@@ -248,7 +271,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append("\" labelText=\"");
         sr.append(labelText);        
         sr.append("\" />");
-        executeMacro(sr.toString());        
+        executeMacro(writer, sr.toString());        
     }
 
     public void renderLink(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Link link) throws IOException {
@@ -296,7 +319,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append("\" imgStr=\"");
         sr.append(imgStr.replaceAll("\"", "\\\\\""));
         sr.append("\" />");
-        executeMacro(sr.toString());
+        executeMacro(writer, sr.toString());
     }
   
     public void renderImage(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Image image) throws IOException {
@@ -357,7 +380,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append("\" urlString=\"");
         sr.append(urlString);
         sr.append("\" />");
-        executeMacro(sr.toString());        
+        executeMacro(writer, sr.toString());        
     }
 
     public ScreenStringRenderer getScreenStringRenderer(Map<String, Object> context) {

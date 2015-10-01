@@ -315,7 +315,7 @@ public class ScreenRenderer {
             context.put("isError", Boolean.TRUE);
         }
 
-        populateContextScripts(context, screens);
+        populateContextScripts(context);
         
         // to preserve these values, push the MapStack
         context.push();
@@ -323,8 +323,10 @@ public class ScreenRenderer {
 
     /**
      * Cato: Calls scripts defined in widgetContextScripts.properties to help populate root context.
+     * <p>
+     * Should be called after rest of context populated and scripts will fish out what they need out of the context.
      */
-    public static void populateContextScripts(MapStack<String> context, ScreenRenderer screens) {
+    public static void populateContextScripts(Map<String, Object> context) {
         // Cato: runs scripts on initial render context to help populate
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> resources;
@@ -363,5 +365,7 @@ public class ScreenRenderer {
     public void populateContextForService(DispatchContext dctx, Map<String, Object> serviceContext) {
         this.populateBasicContext(serviceContext, dctx.getDelegator(), dctx.getDispatcher(),
                 dctx.getSecurity(), (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin"));
+        
+        populateContextScripts(serviceContext);
     }
 }

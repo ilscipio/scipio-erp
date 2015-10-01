@@ -17,44 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#compress>
-
 <#--
 * 
 * A set of global variables that define common classes.
 * Automatically included at all times
 *
 -->
-
-<#-- 
-******************
-* MISC *
-******************
--->
-
-<#-- TODO: move this somewhere else; but not clear where else works, and include order is problematic -->
-<#function getRenderContextType>
-  <#local res = "">
-  <#-- check cache -->
-  <#if request??>
-    <#local res = request.getAttribute("catoRenderContextType")!"">
-  <#else>
-    <#local res = .globals["catoRenderContextType"]!"">
-  </#if>
-  <#if res?has_content>
-    <#return res>
-  <#else>
-    <#-- TODO: implement: does not appear to be possible to detect from FTL properly in all cases at current time... -->
-    <#local res = "backend">
-
-    <#-- save in cache -->
-    <#if request??>
-      <#local dummy = request.setAttribute("catoRenderContextType", res)!>
-    </#if>
-    <#global catoRenderContextType = res>
-    <#return res>
-  </#if>
-</#function>
-<#-- getRenderContextType: ${getRenderContextType()} -->
+<#include "htmlContext.ftl">
 
 <#-- 
 ******************
@@ -62,10 +31,10 @@ under the License.
 ******************
 -->
 
-<#switch getRenderContextType()>
-<#case "backend">
-<#case "frontend">
+<#switch catoRenderContextType>
+<#case "web">
 <#case "email">
+<#case "general">
 <#default>
 <#global styles = {
   <#-- Misc -->

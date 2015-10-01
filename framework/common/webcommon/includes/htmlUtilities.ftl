@@ -23,6 +23,7 @@ under the License.
 * Automatically included at all times
 *
 -->
+<#include "htmlContext.ftl">
 <#include "component://widget/templates/htmlFormMacroLibrary.ftl"/>
 <#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl") /> 
 <#include StringUtil.wrapString("component://widget/templates/htmlMenuMacroLibrary.ftl") />

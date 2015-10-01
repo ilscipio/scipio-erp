@@ -2,8 +2,13 @@
 
 <#--
 * 
-* Context detection and setup.
-* Shared by the common includes themselves.
+* Cato main include script.
+*
+* Ensures include order, #compress and (TODO) per-context include loading.
+*
+* Dev note: maybe should be done from java/renderer prep for performance reasons
+* (FreeMarkerWorker maybe) but currently this is only surefire way to ensure include 
+* script at least always runs.
 *
 -->
 
@@ -53,5 +58,21 @@
 
 <#-- catoRenderContextType: ${catoRenderContextType} -->
 <#-- request present? ${(request??)?c} -->
+
+<#-- TODO: should have support for per-context-type and per-site loading -->
+<#switch catoRenderContextType>
+<#case "web">
+<#case "email">
+<#case "general">
+<#default>
+    <@"<#include 'component://common/webcommon/includes/htmlVariables.ftl'>"?interpret />
+    <@"<#include 'component://common/webcommon/includes/htmlUtilities.ftl'>"?interpret />
+<#break>
+</#switch>
+
+<#-- compatibility mode: define styles hash entries as individual style_ vars
+<#list styles?keys as name>
+  <@'<#global "style_${name}" = "${styles[name]}">'?interpret />
+</#list>-->
 
 </#compress>

@@ -65,8 +65,8 @@
 <#case "email">
 <#case "general">
 <#default>
-    <@"<#include 'component://common/webcommon/includes/htmlVariables.ftl'>"?interpret />
-    <@"<#include 'component://common/webcommon/includes/htmlUtilities.ftl'>"?interpret />
+    <@"<#include 'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl'>"?interpret />
+    <@"<#include 'component://common/webcommon/includes/catoUtilities.ftl'>"?interpret />
 <#break>
 </#switch>
 

@@ -1092,9 +1092,9 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
     </#if>
 </#function>
 
-<#-- Cato: new params: paginate, forcePost, viewIndexFirst, listItemsOnly
+<#-- Cato: new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*
      paginate is a display hint, does not seem to mean guarantee data wasn't paginated -->
-<#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false>
+<#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false ajaxPaginateOnUrl="" paginateOnUrl="" paginateOnStyle="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffStyle="" paginateOffLabel="">
 <#-- note: possible that data was paginated even if paginate false, but don't bother right now -->
 <#if paginate>
   <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
@@ -1156,12 +1156,14 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#if (listSize > minPageSize)>
     <#local multiPage = (listSize > viewSize)>
   
-   <#if !listItemsOnly>
-   <div class="${styles.grid_row!}">
-   <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
+    <#-- DEV NOTE: duplicated below -->
+    <#if !listItemsOnly>
+    <div class="${styles.grid_row!}">
+      <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
         <div class="pagination-centered ${paginateStyle}">
           <ul class="pagination">
-   </#if>
+    </#if>
+
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxFirstUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${firstUrl}')"</#if><#else>href="${firstUrl}"</#if></#local>
             <li class="${paginateFirstStyle}<#if (viewIndex> viewIndexFirst)>"><a ${actionStr}>${paginateFirstLabel}</a><#else> unavailable">${paginateFirstLabel}</#if></li>
             <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPreviousUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${previousUrl}')"</#if><#else>href="${previousUrl}"</#if></#local>
@@ -1207,14 +1209,44 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
           </#list>
               </select></label></li>
         </#if>
-    <#if !listItemsOnly>          
-      </ul>
-    </div>
-        
+    
+        <#if paginateToggle>
+          <#local ajaxPaginateOffUrl = escapeUrlParamDelims(ajaxPaginateOffUrl)>
+          <#local paginateOffUrl = escapeUrlParamDelims(paginateOffUrl)>
+
+            <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPaginateOffUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${paginateOffUrl}')"</#if><#else>href="${paginateOffUrl}"</#if></#local>
+            <li<#if paginateOffStyle?has_content> class="${paginateOffStyle}"</#if>><a ${actionStr}>${paginateOffLabel}</a></li>           
+        </#if>
+
+    <#if !listItemsOnly>  
+          </ul>
+        </div>
       </div>
     </div>
     </#if>
+
   </#if>
+<#elseif paginateToggle>
+
+  <#local ajaxPaginateOnUrl = escapeUrlParamDelims(ajaxPaginateOnUrl)>
+  <#local paginateOnUrl = escapeUrlParamDelims(paginateOnUrl)>
+
+    <#if !listItemsOnly>
+    <div class="${styles.grid_row!}">
+      <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
+        <div class="pagination-centered ${paginateStyle}">
+          <ul class="pagination">
+    </#if>
+
+            <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPaginateOnUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${paginateOnUrl}')"</#if><#else>href="${paginateOnUrl}"</#if></#local>
+            <li<#if paginateOnStyle?has_content> class="${paginateOnStyle}"</#if>><a ${actionStr}>${paginateOnLabel}</a></li>  
+
+    <#if !listItemsOnly>  
+          </ul>
+        </div>
+      </div>
+    </div>
+    </#if>
 </#if>
 </#macro>
 

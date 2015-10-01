@@ -9,7 +9,7 @@ setContextCatoStylesAsGlobal = context.setContextCatoStylesAsGlobal
 
 styles = [:]
 
-ftlContext = [:]
+ftlContext = context
 useCache = true
 StringWriter sw = new StringWriter();
 env = FreeMarkerWorker.renderTemplateFromString("getContextCatoStylesDummyTemplate", "", ftlContext, sw, useCache)

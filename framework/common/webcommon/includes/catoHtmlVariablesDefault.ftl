@@ -1,17 +1,17 @@
-
 <#--
 * 
-* A set of global variables that define common classes.
+* A set of global variables that define common styling classes, part of standard Cato Freemarker API.
 * Automatically included at all times.
+* Intended to be swappable.
 *
-* Default Foundation CSS styles.
+* Default Cato styles (NOTE: currently targeted toward Foundation CSS).
 *
 -->
 
 <#-- 
-******************
-* UTILITY VARIABLES *
-******************
+*************************************
+* TEMPLATING VARIABLES *
+*************************************
 -->
 
 <#global styles = {
@@ -181,5 +181,4 @@
     "progress_bar" : "meter"       <#-- Bootstrap: "sr-only" -->
 }>
 
-<#-- UTLITY VARIABLES END -->
 

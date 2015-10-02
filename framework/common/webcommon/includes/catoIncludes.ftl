@@ -1,14 +1,19 @@
 <#compress>
-
 <#--
 * 
 * Cato main include script.
+* Ensures include order, #compress, keeps other templates clean and (TODO) per-context include loading.
+* Automatically included at all times.
 *
-* Ensures include order, #compress and (TODO) per-context include loading.
-*
-* Dev note: maybe should be done from java/renderer prep for performance reasons
+* DEV NOTE: this essentially takes the place of a renderer prep hook.
+* maybe should be done from java/renderer prep for performance reasons
 * (FreeMarkerWorker maybe) but currently this is only surefire way to ensure include 
-* script at least always runs.
+* script at least always runs (in reality there could be a higher level hook than FreeMarkerWorker
+* but doesn't seem to exist in ofbiz).
+* DEV NOTE: variables like "request" are unavailable here in general in OOTB ofbiz,
+* but minor cato renderer patches ("initial context mod", survey renderer) try to make some available 
+* so they can be used. however, only use the major one likes "delegator" and "request"; 
+* rest of context may not be current. note "request" not available in emails.
 *
 -->
 
@@ -23,9 +28,7 @@
   <#if res?has_content>
     <#return res>
   <#else>
-    <#-- FIXME?: this detection is primitive... not sure covers all possible cases...
-         note: "request" and "application" only generally available since cato renderer patches; 
-         not available in many stock web OOTB situations. -->
+    <#-- FIXME?: this detection is primitive... not sure covers all possible cases... -->
     <#if request??>
         <#-- TODO: ideally will have per-webapp <WebSite> visual theme loading support, and
              don't want to hardcode this.
@@ -55,9 +58,10 @@
 </#function>
 
 <#global catoRenderContextType = getRenderContextType()>
-
 <#-- catoRenderContextType: ${catoRenderContextType} -->
 <#-- request present? ${(request??)?c} -->
+
+<#include 'component://common/webcommon/includes/catoUtilities.ftl'>
 
 <#-- TODO: should have support for per-context-type and per-site loading -->
 <#switch catoRenderContextType>
@@ -66,7 +70,7 @@
 <#case "general">
 <#default>
     <@"<#include 'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl'>"?interpret />
-    <@"<#include 'component://common/webcommon/includes/catoUtilities.ftl'>"?interpret />
+    <@"<#include 'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl'>"?interpret />
 <#break>
 </#switch>
 

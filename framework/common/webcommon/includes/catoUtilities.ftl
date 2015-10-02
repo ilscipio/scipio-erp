@@ -17,6 +17,8 @@
 *
 -->
 
+<#assign catoUtilitiesDefined = true> <#-- must use #assign, not #global -->
+
 <#-- 
 *************************************
 * TEMPLATING API UTILITIES *

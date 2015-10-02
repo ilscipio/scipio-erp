@@ -2,6 +2,23 @@
 Cato: Common HTML macro library code
 -->
 
+<#-- Cato: This function imports all main namespace vars (namely macros and functions) into the current namespace
+  if they don't already exist. Permits libraries imported with #import to access 
+  main namespace Cato utilities. By default, in Freemarker, they can't. 
+  This also means these libraries should be imported last (though may work anyway?). -->
+<#function importCatoUtilities>
+  <#if !catoUtilitiesDefined??>
+    <#list .main?keys as varName>
+      <#if !.vars[varName]??>
+        <@"<#assign ${varName}=.main[varName]>"?interpret />
+      </#if>
+    </#list>
+  </#if>
+  <#return "">
+</#function>
+
+<#assign dummy = importCatoUtilities()>
+
 <#macro renderLabelCommon text id style>
   <#if text?has_content>
     <#-- If a label widget has one of the h1-h6 styles, then it is considered block level element.

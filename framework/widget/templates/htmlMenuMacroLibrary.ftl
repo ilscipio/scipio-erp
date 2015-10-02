@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "htmlCommonMacroLibrary.ftl">
 <#-- 
 Cato: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, etc. however it is only from the initial context,

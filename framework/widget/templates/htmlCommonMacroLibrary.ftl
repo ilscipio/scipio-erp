@@ -2,17 +2,20 @@
 Cato: Common HTML macro library code
 -->
 
-<#-- Cato: This function imports all main namespace vars (namely macros and functions) into the current namespace
+<#-- Cato: This function imports all main namespace directives (macros and functions) into the current namespace
   if they don't already exist. Permits libraries imported with #import to access 
   main namespace Cato utilities. By default, in Freemarker, they can't. 
-  This also means these libraries should be imported last (though may work anyway?). -->
+  This also means these libraries should be imported last (though may work anyway?). 
+  FIXME: this is not a good solution, but currently easiest.
+  -->
 <#function importCatoUtilities>
   <#if !catoUtilitiesDefined??>
     <#list .main?keys as varName>
-      <#if !.vars[varName]??>
+      <#if .main[varName]?is_directive && !.vars[varName]??>
         <@"<#assign ${varName}=.main[varName]>"?interpret />
       </#if>
     </#list>
+    <#assign catoUtilitiesDefined = true>
   </#if>
   <#return "">
 </#function>

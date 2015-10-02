@@ -17,6 +17,8 @@
 *
 -->
 
+<#assign catoOrigMainNsNamesSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(.main?keys)>
+
 <#function getRenderContextType>
   <#local res = "">
   <#-- check cache -->
@@ -30,7 +32,7 @@
   <#else>
     <#-- FIXME?: this detection is primitive... not sure covers all possible cases... -->
     <#if request??>
-        <#-- TODO: ideally will have per-webapp <WebSite> visual theme loading support, and
+        <#-- ideally will have per-webapp <WebSite> visual theme loading support, and
              don't want to hardcode this.
         <#if (application.getAttribute("webSiteId")!"") == "WebStore" ||
             (application.getAttribute("localDispatcherName")!"") == "ecommerce">
@@ -73,6 +75,18 @@
     <@"<#include 'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl'>"?interpret />
 <#break>
 </#switch>
+
+<#-- FIXME? For now we must copy/dump all cato macro and function defs from main namespace into the global namespace manually.
+     Easier with a loop for now but this assumes all are meant to be public (not true)...
+     If not done they are not accessible from #import-ed libraries and other places 
+     (see html widget macro libs which have problems from this, as well with circular dependencies). 
+     NOTE: @ofbizUrl is in global namespace for example.
+     May want to revisit use of namespaces later because they are meant to address problems like this... -->
+<#list .main?keys as name>
+  <#if .main[name]?is_directive && !catoOrigMainNsNamesSet.contains(name)>
+    <@"<#global '${name}'=.main['${name}']>"?interpret />
+  </#if>
+</#list>
 
 <#-- compatibility mode: define styles hash entries as individual style_ vars
 <#list styles?keys as name>

@@ -14,13 +14,7 @@
 *
 -->
 
-<#-- note: assumes catoUtilities.ftl included. -->
-<#-- FIXME: these should probably use a mechanism to include widget macros dynamically because ofbiz will
-     support per-store widget macros and must be same. see catoIncludes.ftl (put dynamic code there? move all this there?) -->
-<#-- FIXME?: these are really heavy and probably dont need to be in global namespace (?), so maybe they should be changed to #imports with namespaces. double-check globals. -->
-<#include "component://widget/templates/htmlFormMacroLibrary.ftl"/>
-<#include "component://widget/templates/htmlScreenMacroLibrary.ftl" /> 
-<#include "component://widget/templates/htmlMenuMacroLibrary.ftl" />
+<#-- note: assumes catoUtilities.ftl included. see end of file for additional includes. -->
 
 <#-- 
 *************************************
@@ -181,10 +175,10 @@ levels manually, but most often should let @section menu handle them.
     </#if>
     <#-- note: addClass logic is only partially implemented (doesn't support booleans and "" means use default; otherwise may conflict with stock API?), but good enough for now -->
     <#-- note: autoHeadingLevel logic now implemented in renderScreenletBegin -->
-    <@renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=class padded=padded menuString=menuHtml fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu 
+    <@screenlib.renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=class padded=padded menuString=menuHtml fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu 
         forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass addClasses=addClass />
         <#nested />
-    <@renderScreenletEnd />
+    <@screenlib.renderScreenletEnd />
 </#macro>
 
 <#-- 
@@ -450,7 +444,7 @@ Not associated with an HTML element as is @fieldset.
     <@cell class=("${classes!}"+" field-entry-widget")?trim nocells=nocells>
         <#switch type>
           <#case "input">
-            <@renderTextField name=name 
+            <@formlib.renderTextField name=name 
                                   className=class 
                                   alert=alert 
                                   value=value 
@@ -469,7 +463,7 @@ Not associated with an HTML element as is @fieldset.
                                   tooltip=tooltip/>
             <#break>
           <#case "textarea">
-            <@renderTextareaField name=name 
+            <@formlib.renderTextareaField name=name 
                                   className=class 
                                   alert=alert 
                                   cols=cols 
@@ -481,7 +475,7 @@ Not associated with an HTML element as is @fieldset.
             <#break>
           <#case "datetime">
             <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
-            <@renderDateTimeField name=name 
+            <@formlib.renderDateTimeField name=name 
                                   className=class 
                                   alert=alert 
                                   title=label 
@@ -515,7 +509,7 @@ Not associated with an HTML element as is @fieldset.
             <#local manualItems = true>
             <#local manualItemsOnly = true>
             
-            <@renderDropDownField name=name
+            <@formlib.renderDropDownField name=name
                                     className=class 
                                     alert=alert 
                                     id=id 
@@ -548,31 +542,31 @@ Not associated with an HTML element as is @fieldset.
                                     fullSearch=""
                                     tooltip=tooltip
                                     manualItems=manualItems
-                                    manualItemsOnly=manualItemsOnly><#nested></@renderDropDownField>
+                                    manualItemsOnly=manualItemsOnly><#nested></@formlib.renderDropDownField>
             <#break>
           <#case "lookup">
-            <@renderLookupField name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
+            <@formlib.renderLookupField name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
           <#break>
           <#case "checkbox">
-                <@renderCheckBox id=id currentValue=value checked=checked name=name action=action />
+                <@formlib.renderCheckBox id=id currentValue=value checked=checked name=name action=action />
             <#break>
           <#case "radio">
                 <#if radioSingle>
                     <#-- single radio button item mode -->
                     <#local items=[{"key":value, "description":label!""}]/>
-                    <@renderRadioField items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+                    <@formlib.renderRadioField items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
-                    <div<@renderClass class alert />>
-                      <@renderRadioField items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
+                    <div<@formlib.renderClass class alert />>
+                      <@formlib.renderRadioField items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
                     </div>
                 </#if>
             <#break>
           <#case "file">
-            <@renderFileField className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
+            <@formlib.renderFileField className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
             <#break> 
           <#case "password">
-            <@renderPasswordField className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") />
+            <@formlib.renderPasswordField className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") />
             <#break> 
           <#case "submitarea">
             <@row>
@@ -627,7 +621,7 @@ Not associated with an HTML element as is @fieldset.
             </#if>
             <#-- FIXME: maybe use div or span with a class instead of p, but this blends nicely for now -->
             <p>
-                <@renderDisplayField type=displayType imageLocation=imageLocation idName="" description=desc title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=description/>
+                <@formlib.renderDisplayField type=displayType imageLocation=imageLocation idName="" description=desc title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=description/>
                 <#-- FIXME: tooltip too crappy -->
               <#if tooltip?has_content>
                 <span class="tooltip">${tooltip}</span>
@@ -636,7 +630,7 @@ Not associated with an HTML element as is @fieldset.
             <#break> 
           <#default> <#-- "generic", empty or unrecognized -->
             <#if value?has_content>
-                <@renderField text=value/>
+                <@formlib.renderField text=value/>
             <#else>
                 <#nested />
             </#if>
@@ -674,9 +668,9 @@ Not associated with an HTML element as is @fieldset.
 -->
 <#macro fieldset id="" title="" class=true collapsed=false>
     <#local classes = makeClassesArg(class, "")>
-    <@renderFieldGroupOpen style=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip=""/>
+    <@formlib.renderFieldGroupOpen style=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip=""/>
         <#nested />
-    <@renderFieldGroupClose style="" id="" title=""/>
+    <@formlib.renderFieldGroupClose style="" id="" title=""/>
 </#macro>
 
 <#-- 
@@ -889,15 +883,15 @@ Not associated with an HTML element as is @fieldset.
   <#-- DEV NOTE: make sure all @renderNextPrev calls same (DO NOT use #local capture; risks duplicate IDs) -->
   <#if mode == "single">
       <#if showNextPrev>
-        <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnStyle="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffStyle="" paginateOffLabel=uiLabelMap.CommonPagingOff />
+        <@formlib.renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnStyle="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffStyle="" paginateOffLabel=uiLabelMap.CommonPagingOff />
       </#if>
   <#else>
       <#if showNextPrev && layout != "bottom">
-        <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnStyle="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffStyle="" paginateOffLabel=uiLabelMap.CommonPagingOff />
+        <@formlib.renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnStyle="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffStyle="" paginateOffLabel=uiLabelMap.CommonPagingOff />
       </#if>
         <#nested>
       <#if showNextPrev && layout != "top">
-        <@renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnStyle="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffStyle="" paginateOffLabel=uiLabelMap.CommonPagingOff />
+        <@formlib.renderNextPrev ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnStyle="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffStyle="" paginateOffLabel=uiLabelMap.CommonPagingOff />
       </#if>
   </#if>
 </#macro>
@@ -2208,3 +2202,18 @@ Usage example:
 </#macro>
 
 
+
+<#-- 
+*************************************
+* END OF FILE INCLUDES *
+*************************************
+* Files that must be included at end.
+-->
+
+<#-- Macro library imports. These must be included at end due to circular dependencies (FIXME?).
+     In a sense the widget macros depend on Cato markup, but Cato macros currently call widget macros. -->
+<#-- FIXME: these should probably use a mechanism to include widget macros dynamically because ofbiz will
+     support per-store widget macros and must be same. see catoIncludes.ftl (put dynamic code there? move all this there?) -->
+<#import "component://widget/templates/htmlFormMacroLibrary.ftl" as formlib>
+<#import "component://widget/templates/htmlScreenMacroLibrary.ftl" as screenlib> 
+<#import "component://widget/templates/htmlMenuMacroLibrary.ftl" as menulib>

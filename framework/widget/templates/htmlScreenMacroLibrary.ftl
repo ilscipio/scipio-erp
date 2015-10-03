@@ -23,6 +23,8 @@ context, such as request, response, etc. however it is only from the initial con
 not "current" context (too intrusive in current renderer design). still relies on macro params.
 -->
 <#macro renderScreenBegin>
+<#-- Cato: WARNING: FIXME?: in stock Ofbiz the context is not available here... is partly available after Cato
+     renderer mods but maybe code here should not rely on it... tbd... maybe this is not the best place for this... -->
 <#if locale??><#local docLangAttr = locale.toString()?replace("_", "-")></#if>
 <#local langDir = "ltr">
 <#if docLangAttr?? && "ar.iw"?contains(docLangAttr?substring(0, 2))>

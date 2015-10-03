@@ -16,8 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-<@renderScreenBegin />
+<@htmlHeadOpen />
     <title>${title!}</title>
     <#-- the trick "<scr" + "ipt below is because browsers should not parse the contents of CDATA elements, but apparently they do. -->
     <script language="JavaScript" type="text/javascript">//<![CDATA[

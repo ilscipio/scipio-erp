@@ -205,6 +205,12 @@ under the License.
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
                     <widgets>
+                        <!-- render html head open -->
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://common/webcommon/includes/htmlHeadOpen.ftl" />
+                            </html>
+                        </platform-specific>
                         <!-- render header -->
                         <platform-specific>
                             <html>
@@ -498,9 +504,9 @@ under the License.
                     </actions>
                     <widgets>
                         <section>
-                        <condition>
+                            <condition>
                                 <if-compare value="layer" operator="not-equals" field="parameters.presentation"/>
-                        </condition>
+                            </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://common/webcommon/includes/lookup.ftl" /></html></platform-specific>
                             </widgets>

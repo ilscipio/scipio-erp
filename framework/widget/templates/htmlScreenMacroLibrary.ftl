@@ -23,19 +23,9 @@ context, such as request, response, etc. however it is only from the initial con
 not "current" context (too intrusive in current renderer design). still relies on macro params.
 -->
 <#macro renderScreenBegin>
-<#-- Cato: WARNING: FIXME?: in stock Ofbiz the context is not available here... is partly available after Cato
-     renderer mods but maybe code here should not rely on it... tbd... maybe this is not the best place for this... -->
-<#if locale??><#local docLangAttr = locale.toString()?replace("_", "-")></#if>
-<#local langDir = "ltr">
-<#if docLangAttr?? && "ar.iw"?contains(docLangAttr?substring(0, 2))>
-    <#local langDir = "rtl">
-</#if>
+<#-- Cato: NOTE: HTML head open is now in cato template macros. 
+     In OOTB ofbiz no context is passed here (locale, etc.) so did not belong here and cleaner if in cato macros. -->
 <!DOCTYPE html>
-<!--[if IE 9]><html class="lt-ie10" lang="${docLangAttr!"en"}" <#if langDir??>dir="${langDir}"</#if>> <![endif]-->
-<html class="no-js" lang="${doctLangAttr!"en"}"<#if langDir?has_content> dir="${langDir!}"</#if>>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </#macro>
 
 <#macro renderScreenEnd>

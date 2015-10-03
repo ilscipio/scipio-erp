@@ -16,16 +16,17 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#-- Cato: use common macro
 <#assign docLangAttr = locale.toString()?replace("_", "-")>
 <#assign langDir = "ltr">
 <#if "ar.iw"?contains(docLangAttr?substring(0, 2))>
     <#assign langDir = "rtl">
 </#if>
-<#-- Cato: FIXME? this appears to be duplicated in renderScreenBegin... can't have per-store?
 <html lang="${docLangAttr}" dir="${langDir}" xmlns="http://www.w3.org/1999/xhtml">
 <head>
--->
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+-->
+<@htmlHeadOpen />
   <title><#if title?has_content>${title}<#elseif titleProperty?has_content>${uiLabelMap.get(titleProperty)}</#if>: ${(productStore.storeName)!}</title>
   <#if layoutSettings.VT_SHORTCUT_ICON?has_content>
     <#assign shortcutIcon = layoutSettings.VT_SHORTCUT_ICON.get(0)/>

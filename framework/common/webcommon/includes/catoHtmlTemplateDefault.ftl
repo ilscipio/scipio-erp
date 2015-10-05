@@ -1227,18 +1227,6 @@ Creates a very basic wrapper for code blocks
     </code></pre>
 </#macro>
 
-<#macro elemAttribStr attribs includeEmpty=false emptyValToken="">
-  <#if attribs?is_hash_ex>
-    <#if includeEmpty>
-      <#t><#list attribs?keys as name> ${name}="${attribs[name]?string}"</#list>
-    <#elseif emptyValToken?has_content>
-      <#t><#list attribs?keys as name><#if attribs[name]?has_content || emptyValToken?string == attribs[name]?string> ${name}="${attribs[name]?string}"</#if></#list>
-    <#else>
-      <#t><#list attribs?keys as name><#if attribs[name]?has_content> ${name}="${attribs[name]?string}"</#if></#list>
-    </#if>
-  </#if>
-</#macro>
-
 <#-- 
 *************
 * Table

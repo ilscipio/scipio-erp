@@ -733,6 +733,24 @@ Gets a global var from request scope (request attributes, or if no request, FTL 
 </#if>
 </#function>
 
+<#-- 
+*************
+* elemAttribStr macro
+************
+Prints a string of element attributes.
+-->
+<#macro elemAttribStr attribs includeEmpty=false emptyValToken="">
+  <#if attribs?is_hash_ex>
+    <#if includeEmpty>
+      <#t><#list attribs?keys as name> ${name}="${attribs[name]?string}"</#list>
+    <#elseif emptyValToken?has_content>
+      <#t><#list attribs?keys as name><#if attribs[name]?has_content || emptyValToken?string == attribs[name]?string> ${name}="${attribs[name]?string}"</#if></#list>
+    <#else>
+      <#t><#list attribs?keys as name><#if attribs[name]?has_content> ${name}="${attribs[name]?string}"</#if></#list>
+    </#if>
+  </#if>
+</#macro>
+
 
 <#-- 
 *************************************

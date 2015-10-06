@@ -400,6 +400,35 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 </#function>
 
 
+<#-- 
+*************
+* objectAsJson macro
+************
+Outputs a Freemarker variable as JSON.
+FIXME: escaping? ?json?
+-->
+<#macro objectAsJson object> 
+    <#if object?is_hash || object?is_hash_ex> 
+        {<#lt>
+        <#list object?keys as key> 
+            "${key}" : <@objectAsJson object=object[key] /><#if key_has_next>,</#if>
+        </#list> 
+        }<#rt>
+    <#elseif object?is_enumerable> 
+        [<#lt>
+        <#list object as item> 
+            <@objectAsJson object=item /><#if item_has_next>,</#if>
+        </#list> 
+        ]<#rt>
+    <#elseif object?is_number> 
+        ${object}<#t>
+    <#elseif object?is_boolean>
+        ${object?c}<#t>
+    <#else>
+        "${object?string}"<#t>
+    </#if> 
+</#macro> 
+
 
 <#-- 
 *************************************

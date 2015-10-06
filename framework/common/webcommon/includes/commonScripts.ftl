@@ -26,11 +26,7 @@
     <#-- theme style variables 
          TODO?: could be optimized via static JS generated manually or cached -->
   <#if styles?has_content>
-    var catoStyles = {
-    <#list styles?keys as name>
-        "${name}" : "${styles[name]!}",
-    </#list>
-    };
+    var catoStyles = <@objectAsJson object=styles />;
   </#if>  
   
 

@@ -266,23 +266,28 @@ under the License.
 </#if>
 
     <#-- select a party id to ship to instead -->
-    <form method="post" action="setShipping" name="partyshipform">
-        <@section title="${uiLabelMap.OrderShipToAnotherParty}">
+    <@section title="${uiLabelMap.OrderShipToAnotherParty}">
+      <form method="post" action="setShipping" name="partyshipform">
+        <@fields type="generic">
           <@row>
-            <@cell class="${styles.grid_large!}6">
-          <@table type="fields" class='basic-table'>
-            <@tr>
-              <@td class="${styles.grid_large!}3">${uiLabelMap.PartyPartyId}</@td>
-              <@td class="${styles.grid_large!}6"><@htmlTemplate.lookupField value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/></@td>
-              <@td>                  
-                  <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonContinue}" />
-              </@td>
-            </@tr>
-          </@table>
+            <@cell columns=6>
+              <@row>
+                <@cell columns=9>
+                    <@field type="generic" label="${uiLabelMap.PartyPartyId}">
+                        <@htmlTemplate.lookupField value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/>
+                    </@field>
+                </@cell>
+                <@cell columns=3>                 
+                    <@field type="submitarea">
+                        <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonContinue}" />
+                    </@field>
+                </@cell>
+              </@row>
             </@cell>
           </@row>
-        </@section> 
-    </form>
+        </@fields>
+      </form>
+    </@section> 
  </@section>
 <#else>
  <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>

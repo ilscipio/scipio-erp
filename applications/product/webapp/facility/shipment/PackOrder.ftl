@@ -41,12 +41,15 @@ under the License.
 
     <@section title="${uiLabelMap.ProductPackOrder}&nbsp;in&nbsp;${facility.facilityName!} [${facilityId!}]">
             <#if invoiceIds?has_content>
-                <div>
+              <@row>
+                <@cell>
                 ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
                 ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${shipmentId}</a>
-                </div>
+                </@cell>
+              </@row>
                 <#if invoiceIds?exists && invoiceIds?has_content>
-                <div>
+                <@row>
+                  <@cell>
                     <p>${uiLabelMap.AccountingInvoices}:</p>
                     <@menu type="button">
                     <#list invoiceIds as invoiceId>
@@ -56,59 +59,45 @@ under the License.
                       </@menuitem>
                     </#list>
                     </@menu>
-                </div>
+                  </@cell>
+                </@row>
                 </#if>
             </#if>
 
             <#-- select order form -->
+            <@section>
             <form name="selectOrderForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>">
               <input type="hidden" name="facilityId" value="${facilityId!}" />
-              <@table type="fields" cellspacing="0" class="basic-table">
-                <@tr>
-                  <@td width="25%" align="right">${uiLabelMap.ProductOrderId}</@td>
-                  <@td width="1">&nbsp;</@td>
-                  <@td width="25%">
+                <@field type="generic" label="${uiLabelMap.ProductOrderId}">
                     <input type="text" name="orderId" size="20" maxlength="20" value="${orderId!}"/>
                     /
                     <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
-                  </@td>
-                  <@td><span>${uiLabelMap.ProductHideGrid}</span>&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if> /></@td>
-                  <@td>&nbsp;</@td>
-                </@tr>
-                <@tr>
-                  <@td colspan="2">&nbsp;</@td>
-                  <@td colspan="2">
+                    <span>${uiLabelMap.ProductHideGrid}</span>&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if> />
+                </@field>
+                <@field type="submitarea">
                     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectOrderForm.submit();" />
                     <a href="javascript:document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackOrder}</a>
                     <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductWeighPackageOnly}</a>
-                  </@td>
-                </@tr>
-              </@table>
+                </@field>
             </form>
+            </@section>
 
-            <!-- select picklist bin form -->
+            <#-- select picklist bin form -->
+            <@section>
             <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>">
               <input type="hidden" name="facilityId" value="${facilityId!}" />
-              <@table type="fields" cellspacing="0" class="basic-table">
-                <@tr>
-                  <@td width="25%" align='right'>${uiLabelMap.FormFieldTitle_picklistBinId}</@td>
-                  <@td width="1">&nbsp;</@td>
-                  <@td width="25%">
+                <@field type="generic" label="${uiLabelMap.FormFieldTitle_picklistBinId}">
                     <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
-                  </@td>
-                  <@td><span>${uiLabelMap.ProductHideGrid}</span>&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if> /></@td>
-                  <@td>&nbsp;</@td>
-                </@tr>
-                <@tr>
-                  <@td colspan="2">&nbsp;</@td>
-                  <@td colspan="1">
+                    <span>${uiLabelMap.ProductHideGrid}</span>&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if> />
+                </@field>
+                <@field type="submitarea">
                     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectPicklistBinForm.submit();" />
                     <a href="javascript:document.selectPicklistBinForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackOrder}</a>
                     <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductWeighPackageOnly}</a>
-                  </@td>
-                </@tr>
-              </@table>
+                </@field>
             </form>
+            </@section>
+
             <form name="clearPackForm" method="post" action="<@ofbizUrl>ClearPackAll</@ofbizUrl>">
               <input type="hidden" name="orderId" value="${orderId!}"/>
               <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
@@ -200,35 +189,35 @@ under the License.
               <#-- manual per item form -->
               <#if showInput != "N">
                 <hr />
+                <@section>
                 <form name="singlePackForm" method="post" action="<@ofbizUrl>ProcessPackOrder</@ofbizUrl>">
                   <input type="hidden" name="packageSeq" value="${packingSession.getCurrentPackageSeq()}"/>
                   <input type="hidden" name="orderId" value="${orderId}"/>
                   <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId}"/>
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <input type="hidden" name="hideGrid" value="${hideGrid}"/>
-                  <@table type="field" cellpadding="2" cellspacing="0" class="basic-table">
-                    <@tr>
-                      <@td>
+                  <@row>
+                    <@cell columns=6>
                             <span>${uiLabelMap.ProductProductNumber}</span>
                             <input type="text" name="productId" size="20" maxlength="20" value=""/>
                             @
                             <input type="text" name="quantity" size="6" maxlength="6" value="1"/>
                             <a href="javascript:document.singlePackForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackItem}</a>
-                      </@td>
-                      <@td>
+                    </@cell>
+                    <@cell columns=6>
                           <span>${uiLabelMap.ProductCurrentPackageSequence}</span>
                           ${packingSession.getCurrentPackageSeq()}
                           <input type="button" value="${uiLabelMap.ProductNextPackage}" onclick="javascript:document.incPkgSeq.submit();" />
-                      </@td>
-                    </@tr>
-                  </@table>
+                    </@cell>
+                  </@row>
                 </form>
+                </@section>
               </#if>
 
               <#-- auto grid form -->
               <#assign itemInfos = packingSession.getItemInfos()!>
               <#if showInput != "N" && hideGrid != "Y" && itemInfos?has_content>
-                <br />
+                <@section>
                 <form name="multiPackForm" method="post" action="<@ofbizUrl>ProcessBulkPackOrder</@ofbizUrl>">
                   <input type="hidden" name="facilityId" value="${facilityId!}" />
                   <input type="hidden" name="orderId" value="${orderId!}" />
@@ -334,11 +323,13 @@ under the License.
                     </@tfoot>
                   </@table>
                 </form>
-                <br />
+                </@section>
+         
               </#if>
 
               <#-- complete form -->
               <#if showInput != "N">
+                <@section>
                 <form name="completePackForm" method="post" action="<@ofbizUrl>CompletePack</@ofbizUrl>">
                   <input type="hidden" name="orderId" value="${orderId!}"/>
                   <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
@@ -407,8 +398,8 @@ under the License.
                       </@td>
                     </@tr>
                   </@table>
-                  <br />
                 </form>
+                </@section>
               </#if>
     </@section>
 
@@ -421,10 +412,8 @@ under the License.
             <#list sortedKeys as key>
               <#assign packedLines = packageMap.get(key)>
               <#if packedLines?has_content>
-                <br />
                 <#assign packedLine = packedLines.get(0)!>
-                <span style="font-size:1.2em">${uiLabelMap.ProductPackage}&nbsp;${packedLine.getPackageSeq()!}</span>
-                <br />
+                <p style="font-size:1.2em">${uiLabelMap.ProductPackage}&nbsp;${packedLine.getPackageSeq()!}</p>
                 <@table type="data-list" class="basic-table" cellspacing="0">
                   <@tr class="header-row">
                     <@td>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@td>

@@ -26,6 +26,7 @@ under the License.
         
         <#-- Receiving Results -->
         <#if receivedItems?has_content>
+          <@section>
           <p>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.button_default!}">${returnHeader.returnId}</a></p>
           <#if "RETURN_RECEIVED" == returnHeader.getString("statusId")>
             <@resultMsg>${uiLabelMap.ProductReturnCompletelyReceived}</@resultMsg>
@@ -55,10 +56,12 @@ under the License.
               </@tr>
             </#list>
           </@table>
+          </@section>
         </#if>
 
         <#-- Multi-Item Return Receiving -->
         <#if returnHeader?has_content>
+          <@section>
           <form method="post" action="<@ofbizUrl>receiveReturnedProduct</@ofbizUrl>" name='selectAllForm'>
             <#-- general request fields -->
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
@@ -66,12 +69,10 @@ under the License.
             <input type="hidden" name="_useRowSubmit" value="Y" />
             <#assign now = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()>
             <#assign rowCount = 0>
+          <#if !returnItems?? || returnItems?size == 0>
+            <@resultMsg>${uiLabelMap.ProductNoItemsToReceive}</@resultMsg>
+          <#else>
             <@table type="data-complex" cellspacing="0" class="basic-table">
-              <#if !returnItems?? || returnItems?size == 0>
-                <@tr>
-                  <@td colspan="2"><@resultMsg>${uiLabelMap.ProductNoItemsToReceive}</@resultMsg></@td>
-                </@tr>
-              <#else>
                 <@tr>
                   <@td>
                     <@heading>
@@ -228,35 +229,26 @@ under the License.
                     </@td>
                   </@tr>
                 </#if>
-              </#if>
             </@table>
+          </#if>
             <input type="hidden" name="_rowCount" value="${rowCount}" />
           </form>
           <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
-
+          </@section>
           <#-- Initial Screen -->
         <#else>
+          <@section title="${uiLabelMap.ProductReceiveReturn}">
           <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveReturn</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
             <input type="hidden" name="initialSelected" value="Y" />
-            <@table type="fields" cellspacing="0" class="basic-table">
-              <@tr><@td colspan="4"><@heading>${uiLabelMap.ProductReceiveReturn}</@heading></@td></@tr>
-              <@tr>
-                <@td width="15%" align='right'>${uiLabelMap.ProductReturnNumber}</@td>
-                <@td>&nbsp;</@td>
-                <@td width="90%">
+              <@field type="generic" label="${uiLabelMap.ProductReturnNumber}">
                   <input type="text" name="returnId" size="20" maxlength="20" value="${requestParameters.returnId!}" />
-                </@td>
-                <@td>&nbsp;</@td>
-              </@tr>
-              <@tr>
-                <@td colspan="2">&nbsp;</@td>
-                <@td colspan="2">
+              </@field>
+              <@field type="submitarea">
                   <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveProduct}</a>
-                </@td>
-              </@tr>
-            </@table>
+              </@field>
           </form>
+          </@section>
         </#if>
 </@section>
 <script language="JavaScript" type="text/javascript">

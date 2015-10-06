@@ -20,10 +20,9 @@ under the License.
         <@table type="fields" cellspacing="0" class="basic-table">
             <#-- quote header information -->
             <@tr>
-                <@td align="right" valign="top" width="15%">
+                <@td align="right" valign="top" width="20%">
                     &nbsp;${uiLabelMap.CommonType}
                 </@td>
-                <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
                     ${(quoteType.get("description",locale))?default(quote.quoteTypeId!)}
                 </@td>
@@ -32,10 +31,9 @@ under the License.
 
             <#-- quote Channel information -->
             <@tr>
-                <@td align="right" valign="top" width="15%">
+                <@td align="right" valign="top" width="20%">
                     &nbsp;${uiLabelMap.OrderSalesChannel}
                 </@td>
-                <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
                     ${(salesChannel.get("description",locale))?default(quote.salesChannelEnumId!)}
                 </@td>
@@ -44,10 +42,9 @@ under the License.
 
             <#-- quote status information -->
             <@tr>
-                <@td align="right" valign="top" width="15%">
+                <@td align="right" valign="top" width="20%">
                     &nbsp;${uiLabelMap.CommonStatus}
                 </@td>
-                <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
                     ${(statusItem.get("description", locale))?default(quote.statusId!)}
                 </@td>
@@ -55,10 +52,9 @@ under the License.
             <#-- party -->
             <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%">
+                <@td align="right" valign="top" width="20%">
                     &nbsp;${uiLabelMap.PartyPartyId}
                 </@td>
-                <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
                     ${quote.partyId!}
                 </@td>
@@ -66,10 +62,9 @@ under the License.
             <#-- quote name -->
             <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%">
+                <@td align="right" valign="top" width="20%">
                     &nbsp;${uiLabelMap.OrderOrderQuoteName}
                 </@td>
-                <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
                     ${quote.quoteName!}
                 </@td>
@@ -77,10 +72,9 @@ under the License.
             <#-- quote description -->
             <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%">
+                <@td align="right" valign="top" width="20%">
                     &nbsp;${uiLabelMap.CommonDescription}
                 </@td>
-                <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
                     ${quote.description!}
                 </@td>
@@ -88,10 +82,9 @@ under the License.
             <#-- quote currency -->
             <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%">
+                <@td align="right" valign="top" width="20%">
                     &nbsp;${uiLabelMap.CommonCurrency}
                 </@td>
-                <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
                     <#if currency??>${currency.get("description",locale)?default(quote.currencyUomId!)}</#if>
                 </@td>
@@ -99,10 +92,9 @@ under the License.
             <#-- quote currency -->
             <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%">
+                <@td align="right" valign="top" width="20%">
                     &nbsp;${uiLabelMap.ProductProductStore}
                 </@td>
-                <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
                     <#if store??>${store.storeName?default(quote.productStoreId!)}</#if>
                 </@td>

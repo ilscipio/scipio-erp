@@ -56,53 +56,38 @@ under the License.
         </#if>
      
         <#if !(orderId?has_content)>
+          <@section>
           <form name="selectOrderForm" method="post" action="<@ofbizUrl>WeightPackageOnly</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
-            <@table type="fields" cellspacing="0" class="basic-table">
-              <@tr>
-                <@td width="25%" align="right">${uiLabelMap.ProductOrderId}</@td>
-                <@td width="1">&nbsp;</@td>
-                <@td width="25%">
+              <@field type="generic" label="${uiLabelMap.ProductOrderId}">
                   <input type="text" name="orderId" size="20" maxlength="20" value="${primaryOrderId!}"/>
                   /
                   <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
-                </@td>
-                <@td>&nbsp;</@td>
-              </@tr>
-              <@tr>
-                <@td colspan="2">&nbsp;</@td>
-                <@td colspan="2">
+              </@field>
+              <@field type="submitarea">
                   <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackOrder}</a>
                   <a href="javascript:document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductWeighPackageOnly}</a>
-                </@td>
-              </@tr>
-            </@table>
+              </@field>
           </form>
+          </@section>
          
           <#-- select picklist bin form -->
+          <@section>
           <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>WeightPackageOnly</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
-            <@table type="fields" cellspacing="0" class="basic-table">
-              <@tr>
-                <@td width="25%" align='right'>${uiLabelMap.FormFieldTitle_picklistBinId}</@td>
-                <@td width="1">&nbsp;</@td>
-                <@td width="25%">
+              <@field type="generic" label="${uiLabelMap.FormFieldTitle_picklistBinId}">
                   <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
-                </@td>
-                <@td>&nbsp;</@td>
-              </@tr>
-              <@tr>
-                <@td colspan="2">&nbsp;</@td>
-                <@td colspan="1">
+              </@field>
+              <@field type="submitarea">
                   <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackOrder}</a>
                   <a href="javascript:document.selectPicklistBinForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductWeighPackageOnly}</a>
-                </@td>
-              </@tr>
-            </@table>
+              </@field>
           </form>
+          </@section>
         <#else>
           <#assign packedLines = weightPackageSession.getPackedLines(orderId)/>
           <#if !(shipmentPackages?has_content)>
+            <@section>
             <#if packedLines?has_content>
               <@table type="data-list" class="basic-table" cellpadding="2" cellspacing="0">
                 <@thead>
@@ -212,7 +197,9 @@ under the License.
               </form>
             </@table>
             </#if>
+            </@section>
           <#else>
+            <@section>
             <@table type="data-list" class="basic-table" cellpadding="2" cellspacing="0"> 
              <@thead>
              <@tr>
@@ -259,14 +246,13 @@ under the License.
             <div align="right">
               <a href="javascript:document.completePackForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
             </div>
+            </@section>
           </#if>
         </#if>
     </@section>
   <#else>
     <@section title="${uiLabelMap.WebtoolsWarningLogLevel}">
-        <div>
-          <h3>${uiLabelMap.FacilityWarningMessageThereIsMuchDifferenceInShippingCharges}&nbsp;[${uiLabelMap.FacilityEstimatedShippingCharges} = <@ofbizCurrency amount=estimatedShippingCost! isoCode=shipment.currencyUomId!/>, ${uiLabelMap.FacilityActualShippingCharges} = <@ofbizCurrency amount=newEstimatedShippingCost! isoCode=shipment.currencyUomId!/>]</h3>
-        </div>
+        <@alert type="warning">${uiLabelMap.FacilityWarningMessageThereIsMuchDifferenceInShippingCharges}&nbsp;[${uiLabelMap.FacilityEstimatedShippingCharges} = <@ofbizCurrency amount=estimatedShippingCost! isoCode=shipment.currencyUomId!/>, ${uiLabelMap.FacilityActualShippingCharges} = <@ofbizCurrency amount=newEstimatedShippingCost! isoCode=shipment.currencyUomId!/>]</@alert>
         <form name="shipNowForm" method="post" action="<@ofbizUrl>shipNow</@ofbizUrl>">
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>

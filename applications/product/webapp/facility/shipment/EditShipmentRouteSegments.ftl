@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if shipment??>
-<@section title="${uiLabelMap.PageTitleEditShipmentRouteSegments}">
+  <@section title="${uiLabelMap.PageTitleEditShipmentRouteSegments}">
         <@table type="data-complex" autoAltRows=false cellspacing="0" class="basic-table">
         <@thead> 
         <@tr class="header-row">
@@ -436,9 +436,9 @@ under the License.
             </@tr>
             </form>
         </@table>
-</@section>
+  </@section>
 <#else>
-<@section>
-        <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</@alert>
-</@section>
+  <@section>
+    <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</@alert>
+  </@section>
 </#if>

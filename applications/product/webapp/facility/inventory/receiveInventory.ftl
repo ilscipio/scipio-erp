@@ -270,12 +270,10 @@ under the License.
             </#if>
             <input type="hidden" name="_useRowSubmit" value="Y"/>
             <#assign rowCount = 0/>
+          <#if !purchaseOrderItems?? || purchaseOrderItems.size() == 0>
+            <@resultMsg>${uiLabelMap.ProductNoItemsPoReceive}.</@resultMsg>
+          <#else>
             <@table type="fields" class="basic-table" cellspacing="0">
-              <#if !purchaseOrderItems?? || purchaseOrderItems.size() == 0>
-                <@tr type="meta">
-                  <@td colspan="2">${uiLabelMap.ProductNoItemsPoReceive}.</@td>
-                </@tr>
-              <#else>
                 <@tr>
                   <@td>
                     <@heading>${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId}</@heading>
@@ -462,8 +460,8 @@ under the License.
                     </@td>
                   </@tr>
                 </#if>
-              </#if>
             </@table>
+          </#if>
             <input type="hidden" name="_rowCount" value="${rowCount}"/>
           </form>
           <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
@@ -474,28 +472,15 @@ under the License.
           <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
-            <@table type="fields" class="basic-table" cellspacing="0">
-              <@tr>
-                <@td>${uiLabelMap.ProductPurchaseOrderNumber}</@td>
-                <@td>
-                    <@htmlTemplate.lookupField value="${requestParameters.purchaseOrderId!}" formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
-                    <span class="tooltip">${uiLabelMap.ProductLeaveSingleProductReceiving}</span>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>${uiLabelMap.ProductProductId}</@td>
-                <@td>
+              <@field type="generic" label="${uiLabelMap.ProductPurchaseOrderNumber}" tooltip="${uiLabelMap.ProductLeaveSingleProductReceiving}">
+                  <@htmlTemplate.lookupField value="${requestParameters.purchaseOrderId!}" formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
+              </@field>
+              <@field type="generic" label="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductLeaveEntirePoReceiving}">
                   <@htmlTemplate.lookupField value="${requestParameters.productId!}" formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                  <span class="tooltip">${uiLabelMap.ProductLeaveEntirePoReceiving}</span>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>&nbsp;</@td>
-                <@td>
+              </@field>
+              <@field type="submitarea">
                   <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveProduct}</a>
-                </@td>
-              </@tr>
-            </@table>
+              </@field>
           </form>
           </@section>
         </#if>

@@ -24,11 +24,14 @@ under the License.
       <#assign showInput = "N">
     </#if>
     <#if shipmentId?has_content>
-      <div>
-        <span>${uiLabelMap.ProductShipmentId}</span><a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${shipmentId}</a>
-      </div>
+      <@row>
+        <@cell>
+        <span>${uiLabelMap.ProductShipmentId}</span> <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${shipmentId}</a>
+        </@cell>
+      </@row>
       <#if invoiceIds?? && invoiceIds?has_content>
-        <div>
+        <@row>
+          <@cell>
           <span>${uiLabelMap.AccountingInvoices}:</span>
           <@menu type="button">
             <#list invoiceIds as invoiceId>
@@ -38,17 +41,15 @@ under the License.
               </@menuitem>
             </#list>
           </@menu>
-        </div>
+          </@cell>
+        </@row>
       </#if>
     </#if>
 
+      <@section>
       <form name="selectOrderForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>">
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-        <@table type="fields" cellspacing="0" class="basic-table">
-          <@tr>
-            <@td width="25%" align="right">${uiLabelMap.ProductOrderId}</@td>
-            <@td width="1">&nbsp;</@td>
-            <@td width="25%">
+          <@field type="generic" label="${uiLabelMap.ProductOrderId}">
               <#if shipmentId?has_content>
                 <input type="text" name="orderId" size="20" maxlength="20" value=""/>
               <#else>
@@ -56,38 +57,26 @@ under the License.
               </#if>
               /
               <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
-            </@td>
-            <@td>&nbsp;</@td>
-          </@tr>
-          <@tr>
-            <@td colspan="2">&nbsp;</@td>
-            <@td colspan="2">
+          </@field>
+          <@field type="submitarea">
               <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}"/>
-            </@td>
-          </@tr>
-        </@table>
+          </@field>
       </form>
-      <br />
+      </@section>
+     
+      <@section>
       <#-- select picklist bin form -->
       <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>">
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-        <@table type="fields" cellspacing="0" class="basic-table">
-          <@tr>
-            <@td width="25%" align='right'>${uiLabelMap.FormFieldTitle_picklistBinId}</@td>
-            <@td width="1">&nbsp;</@td>
-            <@td width="25%">
+          <@field type="generic" label="${uiLabelMap.FormFieldTitle_picklistBinId}">
               <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
-            </@td>
-            <@td>&nbsp;</@td>
-          </@tr>
-          <@tr>
-            <@td colspan="2">&nbsp;</@td>
-            <@td colspan="1">
+          </@field>
+          <@field type="submitarea">
               <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}"/>
-            </@td>
-          </@tr>
-        </@table>
+          </@field>
       </form>
+      </@section>
+
       <form name="clearPickForm" method="post" action="<@ofbizUrl>cancelAllRows</@ofbizUrl>">
         <input type="hidden" name="orderId" value="${orderId!}"/>
         <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
@@ -100,9 +89,8 @@ under the License.
         <#if orderItemShipGroup?has_content>
           <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
           <#assign carrier = orderItemShipGroup.carrierPartyId?default("N/A")>
-          <@table type="fields" cellpadding="4" cellspacing="4" class="basic-table">
-            <@tr>
-              <@td valign="top">
+          <@row>
+              <@cell columns=4>
                 <span>${uiLabelMap.ProductShipToAddress}</span>
                 <br />
                 ${uiLabelMap.CommonTo}: ${postalAddress.toName?default("")}
@@ -121,9 +109,8 @@ under the License.
                 <br />
                 ${postalAddress.countryGeoId}
                 <br />
-              </@td>
-              <@td>&nbsp;</@td>
-              <@td valign="top">
+              </@cell>
+              <@cell columns=4>
                 <span>${uiLabelMap.ProductCarrierShipmentMethod}</span>
                 <br />
                 <#if carrier == "USPS">
@@ -138,34 +125,29 @@ under the License.
                   &nbsp;
                 </#if>
                 ${orderItemShipGroup.shipmentMethodTypeId?default("??")}
-              </@td>
-              <@td>&nbsp;</@td>
-              <@td valign="top">
+              </@cell>
+              <@cell columns=4>
                 <span>${uiLabelMap.OrderInstructions}</span>
                 <br />
                 ${orderItemShipGroup.shippingInstructions?default("(${uiLabelMap.CommonNone})")}
-              </@td>
-            </@tr>
-          </@table>
+              </@cell>
+          </@row>
         </#if>
         <hr />
+        <@section>
         <form name="singlePickForm" method="post" action="<@ofbizUrl>processVerifyPick</@ofbizUrl>">
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
           <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-          <@table type="fields" cellpadding="2" cellspacing="0" class="basic-table">
-            <@tr>
-              <@td>
                   <span>${uiLabelMap.ProductProductNumber}</span>
                   <input type="text" name="productId" size="20" maxlength="20" value=""/>
                   @
                   <input type="text" name="quantity" size="6" maxlength="6" value="1"/>
                   <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}"/>
-              </@td>
-            </@tr>
-          </@table>
         </form>
-        <br />
+        </@section>
+        
+        <@section>
         <#assign orderItems = orderItems!>
         <form name="multiPickForm" method="post" action="<@ofbizUrl>processBulkVerifyPick</@ofbizUrl>">
           <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
@@ -173,7 +155,7 @@ under the License.
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
           <@table type="data-complex" class="basic-table" cellspacing="0">
-           <@thead>
+            <@thead>
             <@tr class="header-row">
               <@th>&nbsp;</@th>
               <@th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@th>
@@ -185,6 +167,7 @@ under the License.
               <@th align="center">${uiLabelMap.CommonQty}&nbsp;${uiLabelMap.CommonTo}&nbsp;${uiLabelMap.ProductVerify}</@th>
             </@tr>
             </@thead>
+            <@tbody>
             <#if orderItems?has_content>
               <#assign rowKey = 1>
               <#assign counter = 1>
@@ -283,9 +266,8 @@ under the License.
                 <#assign rowKey = rowKey + 1>
               </#list>
             </#if>
-            <@tr>
-              <@td colspan="10">&nbsp;</@td>
-            </@tr>
+            </@tbody>
+            <@tfoot>
             <@tr>
               <@td colspan="12" align="right">
                 <#if isShowVerifyItemButton == "true">
@@ -297,8 +279,10 @@ under the License.
                 </#if>
               </@td>
             </@tr>
+            </@tfoot>
           </@table>
         </form>
+        </@section>
     </@section>
     <#assign orderId = orderId! >
     <#assign pickRows = verifyPickSession.getPickRows(orderId)!>

@@ -37,18 +37,20 @@ function setWeight(weight) {
   <#if shipment??>
     <#if 1 < shipmentPackages.size()>
       <#-- multiple packages -->
-      <div><font color="red">${uiLabelMap.ProductMorePackageFoundShipment}.</font></div>
+      <@alert type="info">${uiLabelMap.ProductMorePackageFoundShipment}.</@alert>
     <#else>
       <#-- single package -->
       <#assign shipmentPackage = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentPackages))!>
       <#if shipmentPackage?has_content>
         <#assign weight = (shipmentPackage.weight)?default(0.00)>
         <#if (0 < weight?double) && !requestParameters.reweigh??>
-          <#if 1 < shipmentRoutes.size()>
+          <@section>
+          <#if (1 < shipmentRoutes.size())>
             <#-- multiple routes -->
-            <div><font color="red">${uiLabelMap.ProductMoreRouteSegmentFound}.</font></div>
+            <@alert type="info">${uiLabelMap.ProductMoreRouteSegmentFound}.</@alert>
           <#elseif !requestParameters.shipmentRouteSegmentId?? || requestAttributes._ERROR_MESSAGE_??>
             <form name="routeForm" method="post" action="<@ofbizUrl>setQuickRouteInfo</@ofbizUrl>">
+            <@fields type="generic">
               <#assign shipmentRoute = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentRoutes))!>
               <#assign carrierPerson = (shipmentRoute.getRelatedOne("CarrierPerson", false))!>
               <#assign carrierPartyGroup = (shipmentRoute.getRelatedOne("CarrierPartyGroup", false))!>
@@ -56,11 +58,9 @@ function setWeight(weight) {
               <input type="hidden" name="facilityId" value="${facilityId!}"/>
               <input type="hidden" name="shipmentId" value="${shipmentRoute.shipmentId}"/>
               <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRoute.shipmentRouteSegmentId}"/>
-              <@table type="fields" border="0" cellpadding="2" cellspacing="0">
-                <@tr>
-                  <@td width="20%" align="right">${uiLabelMap.ProductCarrier}</@td>
-                  <@td>&nbsp;</@td>
-                  <@td width="1%" nowrap="nowrap">
+            <@row>
+              <@cell columns=9>
+                <@field type="generic" label="${uiLabelMap.ProductCarrier}">
                     <select name="carrierPartyId">
                       <#if shipmentRoute.carrierPartyId?has_content>
                         <option value="${shipmentRoute.carrierPartyId}">${(carrierPerson.firstName)!} ${(carrierPerson.middleName)!} ${(carrierPerson.lastName)!} ${(carrierPartyGroup.groupName)!} [${shipmentRoute.carrierPartyId}]</option>
@@ -72,16 +72,17 @@ function setWeight(weight) {
                         <option value="${carrierPartyData.party.partyId}">${(carrierPartyData.person.firstName)!} ${(carrierPartyData.person.middleName)!} ${(carrierPartyData.person.lastName)!} ${(carrierPartyData.partyGroup.groupName)!} [${carrierPartyData.party.partyId}]</option>
                       </#list>
                     </select>
-                  </@td>
-                  <@td>&nbsp;</@td>
-                  <@td width="80%">
+                </@field>
+              </@cell>
+              <@cell columns=3>
+                <@field type="submitarea" labelArea=false>
                     <a href="javascript:document.routeForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductConfirmShipmentUps}</a>
-                  </@td>
-                </@tr>
-                <@tr>
-                  <@td width="20%" align="right">${uiLabelMap.ProductShipMethod}</@td>
-                  <@td>&nbsp;</@td>
-                  <@td width="1%" nowrap="nowrap">
+                </@field>
+              </@cell>
+            </@row>
+            <@row>
+              <@cell columns=9>
+                <@field type="generic" label="${uiLabelMap.ProductShipMethod}">
                     <select name="shipmentMethodTypeId">
                       <#if shipmentMethodType?has_content>
                         <option value="${shipmentMethodType.shipmentMethodTypeId}">${shipmentMethodType.get("description",locale)}</option>
@@ -93,24 +94,25 @@ function setWeight(weight) {
                         <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.get("description",locale)}</option>
                       </#list>
                     </select>
-                  </@td>
-                  <@td>&nbsp;</@td>
-                  <@td width="80%">
+                </@field>
+              </@cell>
+              <@cell columns=3>
+                <@field type="submitarea" labelArea=false>
                     <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}&amp;shipmentId=${shipmentId}&amp;reweigh=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductReWeighPackage}</a>
-                  </@td>
-                </@tr>
-                <@tr>
-                  <@td width="20%" align="right">&nbsp;</@td>
-                  <@td>&nbsp;</@td>
-                  <@td width="1%" nowrap="nowrap">
-                    &nbsp;
-                  </@td>
-                  <@td>&nbsp;</@td>
-                  <@td width="80%">
+                </@field>
+              </@cell>
+            </@row>
+            <@row>
+              <@cell columns=9>
+                &nbsp;
+              </@cell>
+              <@cell columns=3>
+                <@field type="submitarea" labelArea=false>
                     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.routeForm.submit();" />
-                  </@td>
-                </@tr>
-              </@table>
+                </@field>
+              </@cell>
+            </@row>
+            </@fields>
             </form>
             <script language="JavaScript" type="text/javascript">
               document.routeForm.carrierPartyId.focus();
@@ -123,17 +125,15 @@ function setWeight(weight) {
               <a href="<@ofbizUrl>ShipmentManifest.pdf?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductPackingSlip}</a>
             </center>
           </#if>
+          </@section>
         <#else>
+          <@section>
           <form name="weightForm" method="post" action="<@ofbizUrl>setQuickPackageWeight</@ofbizUrl>">
             <#assign weightUom = shipmentPackage.getRelatedOne("WeightUom", false)!>
             <input type="hidden" name="facilityId" value="${facilityId!}"/>
             <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
-            <@table type="fields" cellspacing="0" class="basic-table">
-              <@tr>
-                <@td width="20%" align="right"><span>${uiLabelMap.ProductPackage}</span> ${shipmentPackage.shipmentPackageSeqId} ${uiLabelMap.ProductWeight}</@td>
-                <@td>&nbsp;</@td>
-                <@td width="80%">
+              <@field type="generic" label="${uiLabelMap.ProductPackage} ${shipmentPackage.shipmentPackageSeqId} ${uiLabelMap.ProductWeight}">
                   <input type="text" name="weight" />&nbsp;
                   <select name="weightUomId">
                     <#if weightUom?has_content>
@@ -144,16 +144,11 @@ function setWeight(weight) {
                       <option value="${weightUomOption.uomId}">${weightUomOption.get("description",locale)} [${weightUomOption.abbreviation}]</option>
                     </#list>
                   </select>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td colspan="2">&nbsp;</@td>
-                <@td width="80%">
+              </@field>
+              <@field type="submitarea">
                   <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.weightForm.submit();"/>
                   <a href="javascript:document.weightForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductSetWeight}</a>
-                </@td>
-              </@tr>
-            </@table>
+              </@field>
           </form>
           <script language="JavaScript" type="text/javascript">
             document.weightForm.weight.focus();
@@ -164,6 +159,7 @@ function setWeight(weight) {
             <param name="fakeWeight" value="22">
           </applet>
           -->
+          </@section>
         </#if>
       <#else>
         <div class="alert">${uiLabelMap.ProductErrorNoPackagesFoundForShipment} !</div>
@@ -177,31 +173,23 @@ function setWeight(weight) {
       </#if>
     </#if>
   <#else>
+    <@section>
     <form name="selectOrderForm" method="post" action="<@ofbizUrl>createQuickShipment</@ofbizUrl>">
       <input type="hidden" name="facilityId" value="${facilityId!}" />
       <input type="hidden" name="originFacilityId" value="${facilityId!}" />
       <input type="hidden" name="setPackedOnly" value="Y" />
-      <@table type="fields" border='0' cellpadding='2' cellspacing="0">
-        <@tr>
-          <@td width="25%" align='right'>${uiLabelMap.ProductOrderNumber}</@td>
-          <@td width="1">&nbsp;</@td>
-          <@td width="25%">
+        <@field type="generic" label="${uiLabelMap.ProductOrderNumber}">
             <input type="text" name="orderId" size="20" maxlength="20" value="${requestParameters.orderId!}" />
-          </@td>
-          <@td>&nbsp;</@td>
-        </@tr>
-        <@tr>
-          <@td colspan="2">&nbsp;</@td>
-          <@td colspan="2">
+        </@field>
+        <@field type="submitarea">
             <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectOrderForm.submit();" />
             <a href="javascript:document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductShipOrder}</a>
-          </@td>
-        </@tr>
-      </@table>
+        </@field>
     </form>
     <script language="JavaScript" type="text/javascript">
         document.selectOrderForm.orderId.focus();
     </script>
+    </@section>
   </#if>
 </@section>
 </#if>

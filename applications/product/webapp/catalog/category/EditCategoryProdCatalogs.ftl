@@ -85,7 +85,7 @@ under the License.
 
     <@section title="${uiLabelMap.ProductAddCatalogProductCategory}">
         <form method="post" action="<@ofbizUrl>category_addProductCategoryToProdCatalog</@ofbizUrl>" name="addNewForm">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}"/>
             <@field type="generic">
                 <select name="prodCatalogId">

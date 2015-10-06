@@ -69,7 +69,7 @@ under the License.
     </@section>
     <@section title="${uiLabelMap.ProductAssociatePartyToCategory}">
         <form method="post" action="<@ofbizUrl>addPartyToCategory</@ofbizUrl>" name="addNewForm">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
             <@field type="generic">
                 <input type="text" size="20" maxlength="20" name="partyId" value="" />

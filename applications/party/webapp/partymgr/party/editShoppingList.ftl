@@ -29,7 +29,7 @@ under the License.
 <@section title="${uiLabelMap.PartyShoppingLists}" menuHtml=menuHtml>
     <#if shoppingLists?has_content>
       <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
-        <@fields labelArea=false>
+        <@fields type="default-nolabels">
         <input type="hidden" name="partyId" value="${partyId!}" />
         <@field type="generic">
             <select name="shoppingListId">

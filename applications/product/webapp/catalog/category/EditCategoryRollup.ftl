@@ -94,7 +94,7 @@ under the License.
 
     <@section title="${uiLabelMap.ProductAddCategoryParent} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
         <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" name="addParentForm">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
             <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
             <@field type="generic">
@@ -188,7 +188,7 @@ under the License.
 
     <@section title="${uiLabelMap.ProductAddCategoryChild} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
         <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" name="addChildForm">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
             <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}" />
             <@field type="generic">

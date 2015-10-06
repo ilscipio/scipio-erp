@@ -77,7 +77,7 @@ under the License.
   <#if productFeatureGroups?has_content>    
     <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
         <form method="post" action="<@ofbizUrl>createProductFeatureCatGrpAppl</@ofbizUrl>" name="addNewGroupForm">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <@field type="generic">
                 <select name="productFeatureGroupId">
@@ -147,7 +147,7 @@ under the License.
     </@section>
     <@section title="${uiLabelMap.ProductApplyFeatureGroupToCategory}">
         <form method="post" action="<@ofbizUrl>createProductFeatureCategoryAppl</@ofbizUrl>" name="addNewCategoryForm">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <@field type="generic">
                 <select name="productFeatureCategoryId">

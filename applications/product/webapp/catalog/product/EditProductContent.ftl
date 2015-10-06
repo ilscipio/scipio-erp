@@ -149,7 +149,7 @@ under the License.
     
     <@section title="${uiLabelMap.ProductUploadImage}">
         <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>" name="imageUploadForm">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <@field type="file" size="50" name="fname"/>
             <@field type="generic">
                 <input type="radio" name="upload_file_type_bogus" value="small" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=small</@ofbizUrl>");'/>${uiLabelMap.CommonSmall}

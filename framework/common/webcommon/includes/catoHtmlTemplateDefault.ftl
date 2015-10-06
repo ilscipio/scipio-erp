@@ -253,8 +253,13 @@ Can be omitted.
 May sometimes need multiple of these per form (so @form insufficient for this purpose). 
 Not associated with an HTML element as is @fieldset.
 
-    Usage example:  
+    Usage example: 
     <@fields>
+      <@field attr="" />
+      <@field attr="" />
+    </@field>
+     
+    <@fields type="default-nolabels">
       <@field attr="" />
       <@field attr="" />
     </@field>

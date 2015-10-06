@@ -62,12 +62,12 @@ function doPublish() {
 <@section title="${uiLabelMap.PageTitleEditProductQuickAdmin}">
         <!-- Name update section -->
         <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method="post" name="editProduct">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <input type="hidden" name="productId" value="${productId!}"/>
             <#if (product.isVirtual)! == "Y">
                 <input type="hidden" name="isVirtual" value="Y"/>
             </#if>
-            <@heading>${productId!}</@heading>
+            <@field type="display">${productId!}</@field>
             <@field type="input" name="productName" size="40" maxlength="40" value="${product.productName!}" />
             <@field type="submitarea">
                 <input type="submit" value="${uiLabelMap.ProductUpdateName}"/>
@@ -343,7 +343,7 @@ function doPublish() {
     <@row>
       <@cell>
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <@field type="generic">
@@ -389,7 +389,7 @@ function doPublish() {
     <@row>
       <@cell>
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>" name="publish">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="categoryId" value="${allCategoryId!}"/>
             <@field type="generic">
@@ -406,7 +406,7 @@ function doPublish() {
     <@row>
       <@cell>
         <form  action="<@ofbizUrl>quickAdminUnPublish</@ofbizUrl>" name="unpublish">
-          <@fields labelArea=false>
+          <@fields type="default-nolabels">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="productCategoryId" value="${allCategoryId!}"/>
             <@field type="generic">

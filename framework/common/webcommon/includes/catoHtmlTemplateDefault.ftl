@@ -271,7 +271,7 @@ Not associated with an HTML element as is @fieldset.
                       default-nolabels: default cato field arrangement for sets of fields with no labels.
                           it expects that @field entries won't be passed any labels.
                       generic: generic field arrangement of no specific pattern. means field arrangement is custom and field macro should not
-                          make any assumptions. caller determines arrangement/layout.
+                          make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.
     labelType       = [default|none], default based on fields type. reserved for future use. 
                       default: currently, default for both "default" and "generic" types is a label area left of the field input.
                       none: no labels or label areas. expects the @field macro won't be passed any.

@@ -254,22 +254,34 @@ May sometimes need multiple of these per form (so @form insufficient for this pu
 Not associated with an HTML element as is @fieldset.
 
     Usage example:  
-    <@fields labelArea=false>
+    <@fields>
+      <@field attr="" />
+      <@field attr="" />
+    </@field>
+    
+    <@fields type="generic" labelArea=false>
       <@field attr="" />
       <@field attr="" />
     </@field>
     
     * General Attributes *
-    type            = [generic], default generic. the type of field arrangement.
-    labelType       = [default|none], default based on form type and/or fieldsType. reserved for future use.
-                      could be used as specific type of label arrangement if field arrangement type is not defined.
-                      none: same result as fieldsLabelArea=none (but not forced? TODO)
-    labelArea       = boolean, default based on form type and/or fieldsType.
+    type            = [default|default-nolabels|generic], default default. the type of field arrangement.
+                      default: default cato field arrangement. this is the type assumed when no @fields element is present.
+                          currently, it mostly influences the label area (present for all @field types except submit).
+                      default-nolabels: default cato field arrangement for sets of fields with no labels.
+                          it expects that @field entries won't be passed any labels.
+                      generic: generic field arrangement of no specific pattern. means field arrangement is custom and field macro should not
+                          make any assumptions. caller determines arrangement/layout.
+    labelType       = [default|none], default based on fields type. reserved for future use. 
+                      default: currently, default for both "default" and "generic" types is a label area left of the field input.
+                      none: no labels or label areas. expects the @field macro won't be passed any.
+    labelArea       = boolean, default based on fields type and label type. mostly for type="generic".
                       overrides whether fields are expected to have labels or not. can specify explicit
                       true or explicit false. logic is influenced by both fieldsType and individual field type.
-                      does not apply to submit and potentially other special fields. (weaker than @field's labelArea arg).
+                      note that this is weaker than labelArea arg of @field macro, but stronger than
+                      @fields type and labelType args (this macro).
 -->
-<#macro fields type="generic" labelType="" labelArea="">
+<#macro fields type="default" labelType="" labelArea="">
     <#local dummy = pushRequestStack("catoCurrentFieldsInfo", 
         {"type":type, "labelType":labelType, "labelArea":labelArea})>
     <#nested>
@@ -420,7 +432,7 @@ Not associated with an HTML element as is @fieldset.
 </#if>
 
 <@row collapse=collapse!false norows=norows class="form-field-entry">
-    <#local fieldsType = (fieldsInfo.type)!"generic">
+    <#local fieldsType = (fieldsInfo.type)!"default">
     <#-- TODO?: in future fieldsLabelArea and fieldsLabelType default might be inferred from form type or fieldsType 
          for now, just set fieldsLabelArea to true so by default generic and display fields will align with other fields
          and not look crazy. 
@@ -429,19 +441,25 @@ Not associated with an HTML element as is @fieldset.
     -->
     <#local fieldsLabelType = (fieldsInfo.labelType)!"default">
     <#local fieldsLabelArea = (fieldsInfo.labelArea)!"">
-    <#if !fieldsLabelArea?is_boolean>
+
+    <#if fieldsLabelArea?is_boolean>
+      <#-- if specified, use this. -->
+      <#local labelAreaDefault = fieldsLabelArea>
+    <#else>
       <#if fieldsLabelType == "none">
-        <#local fieldsLabelArea = false>
+        <#local labelAreaDefault = false>
       <#else>
-        <#-- current default: always label area except submit -->
-        <#local fieldsLabelArea = true>
+        <#if fieldsType == "default">
+          <#-- current default: always have label area except submit -->
+          <#local labelAreaDefault = (type != "submitarea")>
+        <#else> <#-- fieldsType == "generic" || fieldsType == "default-nolabels" -->
+          <#local labelAreaDefault = false>
+        </#if>
       </#if>
     </#if>
 
-    <#-- don't use this condition, because if label is present on @field it should override fieldsLabelArea=false: 
-              !(fieldsLabelArea?is_boolean && fieldsLabelArea == false) && -->
-    <#if (labelArea?is_boolean && labelArea == true) || (!(labelArea?is_boolean && labelArea == false) && 
-          (((label?has_content || labelDetail?has_content || (fieldsLabelArea?is_boolean && fieldsLabelArea == true)) && type != "submitarea")))>
+    <#if (labelArea?is_boolean && labelArea == true) || 
+         (!(labelArea?is_boolean && labelArea == false) && (label?has_content || labelDetail?has_content || labelAreaDefault))>
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         
@@ -962,6 +980,10 @@ Inline script wrapper.
 *************
 * Alert box
 ************
+Alert box for messages that should grab user attention.
+NOTE: Should avoid using this for regular, common inlined message results such as "no records found" unless
+it's an unexpected result, error or one that requires user action. See other macros.
+
     Usage example:  
     <@alert type="info">
         <#nested>

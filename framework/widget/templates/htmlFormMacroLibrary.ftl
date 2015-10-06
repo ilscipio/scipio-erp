@@ -507,9 +507,12 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#macro renderIgnoredField></#macro>
 
 <#macro renderFieldTitle style title id fieldHelpText="" for="">
-  <#--<label <#if for?has_content>for="${for}"</#if> <#if fieldHelpText?has_content> title="${fieldHelpText}"</#if><#if style?has_content> class="${style}"</#if><#if id?has_content> id="${id}"</#if>><#t/>-->
-    <#global renderFieldTitleCurrentTitle = title>
-  <#--</label><#t/>-->
+<#if (renderFormatFieldRowTitleCellOpened!false) != true>
+  <#-- <label<#if for?has_content> for="${for}"</#if><#if fieldHelpText?has_content> title="${fieldHelpText}"</#if><#if style?has_content> class="${style}"</#if><#if id?has_content> id="${id}"</#if>><#t/> -->
+    ${title}<#t/>
+  <#-- </label><#t/> -->
+</#if>
+  <#global renderFieldTitleCurrentTitle = title>
 </#macro>
 
 <#macro renderSingleFormFieldTitle></#macro>
@@ -590,10 +593,12 @@ not "current" context (too intrusive in current renderer design). still relies o
   </thead>
 </#macro>
 <#macro renderFormatHeaderRowCellOpen style positionSpan>
+  <#global renderFormatHeaderRowCellOpened = true>
   <th<#if positionSpan?has_content && positionSpan gt 1> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowCellClose>
   </th>
+  <#global renderFormatHeaderRowCellOpened = false>
 </#macro>
 
 <#macro renderFormatHeaderRowFormCellOpen style>
@@ -656,8 +661,10 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#function>
 
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
+  <#global renderFormatFieldRowTitleCellOpened = true>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
+  <#global renderFormatFieldRowTitleCellOpened = false>
 </#macro>
 
 <#macro renderFormatFieldRowSpacerCell></#macro>

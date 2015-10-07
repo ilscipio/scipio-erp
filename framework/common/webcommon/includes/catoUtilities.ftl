@@ -484,7 +484,7 @@ TODO: doesn't handle dates (ambiguous?)
         <#break>
       <#case "js">
         <#-- FIXME?: investigate this... -->
-        <#return val?js_string?replace("\\'", "\'")?replace("\\>", ">")>
+        <#return val?js_string?replace("\\'", "\'")>
         <#break>
       <#case "raw">
       <#default>

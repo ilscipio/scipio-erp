@@ -178,7 +178,26 @@
   <#-- Progress Bar -->
     "progress_container" : "progress",   <#-- Bootstrap: "progress" -->
     "progress_wrap" : "",           <#-- Bootstrap: "progress-bar" -->
-    "progress_bar" : "meter"       <#-- Bootstrap: "sr-only" -->
+    "progress_bar" : "meter",       <#-- Bootstrap: "sr-only" -->
+
+  <#-- Fields -->
+    "fields_default_labeltype" : "gridarea",
+    "fields_default_labellayout" : "left",
+    "fields_default_labelarea" : true,
+    "fields_default_labelareaexceptions" : "submit submitarea",
+
+    "fields_default_nolabels_labeltype" : "none",
+    "fields_default_nolabels_labellayout" : "none",
+    "fields_default_nolabels_labelarea" : false,
+    "fields_default_nolabels_labelareaexceptions" : "", 
+
+    "fields_generic_labeltype" : "gridarea",
+    "fields_generic_labellayout" : "left",
+    "fields_generic_labelarea" : false,
+    "fields_generic_labelareaexceptions" : "", 
+
+  <#-- Always declare last -->
+    "dummy" : ""
 }>
 
 

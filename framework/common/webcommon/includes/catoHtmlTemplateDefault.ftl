@@ -12,6 +12,10 @@
 * currently contains much logic code and includes all the widget macros (see FIXMEs). can #include this file
 * and override macros, but widget macro includes makes that very heavy, and still logic reuse problems.
 *
+* TODO?: there could be a catoHtmlTemplateHelpers.ftl to help separate template macro-related logic from markup (less copy-paste).
+*        Do not put functions closely related to these macros in CatoUtilities.
+*        For now, try to keep markup generalized and parametrizable via catoHtmlVariablesDefault.html as much as possible.
+*
 -->
 
 <#-- note: assumes catoUtilities.ftl included. see end of file for additional includes. -->
@@ -270,28 +274,69 @@ Not associated with an HTML element as is @fieldset.
     </@field>
     
     * General Attributes *
-    type            = [default|default-nolabels|generic], default default. the type of field arrangement.
+    type            = [default|default-nolabels|generic], default default. the type of fields arrangement.
                       default: default cato field arrangement. this is the type assumed when no @fields element is present.
                           currently, it mostly influences the label area (present for all @field types except submit).
-                      default-nolabels: default cato field arrangement for sets of fields with no labels.
+                      default-nolabels: default cato field arrangement for common sets of fields with no labels.
                           it expects that @field entries won't be passed any labels.
                       generic: generic field arrangement of no specific pattern. means field arrangement is custom and field macro should not
                           make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.
-    labelType       = [default|none], default based on fields type. reserved for future use. 
-                      default: currently, default for both "default" and "generic" types is a label area left of the field input.
+    labelType       = [gridarea|none], defaults specified in styles variables based on fields type. override for type of the field labels themselves.
+                      gridarea: a grid area reserved for label.
                       none: no labels or label areas. expects the @field macro won't be passed any.
-    labelArea       = boolean, default based on fields type and label type. mostly for type="generic".
-                      overrides whether fields are expected to have labels or not. can specify explicit
-                      true or explicit false. logic is influenced by both fieldsType and individual field type.
-                      note that this is weaker than labelArea arg of @field macro, but stronger than
-                      @fields type and labelType args (this macro).
+    labelLayout     = [left|right|none], defaults specified in styles variables based on fields type. override for layout/positioning of the labels.
+    labelArea       = boolean, defaults specified in styles variables based on fields type. overrides whether fields are expected to have a label area or not, mainly when label omitted. 
+                      logic is influenced by other arguments.
+                      note that this is weaker than labelArea arg of @field macro, but stronger than other args of this macro.
+    labelAreaExceptions = string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type                 
 -->
-<#macro fields type="default" labelType="" labelArea="">
-    <#local dummy = pushRequestStack("catoCurrentFieldsInfo", 
-        {"type":type, "labelType":labelType, "labelArea":labelArea})>
+<#macro fields type="default" labelType="" labelLayout="" labelArea="" labelAreaExceptions=true>
+    <#local fieldsInfo = makeFieldsInfo(type, labelType, labelLayout, labelArea, labelAreaExceptions)>
+    <#local dummy = pushRequestStack("catoCurrentFieldsInfo", fieldsInfo)>
     <#nested>
     <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
 </#macro>
+
+<#function makeFieldsInfo type labelType="" labelLayout="" labelArea="" labelAreaExceptions=true>
+    <#local stylesType = type?replace("-","_")>
+    <#local stylesPrefix = "fields_" + stylesType + "_">
+    <#if !styles[stylesPrefix + "labeltype"]??>
+      <#local stylesType = "default">
+      <#local stylesPrefix = "fields_default_">
+    </#if>
+
+    <#if !labelArea?is_boolean>
+      <#local stylesLabelArea = styles[stylesPrefix + "labelarea"]!"">
+      <#if stylesLabelArea?is_boolean>
+        <#local labelArea = stylesLabelArea>
+      </#if>
+    </#if>
+    <#if !labelType?has_content>
+      <#local labelType = styles[stylesPrefix + "labeltype"]!"gridarea">
+    </#if>
+    <#if !labelLayout?has_content>
+      <#local labelLayout = styles[stylesPrefix + "labellayout"]!"left">
+    </#if>
+    <#if !labelArea?is_boolean>
+      <#local labelArea = (labelType != "none" && labelLayout != "none")>
+    </#if>
+
+    <#if !labelAreaExceptions?is_sequence && !labelAreaExceptions?is_string>
+      <#if labelAreaExceptions?is_boolean && labelAreaExceptions == false>
+        <#local labelAreaExceptions = []>
+      <#else>
+        <#local labelAreaExceptions = styles[stylesPrefix + "labelareaexceptions"]!"">
+      </#if>
+    </#if>
+    <#if labelAreaExceptions?is_string>
+      <#if labelAreaExceptions?has_content>
+        <#local labelAreaExceptions = labelAreaExceptions?split(" ")>
+      <#else>
+        <#local labelAreaExceptions = []>
+      </#if>
+    </#if>
+    <#return {"type":type, "labelType":labelType, "labelLayout":labelLayout, "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions}>
+</#function>
 
 <#-- 
 *************
@@ -308,10 +353,11 @@ Not associated with an HTML element as is @fieldset.
     label           = field label
                       note: title/label area behavior may also be influenced by containing macros such as @form
     labelDetail     = extra content (HTML) inserted with (after) label
-    labelArea       = boolean, default empty string (don't influence default based on other settings).
+    labelType       = [] reserved for future use.
+    labelLayout     = [] reserved for future use.
+    labelArea       = boolean, default empty string (use @fields type default).
                       if true, forces a title/label area.
                       if false, prevents a title/label area.
-    labelType       = [default] reserved for future use.
     tooltip         = Small field description - to be displayed to the customer
     description     = alternative to tooltip
     name            = field name
@@ -386,7 +432,7 @@ Not associated with an HTML element as is @fieldset.
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
         fieldFormName="" formName="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
-        labelType="default" labelArea="" description="">
+        labelType="" labelLayout="" labelArea="" description="">
 <#-- treat these as synonyms for now -->
 <#if tooltip?has_content>
   <#if !description?has_content>
@@ -400,6 +446,14 @@ Not associated with an HTML element as is @fieldset.
 
 <#-- parent @fields group elem info (if any; may be omitted) -->
 <#local fieldsInfo = readRequestStack("catoCurrentFieldsInfo", {})>
+<#if !fieldsInfo.type??>
+  <#if !catoDefaultFieldsInfo?has_content>
+    <#-- optimization -->
+    <#global catoDefaultFieldsInfo = makeFieldsInfo("default")>
+  </#if>
+  <#local fieldsInfo = catoDefaultFieldsInfo>
+</#if>
+
 <#-- parent @field elem info (if any; is possible) -->
 <#local parentFieldInfo = readRequestStack("catoCurrentFieldInfo", {})>
 <#local hasParentField = ((parentFieldInfo.type)!"")?has_content>
@@ -437,30 +491,32 @@ Not associated with an HTML element as is @fieldset.
 </#if>
 
 <@row collapse=collapse!false norows=norows class="form-field-entry">
-    <#local fieldsType = (fieldsInfo.type)!"default">
-    <#-- TODO?: in future fieldsLabelArea and fieldsLabelType default might be inferred from form type or fieldsType 
-         for now, just set fieldsLabelArea to true so by default generic and display fields will align with other fields
-         and not look crazy. 
-         fieldsType should be used and it would determine the two others implicitly, though they can be overridden.
-         for the time being, not often needed.
-    -->
-    <#local fieldsLabelType = (fieldsInfo.labelType)!"default">
-    <#local fieldsLabelArea = (fieldsInfo.labelArea)!"">
 
-    <#if fieldsLabelArea?is_boolean>
-      <#-- if specified, use this. -->
-      <#local labelAreaDefault = fieldsLabelArea>
+    <#-- TODO: right now most of the fieldsInfo parameters are not fully exploited.
+         assumes labelType=="gridarea" (unless "none" which influences labelArea) and 
+         labelLayout="left" (unless "none" which influences labelArea). -->
+    <#if labelArea?is_boolean>
+      <#local labelAreaDefault = labelArea>
+    <#elseif labelType == "none" || labelLayout == "none">
+      <#local labelAreaDefault = false>
     <#else>
-      <#if fieldsLabelType == "none">
-        <#local labelAreaDefault = false>
-      <#else>
-        <#if fieldsType == "default">
-          <#-- current default: always have label area except submit -->
-          <#local labelAreaDefault = (type != "submitarea")>
-        <#else> <#-- fieldsType == "generic" || fieldsType == "default-nolabels" -->
-          <#local labelAreaDefault = false>
+      <#local labelAreaDefault = (fieldsInfo.labelArea)!false>
+      <#if (fieldsInfo.labelAreaExceptions)?has_content>
+        <#if fieldsInfo.labelAreaExceptions?seq_contains(type)>
+          <#local labelAreaDefault = !labelAreaDefault>
         </#if>
       </#if>
+    </#if>
+
+    <#if labelType?has_content>
+      <#local effLabelType = labelType>
+    <#else>
+      <#local effLabelType = (fieldsInfo.labelType)!"">
+    </#if>
+    <#if labelLayout?has_content>
+      <#local effLabelLayout = labelLayout>
+    <#else>
+      <#local effLabelLayout = (fieldsInfo.labelLayout)!"">
     </#if>
 
     <#if (labelArea?is_boolean && labelArea == true) || 
@@ -739,22 +795,15 @@ Not associated with an HTML element as is @fieldset.
     type                = [input|display], default input
                           DEV NOTE: "display" is special for time being, probably rare or unused;
                                     maybe it should cause to omit <form> element
-    class               = classes on form element itself
-    fieldsType          = shorthand for <@fields> section; see @fields "type" arg
-    fieldsLabelArea     = shorthand for <@fields> section; see @fields "labelArea" arg
-    fieldsLabelType     = shorthand for <@fields> section; see @fields "labelType" arg   
+    class               = classes on form element itself 
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
 -->
-<#macro form type="input" class=true fieldsType="generic" fieldsLabelArea="" fieldsLabelType="default" attribs={} inlineAttribs...>
+<#macro form type="input" class=true attribs={} inlineAttribs...>
     <#local classes = makeClassesArg(class, "")>
-    <#-- note: no stacking needed because forms can't nest -->
-    <#local dummy = pushRequestStack("catoCurrentFieldsInfo", 
-        {"type":fieldsType, "labelType":fieldsLabelType, "labelArea":fieldsLabelArea})>
     <form<#if classes?has_content> class="${classes}</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
       <#nested>
     </form>
-    <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
 </#macro>
 
 <#-- 

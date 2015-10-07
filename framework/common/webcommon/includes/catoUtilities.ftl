@@ -1,12 +1,13 @@
 <#--
 * 
-* A set of utility functions and macros, largely devoid of markup and with minimal dependencies, part of standard Cato Freemarker API.
-* These utilities are generally CSS-framework-agnostic. 
-* They are as a whole intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for 
-* specific platforms.
+* A set of standalone utility functions and macros, largely devoid of markup and unrelated to templating macros and with minimal dependencies, 
+* part of standard Cato Freemarker API.
+* Generally CSS-framework-agnostic. 
+* Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.
 * Automatically included at all times.
 *
 * NOTE: Default markup-producing macros are found in catoHtmlTemplateDefault.ftl.
+*       Utilities found in catoUtilities.ftl should not contain their logic in general (TODO?: there could be a catoHtmlTemplateHelpers.ftl to isolate logic from markup).
 * NOTE: Macros should avoid using "request" directly (use setRequestVar/getRequestVar/other).
 * 
 * DEV NOTE: for performance, some of these could probably later be turned into freemarker transforms (java) or
@@ -17,7 +18,7 @@
 *
 -->
 
-<#assign catoUtilitiesDefined = true> <#-- must use #assign, not #global -->
+<#assign catoUtilitiesDefined = true> <#-- this one must use #assign, not #global -->
 
 <#-- 
 *************************************

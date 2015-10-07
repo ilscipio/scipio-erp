@@ -868,7 +868,7 @@ Prints a string of element attributes. (HTML, FO, XML)
         <#t><#list attribs?keys as name><#if !exclude.contains(name) && attribs[name]?has_content> ${name}="${attribs[name]?string}"</#if></#list>
       </#if>
     </#if>
-  <#else>
+  <#elseif attribs?is_string>
     <#t> ${attribs?string}
   </#if>
 </#macro>

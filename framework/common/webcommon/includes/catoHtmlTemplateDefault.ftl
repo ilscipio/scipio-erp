@@ -1198,7 +1198,8 @@ Since this is very foundation specific, this function may be dropped in future i
         <div class="${styles.tile_container!}" id="${id!}">
             <#nested>
         </div>
-        <script>
+        <script type="text/javascript">
+        //<![CDATA[
          $(function() {
             $('#${id}').freetile({
                 selector: '.${styles.tile_wrap!}'
@@ -1212,6 +1213,7 @@ Since this is very foundation specific, this function may be dropped in future i
             }).disable();
             -->
          });
+        //]]>
         </script>
     <#else>
         <#-- FIXME: the "class" arg is not even used...
@@ -1770,7 +1772,8 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
         <#global chartId = "chart_${renderSeqNumber!}_${fieldIdNum!}"/>
         <#global chartType = type/>
         <canvas id="${chartId!}" class="${styles.grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
-        <script>
+        <script type="text/javascript">
+        //<![CDATA[
             $(function(){
                 var chartDataEl = $('.chart-data:first-of-type');
                 var chartData = chartDataEl.sassToJs({pseudoEl:":before", cssProperty: "content"});
@@ -1842,6 +1845,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${fieldIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
                 <#nested/>
             });
+        //]]>
         </script>
     </#if>
 </#macro>
@@ -1955,21 +1959,11 @@ TODO: document better if needed
         var uploadProgress = null;
     
         jQuery(document).ready(function() {
-            uploadProgress = new CatoUploadProgress({
-            <#list options?keys as opt>
-                <#local val = options[opt]!>
-                <#if opt=="successRedirectUrl">
-                  <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
-                  "${opt}" : "${val?replace("&amp;", "&")}",
-                <#elseif val?is_number>
-                  "${opt}" : ${val},
-                <#elseif val?is_boolean>
-                  "${opt}" : ${val?string("true", "false")},
-                <#else>
-                  "${opt}" : "${val}",
-                </#if>
-            </#list>
-            });
+          <#if options.successRedirectUrl??>
+            <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
+            <#local options = options + {"successRedirectUrl":options.successRedirectUrl?replace("&amp;", "&")}>
+          </#if>
+            uploadProgress = new CatoUploadProgress(<@objectAsJson object=options />);
             uploadProgress.reset();
         });
         

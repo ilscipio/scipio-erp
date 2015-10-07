@@ -1963,7 +1963,7 @@ TODO: document better if needed
             <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
             <#local options = options + {"successRedirectUrl":options.successRedirectUrl?replace("&amp;", "&")}>
           </#if>
-            uploadProgress = new CatoUploadProgress(<@objectAsJson object=options />);
+            uploadProgress = new CatoUploadProgress(<@objectAsJs object=options />);
             uploadProgress.reset();
         });
         

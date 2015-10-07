@@ -403,9 +403,9 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 
 <#-- 
 *************
-* objectAsJson macro
+* objectAsJs and objectAsJson macros
 ************
-Outputs a Freemarker variable as JSON.
+Output a Freemarker variable as JS and JSON.
 
 DEV NOTE: This is complicated in Ofbiz because Maps and objects from
     widget/java/groovy context don't behave same as FTL types.
@@ -413,14 +413,28 @@ DEV NOTE: This is complicated in Ofbiz because Maps and objects from
     groovy context, the ?is_ don't work like you'd expect (a lot of vars
     implement ?string and ?is_hash_ex that aren't really either of these, so leave for last)
 
-FIXME: escaping? (var?json)?
+TODO: doesn't handle dates (ambiguous?)
+                    
+   * Parameters *
+    object          = the FTL or context object
+    wrap            = boolean, default true, if true, wrap in {}, [], "" as needed, otherwise omit
+    hasMore         = boolean, default false, if true, always include trailing separator in hashes and arrays
+    escape          = escape characters in strings
 -->
-<#macro objectAsJson object wrap=true hasMore=false> 
+<#macro objectAsJs object wrap=true hasMore=false escape=true>
+    <@objectAsScriptLang lang="js" object=object wrap=wrap hasMore=hasMore escape=escape />
+</#macro>
+<#macro objectAsJson object wrap=true hasMore=false escape=true>
+    <@objectAsScriptLang lang="json" object=object wrap=wrap hasMore=hasMore escape=escape />
+</#macro>
+
+<#-- implementation -->
+<#macro objectAsScriptLang lang object wrap=true hasMore=false escape=true>
     <#if object?is_hash && object.keySet?? && object.keySet?is_method>
         <#-- Map from java/groovy; doesn't work properly with ?keys even though implements ?is_hash_ex -->
         <#if wrap>{</#if><#lt>
-        <#list object.keySet() as key> 
-            "${key}" : <@objectAsJson object=object[key] wrap=true /><#if key_has_next || hasMore>,</#if>
+        <#list object.keySet() as key>
+            "${escapeScriptString(lang, key, escape)}}" : <#if object[key]??><@objectAsScriptLang lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
         </#list> 
         <#if wrap>}</#if><#rt>
     <#elseif object?is_enumerable> 
@@ -429,26 +443,57 @@ FIXME: escaping? (var?json)?
              but usually for those if ?is_enumerable it means it was a list-like type. -->
         <#if wrap>[</#if><#lt>
         <#list object as item> 
-            <@objectAsJson object=item wrap=true /><#if item_has_next || hasMore>,</#if>
+            <#if item??><@objectAsScriptLang lang=lang object=item wrap=true escape=escape /><#else>null</#if><#if item_has_next || hasMore>,</#if>
         </#list> 
         <#if wrap>]</#if><#rt>
     <#elseif object?is_number> 
         ${object}<#t>
     <#elseif object?is_boolean>
         ${object?c}<#t>
+    <#elseif object?is_date_like>
+        <#-- TODO? -->
+        <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
     <#elseif object?is_hash_ex && !object?is_string> 
         <#-- check last because a lot of things implement ?is_hash_ex you might not expect - including strings... -->
         <#if wrap>{</#if><#lt>
         <#list object?keys as key> 
-            "${key}" : <@objectAsJson object=object[key] wrap=true /><#if key_has_next || hasMore>,</#if>
+            "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScriptLang lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
         </#list> 
         <#if wrap>}</#if><#rt>
+    <#-- the following are invalid/inconvertible types, but catch them because otherwise debugging impossible -->
+    <#elseif objectAsJsonTreatInvalidNonFatal && object?is_hash && !object?is_string> 
+        "__NONEXHASH__"<#t>
+    <#elseif objectAsJsonTreatInvalidNonFatal && object?is_method>
+        "__METHOD__"<#t>
+    <#elseif objectAsJsonTreatInvalidNonFatal && object?is_directive>
+        "__DIRECTIVE__"<#t>
+    <#elseif object?is_string>
+        <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
     <#else>
-        <#-- ?is_string and fallback. ?string last because implemented by other types unexpectedly. -->
-        <#if wrap>"${object?string}"<#else>${object?string}</#if><#t>
+        <#-- fallback, best-effort. -->
+        <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
     </#if> 
-</#macro> 
+</#macro>
+<#function escapeScriptString lang val escape=true>
+  <#if escape>
+    <#switch lang>
+      <#case "json">
+        <#return val?json_string>
+        <#break>
+      <#case "js">
+        <#return val?js_string>
+        <#break>
+      <#case "raw">
+      <#default>
+        <#return val>
+        <#break>
+    </#switch>
+  <#else>
+    <#return val>
+  </#if>
+</#function>
 
+<#global objectAsJsonTreatInvalidNonFatal = true>
 
 <#-- 
 *************************************

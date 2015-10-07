@@ -406,27 +406,46 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 * objectAsJson macro
 ************
 Outputs a Freemarker variable as JSON.
-FIXME: escaping? ?json?
+
+DEV NOTE: This is complicated in Ofbiz because Maps and objects from
+    widget/java/groovy context don't behave same as FTL types.
+    Currently can't use ?keys on Maps and generally for most types gotten from
+    groovy context, the ?is_ don't work like you'd expect (a lot of vars
+    implement ?string and ?is_hash_ex that aren't really either of these, so leave for last)
+
+FIXME: escaping? (var?json)?
 -->
-<#macro objectAsJson object> 
-    <#if object?is_hash || object?is_hash_ex> 
-        {<#lt>
-        <#list object?keys as key> 
-            "${key}" : <@objectAsJson object=object[key] /><#if key_has_next>,</#if>
+<#macro objectAsJson object wrap=true hasMore=false> 
+    <#if object?is_hash && object.keySet?? && object.keySet?is_method>
+        <#-- Map from java/groovy; doesn't work properly with ?keys even though implements ?is_hash_ex -->
+        <#if wrap>{</#if><#lt>
+        <#list object.keySet() as key> 
+            "${key}" : <@objectAsJson object=object[key] wrap=true /><#if key_has_next || hasMore>,</#if>
         </#list> 
-        }<#rt>
+        <#if wrap>}</#if><#rt>
     <#elseif object?is_enumerable> 
-        [<#lt>
+        <#-- check this early because some of these from groovy 
+             also implement ?string and ?is_hash_ex at same time (?).
+             but usually for those if ?is_enumerable it means it was a list-like type. -->
+        <#if wrap>[</#if><#lt>
         <#list object as item> 
-            <@objectAsJson object=item /><#if item_has_next>,</#if>
+            <@objectAsJson object=item wrap=true /><#if item_has_next || hasMore>,</#if>
         </#list> 
-        ]<#rt>
+        <#if wrap>]</#if><#rt>
     <#elseif object?is_number> 
         ${object}<#t>
     <#elseif object?is_boolean>
         ${object?c}<#t>
+    <#elseif object?is_hash_ex && !object?is_string> 
+        <#-- check last because a lot of things implement ?is_hash_ex you might not expect - including strings... -->
+        <#if wrap>{</#if><#lt>
+        <#list object?keys as key> 
+            "${key}" : <@objectAsJson object=object[key] wrap=true /><#if key_has_next || hasMore>,</#if>
+        </#list> 
+        <#if wrap>}</#if><#rt>
     <#else>
-        "${object?string}"<#t>
+        <#-- ?is_string and fallback. ?string last because implemented by other types unexpectedly. -->
+        <#if wrap>"${object?string}"<#else>${object?string}</#if><#t>
     </#if> 
 </#macro> 
 

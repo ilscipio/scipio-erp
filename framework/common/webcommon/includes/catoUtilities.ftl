@@ -7,14 +7,14 @@
 * Automatically included at all times.
 *
 * NOTE: Default markup-producing macros are found in catoHtmlTemplateDefault.ftl.
-*       Utilities found in catoUtilities.ftl should not contain their logic in general (TODO?: there could be a catoHtmlTemplateHelpers.ftl to isolate logic from markup).
-* NOTE: Macros should avoid using "request" directly (use setRequestVar/getRequestVar/other).
-* 
+*     Utilities found in catoUtilities.ftl should not contain their logic in general (TODO?: there could be a catoHtmlTemplateHelpers.ftl to isolate logic from markup).
+* IMPL NOTE: Macros should avoid using "request" directly (use setRequestVar/getRequestVar/other).
+*
 * DEV NOTE: for performance, some of these could probably later be turned into freemarker transforms (java) or
-* delegate to java methods.
+*     delegate to java methods.
 * DEV NOTE: freemarker functions (and java calls) don't support named arguments so in some cases 
-* macros are easier/better to use even in this file (but macro calls don't inline well in other macro/function calls, 
-* so give and take).
+*     macros are easier/better to use even in this file (but macro calls don't inline well in other macro/function calls, 
+*     so give and take).
 *
 -->
 
@@ -834,17 +834,42 @@ Gets a global var from request scope (request attributes, or if no request, FTL 
 *************
 * elemAttribStr macro
 ************
-Prints a string of element attributes.
+Prints a string of element attributes. (HTML, FO, XML)
+
+   * General Attributes *
+    attribs         = hash of attribute-value pairs. 
+                      it currently accepts string format as a fallback/legacy support, but this is highly discouraged
+                      and other args won't work with it.
+    alt             = boolean, if true alternate row (odd), if false regular (even)
+    selected        = boolean, if true row is marked selected
+    exclude         = list of attrib names to skip
 -->
-<#macro elemAttribStr attribs includeEmpty=false emptyValToken="">
+<#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude="">
   <#if attribs?is_hash_ex>
-    <#if includeEmpty>
-      <#t><#list attribs?keys as name> ${name}="${attribs[name]?string}"</#list>
-    <#elseif emptyValToken?has_content>
-      <#t><#list attribs?keys as name><#if attribs[name]?has_content || emptyValToken?string == attribs[name]?string> ${name}="${attribs[name]?string}"</#if></#list>
+    <#if exclude?has_content>
+      <#if includeEmpty>
+        <#t><#list attribs?keys as name> ${name}="${attribs[name]?string}"</#list>
+      <#elseif emptyValToken?has_content>
+        <#t><#list attribs?keys as name><#if attribs[name]?has_content || emptyValToken?string == attribs[name]?string> ${name}="${attribs[name]?string}"</#if></#list>
+      <#else>
+        <#t><#list attribs?keys as name><#if attribs[name]?has_content> ${name}="${attribs[name]?string}"</#if></#list>
+      </#if>
     <#else>
-      <#t><#list attribs?keys as name><#if attribs[name]?has_content> ${name}="${attribs[name]?string}"</#if></#list>
+      <#if exclude?is_string>
+        <#local exclude = Static["org.ofbiz.base.util.UtilMisc"].toSet(exclude)>
+      <#else>
+        <#local exclude = Static["org.ofbiz.base.util.UtilMisc"].toSet(exclude)>
+      </#if>
+      <#if includeEmpty>
+        <#t><#list attribs?keys as name><#if !exclude.contains(name)> ${name}="${attribs[name]?string}"</#if></#list>
+      <#elseif emptyValToken?has_content>
+        <#t><#list attribs?keys as name><#if !exclude.contains(name) && (attribs[name]?has_content || emptyValToken?string == attribs[name]?string)> ${name}="${attribs[name]?string}"</#if></#list>
+      <#else>
+        <#t><#list attribs?keys as name><#if !exclude.contains(name) && attribs[name]?has_content> ${name}="${attribs[name]?string}"</#if></#list>
+      </#if>
     </#if>
+  <#else>
+    <#t> ${attribs?string}
   </#if>
 </#macro>
 

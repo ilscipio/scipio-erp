@@ -6,15 +6,24 @@
 *
 * Default Cato markup (NOTE: currently targeted toward Foundation CSS).
 *
-* NOTE: Macros should avoid using "request" directly (use setRequestVar/getRequestVar/other).
+* NOTE: In general, macros expect to be called using named arguments (not supported for functions),
+*     except where otherwise noted.
+*
+* IMPL NOTE: Macros should avoid using "request" directly (use setRequestVar/getRequestVar/other).
 *
 * DEV NOTE: although intended as swappable, the way to reuse/extend this file needs clarified.
-* currently contains much logic code and includes all the widget macros (see FIXMEs). can #include this file
-* and override macros, but widget macro includes makes that very heavy, and still logic reuse problems.
+*     currently contains much logic code and includes all the widget macros (see FIXMEs). can #include this file
+*     and override macros, but widget macro includes makes that very heavy, and still logic reuse problems.
+*
+* DEV NOTE: some macros use attribs and inlineAttribs args to specify extra HTML attribs.
+*     even though it would be convenient, we can't allow a "attribString" arg because no way
+*     for macro to get attribs out of it if it needs them, cause problems.
+*     FIXME: not all macros currently properly check attribMap for duplicate attribs
+*       of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).
 *
 * TODO?: there could be a catoHtmlTemplateHelpers.ftl to help separate template macro-related logic from markup (less copy-paste).
-*        Do not put functions closely related to these macros in CatoUtilities.
-*        For now, try to keep markup generalized and parametrizable via catoHtmlVariablesDefault.html as much as possible.
+*     Do not put functions closely related to these macros in CatoUtilities.
+*     For now, try to keep markup generalized and parametrizable via catoHtmlVariablesDefault.html as much as possible.
 *
 -->
 
@@ -245,7 +254,7 @@ levels manually, but most often should let @section menu handle them.
     <#local level = 6>
   </#if>
   <#local classes = (classes + " " + headingLevelClass)?trim>
-  <h${level}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>><#nested></h${level}>
+  <h${level}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>><#nested></h${level}>
 </#macro>
 
 <#-- 
@@ -801,7 +810,7 @@ Not associated with an HTML element as is @fieldset.
 -->
 <#macro form type="input" class=true attribs={} inlineAttribs...>
     <#local classes = makeClassesArg(class, "")>
-    <form<#if classes?has_content> class="${classes}</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+    <form<#if classes?has_content> class="${classes}</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
       <#nested>
     </form>
 </#macro>
@@ -1284,6 +1293,10 @@ Since this is very foundation specific, this function may be dropped in future i
   <#return returnValue>
 </#function>
 
+<#function makeMagTargetAttribMap id>
+  <#return {"data-magellan-destination":id}>
+</#function>
+
 
 <#-- 
 *************
@@ -1418,7 +1431,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <div class="scrollable-table-container">
   </#if>
   <table<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#rt>
-    <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+    <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "cellspacing"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
 </#if>
     <#nested>
 <#if close>
@@ -1457,7 +1470,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <#local dummy = pushRequestStack("catoCurrentTableHeadStack", 
         {"prevTableSectionInfo":prevTableSectionInfo})>
   </#if>
-  <thead<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+  <thead<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
 </#if>
     <#nested>
 <#if close>
@@ -1484,7 +1497,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <#local dummy = pushRequestStack("catoCurrentTableBodyStack", 
         {"prevTableSectionInfo":prevTableSectionInfo})>
   </#if>
-  <tbody<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+  <tbody<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
 </#if>
     <#nested>
 <#if close>
@@ -1511,7 +1524,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <#local dummy = pushRequestStack("catoCurrentTableFootStack", 
         {"prevTableSectionInfo":prevTableSectionInfo})>
   </#if>
-  <tfoot<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+  <tfoot<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
 </#if>
     <#nested>
 <#if close>
@@ -1608,7 +1621,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#if selected?is_boolean && selected == true>
     <#local classes = (classes + " " + styles.row_selected!)?trim>
   </#if>
-  <tr<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+  <tr<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
 </#if>    
     <#nested>
 <#if close>
@@ -1652,14 +1665,14 @@ Helps define table cells.
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
   <#local classes = makeClassesArg(class, "")>
-  <#if open><th<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></th></#if>
+  <#if open><th<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#macro td class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
   <#local classes = makeClassesArg(class, "")>
-  <#if open><td<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></td></#if>
+  <#if open><td<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 
 <#-- 
@@ -2063,7 +2076,7 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#local classes = makeClassesArg(class, styles["menu_" + styleName]!"")>
   <#t>
   <#if !inlineItems>
-    <ul<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>>
+    <ul<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>>
   </#if>
   <#if !(items?is_boolean && items == false)>
     <#if nestedFirst>
@@ -2181,7 +2194,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     <#local classes = (classes + " active")?trim>
     <#local contentClasses = (contentClasses + " active")?trim>
   </#if>
-  <li<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs /></#if>><#rt>
+  <li<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
     <#if !nestedHtml?is_boolean>
       <#-- use nestedHtml -->
     <#elseif !nestedMenu?is_boolean>

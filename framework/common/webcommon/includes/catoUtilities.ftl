@@ -474,6 +474,8 @@ TODO: doesn't handle dates (ambiguous?)
         <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
     </#if> 
 </#macro>
+
+<#-- escapes a string to be placed within "" literals -->
 <#function escapeScriptString lang val escape=true>
   <#if escape>
     <#switch lang>
@@ -481,7 +483,8 @@ TODO: doesn't handle dates (ambiguous?)
         <#return val?json_string>
         <#break>
       <#case "js">
-        <#return val?js_string>
+        <#-- FIXME?: investigate this... -->
+        <#return val?js_string?replace("\\'", "\'")?replace("\\>", ">")>
         <#break>
       <#case "raw">
       <#default>

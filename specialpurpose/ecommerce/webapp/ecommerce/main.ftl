@@ -22,5 +22,5 @@ under the License.
   ${screens.render("component://ecommerce/widget/CatalogScreens.xml#bestSellingCategory")}
   ${screens.render("component://ecommerce/widget/CatalogScreens.xml#category-include")}
 <#else>
-  <center><h2>${uiLabelMap.EcommerceNoPROMOTIONCategory}</h2></center>
+  <center><@heading>${uiLabelMap.EcommerceNoPROMOTIONCategory}</@heading></center>
 </#if>

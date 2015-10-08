@@ -26,7 +26,7 @@ under the License.
 </#macro>
 
 <#macro "ask:title">
-<h2>${.node}</h2>
+<@heading>${.node}</@heading>
 <p/>
 </#macro>
 
@@ -37,7 +37,7 @@ under the License.
 <#macro "ask:section">
   <#list .node?children as kid>
     <#if kid?node_name == "sectionTitle">
-      <h3><#recurse kid></h3>
+      <@heading relLevel=+1><#recurse kid></@heading>
     <#else>
       ${kid.@@markup}
     </#if>

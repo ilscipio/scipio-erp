@@ -194,7 +194,7 @@ function getConfigDetails(event) {
       </#if>
     </@td>
     <@td align="right" valign="top">
-      <h2>${productContentWrapper.get("PRODUCT_NAME", "html")!}</h2>
+      <@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>
       <div>${productContentWrapper.get("DESCRIPTION", "html")!}</div>
       <div><b>${product.productId!}</b></div>
       <#-- example of showing a certain type of feature with the product -->
@@ -659,7 +659,7 @@ function getConfigDetails(event) {
   </#if>
   <#if assocProducts?has_content>
     <@tr><@td>&nbsp;</@td></@tr>
-    <@tr><@td colspan="2"><h2>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</h2></@td></@tr>
+    <@tr><@td colspan="2"><@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</@heading></@td></@tr>
 
     <#list assocProducts as productAssoc>
       <@tr><@td>
@@ -704,7 +704,7 @@ ${setRequestAttribute("productValue", productValue)}
 
 <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
 <#if commonFeatureResultIds?has_content>
-  <h2>Similar Products That Might Interest You...</h2>
+  <@heading>Similar Products That Might Interest You...</@heading>
 
 
   <#list commonFeatureResultIds as commonFeatureResultId>

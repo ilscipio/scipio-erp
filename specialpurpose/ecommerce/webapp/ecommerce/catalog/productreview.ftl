@@ -69,5 +69,5 @@ under the License.
     </fieldset>
   </form>
 <#else>
-  <h2>${uiLabelMap.ProductCannotReviewUnKnownProduct}.</h2>
+  <@heading>${uiLabelMap.ProductCannotReviewUnKnownProduct}.</@heading>
 </#if>

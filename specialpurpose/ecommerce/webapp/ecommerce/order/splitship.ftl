@@ -110,7 +110,7 @@ function submitForm(form, mode, value) {
                       </#list>
                     </select>
 
-                    <h2>${uiLabelMap.OrderSpecialInstructions}</h2>
+                    <@heading>${uiLabelMap.OrderSpecialInstructions}</@heading>
                     <textarea class='textAreaBox' cols="35" rows="3" wrap="hard" name="shippingInstructions">${cart.getShippingInstructions(groupIdx)!}</textarea>
                   </@td>
                   <@td>
@@ -131,7 +131,7 @@ function submitForm(form, mode, value) {
                       </select>
                     </div>
 
-                    <h2>${uiLabelMap.OrderGiftMessage}</h2>
+                    <@heading>${uiLabelMap.OrderGiftMessage}</@heading>
                     <textarea class='textAreaBox' cols="30" rows="3" wrap="hard" name="giftMessage">${cart.getGiftMessage(groupIdx)!}</textarea>
                   </@td>
                   <@td><input type="button" class="smallSubmit" value="${uiLabelMap.CommonSave}" onclick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>

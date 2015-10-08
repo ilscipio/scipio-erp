@@ -25,7 +25,7 @@ under the License.
         <frame src="${encodeUrlMain}" name="entityFrame"/>
     </frameset>
     <noframes>
-        <h2>${uiLabelMap.CommonFrameAlert1}</h2>
+        <@heading>${uiLabelMap.CommonFrameAlert1}</@heading>
         <p>${uiLabelMap.CommonFrameAlert2}</p>
         <br />
     </noframes>

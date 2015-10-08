@@ -23,7 +23,7 @@ under the License.
   <#if !contactMech??>
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !requestParameters.preContactMechTypeId?? && !preContactMechTypeId??>
-    <h2>${uiLabelMap.PartyCreateNewContactInfo}</h2>
+    <@heading>${uiLabelMap.PartyCreateNewContactInfo}</@heading>
     <form method="post" action='<@ofbizUrl>editcontactmechnosave</@ofbizUrl>' name="createcontactmechform">
       <div>
       <@table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -46,11 +46,11 @@ under the License.
 
   <#if contactMechTypeId??>
     <#if !contactMech??>
-      <h2>${uiLabelMap.PartyCreateNewContactInfo}</h2>
+      <@heading>${uiLabelMap.PartyCreateNewContactInfo}</@heading>
       <a href='<@ofbizUrl>${donePage}</@ofbizUrl>' class="button">${uiLabelMap.CommonGoBack}</a>
       <a href="javascript:document.editcontactmechform.submit()" class="button">${uiLabelMap.CommonSave}</a>
     <#else>
-      <h2>${uiLabelMap.PartyEditContactInfo}</h2>      
+      <@heading>${uiLabelMap.PartyEditContactInfo}</@heading>      
       <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
       <a href="javascript:document.editcontactmechform.submit()" class="button">${uiLabelMap.CommonSave}</a>
     </#if>

@@ -19,7 +19,7 @@ under the License.
 
 <div>
   <#assign shoppingCart = sessionAttributes.shoppingCart! />
-  <h2>${uiLabelMap.OrderCheckout}</h2>
+  <@heading>${uiLabelMap.OrderCheckout}</@heading>
     <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
       <div id="checkoutPanel">
 

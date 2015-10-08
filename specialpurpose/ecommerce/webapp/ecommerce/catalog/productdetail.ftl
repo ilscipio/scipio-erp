@@ -422,7 +422,7 @@ $(function(){
         </#if>
         
         <div id="productDetailBox">
-          <h2>${productContentWrapper.get("PRODUCT_NAME", "html")!}</h2>
+          <@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>
           <div>${productContentWrapper.get("DESCRIPTION", "html")!}</div>
           <div>${product.productId!}</div>
           <#-- example of showing a certain type of feature with the product -->
@@ -810,7 +810,7 @@ $(function(){
         <#assign targetRequest = targetRequestName />
       </#if>
       <#if assocProducts?has_content>
-        <h2>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</h2>
+        <@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</@heading>
     
         <div class="productsummary-container">
         <#list assocProducts as productAssoc>
@@ -863,7 +863,7 @@ $(function(){
     
     <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
     <#if comsmonFeatureResultIds?has_content>
-        <h2>${uiLabelMap.ProductSimilarProducts}</h2>
+        <@heading>${uiLabelMap.ProductSimilarProducts}</@heading>
     
         <div class="productsummary-container">
             <#list commonFeatureResultIds as commonFeatureResultId>

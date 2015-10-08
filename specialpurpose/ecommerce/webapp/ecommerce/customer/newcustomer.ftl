@@ -69,11 +69,11 @@ there should generally always only be one h1 tag on the page and that
 will generally always be reserved for the logo at the top of the page.
 ------------------------------------------------------------------------------->
 
-<h2>${uiLabelMap.PartyRequestNewAccount}
+<@heading>${uiLabelMap.PartyRequestNewAccount}
   <span>
     ${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>checkLogin/main</@ofbizUrl>'>${uiLabelMap.CommonLoginHere}</a>
   </span>
-</h2>
+</@heading>
 
 <#macro fieldErrors fieldName>
   <#if errorMessageList?has_content>

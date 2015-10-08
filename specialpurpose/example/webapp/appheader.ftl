@@ -21,7 +21,7 @@ under the License.
 <div id="app-navigation">
   <ul>
     <li>
-      <h2>${uiLabelMap.ExampleApplication}</h2>
+      <@heading>${uiLabelMap.ExampleApplication}</@heading>
       <@menu type="main">
       <#if userLogin?has_content>
         <@menuitem type="link" href=makeOfbizUrl("FindExample?portalPageId=${uiLabelMap.ExampleExample}") text="${uiLabelMap.ExampleExample}" selected=(selected=="${uiLabelMap.ExampleExample}") />

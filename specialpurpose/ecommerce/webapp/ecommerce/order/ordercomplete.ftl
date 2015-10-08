@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<h2>${uiLabelMap.EcommerceOrderConfirmation}</h2>
+<@heading>${uiLabelMap.EcommerceOrderConfirmation}</@heading>
 <#if !isDemoStore?? || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
 <#if orderHeader?has_content>
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}

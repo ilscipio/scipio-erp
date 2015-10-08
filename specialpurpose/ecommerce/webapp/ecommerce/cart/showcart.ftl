@@ -101,7 +101,7 @@ function setAlternateGwp(field) {
 </script>
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems() /> <#-- change display format when rental items exist in the shoppingcart -->
 <div>
-    <h2>
+    <@heading>
         <#if ((sessionAttributes.lastViewedProducts)?has_content && sessionAttributes.lastViewedProducts?size > 0)>
           <#assign continueLink = "/product?product_id=" + sessionAttributes.lastViewedProducts.get(0) />
         <#else>
@@ -110,7 +110,7 @@ function setAlternateGwp(field) {
         <a href="<@ofbizUrl>${continueLink}</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceContinueShopping}</a>
         <#if (shoppingCartSize > 0)><a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCheckout}</a><#else><span class="submenutextrightdisabled">${uiLabelMap.OrderCheckout}</span></#if>
         ${uiLabelMap.CommonQuickAdd}
-    </h2>
+    </@heading>
     <div>
         <div>
             <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform">
@@ -157,7 +157,7 @@ function setAlternateGwp(field) {
             </div>
         </div>
         <br />
-        <h2>&nbsp;${uiLabelMap.OrderShoppingCart}</h2>
+        <@heading>${uiLabelMap.OrderShoppingCart}</@heading>
     </div>
     <div>
 
@@ -457,7 +457,7 @@ function setAlternateGwp(field) {
       </fieldset>
     </form>
   <#else>
-    <h2>${uiLabelMap.EcommerceYourShoppingCartEmpty}.</h2>
+    <@heading>${uiLabelMap.EcommerceYourShoppingCartEmpty}.</@heading>
   </#if>
 <#-- Copy link bar to bottom to include a link bar at the bottom too -->
     </div>
@@ -465,7 +465,7 @@ function setAlternateGwp(field) {
 
 <div>
     <div>
-        <h2>${uiLabelMap.ProductPromoCodes}</h2>
+        <@heading>${uiLabelMap.ProductPromoCodes}</@heading>
     </div>
     <div>
         <div>
@@ -491,7 +491,7 @@ function setAlternateGwp(field) {
 <#if showPromoText?? && showPromoText>
 <div>
     <div>
-        <h2>${uiLabelMap.OrderSpecialOffers}</h2>
+        <@heading>${uiLabelMap.OrderSpecialOffers}</@heading>
     </div>
     <div>
         <#-- show promotions text -->
@@ -508,7 +508,7 @@ function setAlternateGwp(field) {
 <#if associatedProducts?has_content>
 <div>
     <div>
-        <h2>${uiLabelMap.EcommerceYouMightAlsoIntrested}:</h2>
+        <@heading>${uiLabelMap.EcommerceYouMightAlsoIntrested}:</@heading>
     </div>
     <div>
         <#-- random complementary products -->

@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)/>
 <#assign currentCatalogId = Static["org.ofbiz.product.catalog.CatalogWorker"].getCurrentCatalogId(request)/>
-<h2>${uiLabelMap.ProductAdvancedSearchInCategory}</h2>
+<@heading>${uiLabelMap.ProductAdvancedSearchInCategory}</@heading>
 <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
   <input type="hidden" name="VIEW_SIZE" value="10"/>
   <input type="hidden" name="PAGING" value="Y"/>
@@ -109,7 +109,7 @@ under the License.
   <#if searchOptionsHistoryList?has_content>
     
 
-    <h2>${uiLabelMap.OrderLastSearches}...</h2>
+    <@heading>${uiLabelMap.OrderLastSearches}...</@heading>
 
     <div>
       <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderClearSearchHistory}</a>

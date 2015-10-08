@@ -20,7 +20,7 @@ under the License.
 
 <@row>
 <@cell columns=6>
-       <h3>${uiLabelMap.CommonGroup}</h3>
+       <@heading relLevel=+1>${uiLabelMap.CommonGroup}</@heading>
        <form action="<@ofbizUrl>/entitymaint</@ofbizUrl>">
         <@field type="select" name="filterByGroupName" label="${uiLabelMap.WebtoolsGroupName}">
              <option value="">${uiLabelMap.CommonAll}</option>
@@ -37,7 +37,7 @@ under the License.
 </@row> 
 <@row>
    <@cell>
-        <h3>${uiLabelMap.WebtoolsEntitiesAlpha}</h3>
+        <@heading relLevel=+1>${uiLabelMap.WebtoolsEntitiesAlpha}</@heading>
     <#assign firstChar = "x">
     <#assign anchorId = "">
     <#assign anchorAttribs = {}>

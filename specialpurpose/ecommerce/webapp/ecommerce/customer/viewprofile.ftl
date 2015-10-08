@@ -22,7 +22,7 @@ under the License.
 <@table width="100%" cellpadding="0" cellspacing="0" border="0">
   <@tr>
     <@td>
-      <h2>${uiLabelMap.PartyTheProfileOf}
+      <@heading>${uiLabelMap.PartyTheProfileOf}
         <#if person??>
           ${person.personalTitle!}
           ${person.firstName!}
@@ -32,7 +32,7 @@ under the License.
         <#else>
           "${uiLabelMap.PartyNewUser}"
         </#if>
-      </h2>
+      </@heading>
     </@td>
     <@td align="right">
       <#if showOld>

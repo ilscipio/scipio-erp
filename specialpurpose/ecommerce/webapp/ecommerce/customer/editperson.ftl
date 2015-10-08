@@ -17,10 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if person??>
-  <h2>${uiLabelMap.PartyEditPersonalInformation}</h2>
+  <@heading>${uiLabelMap.PartyEditPersonalInformation}</@heading>
     &nbsp;<form id="editpersonform1" method="post" action="<@ofbizUrl>updatePerson</@ofbizUrl>" name="editpersonform">    
 <#else>
-  <h2>${uiLabelMap.PartyAddNewPersonalInformation}</h2>
+  <@heading>${uiLabelMap.PartyAddNewPersonalInformation}</@heading>
     &nbsp;<form id="editpersonform2" method="post" action="<@ofbizUrl>createPerson/${donePage}</@ofbizUrl>" name="editpersonform">
 </#if>
 <div>

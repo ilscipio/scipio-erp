@@ -534,7 +534,7 @@ under the License.
               </@tr>
             </@table>
         <#else>
-            <h2>${uiLabelMap.EcommerceShoppingListEmpty}.</h2>
+            <@heading>${uiLabelMap.EcommerceShoppingListEmpty}.</@heading>
         </#if>
     </div>
 </div>
@@ -589,6 +589,6 @@ under the License.
 
     <#else>
         <#-- shoppingList was found, but belongs to a different party -->
-        <h2>${uiLabelMap.EcommerceShoppingListError} ${uiLabelMap.CommonId} ${shoppingList.shoppingListId}) ${uiLabelMap.EcommerceListDoesNotBelong}.</h2>
+        <@heading>${uiLabelMap.EcommerceShoppingListError} ${uiLabelMap.CommonId} ${shoppingList.shoppingListId}) ${uiLabelMap.EcommerceListDoesNotBelong}.</@heading>
     </#if>
 </#if>

@@ -68,7 +68,7 @@ under the License.
     <#-- add set of ArtifactInfo if there is not a single one identified, with link to each -->
     <#if artifactInfoSet?has_content>
     <@section>
-        <h2>Multiple Artifacts Found:</h2>
+        <@heading>Multiple Artifacts Found:</@heading>
         <ol>
         <ol><#list artifactInfoSet as curArtifactInfo>
             <li>${curArtifactInfo.getDisplayType()}: <@displayArtifactInfo artifactInfo=curArtifactInfo/></li>
@@ -79,7 +79,7 @@ under the License.
 
 <#else>
 
-    <h2>${uiLabelMap.WebtoolsArtifactInfo} (${artifactInfo.getDisplayType()}): ${artifactInfo.getDisplayName()}</h2>
+    <@heading>${uiLabelMap.WebtoolsArtifactInfo} (${artifactInfo.getDisplayType()}): ${artifactInfo.getDisplayName()}</@heading>
     <#if artifactInfo.getLocationURL()??>
         <@section title="Definition">Defined in: <a href="${artifactInfo.getLocationURL()}">${artifactInfo.getLocationURL()}</a></@section>
     </#if>

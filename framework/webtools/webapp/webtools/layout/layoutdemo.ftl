@@ -15,7 +15,7 @@
 </@nav>
 
 <@section>
-    <h2 ${mtarget("grid")} id="grid">Grid</h2>
+    <@heading attribs=makeMagTargetAttribMap("grid") id="grid">Grid</@heading>
     <@row class="${styles.grid_display!}">
         <@cell columns=2>2</@cell>
         <@cell columns=4>4</@cell>
@@ -46,7 +46,7 @@
 </@section>
 
 <@section>
-    <h2 ${mtarget("blockgrid")} id="blockgrid">Tiles</h2>
+    <@heading attribs=makeMagTargetAttribMap("blockgrid") id="blockgrid">Tiles</@heading>
     <@grid type="tiles">
         <@tile type="large" color=3 icon="fi-compass">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
         <@tile type="normal" color=7 title="Test"></@tile>
@@ -85,16 +85,16 @@
 </@section>
 
 <@section>
-<h2 ${mtarget("buttons")} id="buttons">Buttons</h2>
-<h3>Heading</h3>
-<h1>h1.<h1>
-<h2>h2.<h2>
-<h3>h3.<h3>
-<h4>h4.<h4>
-<h5>h5.<h5>
-<h6>h6.<h6>
+<@heading attribs=makeMagTargetAttribMap("buttons") id="buttons">Buttons</@heading>
+<@heading relLevel=+1>Heading</@heading>
+<@heading level=1>h1.</@heading>
+<@heading level=2>h2.</@heading>
+<@heading level=3>h3.</@heading>
+<@heading level=4>h4.</@heading>
+<@heading level=5>h5.</@heading>
+<@heading level=6>h6.</@heading>
 
-<h3>Shapes</h3>
+<@heading relLevel=+1>Shapes</@heading>
 <a href="#" class="${styles.button!} ${styles.tiny!}">Tiny Button</a>
 <a href="#" class="${styles.button!} ${styles.small!}">Small Button</a>
 <a href="#" class="${styles.button!}">Default Button</a>
@@ -104,7 +104,7 @@
 <a href="#" class="button round">Round Button</a>
 <a href="#" class="button radius">Radius Button</a>
 
-<h3>Colors</h3>
+<@heading relLevel=+1>Colors</@heading>
 <a href="#" class="${styles.button!}">Default Button</a>
 <a href="#" class="${styles.button!} ${styles.color_green!}">Success Button</a>
 <a href="#" class="${styles.button!} ${styles.color_grey!}">Secondary Button</a>
@@ -112,7 +112,7 @@
 <a href="#" class="${styles.button!} ${styles.color_info!}">Info Button</a>
 <a href="#" class="${styles.button!} ${styles.disabled}">Disabled Button</a>
 
-<h3>Button Groups</h3>
+<@heading relLevel=+1>Button Groups</@heading>
 <ul class="${styles.button_group} ${styles.button_force!}">
     <li><a href="#" class="${styles.button!} ${styles.small!}">Button 1</a></li>
     <li><a href="#" class="${styles.button!} ${styles.small!} ${styles.disabled}">Button 2</a></li>
@@ -127,7 +127,7 @@
 </@section>                                     
 
 <@section>
-    <h2 ${mtarget("panel")} id="panel">Panel</h2>
+    <@heading attribs=makeMagTargetAttribMap("panel") id="panel">Panel</@heading>
     <@row>
         <@cell columns=6>
             <@panel>
@@ -143,7 +143,7 @@
 </@section>
 
 <@section>
-    <h2 ${mtarget("charts")} id="charts">Charts</h2>
+    <@heading attribs=makeMagTargetAttribMap("charts") id="charts">Charts</@heading>
     <@row>
         <@cell columns="4">
             <@chart type="pie">
@@ -178,7 +178,7 @@
 </@section>
 
 <@section>
-    <h2 ${mtarget("misc")} id="misc">Misc</h2>
+    <@heading attribs=makeMagTargetAttribMap("misc") id="misc">Misc</@heading>
     <@progress value=5 id="test"/>
     <#-- simple animation test -->
     <script>

@@ -22,11 +22,11 @@ under the License.
 <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
 <#else>
   <#if !creditCard??>
-      <h2>${uiLabelMap.AccountingAddNewCreditCard}</h2>
+      <@heading>${uiLabelMap.AccountingAddNewCreditCard}</@heading>
       <form method="post" action="<@ofbizUrl>createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
       <div>
     <#else>
-      <h2>${uiLabelMap.AccountingEditCreditCard}</h2>
+      <@heading>${uiLabelMap.AccountingEditCreditCard}</@heading>
       <form method="post" action="<@ofbizUrl>updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
         <div>
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />

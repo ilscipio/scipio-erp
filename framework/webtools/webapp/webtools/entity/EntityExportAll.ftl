@@ -17,16 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h2>${uiLabelMap.WebtoolsExportFromDataSource}</h2>
+<@section title="${uiLabelMap.WebtoolsExportFromDataSource}">
 <p>${uiLabelMap.WebtoolsXMLExportInfo}</p>
 <#if results?has_content>
     <hr />
-    <h2>${uiLabelMap.WebtoolsResults}:</h2>
+    <@heading>${uiLabelMap.WebtoolsResults}:</@heading>
     <#list results as result>
         <p>${result}</p>
     </#list>
 </#if>
 <hr />
+
 <form method="post" action="<@ofbizUrl>entityExportAll</@ofbizUrl>">
     ${uiLabelMap.WebtoolsOutputDirectory}: <input type="text" size="60" name="outpath" value="${outpath!}" /><br />
     ${uiLabelMap.CommonFromDate}: <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/><br/>
@@ -34,3 +35,4 @@ under the License.
     <br />
     <input type="submit" value="${uiLabelMap.WebtoolsExport}" />
 </form>
+</@section>

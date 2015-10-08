@@ -18,5 +18,5 @@ under the License.
 -->
 
 <#if mrpName??>
-  <h2>${uiLabelMap.ManufacturingMrpName} ${mrpName!}</h2>
+  <@heading>${uiLabelMap.ManufacturingMrpName} ${mrpName!}</@heading>
 </#if>

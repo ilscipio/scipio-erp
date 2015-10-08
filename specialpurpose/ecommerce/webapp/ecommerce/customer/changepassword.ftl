@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div class="screenlet">
-  <h2>${uiLabelMap.PartyChangePassword}</h2>  
+  <@heading>${uiLabelMap.PartyChangePassword}</@heading>  
   &nbsp;<a id="CommonGoBack1" href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
   &nbsp;<a id="CommonSave1" href="javascript:document.getElementById('changepasswordform').submit()" class="button">${uiLabelMap.CommonSave}</a>
   <p/>   

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h2>${uiLabelMap.WebtoolsImportToDataSource}</h2>
+<@section title="${uiLabelMap.WebtoolsImportToDataSource}">
 <p>${uiLabelMap.WebtoolsXMLImportInfo}</p>
 <hr />
 
@@ -41,8 +41,10 @@ under the License.
   </form>
   <#if messages??>
       <hr />
-      <h3>${uiLabelMap.WebtoolsResults}:</h3>
+    <@section title="${uiLabelMap.WebtoolsResults}:">
       <#list messages as message>
           <p>${message}</p>
       </#list>
+    </@section>
   </#if>
+</@section>

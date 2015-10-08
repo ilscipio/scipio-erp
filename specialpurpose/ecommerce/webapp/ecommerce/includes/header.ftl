@@ -33,7 +33,7 @@ under the License.
     </div>
     <div id="middle">
       <#if !productStore??>
-        <h2>${uiLabelMap.EcommerceNoProductStore}</h2>
+        <@heading>${uiLabelMap.EcommerceNoProductStore}</@heading>
       </#if>
       <#if (productStore.title)??><div id="company-name">${productStore.title}</div></#if>
       <#if (productStore.subtitle)??><div id="company-subtitle">${productStore.subtitle}</div></#if>

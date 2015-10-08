@@ -25,17 +25,24 @@ under the License.
     <#assign toName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, communicationEvent.partyIdTo, true)>
 </#if>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
+<#-- TODO: this was turned into menu below, may need something more to achieve look... extra menu class/type...
+        this code was BEFORE or LEFT of title, not after
         <div class="boxlink">
             <#if (communicationEvent.partyIdFrom! != (userLogin.partyId)!)>
               <a href="<@ofbizUrl>newmessage?communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyReply}</a>
             </#if>
             <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
         </div>
-        <div class="h3">${uiLabelMap.EcommerceReadMessage}</div>
-    </div>
-    <div class="screenlet-body">
+-->
+<#assign menuHtml>
+    <@menu type="section-inline" inlineItems=true>
+        <#if (communicationEvent.partyIdFrom! != (userLogin.partyId)!)>
+          <@menuitem type="link" href=makeOfbizUrl("newmessage?communicationEventId=${communicationEvent.communicationEventId}") text="${uiLabelMap.PartyReply}" />
+        </#if>
+        <@menuitem type="link" href=makeOfbizUrl("messagelist") text="${uiLabelMap.EcommerceViewList}" />
+    </@menu>
+</#assign>
+<@section title="${uiLabelMap.EcommerceReadMessage}" menuHtml=menuHtml menuLayout="inline-title" class="+screenlet">
         <@table width="100%" border="0" cellpadding="1">
           <@tr><@td>&nbsp;</@td></@tr>
           <@tr>
@@ -61,5 +68,4 @@ under the License.
             </@td>
           </@tr>
         </@table>
-    </div>
-</div>
+</@section>

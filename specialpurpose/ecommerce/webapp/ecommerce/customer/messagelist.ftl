@@ -49,8 +49,8 @@ under the License.
               </@tr>
 </#macro>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
+<#-- TODO: this was turned into menu below, may need something more to achieve look... extra menu class/type...
+        this code was BEFORE or LEFT of title, not after
         <div class="boxlink">
             <#if parameters.showSent! == "true">
               <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewReceivedOnly}</a>
@@ -58,9 +58,17 @@ under the License.
               <a href="<@ofbizUrl>messagelist?showSent=true</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewSent}</a>
             </#if>
         </div>
-        <div class="h3">${uiLabelMap.CommonMessages}</div>
-    </div>
-    <div class="screenlet-body">
+-->
+<#assign menuHtml>
+    <@menu type="section-inline" inlineItems=true>
+        <#if parameters.showSent! == "true">
+          <@menuitem type="link" href=makeOfbizUrl("messagelist") text="${uiLabelMap.EcommerceViewReceivedOnly}" />
+        <#else>
+          <@menuitem type="link" href=makeOfbizUrl("messagelist?showSent=true") text="${uiLabelMap.EcommerceViewSent}" />
+        </#if>
+    </@menu>
+</#assign>
+<@section title="${uiLabelMap.CommonMessages}" menuHtml=menuHtml menuLayout="inline-title" class="+screenlet">
         <@table width="100%" border="0" cellpadding="1">
           <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
             <@tr><@td>${uiLabelMap.EcommerceNoMessages}.</@td></@tr>
@@ -81,5 +89,4 @@ under the License.
             </#list>
           </#if>
         </@table>
-    </div>
-</div>
+</@section>

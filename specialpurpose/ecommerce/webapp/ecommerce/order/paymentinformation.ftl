@@ -34,11 +34,7 @@ function shipBillAddr() {
 }
 </script>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.AccountingPaymentInformation}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.AccountingPaymentInformation}" class="+screenlet">
           <#-- after initial screen; show detailed screens for selected type -->
           <#if paymentMethodTypeId! == "CREDIT_CARD">
             <#if creditCard?has_content && postalAddress?has_content && !requestParameters.useShipAddr??>
@@ -228,5 +224,4 @@ function shipBillAddr() {
             </@tfoot>
           </@table>
         </form>
-    </div>
-</div>
+</@section>

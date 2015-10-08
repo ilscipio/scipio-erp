@@ -23,17 +23,9 @@ under the License.
 </#if>
 
 <#if randomSurvey?has_content>
-  <div id="minipoll" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${randomSurvey.getSurveyName()!}</li>
-      </ul>
-      <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+  <@section title="${randomSurvey.getSurveyName()!}" id="minipoll" class="+screenlet">
       <form method="post" action="<@ofbizUrl>minipoll<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
         ${randomSurvey.render(context)}
       </form>
-    </div>
-  </div>
+  </@section>
 </#if>

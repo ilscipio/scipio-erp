@@ -17,14 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="browse-blogs" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductBrowseBlogs}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.ProductBrowseBlogs}" id="browse-blogs" class="+screenlet">
     <ul class="browsecategorylist">
       <#list blogs as blog>
         <li class="browsecategorytext">
@@ -32,5 +25,4 @@ under the License.
         </li>
       </#list>
     </ul>
-  </div>
-</div>
+</@section>

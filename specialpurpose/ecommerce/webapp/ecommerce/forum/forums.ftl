@@ -17,14 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="browse-forums" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductBrowseForums}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.ProductBrowseForums}" id="browse-forums" class="+screenlet">
     <ul class="browsecategorylist">
       <#list forums as forum>
         <li class="browsecategorytext">
@@ -32,5 +25,4 @@ under the License.
         </li>
       </#list>
     </ul>
-  </div>
-</div>
+</@section>

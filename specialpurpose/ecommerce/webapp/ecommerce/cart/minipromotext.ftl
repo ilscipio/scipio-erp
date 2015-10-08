@@ -18,15 +18,7 @@ under the License.
 -->
 
 <#if showPromoText>
-<div id="minipromotext" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.OrderSpecialOffers}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-
-  <div class="screenlet-body">
+  <@section title="${uiLabelMap.OrderSpecialOffers}" id="minipromotext" class="+screenlet">
   <#-- show promotions text -->
     <ul>
       <#list productPromos as productPromo>
@@ -41,6 +33,5 @@ under the License.
         <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="button">${uiLabelMap.OrderViewAllPromotions}</a>
       </li>
     </ul>
-    </div>
-</div>
+  </@section>
 </#if>

@@ -17,11 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.PageTitleDigitalProductList}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleDigitalProductList}" class="+screenlet">
        <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
         <@table width="100%" cellpadding="1" cellspacing="0" border="0">
           <@tr>
@@ -48,14 +44,8 @@ under the License.
             <@tr><@td colspan="3"><@resultMsg>${uiLabelMap.EcommerceNoDigitalProductsFound}</@resultMsg></@td></@tr>
           </#if>
         </@table>
-    </div>
-</div>
+</@section>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission}" class="+screenlet">
        <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
-    </div>
-</div>
+</@section>

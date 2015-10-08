@@ -16,11 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.OrderRequestRoles}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.OrderRequestRoles}" class="+screenlet">
         <@table cellspacing="0" class="basic-table">
          <#assign row = 1>
          <#list requestParties as requestParty>
@@ -41,5 +37,4 @@ under the License.
               <#assign row = row + 1>
           </#list>
         </@table>
-    </div>
-</div>
+</@section>

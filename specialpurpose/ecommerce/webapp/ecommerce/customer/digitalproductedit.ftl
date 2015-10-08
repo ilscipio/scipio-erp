@@ -19,11 +19,7 @@ under the License.
 
 <#assign productPrice = productPriceList[0]!/>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.PageTitleDigitalProductEdit}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.PageTitleDigitalProductEdit}" class="+screenlet">
 <#if !supplierProduct?has_content && parameters.productId?has_content>
   <div><h3>${uiLabelMap.EcommerceMessage1} [${parameters.productId}] ${uiLabelMap.EcommerceMessage2}</h3></div>
 <#else>
@@ -62,15 +58,10 @@ under the License.
   </@table>
   </form>
 </#if>
-    </div>
-</div>
+</@section>
 
 <#if supplierProduct?has_content>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.OrderDigitalProductFiles}</div>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.OrderDigitalProductFiles}" class="+screenlet">
         <#list productContentAndInfoList as productContentAndInfo>
             <div>
               ${productContentAndInfo.contentName} (${uiLabelMap.CommonSince}: ${productContentAndInfo.fromDate})
@@ -95,6 +86,5 @@ under the License.
         </form>
         </div>
     &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBackToList}</a>
-    </div>
-</div>
+</@section>
 </#if>

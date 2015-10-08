@@ -17,14 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="choose-language" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.CommonLanguageTitle}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+<@section id="choose-language" title="${uiLabelMap.CommonLanguageTitle}" class="+screenlet">
     <form method="post" name="chooseLanguage" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>">
       <select name="newLocale" class="selectBox" style="width:95%" onchange="submit()">
         <#assign availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocales()/>
@@ -38,5 +31,4 @@ under the License.
         </#list>
       </select>
     </form>
-  </div>
-</div>
+</@section>

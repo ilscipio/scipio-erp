@@ -95,11 +95,7 @@ under the License.
     <@td width="50%" valign="top">
       <#if orderItemShipGroups?has_content>
 
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <div class="h3">${uiLabelMap.OrderShippingInformation}</div>
-        </div>
-        <div class="screenlet-body">
+    <@section title="${uiLabelMap.OrderShippingInformation}" class="+screenlet">
         <#-- shipping address -->
             <#assign groupIdx = 0>
             <#list orderItemShipGroups as shipGroup>
@@ -135,8 +131,7 @@ under the License.
 
                 <#assign groupIdx = groupIdx + 1>
             </#list><#-- end list of orderItemShipGroups -->
-        </div>
-    </div>
+    </@section>
 
       </#if>
     </@td>

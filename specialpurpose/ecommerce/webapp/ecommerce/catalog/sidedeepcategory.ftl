@@ -37,17 +37,7 @@ under the License.
   <#else>
     <#assign browseCategoryButtonClass = "browsecategorybutton">
   </#if>
-  <#if wrapInBox == "Y">
-    <div  id="sidedeepcategory" class="screenlet">
-      <div class="screenlet-title-bar">
-        <ul>
-          <li class="h3"><#if categoryDescription?has_content>${categoryDescription}<#else>${categoryName?default("")}</#if></li>
-        </ul>
-        <br class="clear"/>
-      </div>
-      <div class="screenlet-body">
-        <div class="browsecategorylist">
-  </#if>
+  <#local listEntries>
         <li class="browsecategorytext">
           <#if parentCategory?has_content>
             <#assign parentCategoryId = parentCategory.productCategoryId/>
@@ -67,27 +57,25 @@ under the License.
     </#if>
   </#if>
   </li>
+  </#local>
   <#if wrapInBox == "Y">
-      </div>
-    </div>
-  </div>
+    <#assign sectionTitle><#if categoryDescription?has_content>${categoryDescription}<#else>${categoryName?default("")}</#if></#assign>
+    <@section title=sectionTitle id="sidedeepcategory" class="+screenlet">
+      <ul class="browsecategorylist">
+        ${listEntries}
+      </ul>
+    </@section>
+  <#else>
+    ${listEntries}
   </#if>
 </#macro>
 
 <#if topLevelList?has_content>
-<div id="sidedeepcategory" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductBrowseCategories}</li>
-    </ul>
-    <br class="clear"/>
-  </div>
-  <div class="screenlet-body">
+  <@section title="${uiLabelMap.ProductBrowseCategories}" id="sidedeepcategory" class="+screenlet">
     <ul class="browsecategorylist">
       <#list topLevelList as category>
         <@categoryList parentCategory="" category=category wrapInBox="N"/>
       </#list>
     </ul>
-  </div>
-</div>
+  </@section>
 </#if>

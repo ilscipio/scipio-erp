@@ -17,16 +17,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
+<#-- TODO: this was turned into menu below, may need something more to achieve look... extra menu class/type...
+        this code was BEFORE or LEFT of title, not after
         <div class="boxlink">
             <#if showMessageLinks?default("false")?upper_case == "TRUE">
                 <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
             </#if>
         </div>
-        <div class="h3">${pageHeader}</div>
-    </div>
-    <div class="screenlet-body">
+-->
+<#assign menuHtml>
+    <@menu type="section-inline" inlineItems=true>
+        <#if showMessageLinks?default("false")?upper_case == "TRUE">
+          <@menuitem type="link" href=makeOfbizUrl("messagelist") text="${uiLabelMap.EcommerceViewList}" />
+        </#if>
+    </@menu>
+</#assign>
+<@section title="${pageHeader!}" menuHtml=menuHtml menuLayout="inline-title" class="+screenlet">
       <form name="contactus" method="post" action="<@ofbizUrl>${submitRequest}</@ofbizUrl>">
         <input type="hidden" name="partyIdFrom" value="${userLogin.partyId}"/>
         <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS"/>
@@ -104,5 +110,4 @@ under the License.
           </@tfoot>
         </@table>
       </form>
-    </div>
-</div>
+</@section>

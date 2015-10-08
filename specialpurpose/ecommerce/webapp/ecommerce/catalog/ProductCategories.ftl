@@ -195,15 +195,7 @@ var rawdata = [
 
 </script>
 
-
-
-
-<div id="quickadd" class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.ProductCategories}</li>
-        </ul>
+<@section title="${uiLabelMap.ProductCategories}" id="quickadd" class="+screenlet">
+    <div id="tree">
     </div>
-    <div class="screenlet-body" id="tree">
-    </div>
-</div>
+</@section>

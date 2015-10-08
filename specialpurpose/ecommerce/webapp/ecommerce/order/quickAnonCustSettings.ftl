@@ -39,11 +39,7 @@ under the License.
   </#if>
 </#macro>
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-     <div class="h3">${uiLabelMap.PartyBasicInformation}</div>
-  </div>
-  <div class="screenlet-body">
+<@section title="${uiLabelMap.PartyBasicInformation}" class="+screenlet">
   <form name="${parameters.formNameValue}" id="quickAnonProcessCustomer" method="post" action="<@ofbizUrl>quickAnonProcessCustomerSettings</@ofbizUrl>">
   <input type="hidden" name="partyId" value="${parameters.partyId!}"/>
   <input type="hidden" name="shippingContactMechId" value="${parameters.shippingContactMechId!}"/>
@@ -327,5 +323,4 @@ under the License.
       </@tr>
   </@table>
   </form>
-  </div>
-</div>
+</@section>

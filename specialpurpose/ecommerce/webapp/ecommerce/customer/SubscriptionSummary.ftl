@@ -17,11 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="subscription-summary" class="screenlet">
-    <div class="screenlet-title-bar">
-        <span class="h3">${uiLabelMap.ProductSubscriptions}</span>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.ProductSubscriptions}" id="subscription-summary" class="+screenlet">
         <@table width="100%" cellspacing="0" cellpadding="2">
             <@thead>
                 <@tr class="header-row">
@@ -56,6 +52,5 @@ under the License.
                 </#list>
             </@tbody>
         </@table>
-    </div>
-</div>
+</@section>
 

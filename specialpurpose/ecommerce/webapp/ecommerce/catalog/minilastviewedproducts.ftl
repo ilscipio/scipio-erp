@@ -21,18 +21,15 @@ under the License.
 <#assign lastViewedProducts = sessionAttributes.lastViewedProducts!/>
 <#if lastViewedProducts?has_content>
   <#if (lastViewedProducts?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedProducts?size-1)/></#if>
-  <div id="minilastviewedproducts" class="screenlet">  
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.EcommerceLastProducts}</li>
-        <li><a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>">[${uiLabelMap.CommonClear}]</a></li>
+  <#assign menuHtml>
+    <@menu type="section" inlineItems=true>
+        <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") text="[${uiLabelMap.CommonClear}]" />
         <#if (lastViewedProducts?size > maxToShow)>
-          <li><a href="<@ofbizUrl>lastviewedproducts</@ofbizUrl>">[${uiLabelMap.CommonMore}]</a></li>
+          <@menuitem type="link" href=makeOfbizUrl("lastviewedproducts") text="[${uiLabelMap.CommonMore}]" />
         </#if>
-      </ul>
-      <br class="clear"/>
-    </div>
-    <div class="screenlet-body">
+    </@menu>
+  </#assign>
+  <@section title="${uiLabelMap.EcommerceLastProducts}" menuHtml=menuHtml id="minilastviewedproducts" class="+screenlet">
       <ul>
         <#list lastViewedProducts[0..limit] as productId>
           <li>
@@ -43,6 +40,5 @@ under the License.
           </li>
         </#list>
       </ul>
-    </div>
-  </div>
+  </@section>
 </#if>

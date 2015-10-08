@@ -17,13 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if reorderProducts?has_content>
-<div id ="minireorderprods" class="screenlet">
-    <div class="screenlet-title-bar">
-        <ul>
-            <li class="h3">${uiLabelMap.ProductQuickReorder}...</li>
-        </ul>
-    </div>
-    <div class="screenlet-body">
+<@section title="${uiLabelMap.ProductQuickReorder}..." id="minireorderprods" class="+screenlet">
         <#list reorderProducts as miniProduct>
           <div>
               ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}
@@ -35,6 +29,5 @@ under the License.
               
           </#if>
         </#list>
-    </div>
-</div>
+</@section>
 </#if>

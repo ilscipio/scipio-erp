@@ -2051,6 +2051,18 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
     items           = list of hashes, where each hash contains arguments representing a menu item,
                       same as @menuitem macro parameters.
                       alternatively, the items can be specified as nested content.
+    preItems        = special-case list of hashes of items, added before items and #nested.
+                      excluded from sorting.
+                      avoid use unless specific need; may be needed by cato menu handling.
+                      **SPECIAL**: this can also be specified as the #global variable catoMenuPreItems,
+                          which if present is read and unset by macro (does not work on nested menus).
+                          force-disabled if preItems==false.
+    postItems       = special-case list of hashes of items, added after items and #nested
+                      excluded from sorting.
+                      avoid use unless specific need; may be needed by cato menu handling.
+                      **SPECIAL**: this can also be specified as the #global variable catoMenuPostItems,
+                          which if present is read and unset by macro (does not work on nested menus).
+                          force-disabled if postItems==false.
     sort,
     sortBy,
     sortDesc        = items sorting behavior; will only work if items are specified
@@ -2068,10 +2080,17 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#local style = inlineArgs.style!args.style!"">
   <#local attribs = inlineArgs.attribs!args.attribs!"">
   <#local items = inlineArgs.items!args.items!true>
+  <#local preItems = inlineArgs.preItems!args.preItems!true>
+  <#local postItems = inlineArgs.postItems!args.postItems!true>
   <#local sort = inlineArgs.sort!args.sort!false>
   <#local sortBy = inlineArgs.sortBy!args.sortBy!"">
   <#local sortDesc = inlineArgs.sortDesc!args.sortDesc!false>
   <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
+  <#t>
+  <#local preItemsGlobal = catoMenuPreItems!"">
+  <#global catoMenuPreItems = "">
+  <#local postItemsGlobal = catoMenuPostItems!"">
+  <#global catoMenuPostItems = "">
   <#t>
   <#local prevMenuInfo = catoCurrentMenuInfo!>
   <#local prevMenuItemIndex = catoCurrentMenuItemIndex!>
@@ -2086,6 +2105,17 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#t>
   <#if !inlineItems>
     <ul<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>>
+  </#if>
+  <#if !(preItems?is_boolean && preItems == false)>
+    <#if preItems?is_sequence>
+      <#list preItems as item>
+        <@menuitem args=item />
+      </#list>
+    <#elseif preItemsGlobal?is_sequence>
+      <#list preItemsGlobal as item>
+        <@menuitem args=item />
+      </#list>      
+    </#if>
   </#if>
   <#if !(items?is_boolean && items == false)>
     <#if nestedFirst>
@@ -2107,6 +2137,17 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
     </#if>
     <#if !nestedFirst>
         <#nested>
+    </#if>
+  </#if>
+  <#if !(postItems?is_boolean && postItems == false)>
+    <#if postItems?is_sequence>
+      <#list postItems as item>
+        <@menuitem args=item />
+      </#list>
+    <#elseif postItemsGlobal?is_sequence>
+      <#list postItemsGlobal as item>
+        <@menuitem args=item />
+      </#list>
     </#if>
   </#if>
   <#if !inlineItems>

@@ -40,28 +40,33 @@
     "icon_list" : "fi-list",
     
   <#-- Menus -->  
+    <#-- Generic menu types -->
     "menu_default" : "",  
     "menu_default_item" : "", 
     "menu_default_itemlink" : "", 
+    "menu_button" : "button-group force-button",
+    "menu_button_item" : "",
+    "menu_button_itemlink" : "button tiny",
+    <#-- Main navigation menus -->
     "menu_main" : "dropdown",  
     "menu_main_item" : "",
     "menu_main_itemlink" : "", 
     "menu_sidebar" : "side-nav", 
     "menu_sidebar_item" : "",
     "menu_sidebar_itemlink" : "", 
+    <#-- Tab and secondary navigation menus-->
     "menu_tab" : "button-group force-button", 
     "menu_tab_item" : "", 
     "menu_tab_itemlink" : "button tiny", 
     "menu_subtab" : "button-group force-button",
     "menu_subtab_item" : "",
     "menu_subtab_itemlink" : "button tiny", 
-    "menu_button" : "button-group force-button",
-    "menu_button_item" : "",
-    "menu_button_itemlink" : "button tiny",
+    <#-- Default section menu -->
     "menu_section" : "button-group",
     "menu_section_item" : "",
     "menu_section_itemlink" : "button tiny", 
-    <#-- FIXME: doesn't look right as these buttons (floats right of title) -->
+    <#-- Default section menu inlined with title
+        FIXME: looks too big/clumsy with these buttons (floats right of title) -->
     "menu_section_inline" : "button-group",
     "menu_section_inline_item" : "",
     "menu_section_inline_itemlink" : "button tiny", 

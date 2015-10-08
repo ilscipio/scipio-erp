@@ -313,7 +313,9 @@ not "current" context (too intrusive in current renderer design). still relies o
 
   <#local preMenuItems></#local>
   <#local postMenuItems>
-    <#--
+    <#-- would only have added this if menu was post-title, and if menu was another type,
+         probably add an extra post-title menu? gets complex
+    <#if menuLayout != "pre-title" && menuLayout != "inline-title">
     <#if collapsible>
     <li class="<#rt/>
     <#if collapsed>
@@ -322,6 +324,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
     </#if>
     >&nbsp;</a></li>
+    </#if>
     </#if>
      -->
   </#local>
@@ -379,6 +382,8 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#local>
 </#if>    
 
+<#-- Currently supports only one menu. could have one for each layout (with current macro
+     args as post-title), but tons of macro args needed and complicates. -->
 <#if menuLayout == "pre-title">
   <#if hasMenu>
     ${menuContent}

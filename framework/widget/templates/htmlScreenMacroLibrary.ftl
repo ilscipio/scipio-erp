@@ -147,7 +147,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#-- Cato:
      fromWidgets: hint of whether called by renderer or ftl macros
      hasContent: hint to say there will be content, workaround for styling -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 addClasses="">
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 addClasses="">
 
 <#-- level logic begin -->
     <#-- note: request obj only available because of macro renderer initial context mod -->
@@ -263,14 +263,53 @@ not "current" context (too intrusive in current renderer design). still relies o
      note: with recent patch, menuString passed by renderer is rendered by macro renderer. -->
 <#local menuString = menuString?trim>
 <#local hasMenu = (menuString?has_content || requireMenu || forceEmptyMenu)>
-<#local contentFlagClasses> section-level-${sLevel} heading-level-${hLevel}<#if title?has_content> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
+<#local hasTitle = title?has_content>
+<#local contentFlagClasses> section-level-${sLevel} heading-level-${hLevel}<#if hasTitle> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
 <div class="section-screenlet${contentFlagClasses}<#if collapsed> toggleField</#if>">
 <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
 <div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if><#if addClasses?has_content> ${addClasses}</#if> ${styles.grid_cell!} section-screenlet-container${contentFlagClasses}">
 
 <#if showMore>
-<#if title?has_content>
+
+<#if hasMenu>
+<#local menuContent>
+  <#-- temporarily (?) unnecessary; all use styles.button_group and hacks moved
+  <#local screenletPaginateMenu = (menuRole == "paginate-menu") && widgetRender>
+  <#local screenletNavMenu = (menuRole == "nav-menu") && widgetRender>
+  <#local ftlNavMenu = (menuRole == "nav-menu") && !widgetRender>
+  -->
+  
+  <#if !menuClass?has_content>
+    <#local menuClass = "${styles.menu_section!}"> <#-- ${styles.button_force!} -->
+  <#elseif menuClass == "none">
+    <#local menuClass = "">
+  </#if>
+
+  <#-- note: menuString shouldn't contain <ul because li may be added here (traditionally), but check anyway, may have to allow -->
+  <#local menuItemsInlined = menuString?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<li(\s|>).*', 'rs')>
+  
+  <#if !menuString?has_content || menuItemsInlined><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
+  <#if !forceEmptyMenu>
+    ${menuString}
+  </#if>
+    <#--
+    <#if collapsible>
+    <li class="<#rt/>
+    <#if collapsed>
+    collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if expandToolTip?has_content> title="${expandToolTip}"</#if>
+    <#else>
+    expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
+    </#if>
+    >&nbsp;</a></li>
+    </#if>
+     -->
+  <#if !menuString?has_content || menuItemsInlined></ul></#if>
+</#local>
+</#if>
+
+<#if hasTitle>
+<#local titleContent>
   <#if titleContainerStyle?has_content>
     <#if titleContainerElemType?has_content>
       <#local tcElem = titleContainerElemType>
@@ -298,48 +337,43 @@ not "current" context (too intrusive in current renderer design). still relies o
       <#local tElem = "h${hLevel}">
     </#if>
   </#if>
-  <#local titleClasses = makeClassesArg(titleClass, "")>
-    
+    <#local titleClasses = makeClassesArg(titleClass, "")>
+
     <#if tElem?has_content><${tElem} class="heading-level-${hLevel}<#if titleClasses?has_content> ${titleClasses}</#if>"></#if>${title}<#if tElem?has_content></${tElem}></#if>
   
   <#if titleContainerStyle?has_content>
     </${tcElem}>
   </#if>
+</#local>
 </#if>    
-    
-    <#--
-<#if collapsible>
-<li class="<#rt/>
-<#if collapsed>
-collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if expandToolTip?has_content> title="${expandToolTip}"</#if>
-<#else>
-expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
-</#if>
->&nbsp;</a></li>
-</#if>
- -->
- 
-<#if hasMenu>
-  <#-- temporarily (?) unnecessary; all use styles.button_group and hacks moved
-  <#local screenletPaginateMenu = (menuRole == "paginate-menu") && widgetRender>
-  <#local screenletNavMenu = (menuRole == "nav-menu") && widgetRender>
-  <#local ftlNavMenu = (menuRole == "nav-menu") && !widgetRender>
-  -->
-  
-  <#if !menuClass?has_content>
-    <#local menuClass = "${styles.menu_section!}"> <#-- ${styles.button_force!} -->
-  <#elseif menuClass == "none">
-    <#local menuClass = "">
-  </#if>
 
-  <#-- note: menuString shouldn't contain <ul because li may be added here (traditionally), but check anyway, may have to allow -->
-  <#local menuItemsInlined = menuString?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<li(\s|>).*', 'rs')>
-  
-  <#if !menuString?has_content || menuItemsInlined><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
-  <#if !forceEmptyMenu>
-    ${menuString}
+<#if menuLayout == "pre-title">
+  <#if hasMenu>
+    ${menuContent}
   </#if>
-  <#if !menuString?has_content || menuItemsInlined></ul></#if>
+  <#if hasTitle>
+    ${titleContent}
+  </#if>
+<#elseif menuLayout == "inline-title">
+  <div class="${styles.float_clearfix!}">
+    <div class="${styles.float_left!}">
+      <#if hasTitle>
+        ${titleContent}
+      </#if>
+    </div>
+    <div class="${styles.float_right!}">
+      <#if hasMenu>
+        ${menuContent}
+      </#if>
+    </div>
+  </div>
+<#else>
+  <#if hasTitle>
+    ${titleContent}
+  </#if>
+  <#if hasMenu>
+    ${menuContent}
+  </#if>
 </#if>
 
 </#if>

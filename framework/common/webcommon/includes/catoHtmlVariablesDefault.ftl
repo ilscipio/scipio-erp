@@ -61,6 +61,10 @@
     "menu_section" : "button-group",
     "menu_section_item" : "",
     "menu_section_itemlink" : "button tiny", 
+    <#-- FIXME: doesn't look right as these buttons (floats right of title) -->
+    "menu_section_inline" : "button-group",
+    "menu_section_inline_item" : "",
+    "menu_section_inline_itemlink" : "button tiny", 
     
   <#-- Data and Tables -->  
     "table_default" : "",

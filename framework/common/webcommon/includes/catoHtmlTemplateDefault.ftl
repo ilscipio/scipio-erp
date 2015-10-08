@@ -196,13 +196,22 @@ levels manually, but most often should let @section menu handle them.
     relHeadingLevel     = increase heading level by this number
     defaultHeadingLevel = default heading level (same as headingLevel if autoHeadingLevel false)
     menuHtml            = optional HTML menu data, li elements only (ul auto added)
-    menuClass           = menu class, default is buttons class. "none" prevents class.
+                          FIXME: need to rework the menu options. could have a menu "type"
+                              that causes lookup in styles (see @fields and @table type arg)
+                              for menuClass and menuLayout, but these args are all redundant
+                              with ones on @menu macro, BUT because this is inlined HTML the 
+                              @menu args are lost and would need to be passed twice... 
+                              need to define @menu "type" arg better and figure out how to integrate
+                              here to avoid having to specify menuClass/menuLayout everywhere...
+                              and somehow avoid the arg redundancy (FTL issue)...
+    menuClass           = menu class, default is section menu (FIXME: doesn't really mean anything at the moment). "none" prevents class. this is a low-level control; avoid if possible (FIXME: currently impossible to avoid).
+    menuLayout          = [post-title|pre-title|inline-title], default post-title. this is a low-level control; avoid if possible (FIXME: currently impossible to avoid).
     menuRole            = "nav-menu" (default), "paginate-menu"
     requireMenu         = if true, add menu elem even if empty
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section type="generic" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 menuHtml="" menuClass="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
+<#macro section type="generic" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 menuHtml="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
     <#local addClass = parseAddClassArg(class)>
     <#local class = parseClassArg(class, "")>
     <#if id?has_content>
@@ -214,7 +223,7 @@ levels manually, but most often should let @section menu handle them.
     </#if>
     <#-- note: addClass logic is only partially implemented (doesn't support booleans and "" means use default; otherwise may conflict with stock API?), but good enough for now -->
     <#-- note: autoHeadingLevel logic now implemented in renderScreenletBegin -->
-    <@screenlib.renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=class padded=padded menuString=menuHtml fromWidgets=false menuClass=menuClass menuId=menuId menuRole=menuRole requireMenu=requireMenu 
+    <@screenlib.renderScreenletBegin id=id collapsibleAreaId=contentId title=title classes=class padded=padded menuString=menuHtml fromWidgets=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
         forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass addClasses=addClass />
         <#nested />
     <@screenlib.renderScreenletEnd />
@@ -2032,7 +2041,7 @@ Note that both macros support arguments passed in a hash (or map) using the "arg
 can be delegated in infinite ways (even to data prep). The inline args have priority over the hash args, as would be expected.
                     
    * General Attributes *
-    type            = menu type: [generic|section|main|tab|subtab|button|...], default generic (but discouraged; prefer specific)
+    type            = menu type: [generic|section|section-inline|main|tab|subtab|button|...], default generic (but discouraged; prefer specific)
     inlineItems     = boolean, if true, generate only items, not menu container
     class           = menu class style. can be boolean true/false or string, if string
                       starts with "+" the classes are in addition to defaults, otherwise replace defaults.
@@ -2066,7 +2075,7 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#t>
   <#local prevMenuInfo = catoCurrentMenuInfo!>
   <#local prevMenuItemIndex = catoCurrentMenuItemIndex!>
-  <#local styleName = type>
+  <#local styleName = type?replace("-","_")>
   <#if (!styleName?has_content) || styleName == "generic" || (!(styles["menu_" + styleName]!false)?is_string)>
     <#local styleName = "default">
   </#if>
@@ -2208,11 +2217,11 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
         <#local href = "javascript:void(0);">
       </#if>
       <#local href = interpretRequestUri(href)>
-      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs /></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></a>
+      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs exclude=["class","id","style","href","onclick","target","title"]/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></a>
     <#elseif type == "text">
-      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs /></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></span>
+      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs exclude=["class","id","style","onclick"]/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if wrapNested && nestedFirst>${nestedHtml}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedHtml}</#if></span>
     <#elseif type == "submit">
-      <#if wrapNested && nestedFirst>${nestedHtml}</#if><input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs /></#if> value="<#if text?has_content>${text}</#if>"<#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#if wrapNested && !nestedFirst>${nestedHtml}</#if>
+      <#if wrapNested && nestedFirst>${nestedHtml}</#if><input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs exclude=["class","id","style","value","onclick","disabled","type"]/></#if> value="<#if text?has_content>${text}</#if>"<#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#if wrapNested && !nestedFirst>${nestedHtml}</#if>
     <#else>
       <#if text?has_content>${text}</#if><#if wrapNested>${nestedHtml}</#if>
     </#if>

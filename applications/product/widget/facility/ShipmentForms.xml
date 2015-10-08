@@ -53,10 +53,10 @@ under the License.
         </field>
         <field name="primaryOrderId" title="${uiLabelMap.ProductPrimaryOrderId}"><lookup target-form-name="LookupOrderHeader"/></field>
         <field name="primaryReturnId" title="${uiLabelMap.ProductPrimaryReturnId}" position="2"><text/></field>
-        <field name="estimatedReadyDate" title="${uiLabelMap.ProductEstimatedReadyDate}"><date-time/></field>
-        <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}" position="2"><date-time/></field>
-        <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><date-time/></field>
-        <field name="latestCancelDate" title="${uiLabelMap.ProductLatestCancelDate}" position="2"><date-time/></field>
+        <field name="estimatedReadyDate" title="${uiLabelMap.ProductEstimatedReadyDate}"><date-time type="date"/></field>
+        <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}" position="2"><date-time type="date"/></field>
+        <field name="estimatedArrivalDate" title="${uiLabelMap.ProductEstimatedArrivalDate}"><date-time type="date"/></field>
+        <field name="latestCancelDate" title="${uiLabelMap.ProductLatestCancelDate}" position="2"><date-time type="date"/></field>
         <field use-when="productStoreId!=null" name="originFacilityId" title="${uiLabelMap.ProductOriginFacility} [${shipment.primaryOrderId}]">
             <drop-down allow-empty="true" current="first-in-list">
                 <entity-options entity-name="ProductStoreFacilityByOrder" key-field-name="facilityId" description="${facilityName} [${facilityId}]">

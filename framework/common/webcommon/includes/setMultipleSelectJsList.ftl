@@ -54,6 +54,7 @@ under the License.
         </#if>
     </#list>
     <style type="text/css">
+    <#-- Cato: FIXME: this greaks grid 
     #${asm_multipleSelectForm} {
         width: ${asm_formSize!700}px; 
         position: relative;
@@ -62,5 +63,6 @@ under the License.
     .asmListItem {
       width: ${asm_asmListItemPercentOfForm!95}%; 
     }
+    -->
     </style>
 </#if>

@@ -117,7 +117,7 @@ function submitFindForm(val){
 <@section menuHtml=menuHtml hasContent=showFields>
 <#if showFields>
   <@row>
-    <@cell class="${styles.grid_large!}9 columns">
+    <@cell class="${styles.grid_large!}9">
 
         <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
       

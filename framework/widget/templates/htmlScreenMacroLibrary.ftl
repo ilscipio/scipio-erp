@@ -279,16 +279,29 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#local screenletNavMenu = (menuRole == "nav-menu") && widgetRender>
   <#local ftlNavMenu = (menuRole == "nav-menu") && !widgetRender>
   -->
-  
-  <#if !menuClass?has_content>
-    <#local menuClass = "${styles.menu_section!}"> <#-- ${styles.button_force!} -->
-  <#elseif menuClass == "none">
-    <#local menuClass = "">
-  </#if>
 
   <#-- note: menuString shouldn't contain <ul because li may be added here (traditionally), but check anyway, may have to allow -->
   <#local menuItemsInlined = menuString?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<li(\s|>).*', 'rs')>
   
+  <#if !menuClass?has_content>
+    <#-- FIXME: for @section macro menuHtml arg, this is redundant and problematic
+        and pretty much hardcoded.
+        currently have no good solution to avoid redundancy.  
+        on <#assign menuHtml><@menu type="section" ...> defintions, could omit
+        inlineItems=true to generate the <ul> there, but then later impossible to append
+        extra list items (done in stock ofbiz here). 
+        and specifying menuClass on @section defeats purpose of having menu type on @menu (having menu type
+        there is ideal, though it's not meant to influence menuLayout, only menuClass).
+    -->
+    <#if menuLayout == "inline-title">
+      <#local menuClass = "${styles.menu_section_inline!}">
+    <#else>
+      <#local menuClass = "${styles.menu_section!}">
+    </#if>
+  <#elseif menuClass == "none">
+    <#local menuClass = "">
+  </#if>
+
   <#if !menuString?has_content || menuItemsInlined><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
   <#if !forceEmptyMenu>
     ${menuString}

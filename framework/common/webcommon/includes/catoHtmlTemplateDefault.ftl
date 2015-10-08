@@ -2039,6 +2039,8 @@ second is cleaner to express.
 
 Note that both macros support arguments passed in a hash (or map) using the "args" argument, so the entire menu definition
 can be delegated in infinite ways (even to data prep). The inline args have priority over the hash args, as would be expected.
+                  
+FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't need to.                  
                     
    * General Attributes *
     type            = menu type: [generic|section|section-inline|main|tab|subtab|button|...], default generic (but discouraged; prefer specific)
@@ -2098,7 +2100,10 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#if (!styleName?has_content) || styleName == "generic" || (!(styles["menu_" + styleName]!false)?is_string)>
     <#local styleName = "default">
   </#if>
-  <#global catoCurrentMenuInfo = {"type":type, "styleName":styleName}>
+  <#local menuInfo = {"type":type, "styleName":styleName, 
+    "inlineItems":inlineItems, "class":class, "id":id, "style":style, "attribs":attribs,
+    "preItems":preItems, "postItems":postItems, "sort":sort, "sortBy":sortBy, "sortDesc":sortDesc, "nestedFirst":nestedFirst}>
+  <#global catoCurrentMenuInfo = menuInfo>
   <#global catoCurrentMenuItemIndex = 0>
   <#t>
   <#local classes = makeClassesArg(class, styles["menu_" + styleName]!"")>
@@ -2156,6 +2161,7 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
   <#t>
   <#global catoCurrentMenuInfo = prevMenuInfo>
   <#global catoCurrentMenuItemIndex = prevMenuItemIndex>
+  <#global catoLastMenuInfo = menuInfo>
 </#macro>
 
 <#-- 

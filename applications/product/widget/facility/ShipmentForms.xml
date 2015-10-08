@@ -101,12 +101,12 @@ under the License.
             <text/>
         </field>
         
-        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="${styles.button_default}">
+        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="${styles.link_default}">
             <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app">
                 <parameter param-name="workEffortId" from-field="shipment.estimatedShipWorkEffId"/>
             </hyperlink>
         </field>
-        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="${styles.button_default}" position="2">
+        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="${styles.link_default}" position="2">
             <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app">
                 <parameter param-name="workEffortId" from-field="shipment.estimatedArrivalWorkEffId"/>
             </hyperlink>

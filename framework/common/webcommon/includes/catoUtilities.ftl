@@ -6,8 +6,11 @@
 * Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.
 * Automatically included at all times.
 *
+* NOTE: In general, macros expect to be called using named arguments (not supported for functions),
+*     except where otherwise noted.
 * NOTE: Default markup-producing macros are found in catoHtmlTemplateDefault.ftl.
 *     Utilities found in catoUtilities.ftl should not contain their logic in general (TODO?: there could be a catoHtmlTemplateHelpers.ftl to isolate logic from markup).
+*  
 * IMPL NOTE: Macros should avoid using "request" directly (use setRequestVar/getRequestVar/other).
 *
 * DEV NOTE: for performance, some of these could probably later be turned into freemarker transforms (java) or
@@ -403,9 +406,9 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 
 <#-- 
 *************
-* objectAsJs and objectAsJson macros
+* objectAsScript macro
 ************
-Output a Freemarker variable as JS and JSON.
+Output a Freemarker variable as Javascript or JSON
 
 DEV NOTE: This is complicated in Ofbiz because Maps and objects from
     widget/java/groovy context don't behave same as FTL types.
@@ -417,19 +420,12 @@ TODO: doesn't handle dates (ambiguous?)
                     
    * Parameters *
     object          = the FTL or context object
+    lang            = [js|json]
     wrap            = boolean, default true, if true, wrap in {}, [], "" as needed, otherwise omit
     hasMore         = boolean, default false, if true, always include trailing separator in hashes and arrays
     escape          = escape characters in strings
 -->
-<#macro objectAsJs object wrap=true hasMore=false escape=true>
-    <@objectAsScript lang="js" object=object wrap=wrap hasMore=hasMore escape=escape />
-</#macro>
-<#macro objectAsJson object wrap=true hasMore=false escape=true>
-    <@objectAsScript lang="json" object=object wrap=wrap hasMore=hasMore escape=escape />
-</#macro>
-
-<#-- implementation -->
-<#macro objectAsScript lang object wrap=true hasMore=false escape=true>
+<#macro objectAsScript object lang wrap=true hasMore=false escape=true>
     <#if object?is_hash && object.keySet?? && object.keySet?is_method>
         <#-- Map from java/groovy; doesn't work properly with ?keys even though implements ?is_hash_ex -->
         <#if wrap>{</#if><#lt>
@@ -478,11 +474,12 @@ TODO: doesn't handle dates (ambiguous?)
 <#-- escapes a string to be placed within "" literals -->
 <#function escapeScriptString lang val escape=true>
   <#if escape>
-    <#switch lang>
+    <#switch lang?lower_case>
       <#case "json">
         <#return val?json_string>
         <#break>
       <#case "js">
+      <#case "javascript">
         <#-- FIXME?: investigate this... -->
         <#return val?js_string?replace("\\'", "\'")>
         <#break>

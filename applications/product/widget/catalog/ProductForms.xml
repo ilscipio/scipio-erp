@@ -461,7 +461,7 @@ under the License.
         <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}"><display-entity entity-name="ProductPricePurpose"/></field>
         <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}" ><display-entity entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]"/></field>
         <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroup}"><display-entity entity-name="ProductStoreGroup" description="${productStoreGroupName}"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
 
         <field name="termUomId">
             <drop-down allow-empty="true">
@@ -529,7 +529,7 @@ under the License.
         <field name="productId"><hidden/></field>
         <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}"><display-entity entity-name="ProductPricePurpose"/></field>
         <field name="paymentMethodTypeId"><display-entity entity-name="PaymentMethodType"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
 
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -545,8 +545,8 @@ under the License.
         <auto-fields-service service-name="safeAddProductToCategory"/>
         <field name="productId" title="${uiLabelMap.ProductProductId}" map-name="product"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductProductCategoryId}"><lookup target-form-name="LookupProductCategory"></lookup></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"></field>
         <field name="sequenceNum" title="${uiLabelMap.ProductSequenceNum}" ></field>
         <field name="quantity" title="${uiLabelMap.ProductQuantity}" ></field>
         <field name="comments" ><textarea/></field>
@@ -561,8 +561,8 @@ under the License.
                 <sub-hyperlink target="EditCategory" description="${productCategoryId}" link-style="${styles.link_default}"><parameter param-name="productCategoryId"/></sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
         <field name="sequenceNum" title="${uiLabelMap.ProductSequenceNum}" ></field>
         <field name="quantity" title="${uiLabelMap.ProductQuantity}" ></field>
         <field name="comments" title="${uiLabelMap.ProductComments}" ><textarea/></field>
@@ -588,8 +588,8 @@ under the License.
         <field name="productContentTypeId" title="${uiLabelMap.ProductType}" position="2">
             <display-entity entity-name="ProductContentType" also-hidden="false" description="${description}"/>
         </field>
-        <field name="fromDate"><display type="date"/></field>
-        <field name="thruDate" position="2"><display type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display type="date"/></field>
         <field name="purchaseFromDate"><display type="date"/></field>
         <field name="purchaseThruDate"><display type="date"/></field>
         <field name="useCountLimit"><display/></field>
@@ -621,8 +621,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="3"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="3"></field>
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
         <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}" position="3"></field>
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
@@ -727,8 +727,8 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="contentId==null" target="createEmailContentForProduct"/>
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
-         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="3"></field>
+         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="3"></field>
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
         <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}" position="3"></field>
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
@@ -759,8 +759,8 @@ under the License.
     <form name="EditProductContentDownload" type="upload" target="updateDownloadContentForProduct" title="${uiLabelMap.ProductUpdateDownloadContentProduct}">
         <alt-target use-when="contentId==null" target="createDownloadContentForProduct"/>
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"></field>
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
         <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}"></field>
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
@@ -793,8 +793,8 @@ under the License.
         <alt-target use-when="contentId==null" target="createExternalContentForProduct"/>
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
         <field name="description" title="${uiLabelMap.ProductProductDescription}" map-name="content"><text size="40"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"></field>
         <field name="serviceName" title="${uiLabelMap.ProductServiceName}" map-name="content"><text size="40"/></field>
         <field use-when="contentId == null" name="contentId" title="${uiLabelMap.ProductContentId}" tooltip="${uiLabelMap.ProductOptional}"><text maxlength="20"/></field>
         <field use-when="contentId != null" name="contentId" title="${uiLabelMap.ProductContentId}" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" ><display/></field>
@@ -807,9 +807,9 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="contentId==null" target="createSimpleTextContentForProduct"/>
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
-        <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFromDate}*" ><date-time/></field>
-        <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFromDate}" ><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time/></field>
+        <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"></field>
         <field name="description" title="${uiLabelMap.ProductProductDescription}" map-name="content"><text size="40"/></field>
         <field name="localeString" title="${uiLabelMap.ProductLocaleString}" map-name="content"><text size="40"/></field>
         <field use-when="contentId == null" name="contentId"><ignored/></field>
@@ -831,9 +831,9 @@ under the License.
     <form name="EditProductContentImage" type="upload" target="addAdditionalImageContentForProduct" title="">
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
         <field name="productContentTypeId"><display-entity entity-name="ProductContentType" also-hidden="true"/></field>
-        <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFromDate}*" ><date-time/></field>
-        <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFromDate}" ><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time/></field>
+        <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"></field>
         <field use-when="contentId == null" name="contentId"><ignored/></field>
         <field use-when="contentId != null" name="contentId" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" ><display/></field>
         <field name="useTime"><hidden/></field>
@@ -1021,7 +1021,7 @@ under the License.
                 <option key="QUESTION" description="${uiLabelMap.ProductQuestion}"/>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
 
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -1053,8 +1053,8 @@ under the License.
             <display-entity entity-name="FixedAsset" description="${fixedAssetName} [${fixedAssetId}]"/>
         </field>
         <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}"><display-entity entity-name="FixedAssetProductType"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display/></field>
         <field name="productId"><hidden/></field>
         <field name="editAciton" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="showFixedAssetProduct">
@@ -1088,8 +1088,8 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
 
         <field name="comments" title="${uiLabelMap.CommonComments}"><text maxlength="30" size="30"/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequence}"><text maxlength="5" size="5"/></field>
@@ -1127,9 +1127,9 @@ under the License.
             </drop-down>
         </field>
 
-        <field use-when="fixedAssetId!=null" name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field use-when="fixedAssetId==null" name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field use-when="fixedAssetId!=null" name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field use-when="fixedAssetId==null" name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="comments" title="${uiLabelMap.CommonComments}"><text maxlength="30" size="30"/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequence}"><text maxlength="5" size="5"/></field>
 
@@ -1146,7 +1146,7 @@ under the License.
     </form>
 
     <!-- UNUSED FORMS
-    <form name="ListProductAssocs" type="list" use-row-submit="true"  title="" list-name="productAssocs"
+    <form name="ListProductAssocs" type="list" use-row-submit="true" title="" list-name="productAssocs"
         odd-row-style="alternate-row" default-table-style="basic-table" paginate-target="EditProductAssoc">
         <auto-fields-entity entity-name="ProductAssoc" default-field-type="display"/>
         <field name="productId"><hidden/></field>
@@ -1286,8 +1286,8 @@ under the License.
         <field name="costComponentCalc" entry-name="costComponentCalcId">
             <display-entity entity-name="CostComponentCalc" key-field-name="costComponentCalcId"/>
         </field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="deleteAction" entry-name="productId" widget-style="${styles.button_default}">
             <hyperlink target="deleteProductCostComponentCalc" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productId"/>
@@ -1312,7 +1312,7 @@ under the License.
                 <entity-options entity-name="CostComponentCalc" description="${description}"/>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditCostComponent" type="single" target="createCostComponent" title="" default-map-name="costComponent"
@@ -1385,7 +1385,7 @@ under the License.
     </form>
 
     <!-- create ProductMaint-->
-    <form name="AddProductMaint" type="single"  target="createProductMaint" title=""
+    <form name="AddProductMaint" type="single" target="createProductMaint" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createProductMaint"/>
         <field name="productId"><hidden/></field>
@@ -1556,7 +1556,7 @@ under the License.
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
-    <form name="ListFeatureInteractions"  list-name="featureInteractions" type="list"
+    <form name="ListFeatureInteractions" list-name="featureInteractions" type="list"
         odd-row-style="alternate-row" default-table-style="basic-table">
         <field name="productId"><hidden/></field>
         <field name="productFeatureId">
@@ -1665,7 +1665,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
 
         <field name="useTimeUomId">
             <drop-down allow-empty="false">
@@ -1768,8 +1768,8 @@ under the License.
         <field name="partyIdFrom" title="${uiLabelMap.ProductPartyCustomer}"><display/></field>
         <field name="agreementText"><display/></field>
         <field name="description"><display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="currencyUomId"><display/></field>
         <field name="price"><display/></field>
     </form>
@@ -1785,8 +1785,8 @@ under the License.
         <field name="partyIdTo"><display/></field>
         <field name="agreementText"><display/></field>
         <field name="description"><display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="currencyUomId"><display/></field>
         <field name="price"><display/></field>
     </form>
@@ -1833,7 +1833,7 @@ under the License.
         </field>
         <field name="workEffortGoodStdTypeId"><display-entity entity-name="WorkEffortGoodStandardType" description="${description}"/></field>
         <field name="productId"><hidden/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
@@ -2152,8 +2152,8 @@ under the License.
             </display-entity>
         </field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRole}"><display-entity entity-name="RoleType"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" red-when="after-now"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}" red-when="before-now"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" red-when="after-now"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" red-when="before-now"></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removePartyFromProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -2185,8 +2185,8 @@ under the License.
         <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}"><display/></field>
         <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}"><display/></field>
         <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroup}"><display-entity entity-name="ProductStoreGroup" description="${productStoreGroupName}"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="price" title="${uiLabelMap.ProductPrice}"><display/></field>
         <field name="oldPrice"><display/></field>
         <field name="changedByUserLogin" title="${uiLabelMap.ProductLastModifiedBy}"><display/></field>

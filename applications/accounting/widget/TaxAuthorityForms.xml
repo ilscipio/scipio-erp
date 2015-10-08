@@ -71,7 +71,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListTaxAuthorityCategories" type="list"  list-name="taxAuthorityCategoryList" target="updateTaxAuthorityCategory"
+    <form name="ListTaxAuthorityCategories" type="list" list-name="taxAuthorityCategoryList" target="updateTaxAuthorityCategory"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="TaxAuthorityCategory" list="taxAuthorityCategoryList">
@@ -134,7 +134,7 @@ under the License.
             </display-entity>
         </field>
         <field name="toTaxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoCode}] [${geoId}]"/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
 
         <field name="taxAuthorityAssocTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
@@ -174,7 +174,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListTaxAuthorityGlAccounts" type="list"  list-name="taxAuthorityGlAccountList" target="updateTaxAuthorityGlAccount"
+    <form name="ListTaxAuthorityGlAccounts" type="list" list-name="taxAuthorityGlAccountList" target="updateTaxAuthorityGlAccount"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="TaxAuthorityGlAccount" list="taxAuthorityGlAccountList">
@@ -319,8 +319,8 @@ under the License.
         <field name="taxAuthGeoId"><hidden/></field>
 
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-find/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-find/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-find/></field>
 
         <field name="partyTaxId"><text-find/></field>
         <field name="isExempt" widget-style="smallSelect">
@@ -354,8 +354,8 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
 
         <field name="partyTaxId"><display/></field>
         <field name="isExempt"><display/></field>
@@ -392,14 +392,14 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field use-when="partyTaxAuthInfo!=null" name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field use-when="partyTaxAuthInfo!=null" name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
 
         <field use-when="partyTaxAuthInfo==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field use-when="partyTaxAuthInfo==null" name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
+        <field use-when="partyTaxAuthInfo==null" name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
 
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="partyTaxId"><text/></field>
-        <field name="isExempt" widget-style="smallSelect"><drop-down no-current-selected-key="N"><option key="Y"  description="${uiLabelMap.CommonY}"/><option key="N"  description="${uiLabelMap.CommonN}"/></drop-down></field>
+        <field name="isExempt" widget-style="smallSelect"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
         <field name="isNexus" widget-style="smallSelect"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
 
         <field use-when="partyTaxAuthInfo!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>

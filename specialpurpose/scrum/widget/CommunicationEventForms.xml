@@ -39,7 +39,7 @@ under the License.
         <field name="partyIdTo" title="${uiLabelMap.CommonTo}"><display description="${contactMechMapTo.infoString}"></display></field>
         <!--<field name="partyIdTo" title="${uiLabelMap.CommonTo}" use-when="partyIdToIn!=null" ><display-entity entity-name="PartyNameView" description="${firstName} ${lastName} ${middleName} ${groupName}" key-field-name="partyId"/></field>-->
         <field name="datetimeStarted"><hidden value="${communicationEvent.datetimeStarted}"/></field>
-        <field name="subject" tooltip="Do not remove the &quot;CR#${custRequest.custRequestId}&quot; number"><text size="74"  maxlength="255" default-value="CR#${custRequest.custRequestId} - ${custRequest.description}"/></field>
+        <field name="subject" tooltip="Do not remove the &quot;CR#${custRequest.custRequestId}&quot; number"><text size="74" maxlength="255" default-value="CR#${custRequest.custRequestId} - ${custRequest.description}"/></field>
         <field name="statusId"><hidden value="COM_IN_PROGRESS"/></field>
         <field name="contentMimeTypeId"><hidden value="text/plain"/></field>
         <field name="contactMechPurposeTypeIdFrom"><hidden value="SUPPORT_EMAIL"/></field>
@@ -126,7 +126,7 @@ under the License.
         <field name="productId"><hidden value="${parameters.productId}"/></field>
         <field name="communicationEventId"><hidden/></field>
         <field name="contentId"><hidden/></field>
-        <field name="fromDate"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="my"><hidden/></field>
         <field name="contentName">
             <hyperlink also-hidden="false" description="${contentName} [${contentId}]" target="ViewSimpleContent">
@@ -177,14 +177,14 @@ under the License.
     <form name="EditEmailForProduct" type="single" extends="EditEmail" target="${target}" default-map-name="communicationEvent" id="updateEmailForProduct">
         <field name="custRequestId"><ignored/> </field>
         <field name="productId"><hidden value="${parameters.productId}"/></field>
-        <field name="subject" tooltip="Do not remove the &quot;PD#${product.productId}&quot; number"><text size="74"  maxlength="255" default-value="PD#${product.productId} - ${product.internalName}"/></field>
+        <field name="subject" tooltip="Do not remove the &quot;PD#${product.productId}&quot; number"><text size="74" maxlength="255" default-value="PD#${product.productId} - ${product.internalName}"/></field>
         <field name="send" title=" " position="1" widget-style="${styles.button_default}" 
             use-when="&quot;${communicationEvent.statusId}&quot;!=&quot;COM_COMPLETE&quot;&amp;&amp;&quot;${communicationEvent.statusId}&quot;!=&quot;COM_IN_PROGRESS&quot;">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSend}" target="javascript:(document.EditEmailForProduct.form.value='list'),(document.EditEmailForProduct.statusId.value='COM_IN_PROGRESS'),(document.EditEmailForProduct.submit())"/>
         </field>
     </form>
     <form name="ViewEmailForProduct" type="single" extends="EditEmail" target="${target}" default-map-name="communicationEvent" id="updateEmailForProduct">
-        <field name="subject"><text size="74"  maxlength="255" disabled="true"/> </field>
+        <field name="subject"><text size="74" maxlength="255" disabled="true"/> </field>
         <field name="content"><textarea cols="72" rows="15" read-only="true"/> </field>
     </form>
     <form name="listCommContentForProduct" type="list" extends="listCommContent" list-name="contentDataResourceList" paginate-target="/ListCommContent" target="removeAttachFileForProduct"

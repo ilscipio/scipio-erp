@@ -41,8 +41,8 @@ under the License.
         </field>
         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyId" title="${uiLabelMap.AccountingPartyIdTo}"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="1" name="Datefrom" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
-        <field position="2" name="DateThru" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field position="1" name="Datefrom" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field position="2" name="DateThru" title="${uiLabelMap.CommonThru}"><date-time/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>

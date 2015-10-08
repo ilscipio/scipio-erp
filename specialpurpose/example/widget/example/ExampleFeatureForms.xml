@@ -72,7 +72,7 @@ under the License.
     </form>
 
     <!-- ExampleFeatureAppl -->
-    <form name="ListExampleFeatureAppls" type="list"  list-name="exampleFeatureAppls"  target="feature_updateExampleFeatureAppl">
+    <form name="ListExampleFeatureAppls" type="list" list-name="exampleFeatureAppls" target="feature_updateExampleFeatureAppl">
         <actions>
             <entity-condition entity-name="ExampleFeatureAppl">
                 <order-by field-name="exampleId"/>
@@ -88,7 +88,7 @@ under the License.
             </display-entity>
         </field>
         <field name="exampleFeatureId"><hidden/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ExampleFeatureApplType" description="${description}">

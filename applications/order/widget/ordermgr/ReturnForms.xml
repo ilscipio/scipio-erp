@@ -119,7 +119,7 @@ under the License.
         <field name="statusId"><ignored/></field>
     </form>
     -->
-    <form name="FindReturns" type="single"  target="findreturn" title=""
+    <form name="FindReturns" type="single" target="findreturn" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="returnHeaderTypeId">
             <drop-down allow-empty="true">
@@ -149,10 +149,10 @@ under the License.
         </field>
     </form>
 
-    <form name="ListReturns" type="list"  target="findreturn" title="" list-name="listIt"
+    <form name="ListReturns" type="list" target="findreturn" title="" list-name="listIt"
         odd-row-style="alternate-row" default-table-style="hover-bar" paginate-target="findreturn">
         <actions>
-            <service service-name="performFind"  result-map="result" result-map-list="listIt">
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="requestParameters"/>
                 <field-map field-name="entityName" value="ReturnHeader"/>
                 <field-map field-name="orderBy" value="entryDate DESC"/>
@@ -160,7 +160,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="returnId"  widget-style="${styles.link_default}" title="${uiLabelMap.OrderReturnId}">
+        <field name="returnId" widget-style="${styles.link_default}" title="${uiLabelMap.OrderReturnId}">
             <hyperlink description="${returnId}" target="returnMain">
                 <parameter param-name="returnId"/>
             </hyperlink>

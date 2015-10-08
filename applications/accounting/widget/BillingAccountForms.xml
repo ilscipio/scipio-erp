@@ -25,8 +25,8 @@ under the License.
         <field name="billingAccountId"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
         <field name="accountLimit"><text/></field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -50,8 +50,8 @@ under the License.
             <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
         <field name="description"><display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
     </form>
 
     <form name="ListBillingAccountsByParty" type="list" list-name="billingAccounts" paginate-target="FindBillingAccount"
@@ -66,14 +66,14 @@ under the License.
         </field>
         <field name="accountBalance"><display type="currency"/></field>
         <field name="description"><display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><display description="${parameters.partyId}"/></field>
         <field name="roleTypeId" title="${uiLabelMap.AccountingRoleType}"><display-entity entity-name="RoleType"/></field>
     </form>
 
     <form name="ListBillingAccountInvoices" type="list" list-name="billingAccountInvoices" paginate-target="BillingAccountInvoices" default-entity-name="Invoice"
-        odd-row-style="alternate-row"  header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="Invoice" list="billingAccountInvoices">
                 <condition-list>
@@ -139,7 +139,7 @@ under the License.
 
         <field use-when="partyId != null" name="partyId"><hidden/></field>
         <field use-when="roleTypeId != null" name="roleTypeId"><hidden/></field>
-        <field name="partyId"  use-when="partyId == null" title="${uiLabelMap.AccountingPartyBilledTo}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" use-when="partyId == null" title="${uiLabelMap.AccountingPartyBilledTo}"><lookup target-form-name="LookupPartyName"/></field>
         <field use-when="roleTypeId == null" name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
 
         <field name="accountCurrencyUomId" position="2">
@@ -159,8 +159,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time type="date"/></field>
-        <field name="thruDate" position="2"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <!--
         <field name="netBalance" title="${uiLabelMap.AccountingBillingNetBalance}" tooltip="${uiLabelMap.AccountingBillingNetBalanceMessage}">
             <display description="${groovy:org.ofbiz.accounting.payment.BillingAccountWorker.getBillingAccountNetBalance(delegator, billingAccountId)}" type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
@@ -173,7 +173,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="billingAccount!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListBillingAccountRoles" type="list"  list-name="billingAccountRoleList" target="updateBillingAccountRole"
+    <form name="ListBillingAccountRoles" type="list" list-name="billingAccountRoleList" target="updateBillingAccountRole"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="BillingAccountRole" list="billingAccountRoleList">
@@ -195,7 +195,7 @@ under the License.
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
             <display-entity entity-name="RoleType" description="${description}"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
 
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">

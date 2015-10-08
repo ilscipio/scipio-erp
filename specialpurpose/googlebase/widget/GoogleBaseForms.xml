@@ -71,7 +71,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.GoogleBaseExportToGoogle}"><submit button-type="button"/></field>
     </form>
     
-    <form name="ListGoogleBaseConfigs" type="list"  list-name="googleBaseConfigs"  target="updateGoogleBaseConfig"
+    <form name="ListGoogleBaseConfigs" type="list" list-name="googleBaseConfigs" target="updateGoogleBaseConfig"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="GoogleBaseConfig">

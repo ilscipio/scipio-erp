@@ -172,7 +172,7 @@ under the License.
             </hyperlink>
         </field>
     </form>
-    <form name="ListRequestItems" type="list" use-row-submit="true"  title="" list-name="custRequestItems"
+    <form name="ListRequestItems" type="list" use-row-submit="true" title="" list-name="custRequestItems"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItems">
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>
         <field name="sequenceNum"></field>
@@ -211,7 +211,7 @@ under the License.
         <field name="configId"><ignored/></field>
     </form>
 
-    <form name="ListRequestQuoteItems" type="list" use-row-submit="true"  title="" list-name="quotes"
+    <form name="ListRequestQuoteItems" type="list" use-row-submit="true" title="" list-name="quotes"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItemQuotes">
         <auto-fields-entity entity-name="QuoteItem" default-field-type="display"/>
         <field name="quoteId" widget-style="${styles.link_default}">
@@ -270,8 +270,8 @@ under the License.
         <field name="custRequestId"><hidden/></field>
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
-        <field name="fromDate"><display type="date"/></field>
-        <field name="thruDate"><display type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
     </form>
 
 
@@ -511,7 +511,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
     </form>
 
-    <form name="ListRequestItemNotes" type="list" use-row-submit="true"  title="" list-name="notes"
+    <form name="ListRequestItemNotes" type="list" use-row-submit="true" title="" list-name="notes"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItemNotes">
         <auto-fields-entity entity-name="CustRequestItemNoteView" default-field-type="display"/>
         <field name="noteId"><hidden/></field>
@@ -521,7 +521,7 @@ under the License.
         <field name="firstName"><hidden/></field>
         <field name="lastName"><hidden/></field>
     </form>
-    <form name="ListRequestItemWorkEffortReq" type="list" use-row-submit="true"  title="" list-name="requirements"
+    <form name="ListRequestItemWorkEffortReq" type="list" use-row-submit="true" title="" list-name="requirements"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItemRequirements">
         <auto-fields-entity entity-name="Requirement" default-field-type="display"/>
         <field name="requirementId"><hidden/></field>
@@ -552,7 +552,7 @@ under the License.
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
             <display-entity also-hidden="true" entity-name="RoleType"/>
         </field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteCustRequestParty">
@@ -576,8 +576,8 @@ under the License.
                 <option key="REQ_MANAGER" description="${uiLabelMap.WorkEffortRequestManager}"/>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListRequestItemRequirements" type="list" title="" list-name="custRequestRequirements"
@@ -698,7 +698,7 @@ under the License.
                 <entity-options description="${categoryName}" entity-name="DataCategory" key-field-name="dataCategoryId"/>
             </drop-down>
         </field>
-        <field name="dataCategoryId" use-when="dataResource!=null"  parameter-name="dataCategoryId">
+        <field name="dataCategoryId" use-when="dataResource!=null" parameter-name="dataCategoryId">
             <drop-down allow-empty="false">
                 <entity-options description="${categoryName}" entity-name="DataCategory">
                     <entity-constraint name="dataCategoryId" value="${dataResource.dataCategoryId}"/>
@@ -721,7 +721,7 @@ under the License.
             </display-entity>
         </field>
         <field name="mimeTypeId"><display/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}" use-when="tabButtonItem!=void&amp;&amp;tabButtonItem.equals(&quot;custRequestContent&quot;)">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteCustRequestContent">
                 <parameter param-name="custRequestId"/>
@@ -741,7 +741,7 @@ under the License.
         <field name="otherContacts"><drop-down allow-empty="false"><option key="Y" description="Yes"/><option key="N" description="No"/></drop-down></field>
         <field name="saveAction"><submit/></field>
     </form>
-    <form name="ListCustRequests" type="list"  list-name="custRequests" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" target="updaterequest">
+    <form name="ListCustRequests" type="list" list-name="custRequests" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" target="updaterequest">
         <row-actions>
             <service service-name="getProjectTask" result-map="taskResult">
                 <field-map field-name="taskId" from-field="workEffortId"/>
@@ -767,7 +767,7 @@ under the License.
         <field name="plannedHours" map-name="taskResult.taskInfo"><display/></field>
         <field name="actualHours" map-name="taskResult.taskInfo"><display/></field>
     </form>
-    <form name="ListMyCustRequests" type="list"  list-name="custRequests" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" target="updaterequest">
+    <form name="ListMyCustRequests" type="list" list-name="custRequests" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" target="updaterequest">
         <row-actions>
             <service service-name="getProjectTask" result-map="taskResult">
                 <field-map field-name="taskId" from-field="workEffortId"/>

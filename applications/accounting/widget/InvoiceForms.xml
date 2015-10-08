@@ -189,7 +189,7 @@ under the License.
         <field name="datetimePerformed"><display/></field>
     </form>
 
-    <form name="ListInvoiceApplications" type="list"  list-name="invoiceApplications" default-entity-name="InvoiceItem" use-row-submit="true"
+    <form name="ListInvoiceApplications" type="list" list-name="invoiceApplications" default-entity-name="InvoiceItem" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
         target="updatePaymentApplication" title="Apply payments to invoices" separate-columns="false">
         <field name="invoiceItemSeqId"><display/></field>
@@ -344,7 +344,7 @@ under the License.
         </field>
     </form>
 
-   <form name="EditInvoiceItems" type="multi"  list-name="invoiceItems" default-entity-name="InvoiceItem" target="updateInvoiceItem?invoiceId=${invoiceId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}" title="Edit Invoice Items" paginate-target="listInvoiceItems"
+   <form name="EditInvoiceItems" type="multi" list-name="invoiceItems" default-entity-name="InvoiceItem" target="updateInvoiceItem?invoiceId=${invoiceId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}" title="Edit Invoice Items" paginate-target="listInvoiceItems"
        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
        <row-actions>
            <set field="total" value="${groovy: (quantity ?: 1) * (amount ?: 0)}" type="BigDecimal"/>
@@ -355,7 +355,7 @@ under the License.
        <field name="uomId"><hidden/></field>
        <field name="taxableFlag"><hidden/></field>
        <field name="invoiceItemSeqId" widget-style="${styles.link_default}">
-           <hyperlink target="listInvoiceItems"  description="${invoiceItemSeqId}">
+           <hyperlink target="listInvoiceItems" description="${invoiceItemSeqId}">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="invoiceItemSeqId"/>
             </hyperlink>
@@ -448,7 +448,7 @@ under the License.
         </field>
     </form>
 
-    <form name="EditInvoiceApplications" type="list"  list-name="invoiceApplications" default-entity-name="InvoiceItem" use-row-submit="true" target="updateInvoiceApplication" title="Apply payments to invoices" separate-columns="false"
+    <form name="EditInvoiceApplications" type="list" list-name="invoiceApplications" default-entity-name="InvoiceItem" use-row-submit="true" target="updateInvoiceApplication" title="Apply payments to invoices" separate-columns="false"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="statusId"><hidden/></field>
         <field name="paymentApplicationId"><hidden/></field>
@@ -595,7 +595,7 @@ under the License.
         </field>
         <field name="partyId" entry-name="partyId">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${middleName} ${lastName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app"  description=" [${partyId}]">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description=" [${partyId}]">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -616,8 +616,8 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate"><display type="date"/></field>
-        <field name="thruDate"><display type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="comments"><display/></field>
     </form>
     <form name="lookupInvoicesStatus" type="single" target="BillingAccountInvoices" title=""

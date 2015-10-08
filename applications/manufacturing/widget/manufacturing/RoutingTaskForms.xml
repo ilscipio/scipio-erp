@@ -203,8 +203,8 @@ under the License.
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="[${workEffortId}] ${workEffortName}"/>
         </field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="editAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditRouting" description="${uiLabelMap.ManufacturingEditRouting}" also-hidden="false">
                 <parameter param-name="workEffortId" from-field="workEffortIdFrom"/>
@@ -218,14 +218,14 @@ under the License.
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortIdFrom"><hidden/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
-        <field name="workEffortIdTo"  title="${uiLabelMap.ManufacturingTaskName}" widget-style="${styles.link_default}">
+        <field name="workEffortIdTo" title="${uiLabelMap.ManufacturingTaskName}" widget-style="${styles.link_default}">
             <hyperlink target="EditRoutingTask" description="[${workEffortIdTo}] ${workEffortToName}" also-hidden="false">
                 <parameter param-name="workEffortId" from-field="workEffortIdTo"/>
             </hyperlink>
         </field>
         <field name="workEffortAssocTypeId" ><hidden/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" ><display/></field>
         <field name="workEffortToSetup" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
         <field name="workEffortToRun" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -250,11 +250,11 @@ under the License.
         <field name="workEffortId"><hidden value="${workEffortIdFrom}"/></field>
         <field name="workEffortIdFrom"><hidden/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"></field>
-        <field name="workEffortIdTo"  title="${uiLabelMap.ManufacturingRoutingTaskId}">
+        <field name="workEffortIdTo" title="${uiLabelMap.ManufacturingRoutingTaskId}">
             <display description="${routingTask.workEffortName}"/></field>
         <field name="workEffortAssocTypeId" ><hidden/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" ></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="workEffortIdFrom"/>
@@ -275,8 +275,8 @@ under the License.
         <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="routingProductLink==null" >
             <lookup target-form-name="LookupProduct"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" use-when="routingProductLink!=null"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="routingProductLink!=null"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
             <submit button-type="button"/>
@@ -293,8 +293,8 @@ under the License.
         <field name="productName" entry-name="productId" title="${uiLabelMap.ProductProductName}">
             <display-entity key-field-name="productId" entity-name="Product" description="${internalName}"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
        <field name="editAction" title=" " widget-style="${styles.button_default}" >
             <hyperlink target="EditRoutingProductAction" description="${uiLabelMap.CommonEdit}" also-hidden="false">
@@ -318,8 +318,8 @@ under the License.
         <field name="productId" title="${uiLabelMap.ProductProductName}">
             <display-entity entity-name="Product" description="${productId} ${internalName}"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="editAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditRoutingTaskProduct" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
@@ -350,8 +350,8 @@ under the License.
         <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="routingProductLink==null" >
             <lookup target-form-name="LookupProduct"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" use-when="routingProductLink!=null"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="routingProductLink!=null"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
             <submit button-type="button"/>
         </field>
@@ -369,7 +369,7 @@ under the License.
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
-            <hyperlink target="removeRoutingTaskFixedAsset"     description="${uiLabelMap.CommonDelete}" also-hidden="false" >
+            <hyperlink target="removeRoutingTaskFixedAsset"    description="${uiLabelMap.CommonDelete}" also-hidden="false" >
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="fixedAssetTypeId"/>
             </hyperlink>

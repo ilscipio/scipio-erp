@@ -27,8 +27,8 @@ under the License.
         <field name="approvalStatus"><hidden value="TRAINING_APPLIED"/></field>
         <field name="workEffortTypeId"><hidden/></field>
         <field name="workEffortId"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date-time"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date-time"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date-time"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonApply}"><submit button-type="button"/></field>
     </form>
     <form name="editTrainingCalendar" type="single" target="createTrainingCalendar" default-map-name="workEffort">
@@ -48,14 +48,14 @@ under the License.
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
         <field name="scopeEnumId"><hidden value="WES_PUBLIC"/></field>
-        <field name="estimatedStartDate" title="${uiLabelMap.CommonFromDate}"><date-time input-method="time-dropdown" /></field>
-        <field name="estimatedCompletionDate" title="${uiLabelMap.CommonThruDate}"><date-time input-method="time-dropdown"/></field>
+        <field name="estimatedStartDate" title="${uiLabelMap.CommonFrom}"><date-time input-method="time-dropdown" /></field>
+        <field name="estimatedCompletionDate" title="${uiLabelMap.CommonThru}"><date-time input-method="time-dropdown"/></field>
         <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
     </form>
     <form name="AssignTraining" type="single" target="assignTraining">
         <field name="approverId"><hidden value="${loginPartyId}"/></field>
-        <field name="fromDate"><hidden/></field>
-        <field name="thruDate"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><hidden/></field>
         <field name="trainingClassTypeId"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
         <field name="approvalStatus"><hidden value="TRAINING_ASSIGNED"/></field>
@@ -209,8 +209,8 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="fromDate"><display type="date-time"/></field>
-        <field name="thruDate"><display type="date-time"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date-time"/></field>
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
         <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>

@@ -38,8 +38,8 @@ under the License.
         </field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}"><display-entity entity-name="RoleType"/></field>
         <field name="statusDateTime"><display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="statusId">
             <drop-down no-current-selected-key="PARTYASSIGN_UNASSIGNED">
                 <entity-options description="${description}" entity-name="StatusItem">
@@ -89,8 +89,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="statusId">
             <drop-down no-current-selected-key="PRTYASGN_ASSIGNED">
                 <entity-options description="${description}" entity-name="StatusItem">

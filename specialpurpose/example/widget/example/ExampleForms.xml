@@ -77,7 +77,7 @@ under the License.
                 <in-place-editor url="/example/control/updateExample" cancel-control="button" saving-text="Updating..." text-between-controls=" ">
                     <simple-editor/>
                     <field-map field-name="exampleId" from-field="exampleId"/>
-                    <field-map field-name="statusId"  from-field="statusId"/>
+                    <field-map field-name="statusId" from-field="statusId"/>
                 </in-place-editor>
             </display>
         </field>
@@ -86,7 +86,7 @@ under the License.
                 <in-place-editor url="/example/control/updateExample" cancel-control="button" saving-text="Updating..." text-between-controls=" ">
                     <simple-editor/>
                     <field-map field-name="exampleId" from-field="exampleId"/>
-                    <field-map field-name="statusId"  from-field="statusId"/>
+                    <field-map field-name="statusId" from-field="statusId"/>
                 </in-place-editor>
             </display>
         </field>
@@ -112,7 +112,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId"  use-when="example==null" title="${uiLabelMap.CommonStatus}" widget-style="required">
+        <field name="statusId" use-when="example==null" title="${uiLabelMap.CommonStatus}" widget-style="required">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ExampleStatusItem" description="${description}"/>
             </drop-down>
@@ -156,7 +156,7 @@ under the License.
     </form>
 
     <!-- ExampleItem -->
-    <form name="ListExampleItems" type="list"  list-name="exampleItems"  target="updateExampleItem">
+    <form name="ListExampleItems" type="list" list-name="exampleItems" target="updateExampleItem">
         <actions>
             <entity-condition entity-name="ExampleItem">
                 <condition-expr field-name="exampleId" from-field="exampleId"/>
@@ -200,7 +200,7 @@ under the License.
     </form>
 
     <!-- ExampleFeatureAppl -->
-    <form name="ListExampleFeatureAppls" type="list"  list-name="exampleFeatureAppls"  target="example_updateExampleFeatureAppl">
+    <form name="ListExampleFeatureAppls" type="list" list-name="exampleFeatureAppls" target="example_updateExampleFeatureAppl">
         <actions>
             <entity-condition entity-name="ExampleFeatureAppl">
                 <condition-expr field-name="exampleId" from-field="exampleId"/>
@@ -216,7 +216,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ExampleFeatureApplType" description="${description}">

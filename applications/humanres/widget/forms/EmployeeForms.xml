@@ -20,7 +20,7 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <form name="AddEmployee" type="single" target="createEmployee"
+    <form name="NewEmployee" type="single" target="createEmployee"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="salutation" title="${uiLabelMap.CommonTitle}"><text size="10" maxlength="30"/></field>
         <field name="firstName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
@@ -34,8 +34,10 @@
                 <option key="null" description="${uiLabelMap.HumanResEmplPartyIdFromNotSpecified}"/>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.WorkEffortEstimatedStartDate}"><date-time/></field>
-        <field name="permanentAddress" title="${uiLabelMap.OrderAddress}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="permanentAddress" title="${uiLabelMap.OrderAddress}" title-area-style="group-label">
+            <display description=" " also-hidden="false"/>
+        </field>
         <field name="postalAddContactMechPurpTypeId"><hidden value="PRIMARY_LOCATION"/></field>
         <field name="address1" title="${uiLabelMap.CommonAddress1}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="address2" title="${uiLabelMap.CommonAddress2}"><text size="30" maxlength="60"/></field>
@@ -142,7 +144,7 @@
         <auto-fields-service service-name="updatePartyQual"/>
         <field name="partyId"><hidden/></field>
         <field name="partyQualTypeId"><display-entity entity-name="PartyQualType" description="${description}"/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="qualificationDesc"><text/></field>
         <field name="title"><text/></field>
         <field name="statusId">
@@ -180,8 +182,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time type="timestamp"/></field>
-        <field name="thruDate" position="2"><date-time type="timestamp"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="timestamp"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="timestamp"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddEmplLeave" type="single" target="createEmplLeave">
@@ -197,8 +199,8 @@
                 <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
             </drop-down>
         </field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}" required-field="true"><date-time type="timestamp"></date-time></field>
-        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}" position="2" required-field="true"><date-time type="timestamp"></date-time></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}" required-field="true"><date-time type="timestamp"></date-time></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" tooltip="${uiLabelMap.CommonRequired}" position="2" required-field="true"><date-time type="timestamp"></date-time></field>
         <field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
         <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -217,7 +219,7 @@
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="leaveTypeId"><display-entity description="${description}" entity-name="EmplLeaveType"/></field>
-        <field name="fromDate"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <form name="CurrentEmploymentData" default-map-name="employmentData" type="single">

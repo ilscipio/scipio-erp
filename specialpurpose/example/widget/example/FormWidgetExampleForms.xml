@@ -354,7 +354,7 @@ under the License.
     <!-- Lookup Examples -->
     <form name="ExampleLookupFields" type="single" title="">
         <!-- Old style lookup (in a popup window without autocompletion), geoIdAlone because we have another geoId below -->
-        <field name="geoIdAlone" title="${uiLabelMap.CommonGeoId}"  tooltip="${uiLabelMap.ExampleLookupFields1}" tooltip-style="button-text">
+        <field name="geoIdAlone" title="${uiLabelMap.CommonGeoId}" tooltip="${uiLabelMap.ExampleLookupFields1}" tooltip-style="button-text">
             <lookup target-form-name="LookupGeo" presentation="window"/>
         </field>
         <!-- Standard lookup (in a layer with autocompletion) -->
@@ -362,7 +362,7 @@ under the License.
             <lookup target-form-name="LookupGeo"/>
         </field>
         <!-- Standard read only lookup (in a layer with autocompletion) -->
-        <field name="geoIdReadOnly" title="${uiLabelMap.CommonGeoId}"  tooltip="${uiLabelMap.ExampleLookupFields3}" tooltip-style="button-text">
+        <field name="geoIdReadOnly" title="${uiLabelMap.CommonGeoId}" tooltip="${uiLabelMap.ExampleLookupFields3}" tooltip-style="button-text">
             <lookup target-form-name="LookupGeo" read-only="true"/>
         </field>
         <!-- Standard lookup (in a layer with autocompletion) -->

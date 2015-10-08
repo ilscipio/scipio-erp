@@ -113,10 +113,10 @@ under the License.
                 </entity-options>
              </drop-down>
         </field>
-        <field name="quantity"  title="${uiLabelMap.ManufacturingQuantity}"><text size="10"/></field>
-        <field name="estimatedStartDate"  title="${uiLabelMap.ManufacturingStartDate}"><date-time/></field>
+        <field name="quantity" title="${uiLabelMap.ManufacturingQuantity}"><text size="10"/></field>
+        <field name="estimatedStartDate" title="${uiLabelMap.ManufacturingStartDate}"><date-time/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
-        <field name="workEffortName"  title="${uiLabelMap.ManufacturingProductionRunName}"><text/></field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}"><text/></field>
         <field name="description"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
@@ -149,7 +149,7 @@ under the License.
             <set field="quantityOnHandDiff" from-field="inventoryItemDetails[0].quantityOnHandDiff"/>
         </row-actions>
         <field name="inventoryItemId" widget-style="${styles.link_default}">
-            <hyperlink target="/facility/control/EditInventoryItem"  description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
+            <hyperlink target="/facility/control/EditInventoryItem" description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="inventoryItemId"/>
             </hyperlink>
         </field>
@@ -163,13 +163,13 @@ under the License.
      <form name="ViewListProductionRunRoutingTasks" type="list" title="" list-name="productionRunRoutingTasks"
          odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
          <row-actions>
-             <set field="estimatedTotalMilliSeconds" value="${groovy:estimatedMilliSeconds * quantity}"  type="BigDecimal"/>
+             <set field="estimatedTotalMilliSeconds" value="${groovy:estimatedMilliSeconds * quantity}" type="BigDecimal"/>
          </row-actions>
         <field name="priority" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
-        <field name="workEffortId"  title="${uiLabelMap.ManufacturingTaskName}"><display description="${workEffortName} [${workEffortId}]"/></field>
-        <field name="fixedAssetId"  title="${uiLabelMap.ManufacturingMachine}"><display/></field>
+        <field name="workEffortId" title="${uiLabelMap.ManufacturingTaskName}"><display description="${workEffortName} [${workEffortId}]"/></field>
+        <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachine}"><display/></field>
         <field name="reservPersons"><display/></field>
-        <field name="estimatedStartDate"  title="${uiLabelMap.ManufacturingStartDate}"><display/></field>
+        <field name="estimatedStartDate" title="${uiLabelMap.ManufacturingStartDate}"><display/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
         <field name="estimatedSetupMillis" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
         <!--<field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>-->
@@ -181,10 +181,10 @@ under the License.
             <set field="estimatedTotalMilliSeconds" value="${groovy:estimatedMilliSeconds * quantity}" type="BigDecimal"/>
         </row-actions>
         <field name="priority" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
-        <field name="workEffortId"  title="${uiLabelMap.ManufacturingTaskName}"><display description="${workEffortName} [${workEffortId}]"/></field>
-        <field name="fixedAssetId"  title="${uiLabelMap.ManufacturingMachine}"><display/></field>
+        <field name="workEffortId" title="${uiLabelMap.ManufacturingTaskName}"><display description="${workEffortName} [${workEffortId}]"/></field>
+        <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachine}"><display/></field>
         <field name="reservPersons"><display/></field>
-        <field name="estimatedStartDate"  title="${uiLabelMap.ManufacturingStartDate}"><display/></field>
+        <field name="estimatedStartDate" title="${uiLabelMap.ManufacturingStartDate}"><display/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
         <field name="estimatedSetupMillis" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
         <!--<field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>-->
@@ -196,7 +196,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="deleteAction" title=" " widget-style="smallSubmit ${styles.button_default}">
-            <!--<hyperlink target="RemoveRoutingTaskAssoc"  description="[${uiLabelMap.CommonDelete}]" also-hidden="false">
+            <!--<hyperlink target="RemoveRoutingTaskAssoc" description="[${uiLabelMap.CommonDelete}]" also-hidden="false">
                 <parameter param-name="workEffortIdFrom"/>
                 <parameter param-name="workEffortIdTo"/>
                 <parameter param-name="fromDate"/>
@@ -283,7 +283,7 @@ under the License.
         <field name="actualStartDate" title="${uiLabelMap.CommonActualStartDate}"><display/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
         <field name="actualCompletionDate" title="${uiLabelMap.ManufacturingActualCompletionDate}"><display/></field>
-        <field name="productionRunName"  title="${uiLabelMap.ManufacturingProductionRunName}"><display/></field>
+        <field name="productionRunName" title="${uiLabelMap.ManufacturingProductionRunName}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="facilityId" title="${uiLabelMap.FacilityFacility}">
             <display-entity entity-name="Facility" description="${facilityName} [${facilityId}]"/>
@@ -320,7 +320,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="productionRunTaskId" entry-name="workEffortId"><hidden/></field>
         <field name="productId"><hidden/></field>
-        <field name="fromDate"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden/></field>
         <field name="failIfItemsAreNotAvailable">
             <drop-down allow-empty="false">
                 <option key="Y" description="${uiLabelMap.CommonYes}"/>
@@ -365,7 +365,7 @@ under the License.
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
-        <field name="fixedAssetId"  title="${uiLabelMap.ManufacturingMachine}"><display/></field>
+        <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachine}"><display/></field>
         <field name="reservPersons"><display/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
         <field name="actualSetupMillis" title="${uiLabelMap.ManufacturingTaskActualSetupMillis}" ><display/></field>
@@ -410,7 +410,7 @@ under the License.
         <field name="productId"><hidden/></field>
         <field name="productionRunId"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
-        <field name="fromDate"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden/></field>
         <field name="failIfItemsAreNotAvailable">
             <drop-down allow-empty="false">
                 <option key="Y" description="${uiLabelMap.CommonYes}"/>
@@ -451,7 +451,7 @@ under the License.
         <field name="productId"><hidden/></field>
         <field name="productionRunId"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
-        <field name="fromDate"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden/></field>
         <field name="task" entry-name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}">
             <display description="${workEffortName} [${workEffortId}]"/>
         </field>
@@ -563,7 +563,7 @@ under the License.
     <form name="ProductionRunTaskInventoryProducedList" type="list" title="" list-name="prunInventoryProduced"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="inventoryItemId" title="${uiLabelMap.ProductInventoryItem}" widget-style="${styles.link_default}">
-            <hyperlink target="/facility/control/EditInventoryItem"  description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
+            <hyperlink target="/facility/control/EditInventoryItem" description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="inventoryItemId"/>
             </hyperlink>
         </field>
@@ -653,7 +653,7 @@ under the License.
         <field name="productionRunId"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
         <field name="statusId"><hidden/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="fixedAssetId">
             <display-entity entity-name="FixedAsset" description="${fixedAssetName} [${fixedAssetId}]"/>
         </field>
@@ -722,7 +722,7 @@ under the License.
         <field name="fixedAssetId" use-when="${actionIsAdd}==null">
             <display-entity entity-name="FixedAsset" description="${fixedAssetName}"/>
         </field>
-        <field name="fromDate" use-when="${actionIsAdd}==null">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="${actionIsAdd}==null">
             <display />
         </field>
         <field name="statusId">
@@ -824,7 +824,7 @@ under the License.
     </form>
     <form name="SelectMrpName" type="single" target="ManufacturingReports" title=""
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="mrpName"  title="${uiLabelMap.ManufacturingMrpName}"><text size="20"/></field>
+        <field name="mrpName" title="${uiLabelMap.ManufacturingMrpName}"><text size="20"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
             <submit button-type="button"/>
         </field>
@@ -833,7 +833,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="productionRunId"><hidden/></field>
         <field name="workEffortAssocTypeId"><hidden value="WORK_EFF_PRECEDENCY"/></field>
-        <field name="productionRunIdTo"  title="${uiLabelMap.ManufacturingProductionRunId}">
+        <field name="productionRunIdTo" title="${uiLabelMap.ManufacturingProductionRunId}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="WorkEffort" key-field-name="workEffortId" description="[ID: ${workEffortId}] - ${workEffortName}">
                     <entity-constraint name="workEffortPurposeTypeId" value="WEPT_PRODUCTION_RUN"/>
@@ -841,7 +841,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="workFlowSequenceTypeId"  title="${uiLabelMap.CommonType}">
+        <field name="workFlowSequenceTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
                     <entity-constraint name="enumTypeId" value="WORKFLOW"/>
@@ -956,7 +956,7 @@ under the License.
         <field name="quantityUomId" map-name="product" title="${uiLabelMap.CommonUom}"><display-entity entity-name="Uom" key-field-name="uomId" description="${abbreviation}"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="smallSubmit ${styles.button_default}">
-            <hyperlink target="deleteProductionRunComponent"  description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deleteProductionRunComponent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="fromDate"/>
                 <parameter param-name="productId"/>
@@ -993,7 +993,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="issueProductionRunTaskComponent"/>
         <field name="productionRunId"><hidden/></field>
-        <field name="fromDate"><ignored/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><ignored/></field>
         <field name="reserveOrderEnumId"><ignored/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingTaskId}">
             <drop-down allow-empty="false">

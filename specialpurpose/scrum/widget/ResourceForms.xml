@@ -373,7 +373,7 @@
         <field name="roleTypeId">
             <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
         </field>
-        <field name="fromDate" sort-field="true">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" sort-field="true">
             <display type="date"/>
         </field>
         <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}" use-when="!compCheck">
@@ -404,7 +404,7 @@
                 <option key="Y"/>
             </drop-down>
         </field>
-        <field name="rateAmount"  tooltip="${uiLabelMap.PartyOverrideDefaultRateAmount}"><text size="10" default-value="${rateDefaultAmount}"/></field>
+        <field name="rateAmount" tooltip="${uiLabelMap.PartyOverrideDefaultRateAmount}"><text size="10" default-value="${rateDefaultAmount}"/></field>
         <field name="percentageUsed"><text size="10"/></field>
         <field name="update" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit/></field>
     </form>

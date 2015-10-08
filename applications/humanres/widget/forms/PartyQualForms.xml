@@ -71,7 +71,7 @@ under the License.
             </display-entity>
         </field>
         <field name="partyQualTypeId"><display-entity entity-name="PartyQualType" description="${description}"/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="qualificationDesc"><text/></field>
         <field name="title"><text/></field>
         <field name="statusId">

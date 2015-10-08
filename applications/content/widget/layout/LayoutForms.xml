@@ -134,7 +134,7 @@ under the License.
         <field name="drObjectInfo" title="${uiLabelMap.ContentFilePath}">
             <text />
         </field>
-        <field name="textData" title="${uiLabelMap.ContentText}"  id-name="textData">
+        <field name="textData" title="${uiLabelMap.ContentText}" id-name="textData">
         <textarea rows="24" cols="80"/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
@@ -208,16 +208,16 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="contentId" position="1" >
         </field>
-        <field name="contentTypeIdDisplay"  title="${uiLabelMap.ContentType}" position="2" map-name="dummy">
+        <field name="contentTypeIdDisplay" title="${uiLabelMap.ContentType}" position="2" map-name="dummy">
             <display description="DOCUMENT"/>
         </field>
-        <field name="contentIdToDisplay"  title="${uiLabelMap.ContentParent}" position="3" map-name="dummy">
+        <field name="contentIdToDisplay" title="${uiLabelMap.ContentParent}" position="3" map-name="dummy">
             <display description="${contentIdTo}"/>
         </field>
-        <field name="mapKeyDisplay"  title="${uiLabelMap.ContentMapKey}" position="4" map-name="dummy">
+        <field name="mapKeyDisplay" title="${uiLabelMap.ContentMapKey}" position="4" map-name="dummy">
             <display description="${mapKey}"/>
         </field>
-        <field name="contentTypeId"  >
+        <field name="contentTypeId" >
             <hidden value="DOCUMENT"/>
         </field>
         <field name="drDataResourceId" title="${uiLabelMap.FormFieldTitle_dataResourceId}" >
@@ -246,7 +246,7 @@ under the License.
         <field name="drMimeTypeId" >
             <display description="text/plain"/>
         </field>
-        <field name="textData" title="${uiLabelMap.ContentText}"  id-name="textData">
+        <field name="textData" title="${uiLabelMap.ContentText}" id-name="textData">
         <textarea rows="24" cols="80"/>
         </field>
         <field name="createdByUserLogin" position="1">

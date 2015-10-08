@@ -121,7 +121,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="contactListId"  widget-style="${styles.link_default}" title="${uiLabelMap.MarketingContactListContactListId}">
+        <field name="contactListId" widget-style="${styles.link_default}" title="${uiLabelMap.MarketingContactListContactListId}">
             <hyperlink target="EditContactList" description="${contactListId}" also-hidden="false">
                 <parameter param-name="contactListId"/>
             </hyperlink>
@@ -148,8 +148,8 @@ under the License.
 
         <field name="contactListId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.MarketingContactListPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field use-when="partyId!=null" name="partyId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="fromDate!=null" name="fromDate" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
 
@@ -177,8 +177,8 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="contactListId" title="${uiLabelMap.MarketingContactListContactListId}"><text-find/></field>
         <field name="partyId" title="${uiLabelMap.MarketingContactListPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-find/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-find/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-find/></field>
 
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
@@ -194,7 +194,7 @@ under the License.
         <field name="hideExpired"><check/></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
-    <form name="ListContactListParties" type="list"  title="" list-name="listIt" paginate-target="ListContactListParties"
+    <form name="ListContactListParties" type="list" title="" list-name="listIt" paginate-target="ListContactListParties"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>                   
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -219,8 +219,8 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity  entity-name="StatusItem"/></field>
         <field name="preferredContactMechId" title="${uiLabelMap.MarketingContactListPreferredContactMech}">
             <display-entity entity-name="ContactMechDetail" key-field-name="contactMechId" description="[${contactMechId}]: [${infoString}] [${tnCountryCode}-${tnAreaCode}-${tnContactNumber}] [${paAddress1}, ${paAddress1}, ${paCity}, ${paStateProvinceGeoId}, ${paPostalCode}, ${paPostalCodeExt} ${paCountryGeoId}]"/>
@@ -233,7 +233,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="expireAction" use-when="${groovy:thruDate == null || isDateAfterNow == true}" widget-style="${styles.button_default}"> 
-            <hyperlink target="expireContactListParty" description="${uiLabelMap.CommonExpire}"  link-type="hidden-form" also-hidden="false">
+            <hyperlink target="expireContactListParty" description="${uiLabelMap.CommonExpire}" link-type="hidden-form" also-hidden="false">
                 <parameter param-name="contactListId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="fromDate"/>
@@ -446,8 +446,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-find/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-find/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-find/></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListContactListCommEvents" list-name="listIt" title="" type="list" paginate-target="ListContactListCommEvents"
@@ -530,7 +530,7 @@ under the License.
         <field name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignId}"><display-entity description="${campaignName}" entity-name="MarketingCampaign"/></field>
     </form>
 
-    <form name="LookupCommEvent"  target="LookupCommEvent" title="" type="single"
+    <form name="LookupCommEvent" target="LookupCommEvent" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="communicationEventId" title="${uiLabelMap.MarketingContactListCommEventId}"><text-find/></field>
         <field name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}"><lookup target-form-name="LookupPartyName"/></field>
@@ -593,7 +593,7 @@ under the License.
             </entity-and>
         </actions>
 
-        <field name="contactMechId"  widget-style="${styles.link_default}">
+        <field name="contactMechId" widget-style="${styles.link_default}">
             <hyperlink description="${contactMechId}" target-type="plain" target="javascript:set_value('${contactMechId}')" also-hidden="false"/>
         </field>
         <field name="contactMechTypeId" title="${uiLabelMap.MarketingContactListContactMechTypeId}"><display-entity entity-name="ContactMechType"/></field>

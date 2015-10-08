@@ -291,7 +291,7 @@ under the License.
         <field name="amountApplied"><display/></field>
         <field name="removeAction"><submit/></field>
     </form>
-    <form name="editPaymentApplicationsBil" default-entity-name="PaymentApplication" list-name="paymentApplicationsBil" target="removePaymentApplication"  type="list" separate-columns="false"
+    <form name="editPaymentApplicationsBil" default-entity-name="PaymentApplication" list-name="paymentApplicationsBil" target="removePaymentApplication" type="list" separate-columns="false"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
@@ -300,7 +300,7 @@ under the License.
         <field name="amountApplied"><display/></field>
         <field name="removeAction" title="${uiLabelMap.CommonRemove}"><submit/></field>
     </form>
-    <form name="editPaymentApplicationsTax" default-entity-name="PaymentApplication" list-name="paymentApplicationsTax" target="removePaymentApplication"  type="list" separate-columns="false"
+    <form name="editPaymentApplicationsTax" default-entity-name="PaymentApplication" list-name="paymentApplicationsTax" target="removePaymentApplication" type="list" separate-columns="false"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
@@ -582,6 +582,6 @@ under the License.
             </hyperlink>
         </field>
         <field name="transactionDate" position="1"><display/></field>
-        <field name="statusId"  position="2" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}" key-field-name="statusId"/></field>
+        <field name="statusId" position="2" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}" key-field-name="statusId"/></field>
     </form>
 </forms>

@@ -27,7 +27,7 @@ under the License.
         <field position="1" name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="toName"><text-find ignore-case="true"/></field>
         <field position="1" name="emailAddress"><text-find ignore-case="true"/></field>
-        <field position="2" name="datefrom" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
+        <field position="2" name="datefrom" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="statusId" position="1">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
@@ -36,7 +36,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="2" name="dateThru" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field position="2" name="dateThru" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -75,7 +75,7 @@ under the License.
         </field>
     </form>
 
-    <form name="EditPartyInvitation" type="single" target="updatePartyInvitation"  default-map-name="partyInvitation"
+    <form name="EditPartyInvitation" type="single" target="updatePartyInvitation" default-map-name="partyInvitation"
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="partyInvitation==null" target="createPartyInvitation"/>
         <auto-fields-service service-name="updatePartyInvitation"/>

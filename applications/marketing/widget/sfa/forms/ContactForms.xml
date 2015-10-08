@@ -143,7 +143,7 @@ under the License.
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="MergeContacts" type="single"  target="MergeContacts">
+    <form name="MergeContacts" type="single" target="MergeContacts">
         <actions>
             <set field="roleTypeId" value="CONTACT"/>
             <set field="partyTypeId" value="PERSON"/>
@@ -152,12 +152,12 @@ under the License.
         </actions>
         <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}" position="1">
             <drop-down allow-empty="false">
-               <list-options list-name="partyList" key-name="contact.partyId"  list-entry-name="contact" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${contact.partyId}"/>
+               <list-options list-name="partyList" key-name="contact.partyId" list-entry-name="contact" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${contact.partyId}"/>
             </drop-down>
         </field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" position="2">
             <drop-down allow-empty="false">
-                <list-options list-name="partyList" key-name="contact.partyId"  list-entry-name="contact" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${contact.partyId}"/>
+                <list-options list-name="partyList" key-name="contact.partyId" list-entry-name="contact" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${contact.partyId}"/>
             </drop-down>
         </field>
         <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeContacts}" widget-style="${styles.button_default}" tooltip-style="button-text"><submit button-type="text-link"/></field>
@@ -170,7 +170,7 @@ under the License.
     </form>
 
     <form name="QuickAddContact" type="single" target="quickAddContact">
-        <field name="firstName"  title="${uiLabelMap.PartyFirstName}*" widget-style="required"><text size="15"/></field>
+        <field name="firstName" title="${uiLabelMap.PartyFirstName}*" widget-style="required"><text size="15"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}*" widget-style="required"><text size="15"/></field>
         <field name="emailAddress" title="${uiLabelMap.CommonEmail}"><text size="15"/></field>
         <field name="contactListId" title="${uiLabelMap.MarketingContactList}">

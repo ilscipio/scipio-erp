@@ -190,13 +190,13 @@ under the License.
         </field>
         <field name="dataCategoryId">
             <drop-down allow-empty="true">
-                <list-options list-name="dataCategoryList"  key-name="dataCategoryId"  description="${categoryName}"/>
+                <list-options list-name="dataCategoryList" key-name="dataCategoryId" description="${categoryName}"/>
             </drop-down>
         </field>
         <field name="localeString">
             <lookup target-form-name="LookupLocale"></lookup>
         </field>
-        <field name="mimeTypeId"  encode-output="false">
+        <field name="mimeTypeId" encode-output="false">
             <drop-down allow-empty="true">
                 <entity-options description="${mimeTypeId} - ${description}" entity-name="MimeType" key-field-name="mimeTypeId">
                     <entity-order-by field-name="mimeTypeId"/>
@@ -259,7 +259,7 @@ under the License.
         </field>
         <field name="dataCategoryId">
             <drop-down allow-empty="true">
-                <list-options list-name="dataCategoryList"  key-name="dataCategoryId"  description="${categoryName}"/>
+                <list-options list-name="dataCategoryList" key-name="dataCategoryId" description="${categoryName}"/>
             </drop-down>
         </field>
         <field name="localeString">
@@ -346,7 +346,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="objectInfo" title="${uiLabelMap.ContentUrl}"><text/></field>
     </form>
-    <form name="ImageUpload" target="uploadImage" title="" type="upload"  default-map-name="currentValue"
+    <form name="ImageUpload" target="uploadImage" title="" type="upload" default-map-name="currentValue"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}"><display/></field>
         <field name="dataResourceTypeId" ><hidden/></field>
@@ -406,7 +406,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-service service-name="updateDataResourceRole" default-field-type="display"/>
-        <field name="thruDate" widget-style="${styles.button_default}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.button_default}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeDataResourceRole">
@@ -489,7 +489,7 @@ under the License.
         <alt-target use-when="electronicText==null" target="addElectronicText"/>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" widget-style="${styles.button_default}"><display also-hidden="true"/></field>
         <field name="textData" widget-style="${styles.button_default}"><textarea cols="120" rows="24"/></field>
-        <field name="submitAction"  use-when="electronicText!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="electronicText!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitAction" use-when="electronicText==null" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 

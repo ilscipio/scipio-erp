@@ -33,7 +33,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.ManufacturingFromDate}">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}">
             <date-time/>
         </field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}">
@@ -83,8 +83,8 @@ under the License.
         <field name="productFeature"><display/></field>
         <field name="quantity"><display/></field>
         <field name="ruleOperator"><display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display/></field>
         <field name="updateAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditProductManufacturingRules" description="${uiLabelMap.CommonSelect}" >
                 <parameter param-name="ruleId"/>
@@ -130,7 +130,7 @@ under the License.
     <form name="findBom" type="single" target="FindBom" title="">
         <field name="productId"><lookup target-form-name="LookupProduct"/></field>
         <field name="productIdTo" title="${uiLabelMap.ProductProductIdTo}"><lookup target-form-name="LookupProduct"/></field>
-        <field name="productAssocTypeId"  title="${uiLabelMap.ManufacturingBomType}">
+        <field name="productAssocTypeId" title="${uiLabelMap.ManufacturingBomType}">
             <drop-down allow-empty="true">
                 <option key="MANUF_COMPONENT" description="${uiLabelMap.ManufacturingBillOfMaterials}"/>
                 <option key="ENGINEER_COMPONENT" description="${uiLabelMap.ManufacturingEngineeringBillOfMaterials}"/>
@@ -139,8 +139,8 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submit" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
-    <form name="ListBom"  type="list" list-name="ListProductBom" odd-row-style="alternate-row"
-        default-table-style="basic-table hover-bar"  paginate-target="FindBom">
+    <form name="ListBom" type="list" list-name="ListProductBom" odd-row-style="alternate-row"
+        default-table-style="basic-table hover-bar" paginate-target="FindBom">
         <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="" widget-style="${styles.link_default}">
             <hyperlink target="EditProductBom" description="${productId}">
                 <parameter param-name="productId"/>

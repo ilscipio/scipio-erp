@@ -39,7 +39,7 @@ under the License.
         <field name="submitAction" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListForums" type="list" list-name="forums"  separate-columns="true" target="updateForum"
+    <form name="ListForums" type="list" list-name="forums" separate-columns="true" target="updateForum"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="forumGroupId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="contentIdTo"><hidden value="${caContentIdTo}"/></field>
@@ -53,7 +53,7 @@ under the License.
         </field>
         <field name="forumName" entry-name="contentName" parameter-name="contentName"><text/></field>
         <field name="forumDescription" entry-name="description" parameter-name="description"><text/></field>
-        <field name="thruDate" entry-name="caThruDate"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" entry-name="caThruDate"><date-time/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="updateForum">
@@ -65,7 +65,7 @@ under the License.
                 <parameter param-name="deactivateExisting" value="yes"/>
             </hyperlink>
         </field>
-        <field name="fromDate" entry-name="caFromDate"><display description="${bsh:caFromDate.toString().substring(0,10)}"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" entry-name="caFromDate"><display description="${bsh:caFromDate.toString().substring(0,10)}"/></field>
         <field name="nbrOfMessages" entry-name="childBranchCount"><display/></field>
     </form>
     <form name="AddForum" type="single" target="createForum"
@@ -108,7 +108,7 @@ under the License.
         <field name="contentId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="partyId"><display-entity entity-name="PartyNameView" description="${groupName}${firstName} ${lastName}"/></field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="text-link"/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteForumGroupRole">
@@ -152,8 +152,8 @@ under the License.
         <field name="dataResourceTypeId"><hidden value="ELECTRONIC_TEXT"/></field>
         <field name="messageTitle" entry-name="description" parameter-name="description"><display/></field>
         <field name="createdBy" entry-name="createdByUserLogin"><display/></field>
-        <field name="fromDate" entry-name="caFromDate"><display description="${bsh:caFromDate!=null?caFromDate.toString().substring(0,10):&quot;&quot;}"/></field>
-        <field name="thruDate" entry-name="caThruDate"><display description="${bsh:caThruDate!=null?caThruDate.toString().substring(0,10):&quot;&quot;}"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" entry-name="caFromDate"><display description="${bsh:caFromDate!=null?caFromDate.toString().substring(0,10):&quot;&quot;}"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" entry-name="caThruDate"><display description="${bsh:caThruDate!=null?caThruDate.toString().substring(0,10):&quot;&quot;}"/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}"><hyperlink target="updateForumMessage">
                 <parameter param-name="forumGroupId"/>
                 <parameter param-name="forumId"/>

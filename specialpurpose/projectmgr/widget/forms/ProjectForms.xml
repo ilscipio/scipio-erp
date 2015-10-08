@@ -117,7 +117,7 @@
         header-row-style="header-row" default-table-style="basic-table">
         <field name="projectId" title="${uiLabelMap.ProjectMgrProjectId}" parameter-name="workEffortId"><text-find size="25"/></field>
         <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" parameter-name="workEffortName"><text-find size="25"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" parameter-name="createdStamp"><date-find/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" parameter-name="createdStamp"><date-find/></field>
         <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
     <form name="hoursNotYetBilled" type="list" list-name="entryList"
@@ -149,7 +149,7 @@
         <field name="hours" position="2"><display/></field>
         <field name="timesheetPartyId" position="2"><display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"/></field>
         <field name="rateTypeId" title="${uiLabelMap.ProjectMgrRateTypeId}" position="2"><display-entity entity-name="RateType" description="${description}"/></field>
-        <field name="fromDate" position="2"><display type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><display type="date"/></field>
     </form>
     <form name="ListProjects" type="list" list-name="listIt" paginate-target="FindProject"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -259,7 +259,7 @@
         <field name="actualHours"><display/></field>
         <field name="emailAddress" title="${uiLabelMap.FormFieldTitle_mailingListEmail}"><display/></field>
     </form>
-    <form name="ListChildEfforts"  target="updateProjectAndAssoc" title="" list-name="projects" type="list" separate-columns="true" paginate-target="FindProject"
+    <form name="ListChildEfforts" target="updateProjectAndAssoc" title="" list-name="projects" type="list" separate-columns="true" paginate-target="FindProject"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <row-actions>
             <entity-one entity-name="StatusItem" value-field="currentStatus">
@@ -297,7 +297,7 @@
             </drop-down>
         </field>
         <field name="actualStartDate" entry-name="workEffortToActualStartDate" title="${uiLabelMap.FormFieldTitle_actualStartDate}"><date-time/></field>
-        <field name="actualCompletionDate"  entry-name="workEffortToActualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><date-time/></field>
+        <field name="actualCompletionDate" entry-name="workEffortToActualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 
@@ -369,7 +369,7 @@
         <field name="workEffortIdTo" entry-name="workEffortId"><hidden/></field>
         <field name="workEffortName" position="1" title="${uiLabelMap.CommonName}*"><display/></field>
         <field name="projectId" title="${uiLabelMap.ProjectMgrWorkEffortIdFrom}"><lookup target-form-name="LookupWorkEffort"/></field>
-        <field name="fromDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="currentStatusId">
             <drop-down allow-empty="false" current-description="${currentStatus.description}">
                 <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
@@ -442,10 +442,10 @@
         <field name="phaseName"><display/></field>
         <field name="firstResource"><display description="${resources[0].lastName},${resources[0].firstName} ${resources[0].middleName}"/></field>
         <field name="currentStatusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
-        <field name="priority"  title="${uiLabelMap.ProjectMgrProrityAbbr}"><display/></field>
+        <field name="priority" title="${uiLabelMap.ProjectMgrProrityAbbr}"><display/></field>
         <field name="startDate"><display type="date"/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.ProjectMgrEstimatedCompletionDateAbbr}"><display type="date"/></field>
-        <field name="actualCompletionDate"  title="${uiLabelMap.ProjectMgrActualCompletionDateAbbr}"><display type="date"/></field>
+        <field name="actualCompletionDate" title="${uiLabelMap.ProjectMgrActualCompletionDateAbbr}"><display type="date"/></field>
         <field name="plannedHours"><display/></field>
         <field name="actualHours"><display/></field>
     </form>
@@ -474,7 +474,7 @@
             </hyperlink>
         </field>
     </form>
-    <form name="projectAssoOrder"  type="list" list-name="listProjectAssoOrder"
+    <form name="projectAssoOrder" type="list" list-name="listProjectAssoOrder"
         extends="ListProjects" extends-resource="component://projectmgr/widget/forms/ProjectForms.xml">
         <row-actions>
             <service service-name="getProject" result-map="resultProject">
@@ -516,27 +516,27 @@
         </row-actions>
         <field name="projectId"><hidden/></field>
         <field name="partyName" title="${uiLabelMap.CommonName}">
-            <hyperlink target="viewprofile"  description="${lastName}, ${firstName} ${middleName} ${groupName} [${partyId}]">
+            <hyperlink target="viewprofile" description="${lastName}, ${firstName} ${middleName} ${groupName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date-time"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date-time"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date-time"/></field>
         <field name="actualHours" entry-name="actualHours" map-name="result.projectInfo"><display/></field>
-        <field name="nonBilledHours"  entry-name="actualNonBilledHours" map-name="result.projectInfo"><display/></field>
+        <field name="nonBilledHours" entry-name="actualNonBilledHours" map-name="result.projectInfo"><display/></field>
     </form>
     <form name="ListProjectClientParties" type="list" list-name="clientAssigns"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="projectId"><hidden/></field>
         <field name="partyName" title="${uiLabelMap.CommonName}">
-            <hyperlink target="viewprofile"  description="${lastName}, ${firstName} ${middleName} ${groupName} [${partyId}]">
+            <hyperlink target="viewprofile" description="${lastName}, ${firstName} ${middleName} ${groupName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date-time"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date-time"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date-time"/></field>
     </form>
     <form name="ListProjectCompanyParties" type="list" list-name="companyAssigns"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -553,8 +553,8 @@
             </hyperlink>
         </field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date-time"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date-time"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date-time"/></field>
         <field name="currencyUomId"><display-entity entity-name="Uom" key-field-name="uomId" description="${description}"/></field>
     </form>
     <form name="EditWorkEffortPartyAssigns" target="deleteWorkEffortPartyAssign" title="" type="list" paginate-target="ListWorkEffortPartyAssigns"
@@ -568,16 +568,16 @@
         <field name="workEffortId"><hidden/></field>
         <field name="projectId"><hidden/></field>
         <field name="partyId" widget-style="${styles.link_default}">
-            <hyperlink target="viewprofile"  description="${firstName} ${middleName} ${lastName} ${groupName}">
+            <hyperlink target="viewprofile" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
             <display-entity entity-name="RoleType"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date-time"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date-time"/></field>
-        <field name="expireAction" widget-style="smallSubmit"  use-when="${thruDate==null || (thruDate &gt; nowTimestamp)}"><submit button-type="button"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date-time"/></field>
+        <field name="expireAction" widget-style="smallSubmit" use-when="${thruDate==null || (thruDate &gt; nowTimestamp)}"><submit button-type="button"/></field>
     </form>
     <form name="AddWorkEffortPartyAssign" target="createWorkEffortPartyAssign" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
@@ -597,7 +597,7 @@
                 <order-by field-name="middleName"/>
                 <order-by field-name="groupName"/>
             </entity-condition>
-            <entity-condition entity-name="WorkEffortPartyAssignView"  filter-by-date="true" distinct="true" list="taskResources">
+            <entity-condition entity-name="WorkEffortPartyAssignView" filter-by-date="true" distinct="true" list="taskResources">
                 <condition-expr field-name="workEffortId" from-field="projectId"/>
                 <select-field field-name="partyId"/>
                 <select-field field-name="lastName"/>
@@ -838,7 +838,7 @@
         <field name="projectId"><hidden value="${parameters.projectId}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.WorkEffortTimeBillFromParty}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}"/></field>
         <field name="partyId" title="${uiLabelMap.WorkEffortTimeBillToParty}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time type="timestamp"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="timestamp"/></field>
         <field name="invoiceId"><hidden/></field>
         <field name="reCreate" position="1" title="${uiLabelMap.ProjectMgrRecreateInvoice}: ${invoiceId}" use-when="context.get(&quot;invoiceId&quot;)!=null">
             <drop-down no-current-selected-key="N">

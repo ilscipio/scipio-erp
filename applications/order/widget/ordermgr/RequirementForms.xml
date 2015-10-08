@@ -203,9 +203,9 @@ under the License.
                 <entity-options entity-name="RoleType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="fromDate" use-when="requirementRole!=null"><display/></field>
-        <field name="fromDate" use-when="requirementRole==null"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="requirementRole!=null"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="requirementRole==null"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -269,7 +269,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.ProductSupplier}" position="1">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PartyRoleAndPartyDetail" key-field-name="partyId" description="${groupName} [${partyId}]">
-                    <entity-constraint name="roleTypeId"  value="SUPPLIER" operator="equals"/>
+                    <entity-constraint name="roleTypeId" value="SUPPLIER" operator="equals"/>
                     <entity-order-by field-name="partyId"/>
                 </entity-options>
             </drop-down>

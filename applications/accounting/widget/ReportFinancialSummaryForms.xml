@@ -85,8 +85,8 @@ under the License.
                 <list-options list-name="monthList" key-name="value" description="${description}"/>
             </drop-down>
         </field>
-        <field name="fromDate" required-field="false"><date-time type="timestamp"/></field>
-        <field name="thruDate" required-field="false" position="2"><date-time type="timestamp"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="false"><date-time type="timestamp"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" required-field="false" position="2"><date-time type="timestamp"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <drop-down>
                 <entity-options entity-name="GlFiscalType" description="${description}">
@@ -215,7 +215,7 @@ under the License.
     <form name="BalanceSheetParameters" type="single" target="BalanceSheet"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
-        <field name="thruDate" position="2"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time default-value="${nowTimestamp}"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <drop-down>
                 <entity-options entity-name="GlFiscalType" description="${description}">
@@ -356,8 +356,8 @@ under the License.
     </form>
 
     <form name="SelectAcctReportPeriod" type="single" title="Select period for report">
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <drop-down>
                 <entity-options entity-name="GlFiscalType" description="${description}">
@@ -372,7 +372,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
         <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <drop-down>
                 <entity-options entity-name="GlFiscalType" description="${description}">
@@ -498,7 +498,7 @@ under the License.
             </drop-down>
         </field>
         <field name="productId"><lookup target-form-name="LookupProduct"/></field>
-        <field name="thruDate" position="2"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time default-value="${nowTimestamp}"/></field>
         <field name="organizationPartyId"><hidden/></field>
         <field name="showSearchResults"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -562,8 +562,8 @@ under the License.
                 <list-options list-name="monthList" key-name="value" description="${description}"/>
             </drop-down>
         </field>
-        <field name="fromDate" required-field="false"><date-time type="timestamp"/></field>
-        <field name="thruDate" required-field="false" position="2"><date-time type="timestamp"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="false"><date-time type="timestamp"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" required-field="false" position="2"><date-time type="timestamp"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <drop-down>
                 <entity-options entity-name="GlFiscalType" description="${description}">
@@ -621,8 +621,8 @@ under the License.
     <form name="FindCashFlowTotals" type="single" target="TransactionTotals" title="Find list of cash flow totals"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <drop-down>
                 <entity-options entity-name="GlFiscalType" description="${description}">

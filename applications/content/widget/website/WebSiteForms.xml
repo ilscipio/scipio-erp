@@ -132,8 +132,8 @@ under the License.
         <field name="webSiteContentTypeId">
             <display-entity entity-name="WebSiteContentType"/>
         </field>
-        <field name="fromDate"><display/></field>
-
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="RemoveWebSiteContent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -196,8 +196,8 @@ under the License.
         <field name="roleTypeId">
             <display description="${roleType.description}"/>
         </field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeWebSiteRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -249,7 +249,7 @@ under the License.
         </actions>
         <field name="webSiteId"><display/></field>
         <field name="siteName"><display/></field>
-        <field name="fromDate"><hidden value="${fromDate}"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden value="${fromDate}"/></field>
         <field name="contactListId">
             <drop-down allow-empty="true">
                 <entity-options description="${contactListName} [${contactListId}]" entity-name="ContactList" key-field-name="contactListId"></entity-options>
@@ -280,8 +280,8 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate"><display type="date-time"/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteWebSiteContactList" description="${uiLabelMap.CommonDelete}">

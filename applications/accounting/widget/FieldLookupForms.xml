@@ -200,8 +200,8 @@ under the License.
         </field>
         <field position="1" name="partyIdFrom"><lookup  target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyId" title="${uiLabelMap.AccountingPartyIdTo}"><lookup  target-form-name="LookupPartyName"/></field>
-        <field position="1" name="Datefrom" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
-        <field position="2" name="DateThru" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field position="1" name="Datefrom" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field position="2" name="DateThru" title="${uiLabelMap.CommonThru}"><date-time/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -234,7 +234,7 @@ under the License.
         <field name="productId" ><text-find/></field>
         <field name="partyIdFrom"><text-find/></field>
         <field name="partyId" title="${uiLabelMap.AccountingPartyIdTo}"><text-find/></field>
-        <field name="agreementDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
+        <field name="agreementDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -252,7 +252,7 @@ under the License.
         <field name="productId"><display/></field>
         <field name="partyIdFrom"><display/></field>
         <field name="partyIdTo"><display/></field>
-        <field name="agreementDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="agreementDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="agreementTypeId"><display/></field>
         <field name="description"><display/></field>
     </form>
@@ -290,8 +290,8 @@ under the License.
     <form name="lookupPaymentGroupMember" target="LookupPaymentGroupMember" title="" type="single" header-row-style="header-row" default-table-style="basic-table">
         <field name="paymentGroupId"><text-find/></field>
         <field name="paymentId"><text-find/></field>
-        <field name="fromDate" position="1"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="sequenceNum"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -355,8 +355,8 @@ under the License.
         </field>
         <field name="periodNum"><text-find/></field>
         <field name="periodName"><text-find/></field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="isClosed">
             <drop-down allow-empty="true">
                 <option key="Y" description="${uiLabelMap.CommonY}"/>
@@ -383,8 +383,8 @@ under the License.
         <field name="periodTypeId"><display-entity entity-name="PeriodType"/></field>
         <field name="periodNum"><display/></field>
         <field name="periodName"><display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display/></field>
         <field name="isClosed"><display/></field>
     </form>
 </forms>

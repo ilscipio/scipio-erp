@@ -159,7 +159,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
-        <field name="fromDate"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="partyId" >
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName} ${firstName} ${middleName}"/>
         </field>

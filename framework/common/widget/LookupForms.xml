@@ -48,7 +48,7 @@ under the License.
             </service>
         </actions>
         <field name="geoId" widget-style="${styles.link_default}" title="${uiLabelMap.CommonGeoId}">
-            <hyperlink also-hidden="false" target-type="plain" description="${geoId}"  target="javascript:set_value('${geoId}')"/>
+            <hyperlink also-hidden="false" target-type="plain" description="${geoId}" target="javascript:set_value('${geoId}')"/>
         </field>
         <field name="geoTypeId" title="${uiLabelMap.CommonGeoTypeId}">
             <display-entity key-field-name="geoTypeId" entity-name="GeoType" description="${description}"/>
@@ -63,7 +63,7 @@ under the License.
     <form name="LookupGeoName" extends="LookupGeo" target="LookupGeoName"/>
     <form name="listLookupGeoName" extends="listLookupGeo" paginate-target="LookupGeoName">
         <field name="geoId" widget-style="${styles.link_default}" title="${uiLabelMap.CommonGeoId}">
-            <hyperlink also-hidden="false" target-type="plain" description="${geoId}"  target="javascript:set_values('${geoName}', '${geoId}')"/>
+            <hyperlink also-hidden="false" target-type="plain" description="${geoId}" target="javascript:set_values('${geoName}', '${geoId}')"/>
         </field>
     </form>
 

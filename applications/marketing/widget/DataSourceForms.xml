@@ -47,7 +47,7 @@ under the License.
         <actions>
             <entity-condition entity-name="DataSource"/>
         </actions>
-        <field name="dataSourceId"  widget-style="${styles.link_default}" title="${uiLabelMap.DataSourceDataSourceId}">
+        <field name="dataSourceId" widget-style="${styles.link_default}" title="${uiLabelMap.DataSourceDataSourceId}">
             <hyperlink target="EditDataSource" description="${dataSourceId}" also-hidden="false">
                 <parameter param-name="dataSourceId"/>
             </hyperlink>

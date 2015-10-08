@@ -367,7 +367,7 @@ under the License.
     </form>
 
     <!-- ProductSubscriptionResource -->
-    <form name="ListSubscriptionResourceProducts" type="list"  list-name="productSubscriptionResource"  target="updateProductSubscriptionResourceSr"
+    <form name="ListSubscriptionResourceProducts" type="list" list-name="productSubscriptionResource" target="updateProductSubscriptionResourceSr"
         header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table">
         <actions>
             <entity-condition entity-name="ProductSubscriptionResource">
@@ -455,7 +455,7 @@ under the License.
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="EditSubscriptionAttributes" type="list"  list-name="subscriptionAttributes"  target="UpdateSubscriptionAttribute"
+    <form name="EditSubscriptionAttributes" type="list" list-name="subscriptionAttributes" target="UpdateSubscriptionAttribute"
         header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table">
         <auto-fields-service service-name="updateSubscriptionAttribute"/>
 
@@ -470,7 +470,7 @@ under the License.
     </form>
 
     <!-- Subscription Communication Event  -->
-    <form name="listSubscriptionCommEvent" type="list"  list-name="subscriptionCommEvent"  target="ListSubscriptionCommEvent"
+    <form name="listSubscriptionCommEvent" type="list" list-name="subscriptionCommEvent" target="ListSubscriptionCommEvent"
         header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table">
         <actions>
             <entity-condition entity-name="SubscriptionAndCommEvent">

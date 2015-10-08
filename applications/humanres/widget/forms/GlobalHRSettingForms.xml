@@ -153,7 +153,7 @@ under the License.
         </actions>
         <field name="rateCurrencyUomId"><hidden/></field>
         <field name="emplPositionTypeId"><hidden/></field>
-        <field name="fromDate"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden/></field>
         <field name="rateAmountFromDate"><hidden/></field>
         <field name="rateTypeId"><display-entity entity-name="RateType" description="${description}"/></field>
         <field name="periodTypeId"><display-entity entity-name="PeriodType" description="${description}"/></field>
@@ -168,7 +168,7 @@ under the License.
             <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
         </actions>
         <field name="emplPositionTypeId"><hidden value="${parameters.emplPositionTypeId}"/></field>
-        <field name="rateTypeId"   tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="rateTypeId"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down>
                 <entity-options description="${description}" key-field-name="rateTypeId" entity-name="RateType">
                     <entity-order-by field-name="description"/>
@@ -317,7 +317,7 @@ under the License.
         <field name="scopeEnumId"><hidden value="WES_PUBLIC"/></field>
         <field name="workEffortName" title="${uiLabelMap.HumanHolidayName}" tooltip="${uiLabelMap.CommonRequired}"><text size="50"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><textarea/></field>
-        <field name="estimatedStartDate" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
+        <field name="estimatedStartDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
         <field name="addAction" title="${uiLabelMap.CommonSubmit}" use-when="workEffort==null"><submit/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="workEffort!=null"><submit/></field>
     </form>
@@ -340,9 +340,9 @@ under the License.
         <field name="scopeEnumId"><hidden value="WES_PUBLIC"/></field>
         <field name="workEffortName" title="${uiLabelMap.HumanHolidayName}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="estimatedStartDate" title="${uiLabelMap.CommonFromDate}"><display type="date"/></field>
+        <field name="estimatedStartDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="partyId" title="${uiLabelMap.CommonBy}">
-            <display-entity entity-name="PartyNameView"  description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
+            <display-entity entity-name="PartyNameView" description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
         </field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit/></field>
         <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">

@@ -177,8 +177,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate"><date-find/></field>
-        <field name="thruDate" position="2"><date-find/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-find/></field>
         <field name="search" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     

@@ -419,8 +419,8 @@ under the License.
             </drop-down>
         </field>
         <field name="conversionFactor"><text/></field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.AccountingUpdateFX}"><submit/></field>
     </form>
 
@@ -1139,7 +1139,7 @@ under the License.
         <field name="description" title="${uiLabelMap.CommonDescription}" sort-field="true"><display/></field>
     </form>
 
-    <form name="EditGlAccountCategory" type="single"  target="updateGlAccountCategory" default-map-name="glAccountCategory">
+    <form name="EditGlAccountCategory" type="single" target="updateGlAccountCategory" default-map-name="glAccountCategory">
         <alt-target use-when="glAccountCategory==null" target="createGlAccountCategory"/>
         <auto-fields-entity entity-name="GlAccountCategory" default-field-type="edit"/>
         <field name="glAccountCategoryId" use-when="glAccountCategoryId!=null"><display/></field>
@@ -1162,8 +1162,8 @@ under the License.
         <auto-fields-entity entity-name="GlAccountCategoryMember" default-field-type="edit"/>
         <field name="glAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${glAccountId}-${accountName}"/></field>
         <field name="glAccountCategoryId"><display-entity entity-name="GlAccountCategory"/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="deleteAction" title="" widget-style="${styles.button_default}">
             <hyperlink target="deleteGlAccountCategoryMember" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="glAccountId" from-field="glAccountId"/>
@@ -1182,8 +1182,8 @@ under the License.
                 <entity-options description="${glAccountId}" entity-name="GlAccount"/>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="amountPercentage"><text/></field>
         <field name="submit" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>

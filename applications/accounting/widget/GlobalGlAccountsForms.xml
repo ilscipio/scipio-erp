@@ -151,7 +151,7 @@ under the License.
     </form>
 
     <!-- this is used to list AcctgTransEntries and can be called either by using an acctgTransId or a glAccountId -->
-    <form name="ListAcctgTransEntries" type="list" list-name="entries"  default-entity-name="AcctgTransEntry"
+    <form name="ListAcctgTransEntries" type="list" list-name="entries" default-entity-name="AcctgTransEntry"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="acctgTransId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="ListAcctgTransEntries">
@@ -232,7 +232,7 @@ under the License.
                 <order-by field-name="periodTypeId"/>
             </entity-condition>
         </actions>
-        <field name="fromDate"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden/></field>
         <field name="rateTypeId"><hidden/></field>
         <field name="rateCurrencyUomId"><hidden/></field>
         <field name="rateDescription"><display/></field>

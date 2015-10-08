@@ -101,7 +101,7 @@ under the License.
         <field name="contentName"><display/></field>
         <field name="rootContentId" title="${uiLabelMap.FormFieldTitle_contentIdTo}"><display/></field>
         <field name="caContentAssocTypeId" title="${uiLabelMap.FormFieldTitle_contentAssocTypeId}"><display/></field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="caThruDate"><hidden/></field>
         <field name="editTemplate" title="${uiLabelMap.CommonEdit}" widget-style="${styles.button_default}">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditRootCompDoc">
@@ -122,7 +122,7 @@ under the License.
         <auto-fields-entity entity-name="ContentRevision"/>
 
         <field name="rootContentId" map-name="empty" widget-style="${styles.button_default}"><hidden/></field>
-        <field name="rootContentRevisionSeqId"  map-name="empty" widget-style="${styles.button_default}"><hidden/></field>
+        <field name="rootContentRevisionSeqId" map-name="empty" widget-style="${styles.button_default}"><hidden/></field>
         <field name="contentId" widget-style="${styles.button_default}"><lookup target-form-name="LookupContent"/></field>
         <field name="contentRevisionSeqId" widget-style="inputBox"><text/></field>
 <!--         <field name="contentRevisionSeqId">
@@ -187,7 +187,7 @@ under the License.
         <auto-fields-entity entity-name="ContentRevisionItem"/>
 
         <field name="rootContentId" map-name="empty" widget-style="${styles.button_default}"><hidden/></field>
-        <field name="rootContentRevisionSeqId"  map-name="empty" widget-style="${styles.button_default}"><hidden/></field>
+        <field name="rootContentRevisionSeqId" map-name="empty" widget-style="${styles.button_default}"><hidden/></field>
         <field name="contentId" widget-style="${styles.button_default}"><lookup target-form-name="LookupContent"/></field>
         <field name="contentRevisionSeqId" widget-style="inputBox"><text/></field>
         <field name="itemContentId" widget-style="inputBox"><text/></field>
@@ -293,8 +293,8 @@ under the License.
                 <option key="APPROVED" description="${uiLabelMap.CommonApproved}"/>
             </drop-down>
         </field>
-        <field name="approvalDate" widget-style="inputBox"   use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)"><date-time/></field>
-        <field name="sequenceNum" widget-style="inputBox"  use-when="&quot;COMPDOC_TEMPLATE&quot;.equals(contentTypeId)"><text/></field>
+        <field name="approvalDate" widget-style="inputBox"  use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)"><date-time/></field>
+        <field name="sequenceNum" widget-style="inputBox" use-when="&quot;COMPDOC_TEMPLATE&quot;.equals(contentTypeId)"><text/></field>
         <field name="comments" widget-style="inputBox"><textarea cols="30" rows="3"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit ${styles.button_default}">
@@ -330,7 +330,7 @@ under the License.
         <field name="approvalDate" widget-style="inputBox"><date-time/></field>
         <field name="sequenceNum" widget-style="inputBox"><text/></field>
         <field name="comments" widget-style="inputBox"><text size="40"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"  use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)"><submit/></field>
     </form>
 
     <form name="AddRootCompDocInstance" default-map-name="" type="single" target="genCompDocInstance"
@@ -382,8 +382,8 @@ under the License.
             <display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/>
         </field>
         <field name="contentAssocTypeId"><display-entity entity-name="ContentAssocType"/></field>
-        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time default-value="${nowTimestamp}"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="sequenceNum"><text/></field>
 
         <field name="mimeTypeId" title="${uiLabelMap.ContentDocumentType}" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; &quot;SURVEY&quot;.equals(templateDataResourceTypeId)">
@@ -422,8 +422,8 @@ under the License.
         <field name="instanceOfContentId" map-name="itemContent" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId)"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentIdTo"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentAssocTypeId"><display-entity entity-name="ContentAssocType" also-hidden="false"/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="sequenceNum"><text/></field>
 
         <field name="mimeTypeId" map-name="dataResource"
@@ -502,8 +502,8 @@ under the License.
         <field name="instanceOfContentId" map-name="itemContent" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentIdTo" title="${uiLabelMap.ContentCompDocParentContentId}"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentAssocTypeId"><display-entity entity-name="ContentAssocType" also-hidden="false"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
 
        <field name="mimeTypeId" map-name="dataResource" title="${uiLabelMap.ContentDocumentType}" >

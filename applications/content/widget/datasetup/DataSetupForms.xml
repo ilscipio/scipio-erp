@@ -133,7 +133,7 @@ under the License.
         <field name="parentCategoryId">
             <drop-down allow-empty="true">
                 <list-options list-name="dataCategoryList"
-                    key-name="dataCategoryId"  description="${categoryName}"
+                    key-name="dataCategoryId" description="${categoryName}"
                     />
             </drop-down>
         </field>

@@ -36,7 +36,7 @@
         <!-- Child workeffort fields -->
         <field name="workEffortIdFrom"><hidden value="${parameters.workEffortIdFrom}"/></field>
         <field name="workEffortIdTo"><hidden value="${parameters.workEffortId}"/></field>
-        <field name="fromDate"><hidden value="${parameters.fromDate}"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden value="${parameters.fromDate}"/></field>
         <field map-name="workEffortAssoc" name="workEffortAssocTypeId" title="${uiLabelMap.FormFieldTitle_workEffortAssocTypeId}" use-when="workEffortIdFrom!=null">
             <display-entity entity-name="WorkEffortAssocType" description="${description}"/>
         </field>
@@ -90,7 +90,7 @@
                 <list-options list-name="listMaintRoles" key-name="roleTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time default-value="${nowTimestamp}"/></field>
         <field name="partyId">
             <drop-down>
                 <list-options list-name="listMaintParties" key-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
@@ -129,8 +129,8 @@
             </drop-down>
         </field>
         <field name="sequenceNum"><text/></field>
-        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="workEffortName" title="${uiLabelMap.CommonName}"><text size="30"/></field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
             <drop-down>
@@ -180,7 +180,7 @@
             <display-entity entity-name="WorkEffortPurposeType" description="${description}"/>
         </field>
         <field name="actualStartDate" entry-name="workEffortToActualStartDate"><display/></field>
-        <field name="actualCompletionDate"  entry-name="workEffortToActualCompletionDate"><display/></field>
+        <field name="actualCompletionDate" entry-name="workEffortToActualCompletionDate"><display/></field>
     </form>
 
     <!-- TimeEntry -->

@@ -146,8 +146,8 @@ under the License.
             <display-entity entity-name="PaymentMethodType" description="${description}"/>
         </field>
         <field name="amount"><display currency="${payment.currencyUomId}" type="currency"/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="deleteAction" title="" widget-style="${styles.button_default}">
             <hyperlink target="expirePaymentGroupMember" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
@@ -162,7 +162,7 @@ under the License.
         <auto-fields-service service-name="createPaymentGroupMember"/>
         <field name="paymentGroupId"><hidden/></field>
         <field name="paymentId"><lookup target-form-name="LookupPayment"/></field>
-        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time default-value="${nowTimestamp}"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="PaymentGroupMembers" type="list" list-name="paymentGroupMembers"
@@ -197,7 +197,7 @@ under the License.
         <field name="paymentTypeId" title="${uiLabelMap.OrderPaymentType}"><display-entity entity-name="PaymentType" description="${description}"/></field>
         <field name="statusId" title="${uiLabelMap.AccountingPaymentStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="amount"><display also-hidden="false" type="currency" currency="${payment.currencyUomId}"/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
     </form>
 </forms>

@@ -46,7 +46,7 @@ under the License.
         <field name="description"><display/></field>
     </form>
     <form name="FindProductConfigItemsFrom" type="single" target="FindProductConfigItems"
-        default-map-name="productconfigitems"  header-row-style="header-row" default-table-style="basic-table">
+        default-map-name="productconfigitems" header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="ProductConfigItem" default-field-type="find"/>
         <field name="configItemId" title="${uiLabelMap.ProductConfigItem}"/>
         <field name="configItemTypeId"><hidden/></field>
@@ -124,16 +124,16 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
+         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="PrepareAddProductConfigItemContentAssoc" type="single" target="prepareAddContentToProductConfigItem" title="Add ProdConfItemContent (select Content Id, enter From Date):"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="ProdConfItemContent"/>
         <field name="contentId"><ignored/></field>
-        <field name="fromDate"><ignored/></field>
-        <field name="thruDate" position="2"><ignored/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><ignored/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><ignored/></field>
         <field name="configItemId" map-name="productConfigItem"><hidden/></field>
         <field name="confItemContentTypeId" title="${uiLabelMap.ProductProductConfigItemContentTypeId}">
             <drop-down>
@@ -177,13 +177,13 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="contentId==null" target="createSimpleTextContentForProductConfigItem"/>
         <auto-fields-entity entity-name="ProdConfItemContent" map-name="productContentData"/>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"></field>
         <field name="description" title="${uiLabelMap.ProductProductDescription}" map-name="content"><text size="40"/></field>
         <field name="localeString" title="${uiLabelMap.ProductLocaleString}" map-name="content"><text size="40"/></field>
         <field use-when="contentId == null" name="contentId"><ignored/></field>
         <field use-when="contentId != null" name="contentId" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" ><display/></field>
-        <field name="text"  title="${uiLabelMap.ProductText}" map-name="textData"><textarea cols="60" rows="7"/></field>
+        <field name="text" title="${uiLabelMap.ProductText}" map-name="textData"><textarea cols="60" rows="7"/></field>
         <field name="textDataResourceId" title="${uiLabelMap.ProductTextDataResourceId}" map-name="textData"><hidden/></field>
         <field name="configItemId"><hidden/></field>
         <field name="confItemContentTypeId"><hidden/></field>
@@ -206,7 +206,7 @@ under the License.
             </entity-condition>
         </actions>
         <auto-fields-entity entity-name="ProductConfigAndProduct" default-field-type="hidden"/>
-        <field name="productId" widget-style="${styles.link_default}"  >
+        <field name="productId" widget-style="${styles.link_default}" >
             <hyperlink target="EditProductConfigs" description="${productId}">
                 <parameter param-name="productId"/>
             </hyperlink>

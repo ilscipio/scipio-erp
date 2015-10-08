@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
         
-    <form name="ListGoogleCheckoutConfigurations" type="list"  list-name="googleCheckoutConfigurations"  target="updateGoogleCheckoutConfiguration"
+    <form name="ListGoogleCheckoutConfigurations" type="list" list-name="googleCheckoutConfigurations" target="updateGoogleCheckoutConfiguration"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="GoogleCoConfiguration">
@@ -111,7 +111,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
         
-    <form name="ListGoogleCheckoutShippingMethods" type="list"  list-name="googleCheckoutShippingMethods"  target="updateGoogleCheckoutShippingMethod"
+    <form name="ListGoogleCheckoutShippingMethods" type="list" list-name="googleCheckoutShippingMethods" target="updateGoogleCheckoutShippingMethod"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="GoogleCoShippingMethod">

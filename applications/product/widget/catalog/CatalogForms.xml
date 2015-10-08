@@ -71,7 +71,7 @@ under the License.
         <field name="styleSheet" title="${uiLabelMap.ProductStyleSheet}"><text size="60" maxlength="250"/></field>
         <field name="headerLogo" title="${uiLabelMap.ProductHeaderLogo}"><text size="60" maxlength="250"/></field>
         <field name="contentPathPrefix" title="${uiLabelMap.ProductContentPathPrefix}" tooltip="${uiLabelMap.ProductPrependedImageContentPaths}"><text size="60" maxlength="250"/></field>
-        <field name="templatePathPrefix" title="${uiLabelMap.ProductTemplatePathPrefix}"  tooltip="${uiLabelMap.ProductPrependedTemplatePaths}"><text size="60" maxlength="250"/></field>
+        <field name="templatePathPrefix" title="${uiLabelMap.ProductTemplatePathPrefix}" tooltip="${uiLabelMap.ProductPrependedTemplatePaths}"><text size="60" maxlength="250"/></field>
         
         <field name="useQuickAdd" title="${uiLabelMap.ProductUseQuickAdd}">
             <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
@@ -114,8 +114,8 @@ under the License.
             </display-entity>
         </field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRole}"><display-entity entity-name="RoleType"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeProdCatalogFromParty" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -150,8 +150,8 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProdCatalogStore" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -173,8 +173,8 @@ under the License.
             </display-entity>
         </field>
         <field name="prodCatalogCategoryTypeId" title="${uiLabelMap.ProductCatalogCategoryType}"><display-entity entity-name="ProdCatalogCategoryType" also-hidden="true" cache="true"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeProductCategoryFromProdCatalog" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -205,8 +205,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"/>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"/>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"/>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"/>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"/>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

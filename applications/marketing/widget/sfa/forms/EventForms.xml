@@ -20,7 +20,7 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <form name="MyTasks" list-name="myTasks"  extends="ListWorkEfforts" extends-resource="component://workeffort/widget/WorkEffortForms.xml">
+    <form name="MyTasks" list-name="myTasks" extends="ListWorkEfforts" extends-resource="component://workeffort/widget/WorkEffortForms.xml">
         <row-actions>
             <entity-one entity-name="UserLogin" value-field="assignedByUserLogin">
                 <field-map field-name="userLoginId" from-field="assignedByUserLoginId"/>

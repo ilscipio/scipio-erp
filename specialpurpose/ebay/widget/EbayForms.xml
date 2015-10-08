@@ -29,8 +29,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp)}"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(nowTimestamp)}"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp)}"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(nowTimestamp)}"/></field>
         <field name="submitAction" title="${uiLabelMap.EbayImportSearchSingleTransactionFromEbay}"><submit button-type="button"/></field>
     </form>
     <form name="ListOrdersFromEbay" type="multi" use-row-submit="true" list-name="orderList" target="ImportOrderFromEbay"
@@ -97,8 +97,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp)}"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(nowTimestamp)}"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp)}"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(nowTimestamp)}"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     
@@ -130,7 +130,7 @@ under the License.
     </form>
     
     <!-- Ebay configuration settings forms  -->
-    <form name="ListEbayConfigurations" type="list"  list-name="listIt" paginate-target="FindEbayConfigurations"
+    <form name="ListEbayConfigurations" type="list" list-name="listIt" paginate-target="FindEbayConfigurations"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -189,7 +189,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="ebayConfig != null"><submit button-type="button"/></field>
     </form>
     
-    <form name="ListEbayShippingMethods" type="list"  list-name="eBayShippingMethods"  target="updateEbayShippingMethod"
+    <form name="ListEbayShippingMethods" type="list" list-name="eBayShippingMethods" target="updateEbayShippingMethod"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="EbayShippingMethod">

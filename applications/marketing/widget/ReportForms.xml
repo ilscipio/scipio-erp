@@ -23,10 +23,10 @@ under the License.
 
     <form name="TrackingCodeReportOptions" type="single" target="TrackingCodeReport" title="${uiLabelMap.MarketingTrackingCodeReportTitle}"
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate} (${uiLabelMap.CommonDate}&gt;=)">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom} (${uiLabelMap.CommonDate}&gt;=)">
             <date-time type="timestamp"/>
         </field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate} (${uiLabelMap.CommonDate}&lt;)">
+        <field name="thruDate" title="${uiLabelMap.CommonThru} (${uiLabelMap.CommonDate}&lt;)">
             <date-time type="timestamp"/>
         </field>
 
@@ -45,10 +45,10 @@ under the License.
 
     <form name="MarketingCampaignOptions" type="single" target="MarketingCampaignReport"
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate} (${uiLabelMap.CommonDate}&gt;=)">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom} (${uiLabelMap.CommonDate}&gt;=)">
             <date-time type="timestamp"/>
         </field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate} (${uiLabelMap.CommonDate}&lt;)">
+        <field name="thruDate" title="${uiLabelMap.CommonThru} (${uiLabelMap.CommonDate}&lt;)">
             <date-time type="timestamp"/>
         </field>
 
@@ -67,10 +67,10 @@ under the License.
 
     <form name="EmailStatusOptions" type="single" target="EmailStatusReport" 
             header-row-style="header-row" default-table-style="basic-table">
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate} (${uiLabelMap.CommonDate}&gt;=)">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom} (${uiLabelMap.CommonDate}&gt;=)">
             <date-time type="timestamp"/>
         </field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate} (${uiLabelMap.CommonDate}&lt;)">
+        <field name="thruDate" title="${uiLabelMap.CommonThru} (${uiLabelMap.CommonDate}&lt;)">
             <date-time type="timestamp"/>
         </field>
         <field name="partyIdTo" title="${uiLabelMap.FormFieldTitle_partyIdTo}">
@@ -102,13 +102,13 @@ under the License.
 
     <form name="PartyStatusOptions" type="single" target="PartyStatusReport" 
             header-row-style="header-row" default-table-style="basic-table">
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate} (${uiLabelMap.CommonDate}&gt;=)">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom} (${uiLabelMap.CommonDate}&gt;=)">
             <date-time type="timestamp"/>
         </field>
         <field name="statusDate" title="${uiLabelMap.CommonStatus} (${uiLabelMap.CommonDate}&gt;=)">
             <date-time type="timestamp"/>
         </field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate} (${uiLabelMap.CommonDate}&lt;)">
+        <field name="thruDate" title="${uiLabelMap.CommonThru} (${uiLabelMap.CommonDate}&lt;)">
             <date-time type="timestamp"/>
         </field>
         <field name="contactListId" title="${uiLabelMap.PartyContactLists}">
@@ -179,7 +179,7 @@ under the License.
             </row-actions>
         <field name="contactListId" title="${uiLabelMap.MarketingContactList}"><display/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="statusDate" title="${uiLabelMap.CommonStatus} ${uiLabelMap.CommonDate}"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display description="${statusItem.description}"/></field>
     </form>

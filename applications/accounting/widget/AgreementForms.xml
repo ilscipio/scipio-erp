@@ -140,15 +140,15 @@ under the License.
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time type="date"/></field>
-        <field name="thruDate" position="2"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
 
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
 
-    <form name="ListAgreementItems" list-name="agreementItems" target=""  title="" type="list" paginate-target="ListAgreementItems"
+    <form name="ListAgreementItems" list-name="agreementItems" target="" title="" type="list" paginate-target="ListAgreementItems"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="AgreementItem" default-field-type="display"/>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
@@ -271,8 +271,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time type="date"/></field>
-        <field name="thruDate" position="2"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="minQuantity"><text/></field>
         <field name="maxQuantity" position="2"><text/></field>
         <field name="termDays"><text/></field>
@@ -303,8 +303,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time type="date"/></field>
-        <field name="thruDate" position="2"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="minQuantity"><text/></field>
         <field name="maxQuantity" position="2"><text/></field>
         <field name="termDays"><text/></field>
@@ -404,7 +404,7 @@ under the License.
         <field name="partyIdTo">
             <display-entity entity-name="PartyGroup" key-field-name="partyId" description="${partyId} - ${groupName}"/>
         </field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.AccountingThruDate}" position="2"><display/></field>
         <field name="description"><display/></field>
     </form>
@@ -466,11 +466,11 @@ under the License.
         <field name="agreementItemSeqId"><hidden/></field>
         <field name="partyId"><hidden value="${agreement.partyIdTo}"/></field>
         <field name="currencyUomId"><hidden value="${agreementItem.currencyUomId}"/></field>
-        <field name="availableFromDate" use-when="agreementProductAppl==null">
+        <field name="availableFromDate" title="${uiLabelMap.CommonFrom}" use-when="agreementProductAppl==null">
             <!--<date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>-->
             <date-time default-value="${agreement.fromDate}"/>
         </field>
-        <field name="availableFromDate" use-when="agreementProductAppl!=null">
+        <field name="availableFromDate" title="${uiLabelMap.CommonFrom}" use-when="agreementProductAppl!=null">
             <display/>
         </field>
         <field name="minimumOrderQuantity" use-when="agreementProductAppl==null">
@@ -551,7 +551,7 @@ under the License.
             </drop-down>
         </field>
         <field name="fromDate"><date-time type="date"/></field>
-        <field name="thruDate" position="2"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="sequenceNum" position-span="1"><text/></field>
         <field use-when="agreementPromoAppl!=null" name="fromDate"><display/></field>
         <field use-when="agreementPromoAppl==null" name="fromDate"><date-time/></field>

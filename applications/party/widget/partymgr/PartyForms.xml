@@ -334,7 +334,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromTime}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="smallSubmit ${styles.button_default}">
             <hyperlink target="deletePartyTaxAuthInfo" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -385,7 +385,7 @@ under the License.
         <field name="periodTypeId" position="2">
             <display-entity entity-name="PeriodType"/>
         </field>
-        <field name="rateAmount"  tooltip="${uiLabelMap.PartyOverrideDefaultRateAmount}"><text/></field>
+        <field name="rateAmount" tooltip="${uiLabelMap.PartyOverrideDefaultRateAmount}"><text/></field>
         <field name="rateCurrencyUomId" title="${uiLabelMap.ProductCurrencyUomId}" position="2" entry-name="defaultCurrencyUomId" tooltip="${uiLabelMap.PartyAdjustInAccountingComponent}">
             <display-entity entity-name="Uom" key-field-name="uomId"/>
         </field>
@@ -711,7 +711,7 @@ under the License.
 
     <form name="ListCarrierAccounts" type="list" target="updatePartyCarrierAccount" list-name="carrierAccounts"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
-        paginate="true"  view-size="3" paginate-target="viewprofile" paginate-target-anchor="ListCarrierAccounts">
+        paginate="true" view-size="3" paginate-target="viewprofile" paginate-target-anchor="ListCarrierAccounts">
         <actions>
             <entity-condition entity-name="PartyCarrierAccount" list="carrierAccounts" filter-by-date="true">
                 <condition-expr field-name="partyId" from-field="parameters.partyId"></condition-expr>
@@ -745,7 +745,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"/>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}"/>
         <field name="accountNumber" title="${uiLabelMap.AccountingAccountNumber}" tooltip="${uiLabelMap.CommonRequired}"/>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
@@ -772,8 +772,8 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
     </form>
 
     <form name="ListRelatedContacts" type="list" list-name="contacts" default-table-style="basic-table">
@@ -872,8 +872,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="securityGroupId" title="${uiLabelMap.CommonSecurityGroupId}">
             <drop-down allow-empty="true" text-size="60">
                 <entity-options entity-name="SecurityGroup" key-field-name="groupId">
@@ -1051,7 +1051,7 @@ under the License.
         </field>
         <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
     </form>
-    <form name="AddRoleType" type="single" title="Add a new roletype" target="createroletype"  list-name="parentRoleList">
+    <form name="AddRoleType" type="single" title="Add a new roletype" target="createroletype" list-name="parentRoleList">
         <field name="partyId"><hidden value="${parameters.partyId}"/></field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}" required-field="true" entry-name="dummy" position="1"><text/></field>
         <field name="parentTypeId" position="2">
@@ -1181,8 +1181,8 @@ under the License.
             </display-entity>
         </field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}"><display-entity entity-name="RoleType"/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="sequenceNum"><display/></field>
         <field name="editAction" widget-style="${styles.button_default}" title="${uiLabelMap.CommonEdit}">
            <hyperlink target="FindProductStoreRoles" description="${uiLabelMap.CommonEdit}">

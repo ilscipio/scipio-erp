@@ -21,7 +21,7 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <form name="EbayStoreList" type="single" list-name="ebayStoreList"  target="ebayAccount"
+    <form name="EbayStoreList" type="single" list-name="ebayStoreList" target="ebayAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="productStoreId" title="${uiLabelMap.ProductProductStore}" >
             <drop-down current="selected" >
@@ -30,25 +30,25 @@ under the License.
         </field>
         <field name="submitAction" ><submit button-type="button"/></field>
     </form>
-    <form name="EbayAccountSelection" type="single" list-name="ebayAccountList"  target="ebayAccount"
+    <form name="EbayAccountSelection" type="single" list-name="ebayAccountList" target="ebayAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
             <script location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/StoreAccount.groovy"/>
         </actions>
         <field name="productStoreId" title="Account" action="document.EbayAccountSelection.submit()" event="onchange">
             <drop-down current="selected" allow-empty="true">
-                <list-options list-name="stores"  description="${firstName} ${lastName}" key-name="productStoreId"/>
+                <list-options list-name="stores" description="${firstName} ${lastName}" key-name="productStoreId"/>
             </drop-down>
         </field>
     </form>
-    <form name="EbayAccountList" type="single" list-name="ebayAccountList"  target="ebayAccount"
+    <form name="EbayAccountList" type="single" list-name="ebayAccountList" target="ebayAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
             <script location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/StoreAccount.groovy"/>
         </actions>
         <field name="productStoreId" title="Account" >
             <drop-down current="selected">
-                <list-options list-name="stores"  description="${firstName} ${lastName}" key-name="productStoreId"/>
+                <list-options list-name="stores" description="${firstName} ${lastName}" key-name="productStoreId"/>
             </drop-down>
         </field>
         <field name="submitAction" ><submit button-type="button"/></field>
@@ -71,7 +71,7 @@ under the License.
         </field>
         <field name="submitAction" title="Find"><submit button-type="button"/></field>
     </form>
-    <form name="ListCategories" type="multi" use-row-submit="true"  target="deleteCategoriesFromEbayStore" title="" list-name="categoriesList"
+    <form name="ListCategories" type="multi" use-row-submit="true" target="deleteCategoriesFromEbayStore" title="" list-name="categoriesList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <row-actions>
             <entity-one entity-name="ProductCategory" value-field="prodCategory">
@@ -82,7 +82,7 @@ under the License.
                 <field-map field-name="partyId" value="${parameters.partyId}"/>
                 <field-map field-name="roleTypeId" value="EBAY_ACCOUNT"/>
             </entity-and>
-            <set  field="ebayCategoryId"  value="${groovy: 
+            <set  field="ebayCategoryId" value="${groovy: 
                 ebayCategoryId= &quot;&quot;;
                 if(prodCategoryRoles!=null &amp;&amp; prodCategoryRoles.size() == 1)  ebayCategoryId = prodCategoryRoles.get(0).getString(&quot;comments&quot;);
                 return ebayCategoryId;
@@ -91,7 +91,7 @@ under the License.
                 <field-map field-name="parentProductCategoryId" value="${productCategoryId}"/>
             </entity-and>
         </row-actions>
-        <field name="_rowSubmit"  position="1" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="_rowSubmit" position="1" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="productStoreId"><hidden/></field>
         <field name="prodCatalogId"><hidden/></field>
         <field name="productCategoryId"><display></display></field>
@@ -104,9 +104,9 @@ under the License.
         </field>
         <field name="comments" title="Ebay Category Id"><display description="${ebayCategoryId}"></display></field>
         <field name="subCategory"><display description="${groovy:prodCategoryRollup.size()}"></display></field>
-        <field name="updateAction"  title="${uiLabelMap.CommonDelete}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonDelete}"><submit button-type="button"/></field>
     </form>
-    <form name="NewEbayAccount" type="single"  target="createEbayAccount">
+    <form name="NewEbayAccount" type="single" target="createEbayAccount">
         <auto-fields-service service-name="createEbayAccount"/>
         <field name="statusId"><hidden value="PARTY_ENABLED"/></field>
         <field name="gender">

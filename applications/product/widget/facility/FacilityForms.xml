@@ -145,7 +145,7 @@ under the License.
             </hyperlink>
         </field>
     </form>
-    <form name="ListFacilityInventoryItemsNoLocations" type="list"  target="" title="" list-name="inventoryItems"
+    <form name="ListFacilityInventoryItemsNoLocations" type="list" target="" title="" list-name="inventoryItems"
          override-list-size="${inventoryItemsSize}" paginate-target="SearchInventoryItemsByLabels"
          odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="inventoryItemId" widget-style="${styles.link_default}">
@@ -403,8 +403,8 @@ under the License.
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down allow-empty="true" no-current-selected-key="FINISHED_GOOD">
                 <entity-options entity-name="ProductType" description="${description}"> <!-- [${productTypeId}] -->
-                    <entity-constraint name="isPhysical"  value="Y" operator="equals"/>
-                    <entity-constraint name="parentTypeId"  value="GOOD" operator="equals"/>
+                    <entity-constraint name="isPhysical" value="Y" operator="equals"/>
+                    <entity-constraint name="parentTypeId" value="GOOD" operator="equals"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -505,7 +505,7 @@ under the License.
             </drop-down>
         </field>
         <field name="billingWeight" title="${uiLabelMap.CommonWeight}"><text size="10"/></field>
-        <field name="billingWeightUomId"  title="${uiLabelMap.ProductWeightUomId}">
+        <field name="billingWeightUomId" title="${uiLabelMap.ProductWeightUomId}">
             <drop-down allow-empty="false">
                 <option key="${defaultWeightUom.uomId}" description="${defaultWeightUom.description}"/>
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
@@ -608,7 +608,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeGroupFromFacility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -640,8 +640,8 @@ under the License.
         <field name="roleTypeId">
             <display-entity entity-name="RoleType" description="${description}"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removePartyFromFacility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="facilityId"/>
@@ -717,7 +717,7 @@ under the License.
         <field name="totalRetailPriceGrandTotal" title="${uiLabelMap.CommonTotal} ${uiLabelMap.ProductRetailPrice}"><display/></field>
     </form>
 
-    <form name="ToFacilityTransfers" type="list"  target="" title="" list-name="toTransfers"
+    <form name="ToFacilityTransfers" type="list" target="" title="" list-name="toTransfers"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <row-actions>
             <entity-one entity-name="InventoryItem" value-field="inventoryItem">
@@ -892,7 +892,7 @@ under the License.
         <field name="contentName"><display/></field>
         <field name="mimeTypeId"><display/></field>
         <field name="contentTypeId" title="${uiLabelMap.FormFieldTitle_contentTypeId}"><display-entity entity-name="ContentType" also-hidden="false"/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteFacilityContent">
                 <parameter param-name="facilityId"/>
@@ -940,7 +940,7 @@ under the License.
         </field>
         <field name="agreementText"><display/></field>
         <field name="description"><display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
     </form>
 </forms>

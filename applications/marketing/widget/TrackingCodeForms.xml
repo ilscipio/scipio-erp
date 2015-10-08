@@ -51,8 +51,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
 
         <field name="redirectUrl" title="${uiLabelMap.MarketingTrackingCodeRedirectUrl}" tooltip="${uiLabelMap.MarketingTrackingCodeNoRedirectIfEmpty}"><text size="40"/></field>
         <field name="overrideLogo" title="${uiLabelMap.MarketingTrackingCodeOverrideLogo}" tooltip="${uiLabelMap.MarketingTrackingCodeNoOverrideIfEmpty}"><text size="60"/></field>
@@ -72,7 +72,7 @@ under the License.
         <actions>
             <entity-condition entity-name="TrackingCode"/>
         </actions>
-        <field name="trackingCodeId"  widget-style="${styles.link_default}" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}">
+        <field name="trackingCodeId" widget-style="${styles.link_default}" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}">
             <hyperlink target="EditTrackingCode" description="${trackingCodeId}" also-hidden="false">
                 <parameter param-name="trackingCodeId"/>
             </hyperlink>
@@ -154,7 +154,7 @@ under the License.
         <alt-target target="createTrackingCodeVisit" use-when="visit==null"/>
         <field name="tackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}"><display/></field>
         <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
 
         <field name="sourceEnumId" title="${uiLabelMap.MarketingTrackingCodeVisitSourceEnumId}">
             <drop-down>
@@ -170,7 +170,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}"><text/></field>
         <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}"><lookup target-form-name="LookupVisit"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-find/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
         <field name="sourceEnumId" title="${uiLabelMap.MarketingTrackingCodeVisitSourceEnumId}">
             <drop-down>
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
@@ -200,7 +200,7 @@ under the License.
         <field name="sourceEnumId" title="${uiLabelMap.MarketingTrackingCodeVisitSourceEnumId}">
             <display-entity description="${description} [${enumCode}]" entity-name="Enumeration" key-field-name="enumId"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
     </form>
 
     <form name="LookupTrackingCode" default-map-name="trackingCode" target="LookupTrackingCode" title="" type="single"
@@ -253,8 +253,8 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}"><text-find/></field>
         <field name="partyId" title="${uiLabelMap.MarketingTrackingCodeVisitPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-find/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-find/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-find/></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupVisit" target="" title="" type="list"
@@ -279,8 +279,8 @@ under the License.
         <field name="contactMechTypeId" title="${uiLabelMap.MarketingTrackingCodeVisitContactMechTypeId}"><display-entity description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/></field>
         <field name="roleTypeId" title="${uiLabelMap.MarketingTrackingCodeVisitRoleTypeId}"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
         <field name="userLoginId" title="${uiLabelMap.MarketingTrackingCodeVisitUserLoginId}"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="clientIpAddress" title="${uiLabelMap.MarketingTrackingCodeVisitClientIpAddress}"><display/></field>
         <field name="clientHostName" title="${uiLabelMap.MarketingTrackingCodeVisitClientHostName}"><display/></field>
         <field name="webappName" title="${uiLabelMap.MarketingTrackingCodeVisitWebappName}"><display/></field>
@@ -305,7 +305,7 @@ under the License.
         <actions>
             <entity-condition entity-name="TrackingCodeType"/>
         </actions>
-        <field name="trackingCodeTypeId"  widget-style="${styles.link_default}" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}">
+        <field name="trackingCodeTypeId" widget-style="${styles.link_default}" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}">
             <hyperlink target="EditTrackingCodeType" description="${trackingCodeTypeId}" also-hidden="false">
                 <parameter param-name="trackingCodeTypeId"/>
             </hyperlink>

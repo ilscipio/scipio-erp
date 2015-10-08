@@ -53,8 +53,8 @@ under the License.
                 <field-map field-name="employeePartyId" from-field="parameters.partyId"/>
             </entity-and>
         </actions>
-        <field name="fromDate"><display type="date"/></field>
-        <field name="thruDate"><display type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
     </form>
     <form name="EditEmplPosition" type="single" target="updateEmplPosition" title="" default-map-name="emplPosition"
         header-row-style="header-row" default-table-style="basic-table">
@@ -115,7 +115,7 @@ under the License.
             </display-entity>
         </field>
         <field name="emplPositionId"><hidden/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonDate}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/> </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteEmplPositionFulfillment" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -130,7 +130,7 @@ under the License.
         <auto-fields-service service-name="createEmplPositionFulfillment"/>
         <field name="emplPositionId"><hidden /></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"/>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}" required-field="true"/>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 
@@ -146,11 +146,11 @@ under the License.
         <field name="emplPositionId"><hidden value="${parameters.emplPositionId}"/></field>
         <field name="emplPositionIdReportingTo"><display/></field>
         <field name="emplPositionIdManagedBy"><display/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="comments"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/> </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
-            <hyperlink target="deleteEmplPositionReportingStruct"  description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deleteEmplPositionReportingStruct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="emplPositionIdReportingTo"/>
                 <parameter param-name="emplPositionIdManagedBy"/>
                 <parameter param-name="fromDate"/>
@@ -164,7 +164,7 @@ under the License.
         <field name="emplPositionId"><hidden value="${parameters.emplPositionId}"/></field>
         <field name="emplPositionIdReportingTo" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmplPosition"/></field>
         <field name="emplPositionIdManagedBy" tooltip="${uiLabelMap.CommonRequired}"><hidden value="${parameters.emplPositionId}"/></field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"/>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}" required-field="true"/>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="ListReportedToEmplPositionReportingStructs" type="list" target="updateEmplPositionReportingStruct" title="" paginate-target="EditReportedToEmplPositionReportingStruct"
@@ -179,7 +179,7 @@ under the License.
         <field name="emplPositionId"><hidden value="${parameters.emplPositionId}"/></field>
         <field name="emplPositionIdManagedBy"><display/></field>
         <field name="emplPositionIdReportingTo"><display/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="comments"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/> </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
@@ -197,7 +197,7 @@ under the License.
         <field name="emplPositionId"><hidden value="${parameters.emplPositionId}"/></field>
         <field name="emplPositionIdReportingTo"><hidden value="${parameters.emplPositionId}"/></field>
         <field name="emplPositionIdManagedBy" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmplPosition"/></field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"/>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}" required-field="true"/>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplPositionResponsibilities" type="list" target="updateEmplPositionResponsibility" title="" paginate-target="findEmplPositionResponsibilities"
@@ -211,7 +211,7 @@ under the License.
         <auto-fields-service service-name="updateEmplPositionResponsibility"/>
         <field name="emplPositionId"><hidden/></field>
         <field name="responsibilityTypeId" title="${uiLabelMap.HumanResResponsibilityTypeId}"><display /></field>
-        <field name="fromDate"><display /></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display /></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/> </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteEmplPositionResponsibility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -225,7 +225,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createEmplPositionResponsibility"/>
         <field name="emplPositionId"><hidden /></field>
-        <field name="responsibilityTypeId"  tooltip="${uiLabelMap.CommonRequired}">
+        <field name="responsibilityTypeId" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ResponsibilityType" key-field-name="responsibilityTypeId" description=" ${description}">
                     <entity-order-by field-name="description"/>
@@ -242,7 +242,7 @@ under the License.
         <auto-fields-service service-name="updateValidResponsibility"/>
         <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmployeePositionTypeId}"><display /></field>
         <field name="responsibilityTypeId" title="${uiLabelMap.HumanResResponsibilityTypeId}"><display /></field>
-        <field name="fromDate"><display /></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display /></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/> </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteValidResponsibility" description="${uiLabelMap.CommonDelete}" also-hidden="false">

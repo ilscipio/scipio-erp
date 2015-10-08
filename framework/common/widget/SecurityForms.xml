@@ -195,8 +195,8 @@ under the License.
                 <parameter param-name="userLoginId"/>
             </hyperlink>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" sort-field="true"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" sort-field="true"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" sort-field="true"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" sort-field="true"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeUserLoginFromSecurityGroup" also-hidden="false">
@@ -245,8 +245,8 @@ under the License.
             <display-entity entity-name="SecurityGroup"/>
         </field>
         <field name="userLoginId"><hidden/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" red-when="before-now"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" red-when="before-now"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="${removeUserLoginSecurityGroupURI}" also-hidden="false">

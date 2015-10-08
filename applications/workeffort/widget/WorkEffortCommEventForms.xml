@@ -30,7 +30,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="communicationEventId"  widget-style="${styles.link_default}">
+        <field name="communicationEventId" widget-style="${styles.link_default}">
             <hyperlink target="/partymgr/control/EditCommunicationEvent" target-type="inter-app" description="${communicationEventId}">
                 <parameter param-name="communicationEventId"/>
             </hyperlink>

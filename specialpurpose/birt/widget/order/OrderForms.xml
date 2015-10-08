@@ -25,7 +25,7 @@ under the License.
     <!--New From-->
     <form name="SalesReport" type="single" target="checkReportBy" title=""
           header-row-style="header-row" default-table-style="basic-table" target-window="_BLANK">
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
         <field name="reportBy" title="${uiLabelMap.BirtOrderReportReportBy}">
             <drop-down>
                 <option key="day" description="${uiLabelMap.CommonDays}"></option>

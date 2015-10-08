@@ -96,10 +96,10 @@ under the License.
         <field name="newTopicId" position="2">
             <text size="12"/>
         </field>
-        <field name="newTopicDescription" title="Description"  position="3">
+        <field name="newTopicDescription" title="Description" position="3">
             <text size="24"/>
         </field>
-        <field name="createTopic" title=" "  position="4">
+        <field name="createTopic" title=" " position="4">
             <hyperlink also-hidden="false" target="createTopic${pageName}" description="Create Topic">
                 <parameter param-name="mode" value="restore"/>
             </hyperlink>
@@ -177,14 +177,14 @@ under the License.
         <field name="caContentIdTo" title="${uiLabelMap.ContentPublishToContent}"><text-find/></field>
         <field name="caMapKey"><text-find/></field>
         <field name="caContentAssocTypeId" title="${uiLabelMap.FormFieldTitle_contentAssocTypeId}" ><text-find/></field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFromDate}" ><date-find/></field>
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" ><date-find/></field>
         <field name="contentId"><text-find/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}"><text-find/></field>
         <field name="contentName"><text-find/></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
 <!--
         <field name="createAction" title=" " widget-style="${styles.button_default}">
-            <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
+            <hyperlink also-hidden="false" description="Create New" target="AddContent"/>
         </field>
 -->
 
@@ -278,10 +278,10 @@ under the License.
         <field name="newTopicId" position="2">
             <text size="12"/>
         </field>
-        <field name="newTopicDescription" title="Description"  position="3">
+        <field name="newTopicDescription" title="Description" position="3">
             <text size="24"/>
         </field>
-        <field name="createTopic" title=" "  position="4">
+        <field name="createTopic" title=" " position="4">
             <hyperlink also-hidden="false" target="createTopic${pageName}" description="Create Topic">
                 <parameter param-name="mode" value="restore"/>
             </hyperlink>
@@ -373,10 +373,10 @@ under the License.
         <field name="lastModifiedDate" position="2"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="createAction" title=" " widget-style="${styles.button_default}" position="1">
-            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}"  target="AddContent"/>
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}" target="AddContent"/>
         </field>
         <field name="findContent" title=" " widget-style="${styles.button_default}" position="2">
-            <hyperlink also-hidden="false" description="${uiLabelMap.CommonFind}"  target="FindContent"/>
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonFind}" target="FindContent"/>
         </field>
        <field name="nodeTrailCsv" map-name="dummy">
                 <hidden value="${nodeTrailCsv}"/>
@@ -407,7 +407,7 @@ under the License.
         </field>
         <field name="dataCategoryId">
             <drop-down allow-empty="true">
-                <list-options list-name="dataCategoryList"  key-name="dataCategoryId"  description="${categoryName}"/>
+                <list-options list-name="dataCategoryList" key-name="dataCategoryId" description="${categoryName}"/>
             </drop-down>
         </field>
         <field name="mimeTypeId" encode-output="false">
@@ -605,18 +605,18 @@ under the License.
             <display/>
         </field>
         <field name="textData" title="${uiLabelMap.CommonText}" entry-name="summaryData" id-name="textData"
-            use-when="&quot;${textSource}&quot;.length()>0 &amp;&amp; &quot;${textSource}&quot;.equals(&quot;summaryData&quot;) "
-         ><textarea rows="20" cols="80"/></field>
+            use-when="&quot;${textSource}&quot;.length()>0 &amp;&amp; &quot;${textSource}&quot;.equals(&quot;summaryData&quot;) ">
+         <textarea rows="20" cols="80"/></field>
         <field name="textData" title="${uiLabelMap.CommonText}" id-name="textData" entry-name="textData"
-            use-when="&quot;${textSource}&quot;.length()>0 &amp;&amp; &quot;${textSource}&quot;.equals(&quot;textData&quot;) "
-         ><textarea rows="20" cols="80"/></field>
+            use-when="&quot;${textSource}&quot;.length()>0 &amp;&amp; &quot;${textSource}&quot;.equals(&quot;textData&quot;) ">
+         <textarea rows="20" cols="80"/></field>
         <field name="privilegeEnumId" >
             <hidden/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="statusId"  map-name="currentValue">
+        <field name="statusId" map-name="currentValue">
             <hidden />
         </field>
         <field name="contentAssocTypeId" >
@@ -684,7 +684,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="statusId"  map-name="currentValue">
+        <field name="statusId" map-name="currentValue">
             <hidden />
         </field>
         <!--

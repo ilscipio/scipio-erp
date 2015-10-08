@@ -202,7 +202,7 @@ under the License.
         </field>
         <field name="dummy6" title=" " position="2" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><display description=" "/></field>
         <field name="partyId" title="${uiLabelMap.ScrumAssignedTo}" position="2" parameter-name="partyId" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)">
-            <display-entity entity-name="PartyNameView"  description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
+            <display-entity entity-name="PartyNameView" description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
         </field>
         <field name="editTaskParty" title=" " position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)" widget-style="${styles.button_default}">
             <hyperlink target="EditTask" description="${uiLabelMap.CommonEdit}" link-type="hidden-form" target-window="_BLANK">
@@ -422,7 +422,7 @@ under the License.
         </actions>
         <field name="productId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.Person}" tooltip="${uiLabelMap.CommonPerson}" use-when="parameters.get(&quot;partyId&quot;)!=null" parameter-name="partyId">
-            <display-entity entity-name="PartyNameView"  description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId">
+            <display-entity entity-name="PartyNameView" description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId">
                 <sub-hyperlink target="SprintMember?sprintId=${parameters.sprintId}" description="[${uiLabelMap.CommonChange}]"/>
             </display-entity>
         </field>
@@ -440,8 +440,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="statusId"><hidden value="PRTYASGN_ASSIGNED"/></field>
         <field name="workEffortId"><hidden value="${parameters.sprintId}"/></field>
         <field name="submitAction" title="${uiLabelMap.ScrumAssign}"><submit button-type="button"/></field>
@@ -469,8 +469,8 @@ under the License.
         <field name="roleTypeId">
             <display-entity entity-name="RoleType" description="${description}"/>
         </field>
-        <field name="fromDate"><display type="date"/></field>
-        <field name="thruDate"><display type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" title="${uiLabelMap.CommonRemove}"><submit confirmation-message="Are you sure to delete selected member ?"/></field>
     </form>
@@ -514,7 +514,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productName" entry-name="productId"  title="${uiLabelMap.ScrumProductName}" use-when="workEffort!=null" parameter-name="productName">
+        <field name="productName" entry-name="productId" title="${uiLabelMap.ScrumProductName}" use-when="workEffort!=null" parameter-name="productName">
             <display-entity entity-name="Product" key-field-name="productId" description="${internalName}"/>
         </field>
         <field name="workEffortId"><hidden/></field>
@@ -1225,7 +1225,7 @@ under the License.
                 <field-map field-name="productId" from-field="productId"/>
             </entity-one>
         </row-actions>
-        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany"  widget-style="${styles.button_default}">
+        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany" widget-style="${styles.button_default}">
             <hyperlink target="viewprofile" description="${companyName} [${companyId}]">
                 <parameter param-name="partyId" from-field="companyId"/>
             </hyperlink>
@@ -1247,7 +1247,7 @@ under the License.
                 <parameter param-name="partyId" from-field="productOwnerId"/>
             </hyperlink>
         </field>
-        <field name="dummy" title=" " position="2"    use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display description=" "/></field>
+        <field name="dummy" title=" " position="2"   use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display description=" "/></field>
         <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;">
             <hyperlink target="ViewSprint" description="${uiLabelMap.ScrumTab} ${sprintName} [${sprintId}]">
                 <parameter param-name="projectId"/>
@@ -1265,7 +1265,7 @@ under the License.
         <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display type="date"></display></field>
     </form>
     <form name="projectListWithNoLinkProfile" extends="projectList">
-        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany"  widget-style="${styles.button_default}">
+        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany" widget-style="${styles.button_default}">
             <display description="${companyName} [${companyId}]"/>
         </field>
         <field name="productOwnerName" title="${uiLabelMap.ScrumProductOwner}" position="1" use-when="!isCurrentProject">
@@ -1515,7 +1515,7 @@ under the License.
         <field name="productTypeId"><hidden value="SCRUM_ITEM"/></field>
         <field name="productId"><hidden value="${parameters.productId}"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="1" use-when="product!=null"  widget-style="smallSubmit" event="onClick" action="javascript: if(document.EditProduct.statusId.value == 'PRODUCT_CLOSED') {
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="1" use-when="product!=null" widget-style="smallSubmit" event="onClick" action="javascript: if(document.EditProduct.statusId.value == 'PRODUCT_CLOSED') {
                                                                                                                                                                                 if (confirm('Are you sure to close this product ?.')){ 
                                                                                                                                                                                     document.ViewEditProdBacklog.disable();
                                                                                                                                                                                     document.EditProduct.action = 'updateProduct';
@@ -1869,8 +1869,8 @@ under the License.
         <field name="partyIdFrom" title="${uiLabelMap.WorkEffortTimeBillFromParty}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} [${partyId}]"/></field>
         <field name="partyId" title="${uiLabelMap.WorkEffortTimeBillToParty}"><display-entity entity-name="PartyNameView" description="${groupName} ${lastName} ${firstName} [${partyId}]"/></field>
         <field name="productId"><hidden/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" use-when="fromDate!=null"><display type="date"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="fromDate!=null"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="invoiceId"><hidden/></field>
         <field name="includeMeeting" title="${uiLabelMap.ScrumIncludeMeeting}"> 
             <drop-down no-current-selected-key="N">
@@ -1889,8 +1889,8 @@ under the License.
     </form>
     <form name="FindProductBilling" type="single" target="ProductBilling">
         <field name="productId"><hidden/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time type="date"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="includeMeeting" title="${uiLabelMap.ScrumIncludeMeeting}"> 
             <drop-down no-current-selected-key="N">
                 <option key="Y"/>
@@ -2536,7 +2536,7 @@ under the License.
         <field name="contentName" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
             <display description="${contentMap.contentName} ${contentId}"/>
         </field>
-        <field name="thruDate"><ignored/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><ignored/></field>
         <field name="submitAction"><ignored/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteProjectContent">
@@ -2587,7 +2587,7 @@ under the License.
         <field name="contentName" widget-style="${styles.button_default}">
             <display description="${contentName}[${contentId}]"/>
         </field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="drMimeTypeId"><hidden/></field>
         <field name="downloadAction" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.ContentDownload}" target="ViewSimpleContent?contentId=${contentId}"/>
@@ -2607,7 +2607,7 @@ under the License.
         </row-actions>
         <field name="contentTypeId"><display description="${descContent.description}"/></field>
         <field name="contentName"><display description="${contentMap.contentName} [${contentId}]"/></field>
-        <field name="fromDate"><display/> </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/> </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteScrumProductContent">
                 <parameter param-name="contentId"/>
@@ -2668,7 +2668,7 @@ under the License.
         <field name="noteInfo"><display/></field>
         <field name="noteDateTime"><display/></field>
         <field name="noteParty">
-            <display-entity entity-name="PartyNameView"  description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
+            <display-entity entity-name="PartyNameView" description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
         </field>
         <field name="removeNote" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteProdBacklogNote">
@@ -2714,7 +2714,7 @@ under the License.
         <field name="custRequestId"><hidden/></field>
         <field name="contentName"><display description="${contentMap.contentName}[${contentId}]"/></field>
         <field name="mimeTypeId"><hidden/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}" >
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteBacklogItemContent">
                 <parameter param-name="custRequestId"/>

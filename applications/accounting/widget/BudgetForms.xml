@@ -131,13 +131,13 @@ under the License.
         <field name="reviewDate"><display/></field>
     </form>
     
-    <form name="EditBudgetItems" type="multi"  list-name="budgetItems" default-entity-name="BudgetItem" target="updateBudgetItem?budgetId=${budgetId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}" title="Edit Budget Items" paginate-target="EditBudgetItems"
+    <form name="EditBudgetItems" type="multi" list-name="budgetItems" default-entity-name="BudgetItem" target="updateBudgetItem?budgetId=${budgetId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}" title="Edit Budget Items" paginate-target="EditBudgetItems"
        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
        <field name="viewSize"><hidden value="${viewSize}"/></field>
        <field name="viewIndex"><hidden value="${viewIndex}"/></field>
        <field name="budgetId"><hidden/></field>
        <field name="budgetItemSeqId" widget-style="${styles.link_default}">
-           <hyperlink target="EditBudgetItems"  description="${budgetItemSeqId}">
+           <hyperlink target="EditBudgetItems" description="${budgetItemSeqId}">
                 <parameter param-name="budgetId"/>
                 <parameter param-name="budgetItemSeqId"/>
             </hyperlink>

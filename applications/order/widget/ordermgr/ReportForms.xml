@@ -92,8 +92,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromOrderDate" title="${uiLabelMap.CommonFromDate}"><date-time type="timestamp"/></field>
-        <field name="thruOrderDate" title="${uiLabelMap.CommonThruDate}"><date-time type="timestamp"/></field>
+        <field name="fromOrderDate" title="${uiLabelMap.CommonFrom}"><date-time type="timestamp"/></field>
+        <field name="thruOrderDate" title="${uiLabelMap.CommonThru}"><date-time type="timestamp"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -191,8 +191,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromOrderDate" title="${uiLabelMap.CommonFromDate}"><date-time type="timestamp"/></field>
-        <field name="thruOrderDate" title="${uiLabelMap.CommonThruDate}"><date-time type="timestamp"/></field>
+        <field name="fromOrderDate" title="${uiLabelMap.CommonFrom}"><date-time type="timestamp"/></field>
+        <field name="thruOrderDate" title="${uiLabelMap.CommonThru}"><date-time type="timestamp"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

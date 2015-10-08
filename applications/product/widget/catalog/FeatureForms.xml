@@ -47,7 +47,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="categoryAction" title=" " use-when="productFeature!=null&amp;&amp;productFeature.getString(&quot;productFeatureCategoryId&quot;)!=null"  widget-style="${styles.button_default}">
+        <field name="categoryAction" title=" " use-when="productFeature!=null&amp;&amp;productFeature.getString(&quot;productFeatureCategoryId&quot;)!=null" widget-style="${styles.button_default}">
             <hyperlink target="/EditFeatureCategoryFeatures" target-type="intra-app" description="${uiLabelMap.ProductGoToFeatureCategory} ${productFeature.productFeatureCategoryId}" also-hidden="false">
                 <parameter param-name="productFeatureCategoryId" from-field="productFeature.productFeatureCategoryId"/>
             </hyperlink>
@@ -233,7 +233,7 @@
     <form name="ListFeatureGroupAppls" type="multi" use-row-submit="false" list-name="productFeatureGroupAndAppls" target="UpdateProductFeatureGroupAppl?productFeatureGroupId=${productFeatureGroupId}" title=""
         odd-row-style="alternate-row" default-table-style="basic-table">
         <field name="productFeatureGroupId"><hidden/></field>
-        <field name="fromDate"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="productFeatureId" title="${uiLabelMap.CommonId}"><display/></field>
         <field name="description" title="${uiLabelMap.ProductFeature}"><display/></field>
         <field name="productFeatureTypeId" title="${uiLabelMap.CommonType}">
@@ -329,7 +329,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
     </form>
-    <form name="ListFeaturePrice" type="list" target="updateFeaturePrice"  list-name="productFeaturePrice"
+    <form name="ListFeaturePrice" type="list" target="updateFeaturePrice" list-name="productFeaturePrice"
         odd-row-style="alternate-row" default-table-style="basic-table">
         <actions>
             <entity-and entity-name="ProductFeaturePrice" list="productFeaturePrice">
@@ -339,8 +339,8 @@
         <field name="productFeatureId"><hidden/></field>
         <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}"><display-entity entity-name="ProductPriceType"/></field>
         <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}"><display-entity entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time default-value="${thruDate}"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time default-value="${thruDate}"/></field>
         <field name="price" title="${uiLabelMap.ProductPrice}" widget-style="required"><text size="25" default-value="${price}"/></field>
         <field name="updateFeaturePrice" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="lastModifiedBy" title="${uiLabelMap.ProductLastModifiedBy}"><display description="[${lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${lastModifiedDate}"/></field>
@@ -365,8 +365,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" position="1"><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="price" title="${uiLabelMap.ProductPrice}" widget-style="required" position="1"><text size="25"/></field>
         <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}" position="2">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">

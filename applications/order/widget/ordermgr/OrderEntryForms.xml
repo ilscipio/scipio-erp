@@ -156,7 +156,7 @@ under the License.
             <set field=""/>
             <set field="hasAmount" value="${groovy:product.getString('requireAmount')?:'N'}"/>
         </row-actions>
-        <field name="productId"  title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_default}">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_default}">
             <hyperlink description="${productId}" target="/catalog/control/EditProductInventoryItems" target-type="inter-app">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -166,10 +166,10 @@ under the License.
         <field name="quantity" title="${uiLabelMap.OrderQuantity}">
             <text size="5" maxlength="10"/>
         </field>
-        <field use-when="${groovy: 'Y'.equals(context.hasAmount)}"  name="amount" title="${uiLabelMap.OrderAmount}" >
+        <field use-when="${groovy: 'Y'.equals(context.hasAmount)}" name="amount" title="${uiLabelMap.OrderAmount}" >
             <text size="5" maxlength="10"/>
         </field>
-        <field use-when="${groovy: 'N'.equals(context.hasAmount)}"  name="amount" title="${uiLabelMap.OrderAmount}" widget-style="disabled">
+        <field use-when="${groovy: 'N'.equals(context.hasAmount)}" name="amount" title="${uiLabelMap.OrderAmount}" widget-style="disabled">
             <text size="5" maxlength="10" disabled="true"/>
         </field>        
         <field name="itemDesiredDeliveryDate" title="${uiLabelMap.OrderDesiredDeliveryDate}">
@@ -206,7 +206,7 @@ under the License.
     </form>
     <form name="LookupAssociatedProducts" type="multi" use-row-submit="true" list-name="productList" title="" target="BulkAddProducts"
         paginate-target="LookupAssociatedProducts" default-title-style="tableheadtext" default-widget-style="inputBox">
-        <field name="productId"  title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_default}">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_default}">
             <hyperlink description="${productId}" target="/catalog/control/EditProductInventoryItems?productId=${productId}" target-type="inter-app"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>

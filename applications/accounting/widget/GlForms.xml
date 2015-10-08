@@ -41,7 +41,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glJournalId"  position="2">
+        <field name="glJournalId" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="GlJournal" description="${glJournalName} [${glJournalId}]">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -49,7 +49,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="isPosted"  position="1">
+        <field name="isPosted" position="1">
             <drop-down allow-empty="true">
                 <option description="${uiLabelMap.CommonNo}" key="N"/>
                 <option description="${uiLabelMap.CommonYes}" key="Y"/>
@@ -60,8 +60,8 @@ under the License.
         <field name="productId" position="2"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
         <field name="workEffortId" position="1"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
         <field name="shipmentId" position="2"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
-        <field name="fromDate" position="1"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="performSearch" position="1"><hidden value="Y"/></field>
         <field name="searchAction" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
@@ -240,8 +240,8 @@ under the License.
         <field name="productId"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
         <field name="workEffortId"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
         <field name="shipmentId"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="reportType">
             <drop-down allow-empty="false">
@@ -733,17 +733,17 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="transactionDate"  position="1"></field>
-        <field name="scheduledPostingDate"  position="2"></field>
-        <field name="isPosted"  position="1">
+        <field name="transactionDate" position="1"></field>
+        <field name="scheduledPostingDate" position="2"></field>
+        <field name="isPosted" position="1">
             <drop-down allow-empty="true">
                 <option description="${uiLabelMap.CommonNo}" key="N"/>
                 <option description="${uiLabelMap.CommonYes}" key="Y"/>
             </drop-down>
         </field>
         <field name="postedDate" position="2"><date-time/></field>
-        <field name="receiptId"  position="1"></field>
-        <field name="theirAcctgTransId"  position="2"></field>
+        <field name="receiptId" position="1"></field>
+        <field name="theirAcctgTransId" position="2"></field>
         <field name="voucherRef" position="1"></field>
         <field name="voucherDate" position="2"></field>
         <field name="inventoryItemId" position="1"></field>
@@ -890,8 +890,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
@@ -900,7 +900,7 @@ under the License.
         <actions>
             <entity-condition entity-name="GlReconciliation">
                 <condition-list>
-                    <condition-expr field-name="glAccountId"  operator="equals" value="${glAccountId}"/>
+                    <condition-expr field-name="glAccountId" operator="equals" value="${glAccountId}"/>
                     <condition-expr field-name="reconciledDate" operator="greater-equals" from-field="parameters.fromDate" ignore-if-empty="true"/>
                     <condition-expr field-name="reconciledDate" operator="less" from-field="parameters.thruDate" ignore-if-empty="true"/>
                 </condition-list>
@@ -1026,7 +1026,7 @@ under the License.
             </display-entity>
         </field>
         <field name="reconcileStatusId" title="${uiLabelMap.FormFieldTitle_reconcileStatus}">
-            <display-entity entity-name="StatusItem"  key-field-name="statusId"/>
+            <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
         <field name="isSummary"><display/></field>
         <field name="debitCreditFlag"><display/></field>
@@ -1134,7 +1134,7 @@ under the License.
         <field name="glFiscalTypeId" use-when="${acctgTrans.glFiscalTypeId!=null}">
             <display-entity entity-name="GlFiscalType" key-field-name="glFiscalTypeId"/>
         </field>
-        <field name="voucherRef"  use-when="${acctgTrans.voucherRef!=null}"><display/></field>
+        <field name="voucherRef" use-when="${acctgTrans.voucherRef!=null}"><display/></field>
         <field name="voucherDate" use-when="${acctgTrans.voucherDate!=null}"><display/></field>
         <field name="groupStatusId" use-when="${acctgTrans.groupStatusId!=null}"><display/></field>
         <field name="fixedAssetId" use-when="${acctgTrans.fixedAssetId!=null}"><display/></field>

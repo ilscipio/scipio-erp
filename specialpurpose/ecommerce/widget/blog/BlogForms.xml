@@ -33,7 +33,7 @@
         <field name="caContentAssocTypeId" title="${uiLabelMap.FormFieldTitle_contentAssocTypeId}">
             <text-find/>
         </field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFromDate}">
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}">
             <date-find/>
         </field>
         <field name="contentId" title="${uiLabelMap.ContentContent}">

@@ -34,8 +34,8 @@ under the License.
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down allow-empty="true" no-current-selected-key="FINISHED_GOOD">
                 <entity-options entity-name="ProductType" description="${description}"> <!-- [${productTypeId}] -->
-                    <entity-constraint name="isPhysical"  value="Y" operator="equals"/>
-                    <entity-constraint name="parentTypeId"  value="GOOD" operator="equals"/>
+                    <entity-constraint name="isPhysical" value="Y" operator="equals"/>
+                    <entity-constraint name="parentTypeId" value="GOOD" operator="equals"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>

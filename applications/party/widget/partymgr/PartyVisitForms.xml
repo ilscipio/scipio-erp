@@ -67,8 +67,8 @@ under the License.
         <field name="userCreated" title="${uiLabelMap.PartyNewUser}" sort-field="true"><display/></field>
         <field name="webappName" title="${uiLabelMap.PartyWebApp}" sort-field="true"><display/></field>
         <field name="clientIpAddress" title="${uiLabelMap.PartyClientIP}" sort-field="true"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" sort-field="true"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" sort-field="true"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" sort-field="true"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" sort-field="true"><display/></field>
     </form>
 
     <form name="ListLoggedInUsers" type="list" separate-columns="true" title="Visits List" list-name="listIt" target="" default-entity-name="Visit" paginate-target="listLoggedInUsers"

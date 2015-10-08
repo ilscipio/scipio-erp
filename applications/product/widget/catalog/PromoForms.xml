@@ -123,9 +123,9 @@ under the License.
         <field name="productPromoId"><hidden/></field>
         <field use-when="productPromoContent != null" name="contentId"><display/></field>
         <field name="productPromoContentTypeId"><hidden value="ORIGINAL_IMAGE_URL"/></field>
-        <field name="fromDate" use-when="productPromoContent == null" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
-        <field name="fromDate" use-when="productPromoContent != null" title="${uiLabelMap.CommonFromDate}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-time/></field>
+        <field name="fromDate" use-when="productPromoContent == null" title="${uiLabelMap.CommonFrom}"><date-time/></field>
+        <field name="fromDate" use-when="productPromoContent != null" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="uploadedFile" title="${uiLabelMap.ProductFile}"><file/></field>
         <field use-when="productPromoContent == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field use-when="productPromoContent != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -144,8 +144,8 @@ under the License.
         <field name="productPromoContentTypeId" title="${uiLabelMap.ProductProductPromoContentType}">
             <display-entity entity-name="ProductContentType" key-field-name="productContentTypeId" also-hidden="false" description="${description}"/>
         </field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="editContentAction" title="${uiLabelMap.ProductEditContent}" widget-style="${styles.button_default}">
             <hyperlink target="/content/control/EditContent" target-type="inter-app" description="${contentId}" also-hidden="false">
                 <parameter param-name="contentId"/>

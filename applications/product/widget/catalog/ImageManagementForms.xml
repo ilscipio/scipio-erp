@@ -54,7 +54,7 @@ under the License.
         </field>
         <field name="contentId"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}"><display/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
@@ -117,7 +117,7 @@ under the License.
         <field name="drDataResourceName" position="2" title="${uiLabelMap.ImageManagementImageName}"><display/></field>
         <field name="contentId" position="2"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" position="2"><display/></field>
-        <field name="fromDate" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><display/></field>
         <field name="viewAction" position="2" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
@@ -157,7 +157,7 @@ under the License.
         <field name="drDataResourceName" position="2" title="${uiLabelMap.ImageManagementImageName}"><display/></field>
         <field name="contentId" position="2"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" position="2"><display/></field>
-        <field name="fromDate" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><display/></field>
         <field name="viewAction" position="2" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
@@ -197,7 +197,7 @@ under the License.
         <field name="drDataResourceName" position="2" title="${uiLabelMap.ImageManagementImageName}"><display/></field>
         <field name="contentId" position="2"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" position="2"><display/></field>
-        <field name="fromDate" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><display/></field>
         <field name="statusId" position="2" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
@@ -251,8 +251,8 @@ under the License.
         <field name="drDataResourceName" position="2" title="${uiLabelMap.ImageManagementImageName}"><display/></field>
         <field name="contentId" position="2"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" position="2"><display/></field>
-        <field name="fromDate" position="2"><display/></field>
-        <field name="thruDate" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display/></field>
         <field name="statusId" position="2" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
@@ -303,7 +303,7 @@ under the License.
         <field name="contentId"><hidden/></field>
         <field name="contentIdTo"><hidden/></field>
         <field name="dataResourceId"><hidden/></field>
-        <field name="fromDate"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="_rowSubmit" title=" " widget-style="hidden"><check all-checked="true"/></field>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
         <field name="action" use-when="${groovy: return context.drMimeTypeId == 'image/jpeg';}" title="${uiLabelMap.ImageManagementAction}" event="onChange" action="javascript:
@@ -566,8 +566,8 @@ under the License.
         <field name="contentId"><hidden/></field>
         <field name="imageShare" use-when="imageURL != null" title="${uiLabelMap.CommonImage}"><image value="${imageURL}" style="cssImgXLarge"/></field>
         <field name="imageShare" use-when="imageURL == null" title="${uiLabelMap.CommonImage}"><image value="/images/defaultImage.jpg" style="cssImgXLarge"/></field>
-        <field name="link" title="${uiLabelMap.CommonLink}"  event="onClick" action="javascript:select();"><text/></field>
-        <field name="direct" title="${uiLabelMap.ImageManagementDirectLink}"  event="onClick" action="javascript:select();"><text/></field>
+        <field name="link" title="${uiLabelMap.CommonLink}" event="onClick" action="javascript:select();"><text/></field>
+        <field name="direct" title="${uiLabelMap.ImageManagementDirectLink}" event="onClick" action="javascript:select();"><text/></field>
         <field name="forumCode" title="${uiLabelMap.ImageManagementForumCode}" event="onClick" action="javascript:select();"><text/></field>
         <field name="forumThumbnail" title="${uiLabelMap.ImageManagementForumThumbnail}" event="onClick" action="javascript:select();"><text/></field>
         <field name="altForumCode" title="${uiLabelMap.ImageManagementAltForumCode}" event="onClick" action="javascript:select();"><text/></field>
@@ -624,7 +624,7 @@ under the License.
         <field name="productId"><hidden/></field>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
         <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}"><display/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="status"><display description="Uploaded"/></field>
         <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="removeImageUpload" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -666,7 +666,7 @@ under the License.
         </field>
         <field name="contentId"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}"><display/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
@@ -756,7 +756,7 @@ under the License.
                 <parameter param-name="dataResourceIdExist" from-field="dataResourceId"/>
             </hyperlink>
         </field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
@@ -799,7 +799,7 @@ under the License.
                 <parameter param-name="dataResourceIdExist" from-field="parameters.dataResourceIdExist"/>
             </hyperlink>
         </field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>

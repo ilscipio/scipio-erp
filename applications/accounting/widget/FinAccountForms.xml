@@ -33,8 +33,8 @@ under the License.
             </drop-down>
         </field>
         <field name="finAccountCode"><text-find ignore-case="true"/></field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="displayAdvancedSearch"><hidden value="true"></hidden></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -55,14 +55,14 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field>
         <field name="finAccountName">
             <hyperlink description="${finAccountName}" target="EditFinAccount">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="fromDate"><display type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
         <field name="currencyUomId"><display/></field>
         <field name="actualBalance"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="organizationPartyId" widget-style="${styles.link_default}">
@@ -129,8 +129,8 @@ under the License.
         </field>
         <field name="organizationPartyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="fromDate"><date-time type="date"/></field>
-        <field name="thruDate" position="2"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="isRefundable">
             <drop-down no-current-selected-key="Y">
                 <option key="Y" description="${uiLabelMap.CommonY}"/>
@@ -146,7 +146,7 @@ under the License.
         <field name="availableBalance" position="2"><display/></field>
     </form>
 
-    <form name="ListFinAccountRoles" type="list"  list-name="finAccountRoles"  target="updateFinAccountRole" separate-columns="true"
+    <form name="ListFinAccountRoles" type="list" list-name="finAccountRoles" target="updateFinAccountRole" separate-columns="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="FinAccountRole">
@@ -157,8 +157,8 @@ under the License.
         <field name="finAccountId"><hidden/></field>
         <field name="roleTypeId"><display/></field>
         <field name="partyId"> <display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteFinAccountRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -181,8 +181,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -225,7 +225,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListFinAccountAuths" type="list"  list-name="finAccountauths"  target="expireFinAccountAuth" separate-columns="true"
+    <form name="ListFinAccountAuths" type="list" list-name="finAccountauths" target="expireFinAccountAuth" separate-columns="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="FinAccountAuth">
@@ -250,8 +250,8 @@ under the License.
         <field name="finAccountAuthId"><hidden/></field>
         <field name="amount"><text/></field>
         <field name="authorizationDate"><date-time/></field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="PaymentsDepositWithdraw" type="single" target="FindPaymentsForDepositOrWithdraw" extends="FindBatchPayments" extends-resource="component://accounting/widget/ar/forms/ArPaymentForms.xml">

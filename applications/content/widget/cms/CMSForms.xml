@@ -25,7 +25,7 @@ under the License.
         <field name="caContentIdTo"><text-find/></field>
         <field name="caMapKey"><text-find/></field>
         <field name="caContentAssocTypeId"><text-find/></field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFromDate}"><date-find/></field>
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
         <field name="contentId"><text-find/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}"><text-find/></field>
         <field name="contentName"><text-find/></field>
@@ -66,7 +66,7 @@ under the License.
 -->
         </field>
         <field name="caMapKey"><display/></field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="contentId"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}"><display/></field>
         <field name="contentName"><display/></field>
@@ -130,10 +130,10 @@ under the License.
         <field name="newTopicId" position="2">
             <text size="12"/>
         </field>
-        <field name="newTopicDescription" title="Description"  position="3">
+        <field name="newTopicDescription" title="Description" position="3">
             <text size="24"/>
         </field>
-        <field name="createTopicAction" title=" "  position="4" widget-style="${styles.button_default}">
+        <field name="createTopicAction" title=" " position="4" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target="createTopic${pageName}" description="Create Topic">
                 <parameter param-name="mode" value="restore"/>
             </hyperlink>
@@ -254,18 +254,18 @@ under the License.
             <display/>
         </field>
         <field name="textData" entry-name="summaryData" id-name="textData"
-            use-when="&quot;${textSource}&quot;.length()>0 &amp;&amp; &quot;${textSource}&quot;.equals(&quot;summaryData&quot;) "
-         ><textarea rows="20" cols="80"/></field>
+            use-when="&quot;${textSource}&quot;.length()>0 &amp;&amp; &quot;${textSource}&quot;.equals(&quot;summaryData&quot;) ">
+        <textarea rows="20" cols="80"/></field>
         <field name="textData" id-name="textData" entry-name="textData"
-            use-when="&quot;${textSource}&quot;.length()>0 &amp;&amp; &quot;${textSource}&quot;.equals(&quot;textData&quot;) "
-         ><textarea rows="20" cols="80"/></field>
+            use-when="&quot;${textSource}&quot;.length()>0 &amp;&amp; &quot;${textSource}&quot;.equals(&quot;textData&quot;) ">
+        <textarea rows="20" cols="80"/></field>
         <field name="privilegeEnumId" >
             <hidden/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="statusId"  map-name="currentValue">
+        <field name="statusId" map-name="currentValue">
             <hidden />
         </field>
         <field name="contentAssocTypeId" >
@@ -335,7 +335,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="statusId"  map-name="currentValue">
+        <field name="statusId" map-name="currentValue">
             <hidden />
         </field>
         <!--
@@ -424,16 +424,16 @@ under the License.
                 <entity-options description="${description}" entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
             </drop-down>
         </field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFromDate}" widget-style="${styles.button_default}" position="1" use-when="&quot;${caFromDate}&quot;.length()>0">
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" widget-style="${styles.button_default}" position="1" use-when="&quot;${caFromDate}&quot;.length()>0">
             <display default-value="${nowTimestamp}"/>
         </field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFromDate}" widget-style="${styles.button_default}" position="1" use-when="&quot;${caFromDate}&quot;.length()==0">
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" widget-style="${styles.button_default}" position="1" use-when="&quot;${caFromDate}&quot;.length()==0">
             <date-time default-value="${nowTimestamp}"/>
         </field>
-        <field name="caThruDate" title="${uiLabelMap.CommonThruDate}" widget-style="${styles.button_default}" position="2" use-when="&quot;${caThruDate}&quot;.length()>0">
+        <field name="caThruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.button_default}" position="2" use-when="&quot;${caThruDate}&quot;.length()>0">
             <date-time/>
         </field>
-        <field name="caThruDate" title="${uiLabelMap.CommonThruDate}" widget-style="${styles.button_default}" position="2" use-when="&quot;${caThruDate}&quot;.length()==0">
+        <field name="caThruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.button_default}" position="2" use-when="&quot;${caThruDate}&quot;.length()==0">
             <date-time/>
         </field>
         <field name="contentTitle" title="${uiLabelMap.ContentContent}" title-style="h1" map-name="dummy">

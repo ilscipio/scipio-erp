@@ -275,6 +275,8 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#if hasMenu>
 <#local menuContent>
   <#-- temporarily (?) unnecessary; all use styles.button_group and hacks moved
+       menuRole and widgetRender were mostly to figure out the context to apply defaults at the time.
+       don't remove.
   <#local screenletPaginateMenu = (menuRole == "paginate-menu") && widgetRender>
   <#local screenletNavMenu = (menuRole == "nav-menu") && widgetRender>
   <#local ftlNavMenu = (menuRole == "nav-menu") && !widgetRender>
@@ -289,9 +291,16 @@ not "current" context (too intrusive in current renderer design). still relies o
         currently have no good solution to avoid redundancy.  
         on <#assign menuHtml><@menu type="section" ...> defintions, could omit
         inlineItems=true to generate the <ul> there, but then later impossible to append
-        extra list items (done in stock ofbiz here). 
+        extra list items cleanly (used in stock ofbiz here) via preMenuItems/postMenuItems. 
         and specifying menuClass on @section defeats purpose of having menu type on @menu (having menu type
         there is ideal, though it's not meant to influence menuLayout, only menuClass).
+        instead of menuString could have a menu macro directive to call as #macro instead of #assign, but ugly for clients to use.
+        the most versatile solution is require pass entire menu to @section as a @menu args hash
+        as a menuMap arg (usually can do <@menu args={my menu def} />), but this is heavy too...
+        may be forced to use one of these however because otherwise preMenuItems/postMenuItems
+        are unaware of menu type completely, not just add items problem...
+        UNTIL RESOLVED we're assuming all menus passed are menus of type "section" or "section-inline".
+        until then no clean way to support more types. 
     -->
     <#if menuLayout == "inline-title">
       <#local menuClass = "${styles.menu_section_inline!}">
@@ -302,10 +311,8 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#local menuClass = "">
   </#if>
 
-  <#if !menuString?has_content || menuItemsInlined><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
-  <#if !forceEmptyMenu>
-    ${menuString}
-  </#if>
+  <#local preMenuItems></#local>
+  <#local postMenuItems>
     <#--
     <#if collapsible>
     <li class="<#rt/>
@@ -317,6 +324,18 @@ not "current" context (too intrusive in current renderer design). still relies o
     >&nbsp;</a></li>
     </#if>
      -->
+  </#local>
+
+  <#if !menuString?has_content || menuItemsInlined><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
+
+  <#if !forceEmptyMenu>
+    <#-- FIXME: can't do this because currently may need to have menuString open the <ul>
+    ${preMenuItems} -->
+    ${menuString}
+    <#--
+    ${postMenuItems} -->
+  </#if>
+  
   <#if !menuString?has_content || menuItemsInlined></ul></#if>
 </#local>
 </#if>

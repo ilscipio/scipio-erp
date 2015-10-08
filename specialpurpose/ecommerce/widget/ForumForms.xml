@@ -423,9 +423,9 @@ under the License.
             </drop-down>
         </field>
         <field name="createdDate"><display/></field>
-        <field name="lastModifiedDate"><display/></field>
+        <field name="lastModifiedDate" position="2"><display/></field>
         <field name="createdByUserLogin"><display/></field>
-        <field name="lastModifiedByUserLogin"><display/></field>
+        <field name="lastModifiedByUserLogin" position="2"><display/></field>
     </form>
     <form name="EditDataResourceText" target="updateDataResourceText" title="" type="single" extends="DataResourceMaster"
         default-title-style="tableheadtext" default-widget-style="inputBox">

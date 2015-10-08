@@ -113,7 +113,7 @@ under the License.
         </field>
         <field name="custRequestDate" title="${uiLabelMap.OrderRequestDate}"><display type="date"/></field>
         <field name="createdDate"><display type="date"/></field>
-        <field name="lastModifiedDate"><display type="date"/></field>
+        <field name="lastModifiedDate" position="2"><display type="date"/></field>
     </form>
     <form name="RequestRolesInfo" type="list"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">

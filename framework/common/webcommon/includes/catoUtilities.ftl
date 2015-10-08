@@ -422,19 +422,19 @@ TODO: doesn't handle dates (ambiguous?)
     escape          = escape characters in strings
 -->
 <#macro objectAsJs object wrap=true hasMore=false escape=true>
-    <@objectAsScriptLang lang="js" object=object wrap=wrap hasMore=hasMore escape=escape />
+    <@objectAsScript lang="js" object=object wrap=wrap hasMore=hasMore escape=escape />
 </#macro>
 <#macro objectAsJson object wrap=true hasMore=false escape=true>
-    <@objectAsScriptLang lang="json" object=object wrap=wrap hasMore=hasMore escape=escape />
+    <@objectAsScript lang="json" object=object wrap=wrap hasMore=hasMore escape=escape />
 </#macro>
 
 <#-- implementation -->
-<#macro objectAsScriptLang lang object wrap=true hasMore=false escape=true>
+<#macro objectAsScript lang object wrap=true hasMore=false escape=true>
     <#if object?is_hash && object.keySet?? && object.keySet?is_method>
         <#-- Map from java/groovy; doesn't work properly with ?keys even though implements ?is_hash_ex -->
         <#if wrap>{</#if><#lt>
         <#list object.keySet() as key>
-            "${escapeScriptString(lang, key, escape)}}" : <#if object[key]??><@objectAsScriptLang lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
+            "${escapeScriptString(lang, key, escape)}}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
         </#list> 
         <#if wrap>}</#if><#rt>
     <#elseif object?is_enumerable> 
@@ -443,7 +443,7 @@ TODO: doesn't handle dates (ambiguous?)
              but usually for those if ?is_enumerable it means it was a list-like type. -->
         <#if wrap>[</#if><#lt>
         <#list object as item> 
-            <#if item??><@objectAsScriptLang lang=lang object=item wrap=true escape=escape /><#else>null</#if><#if item_has_next || hasMore>,</#if>
+            <#if item??><@objectAsScript lang=lang object=item wrap=true escape=escape /><#else>null</#if><#if item_has_next || hasMore>,</#if>
         </#list> 
         <#if wrap>]</#if><#rt>
     <#elseif object?is_number> 
@@ -457,7 +457,7 @@ TODO: doesn't handle dates (ambiguous?)
         <#-- check last because a lot of things implement ?is_hash_ex you might not expect - including strings... -->
         <#if wrap>{</#if><#lt>
         <#list object?keys as key> 
-            "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScriptLang lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
+            "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
         </#list> 
         <#if wrap>}</#if><#rt>
     <#-- the following are invalid/inconvertible types, but catch them because otherwise debugging impossible -->

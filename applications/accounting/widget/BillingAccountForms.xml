@@ -41,7 +41,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="billingAccountId" widget-style="${styles.button_default}">
+        <field name="billingAccountId" widget-style="${styles.link_default}">
             <hyperlink description="${billingAccountId}" target="EditBillingAccount">
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
@@ -56,7 +56,7 @@ under the License.
 
     <form name="ListBillingAccountsByParty" type="list" list-name="billingAccounts" paginate-target="FindBillingAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="billingAccountId" widget-style="${styles.button_default}">
+        <field name="billingAccountId" widget-style="${styles.link_default}">
             <hyperlink description="${billingAccountId}" target="EditBillingAccount">
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
@@ -102,7 +102,7 @@ under the License.
                 return(NumberFormat.getNumberInstance(context.get(&quot;locale&quot;)).format(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)));}"/>
         </row-actions>
         <field name="billingAccountId"><hidden/></field>
-        <field name="invoiceId" widget-style="${styles.button_default}">
+        <field name="invoiceId" widget-style="${styles.link_default}">
             <hyperlink description="${invoiceId}" target="invoiceOverview">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -237,7 +237,7 @@ under the License.
         <field name="uomId" title="${uiLabelMap.CommonUom}">
             <display-entity entity-name="Uom" description="${description}"/>
         </field>
-        <field name="billingAccountTermId" title=" " widget-style="${styles.button_default}">
+        <field name="billingAccountTermId" title=" " widget-style="${styles.link_default}">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="EditBillingAccountTerms">
                 <parameter param-name="billingAccountId"/>
                 <parameter param-name="billingAccountTermId"/>
@@ -280,7 +280,7 @@ under the License.
                 <condition-expr field-name="billingAccountId" from-field="billingAccountId"/>
             </entity-condition>
         </actions>
-        <field name="paymentId" widget-style="${styles.button_default}">
+        <field name="paymentId" widget-style="${styles.link_default}">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>

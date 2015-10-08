@@ -25,13 +25,13 @@
     
     <form name="ListGeos" extends-resource="component://common/widget/LookupForms.xml" extends="listLookupGeo" paginate-target="${currentUrl}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true" >
-        <field name="geoId"  widget-style="${styles.button_default}" title="${uiLabelMap.CommonGeoId}">
+        <field name="geoId"  widget-style="${styles.link_default}" title="${uiLabelMap.CommonGeoId}">
             <hyperlink also-hidden="false" target-type="plain" description="${geoId}"  target="EditGeo">
                 <parameter param-name="geoId"/>
             </hyperlink>
         </field>
         <field name="wellKnownText" title="${uiLabelMap.CommonGeoWellKnownText}"><display/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteGeo" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="geoId"/>
                 <parameter param-name="noConditionFind" value="Y"/>
@@ -55,14 +55,13 @@
         <field name="geoSecCode" title="${uiLabelMap.CommonGeoSecCode}"><text/></field>
         <field name="abbreviation" title="${uiLabelMap.CommonGeoAbbr}"><text/></field>
         <field name="wellKnownText" title="${uiLabelMap.CommonGeoWellKnownText}"><textarea/></field>
-
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupGeo" extends="ListGeos">
-        <field name="geoId" title="${uiLabelMap.CommonGeoId}" widget-style="${styles.button_default}">
+        <field name="geoId" title="${uiLabelMap.CommonGeoId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${geoId}" target="javascript:set_value('${geoId}')"/>
-        </field>        
-        <field name="deleteLink"><ignored/></field>        
+        </field>
+        <field name="deleteAction"><ignored/></field>
     </form>
     
     <form name="LinkGeos" type="single" target="linkGeos" title="" focus-field-name="geoId" 
@@ -92,7 +91,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
         
 </forms>

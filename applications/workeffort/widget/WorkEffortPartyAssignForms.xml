@@ -29,9 +29,9 @@ under the License.
             </entity-condition>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="partyId" widget-style="${styles.button_default}">
+        <field name="partyId" widget-style="${styles.link_default}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.button_default}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.link_default}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -75,7 +75,7 @@ under the License.
         <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="mustRsvp"><check/></field>
         <field name="comments"><text size="60" maxlength="255"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditWorkEffortPartyAssign" default-map-name="workEffortPartyAssignment" target="updateWorkEffortPartyAssign" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
@@ -126,6 +126,6 @@ under the License.
         <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="mustRsvp"><check/></field>
         <field name="comments"><text size="60" maxlength="255"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -28,7 +28,7 @@ under the License.
                 <list-options list-name="ebayStoreList" description="${storeName} [${productStoreId}]" key-name="productStoreId"/>
             </drop-down>
         </field>
-        <field name="submitButton" ><submit button-type="button"/></field>
+        <field name="submitAction" ><submit button-type="button"/></field>
     </form>
     <form name="EbayAccountSelection" type="single" list-name="ebayAccountList"  target="ebayAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -51,7 +51,7 @@ under the License.
                 <list-options list-name="stores"  description="${firstName} ${lastName}" key-name="productStoreId"/>
             </drop-down>
         </field>
-        <field name="submitButton" ><submit button-type="button"/></field>
+        <field name="submitAction" ><submit button-type="button"/></field>
     </form>
     <form name="ListCurrentStores" type="single" target="exportCategoryEbayStore"
         header-row-style="header-row" default-table-style="basic-table">
@@ -69,7 +69,7 @@ under the License.
                     </entity-options-->
             </drop-down>
         </field>
-        <field name="submitButton" title="Find"><submit button-type="button"/></field>
+        <field name="submitAction" title="Find"><submit button-type="button"/></field>
     </form>
     <form name="ListCategories" type="multi" use-row-submit="true"  target="deleteCategoriesFromEbayStore" title="" list-name="categoriesList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -104,7 +104,7 @@ under the License.
         </field>
         <field name="comments" title="Ebay Category Id"><display description="${ebayCategoryId}"></display></field>
         <field name="subCategory"><display description="${groovy:prodCategoryRollup.size()}"></display></field>
-        <field name="updateButton"  title="${uiLabelMap.CommonDelete}"><submit button-type="button"/></field>
+        <field name="updateAction"  title="${uiLabelMap.CommonDelete}"><submit button-type="button"/></field>
     </form>
     <form name="NewEbayAccount" type="single"  target="createEbayAccount">
         <auto-fields-service service-name="createEbayAccount"/>
@@ -117,7 +117,7 @@ under the License.
         </field>
         <field name="currentPassword"><password/></field>
         <field name="currentPasswordVerify"><password/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
     </form>
     <form name="AddCatalog" type="single" target="associateCatalogToStore">
         <field name="productStoreId"><hidden /></field>

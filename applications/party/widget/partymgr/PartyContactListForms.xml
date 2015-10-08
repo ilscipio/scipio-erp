@@ -64,7 +64,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
 
     <form name="AddPartyContactList" type="single" target="createContactListParty"
@@ -89,7 +89,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
 
     <form name="ListLookupContactList" type="list" target="LookupContactList" default-map-name="contactList"
@@ -97,7 +97,7 @@ under the License.
         <actions>
             <entity-condition entity-name="ContactList"/>
         </actions>
-        <field name="contactListId"  widget-style="smallSubmit ${styles.button_default}">
+        <field name="contactListId"  widget-style="smallSubmit ${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${contactListId}" target="javascript:set_value('${contactListId}')"/>
         </field>
         <field name="contactListName"><display/></field>

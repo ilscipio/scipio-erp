@@ -25,7 +25,7 @@
         <auto-fields-service service-name="createPayGrade" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="payGradeId"><lookup target-form-name="LookupPayGrade"/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPayGrades" type="list" list-name="listIt" title="" target="updatePayGrade" paginate-target="FindPayGrade"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -38,12 +38,12 @@
             </service>
         </actions>
         <auto-fields-service default-field-type="display" service-name="updatePayGrade"/>
-        <field name="payGradeId" title="${uiLabelMap.HumanResPayGradeID}" widget-style="linktext ${styles.button_default}">
+        <field name="payGradeId" title="${uiLabelMap.HumanResPayGradeID}" widget-style="linktext ${styles.link_default}">
             <hyperlink also-hidden="true" target="EditPayGrade" target-type="plain" description="${payGradeId}">
                 <parameter param-name="payGradeId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deletePayGrade" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="payGradeId"/>
             </hyperlink>
@@ -56,8 +56,8 @@
         <field use-when="payGrade!=null" name="payGradeId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="payGrade==null" name="payGradeId"><text/></field>
         <field name="payGradeName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="payGrade!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="payGrade!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListSalarySteps" type="multi" target="updateSalaryStep?salaryStepSeqId=${salaryStepSeqId}&amp;payGradeId=${payGradeId}" paginate-target="findSalarySteps"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -69,8 +69,8 @@
         <field name="salaryStepSeqId" title="${uiLabelMap.HumanResSalaryStepSeqId}"><display also-hidden="true"/></field>
         <field name="payGradeId"><hidden/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteSalaryStep" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="salaryStepSeqId"/>
                 <parameter param-name="payGradeId"/>
@@ -82,6 +82,6 @@
         <auto-fields-service service-name="createSalaryStep"/>
         <field name="salaryStepSeqId"><ignored/></field>
         <field name="payGradeId"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

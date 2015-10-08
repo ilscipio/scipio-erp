@@ -34,7 +34,7 @@ under the License.
             <sort-field name="lastName"/>
             <sort-field name="contactMechTypeId"/>
             <sort-field name="contactMechContainer"/>
-            <sort-field name="submitButton"/>
+            <sort-field name="submitAction"/>
         </sort-order>
     </form>
     <form name="ListContacts" paginate-target="${currentUrl}"
@@ -141,7 +141,7 @@ under the License.
                 <entity-options entity-name="ContactList" description="${description}" key-field-name="contactListId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="MergeContacts" type="single"  target="MergeContacts">
         <actions>
@@ -160,13 +160,13 @@ under the License.
                 <list-options list-name="partyList" key-name="contact.partyId"  list-entry-name="contact" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${contact.partyId}"/>
             </drop-down>
         </field>
-        <field name="submitButton" position="3" title="${uiLabelMap.SfaMergeContacts}" widget-style="${styles.button_default}" tooltip-style="button-text"><submit button-type="text-link"/></field>
+        <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeContacts}" widget-style="${styles.button_default}" tooltip-style="button-text"><submit button-type="text-link"/></field>
     </form>
 
     <form name="NewContactFromVCard" type="upload" target="createContactFromVCard" header-row-style="header-row" default-table-style="basic-table">
         <field name="infile" title="${uiLabelMap.SfaUploadVCard}"><file/></field>
         <field name="serviceName"><hidden value="createContact"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="QuickAddContact" type="single" target="quickAddContact">
@@ -179,6 +179,6 @@ under the License.
             </drop-down>
         </field>
         <field name="quickAdd"><hidden value="Y"/></field>
-        <field name="submitButton"><submit/></field>
+        <field name="submitAction"><submit/></field>
     </form>
 </forms>

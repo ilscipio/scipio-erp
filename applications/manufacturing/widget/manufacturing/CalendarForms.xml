@@ -25,12 +25,12 @@ under the License.
         <field name="calendarId" title="${uiLabelMap.ManufacturingCalendarId}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="calendarWeekId" title="${uiLabelMap.ManufacturingCalendarWeekId}"><display/></field>
-        <field name="updateLink" title=" " widget-style="${styles.button_default}">
+        <field name="updateAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditCalendar" description="${uiLabelMap.CommonUpdate}" >
                 <parameter param-name="calendarId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="RemoveCalendar" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="calendarId"/>
             </hyperlink>
@@ -40,12 +40,12 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="calendarWeekId" title="${uiLabelMap.ManufacturingCalendarWeekId}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="updateLink" title=" " widget-style="${styles.button_default}">
+        <field name="updateAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditCalendarWeek" description="${uiLabelMap.CommonUpdate}" >
                 <parameter param-name="calendarWeekId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="RemoveCalendarWeek" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="calendarWeekId"/>
             </hyperlink>
@@ -58,13 +58,13 @@ under the License.
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="exceptionCapacity" title="${uiLabelMap.ManufacturingCalendarCapacity}" ><display/></field>
         <field name="usedCapacity" title="${uiLabelMap.ManufacturingUsedCapacity}" ><display/></field>        
-        <field name="updateLink" title=" " widget-style="${styles.button_default}">
+        <field name="updateAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditCalendarExceptionDay" description="${uiLabelMap.CommonSelect}" >
                 <parameter param-name="calendarId"/>
                 <parameter param-name="exceptionDateStartTime"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="RemoveCalendarExceptionDay" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="calendarId"/>
                 <parameter param-name="exceptionDateStartTime"/>
@@ -80,7 +80,7 @@ under the License.
         <field name="description" title="${uiLabelMap.CommonDescription}" position="2" ></field>
          <field name="exceptionCapacity" title="${uiLabelMap.ManufacturingCalendarCapacity}" position="3" ></field>
          <field name="usedCapacity" title="${uiLabelMap.ManufacturingUsedCapacity}" position="4" ></field>
-         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" position="5" ><submit button-type="button"/></field>
+         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="5" ><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="exceptionDateStartTime"/>
             <sort-field name="description"/>
@@ -97,7 +97,7 @@ under the License.
         <field name="exceptionDateStartTime" title="${uiLabelMap.ManufacturingExceptionDateStartTime}" ></field>
         <field name="exceptionCapacity" title="${uiLabelMap.ManufacturingCalendarCapacity}"></field>
         <field name="usedCapacity" title="${uiLabelMap.ManufacturingUsedCapacity}"></field>                 
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 
      <form name="ListCalendarExceptionWeek" type="list" target="UpdateCalendarExceptionWeek" title="" list-name="calendarExceptionWeeksDatas"
@@ -109,13 +109,13 @@ under the License.
         <field name="calendarWeekId" title="${uiLabelMap.ManufacturingCalendarWeek}">
             <display description="${calendarWeek.description} "/>
         </field>
-        <field name="updateLink" title=" " widget-style="${styles.button_default}">
+        <field name="updateAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditCalendarExceptionWeek" description="${uiLabelMap.CommonSelect}" >
                 <parameter param-name="calendarId" from-field="calendarExceptionWeek.calendarId"/>
                 <parameter param-name="exceptionDateStart" from-field="calendarExceptionWeek.exceptionDateStart"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="RemoveCalendarExceptionWeek" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="calendarId" from-field="calendarExceptionWeek.calendarId"/>
                 <parameter param-name="exceptionDateStart" from-field="calendarExceptionWeek.exceptionDateStart"/>
@@ -135,7 +135,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" position="4" ><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="4" ><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="exceptionDateStart"/>
             <sort-field name="description"/>
@@ -155,7 +155,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 
     <form name="UpdateCalendarWeek" type="single" target="updateCalendarWeek" title=""
@@ -177,6 +177,6 @@ under the License.
         <field name="saturdayCapacity" position="2"><text/></field>
         <field name="sundayStartTime" position="1"><text/></field>
         <field name="sundayCapacity" position="2"><text/></field>
-        <field name="submitButton"><submit button-type="button"/></field>
+        <field name="submitAction"><submit button-type="button"/></field>
     </form>
  </forms>

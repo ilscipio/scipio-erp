@@ -72,7 +72,7 @@ under the License.
                 <entity-options entity-name="ContactList" description="${description}" key-field-name="contactListId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ConvertLead" type="single" target="convertLead">
@@ -90,7 +90,7 @@ under the License.
               </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton"><submit button-type="button"/></field>
+        <field name="submitAction"><submit button-type="button"/></field>
     </form>
 
     <form name="MergeLeads" type="single" target="MergeLeads">
@@ -110,13 +110,13 @@ under the License.
                <list-options list-name="partyList" key-name="lead.partyId"  list-entry-name="lead" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${lead.partyId}"/>
             </drop-down>
         </field>
-        <field name="submitButton" position="3" title="${uiLabelMap.SfaMergeLeads}" widget-style="${styles.button_default}" tooltip-style="button-text"><submit button-type="text-link"/></field>
+        <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeLeads}" widget-style="${styles.button_default}" tooltip-style="button-text"><submit button-type="text-link"/></field>
     </form>
 
     <form name="NewLeadFromVCard" type="upload" target="createLeadFromVCard" header-row-style="header-row" default-table-style="basic-table">
         <field name="infile" title="${uiLabelMap.SfaUploadVCard}"><file/></field>
         <field name="serviceName"><hidden value="createLead"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="QuickAddLead" type="single" target="quickAddLead">
@@ -130,7 +130,7 @@ under the License.
             </drop-down>
         </field>
         <field name="quickAdd"><hidden value="Y"/></field>
-        <field name="submitButton"><submit/></field>
+        <field name="submitAction"><submit/></field>
     </form>
     <form name="AddLeadPartyDataSource" type="single" target="createLeadPartyDataSource">
         <auto-fields-service service-name="createPartyDataSource"/>
@@ -143,7 +143,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="ViewLeadPartyDataSources" type="list" list-name="partyDataSources" 
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
@@ -167,7 +167,7 @@ under the License.
             <sort-field name="groupName"/>
             <sort-field name="contactMechTypeId"/>
             <sort-field name="contactMechContainer"/>
-            <sort-field name="submitButton"/>
+            <sort-field name="submitAction"/>
         </sort-order>
     </form>
 
@@ -240,6 +240,6 @@ under the License.
         <field name="partyRelationshipTypeId"><hidden value="EMPLOYMENT"/></field>
         <field name="partyIdTo"><hidden value="${parameters.partyId}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.PartyRelatedCompany}"><lookup target-form-name="LookupAccountLeads"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 </forms>

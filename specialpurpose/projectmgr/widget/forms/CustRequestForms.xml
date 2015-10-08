@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="ListRequests" type="list" extends="ListRequestList" extends-resource="component://order/widget/ordermgr/CustRequestForms.xml"
             paginate-target="requestlist" >
-        <field name="createTaskFromRequest" title="${uiLabelMap.ProjectMgrCreateTaskFromRequest}" widget-style="${styles.button_default}">
+        <field name="createAction" title="${uiLabelMap.ProjectMgrCreateTaskFromRequest}" widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.ProjectMgrCreateTaskFromRequest}" target="/projectmgr/control/EditTaskFromRequest" target-type="inter-app">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
@@ -60,7 +60,7 @@ under the License.
         <field name="roleTypeId"><hidden value="PROJECT_TEAM"/></field>
         <field name="custRequestDate" title="${uiLabelMap.OrderRequestDate}"><date-time type="timestamp"/></field>
         <field name="responseRequiredDate"><date-time type="timestamp"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="custRequestId"/>
             <sort-field name="fromPartyId"/>
@@ -74,7 +74,7 @@ under the License.
             <sort-field name="partyId"/>
             <sort-field name="custRequestDate"/>
             <sort-field name="responseRequiredDate"/>
-            <sort-field name="submitButton"/>
+            <sort-field name="submitAction"/>
         </sort-order>
     </form>
     <form name="RequestInfo" type="single" default-entity-name="CustRequest" default-map-name="custRequest"
@@ -127,7 +127,7 @@ under the License.
                 <field-map field-name="partyId" from-field="partyId"/>
             </entity-one>
         </row-actions>
-        <field name="partyId" widget-style="${styles.button_default}">
+        <field name="partyId" widget-style="${styles.link_default}">
             <hyperlink description="${partyId}" target="viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>

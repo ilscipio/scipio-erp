@@ -29,14 +29,14 @@ under the License.
         </field>
         <field name="forumGroupName" entry-name="contentName" parameter-name="contentName"><text/></field>
         <field name="forumGroupDescription" entry-name="description" parameter-name="description"><text/></field>
-        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="AddForumGroup" type="single" target="createForumGroup" title="" default-map-name="forumGroup"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="forumGroupName" parameter-name="contentName"><text/></field>
         <field name="forumGroupDescription" parameter-name="description"><text/></field>
         <field name="contentTypeId"><hidden value="FORUM_ROOT"/></field>
-        <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListForums" type="list" list-name="forums"  separate-columns="true" target="updateForum"
@@ -54,8 +54,8 @@ under the License.
         <field name="forumName" entry-name="contentName" parameter-name="contentName"><text/></field>
         <field name="forumDescription" entry-name="description" parameter-name="description"><text/></field>
         <field name="thruDate" entry-name="caThruDate"><date-time/></field>
-        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
-        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="updateForum">
                 <parameter param-name="forumGroupId" from-field="parameters.forumGroupId"/>
                 <parameter param-name="contentIdTo" from-field="parameters.forumGroupId"/>
@@ -78,7 +78,7 @@ under the License.
         <field name="ownerContentId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="caContentId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="caContentAssocTypeId"><hidden value="SUBSITE"/></field>
-        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ForumGroupPurposes" type="list" list-name="forumPurposes" target="deleteForumGroupPurpose" separate-columns="true"
@@ -87,7 +87,7 @@ under the License.
         <field name="forumGroupId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="contentId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="contentPurposeTypeId"><display-entity entity-name="ContentPurposeType" description="${description}"/></field>
-        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddForumGroupPurpose" type="single" target="createForumGroupPurpose" title=""
         header-row-style="header-row" default-table-style="basic-table">
@@ -98,7 +98,7 @@ under the License.
             <drop-down>
                 <entity-options entity-name="ContentPurposeType" description="${description}"></entity-options>
             </drop-down></field>
-        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ForumGroupRoles" type="list" list-name="forumRoles" target="updateForumGroupRole" separate-columns="true"
@@ -109,8 +109,8 @@ under the License.
         <field name="partyId"><display-entity entity-name="PartyNameView" description="${groupName}${firstName} ${lastName}"/></field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
         <field name="fromDate"><display/></field>
-        <field name="updateButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="text-link"/></field>
-        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="text-link"/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteForumGroupRole">
                 <parameter param-name="forumGroupId"/>
                 <parameter param-name="contentIdTo"/>
@@ -133,7 +133,7 @@ under the License.
             <drop-down>
                 <entity-options entity-name="RoleType" description="${description}"></entity-options>
             </drop-down></field>
-        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListForumMessages" type="list" list-name="forumMessages" separate-columns="true" target="updateForumMessage"
@@ -154,7 +154,7 @@ under the License.
         <field name="createdBy" entry-name="createdByUserLogin"><display/></field>
         <field name="fromDate" entry-name="caFromDate"><display description="${bsh:caFromDate!=null?caFromDate.toString().substring(0,10):&quot;&quot;}"/></field>
         <field name="thruDate" entry-name="caThruDate"><display description="${bsh:caThruDate!=null?caThruDate.toString().substring(0,10):&quot;&quot;}"/></field>
-        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}"><hyperlink target="updateForumMessage">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}"><hyperlink target="updateForumMessage">
                 <parameter param-name="forumGroupId"/>
                 <parameter param-name="forumId"/>
                 <parameter param-name="contentIdTo"/>
@@ -163,8 +163,8 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink></field>
         <field name="messageText" entry-name="contentData.resultData.electronicText.textData" parameter-name="textData"><textarea rows="8"/></field>
-        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
-        <field name="responseButton" title="${uiLabelMap.FormFieldTitle_reponse}" widget-style="${styles.button_default}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="responseAction" title="${uiLabelMap.FormFieldTitle_reponse}" widget-style="${styles.button_default}">
             <hyperlink target="addForumMessage" description="${uiLabelMap.FormFieldTitle_reponse}">
                 <parameter param-name="forumGroupId" from-field="parameters.forumGroupId"/>
                 <parameter param-name="forumId" from-field="parameters.forumId"/>
@@ -206,7 +206,7 @@ under the License.
         <field name="caContentAssocTypeId"><hidden value="RESPONSE"/></field>
         <field name="dataResourceTypeId"><hidden value="ELECTRONIC_TEXT"/></field>
         <field name="forumMessageText" parameter-name="textData"><textarea rows="10"/></field>
-        <field name="addButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddForumMessage" type="single" target="updateForumMessage" default-map-name="message"
         header-row-style="header-row" default-table-style="basic-table">
@@ -222,7 +222,7 @@ under the License.
         <field name="caContentId"><hidden value="${parameters.forumMessageIdTo}"/></field>
         <field name="caContentAssocTypeId"><hidden value="RESPONSE"/></field>
         <field name="forumMessageText" parameter-name="textData"><textarea rows="10" visual-editor-enable="true" visual-editor-buttons="compact"/></field>
-        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddForumThreadMessage" type="single" extends="AddForumMessage" target="updateForumThreadMessage"
         header-row-style="header-row" default-table-style="basic-table"/>
@@ -242,6 +242,6 @@ under the License.
         <field name="rsp.caContentAssocTypeId" parameter-name="caContentAssocTypeId"><hidden/></field>
         <field name="dataResourceTypeId"><hidden value="ELECTRONIC_TEXT"/></field>
         <field name="textData" title="${uiLabelMap.FormFieldTitle_textDataTitle}"><textarea rows="8"/></field>
-        <field name="updateButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     </forms>

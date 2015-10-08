@@ -33,7 +33,7 @@
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
 
     <!-- Maintences Search Options form -->
@@ -58,7 +58,7 @@
         </field>
         <field name="actualStartDate"><date-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
 
     <!-- Special version of the same form in Accounting. This one lists all maintenances, not just
@@ -74,7 +74,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="maintHistSeqId" widget-style="linktext ${styles.button_default}">
+        <field name="maintHistSeqId" widget-style="linktext ${styles.link_default}">
             <hyperlink also-hidden="false" description="${maintHistSeqId}" target="EditFixedAssetMaint">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="maintHistSeqId"/>
@@ -94,7 +94,7 @@
         <alt-target use-when="fixedAssetMaint==null" target="createFixedAssetMaintUpdateWorkEffort"/>
         <field name="fixedAssetId" use-when="fixedAssetMaint==null" title="${uiLabelMap.AccountingFixedAssetId}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupFixedAsset"/></field>
         <field name="scheduleWorkEffortId"><hidden/></field>
-        <field name="submitButton" ><ignored/></field>
+        <field name="submitAction" ><ignored/></field>
         <field map-name="workEffort" position="1"  name="estimatedStartDate"><date-time/></field>
         <field map-name="workEffort" position="2"  name="estimatedCompletionDate"><date-time/></field>
         <field map-name="workEffort" position="1" name="actualStartDate"><date-time/></field>
@@ -102,8 +102,8 @@
         <field name="quickAssignPartyId" title="${uiLabelMap.PartyPartyId}" use-when="fixedAssetMaint == null" field-name="partyId">
             <lookup target-form-name="LookupPerson"/>
         </field>
-        <field name="submitButton2" use-when="fixedAssetMaint!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="submitButton2" use-when="fixedAssetMaint==null" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction2" use-when="fixedAssetMaint!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction2" use-when="fixedAssetMaint==null" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddItemIssuance" target="issueInventoryItemToFixedAssetMaint" title="PageTitleFixedAssetMaintItemIssuance" default-map-name="newIssuanceItem" type="single"
@@ -120,7 +120,7 @@
         <field name="quantity" position="1" title="${uiLabelMap.CommonQuantity}*"><text size="10"/></field>
         <field name="maintHistSeqId"><hidden/></field>
         <field name="fixedAssetId"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListItemIssuance" title="PageTitleFixedAssetMaintItemIssuance" type="list" list-name="itemIssuanceList"

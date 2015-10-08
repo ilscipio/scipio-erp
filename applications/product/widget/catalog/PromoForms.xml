@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="ListProductPromos" type="list" title="" list-name="productPromos"
         paginate-target="FindProductPromo" odd-row-style="alternate-row" default-table-style="basic-table">
-        <field name="productPromoId" widget-style="${styles.button_default}">
+        <field name="productPromoId" widget-style="${styles.link_default}">
             <hyperlink target="EditProductPromo" description="${productPromoId}" also-hidden="false">
                 <parameter param-name="productPromoId"/>
             </hyperlink>
@@ -35,7 +35,7 @@ under the License.
     <form name="GoToProductPromoCode" type="single" target="EditProductPromoCode" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="productPromoCodeId"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonEdit}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonEdit}"><submit button-type="button"/></field>
     </form>
     <form name="EditProductPromo" type="single" target="updateProductPromo" title="" default-map-name="productPromo"
         header-row-style="header-row" default-table-style="basic-table">
@@ -59,7 +59,7 @@ under the License.
         </field>
         <field name="overrideOrgPartyId"><lookup target-form-name="LookupPartyName"/></field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
         <field use-when="productPromo!=null" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:">
             <display description="[${productPromo.lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${productPromo.lastModifiedDate}" also-hidden="false"/>
@@ -92,7 +92,7 @@ under the License.
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="N" description="${uiLabelMap.CommonN}"/><option key="Y" description="${uiLabelMap.CommonY}"/></drop-down>
         </field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
         <field use-when="productPromoCode!=null" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:">
             <display description="[${productPromoCode.lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${productPromoCode.lastModifiedDate}" also-hidden="false"/>
@@ -106,12 +106,12 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="ProductPromoCode" default-field-type="display"/>
         <field name="productPromoId"><hidden/></field>
-        <field name="productPromoCodeId" widget-style="${styles.button_default}">
+        <field name="productPromoCodeId" widget-style="${styles.link_default}">
             <hyperlink target="EditProductPromoCode" description="${productPromoCodeId}" also-hidden="false">
                 <parameter param-name="productPromoCodeId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductPromoCode" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productPromoCodeId"/>
                 <parameter param-name="productPromoId"/>
@@ -127,13 +127,13 @@ under the License.
         <field name="fromDate" use-when="productPromoContent != null" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"><date-time/></field>
         <field name="uploadedFile" title="${uiLabelMap.ProductFile}"><file/></field>
-        <field use-when="productPromoContent == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field use-when="productPromoContent != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="productPromoContent == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="productPromoContent != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListProductPromoContent" type="list" list-name="productPromoContents"
             odd-row-style="alternate-row" default-table-style="basic-table">
-        <field name="editProductPromoContent" title="${uiLabelMap.ProductContent}" widget-style="${styles.button_default}">
+        <field name="editProductPromoContent" title="${uiLabelMap.ProductContent}" widget-style="${styles.link_default}">
             <hyperlink target="EditProductPromoContent" description="${description} [${contentId}]" also-hidden="false">
                 <parameter param-name="productPromoId"/>
                 <parameter param-name="contentId"/>
@@ -146,12 +146,12 @@ under the License.
         </field>
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
-        <field name="editContent" title="${uiLabelMap.ProductEditContent}" widget-style="${styles.button_default}">
+        <field name="editContentAction" title="${uiLabelMap.ProductEditContent}" widget-style="${styles.button_default}">
             <hyperlink target="/content/control/EditContent" target-type="inter-app" description="${contentId}" also-hidden="false">
                 <parameter param-name="contentId"/>
             </hyperlink>
         </field>
-        <field name="removeContent" title=" " widget-style="${styles.button_default}">
+        <field name="removeContentAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeContentFromProductPromo" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productPromoId"/>
                 <parameter param-name="contentId"/>

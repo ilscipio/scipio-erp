@@ -38,7 +38,7 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonRun} ${uiLabelMap.MarketingTrackingCodeReportTitle}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonRun} ${uiLabelMap.MarketingTrackingCodeReportTitle}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -60,7 +60,7 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonRun} ${uiLabelMap.MarketingCampaignReportTitle}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonRun} ${uiLabelMap.MarketingCampaignReportTitle}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -95,7 +95,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonRun} ${uiLabelMap.MarketingEmailStatusReport}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonRun} ${uiLabelMap.MarketingEmailStatusReport}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -126,7 +126,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonRun} ${uiLabelMap.MarketingPartyStatusReport}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonRun} ${uiLabelMap.MarketingPartyStatusReport}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

@@ -1041,6 +1041,11 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="no-current-selected-key">
+                <xs:annotation>
+                    <xs:documentation>The key to mark as selected when there is no current entry value.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="container" substitutionGroup="AllFields">

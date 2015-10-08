@@ -56,8 +56,8 @@ under the License.
         <field use-when="partyId!=null&amp;&amp;vendor!=null" name="manifestLogoUrl" title="${uiLabelMap.PartyManifestLogoUrl}"><text default-value="${parameters.manifestLogoUrl}"/></field>
         <field use-when="partyId==null" name="manifestPolicies" title="${uiLabelMap.PartyManifestPolicies}"><text/></field>
         <field use-when="partyId!=null&amp;&amp;vendor!=null" name="manifestPolicies" title="${uiLabelMap.PartyManifestPolicies}"><text default-value="${parameters.manifestPolicies}"/></field>
-        <field name="submitButton" use-when="partyId==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
-        <field name="submitButton" use-when="partyId!=null&amp;&amp;vendor!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="partyId==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="partyId!=null&amp;&amp;vendor!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <form name="FindVendors" type="single" target="findVendors" title="Find and List Vendors"
         header-row-style="header-row" default-table-style="basic-table">

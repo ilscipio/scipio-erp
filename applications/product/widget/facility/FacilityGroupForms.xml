@@ -24,7 +24,7 @@ under the License.
     <form name="FindFacilityGroup" type="list" title="" list-name="facilityGroups" paginate-target="FindFacilityGroup"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="FacilityGroup" default-field-type="display"/>
-        <field name="facilityGroupId" widget-style="${styles.button_default}">
+        <field name="facilityGroupId" widget-style="${styles.link_default}">
             <hyperlink description="${facilityGroupId}" target="EditFacilityGroup">
                 <parameter param-name="facilityGroupId"/>
             </hyperlink>
@@ -50,7 +50,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
     </form>
     <form name="UpdateFacilityGroupRollupTo" type="list" target="updateFacilityGroupToGroup" title="" list-name="currentGroupRollups"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -65,8 +65,8 @@ under the License.
             </display-entity>
         </field>
         <field name="fromDate"><display/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeFacilityGroupFromGroup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="showFacilityGroupId" from-field="facilityGroupId"/>
                 <parameter param-name="facilityGroupId"/>
@@ -86,7 +86,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="UpdateFacilityGroupRollupFrom" type="list" target="updateFacilityGroupToGroup" title="" list-name="parentGroupRollups"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -101,8 +101,8 @@ under the License.
             </display-entity>
         </field>
         <field name="fromDate"><display/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeFacilityGroupFromGroup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="showFacilityGroupId" from-field="parentFacilityGroupId"/>
                 <parameter param-name="facilityGroupId"/>
@@ -123,7 +123,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="UpdateFacilityGroupMembers" type="list" target="updateFacilityToGroup" title="" list-name="facilityGroupMembers"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -137,8 +137,8 @@ under the License.
             </display-entity>
         </field>
         <field name="fromDate"><display/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeFacilityFromGroup" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="facilityGroupId"/>
                 <parameter param-name="facilityId"/>
@@ -157,7 +157,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="UpdateFacilityGroupRoles" type="list" target="removePartyFromFacilityGroup" title="" list-name="facilityRoles"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -173,7 +173,7 @@ under the License.
         <field name="roleTypeId">
             <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removePartyFromFacilityGroup" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="facilityGroupId"/>
                 <parameter param-name="partyId"/>
@@ -193,6 +193,6 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 </forms>

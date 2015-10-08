@@ -30,9 +30,9 @@ under the License.
             </entity-one>
         </row-actions>
         <field name="workEffortTypeId"><hidden/></field>
-        <field name="deleteLink"><hidden/></field>
+        <field name="deleteAction"><hidden/></field>
         <field name="currentStatusId"><hidden/></field>
-        <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="${styles.button_default}">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${workEffortName} [${workEffortId}]" target="/workeffort/control/WorkEffortSummary" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
@@ -111,8 +111,8 @@ under the License.
             <sort-field name="estimatedStartDate"/>
             <sort-field name="estimatedCompletionDate"/>
             <sort-field name="partyId"/>
-            <sort-field name="addButton"/>
-            <sort-field name="updateButton"/>
+            <sort-field name="addAction"/>
+            <sort-field name="updateAction"/>
         </sort-order>
     </form>
 </forms>

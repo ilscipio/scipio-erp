@@ -26,7 +26,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="PaymentGroup" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListPaymentGroup" type="list" separate-columns="true" default-entity-name="PaymentGroup" list-name="paymentGroupList" 
@@ -39,29 +39,29 @@ under the License.
                 <field-map field-name="paymentGroupId"/>
             </entity-and>
         </row-actions>
-        <field name="paymentGroupId" widget-style="${styles.button_default}">
+        <field name="paymentGroupId" widget-style="${styles.link_default}">
             <hyperlink description="${paymentGroupId}" target="PaymentGroupOverview">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
         <field name="paymentGroupTypeId" title="${uiLabelMap.FormFieldTitle_paymentGroupType}"><display-entity entity-name="PaymentGroupType"/></field>
         <field name="paymentGroupName"><display description="${paymentGroupName}"/></field>
-        <field name="depositSlip" title=" " widget-style="${styles.button_default}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="depositSlipAction" title=" " widget-style="${styles.button_default}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="DepositSlip.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
-        <field name="printCheck" title=" " widget-style="${styles.button_default}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="printCheckAction" title=" " widget-style="${styles.button_default}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="printChecks.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="cancelPaymentGroup" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="cancelCheckRunPayments" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
@@ -96,9 +96,9 @@ under the License.
         <field use-when="finAccount!=null" name="finAccountName" title="${uiLabelMap.FormFieldTitle_finAccountName}"><display description="${finAccount.finAccountName}" type="text"></display></field>
         <field use-when="finAccount!=null" name="ownerPartyId" title="${uiLabelMap.FormFieldTitle_ownerPartyId}"><display description="${finAccount.ownerPartyId}" type="text"></display></field>
         <field name="paymentGroupName" use-when="display==true"><display/></field>
-        <field name="submitButton" use-when="paymentGroup==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
-        <field name="submitButton" use-when="paymentGroup!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="submitButton" use-when="display==true"><hidden/></field>
+        <field name="submitAction" use-when="paymentGroup==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="paymentGroup!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="display==true"><hidden/></field>
     </form>
     
     <!-- Payment Group Member -->
@@ -118,7 +118,7 @@ under the License.
             <set field="paymentRefNum" from-field="payment.paymentRefNum"/>
         </row-actions>
         <field name="paymentGroupId"><hidden/></field>
-        <field name="paymentId" widget-style="${styles.button_default}">
+        <field name="paymentId" widget-style="${styles.link_default}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -148,14 +148,14 @@ under the License.
         <field name="amount"><display currency="${payment.currencyUomId}" type="currency"/></field>
         <field name="fromDate"><display/></field>
         <field name="thruDate"><date-time/></field>
-        <field name="deleteLink" title="" widget-style="${styles.button_default}">
+        <field name="deleteAction" title="" widget-style="${styles.button_default}">
             <hyperlink target="expirePaymentGroupMember" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
                 <parameter param-name="paymentId"/>
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddPaymentGroupMember" type="single" target="createPaymentGroupMember">
@@ -163,7 +163,7 @@ under the License.
         <field name="paymentGroupId"><hidden/></field>
         <field name="paymentId"><lookup target-form-name="LookupPayment"/></field>
         <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="PaymentGroupMembers" type="list" list-name="paymentGroupMembers"
             odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -175,7 +175,7 @@ under the License.
             <set field="partyIdFrom" from-field="payment.partyIdFrom"/>
             <set field="partyIdTo" from-field="payment.partyIdTo"/>
         </row-actions>
-        <field name="paymentId" widget-style="${styles.button_default}">
+        <field name="paymentId" widget-style="${styles.link_default}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>

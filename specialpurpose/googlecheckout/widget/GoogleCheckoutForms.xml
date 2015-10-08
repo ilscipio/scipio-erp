@@ -65,7 +65,7 @@ under the License.
                 <parameter param-name="productStoreId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
     <form name="AddGoogleCheckoutConfiguration" type="single" target="createGoogleCheckoutConfiguration" title="">
@@ -108,7 +108,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
         
     <form name="ListGoogleCheckoutShippingMethods" type="list"  list-name="googleCheckoutShippingMethods"  target="updateGoogleCheckoutShippingMethod"
@@ -142,7 +142,7 @@ under the License.
                 <parameter param-name="productStoreId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
     <form name="AddGoogleCheckoutShippingMethod" type="single" target="createGoogleCheckoutShippingMethod" title="">
@@ -169,6 +169,6 @@ under the License.
                 <entity-options entity-name="ShipmentMethodType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -80,13 +80,13 @@ under the License.
             </display>
         </field>
         <field name="originalPortalPageId"><display-entity entity-name="PortalPage" description="${portalPageName} [${portalPageId}]" key-field-name="portalPageId"/></field>
-        <field name="deleteLink" use-when="!ownerUserLoginId.equals(&quot;_NA_&quot;)" title=" " widget-style="${styles.button_default}" >
+        <field name="deleteAction" use-when="!ownerUserLoginId.equals(&quot;_NA_&quot;)" title=" " widget-style="${styles.button_default}" >
             <hyperlink target="deletePortalPage" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="portalPageId"/>
                 <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" use-when="!ownerUserLoginId.equals(&quot;_NA_&quot;)&amp;&amp;originalPortalPageId!=null" title=" " widget-style="${styles.button_default}" >
+        <field name="deleteAction" use-when="!ownerUserLoginId.equals(&quot;_NA_&quot;)&amp;&amp;originalPortalPageId!=null" title=" " widget-style="${styles.button_default}" >
             <hyperlink target="deletePortalPage" description="${uiLabelMap.CommonRevertPortalPage}">
                 <parameter param-name="portalPageId"/>
                 <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>
@@ -99,7 +99,7 @@ under the License.
         <field name="sequenceNum"><hidden value="${parameters.portalPagesSize+1}"/></field>
         <field name="portalPageName"><text/></field>
         <field name="description"><text/></field>
-        <field name="createButton"><submit button-type="button"/></field>
+        <field name="createAction"><submit button-type="button"/></field>
     </form>
 
     <form name="PortletCategoryAndPortlet" type="list" list-name="portletCat" paginate-target="addPortlet" separate-columns="true"
@@ -136,7 +136,7 @@ under the License.
         <field name="description" ><text size="16"/></field>
         <field name="description_op" ><hidden value="contains"/></field>
         <field name="description_ic" ><hidden value="Y"/></field>
-        <field name="submitButton" title=" " widget-style="smallSubmit">
+        <field name="submitAction" title=" " widget-style="smallSubmit">
             <hyperlink target="javascript:ajaxUpdateArea('List${entity}Area', 'list${entity}', $(FindGenericEntity).serialize());" target-type="plain"  description="${uiLabelMap.CommonSearch}"/>
         </field>
     </form>
@@ -146,6 +146,6 @@ under the License.
         <field name="columnSeqId"><hidden/></field>
         <field name="columnWidthPixels"><text/></field>
         <field name="columnWidthPercentage"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -47,8 +47,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="product!=null"><submit button-type="button"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="product==null"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="product!=null"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="product==null"><submit button-type="button"/></field>
         <field use-when="product!=null" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:">
             <display description="[${product.lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${product.lastModifiedDate}" also-hidden="false"/>
         </field>
@@ -67,14 +67,14 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productId" title="${uiLabelMap.CommonId}" widget-style="${styles.button_default}">
+        <field name="productId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
-        <field name="searchVariants" title="" widget-style="${styles.button_default}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
+        <field name="searchAction" title=" " widget-style="${styles.button_default}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -88,7 +88,7 @@
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text-find ignore-case="true"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
        <!-- <field name="isVariant"><hidden value="N"/></field>  -->
-        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
 
     <form name="listLookupProduct" list-name="listIt" paginate-target="${submitTarget}" title="" type="list"
@@ -101,13 +101,13 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productId" title="${uiLabelMap.CommonId}" widget-style="${styles.button_default}">
+        <field name="productId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
         <field name="primaryProductCategoryId" title="${uiLabelMap.ProductPrimaryCategory}"><display/></field>
-        <field name="searchVariants" title="" widget-style="${styles.button_default}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
+        <field name="searchAction" title="" widget-style="${styles.button_default}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -141,8 +141,8 @@
         <field name="intervalQuantity"><text/></field>
         <field name="repeatCount"><text/></field>
         <field name="maintTemplateWorkEffortId"><lookup target-form-name="LookupWorkEffort"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteProductMaint" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <parameter param-name="productId"/>

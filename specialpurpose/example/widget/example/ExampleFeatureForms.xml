@@ -25,7 +25,7 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
 
@@ -67,8 +67,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" use-when="exampleFeature==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
-        <field name="submitButton" use-when="exampleFeature!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="exampleFeature==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="exampleFeature!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 
     <!-- ExampleFeatureAppl -->
@@ -96,8 +96,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title="" widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="deleteAction" title="" widget-style="${styles.button_default}">
             <hyperlink target="feature_deleteExampleFeatureAppl" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="exampleId"/>
                 <parameter param-name="exampleFeatureId"/>
@@ -130,7 +130,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 
     <form name="LookupFindExampleFeature" target="LookupExampleFeature" title="" type="single">
@@ -146,7 +146,7 @@ under the License.
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
 
     <form name="LookupListExampleFeature" list-name="listIt" title="" type="list"

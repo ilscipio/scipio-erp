@@ -44,7 +44,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="webSiteId"><hidden value="${webSiteId}"/></field>
-        <field name="removeButton" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
             <hyperlink target="deleteWebAnalyticsConfig" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="webAnalyticsTypeId"/>
@@ -71,7 +71,7 @@ under the License.
         </field>
         <field name="webSiteId" title="${uiLabelMap.CommonWebsite}"><hidden value="${parameters.webSiteId}"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field use-when="webAnalyticsConfig!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field use-when="webAnalyticsConfig==null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="webAnalyticsConfig!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="webAnalyticsConfig==null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

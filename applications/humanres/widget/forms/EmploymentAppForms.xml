@@ -60,7 +60,7 @@ under the License.
         <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="referredByPartyId" title="${uiLabelMap.FormFieldTitle_referredByPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="applicationDate" title="${uiLabelMap.FormFieldTitle_applicationDate}"><date-time/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteEmploymentApp" description="${uiLabelMap.CommonDelete}" also-hidden="true">
                 <parameter param-name="applicationId"/>
                 <parameter param-name="partyId"/>
@@ -68,7 +68,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
     <form name="FindEmploymentApps" type="single" target="FindEmploymentApps" header-row-style="header-row" default-table-style="basic-table" default-map-name="employmentApp">
         <actions>
@@ -100,8 +100,8 @@ under the License.
         <field name="referredByPartyId" use-when="referredByPartyId!=null"><hidden/></field>
         <field name="approverPartyId"><hidden/></field>
         <field name="jobRequisitionId"><hidden/></field>
-         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+         <field name="searchAction" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddEmploymentApp" type="single" target="createEmploymentApp" default-entity-name="EmploymentApp" paginate-target="FindEmploymentApps"
         header-row-style="header-row" default-table-style="basic-table">
@@ -132,6 +132,6 @@ under the License.
             </drop-down>
         </field>
         <field name="applicationDate"><date-time/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

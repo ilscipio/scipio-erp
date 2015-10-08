@@ -68,7 +68,7 @@ under the License.
         <field name="monthsInPastLimit" entry-name="monthsInPastLimit"><text/></field>
         <field name="fromDateSellThrough"><date-time/></field>
         <field name="thruDateSellThrough"><date-time/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -97,7 +97,7 @@ under the License.
               <option key="RenderInventoryReportPPT" description="MS-Powerpoint"/-->
             </drop-down>
         </field>
-        <field name="submitButton"><hidden/></field>
+        <field name="submitAction"><hidden/></field>
         <field name="report" title="Export Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

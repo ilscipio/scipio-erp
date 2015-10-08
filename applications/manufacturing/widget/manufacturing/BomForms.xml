@@ -65,7 +65,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -85,12 +85,12 @@ under the License.
         <field name="ruleOperator"><display/></field>
         <field name="fromDate"><display/></field>
         <field name="thruDate" position="2"><display/></field>
-        <field name="updateLink" title=" " widget-style="${styles.button_default}">
+        <field name="updateAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditProductManufacturingRules" description="${uiLabelMap.CommonSelect}" >
                 <parameter param-name="ruleId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="DeleteProductManufacturingRule" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="ruleId"/>
             </hyperlink>
@@ -123,7 +123,7 @@ under the License.
                 <option key="AND" description="${uiLabelMap.CommonAnd}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -141,7 +141,7 @@ under the License.
     </form>
     <form name="ListBom"  type="list" list-name="ListProductBom" odd-row-style="alternate-row"
         default-table-style="basic-table hover-bar"  paginate-target="FindBom">
-        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="" widget-style="${styles.button_default}">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="" widget-style="${styles.link_default}">
             <hyperlink target="EditProductBom" description="${productId}">
                 <parameter param-name="productId"/>
                 <parameter param-name="productAssocTypeId"/>

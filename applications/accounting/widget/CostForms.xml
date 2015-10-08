@@ -23,7 +23,7 @@ under the License.
     <form name="ListCostComponentCalc" type="list" list-name="allCostComponentCalcs" use-row-submit="true" target="updateCostComponentCalc"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="CostComponentCalc" default-field-type="display"/>
-        <field name="costComponentCalcId" widget-style="${styles.button_default}"></field>
+        <field name="costComponentCalcId" widget-style="${styles.link_default}"></field>
         <field name="costGlAccountTypeId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="GlAccountType" key-field-name="glAccountTypeId" description="${description}"/>
@@ -70,7 +70,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

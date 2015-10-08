@@ -141,7 +141,7 @@
         <field name="workEffortId"><hidden/></field>
         <field name="phaseName" position="1" use-when="showPosition1"><display description="${phaseName}[${phaseId}]"/></field>
         <field name="workEffortName" title="${uiLabelMap.FormFieldTitle_taskName}" position="1" use-when="showPosition1"><hyperlink target="taskView?workEffortId=${workEffortId}" description="${workEffortName}[${workEffortId}]"/></field>
-        <field name="timesheetId" position="2" widget-style="${styles.button_default}">
+        <field name="timesheetId" position="2" widget-style="${styles.link_default}">
             <hyperlink description="${timesheetId}" target="Timesheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -172,7 +172,7 @@
                 <field-map field-name="projectId" value="${workEffortId}"/>
             </service>
         </row-actions>
-        <field name="projectName" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.button_default}">
+        <field name="projectName" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_default}">
             <hyperlink description="${resultProject.projectInfo.projectName}" target="projectView">
                 <parameter param-name="projectId" from-field="resultProject.projectInfo.projectId"/>
             </hyperlink>
@@ -194,7 +194,7 @@
         <row-actions>
             <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/ProjectIsBillable.groovy"/>
         </row-actions>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.button_default}">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_default}">
             <hyperlink description="${projectName}" target="projectView">
                 <parameter param-name="projectId"/>
             </hyperlink>
@@ -220,7 +220,7 @@
         <field name="projectId"><hidden/></field>
         <field name="workEffortParentId"><hidden value=""/></field>
         <field name="workEffortId"><hidden value="${projectId}"/></field>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.button_default}">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${workEffortName}" target="projectView">
                 <parameter param-name="projectId" from-field="workEffortId"/>
             </hyperlink>
@@ -234,7 +234,7 @@
         <field name="plannedHours"><display/></field>
         <field name="actualHours"><display/></field>
         <field name="createdStamp"><display type="date"/></field>
-        <!--field name="removeButton"><submit/></field--><!-- TODO: difficult to clear the workEffortParentId field in the record have to find solution-->
+        <!--field name="removeAction"><submit/></field--><!-- TODO: difficult to clear the workEffortParentId field in the record have to find solution-->
     </form>
     <form name="ProjectInfo" type="single" default-map-name="project" paginate-target="FindProject"
         header-row-style="header-row" default-table-style="basic-table">
@@ -245,7 +245,7 @@
         <field name="priority" title="${uiLabelMap.CommonPriority}"><display/></field>
         <field name="parentProjectId" title="${uiLabelMap.ProjectMgrParentProjectName}">
             <display-entity entity-name="WorkEffort" description="${workEffortName} ${workEffortId}" key-field-name="workEffortId">
-                <sub-hyperlink target="projectView" description="${project.parentProjectId}" link-style="${styles.button_default}">
+                <sub-hyperlink target="projectView" description="${project.parentProjectId}" link-style="${styles.link_default}">
                     <parameter param-name="projectId" from-field="project.parentProjectId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -298,7 +298,7 @@
         </field>
         <field name="actualStartDate" entry-name="workEffortToActualStartDate" title="${uiLabelMap.FormFieldTitle_actualStartDate}"><date-time/></field>
         <field name="actualCompletionDate"  entry-name="workEffortToActualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><date-time/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 
     <form name="EditProjectTasks" target="updateProjectTask" title="" list-name="tasks" type="list" separate-columns="true" paginate-target="EditProjectTasks"
@@ -351,10 +351,10 @@
         </field>
         <field name="estimatedStartDate" title="${uiLabelMap.WorkEffortEstimatedStartDate}"><date-time type="date"/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.WorkEffortEstimatedCompletionDate}"><date-time type="date"/></field>
-        <field name="edit" title=" " widget-style="${styles.button_default}">
+        <field name="editAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="EditTask?workEffortId=${workEffortId}" description="${uiLabelMap.CommonEdit}"/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <form name="ListUnassignedTasks" target="updateTaskAndAssoc" title="" list-name="tasks" type="list" separate-columns="true" paginate-target="FindTask"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -392,7 +392,7 @@
                 <option key="9" description="${uiLabelMap.WorkEffortPriorityNine}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <form name="ListPhases" target="updateProjectPhase" title="" list-name="phases" type="list" separate-columns="true" paginate-target="FindPhase"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -409,7 +409,7 @@
         <field name="estimatedCompletionDate" title="${uiLabelMap.FormFieldTitle_estimatedCompletionDate}"><display type="date"/></field>
         <field name="actualStartDate" title="${uiLabelMap.FormFieldTitle_actualStartDate}"><display type="date"/></field>
         <field name="actualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><display type="date"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <form name="ListPhaseInfo" type="list" list-name="phases"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -453,10 +453,10 @@
         header-row-style="header-row" default-table-style="basic-table">
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
         <field name="workEffortId"><hidden value="${projectId}"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListOrderInfo" target="EditProjectOrders?projectId=${projectId}" type="list" list-name="listOrderAssoProject" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="orderId" widget-style="${styles.button_default}">
+        <field name="orderId" widget-style="${styles.link_default}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -466,7 +466,7 @@
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="orderDate"><display/></field>
         <field name="entryDate"><display/></field>
-        <field name="linkProjectOrder" title=" " widget-style="${styles.button_default}" use-when="headerItem.equals(&quot;editProjectOrders&quot;)">
+        <field name="linkProjectOrderAction" title=" " widget-style="${styles.button_default}" use-when="headerItem.equals(&quot;editProjectOrders&quot;)">
             <hyperlink target="unLinkProjectOrder" description="${uiLabelMap.ProjectMgrRemoveLinkFromProject}">
                 <parameter param-name="workEffortId" from-field="projectId"/>
                 <parameter param-name="orderId"/>
@@ -481,7 +481,7 @@
                 <field-map field-name="projectId" value="${workEffortId}"/>
             </service>
         </row-actions>
-        <field name="projectName" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.button_default}">
+        <field name="projectName" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_default}">
             <hyperlink description="${resultProject.projectInfo.projectName}" target-type="inter-app" target="/projectmgr/control/projectView">
                 <parameter param-name="projectId" from-field="resultProject.projectInfo.projectId"/>
             </hyperlink>
@@ -567,7 +567,7 @@
         </actions>
         <field name="workEffortId"><hidden/></field>
         <field name="projectId"><hidden/></field>
-        <field name="partyId" widget-style="${styles.button_default}">
+        <field name="partyId" widget-style="${styles.link_default}">
             <hyperlink target="viewprofile"  description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -577,7 +577,7 @@
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date-time"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date-time"/></field>
-        <field name="expireButton" widget-style="smallSubmit"  use-when="${thruDate==null || (thruDate &gt; nowTimestamp)}"><submit button-type="button"/></field>
+        <field name="expireAction" widget-style="smallSubmit"  use-when="${thruDate==null || (thruDate &gt; nowTimestamp)}"><submit button-type="button"/></field>
     </form>
     <form name="AddWorkEffortPartyAssign" target="createWorkEffortPartyAssign" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
@@ -658,7 +658,7 @@
         </field>
         <field entry-name="xx" name="fromDate"><date-time type="date"/></field>
         <field entry-name="xx" name="thruDate"><date-time type="date"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListProjectNotes" extends="ListWorkEffortNotes" extends-resource="component://workeffort/widget/WorkEffortForms.xml" type="list" paginate-target="EditWorkEffortNotes"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -690,7 +690,7 @@
             <set field="actualHours" from-field="result.taskInfo.actualHours"/>
             <set field="statusId" from-field="result.statusId"/>
         </row-actions>
-        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="${styles.button_default}">
+        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${workEffortName}" target="taskView">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
@@ -713,7 +713,7 @@
         <field name="actualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}" widget-area-style="centered"><display type="date"/></field>
         <field name="plannedHours" widget-area-style="centered"><display/></field>
         <field name="actualHours" widget-area-style="centered"><display/></field>
-        <field name="remove" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
             <hyperlink target="updateResourcesTaskAssigment" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="partyId"/>
@@ -722,7 +722,7 @@
                 <parameter param-name="statusId" value="PAS_ENDED"/>
             </hyperlink>
         </field>
-        <field name="toComplete" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
+        <field name="toCompleteAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
             <hyperlink target="updateResourcesTaskAssigment" description="${uiLabelMap.CommonStatustoComplete}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="partyId"/>
@@ -748,7 +748,7 @@
             <set field="ActualStartDate" from-field="result.projectInfo.actualStartDate"/>
             <set field="ActualCompletionDate" from-field="result.projectInfo.actualCompletionDate"/>
         </row-actions>
-        <field entry-name="workEffortName" name="projectName" parameter-name="workEffortName" title="${uiLabelMap.CommonName}" widget-style="${styles.button_default}">
+        <field entry-name="workEffortName" name="projectName" parameter-name="workEffortName" title="${uiLabelMap.CommonName}" widget-style="${styles.link_default}">
             <hyperlink target="projectView" description="${workEffortName}[${workEffortId}]">
                 <parameter param-name="projectId" from-field="workEffortId"/>
             </hyperlink>
@@ -792,7 +792,7 @@
         </field>
         <field entry-name="test" name="fromDate"><date-time type="date"/></field>
         <field entry-name="test" name="thruDate"><date-time type="date"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddResourceTaskParty" target="addTaskPartyAssign" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
@@ -820,7 +820,7 @@
         </field>
         <field entry-name="test" name="fromDate"><date-time type="date"/></field>
         <field entry-name="test" name="thruDate"><date-time type="date"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddProjectTimeToNewInvoice" target="addProjectTimeToNewInvoice" title="" type="single">
         <actions>
@@ -846,34 +846,34 @@
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
            </field>
-        <field name="submitButton" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListContents" extends="ListWorkEffortContents" extends-resource="component://workeffort/widget/WorkEffortForms.xml" default-entity-name="WorkEffortContent">
         <field name="contentId" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
             <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
-                <sub-hyperlink target="EditProjectContents" description="${contentId}" link-style="${styles.button_default}" target-type="inter-app">
+                <sub-hyperlink target="EditProjectContents" description="${contentId}" link-style="${styles.link_default}" target-type="inter-app">
                     <auto-parameters-entity/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="contentId" use-when="headerItem.equals(&quot;EditTaskContents&quot;)">
             <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
-                <sub-hyperlink target="EditTaskContents" description="${contentId}" link-style="${styles.button_default}" target-type="inter-app">
+                <sub-hyperlink target="EditTaskContents" description="${contentId}" link-style="${styles.link_default}" target-type="inter-app">
                     <auto-parameters-entity/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="thruDate"><ignored/></field>
-        <field name="submitButton"><ignored/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
+        <field name="submitAction"><ignored/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteProjectContent">
                 <auto-parameters-entity/>
             </hyperlink>
         </field>
-        <field name="downloadLink" title=" " widget-style="${styles.button_default}">
+        <field name="downloadAction" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.ContentDownload}" target="ViewSimpleContent?contentId=${contentId}"/>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}" use-when="headerItem.equals(&quot;EditTaskContents&quot;)">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}" use-when="headerItem.equals(&quot;EditTaskContents&quot;)">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteTaskContent">
                 <auto-parameters-entity/>
             </hyperlink>
@@ -956,8 +956,8 @@
                 <entity-options description="${categoryName}" entity-name="DataCategory" key-field-name="dataCategoryId"/>
             </drop-down>
         </field-->
-        <field name="createButton" use-when="workEffortContent==null"><submit button-type="button"/></field>
-        <field name="updateButton" use-when="workEffortContent!=null"><submit button-type="button"/></field>
+        <field name="createAction" use-when="workEffortContent==null"><submit button-type="button"/></field>
+        <field name="updateAction" use-when="workEffortContent!=null"><submit button-type="button"/></field>
     </form>
     <form name="ListPhaseInfo" extends="ListPhaseInfo" extends-resource="component://projectmgr/widget/forms/ProjectForms.xml">
         <field name="phase"><display description="${phaseName}"/></field>
@@ -980,7 +980,7 @@
             <sort-field name="subject"/>
             <sort-field name="entryDate"/>
             <sort-field name="noConditionFind"/>
-            <sort-field name="submitButton"/>
+            <sort-field name="submitAction"/>
         </sort-order>
     </form>
     <form name="ListMailingLists" type="list" list-name="listIt" title="Mailing List" paginate-target="FindMailingList"

@@ -58,14 +58,14 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
-        <field name="viewButton" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
+        <field name="viewAction" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
     </form>
     
     <form name="ImageGallery" type="single" title="" header-row-style="header-row" default-table-style="basic-table" target="ListImageGallery"> 
         <field name="productId" title="${uiLabelMap.ImageManagementChooseProductID}"><lookup target-form-name="LookupProduct"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ImageApprove" type="multi" title="" list-name="contentApprovalProductContentAndInfos" odd-row-style="alternate-row" default-table-style="basic-table" 
@@ -118,10 +118,10 @@ under the License.
         <field name="contentId" position="2"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" position="2"><display/></field>
         <field name="fromDate" position="2"><display/></field>
-        <field name="viewButton" position="2" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
+        <field name="viewAction" position="2" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ListPeopleApproved" type="list" title="" list-name="contentApprovalProductContentAndInfos" odd-row-style="alternate-row" default-table-style="basic-table" 
@@ -158,7 +158,7 @@ under the License.
         <field name="contentId" position="2"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" position="2"><display/></field>
         <field name="fromDate" position="2"><display/></field>
-        <field name="viewButton" position="2" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
+        <field name="viewAction" position="2" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
     </form>
@@ -208,10 +208,10 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="viewButton" position="2" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
+        <field name="viewAction" position="2" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ImageRejected" type="multi" title="" list-name="productContentAndInfos" odd-row-style="alternate-row" default-table-style="basic-table" 
@@ -258,14 +258,14 @@ under the License.
         </field>
         <field name="rejectedBy" position="2" title="${uiLabelMap.ImageManagementRejectedBy}"><display/></field>
         <field name="description" position="2" title="${uiLabelMap.ImageManagementRejectedReason}"><display/></field>
-        <field name="viewButton" position="2" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
+        <field name="viewAction" position="2" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
     </form>
     
     <form name="ImageManage" type="single" title="" header-row-style="header-row" default-table-style="basic-table" target="ListImageManage"> 
         <field name="productId" title="${uiLabelMap.ImageManagementChooseProductID}"><lookup target-form-name="LookupProduct"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ListImageManage" type="multi" title="" odd-row-style="alternate-row" default-table-style="basic-table" list-name="productContentAndInfoList"
@@ -319,7 +319,7 @@ under the License.
         <field name="description" use-when="${groovy: return context.statusId == 'IM_APPROVED';}" title="${uiLabelMap.ImageManagementCaption}"><text/></field>
         <field name="sequenceNum" use-when="${groovy: return context.statusId == 'IM_APPROVED';}" title="${uiLabelMap.ImageManagementSortOrder}"><text maxlength="2" size="5"/></field>
         <field name="drIsPublic" use-when="${groovy: return context.statusId == 'IM_APPROVED';}" title="${uiLabelMap.ImageManagementPublic}"><check/></field>
-        <field name="defaultImage" use-when="${groovy: return context.statusId == 'IM_APPROVED';}" title="${uiLabelMap.ImageManagementDefaultImage}" widget-style="${styles.button_default}">
+        <field name="defaultImage" use-when="${groovy: return context.statusId == 'IM_APPROVED';}" title="${uiLabelMap.ImageManagementDefaultImage}" widget-style="${styles.link_default}">
             <hyperlink target="setDefaultImage" description="${uiLabelMap.ImageManagementSetDefault}">
                 <parameter param-name="productId"/>
                 <parameter param-name="contentId"/>
@@ -338,10 +338,10 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
-        <field name="viewButton" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
+        <field name="viewAction" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
-        <field name="deleteButton" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
+        <field name="deleteAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
             <hyperlink target="removeImage" description="${uiLabelMap.CommonRemove}" also-hidden="false" confirmation-message="Do you want to remove this image?">
                 <parameter param-name="productId" from-field="productId"/>
                 <parameter param-name="contentId" from-field="contentId"/>
@@ -349,7 +349,7 @@ under the License.
                 <parameter param-name="fromDate" from-field="fromDate"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="drObjectInfo"/>
             <sort-field name="action"/>
@@ -415,14 +415,14 @@ under the License.
         <field name="imageFrame" use-when="frameURL == null" title="${uiLabelMap.ImageManagementFrame}" widget-area-style="image-fr"><image value="/images/defaultImage.jpg" style="cssImgXLarge"/></field>
         <field name="frameDimension" use-when="frameURL != null" widget-area-style="frameDimension"><display/></field>
         <field name="uploadedFile" title="${uiLabelMap.ImageManagementUploadNewFrame}" event="onClick" action="javascript:setUploadTarget('_self');"><file/></field>
-        <field name="uploadButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit" event="onClick" action="javascript:document.ImageFrames.setAttribute('enctype', 'multipart/form-data');setTargetWindows('upload');document.ImageFrames.submit();"><submit button-type="button"/></field>
+        <field name="uploadAction" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit" event="onClick" action="javascript:document.ImageFrames.setAttribute('enctype', 'multipart/form-data');setTargetWindows('upload');document.ImageFrames.submit();"><submit button-type="button"/></field>
         <field name="imageFrameContentId" title="${uiLabelMap.ImageManagementChooseExistFrame}"><lookup target-form-name="LookupImageFrame"/></field>
-        <field name="confirmButton" title="${uiLabelMap.FormFieldTitle_confirmButton}" widget-style="smallSubmit" event="onClick" action="javascript:setTargetWindows('choose');document.ImageFrames.submit();"><submit button-type="button"/></field>
+        <field name="confirmAction" title="${uiLabelMap.FormFieldTitle_confirmButton}" widget-style="smallSubmit" event="onClick" action="javascript:setTargetWindows('choose');document.ImageFrames.submit();"><submit button-type="button"/></field>
         <field name="imageWidth" title="${uiLabelMap.ImageManagementImageWidth}"><text/></field>
         <field name="imageHeight" title="${uiLabelMap.ImageManagementImageHeight}"><text/></field>
-        <field name="previewButton" title="${uiLabelMap.CommonPreview}" use-when="frameURL != null" widget-style="smallSubmit" event="onClick" action="javascript:setTargetWindows('new');"><submit button-type="button"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="frameURL != null" widget-style="smallSubmit" event="onClick" action="javascript:setTargetWindows('_self');"><submit button-type="button"/></field>
-        <field name="cancelButton" title=" " widget-style="${styles.button_default}" event="onClick" action="javascript:deletePreviewFrameImage();">
+        <field name="previewAction" title="${uiLabelMap.CommonPreview}" use-when="frameURL != null" widget-style="smallSubmit" event="onClick" action="javascript:setTargetWindows('new');"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="frameURL != null" widget-style="smallSubmit" event="onClick" action="javascript:setTargetWindows('_self');"><submit button-type="button"/></field>
+        <field name="cancelAction" title=" " widget-style="${styles.button_default}" event="onClick" action="javascript:deletePreviewFrameImage();">
             <hyperlink target="ListImageManage" description="${uiLabelMap.CommonCancel}">
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </hyperlink>
@@ -467,7 +467,7 @@ under the License.
             </drop-down>
         </field>
         <field name="textWatermark" title="${uiLabelMap.CommonText}" widget-area-style="watermark_txt"><text default-value="DEFAULT"/></field>
-        <field name="previewButton" title=" " widget-style="${styles.button_default}" widget-area-style="preview"><hyperlink target="#" target-type="plain" description="${uiLabelMap.CommonPreview}"/></field>
+        <field name="previewAction" title=" " widget-style="${styles.button_default}" widget-area-style="preview"><hyperlink target="#" target-type="plain" description="${uiLabelMap.CommonPreview}"/></field>
         <field name="colorWatermark" title="${uiLabelMap.ImageManagementTextColor}" widget-area-style="txt_color">
             <drop-down allow-empty="true" no-current-selected-key="TEXT_BLACK">
                 <entity-options description="${description}" entity-name="ProductFeature" key-field-name="productFeatureId">
@@ -486,8 +486,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" event="onClick" action="javascript:setImageDimension()" widget-style="smallSubmit" ><submit button-type="button"/></field>
-        <field name="cancelButton" title=" " widget-style="${styles.button_default}" event="onClick" action="javascript:deletePreviewWatermarkImage();">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" event="onClick" action="javascript:setImageDimension()" widget-style="smallSubmit" ><submit button-type="button"/></field>
+        <field name="cancelAction" title=" " widget-style="${styles.button_default}" event="onClick" action="javascript:deletePreviewWatermarkImage();">
             <hyperlink target="ListImageManage" description="${uiLabelMap.CommonCancel}">
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </hyperlink>
@@ -535,8 +535,8 @@ under the License.
         <field name="angle"><hidden/></field>
         <field name="imageName"><hidden value="${contentDataResource.drDataResourceName}"/></field>
         <field name="imageRotate" widget-area-style="cropbox" title="${uiLabelMap.CommonImage}"><image value="${imageURL}" /></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit" position="1"><submit button-type="button"/></field>
-        <field name="cancelButton" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit" position="1"><submit button-type="button"/></field>
+        <field name="cancelAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="ListImageManage" description="${uiLabelMap.CommonCancel}">
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </hyperlink>
@@ -596,7 +596,7 @@ under the License.
         <field name="dataResourceNameReplace"><hidden value="${contentDataResourceReplace.drDataResourceName}"/></field>
         <field name="imageExist" position="1" use-when="imageURLExist != null" title="${uiLabelMap.ImageManagementReplacementImage}"><image value="${imageURLExist}" style="cssImgXLarge"/></field>
         <field name="imageReplace" position="2" use-when="imageURLReplace != null&amp;&amp;imageURLExist != null" title="${uiLabelMap.ImageManagementImageToReplace}"><image value="${imageURLReplace}" style="cssImgXLarge"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ListImageUpload" type="list" title="" list-name="productContent" odd-row-style="alternate-row" default-table-style="basic-table" use-row-submit="true" separate-columns="true">
@@ -626,7 +626,7 @@ under the License.
         <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}"><display/></field>
         <field name="fromDate"><display/></field>
         <field name="status"><display description="Uploaded"/></field>
-        <field name="removeContent" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="removeImageUpload" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/>
                 <parameter param-name="contentId"/>
@@ -661,7 +661,7 @@ under the License.
             </entity-and>
         </row-actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.button_default}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${drDataResourceName}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentId"><display/></field>
@@ -670,14 +670,14 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
-        <field name="viewButton" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
+        <field name="viewAction" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
     </form>
     
     <form name="ProductImageReplace" type="single" title="" header-row-style="header-row" default-table-style="basic-table" target="ListImageReplace"> 
         <field name="productId" title="${uiLabelMap.ImageManagementChooseProductID}"><lookup target-form-name="LookupProduct"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ListImageRecentlyApproved" type="list" title="" odd-row-style="alternate-row" default-table-style="basic-table" use-row-submit="true" separate-columns="true" target="">
@@ -719,7 +719,7 @@ under the License.
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
         <field name="purchaseFromDate" title="${uiLabelMap.ImageManagementApprovedDate}"><display/></field>
-        <field name="viewButton" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
+        <field name="viewAction" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
     </form>
@@ -760,7 +760,7 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
-        <field name="viewButton" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
+        <field name="viewAction" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
     </form>
@@ -803,7 +803,7 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
-        <field name="viewButton" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
+        <field name="viewAction" title="${uiLabelMap.CommonView}" widget-style="${styles.button_default}">
             <hyperlink target="${origContentDataResourceViews[0].drObjectInfo}" target-window="_blank" description="${uiLabelMap.CommonView}" also-hidden="false" target-type="content"/>
         </field>
     </form>
@@ -815,13 +815,13 @@ under the License.
             </entity-condition>
         </actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.button_default}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${drDataResourceName}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentId"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}"><display/></field>
         <field name="createdDate"><display/></field>
-        <!--<field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <!--<field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteImageFrame" target-window="_blank" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="contentId" from-field="contentId"/>
             </hyperlink>
@@ -837,7 +837,7 @@ under the License.
         </field>
         <field name="productId" title="${uiLabelMap.ImageManagementChooseProductID}"><lookup target-form-name="LookupProduct"/></field>
         <field name="size" title="${uiLabelMap.ImageManagementImageWidth}"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="SizeListOfProduct" type="list" title="" odd-row-style="alternate-row" default-table-style="basic-table" use-row-submit="true" separate-columns="true">
@@ -852,7 +852,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="mapKey" title="${uiLabelMap.CommonSize}"><display/></field>
-        <field name="deleteButton" title="${uiLabelMap.CommonRemove}" use-when="${groovy: return context.mapKey != '100';}" widget-style="${styles.button_default}">
+        <field name="deleteAction" title="${uiLabelMap.CommonRemove}" use-when="${groovy: return context.mapKey != '100';}" widget-style="${styles.button_default}">
             <hyperlink target="removeImageBySize" description="${uiLabelMap.CommonRemove}" also-hidden="false" confirmation-message="Do you want to remove this size?">
                 <parameter param-name="productId" from-field="parameters.productId"/>
                 <parameter param-name="mapKey" from-field="mapKey"/>

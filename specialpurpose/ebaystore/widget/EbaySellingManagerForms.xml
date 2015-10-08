@@ -94,7 +94,7 @@ under the License.
                 <list-options key-name="action" list-name="actionList" description="${actionName}"/>
             </drop-down>
         </field>
-        <field name="submitButton"  use-when="&quot;${hasAction}&quot;==&quot;true&quot;" title="${uiLabelMap.CommonSubmit}"><submit/></field>
+        <field name="submitAction"  use-when="&quot;${hasAction}&quot;==&quot;true&quot;" title="${uiLabelMap.CommonSubmit}"><submit/></field>
     </form>
     <form name="OpenUnpaid" type="single" target="addDispute">
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
@@ -124,8 +124,8 @@ under the License.
                    <option key="OTHER_EXPLANATION" description="Other reason"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" position="1"><submit/></field>
-        <field name="cancelButton" title=" " widget-style="smallSubmit ${styles.button_default}" position="2">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" position="1"><submit/></field>
+        <field name="cancelAction" title=" " widget-style="smallSubmit ${styles.button_default}" position="2">
             <hyperlink target="soldListing" description="${uiLabelMap.CommonCancel}">
                 <parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
             </hyperlink>
@@ -146,7 +146,7 @@ under the License.
                 <list-options key-name="userId" list-name="allBidders" description="${userId}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit/></field>
     </form>
     <!-- Inventory -->
     <form name="EbayStoreFacilityList" type="single" list-name="productStoreFacilityList"  target="ebayStoreInventory"
@@ -158,7 +158,7 @@ under the License.
                 <list-options list-name="productStoreFacilityList" description="${facilityId}" key-name="facilityId"/>
             </drop-down>
         </field>
-        <field name="submitButton" ><submit button-type="button"/></field>
+        <field name="submitAction" ><submit button-type="button"/></field>
     </form>
     <form name="reserveEbayProductInventory" type="single" list-name=""  target="reserveProductInventory"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -166,7 +166,7 @@ under the License.
         <field name="facilityId"><display description="${parameters.facilityId}"></display></field>
         <field name="productId"><lookup target-form-name="LookupProduct"></lookup></field>
         <field name="quantity"><text></text></field>
-        <field name="submitButton" ><submit button-type="button"/></field>
+        <field name="submitAction" ><submit button-type="button"/></field>
     </form>
     <form name="ListEbayProductInventoryDetail" type="multi" use-row-submit="true"  target="updateEbayStoreInventory" title=""  list-name="ebayProductStoreInventoryList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -193,7 +193,7 @@ under the License.
         <field name="sold"><display></display></field>
         <field name="unSold"><display></display></field>
         <field name="reservedDate"><display></display></field>
-        <field name="updateButton" title="${uiLabelMap.EbayUpdateInventory}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.EbayUpdateInventory}"><submit button-type="button"/></field>
     </form>
     <form name="updateQuantityReserved" type="single"  target="updateProductQuantityReserved" default-entity-name="EbayProductStoreInventory" default-map-name="ebayProductStoreInventory"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -210,7 +210,7 @@ under the License.
                 <option key="REMOVE" description="Remove"/>
             </drop-down>
         </field>
-        <field name="submitButton"><submit button-type="button"/></field>
+        <field name="submitAction"><submit button-type="button"/></field>
     </form>
     <!-- Automatically leave the following positive feedback  -->
     <form name="autoPositiveFeedbackForBuyers" type="single"  target="autoPrefLeaveFeedbackOptions"
@@ -283,7 +283,7 @@ under the License.
         <field name="comment_2" title=" " position="1"><text size="60"></text></field>
         <field name="comment_5" title=" " position="2"><text size="40"></text></field>
         <field name="comment_4" title=" " position="1"><text size="60"></text></field>
-        <field name="submitButton" title="${uiLabelMap.CommonApply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonApply}"><submit button-type="button"/></field>
     </form>
     <!-- Automatically send a Feedback Reminder email if feedback has not been received. Please choose how many days after shipping you want this email sent? -->
     <form name="autoSendFeedbackReminder" type="single"  target="autoSendFeedbackReminder"
@@ -307,7 +307,7 @@ under the License.
                 <parameter param-name="emailType" value="EBAY_WIN_BUYER_NOTI"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonApply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonApply}"><submit button-type="button"/></field>
     </form>
     <!-- Automatically send Payment Received email when payment has been received -->
     <form name="autoSendPaymentReceivedEmail" type="single"  target="autoSendPaymentReceivedEmail"
@@ -329,7 +329,7 @@ under the License.
                 <parameter param-name="emailType" value="EBAY_PAY_RECIEVED"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonApply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonApply}"><submit button-type="button"/></field>
     </form>
     <!-- Combine Orders Setting -->
     <form name="combineOrdersSetting" type="single" target="settingCombineOrders" header-row-style="header-row" default-table-style="basic-table">
@@ -344,7 +344,7 @@ under the License.
         <field name="isRunCombineOrdersJob" position="1" title="Enable combine orders in eBay"><check></check></field>
         <field name="condition1" title="Allow no more than" tooltip-style="h3" tooltip="days between the first and last transactions to add in order"><text size="3" default-value="${ebayPrefCombine.condition1}" maxlength="2"></text></field>
         <field name="condition2" title="Allow no more than" tooltip-style="h3" tooltip="items per order"><text size="3" default-value="${ebayPrefCombine.condition2}" maxlength="2"></text></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
     </form>
     <form name="winningBuyerNotification" type="single" target="settingWinningBuyerNotification" header-row-style="header-row" default-table-style="basic-table">
         <actions>
@@ -356,7 +356,7 @@ under the License.
         </actions>
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
         <field name="isRunWinnerNotify" position="1" title="Enable send winner buyer notification automatically"><check></check></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
     </form>
     <form name="itemDispatchedNotification" type="single" target="settingSendItemDispatchedNotification" header-row-style="header-row" default-table-style="basic-table">
         <actions>
@@ -368,7 +368,7 @@ under the License.
         </actions>
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
         <field name="isRunItemDispatchNotify" position="1" title="Enable send item dispatched email"><check></check></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
     </form>
     <form name="EditEmailTemplate" type="single"  target="createEmailTemplate"
         header-row-style="header-row" default-table-style="basic-table">
@@ -453,7 +453,7 @@ under the License.
         <field name="includePayment" title=" " tooltip="${uiLabelMap.EbayIncludePayNowButtonAndAcceptPaymentMethods}" tooltip-style="h3"><check/></field>
         <field name="crossPromotions" title=" " widget-area-style="h2"><display description="${uiLabelMap.EbayCrossPromotions}"/></field>
         <field name="includeCrossPromotions" title=" " tooltip="${uiLabelMap.EbayIncludeMyDefaultCrossPromotionInThisEmail}" tooltip-style="h3"><check/></field-->
-        <field name="submitButton"><submit/></field>
+        <field name="submitAction"><submit/></field>
     </form>
     <form name="blockItemsOutOfStock" type="single" target="runBlockItemOutOfStock" header-row-style="header-row" default-table-style="basic-table">
         <actions>
@@ -465,7 +465,7 @@ under the License.
         </actions>
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
         <field name="isRunBlockItem" position="1" title="Enable to automatic block item that out of stock"><check></check></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
     </form>
     <!-- Active Listing -->
     <form name="ActiveItemList" type="list"  target="doAction" list-name="activeItemList"
@@ -512,13 +512,13 @@ under the License.
                 <option key="STORES_FIXED_PRICE" description="Stores Inventory Only"/>
             </drop-down>
         </field>
-        <field name="submitButton"><submit/></field>
+        <field name="submitAction"><submit/></field>
     </form>
     <form name="WaitingToShippingOption" type="single" target="${target}">
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
         <field name="itemId"><text/></field>
         <field name="buyerId"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSearch}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSearch}"><submit/></field>
     </form>
     <form name="findOrdersImported" type="single" target="searchOrdersImported">
         <actions>
@@ -558,7 +558,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
     <form name="bestOffer" type="single" target="ebayAutoPrefCond">
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
@@ -646,7 +646,7 @@ under the License.
         <field name="userEmail" title="Email"><hidden value="${inMap.email}"/></field>
         <field name="offerStatus" title="Offer Status"><display description="${inMap.offerStatus}"/></field>
         <field name="contactStatus" title="Contact Status"><display description="${contactStatus}"/></field>
-        <field name="viewCustomerDataButton" widget-style="${styles.button_default}" title="View Customer Offer Data">
+        <field name="viewCustomerDataAction" widget-style="${styles.button_default}" title="View Customer Offer Data">
             <hyperlink target="customerOfferData" description="View Data" also-hidden="false">
                 <parameter param-name="productStoreId" from-field="productStoreId"/>
                 <parameter param-name="itemId" from-field="itemId"/>
@@ -660,7 +660,7 @@ under the License.
                 <parameter param-name="contactStatus" from-field="contactStatus"/>
             </hyperlink>
         </field>
-        <field name="deleteOfferButton" title="Delete Offer Alert Data" widget-style="${styles.button_default}">
+        <field name="deleteOfferAction" title="Delete Offer Alert Data" widget-style="${styles.button_default}">
             <hyperlink target="deleteContactAlert" description="Delete Data" also-hidden="false">
                 <parameter param-name="itemId" from-field="itemId"/>
                 <parameter param-name="userId" from-field="userId"/>
@@ -790,7 +790,7 @@ under the License.
         <field name="shippedTime" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}"><hidden value="${shippedTime}"></hidden></field>
         <field name="emailBuyer" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}"><hidden value="${emailBuyer}"></hidden></field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
     </form>
     <form name="FindEbayStoreOrders" type="single" target="OrderListing"
         header-row-style="header-row" default-table-style="basic-table">
@@ -799,6 +799,6 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"><date-time type="date"/></field>
         <field name="selectedDate"><hidden value="true"></hidden></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
 </forms>

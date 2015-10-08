@@ -37,7 +37,7 @@ under the License.
             default-title-style="tableheadtext">
         <field name="facilityId"><hidden/></field>
         <field name="OrderId" title="${uiLabelMap.OrderPONumber}"><text size="10"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonNext}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonNext}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- this form posts to "productqtyreceipt" (see controller.xml) -->
@@ -45,7 +45,7 @@ under the License.
             default-title-style="tableheadtext">
         <field name="facilityId"><hidden/></field>
         <field name="productId"><text size="10" default-value=""/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonNext}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonNext}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- this form posts to "receiveproductqty" (see controller.xml) -->
@@ -57,7 +57,7 @@ under the License.
         <field name="productName" title=" " entry-name="product.productName" ><display/></field>
         <field name="productLocation" title="${uiLabelMap.FormFieldTitle_locationSeqId}" event="onkeypress" action="return enter(event,document.forms[0].productQty)"><text size="10"/></field>
         <field name="productQty" required-field="true" title="${uiLabelMap.CommonQty}" ><text default-value="1" size="5"/></field>
-        <field name="submitButton" title="${uiLabelMap.ProductReceiveProduct}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ProductReceiveProduct}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- this form posts to "findstocktake" (see controller.xml) -->
@@ -65,7 +65,7 @@ under the License.
             default-title-style="tableheadtext">
         <field name="facilityId"><hidden/></field>
         <field name="idValue"><text size="10" default-value=""/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonNext}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonNext}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ProductStocktake" type="single" target="updateproductstocktake"
@@ -75,7 +75,7 @@ under the License.
         <field name="productName" entry-name="product.productName"><display/></field>
         <field name="atp_qoh" title="${uiLabelMap.ProductAtpQoh}" entry-name="quantitySummary.atp_qoh"><display/></field>
         <field name="locationSeqId" entry-name="locationSeqId"><display/></field>
-        <!--<field name="submitButton" title="Submit" widget-style="standardSubmit"><submit button-type="button"/></field>-->
+        <!--<field name="submitAction" title="Submit" widget-style="standardSubmit"><submit button-type="button"/></field>-->
     </form>
     <form name="UpdateProductStocktake" type="list"
             target="updateproductstocktake" title="" list-name="productQtyByLocations"
@@ -87,8 +87,8 @@ under the License.
         <field name="locationSeqId"><hidden/></field>
         <field name="locationSeqIdNew" title="${uiLabelMap.FormFieldTitle_locationSeqId}" entry-name="locationSeqId"><text size="10" default-value=""/></field>
         <field name="quantity" required-field="true" entry-name="totalQuantityOnHand"><text size="6" default-value=""/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeProductFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/>
                 <parameter param-name="productCategoryId"/>

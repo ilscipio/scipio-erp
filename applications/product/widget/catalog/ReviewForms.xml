@@ -32,7 +32,7 @@ under the License.
             </drop-down>
         </field>
         <field name="productReview" title="${uiLabelMap.ProductReviews}"><text-find/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -56,7 +56,7 @@ under the License.
             <set field="reviewBy" value="${userLoginAndPartyDetails[0].firstName} ${userLoginAndPartyDetails[0].middleName} ${userLoginAndPartyDetails[0].lastName}"/>
         </row-actions>
         <field name="productReviewId"><hidden/></field>
-        <field name="productId" widget-style="${styles.button_default}">
+        <field name="productId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -67,14 +67,14 @@ under the License.
         <field name="productRating" use-when="${statusId == 'PRR_DELETED'}"><text disabled="true"/></field>
         <field name="productReview" use-when="${statusId != 'PRR_DELETED'}"><textarea/></field>
         <field name="productReview" use-when="${statusId == 'PRR_DELETED'}"><textarea read-only="true"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="${statusId != 'PRR_DELETED'}"><submit button-type="button"/></field>
-        <field name="approve" widget-style="${styles.button_default}" use-when="${statusId == 'PRR_PENDING'}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="${statusId != 'PRR_DELETED'}"><submit button-type="button"/></field>
+        <field name="approveAction" widget-style="${styles.button_default}" use-when="${statusId == 'PRR_PENDING'}">
             <hyperlink target="updateProductReviewStatus" description="${uiLabelMap.FormFieldTitle_approve}" also-hidden="false">
                 <parameter param-name="statusId" value="PRR_APPROVED"/>
                 <parameter param-name="productReviewId" from-field="productReviewId"/>
             </hyperlink>
         </field>
-        <field name="rejectButton" widget-style="${styles.button_default}" use-when="${statusId != 'PRR_DELETED'}">
+        <field name="rejectAction" widget-style="${styles.button_default}" use-when="${statusId != 'PRR_DELETED'}">
             <hyperlink target="updateProductReviewStatus" description="${uiLabelMap.FormFieldTitle_rejectButton}" also-hidden="false" confirmation-message="Do you want to reject this review?">
                 <parameter param-name="statusId" value="PRR_DELETED"/>
                 <parameter param-name="productReviewId" from-field="productReviewId"/>

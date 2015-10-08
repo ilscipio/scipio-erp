@@ -26,7 +26,7 @@ under the License.
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="contentId"><lookup target-form-name="LookupContent"/></field>
         <field name="resumeId"><lookup target-form-name="LookupPartyResume"/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPartyResumes" type="list" separate-columns="true" default-entity-name="PartyResume" list-name="listIt" paginate-target="FindPartyResumes" paginate="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -40,7 +40,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PartyResume" default-field-type="display"/>
-        <field name="resumeId" widget-style="linktext ${styles.button_default}">
+        <field name="resumeId" widget-style="linktext ${styles.link_default}">
             <hyperlink also-hidden="false" description="${resumeId}" target="EditPartyResume">
                 <parameter param-name="resumeId"/>
             </hyperlink>
@@ -52,7 +52,7 @@ under the License.
             </sub-hyperlink>
            </display-entity>
        </field>
-       <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+       <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
            <hyperlink target="deletePartyResume" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="resumeId"/>
             </hyperlink>
@@ -68,7 +68,7 @@ under the License.
         <field name="partyId" use-when="partyResume==null&amp;&amp;partyId==null" title="${uiLabelMap.FormFieldTitle_partyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="resumeDate"><date-time/></field>
         <field name="resumeText"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitButton" use-when="resumeId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="resumeId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

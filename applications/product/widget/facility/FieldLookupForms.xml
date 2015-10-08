@@ -35,7 +35,7 @@ under the License.
         </field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupFacility" list-name="listIt" title="" type="list"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="LookupFacility">
@@ -47,7 +47,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="facilityId" title=" " widget-style="${styles.button_default}">
+        <field name="facilityId" title=" " widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${facilityId}" target="javascript:set_values('${facilityId}', '${facilityName}')"/>
         </field>
         <field name="facilityName"><display/></field>
@@ -72,7 +72,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupFacilityLocation" list-name="listIt" title="" type="list"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
@@ -86,7 +86,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="FacilityLocation" default-field-type="display"/>
-        <field name="locationSeqId" title=" " widget-style="${styles.button_default}">
+        <field name="locationSeqId" title=" " widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${locationSeqId}" target="javascript:set_value('${locationSeqId}')"/>
         </field>
         <field name="facilityId"><hidden/></field>
@@ -115,7 +115,7 @@ under the License.
         <field position="1" name="Datefrom" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
         <field position="2" name="DateThru" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listShipment" list-name="listIt" title="" type="list" paginate-target="LookupShipment"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -127,7 +127,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="shipmentId" widget-style="${styles.button_default}">
+        <field name="shipmentId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${shipmentId}" target="javascript:set_value('${shipmentId}')"/>
         </field>
         <field name="shipmentTypeId"><display-entity entity-name="ShipmentType"/></field>
@@ -138,7 +138,7 @@ under the License.
     <form name="ListProductInventoryLocation" list-name="LocationList" title="" type="list" paginate-target="ListProductInventoryLocation"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" view-size="20">
         <field name="inventoryItemId"><display/></field>
-        <field name="locationSeqId" title=" " widget-style="${styles.button_default}" >
+        <field name="locationSeqId" title=" " widget-style="${styles.link_default}" >
             <hyperlink also-hidden="false" target-type="plain" description="${locationSeqId}" target="javascript:set_value('${locationSeqId}')"/>
         </field> 
         <field name="locationTypeEnumId">

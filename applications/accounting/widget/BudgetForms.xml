@@ -50,7 +50,7 @@ under the License.
     <form name="FindBudgetOptions" extends="lookupBudget" extends-resource="component://accounting/widget/FieldLookupForms.xml"
         target="ListBudgets">
         <field name="searchOptions_collapsed"><hidden value="true"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- create and update a fixed asset -->
@@ -67,8 +67,8 @@ under the License.
         </field>
         <field name="customTimePeriodId"><lookup target-form-name="LookupCustomTimePeriod"/></field>
         <field name="comments" ><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="budget == null"><submit /></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="budget != null"><submit /></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="budget == null"><submit /></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="budget != null"><submit /></field>
     </form>
 
     <form name="BudgetHeader" type="single" title="Budget header information" default-map-name="budget"
@@ -150,8 +150,8 @@ under the License.
        <field name="amount" ><text size="10"/></field>
        <field name="purpose" ><text size="50"/></field>
        <field name="justification" ><text size="50"/></field>
-       <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}" ><submit button-type="text-link"/></field>
-       <field name="removeButton" title=" " widget-style="${styles.button_default}">
+       <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}" ><submit button-type="text-link"/></field>
+       <field name="removeAction" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeBudgetItem">
                 <parameter param-name="budgetId"/>
                 <parameter param-name="budgetItemSeqId"/>
@@ -172,10 +172,10 @@ under the License.
        <field name="amount" ><text size="10"/></field>
        <field name="purpose" ><text size="50"/></field>
        <field name="justification" ><text size="50"/></field>
-        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem==null">
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem==null">
             <submit button-type="button"/>
         </field>
-        <field name="updateButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem!=null">
+        <field name="updateAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem!=null">
             <submit button-type="button"/>
         </field>
     </form>
@@ -192,7 +192,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ListBudgetRoles" type="list" use-row-submit="true" title="" list-name="budgetRoles" paginate-target="BudgetRoles"
@@ -209,7 +209,7 @@ under the License.
         <field name="roleTypeId">
             <display-entity also-hidden="false" entity-name="RoleType"/>
         </field>
-        <field name="removeButton" widget-style="${styles.button_default}">
+        <field name="removeAction" widget-style="${styles.button_default}">
            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeBudgetRole">
                 <parameter param-name="budgetId"/>
                 <parameter param-name="partyId"/>
@@ -232,7 +232,7 @@ under the License.
             </drop-down>
         </field>
         <field name="reviewDate"><date-time /></field>
-        <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ListBudgetReviews" type="list" use-row-submit="true" title="" list-name="budgetReviews" paginate-target="BudgetReviews"
@@ -251,7 +251,7 @@ under the License.
             <display-entity also-hidden="false" entity-name="BudgetReviewResultType"/>
         </field>
         <field name="reviewDate"><display/></field>
-        <field name="removeButton" widget-style="${styles.button_default}">
+        <field name="removeAction" widget-style="${styles.button_default}">
            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeBudgetReview">
                 <parameter param-name="budgetId"/>
                 <parameter param-name="budgetReviewId"/>

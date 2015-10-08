@@ -23,7 +23,7 @@ under the License.
     <form name="ListCostComponentCalc" type="list" title="" list-name="allCostComponentCalcs"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="CostComponentCalc" default-field-type="display"/>
-        <field name="costComponentCalcId" widget-style="${styles.button_default}">
+        <field name="costComponentCalcId" widget-style="${styles.link_default}">
             <hyperlink target="EditCostCalcs" description="${costComponentCalcId}" also-hidden="false">
                 <parameter param-name="costComponentCalcId"/>
             </hyperlink>
@@ -36,7 +36,7 @@ under the License.
         <field name="costCustomMethodId">
             <display-entity entity-name="CustomMethod" key-field-name="customMethodId"/>
         </field>
-        <field name="removeCostComponentCalc" title=" " widget-style="${styles.button_default}">
+        <field name="removeCostComponentCalcAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeCostComponentCalc" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="costComponentCalcId"/>
             </hyperlink>
@@ -64,7 +64,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

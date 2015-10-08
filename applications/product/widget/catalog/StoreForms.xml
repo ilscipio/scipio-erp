@@ -53,7 +53,7 @@ under the License.
         <field name="fromDate" position="1"><date-time/></field>
         <field name="thruDate" position="2"><date-time/></field>
         <field name="sequenceNum"><text/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListProductStoreRole" type="list" list-name="listIt" paginate-target="FindProductStoreRoles" default-entity-name="ProductStoreRole" separate-columns="true"
@@ -78,7 +78,7 @@ under the License.
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
         <field name="sequenceNum"><display/></field>
-        <field name="editLink" widget-style="${styles.button_default}" title="${uiLabelMap.CommonEdit}">
+        <field name="editAction" widget-style="${styles.button_default}" title="${uiLabelMap.CommonEdit}">
            <hyperlink target="FindProductStoreRoles" description="${uiLabelMap.CommonEdit}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="productStoreId"/>
@@ -86,7 +86,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" widget-style="${styles.button_default}" title="${uiLabelMap.CommonDelete}">
+        <field name="deleteAction" widget-style="${styles.button_default}" title="${uiLabelMap.CommonDelete}">
             <hyperlink target="storeRemoveRole" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="productStoreId"/>
@@ -112,10 +112,10 @@ under the License.
         <field name="fromDate" use-when="productStoreRole!=null" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" position="2"><date-time/></field>
         <field name="sequenceNum"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" use-when="productStoreRole==null" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" use-when="productStoreRole==null" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" use-when="productStoreRole!=null" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="productStoreRole!=null" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -131,7 +131,7 @@ under the License.
             </entity-and>
         </actions>
         
-        <field name="submitButton" title=" " >
+        <field name="submitAction" title=" " >
             <hyperlink target="javascript:ajaxUpdateArea('ProductStoreFacilityEditArea', 'editProductStoreFacility', 'productStoreId=${productStoreId}&amp;facilityId=${facilityId}&amp;fromDate=${fromDate}');" 
                 target-type="plain" image-location="/images/mini-edit.png" image-title="${uiLabelMap.CommonEdit}"/>
         </field>
@@ -146,7 +146,7 @@ under the License.
         <field name="sequenceNum" ><display /></field>
         <field name="fromDate" ><display type="date-time" /></field>
         <field name="thruDate" ><display type="date-time" /></field>
-        <field name="deleteLink" title=" " >
+        <field name="deleteAction" title=" " >
             <hyperlink target="javascript:ajaxUpdateArea('PP_ProductStoreFacilityPrdStoreFacilityMgmt00001', 'deleteProductStoreFacility', 'productStoreId=${productStoreId}&amp;facilityId=${facilityId}&amp;fromDate=${fromDate}');"
                target-type="plain" request-confirmation="true" image-location="/images/mini-trash.png" image-title="${uiLabelMap.CommonRemove}">
             </hyperlink>
@@ -168,7 +168,7 @@ under the License.
         <field name="fromDate" use-when="productStoreFacility != null"><display type="date-time"/></field>
         <field name="fromDate" use-when="productStoreFacility == null"><date-time type="date" input-method="time-dropdown"/></field>
         <field name="thruDate" position="2"><date-time type="date" input-method="time-dropdown"/></field>
-        <field name="submitButton" title="${groovy: productStoreFacility == null ? uiLabelMap.CommonAdd : uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${groovy: productStoreFacility == null ? uiLabelMap.CommonAdd : uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <on-event-update-area event-type="submit" area-id="PP_ProductStoreFacilityPrdStoreFacilityMgmt00001" area-target="ListProductStoreFacilityFormOnly?portalPortletId=PrdStoreFacilityMgmt&amp;productStoreId=${parameters.productStoreId}"/>
@@ -191,7 +191,7 @@ under the License.
         </field>
         <field name="productStoreGroupTypeId"><display-entity entity-name="ProductStoreGroupType"/></field>
         <field name="description"><display/></field>
-        <field name="selectButton" title="${uiLabelMap.CommonSelect}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="selectAction" title="${uiLabelMap.CommonSelect}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditProductStoreGroup" target="updateProductStoreGroup" type="single" default-map-name="productStoreGroup">
         <alt-target use-when="productStoreGroup == null" target="createProductStoreGroup"/>
@@ -210,7 +210,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.Common${groovy: context.productStoreGroup?'Submit':'Create'}" widget-style="smallSubmit"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.Common${groovy: context.productStoreGroup?'Submit':'Create'}" widget-style="smallSubmit"><submit/></field>
     </form>
     <form name="ListProductStoreGroupAssoc" type="list"
            odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -228,7 +228,7 @@ under the License.
         </field>
         <field name="fromDate"><display type="date"/></field>
         <field name="thruDate"><display type="date"/></field>
-        <field name="submitButton" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="updateProductStoreGroupRollup" request-confirmation="true" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productStoreGroupId"/>
                 <parameter param-name="parentGroupId"/>
@@ -244,7 +244,7 @@ under the License.
                 <field-map field-name="productStoreGroupId" from-field="productStoreGroup.productStoreGroupId"/>
             </entity-and>
         </actions>
-        <field name="productStoreId" widget-style="${styles.button_default}">
+        <field name="productStoreId" widget-style="${styles.link_default}">
             <hyperlink target="EditProductStore" description="${productStoreId}">
                 <parameter param-name="productStoreId"/>
             </hyperlink>
@@ -263,7 +263,7 @@ under the License.
             </drop-down>
         </field>
         <field name="fromDate"><date-time type="date" default-value="${nowTimestamp}"/></field>
-        <field name="addButton" widget-style="smallSubmit"><submit/></field>
+        <field name="addAction" widget-style="smallSubmit"><submit/></field>
         <on-event-update-area area-target="EditProductStoreGroupAndAssoc" event-type="submit" area-id="centerdiv">
             <parameter param-name="productStoreGroupId" from-field="productStoreGroup.productStoreGroupId"/>
         </on-event-update-area>

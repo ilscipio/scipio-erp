@@ -28,7 +28,7 @@ under the License.
         <field name="fromDate"><date-time/></field>
         <field name="thruDate" position="2"><date-time/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListBillingAccounts" type="list" list-name="listIt" paginate-target="FindBillingAccount" default-entity-name="BillingAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -169,8 +169,8 @@ under the License.
         <field name="availableBalance" title="${uiLabelMap.AccountingBillingAvailableBalance}" tooltip="${uiLabelMap.AccountingBillingAvailableBalanceMessage}">
             <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="billingAccount == null" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="billingAccount!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="billingAccount == null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="billingAccount!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListBillingAccountRoles" type="list"  list-name="billingAccountRoleList" target="updateBillingAccountRole"
@@ -187,7 +187,7 @@ under the License.
         <field name="billingAccountId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.button_default}">
+                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_default}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -197,8 +197,8 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteBillingAccountRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="billingAccountId"/>
                 <parameter param-name="roleTypeId"/>
@@ -219,7 +219,7 @@ under the License.
             </drop-down>
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListBillingAccountTerms" type="list" list-name="billingAccountTermsList" default-entity-name="BillingAccountTerm" paginate-target="EditBillingAccountTerms"
@@ -243,7 +243,7 @@ under the License.
                 <parameter param-name="billingAccountTermId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="removeBillingAccountTerm">
                 <parameter param-name="billingAccountId"/>
                 <parameter param-name="billingAccountTermId"/>
@@ -271,7 +271,7 @@ under the License.
             </drop-down>
         </field>
         <field name="termValue" title="${uiLabelMap.PartyTermValue}"><text size="10"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListBillingAccountPayments" type="list" list-name="payments" paginate-target="BillingAccountPayments"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -330,14 +330,14 @@ under the License.
             </drop-down>
         </field>
         <field name="amount"><text/></field>
-        <field name="createButton">
+        <field name="createAction">
             <submit button-type="button"/>
         </field>
     </form>
     <form name="ListBillingAccountOrders" type="list" list-name="orderPaymentPreferencesList" paginate-target="BillingAccountOrders"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="billingAccountId"><hidden/></field>
-        <field name="orderId" widget-style="${styles.button_default}">
+        <field name="orderId" widget-style="${styles.link_default}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}" also-hidden="false">
                 <parameter param-name="orderId"/>
             </hyperlink>

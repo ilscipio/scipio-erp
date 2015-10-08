@@ -28,7 +28,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="quoteId" widget-style="${styles.button_default}">
+        <field name="quoteId" widget-style="${styles.link_default}">
             <hyperlink description="${quoteId}" target="/ordermgr/control/EditQuote" target-type="inter-app">
                 <parameter param-name="quoteId"/>
             </hyperlink>
@@ -37,7 +37,7 @@ under the License.
         <field name="description"><display/></field>
         <field name="statusItemDescription"><display/></field>
         <field name="issueDate"><display/></field>
-        <field name="deleteLink" title=" " widget-style="linktext ${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="linktext ${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteWorkEffortQuote">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="quoteId"/>
@@ -48,7 +48,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="workEffortId"><hidden/></field>
         <field name="quoteId"><lookup target-form-name="LookupQuote"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListWorkEffortQuoteItems" separate-columns="true" target="ListWorkEffortQuoteItems" title="" type="list"
@@ -59,12 +59,12 @@ under the License.
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="quoteId" widget-style="${styles.button_default}">
+        <field name="quoteId" widget-style="${styles.link_default}">
             <hyperlink description="${quoteId}" target="/ordermgr/control/EditQuote" target-type="inter-app">
                 <parameter param-name="quoteId"/>
             </hyperlink>
         </field>
-        <field name="quoteItemSeqId" widget-style="${styles.button_default}">
+        <field name="quoteItemSeqId" widget-style="${styles.link_default}">
             <hyperlink description="${quoteItemSeqId}" target="/ordermgr/control/EditQuoteItem" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="quoteId"/>
@@ -76,7 +76,7 @@ under the License.
         <field name="custRequestItemSeqId"><display/></field>
         <field name="estimatedDeliveryDate"><display/></field>
         <field name="comments"><display/></field>
-        <field name="deleteLink" title=" " widget-style="linktext ${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="linktext ${styles.button_default}">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteWorkEffortQuoteItem">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="quoteId"/>
@@ -89,6 +89,6 @@ under the License.
         <field name="workEffortId"><hidden/></field>
         <field name="quoteId"><lookup target-form-name="LookupQuote"/></field>
         <field name="quoteItemSeqId"><lookup target-form-name="LookupQuoteItem" target-parameter="quoteId"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

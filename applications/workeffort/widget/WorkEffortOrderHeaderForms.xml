@@ -29,7 +29,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="orderId" widget-style="${styles.button_default}">
+        <field name="orderId" widget-style="${styles.link_default}">
             <hyperlink description="${orderId}" target="/ordermgr/control/orderview" target-type="inter-app">
                 <parameter param-name="orderId"/>
                 <parameter param-name="workEffortId"/>
@@ -39,7 +39,7 @@ under the License.
         <field name="orderTypeDescription"><display/></field>
         <field name="orderDate"><display/></field>
         <field name="grandTotal"><display/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteWorkEffortOrderHeader" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="orderId"/>
@@ -50,6 +50,6 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="workEffortId"><hidden/></field>
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
-       <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+       <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
 </forms>

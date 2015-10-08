@@ -77,7 +77,7 @@ under the License.
         <field name="productStoreId">
             <lookup target-form-name="/marketing/control/LookupProductStore"/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListOrderHeaders" type="single" target="" title=""
         header-row-style="header-row" default-table-style="basic-table">
@@ -87,7 +87,7 @@ under the License.
             </entity-and>
         </actions>
         <auto-fields-entity entity-name="OrderHeader" default-field-type="display"/>
-        <field name="orderId" widget-style="${styles.button_default}">
+        <field name="orderId" widget-style="${styles.link_default}">
             <hyperlink target="EditOrderHeader" description="[${orderId}]">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -101,8 +101,8 @@ under the License.
         <field name="termTypeId"><display-entity also-hidden="true" entity-name="TermType"/></field>
         <field name="orderId"><hidden/></field>
         <field name="orderItemSeqId"><display/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeOrderTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="orderId"/>
                 <parameter param-name="termTypeId"/>
@@ -121,7 +121,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="addButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="LookupBulkAddSupplierProductsInApprovedOrder" type="multi" use-row-submit="true" list-name="productList" title="" target="bulkAddProductsInApprovedOrder"
             odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="LookupBulkAddSupplierProductsInApprovedOrder" view-size="10">
@@ -130,7 +130,7 @@ under the License.
         </actions>
         <field name="orderId"><hidden/></field>
         <field name="shipGroupSeqId"><hidden/></field>
-        <field name="productId" widget-style="${styles.button_default}">
+        <field name="productId" widget-style="${styles.link_default}">
             <hyperlink description="${productId}" target="/catalog/control/EditProductInventoryItems" target-type="inter-app">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -144,7 +144,7 @@ under the License.
         <field name="itemDesiredDeliveryDate" title="${uiLabelMap.OrderDesiredDeliveryDate}">
             <date-time/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.OrderAddToOrder}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="smallSubmit">
             <submit/>
         </field>
     </form>
@@ -196,7 +196,7 @@ under the License.
                 <option key="BILL_TO_CUSTOMER" description="${uiLabelMap.MyPortalBillToCustomer}"/>
             </drop-down>
         </field>
-        <field name="updateButton"><submit/></field>
+        <field name="updateAction"><submit/></field>
     </form>
     <form name="ListCustomerOrders" type="list" target="" list-name="listIt" title="" odd-row-style="alternate-row" 
         header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -229,7 +229,7 @@ under the License.
         <field name="orderTypeId" title="${uiLabelMap.FormFieldTitle_orderTypeId}">
             <display-entity entity-name="OrderType" description="${description}"/>
         </field>
-        <field name="orderId" title="${uiLabelMap.OrderOrderId}" widget-style="${styles.button_default}">
+        <field name="orderId" title="${uiLabelMap.OrderOrderId}" widget-style="${styles.link_default}">
             <hyperlink target="orderview" description="${orderId}">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -256,7 +256,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
 </forms>

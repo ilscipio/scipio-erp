@@ -34,7 +34,7 @@ under the License.
             </drop-down>
         </field> -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
 
     <form name="BasicExpressionList" type="list"
@@ -69,7 +69,7 @@ under the License.
 
     <form name="ListChildExpressions" extends="BasicExpressionList" list-name="childExpressionList" paginate-target="editTemporalExpression?tempExprId=${tempExprId}">
         <field name="exprAssocType"><display/></field>
-        <field name="deleteButton" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteTemporalExpressionAssoc">
                 <parameter param-name="tempExprId" from-field="parameters.tempExprId"/>
                 <parameter param-name="fromTempExprId"/>

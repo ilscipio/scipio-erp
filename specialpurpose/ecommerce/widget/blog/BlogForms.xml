@@ -45,7 +45,7 @@
         <field name="contentName">
             <text-find/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="createBlog" title=" " widget-style="${styles.button_default}">
@@ -104,7 +104,7 @@
                 <option key="CTNT_INITIAL_DRAFT" description="${uiLabelMap.ContentBlogPreview}"/>
             </radio>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="blogContentId" entry-name="blogContentId" map-name="rsp">
@@ -142,7 +142,7 @@
             <sort-field name="description"/>
             <sort-field name="textData"/>
             <sort-field name="statusId"/>
-            <sort-field name="submitButton"/>
+            <sort-field name="submitAction"/>
         </sort-order>
     </form>
 
@@ -171,7 +171,7 @@
                 <option key="CTNT_INITIAL_DRAFT" description="${uiLabelMap.ContentBlogPreview}"/>
             </radio>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="blogContentId" entry-name="blogContentId" map-name="rsp">
@@ -192,13 +192,13 @@
             <sort-field name="description"/>
             <sort-field name="textData"/>
             <sort-field name="statusId"/>
-            <sort-field name="submitButton"/>
+            <sort-field name="submitAction"/>
         </sort-order>
     </form>
 
     <form name="editFormSubmit" target="" title="" type="single" skip-start="true" skip-end="true"
         default-title-style="treeHeader" default-widget-style="inputBox">
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

@@ -35,7 +35,7 @@ under the License.
         <field name="rating"><text-find/></field>
         <field name="skillLevel"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPartySkills" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePartySkillExt" paginate-target="findPartySkills"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -55,13 +55,13 @@ under the License.
         <field name="yearsExperience"><text/></field>
         <field name="rating"><text/></field>
         <field name="skillLevel"><text/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deletePartySkill" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="skillTypeId"/>
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <form name="AddPartySkills" type="single" target="createPartySkill" default-map-name="partySkill"
         header-row-style="header-row" default-table-style="basic-table">
@@ -81,6 +81,6 @@ under the License.
         <field name="yearsExperience"><text/></field>
         <field name="rating"><text/></field>
         <field name="skillLevel"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

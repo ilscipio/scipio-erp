@@ -61,7 +61,7 @@
             <set field="inProcess" value="Set To In-progress"/>
         </actions>
         <row-actions>
-            <set field="completeLink" value="${bsh:&quot;TIMESHEET_IN_PROCESS&quot;.equals(statusId)?complete:&quot;&quot;}"/>
+            <set field="completeAction" value="${bsh:&quot;TIMESHEET_IN_PROCESS&quot;.equals(statusId)?complete:&quot;&quot;}"/>
         </row-actions>
         <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${timesheetId}" target="ViewTimeSheet">
@@ -74,13 +74,13 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date"/></field>
         <!--field name="comments" title="${uiLabelMap.CommonComments}"><display/></field-->
-        <field name="completeLink" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
+        <field name="completeAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
             <hyperlink target="TimeSheetStatusToComplete" description="${groovy:statusId.equals(&quot;TIMESHEET_IN_PROCESS&quot;)?complete:&quot;&quot;}">
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="statusId" value="TIMESHEET_COMPLETED"/>
             </hyperlink>
         </field>
-        <field name="inProcessLink" title="${uiLabelMap.StatusToInProcess}" widget-style="${styles.button_default}">
+        <field name="inProcessAction" title="${uiLabelMap.StatusToInProcess}" widget-style="${styles.button_default}">
             <hyperlink target="updateTimesheetToInProcess" description="${groovy:statusId.equals(&quot;TIMESHEET_COMPLETED&quot;)?inProcess:&quot;&quot;}" >
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="statusId" value="TIMESHEET_IN_PROCESS"/>
@@ -103,7 +103,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date"/></field>
         <field name="hours"><display/></field>
         <field name="comments" title="${uiLabelMap.CommonComments}"><display/></field>
-        <field name="completeLink" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
+        <field name="completeAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
             <hyperlink target="TimeSheetStatusToComplete" description="${groovy:statusId.equals(&quot;TIMESHEET_IN_PROCESS&quot;)?complete:&quot;&quot;}" also-hidden="false">
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="statusId" value="TIMESHEET_COMPLETED"/>
@@ -173,7 +173,7 @@
         <field name="d6" parameter-name="hoursDay6" title="${uiLabelMap.ScrumSun}" title-style="alert"><text size="2"/></field>
         <field name="acualTotal" title="${uiLabelMap.ScrumActualHours}"><display/></field>
         <field name="actualHours" title="${uiLabelMap.ScrumActualTotal}"><display/></field>
-        <field name="updateButton"><submit button-type="button"/></field>
+        <field name="updateAction"><submit button-type="button"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.ScrumRowSubmit}"><hidden value="Y"/></field>
     </form>
 
@@ -189,13 +189,13 @@
             </drop-down>
         </field>
         <field entry-name="dummy" name="requiredDate" title="${uiLabelMap.ScrumSelectedDate}"><date-time type="date"/></field>
-        <field name="addButton"><submit/></field>
+        <field name="addAction"><submit/></field>
     </form>
     
     <form name="AddMyWeeklyTimesheet" type="single" target="createMyWeeklyTimesheet" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="partyId"><hidden value="${userLogin.partyId}"/></field>
         <field entry-name="dummy" name="requiredDate" title="${uiLabelMap.ScrumSelectedDate}"><date-time type="date"/></field>
-        <field name="addButton"><submit/></field>
+        <field name="addAction"><submit/></field>
     </form>
 </forms>

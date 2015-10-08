@@ -31,7 +31,7 @@ under the License.
         </field>
         <field name="currentPassword"><password/></field>
         <field name="currentPasswordVerify"><password/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
     </form>
     <!-- feedback -->
     <form name="ItemsAwaitingFeedback" type="list" list-name="itemsAwaitingFeedbackList"

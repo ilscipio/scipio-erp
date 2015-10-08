@@ -29,7 +29,7 @@ under the License.
         <field name="parentPortalPageId" position="2"><text-find/></field>
         <field name="description"><text-find/></field>
         <field name="securityGroupId" position="2" title="${uiLabelMap.CommonSecurityGroupId}"><text-find/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListPortalPages" type="list" list-name="listIt" paginate-target="FindPortalPage" separate-columns="true"
@@ -71,7 +71,7 @@ under the License.
         <field name="originalPortalPageId" sort-field="true"><display/></field>
         <field name="ownerUserLoginId" sort-field="true"><display/></field>
         <field name="securityGroupId" title="${uiLabelMap.CommonSecurityGroupId}" sort-field="true"><display/></field>
-        <field name="deleteLink" use-when="originalPortalPageId!=null" title=" " widget-style="${styles.button_default}" >
+        <field name="deleteAction" use-when="originalPortalPageId!=null" title=" " widget-style="${styles.button_default}" >
             <hyperlink target="deletePortalPage" description="${uiLabelMap.CommonRevertPortalPage}">
                 <parameter param-name="portalPageId"/>
                 <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>
@@ -96,7 +96,7 @@ under the License.
                 <entity-options description="${groupId} -- ${description}" entity-name="SecurityGroup" key-field-name="groupId"></entity-options>
             </drop-down>
         </field>
-        <field name="saveButton" position="2"><submit button-type="button"/></field>
+        <field name="saveAction" position="2"><submit button-type="button"/></field>
     </form>
 
 </forms>

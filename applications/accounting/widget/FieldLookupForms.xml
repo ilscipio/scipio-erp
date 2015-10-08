@@ -34,7 +34,7 @@ under the License.
              </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupFixedAsset" list-name="listIt" title="" type="list" paginate-target="LookupFixedAsset"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -46,7 +46,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="fixedAssetId" widget-style="${styles.button_default}">
+        <field name="fixedAssetId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.CommonName}"><display/></field>
@@ -66,7 +66,7 @@ under the License.
         <field name="customTimePeriodId"><text-find/></field>
         <field name="comments"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupBudget" list-name="listIt" title="" type="list" paginate-target="LookupBudget"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -78,7 +78,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="fixedAssetId" widget-style="${styles.button_default}">
+        <field name="fixedAssetId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.CommonName}"><display/></field>
@@ -92,7 +92,7 @@ under the License.
         <field name="externalAccountId" title="${uiLabelMap.AccountingExternalAccountId}"><text-find/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listBillingAccount" list-name="listIt" title="" type="list" paginate-target="LookupBillingAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -105,7 +105,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="billingAccountId" title="${uiLabelMap.AccountingBillingAccountId}" widget-style="${styles.button_default}">
+        <field name="billingAccountId" title="${uiLabelMap.AccountingBillingAccountId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${billingAccountId}" target="javascript:set_value('${billingAccountId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -132,7 +132,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupGlAccount" list-name="listIt" title="" type="list" paginate-target="LookupGlAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -144,7 +144,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}" widget-style="${styles.button_default}">
+        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${glAccountId}" target="javascript:set_value('${glAccountId}')"/>
         </field>
         <field name="accountName" title="${uiLabelMap.CommonName}"><display/></field>
@@ -160,7 +160,7 @@ under the License.
         <field name="amountApplied"><text-find default-value=""></text-find> </field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listPayment" list-name="listIt" title="" type="list" paginate-target="LookupPayment"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -172,7 +172,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="paymentId" widget-style="${styles.button_default}">
+        <field name="paymentId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${paymentId}" target="javascript:set_value('${paymentId}')"/>
         </field>
         <field name="partyIdFrom"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
@@ -204,7 +204,7 @@ under the License.
         <field position="2" name="DateThru" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listInvoice" list-name="listIt" title="" type="list" paginate-target="LookupInvoice"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -216,7 +216,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="invoiceId" widget-style="${styles.button_default}">
+        <field name="invoiceId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${invoiceId}" target="javascript:set_value('${invoiceId}')"/>
         </field>
         <field name="invoiceTypeId"><display-entity entity-name="InvoiceType"/></field>
@@ -236,7 +236,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.AccountingPartyIdTo}"><text-find/></field>
         <field name="agreementDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listAgreements" list-name="listIt" title="" type="list" target="LookupAgreement"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -246,7 +246,7 @@ under the License.
                 <field-map field-name="entityName" value="Agreement"/>
             </service>
         </actions>
-        <field name="agreementId" widget-style="${styles.button_default}">
+        <field name="agreementId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${agreementId}" target="javascript:set_value('${agreementId}')"/>
         </field>
         <field name="productId"><display/></field>
@@ -267,7 +267,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listAgreementItems" list-name="listIt" title="" type="list" target="LookupAgreementItem"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -280,7 +280,7 @@ under the License.
             </service>
         </actions>
         <field name="agreementId"><display/></field>
-        <field name="agreementItemSeqId" widget-style="${styles.button_default}">
+        <field name="agreementItemSeqId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${agreementItemSeqId}" target="javascript:set_value('${agreementItemSeqId}')"/>
         </field>
         <field name="agreementItemTypeId"><display/></field>
@@ -294,7 +294,7 @@ under the License.
         <field name="thruDate" position="2"><date-time/></field>
         <field name="sequenceNum"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listPaymentGroupMember" list-name="listIt" title="" type="list" target="LookupPaymentGroupMember"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -306,7 +306,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="paymentGroupId" widget-style="${styles.button_default}">
+        <field name="paymentGroupId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${paymentGroupId}" target="javascript:set_value('${paymentGroupId}')"/>
         </field>
         <field name="paymentId"><display/></field>
@@ -320,7 +320,7 @@ under the License.
         <field name="organizationPartyId" title="${uiLabelMap.FormFieldTitle_organizationPartyId}"><lookup  target-form-name="LookupPartyName"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ListLookupReconciliation" list-name="listIt" type="list" target="LookupGlReconciliation"
@@ -333,7 +333,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="glReconciliationId" widget-style="${styles.button_default}">
+        <field name="glReconciliationId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${glReconciliationId}" target="javascript:set_value('${glReconciliationId}')"/>
         </field>
         <field name="glReconciliationName"><display/></field>
@@ -364,7 +364,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupCustomTimePeriod" list-name="listIt" title="" type="list" paginate-target="LookupCustomTimePeriod"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -376,7 +376,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="customTimePeriodId" widget-style="${styles.button_default}">
+        <field name="customTimePeriodId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${customTimePeriodId}" target="javascript:set_value('${customTimePeriodId}')"/>
         </field>
         <field name="parentPeriodId"><display/></field>

@@ -42,7 +42,7 @@ under the License.
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <!-- NOTE DEJ20070829 not sure why this is here, but it doesn't seem applicable for a general product lookup, also doesn't handle case where isVariant is null <field name="isVariant"><hidden value="N"/></field> -->
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProduct" list-name="listIt" title="" type="list" paginate-target="LookupProduct"
         odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
@@ -58,13 +58,13 @@ under the License.
         <row-actions>            
             <set field="hasVariants" value="${groovy: org.ofbiz.entity.util.EntityUtil.filterByDate(delegator.findByAnd('ProductAssoc', org.ofbiz.base.util.UtilMisc.toMap('productId', productId, 'productAssocTypeId', 'PRODUCT_VARIANT'), null, true)).size() > 0}" type="Boolean"/>
         </row-actions>
-        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.button_default}">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display-entity entity-name="ProductType"/></field>
-        <field name="searchVariants" title=" " widget-style="${styles.button_default}" use-when="hasVariants">
+        <field name="searchAction" title=" " widget-style="${styles.button_default}" use-when="hasVariants">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -83,7 +83,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupSupplierProduct" list-name="listIt" title="" type="list" paginate-target="LookupSupplierProduct"
         odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
@@ -96,7 +96,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.button_default}">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
@@ -120,7 +120,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.button_default}">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
@@ -172,7 +172,7 @@ under the License.
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="filterByDate"><hidden value="Y"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductAndPrice" list-name="listIt" title="" type="list"
         paginate-target="LookupProductAndPrice" odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
@@ -189,12 +189,12 @@ under the License.
             <set field="hasVariants" value="${groovy: delegator.findByAnd('ProductAssoc', org.ofbiz.base.util.UtilMisc.toMap('productId', productId, 'productAssocTypeId', 'PRODUCT_VARIANT'), null, true).size() > 0}" type="Boolean"/>
         </row-actions>
         <!--
-        <field name="productId" title=" " widget-style="${styles.button_default}" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
+        <field name="productId" title=" " widget-style="${styles.link_default}" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><display/></field>
         -->
-        <field name="productId" widget-style="${styles.button_default}">
+        <field name="productId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
@@ -203,7 +203,7 @@ under the License.
         <field name="price" title="${uiLabelMap.ProductPrice}"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
-        <field name="searchVariants" title=" " widget-style="${styles.button_default}" use-when="hasVariants">
+        <field name="searchAction" title=" " widget-style="${styles.button_default}" use-when="hasVariants">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -227,7 +227,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
         <sort-order>
             <field-group>
@@ -259,7 +259,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="ProductCategory" default-field-type="display"/>
         <field name="productCategoryTypeId"><display-entity entity-name="ProductCategoryType"/></field>
-        <field name="productCategoryId" title=" " widget-style="${styles.button_default}">
+        <field name="productCategoryId" title=" " widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${productCategoryId}" target="javascript:set_value('${productCategoryId}')"/>
         </field>
         <field name="longDescription"><ignored/></field>
@@ -288,7 +288,7 @@ under the License.
         </field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductFeature" list-name="listIt" title="" type="list" paginate-target="LookupProductFeature"
         odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
@@ -301,7 +301,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="ProductFeature" default-field-type="display"/>
-        <field name="productFeatureId" title=" " widget-style="${styles.button_default}">
+        <field name="productFeatureId" title=" " widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
         </field>
     </form>
@@ -316,7 +316,7 @@ under the License.
         <field name="payToPartyId"><text-find/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductStore" list-name="listIt" target="" title="" type="list"
         paginate-target="LookupProductStore" odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
@@ -331,7 +331,7 @@ under the License.
 
         <!-- <auto-fields-entity entity-name="ProductStore" default-field-type="display"/> -->
 
-        <field name="productStoreId" widget-style="${styles.button_default}">
+        <field name="productStoreId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${productStoreId}" target="javascript:set_value('${productStoreId}')"/>
         </field>
         <field name="primaryStoreGroupId"><display/></field>
@@ -357,7 +357,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupCostComponentCalc" list-name="listIt" title="" type="list" paginate-target="LookupCostComponentCalc"
         odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
@@ -369,7 +369,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="costComponentCalcId" title="${uiLabelMap.ProductCostComponentCalcId}" widget-style="${styles.button_default}">
+        <field name="costComponentCalcId" title="${uiLabelMap.ProductCostComponentCalcId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${costComponentCalcId}" target="javascript:set_value('${costComponentCalcId}')"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>

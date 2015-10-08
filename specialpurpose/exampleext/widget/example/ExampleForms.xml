@@ -27,10 +27,10 @@ under the License.
         <!-- In order for these to be at the bottom of the form, we need to hide the buttons from the
             original form, and then create new ones. We could use the sort-order element, but that
             doesn't work well when we want to allow changes in the original form. -->
-        <field name="submitButton" use-when="example!=null"><hidden/></field>
-        <field name="submitButton" use-when="example==null"><hidden/></field>
-        <field name="submitButtonOvrd" title="${uiLabelMap.CommonCreate}" use-when="example==null" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitButtonOvrd" title="${uiLabelMap.CommonUpdate}" use-when="example!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="example!=null"><hidden/></field>
+        <field name="submitAction" use-when="example==null"><hidden/></field>
+        <field name="submitActionOvrd" title="${uiLabelMap.CommonCreate}" use-when="example==null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitActionOvrd" title="${uiLabelMap.CommonUpdate}" use-when="example!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
 </forms>

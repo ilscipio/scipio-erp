@@ -28,7 +28,7 @@ under the License.
         <field name="fixedAssetId"><hidden value=""/></field>
         <field name="fixedAssetId_op"><hidden value="equals"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupRouting" list-name="listIt" title="" type="list"
         paginate-target="LookupRouting" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -40,7 +40,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="workEffortId" title=" " widget-style="${styles.button_default}">
+        <field name="workEffortId" title=" " widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${workEffortId}" target="javascript:set_value('${workEffortId}')"/>
         </field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}"><display/></field>
@@ -63,7 +63,7 @@ under the License.
         <field name="fixedAssetId_op"><hidden value="equals"/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupRoutingTask" list-name="listIt" title="" type="list"
         paginate-target="LookupRoutingTask" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -75,7 +75,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="workEffortId" title=" " widget-style="${styles.button_default}">
+        <field name="workEffortId" title=" " widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${workEffortId}" target="javascript:set_value('${workEffortId}')"/>
         </field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingTaskName}"><display/></field>

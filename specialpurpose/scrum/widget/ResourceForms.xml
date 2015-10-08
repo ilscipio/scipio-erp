@@ -147,7 +147,7 @@
                 <list-options list-name="securityGroupList" description="${description}" key-name="groupId"/>
             </drop-down>
         </field>
-        <field name="addButton" ><submit  confirmation-message="Are you sure to add this person ?"/></field>
+        <field name="addAction" ><submit  confirmation-message="Are you sure to add this person ?"/></field>
     </form>
     <form name="AddPartyRole" extends="AddPartyRole" extends-resource="component://party/widget/partymgr/PartyForms.xml">
         <field name="roleTypeId">
@@ -193,7 +193,7 @@
         <field name="partyId"><hidden value="${parameters.partyId}"/></field>
         <field name="contentName" title="${uiLabelMap.ScrumRevision}"><text/></field>
         <field name="description" title="${uiLabelMap.CommonMessage}"><text/></field>
-        <field name="findButton" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="findAction" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
     <form name="ListPartyRevisions" extends="ListTaskRevisions" extends-resource="component://scrum/widget/TaskForms.xml" paginate-target="findPartyRevision">
         <actions>
@@ -279,7 +279,7 @@
         <field name="company" title="${uiLabelMap.ScrumCompanyNameShow}" widget-style="required" tooltip="${uiLabelMap.CommonRequired}">
             <lookup target-form-name="LookupPartyGroup"></lookup>
         </field>
-        <field name="createButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+        <field name="createAction" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="QuickAddPartyRelationship" type="single" target="createQuickAddPartyRelationship">
         <field name="contactPartyId" title="${uiLabelMap.PartyPartyId}" widget-style="required" tooltip="${uiLabelMap.CommonRequired}">
@@ -289,7 +289,7 @@
             <lookup target-form-name="LookupPartyGroup"></lookup>
         </field>
         <field name="comments"><hidden/> </field>
-        <field name="createButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+        <field name="createAction" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="UpdateCompanyAndOwner" type="single" extends="EditProduct" extends-resource="component://scrum/widget/scrumForms.xml" 
         header-row-style="header-row" default-table-style="basic-table">
@@ -304,7 +304,7 @@
         <field name="statusId"><hidden/></field>
         <field name="internalName"><hidden/></field>
         <field name="longDescription"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.ScrumAssign}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ScrumAssign}"><submit button-type="button"/></field>
     </form>
     <form name="AddProductMember" type="single" target="addProductMember" 
         header-row-style="header-row" default-table-style="basic-table">
@@ -341,7 +341,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.ScrumAssign}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ScrumAssign}"><submit button-type="button"/></field>
     </form>
     <form name="ProductMemberList" type="list" list-name="productAndRoleList" paginate-target="ProductMember"
         odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
@@ -376,7 +376,7 @@
         <field name="fromDate" sort-field="true">
             <display type="date"/>
         </field>
-        <field name="remove" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}" use-when="!compCheck">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}" use-when="!compCheck">
             <hyperlink target="removeProductMember" description="${uiLabelMap.CommonRemove}" link-type="hidden-form">
                 <parameter param-name="productId" from-field="productId"/>
                 <parameter param-name="partyId"/>
@@ -386,7 +386,7 @@
         </field>
     </form>
     <form name="ProductMemberInfo" extends="ProductMemberList">
-        <field name="remove" use-when="!compCheck"><ignored/></field>
+        <field name="removeAction" use-when="!compCheck"><ignored/></field>
     </form>
     <form name="QuickAddPartyRate" type="single" target="updateQuickAddPartyRate" default-map-name="partyRateMap"
         header-row-style="header-row" default-table-style="basic-table">

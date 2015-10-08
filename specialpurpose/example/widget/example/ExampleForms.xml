@@ -37,7 +37,7 @@ under the License.
                 <entity-options description="${description}" key-field-name="statusId" entity-name="ExampleStatusItem"/>
             </drop-down>
         </field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
 
     <form name="ListExamples" type="list" list-name="listIt" paginate-target="FindExample" default-entity-name="Example" separate-columns="true"
@@ -138,8 +138,8 @@ under the License.
         <field name="displayAnotherText" use-when="example!=null @and example.get(&quot;anotherText&quot;)!=null">
             <display description="${example.anotherText}"/>
         </field>
-        <field name="submitButton" use-when="example==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
-        <field name="submitButton" use-when="example!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="example==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="example!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 
     <!-- Typically, this extended form wouldn't be necessary. The parent form (EditExample) would
@@ -175,13 +175,13 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteExampleItem" description="${uiLabelMap.CommonDelete}" also-hidden="false" confirmation-message="${uiLabelMap.CommonConfirmDelete}" image-location="${iconsLocation}/delete.png">
                 <parameter param-name="exampleId"/>
                 <parameter param-name="exampleItemSeqId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddExampleItem" type="single" target="createExampleItem" title="">
@@ -196,7 +196,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button" request-confirmation="true"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button" request-confirmation="true"/></field>
     </form>
 
     <!-- ExampleFeatureAppl -->
@@ -224,8 +224,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="example_deleteExampleFeatureAppl" description="${uiLabelMap.CommonDelete}" also-hidden="false" image-location="${iconsLocation}/delete.png">
                 <parameter param-name="exampleId"/>
                 <parameter param-name="exampleFeatureId"/>
@@ -247,6 +247,6 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 </forms>

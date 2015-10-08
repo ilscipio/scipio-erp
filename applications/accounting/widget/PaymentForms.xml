@@ -46,7 +46,7 @@ under the License.
         <field position="1" name="amount"><text/></field>
         <field name="paymentRefNum"><text-find ignore-case="true"/></field>
         <field name="paymentGatewayResponseId"><text/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ListPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
@@ -63,7 +63,7 @@ under the License.
         <row-actions>
             <set field="amountToApply" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>
         </row-actions>
-        <field name="paymentId" widget-style="${styles.button_default}">
+        <field name="paymentId" widget-style="${styles.link_default}">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -106,7 +106,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="saveButton"><submit/></field>
+        <field name="saveAction"><submit/></field>
     </form>
 
     <form name="NewPaymentOut" type="single" target="createPayment" default-map-name="payment"
@@ -162,7 +162,7 @@ under the License.
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
-        <field position="1" name="createButton" widget-style="smallSubmit">
+        <field position="1" name="createAction" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -209,7 +209,7 @@ under the License.
         </field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
-        <field position="1" name="createButton" widget-style="smallSubmit">
+        <field position="1" name="createAction" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -265,7 +265,7 @@ under the License.
         <field name="paymentGatewayResponseId"><ignored/></field>
         <field name="finAccountTransId" position="1"><text/></field>
         <field name="overrideGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
-        <field position="1" name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field position="1" name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="editPaymentApplicationsInv" default-entity-name="PaymentApplication" list-name="paymentApplicationsInv" target="removePaymentApplication" type="list" separate-columns="false"
@@ -281,7 +281,7 @@ under the License.
         </field>
         <field name="invoiceItemSeqId"><display/></field>
         <field name="amountApplied"><display/></field>
-        <field name="removeButton"><submit/></field>
+        <field name="removeAction"><submit/></field>
     </form>
     <form name="editPaymentApplicationsPay" default-entity-name="PaymentApplication" list-name="paymentApplicationsPay" target="removePaymentApplication" type="list" separate-columns="false"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -289,7 +289,7 @@ under the License.
         <field name="paymentId"><hidden/></field>
         <field name="toPaymentId"><display/></field>
         <field name="amountApplied"><display/></field>
-        <field name="removeButton"><submit/></field>
+        <field name="removeAction"><submit/></field>
     </form>
     <form name="editPaymentApplicationsBil" default-entity-name="PaymentApplication" list-name="paymentApplicationsBil" target="removePaymentApplication"  type="list" separate-columns="false"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -298,7 +298,7 @@ under the License.
         <field name="billingAccountId"><display/></field>
         <field name="invoiceId"><hidden/></field>
         <field name="amountApplied"><display/></field>
-        <field name="removeButton" title="${uiLabelMap.CommonRemove}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}"><submit/></field>
     </form>
     <form name="editPaymentApplicationsTax" default-entity-name="PaymentApplication" list-name="paymentApplicationsTax" target="removePaymentApplication"  type="list" separate-columns="false"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -306,13 +306,13 @@ under the License.
         <field name="paymentId"><hidden/></field>
         <field name="taxAuthGeoId"><display/></field>
         <field name="amountApplied"><display/></field>
-        <field name="removeButton" title="${uiLabelMap.CommonRemove}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}"><submit/></field>
     </form>
 
     <form name="listInvoicesNotApplied" type="list" list-name="invoices" target="createPaymentApplication" title=""
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="paymentId"><hidden/></field>
-        <field name="invoiceId" widget-style="${styles.button_default}">
+        <field name="invoiceId" widget-style="${styles.link_default}">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -324,7 +324,7 @@ under the License.
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
-        <field name="applyButton" widget-style="smallSubmit">
+        <field name="applyAction" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -334,7 +334,7 @@ under the License.
     <form name="listPaymentsNotApplied" type="list" list-name="payments" target="createPaymentApplication" title=""
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="paymentId"><hidden/></field>
-        <field name="toPaymentId" widget-style="${styles.button_default}">
+        <field name="toPaymentId" widget-style="${styles.link_default}">
             <hyperlink target="paymentOverview" description="[${toPaymentId}]">
                 <parameter param-name="paymentId" from-field="toPaymentId"/>
             </hyperlink>
@@ -343,7 +343,7 @@ under the License.
         <field name="amount"><display  type="currency" currency="${currencyUomId}"/></field>
         <field name="amountApplied" parameter-name="dummy"><display  type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
-        <field name="applyButton" widget-style="smallSubmit">
+        <field name="applyAction" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -359,7 +359,7 @@ under the License.
         <field name="amountToApply" parameter-name="amountApplied" tooltip="${uiLabelMap.AccountingLeaveEmptyForMaximumAmount}"><text/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
-        <field name="applyButton" widget-style="smallSubmit">
+        <field name="applyAction" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -487,7 +487,7 @@ under the License.
 
     <form name="ListChecksToPrint" type="multi" list-name="payments" target="printChecks" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="paymentId" widget-style="${styles.button_default}">
+        <field name="paymentId" widget-style="${styles.link_default}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -498,14 +498,14 @@ under the License.
         <field name="amount" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="effectiveDate"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonPrint}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonPrint}" widget-style="smallSubmit">
             <submit/>
         </field>
     </form>
     <form name="ListChecksToSend" type="multi" use-row-submit="true" list-name="payments" target="quickSendPayment?organizationPartyId=${organizationPartyId}" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="paymentId"><hidden/></field>
-        <field name="paymentId" widget-style="${styles.button_default}">
+        <field name="paymentId" widget-style="${styles.link_default}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -517,7 +517,7 @@ under the License.
         <field name="effectiveDate"><display/></field>
         <field name="paymentRefNum"><text/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSend}" widget-style="smallSubmit"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSend}" widget-style="smallSubmit"><submit/></field>
     </form>
 
     <form name="FindSalesInvoicesByDueDate" type="single" target="findSalesInvoicesByDueDate"
@@ -533,7 +533,7 @@ under the License.
         </field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="daysOffset"><text default-value="0"/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonSelect}">
+        <field name="searchAction" title="${uiLabelMap.CommonSelect}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -550,13 +550,13 @@ under the License.
         </field>
         <field name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
         <field name="daysOffset"><text default-value="0"/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonSelect}">
+        <field name="searchAction" title="${uiLabelMap.CommonSelect}">
             <submit button-type="button"/>
         </field>
     </form>
     <form name="ListInvoicesByDueDate" type="list" list-name="invoicePaymentInfoList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="invoiceId" widget-style="${styles.button_default}">
+        <field name="invoiceId" widget-style="${styles.link_default}">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>

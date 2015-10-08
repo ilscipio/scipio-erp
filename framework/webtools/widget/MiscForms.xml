@@ -24,7 +24,7 @@ under the License.
         <field name="groovyProgram" widget-style="required" tooltip="${uiLabelMap.CommonRequired}">
             <textarea cols="120" rows="20" />
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonRun}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRun}"><submit button-type="button"/></field>
     </form>
 
     <form name="LayoutDemoForm" type="single" target="${demoTargetUrl}" default-map-name="demoMap">
@@ -47,8 +47,8 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}" />
             </radio>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
-        <field name="cancelButton" title=" " widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
+        <field name="cancelAction" title=" " widget-style="smallSubmit">
             <hyperlink target="${demoTargetUrl}" description="${uiLabelMap.CommonCancel}"></hyperlink>
         </field>
     </form>
@@ -72,7 +72,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}" />
             </radio>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="button-col">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="button-col">
             <submit button-type="button"/>
         </field>
     </form>

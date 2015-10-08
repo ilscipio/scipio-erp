@@ -138,7 +138,7 @@ under the License.
                 <parameter param-name="custRequstId"/>
             </hyperlink>
         </field>
-        <field name="deleteButton"><submit button-type="text-link"/></field>
+        <field name="deleteAction"><submit button-type="text-link"/></field>
     </form>
     <form name="ListCommEvents" type="list" paginate="true" list-name="commEvents" extends="ListCommEvents" extends-resource="component://party/widget/partymgr/CommunicationEventForms.xml"
         odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">

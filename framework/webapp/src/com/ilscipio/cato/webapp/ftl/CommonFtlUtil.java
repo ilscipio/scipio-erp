@@ -31,6 +31,8 @@ public final class CommonFtlUtil {
     private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
             UtilCache.createUtilCache("com.ilscipio.cato.webapp.ftl.CommonFtlUtil.headingElemSpecFromStyleStrCache");
     
+    private static final Set<String> emptyStrSet = new HashSet<String>();
+    
     private CommonFtlUtil() {
     }
     
@@ -276,6 +278,48 @@ public final class CommonFtlUtil {
             }
         }
         return res;
+    }
+    
+    
+    /**
+     * Makes a generic element attribute string for html, xml, etc. from attrib map.
+     * <p>
+     * If emptyValToken non-empty, values matching emptyValToken are treated as empty and 
+     * included regardless of includeEmpty setting.
+     */
+    public static String makeElemAttribStr(Map<String, Object> attribs, boolean includeEmpty, String emptyValToken, Collection<String> exclude) {
+        StringBuilder sb = new StringBuilder();
+        
+        if (emptyValToken == null) {
+            emptyValToken = "";
+        }
+        
+        if (exclude == null || exclude.isEmpty()) {
+            exclude = emptyStrSet;
+        }
+        else if (!(exclude instanceof Set)) {
+            exclude = new HashSet<String>(exclude); // faster
+        }
+        
+        for(Map.Entry<String, Object> pair : attribs.entrySet()) {
+            String name = pair.getKey();
+            if (!exclude.contains(name)) {
+                Object val = pair.getValue();
+                String valStr = (val != null) ? val.toString() : "";
+                
+                if (includeEmpty || !valStr.isEmpty()) {
+                    sb.append(" ");
+                    sb.append(name);
+                    sb.append("=\"");
+                    if (!valStr.equals(emptyValToken)) {
+                        sb.append(valStr);
+                    }
+                    sb.append("\"");
+                }
+            } 
+        }
+        
+        return sb.toString();
     }
     
 }

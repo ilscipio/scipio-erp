@@ -932,8 +932,10 @@ Prints a string of element attributes. (HTML, FO, XML)
     selected        = boolean, if true row is marked selected
     exclude         = list of attrib names to skip
 -->
-<#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude="">
+<#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[]>
   <#if attribs?is_hash_ex>
+    <#t>${Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].makeElemAttribStr(attribs, includeEmpty, emptyValToken, exclude)}
+    <#-- old FTL impl (broken!)
     <#if exclude?has_content>
       <#if includeEmpty>
         <#t><#list attribs?keys as name> ${name}="${attribs[name]?string}"</#list>
@@ -956,6 +958,7 @@ Prints a string of element attributes. (HTML, FO, XML)
         <#t><#list attribs?keys as name><#if !exclude.contains(name) && attribs[name]?has_content> ${name}="${attribs[name]?string}"</#if></#list>
       </#if>
     </#if>
+    -->
   <#elseif attribs?is_string>
     <#t> ${attribs?string}
   </#if>

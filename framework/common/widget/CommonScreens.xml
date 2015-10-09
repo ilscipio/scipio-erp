@@ -659,7 +659,7 @@ under the License.
                         </html>
                     </platform-specific>
                     <decorator-section-include name="pre-body" />
-                    <label style="h1" text="${noTitle} ${headerTitle}"/>
+                    <label style="h1" text="${headerTitle}"/>
                     <decorator-section-include name="body" />
                 </container>
             </widgets>

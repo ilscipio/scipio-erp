@@ -768,7 +768,7 @@ WARNING: stack type/format is subject to change; assume unknown.
   <#-- FIXME: this is highly suboptimal way to use stack... -->
   <#if stack?has_content && (stack?size > 1)>
     <#local stackSize = stack?size>
-    <#return stack?chunk(stackSize - 1)?first>
+    <#return stack[0..<(stackSize-1)]>
   <#else>
     <#return []>
   </#if>
@@ -850,7 +850,7 @@ TODO: this is highly suboptimal; should move much of this to a java method.
     <#local res = stack?last>
     <#local stackSize = stack?size>
     <#if (stackSize > 1)>
-      <#local dummy = request.setAttribute(stackName, stack?chunk(stackSize - 1)?first)!>
+      <#local dummy = request.setAttribute(stackName, stack[0..<(stackSize-1)])!>
     <#else>
       <#local dummy = request.removeAttribute(stackName)!>
     </#if>
@@ -865,7 +865,7 @@ TODO: this is highly suboptimal; should move much of this to a java method.
     <#local res = stack?last>
     <#local stackSize = stack?size>
     <#if (stackSize > 1)>
-      <#local newStack = stack?chunk(stackSize - 1)?first>
+      <#local newStack = stack[0..<(stackSize-1)]>
       <@"<#global ${stackName}=newStack>"?interpret />
     <#else>
       <@"<#global ${stackName}=''>"?interpret />

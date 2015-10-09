@@ -968,7 +968,9 @@ a level and relLevel are extracted.
     div:divclass;h+3:headingclass;consumeLevel=true
 Note that the class portions may be prefixed with "+" as well for append-not-replace logic.
 
-TODO: should delegate to a java method; way too slow
+TODO: should delegate to a java method; way too slow; don't have to optimize but
+      could have a global UtilCache of (styleStr + "::" + containerStyleStr + "::" +  params.toString()) instead
+      because generally static expressions.
 -->
 <#function getHeadingElemSpecFromStyleStr styleStr containerStyleStr allowedHeadingElemTypes allowedElemTypes allowedContainerElemTypes>
     <#local headingLevel = "">

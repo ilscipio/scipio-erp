@@ -163,23 +163,23 @@ not "current" context (too intrusive in current renderer design). still relies o
                 titleStyle="div;h+1;consumeLevel=true"-->
   <#if titleStyle?has_content>
     <#local titleStyleArgs = getHeadingElemSpecFromStyleStr(titleStyle, titleContainerStyle,
-        ["h","heading"], ['div','span','p','raw'], ['div'])>
+        "h|heading","div|span|p|raw", "div", "widget-screenlet")>
 
     <#-- overrides (so style from screen affects heading calc and consume) -->
-    <#if titleStyleArgs.level?is_number>
-      <#local headingLevel = titleStyleArgs.level>
+    <#if titleStyleArgs.level?has_content>
+      <#local headingLevel = titleStyleArgs.level?number>
     </#if>
-    <#if titleStyleArgs.relLevel?is_number>
-      <#local relHeadingLevel = titleStyleArgs.relLevel>
+    <#if titleStyleArgs.relLevel?has_content>
+      <#local relHeadingLevel = titleStyleArgs.relLevel?number>
     </#if>
     <#local titleConsumeLevel = translateStyleStrBoolArg(titleStyleArgs.consumeLevel!"", true)>
   <#else>
     <#local titleStyleArgs = {}>
   </#if>
     <#local titleElemType = translateStyleStrClassesArg(titleStyleArgs.elemType!"", true)>
-    <#local titleClass = translateStyleStrClassesArg(titleStyleArgs.class!"", true)>
+    <#local titleClass = translateStyleStrClassesArg(titleStyleArgs.elemClass!"", true)>
     <#local titleContainerElemType = translateStyleStrClassesArg(titleStyleArgs.containerElemType!"", false)>
-    <#local titleContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerClass!"", true)>
+    <#local titleContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerElemClass!"", true)>
 
 <#-- title-style parsing end -->
 

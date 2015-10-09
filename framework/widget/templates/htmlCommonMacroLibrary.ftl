@@ -30,14 +30,14 @@ Cato: Common HTML macro library code
     <#if style?has_content>
       <#-- Cato: can pass class and consumeLevel this way: "h2:class;consumeLevel=true" -->
       <#-- don't specify allowedElemTypes because we go through them ourselves below, redundant -->
-      <#local headingArgs = getHeadingElemSpecFromStyleStr(style, "", ["h","heading"], true, ["div"])>
+      <#local headingArgs = getHeadingElemSpecFromStyleStr(style, "", "h|heading", true, "div", "widget-label")>
       <#local elemType = headingArgs.elemType> <#-- don't translate for macro; not passed; just for us -->
-      <#local class = translateStyleStrClassesArg(headingArgs.class!"", true)>
+      <#local class = translateStyleStrClassesArg(headingArgs.elemClass!"", true)>
       <#if headingArgs.isHeadingElem>
-        <@heading level=headingArgs.level relLevel=headingArgs.relLevel 
+        <@heading level=translateStyleStrNumberArg(headingArgs.level!"", "") relLevel=translateStyleStrNumberArg(headingArgs.relLevel!"", "") 
             class=class id=id consumeLevel=translateStyleStrBoolArg(headingArgs.consumeLevel!"", "")
             containerElemType=translateStyleStrClassesArg(headingArgs.containerElemType!"", false)
-            containerClass=translateStyleStrClassesArg(headingArgs.containerClass!"", true)>${text}</@heading>
+            containerClass=translateStyleStrClassesArg(headingArgs.containerElemClass!"", true)>${text}</@heading>
       <#elseif elemType=="p">
         <p${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</p>
       <#elseif elemType=="span">

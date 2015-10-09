@@ -156,7 +156,8 @@ where DELIM is specified delimiter (& &amp; , ; etc.)
     paramDelim      = Param delimiter ("&amp;" by default)
 -->
 <#function splitStrParams paramStr paramDelim="&amp;">
-  <#-- TODO: should do this in java; inefficient -->
+  <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].splitStrParams(paramStr, paramDelim)>
+<#-- old FTL impl.
   <#local res = {}>
   <#local pairs = paramStr?split(paramDelim)>
   <#list pairs as pair>
@@ -166,6 +167,7 @@ where DELIM is specified delimiter (& &amp; , ; etc.)
     </#if>
   </#list>
   <#return res>
+-->
 </#function> 
 
 <#-- 
@@ -699,6 +701,14 @@ see makeClassesArg, results of getElemSpecFromStyleStr.
   </#if>    
 </#function>
 
+<#function translateStyleStrNumberArg val defaultVal="">
+  <#if !val?has_content>
+    <#return defaultVal>
+  <#else>
+    <#return val?number>
+  </#if>    
+</#function>
+
 <#-- 
 *************
 * createStack
@@ -967,12 +977,12 @@ a level and relLevel are extracted.
     div:divclass;h+3:headingclass
     div:divclass;h+3:headingclass;consumeLevel=true
 Note that the class portions may be prefixed with "+" as well for append-not-replace logic.
-
-TODO: should delegate to a java method; way too slow; don't have to optimize but
-      could have a global UtilCache of (styleStr + "::" + containerStyleStr + "::" +  params.toString()) instead
-      because generally static expressions.
 -->
-<#function getHeadingElemSpecFromStyleStr styleStr containerStyleStr allowedHeadingElemTypes allowedElemTypes allowedContainerElemTypes>
+<#function getHeadingElemSpecFromStyleStr styleStr containerStyleStr allowedHeadingElemTypes allowedElemTypes allowedContainerElemTypes cacheId="">
+    <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr,
+        allowedHeadingElemTypes, allowedElemTypes, allowedContainerElemTypes, cacheId)>
+
+<#-- old FTL impl
     <#local headingLevel = "">
     <#local relHeadingLevel = "">
 
@@ -990,7 +1000,7 @@ TODO: should delegate to a java method; way too slow; don't have to optimize but
       <#local titleArgsStr = titleStyleParts?last>
     </#if>
 
-    <#if titleArgsStr?has_content && titleArgsStr?contains("=")> <#-- heuristic detect params part -->
+    <#if titleArgsStr?has_content && titleArgsStr?contains("=")> <#- heuristic detect params part ->
       <#local titleArgs = splitStrParams(titleArgsStr, ",")>
       <#if (titleStyleParts?size >= 3)>
         <#local titleContainerStyle = titleStyleParts[0]>
@@ -1011,7 +1021,7 @@ TODO: should delegate to a java method; way too slow; don't have to optimize but
       <#local titleContainerStyleParts = titleContainerStyle?split(":")>
 
        <#if (titleContainerStyleParts?size <= 1)>
-        <#-- here titleContainerStyle is either an elem or class, can't tell yet -->
+        <#- here titleContainerStyle is either an elem or class, can't tell yet ->
         <#local titleContainerElemType = titleContainerStyle?lower_case>
         <#local titleContainerClass = titleContainerStyle>
       <#else>
@@ -1019,7 +1029,7 @@ TODO: should delegate to a java method; way too slow; don't have to optimize but
         <#local titleContainerClass = titleContainerStyle?substring(titleContainerElemType?length + 1)>
       </#if>
 
-      <#-- if not sequence, leave to caller to figure out if titleContainerStyle elem or class -->
+      <#- if not sequence, leave to caller to figure out if titleContainerStyle elem or class ->
       <#if allowedContainerElemTypes?is_sequence>
         <#if allowedContainerElemTypes?seq_contains(titleContainerElemType)>
           <#if (titleContainerStyleParts?size <= 1)>
@@ -1037,7 +1047,7 @@ TODO: should delegate to a java method; way too slow; don't have to optimize but
     <#if titleStyle?has_content>
       <#local titleStyleParts = titleStyle?split(":")>
       <#if (titleStyleParts?size <= 1)>
-        <#-- here titleStyle is either an elem or class, can't tell yet -->
+        <#- here titleStyle is either an elem or class, can't tell yet ->
         <#local titleElemType = titleStyle?lower_case>
         <#local titleClass = titleStyle>
       <#else>
@@ -1056,7 +1066,7 @@ TODO: should delegate to a java method; way too slow; don't have to optimize but
             </#if>
           <#else>
             <#if res?groups[3]?has_content>
-              <#-- overrides headingLevel (so style from screen affects heading calc) -->
+              <#- overrides headingLevel (so style from screen affects heading calc) ->
               <#local headingLevel = res?groups[3]?number>
             </#if>
           </#if>
@@ -1069,7 +1079,7 @@ TODO: should delegate to a java method; way too slow; don't have to optimize but
         </#if>
       </#if>
       
-      <#-- if not sequence, let caller figure it out if titleStyle elem or class -->
+      <#- if not sequence, let caller figure it out if titleStyle elem or class ->
       <#if !elemTypeFound && allowedElemTypes?is_sequence>
         <#if allowedElemTypes?seq_contains(titleElemType)>
           <#if (titleStyleParts?size <= 1)>
@@ -1078,7 +1088,7 @@ TODO: should delegate to a java method; way too slow; don't have to optimize but
           <#local elemTypeFound = true>
         <#else>
           <#local titleElemType = "">
-          <#-- if invalid type found, use the full string as class, in case ":" char is important somehow -->
+          <#- if invalid type found, use the full string as class, in case ":" char is important somehow ->
           <#local titleClass = titleStyle>
         </#if>
       </#if>
@@ -1099,6 +1109,7 @@ TODO: should delegate to a java method; way too slow; don't have to optimize but
         
         "argsStr":titleArgsStr
     }>
+-->
 </#function>
 
 <#-- 

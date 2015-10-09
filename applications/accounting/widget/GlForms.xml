@@ -95,6 +95,44 @@ under the License.
         <field name="voucherRef" position="1"><text/></field>
         <field name="voucherDate" position="2"><date-time/></field>
         <field name="createAction" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <sort-order>
+            <field-group>
+                <sort-field name="organisationPartyId"/>
+                <sort-field name="acctgTransId"/>
+                <sort-field name="acctgTransTypeId"/>
+                <sort-field name="glFiscalTypeId"/>
+                <sort-field name="glJournalId"/>
+                <sort-field name="transactionDate"/>
+                <sort-field name="scheduledPostingDate"/>
+                <sort-field name="isPosted"/>
+                <sort-field name="postedDate"/>
+                <sort-field name="finAccountTransId"/>
+                <sort-field name="groupStatusId"/>
+                <sort-field name="description"/>
+            </field-group>
+            <field-group>
+                <sort-field name="partyId"/>
+                <sort-field name="roleTypeId"/>
+                <sort-field name="invoiceId"/>
+                <sort-field name="paymentId"/>
+                <sort-field name="productId"/>
+                <sort-field name="shipmentId"/>
+                <sort-field name="inventoryItemId"/>
+                <sort-field name="physicalInventoryId"/>
+                <sort-field name="receiptId"/>
+                <sort-field name="theirAcctgTransId"/>
+                <sort-field name="fixedAssetId"/>
+                <sort-field name="workEffortId"/>
+                <sort-field name="voucherRef"/>
+                <sort-field name="voucherDate"/>
+            </field-group>
+            <field-group>
+                <sort-field name="createdDate"/>
+                <sort-field name="lastModifiedDate"/>
+                <sort-field name="createdByUserLogin"/>
+                <sort-field name="lastModifiedByUserLogin"/>
+            </field-group>
+        </sort-order>
     </form>
     <form name="EditAcctgTrans" type="single" target="updateAcctgTrans" default-map-name="acctgTrans"
         header-row-style="header-row" default-table-style="basic-table">
@@ -182,75 +220,123 @@ under the License.
         <field name="createdByUserLogin"><display/></field>
         <field name="lastModifiedByUserLogin" position="2"><display/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <sort-order>
+            <field-group>
+                <sort-field name="organisationPartyId"/>
+                <sort-field name="acctgTransId"/>
+                <sort-field name="acctgTransTypeId"/>
+                <sort-field name="glFiscalTypeId"/>
+                <sort-field name="glJournalId"/>
+                <sort-field name="transactionDate"/>
+                <sort-field name="scheduledPostingDate"/>
+                <sort-field name="isPosted"/>
+                <sort-field name="postedDate"/>
+                <sort-field name="finAccountTransId"/>
+                <sort-field name="groupStatusId"/>
+                <sort-field name="description"/>
+            </field-group>
+            <field-group>
+                <sort-field name="partyId"/>
+                <sort-field name="roleTypeId"/>
+                <sort-field name="invoiceId"/>
+                <sort-field name="paymentId"/>
+                <sort-field name="productId"/>
+                <sort-field name="shipmentId"/>
+                <sort-field name="inventoryItemId"/>
+                <sort-field name="physicalInventoryId"/>
+                <sort-field name="receiptId"/>
+                <sort-field name="theirAcctgTransId"/>
+                <sort-field name="fixedAssetId"/>
+                <sort-field name="workEffortId"/>
+                <sort-field name="voucherRef"/>
+                <sort-field name="voucherDate"/>
+            </field-group>
+            <field-group>
+                <sort-field name="createdDate"/>
+                <sort-field name="lastModifiedDate"/>
+                <sort-field name="createdByUserLogin"/>
+                <sort-field name="lastModifiedByUserLogin"/>
+            </field-group>
+        </sort-order>
     </form>
     
     <form name="ViewAcctgTrans" type="single" default-map-name="acctgTrans"
             default-table-style="basic-table">
-        <auto-fields-service service-name="updateAcctgTrans" default-field-type="display"/>
+        <auto-fields-entity entity-name="AcctgTrans" default-field-type="display"/>
         <field name="acctgTransId" position="1"/>
-        <field name="acctgTransTypeId" title="${uiLabelMap.AccountingTransactionType}" position="1">
+        <field name="acctgTransTypeId" title="${uiLabelMap.AccountingTransactionType}" position="2">
             <display-entity entity-name="AcctgTransType"/>
         </field>
-        <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}" position="2">
+        <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <display-entity entity-name="GlFiscalType"/>
         </field>
-        <field name="glJournalId" position="1">
+        <field name="glJournalId" position="2">
                 <display-entity entity-name="GlJournal" description="${glJournalName}"/>
-        </field>
-        <field name="groupStatusId" title="${uiLabelMap.FormFieldTitle_groupStatus}" position="2">
-            <display-entity entity-name="StatusItem" key-field-name="statusId"/>
-        </field>
-        <field name="finAccountTransId" position="1"/>
-        <field name="partyId" position="1"/>
-        <field name="roleTypeId" position="2">
-            <display-entity entity-name="RoleType"/>
         </field>
         <field name="transactionDate" position="1"/>
         <field name="scheduledPostingDate" position="2"/>
         <field name="isPosted" position="1"/>
         <field name="postedDate" position="2"/>
+        <field name="groupStatusId" title="${uiLabelMap.FormFieldTitle_groupStatus}" position="2">
+            <display-entity entity-name="StatusItem" key-field-name="statusId"/>
+        </field>
+        <field name="finAccountTransId" position="1"/>
+        <field name="description" position="1"/>
+        <field name="partyId" position="1"/>
+        <field name="roleTypeId" position="2">
+            <display-entity entity-name="RoleType"/>
+        </field>
         <field name="inventoryItemId" position="1"/>
         <field name="physicalInventoryId" position="2"/>
         <field name="invoiceId" position="1" widget-style="${styles.link_default}"><hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/></field>
         <field name="paymentId" position="2" widget-style="${styles.link_default}"><hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/></field>
+        <field name="productId"><display/></field>
+        <field name="shipmentId" position="2"/>
         <field name="receiptId" position="1"/>
+        <field name="theirAcctgTransId" position="2"/>
+        <field name="fixedAssetId" position="1"/>
         <field name="workEffortId" position="2"/>
-        <field name="shipmentId" position="1"/>
-        <field name="fixedAssetId" position="2"/>
-        <field name="theirAcctgTransId" position="1"/>
         <field name="voucherRef" position="1"/>
         <field name="voucherDate" position="2"/>
-        <field name="description" position="1"/>
         <field name="createdByUserLogin"><hidden/></field>
         <field name="lastModifiedByUserLogin"><hidden/></field>
-        <sort-order>
-            <sort-field name="acctgTransId"/>
-            <sort-field name="acctgTransTypeId"/>
-            <sort-field name="glFiscalTypeId"/>
-            <sort-field name="glJournalId"/>
-            <sort-field name="groupStatusId"/>
-            <sort-field name="finAccountTransId"/>
-            <sort-field name="partyId"/>
-            <sort-field name="roleTypeId"/>
-            <sort-field name="transactionDate"/>
-            <sort-field name="scheduledPostingDate"/>
-            <sort-field name="isPosted"/>
-            <sort-field name="postedDate"/>
-            <sort-field name="inventoryItemId"/>
-            <sort-field name="physicalInventoryId"/>
-            <sort-field name="invoiceId"/>
-            <sort-field name="paymentId"/>
-            <sort-field name="receiptId"/>
-            <sort-field name="workEffortId"/>
-            <sort-field name="shipmentId"/>
-            <sort-field name="fixedAssetId"/>
-            <sort-field name="theirAcctgTransId"/>
-            <sort-field name="voucherRef"/>
-            <sort-field name="voucherDate"/>
-            <sort-field name="description"/>
-            <sort-field name="createAction"/>
-            <sort-field name="createdByUserLogin"/>
-            <sort-field name="lastModifiedByUserLogin"/>
+         <sort-order>
+            <field-group>
+                <sort-field name="organisationPartyId"/>
+                <sort-field name="acctgTransId"/>
+                <sort-field name="acctgTransTypeId"/>
+                <sort-field name="glFiscalTypeId"/>
+                <sort-field name="glJournalId"/>
+                <sort-field name="transactionDate"/>
+                <sort-field name="scheduledPostingDate"/>
+                <sort-field name="isPosted"/>
+                <sort-field name="postedDate"/>
+                <sort-field name="finAccountTransId"/>
+                <sort-field name="groupStatusId"/>
+                <sort-field name="description"/>
+            </field-group>
+            <field-group>
+                <sort-field name="partyId"/>
+                <sort-field name="roleTypeId"/>
+                <sort-field name="invoiceId"/>
+                <sort-field name="paymentId"/>
+                <sort-field name="productId"/>
+                <sort-field name="shipmentId"/>
+                <sort-field name="inventoryItemId"/>
+                <sort-field name="physicalInventoryId"/>
+                <sort-field name="receiptId"/>
+                <sort-field name="theirAcctgTransId"/>
+                <sort-field name="fixedAssetId"/>
+                <sort-field name="workEffortId"/>
+                <sort-field name="voucherRef"/>
+                <sort-field name="voucherDate"/>
+            </field-group>
+            <field-group>
+                <sort-field name="createdDate"/>
+                <sort-field name="lastModifiedDate"/>
+                <sort-field name="createdByUserLogin"/>
+                <sort-field name="lastModifiedByUserLogin"/>
+            </field-group>
         </sort-order>
     </form>
     

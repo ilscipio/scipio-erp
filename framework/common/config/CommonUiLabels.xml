@@ -8147,6 +8147,9 @@
         <value xml:lang="zh">上级</value>
         <value xml:lang="zh_TW">上層</value>
     </property>
+    <property key="CommonParty">
+        <value xml:lang="en">Party</value>
+    </property>
     <property key="CommonPartyGroupName">
         <value xml:lang="ar">إسم المجموعة</value>
         <value xml:lang="cs">Název partnera</value>
@@ -8845,6 +8848,9 @@
         <value xml:lang="zh">处理中</value>
         <value xml:lang="zh_CN">处理中</value>
         <value xml:lang="zh_TW">處理中</value>
+    </property>
+    <property key="CommonProduct">
+        <value xml:lang="en">Product</value>
     </property>
     <property key="CommonProfile">
         <value xml:lang="ar">خصائص</value>
@@ -9690,6 +9696,9 @@
         <value xml:lang="zh">评价</value>
         <value xml:lang="zh_CN">评论</value>
         <value xml:lang="zh_TW">評論</value>
+    </property>
+    <property key="CommonRole">
+        <value xml:lang="en">Role</value>
     </property>
     <property key="CommonRouting">
         <value xml:lang="ar">تمرير</value>

@@ -212,7 +212,7 @@ under the License.
             <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
         </#if>
         <#if itemsAvailableToReceive && totalReadyToReceive < totalAvailableToReceive>
-            <h3>${uiLabelMap.ProductReceiveInventoryAddProductToReceive}</h3>
+            <@heading>${uiLabelMap.ProductReceiveInventoryAddProductToReceive}</@heading>
             <form name="addProductToReceive" method="post" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>

@@ -47,7 +47,7 @@ under the License.
     s.parentNode.insertBefore(e, s);
 })();
 </script>
-<h1>${uiLabelMap.CommonLogin}</h1>
+<@heading level=1>${uiLabelMap.CommonLogin}</@heading>
 <div class="screenlet">
   <div class="screenlet-title-bar"><h3>${uiLabelMap.CommonRegistered}</h3></div>
   <div class="screenlet-body">
@@ -83,7 +83,7 @@ under the License.
   </div>
 </div>
 <#else>
-<h1>${uiLabelMap.CommonLogin}</h1>
+<@heading level=1>${uiLabelMap.CommonLogin}</@heading>
 <div class="screenlet">
   <div class="screenlet-title-bar"><h3>${uiLabelMap.CommonRegistered}</h3></div>
   <div class="screenlet-body">

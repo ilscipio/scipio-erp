@@ -18,15 +18,15 @@ under the License.
 -->
 <#if result?has_content>
 <div align="center">
-<h2>Subversion Information for repository : <b><a href=${result.repository!}> ${result.repository!}</a></b>, revision# <b>${result.revision!}</b></h2>
+<@heading>Subversion Information for repository : <b><a href=${result.repository!}> ${result.repository!}</a></b>, revision# <b>${result.revision!}</b></@heading>
 </div>
 <div>
-    <br/><h3>Log message</h3>
+    <br/><@heading relLevel=+1>Log message</@heading>
     <br/><pre>${result.logMessage}</pre>
 </div>
 <div>
     <#assign oldrevision = result.revision?number - 1 >
-    <br/><h3>The differences between revisions: ${oldrevision!} and ${result.revision!} </h3>
+    <br/><@heading relLevel=+1>The differences between revisions: ${oldrevision!} and ${result.revision!} </@heading>
     <br/><pre>${result.diffMessage}</pre>
 </div>
 </#if>

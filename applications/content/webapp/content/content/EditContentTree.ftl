@@ -19,12 +19,12 @@
 <form name="editContentTree" action="<#if parameters.rename?has_content><@ofbizUrl>updateDocumentTree</@ofbizUrl><#else><@ofbizUrl>addDocumentToTree</@ofbizUrl></#if>" method="post">
     <#assign content  = delegator.findOne("Content",Static["org.ofbiz.base.util.UtilMisc"].toMap("contentId",parameters.contentId), false)/>
     <#if parameters.rename?has_content>
-        <div class="h3">${uiLabelMap.ContentRenameFolder}</div>
+        <@heading relLevel=+1>${uiLabelMap.ContentRenameFolder}</@heading>
         ${uiLabelMap.ContentRenameFolder} : ${content.contentName}<br />
         <input type="text" name="contentName" value="${content.contentName}" />
         <br /><a class="${styles.button_default!}" href="javascript:document.editContentTree.submit();">${uiLabelMap.ContentRenameFolder}</a><a class="${styles.button_default!}" href="<@ofbizUrl>navigateContent</@ofbizUrl>">${uiLabelMap.CommonCancel}</a>
     <#else>
-        <div class="h3">${uiLabelMap.ContentNewFolder}</div>
+        <@heading relLevel=+1>${uiLabelMap.ContentNewFolder}</@heading>
         ${uiLabelMap.ContentRoot} : ${content.contentName}
         <input type="text" name="contentName" />
         <br /><a class="${styles.button_default!}" href="javascript:document.editContentTree.submit();">${uiLabelMap.CommonCreate}</a><a class="${styles.button_default!}" href="<@ofbizUrl>navigateContent</@ofbizUrl>">${uiLabelMap.CommonCancel}</a>

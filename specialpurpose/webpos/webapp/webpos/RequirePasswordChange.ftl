@@ -22,7 +22,7 @@ under the License.
 <#elseif autoUserLogin?has_content>
   <#assign username = autoUserLogin.userLoginId/>
 </#if>
-<h1>${uiLabelMap.CommonLogin}</h1>
+<@heading level=1>${uiLabelMap.CommonLogin}</@heading>
 
 <@section title="${uiLabelMap.CommonPasswordChange}"> <#-- TODO: style="float: center; width: 49%; margin-right: 5px; text-align: center;" -->
     <form method="post" action="<@ofbizUrl>login${previousParams}</@ofbizUrl>" name="loginform">

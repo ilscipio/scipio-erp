@@ -34,7 +34,7 @@ under the License.
 // -->
 </script>
 
-<h1>${uiLabelMap.OrderFinalCheckoutReview}</h1>
+<@heading level=1>${uiLabelMap.OrderFinalCheckoutReview}</@heading>
 <#if !isDemoStore?? && isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
 
 <#if cart?? && 0 < cart.size()>
@@ -61,5 +61,5 @@ under the License.
     </@tr>
   </@table>
 <#else>
-  <h3>${uiLabelMap.OrderErrorShoppingCartEmpty}.</h3>
+  <@errorMsg>${uiLabelMap.OrderErrorShoppingCartEmpty}.</@errorMsg>
 </#if>

@@ -195,6 +195,7 @@ levels manually, but most often should let @section menu handle them.
     headingLevel        = force this heading level for title. if autoHeadingLevel true, also influences nested elems (even if no title here, but if no title won't consume a size).
     relHeadingLevel     = increase heading level by this number
     defaultHeadingLevel = default heading level (same as headingLevel if autoHeadingLevel false)
+                          if empty string, use getDefaultHeadingLevel()
     menuHtml            = optional HTML menu data, li elements only (ul auto added)
                           FIXME: need to rework the menu options. could have a menu "type"
                               that causes lookup in styles (see @fields and @table type arg)
@@ -211,7 +212,7 @@ levels manually, but most often should let @section menu handle them.
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section type="generic" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 menuHtml="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
+<#macro section type="generic" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" menuHtml="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
     <#local addClass = parseAddClassArg(class)>
     <#local class = parseClassArg(class, "")>
     <#if id?has_content>
@@ -235,36 +236,229 @@ levels manually, but most often should let @section menu handle them.
 ************
     Usage example:  
     <@heading>My Title</@heading>         
-                    
+                                 
    * General Attributes *
+    elemType       = [heading|h|p|span|div|raw], default heading (note: do not specify h1-h6 here - use level)
+                     boolean true means use default, false same as raw (none)
     level          = specific level (1-6). If not specified, current heading level returned by
                      getCurrentHeadingLevel() function is used. 
                      note: does not consume a level.
     relLevel       = for level, uses level of current heading returned by getCurrentHeadingLevel()
                      plus this number of levels. default: 0 (current level)
-    class          = heading classes 
+    class          = heading elem classes (simple)
                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+    levelClassPrefix = default "heading-level-", prefix for class that will be appended level number
     id             = heading id
+    consumeLevel   = boolean, default currently always false (DEV NOTE: could be made to depend on calculated level).
+                     if true, the global heading level is set to (calculated level for this heading) + 1.
+                     note this is better handled through use of the @section macro. mostly useful for h1.
+    containerElemType = [div|] default empty. if present, adds container around title or this elem type
+    containerClass    = container elem classes (simple)       
+    containerId       = container id  
     attribs              = hash of other legacy h1-h6 attributes (mainly for those with dash in name)
     [inlineAttribs...]   = other legacy h1-h6 attributes, inlined
 -->
-<#macro heading level="" relLevel="" class=true id="" attribs={} inlineAttribs...>
-  <#local classes = makeClassesArg(class, "")>
+<#macro heading elemType=true level="" relLevel="" class=true id="" levelClassPrefix="heading-level-" consumeLevel="" containerElemType=false containerClass=true attribs={} inlineAttribs...>
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
   </#if>
   <#if relLevel?has_content>
     <#local level = level + relLevel>
   </#if>
-  <#local headingLevelClass = "heading-level-" + level?string>
+  <#if levelClassPrefix?has_content>
+    <#local headingLevelClass = levelClassPrefix + level?string>
+  <#else>
+    <#local headingLevelClass = "">
+  </#if>
+  <#local classes = makeClassesArg(class, headingLevelClass)>
+  <#local containerClasses = makeClassesArg(containerClass, headingLevelClass)>
+  <#if (consumeLevel?is_boolean && consumeLevel == true)>
+    <#local dummy = setCurrentHeadingLevel(level + 1)>
+  </#if>
+  <#-- local adjustment to prevent invalid <hX> elem. true value always reflected in headingLevelClass. -->
   <#if (level < 1)>
     <#local level = 1>
   <#elseif (level > 6)>
     <#local level = 6>
   </#if>
-  <#local classes = (classes + " " + headingLevelClass)?trim>
-  <h${level}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>><#nested></h${level}>
+  <#if elemType?is_boolean>
+    <#if elemType>
+      <#local hElem = "h" + level?string>
+    <#else>
+      <#local hElem = "">
+    </#if>
+  <#elseif elemType == "heading" || elemType == "h">
+    <#local hElem = "h" + level?string>
+  <#elseif elemType == "raw" || !elemType?has_content>
+    <#local hElem = "">
+  <#else>
+    <#local hElem = elemType>
+  </#if>
+  <#if containerElemType?is_boolean>
+    <#local cElem = "">
+  <#elseif containerElemType == "raw" || !containerElemType?has_content>
+    <#local cElem = "">
+  <#else>
+    <#local cElem = containerElemType>
+  </#if>
+  <#if cElem?has_content>
+    <${cElem}<#if containerClasses?has_content> class="${containerClasses}"</#if><#if containerId?has_content> id="${containerId}"</#if>>
+  </#if>
+  <#if hElem?has_content><${hElem}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#rt>
+    <#lt><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if hElem?has_content></${hElem}></#if>
+  <#if cElem?has_content>
+    </${cElem}>
+  </#if>
 </#macro>
+
+<#-- 
+*************
+* getHeadingElemSpecFromStyleStr function
+************
+Parses a complex style string in the following formats to a hash of values (in proper types that could
+be passed to @heading):
+    containerElemType:containerClass;elemType:class;param1=val1,param2=val2
+"h" and "heading" elem types support + notation for relative, and for these types
+a level and relLevel are extracted.
+  e.g.:  
+    h3
+    h3:headingclass
+    h+3:headingclass
+    div:divclass;h+3:headingclass
+    div:divclass;h+3:headingclass;consumeLevel=true
+Note that the class portions may be prefixed with "+" as well for append-not-replace logic.
+
+TODO: should delegate to a java method; way too slow
+-->
+<#function getHeadingElemSpecFromStyleStr styleStr containerStyleStr allowedHeadingElemTypes allowedElemTypes allowedContainerElemTypes>
+    <#local headingLevel = "">
+    <#local relHeadingLevel = "">
+
+    <#local isHeadingElem = false>
+    <#local titleStyle = styleStr>
+    <#local titleContainerStyle = containerStyleStr>
+
+    <#local titleArgs = {}>
+    <#local titleArgsStr = titleStyle>
+
+    <#local titleStyleParts = titleStyle?split(";")>
+    <#if (titleStyleParts?size > 3)>
+      <#local titleArgsStr = titleStyleParts[2]>
+    <#else>
+      <#local titleArgsStr = titleStyleParts?last>
+    </#if>
+
+    <#if titleArgsStr?has_content && titleArgsStr?contains("=")> <#-- heuristic detect params part -->
+      <#local titleArgs = splitStrParams(titleArgsStr, ",")>
+      <#if (titleStyleParts?size >= 3)>
+        <#local titleContainerStyle = titleStyleParts[0]>
+        <#local titleStyle = titleStyleParts[1]> 
+      <#elseif (titleStyleParts?size == 2)>
+        <#local titleStyle = titleStyleParts[0]>   
+      <#elseif (titleStyleParts?size <= 1)>
+        <#local titleStyle = "">
+      </#if>
+    <#elseif (titleStyleParts?size > 1)>
+      <#local titleContainerStyle = titleStyleParts[0]>
+      <#local titleStyle = titleStyleParts[1]>  
+    </#if>
+    
+    <#local titleContainerElemType = "">
+    <#local titleContainerClass = "">
+    <#if titleContainerStyle?has_content>
+      <#local titleContainerStyleParts = titleContainerStyle?split(":")>
+
+       <#if (titleContainerStyleParts?size <= 1)>
+        <#-- here titleContainerStyle is either an elem or class, can't tell yet -->
+        <#local titleContainerElemType = titleContainerStyle?lower_case>
+        <#local titleContainerClass = titleContainerStyle>
+      <#else>
+        <#local titleContainerElemType = titleContainerStyleParts?first?lower_case>
+        <#local titleContainerClass = titleContainerStyle?substring(titleContainerElemType?length + 1)>
+      </#if>
+
+      <#-- if not sequence, leave to caller to figure out if titleContainerStyle elem or class -->
+      <#if allowedContainerElemTypes?is_sequence>
+        <#if allowedContainerElemTypes?seq_contains(titleContainerElemType)>
+          <#if (titleContainerStyleParts?size <= 1)>
+            <#local titleContainerClass = "">
+          </#if>
+        <#else>
+          <#local titleContainerElemType = "">
+          <#local titleContainerClass = titleContainerStyle>
+        </#if>
+      </#if>
+    </#if>
+
+    <#local titleElemType = "">
+    <#local titleClass = "">
+    <#if titleStyle?has_content>
+      <#local titleStyleParts = titleStyle?split(":")>
+      <#if (titleStyleParts?size <= 1)>
+        <#-- here titleStyle is either an elem or class, can't tell yet -->
+        <#local titleElemType = titleStyle?lower_case>
+        <#local titleClass = titleStyle>
+      <#else>
+        <#local titleElemType = titleStyleParts?first?lower_case>
+        <#local titleClass = titleStyle?substring(titleElemType?length + 1)>
+      </#if>
+
+      <#local elemTypeFound = false>
+    
+      <#if allowedHeadingElemTypes?is_sequence && allowedHeadingElemTypes?has_content>
+        <#local res = titleElemType?matches(r'(' + allowedHeadingElemTypes?join("|") + r')(\+)?(\d*)')>
+        <#if res>
+          <#if res?groups[2]?has_content>
+            <#if res?groups[3]?has_content>
+              <#local relHeadingLevel = res?groups[3]?number>
+            </#if>
+          <#else>
+            <#if res?groups[3]?has_content>
+              <#-- overrides headingLevel (so style from screen affects heading calc) -->
+              <#local headingLevel = res?groups[3]?number>
+            </#if>
+          </#if>
+          <#if (titleStyleParts?size <= 1)>
+            <#local titleClass = "">
+          </#if>
+          <#local titleElemType = res?groups[1]>
+          <#local elemTypeFound = true>
+          <#local isHeadingElem = true>
+        </#if>
+      </#if>
+      
+      <#-- if not sequence, let caller figure it out if titleStyle elem or class -->
+      <#if !elemTypeFound && allowedElemTypes?is_sequence>
+        <#if allowedElemTypes?seq_contains(titleElemType)>
+          <#if (titleStyleParts?size <= 1)>
+            <#local titleClass = "">
+          </#if>
+          <#local elemTypeFound = true>
+        <#else>
+          <#local titleElemType = "">
+          <#-- if invalid type found, use the full string as class, in case ":" char is important somehow -->
+          <#local titleClass = titleStyle>
+        </#if>
+      </#if>
+    </#if>
+
+    <#return titleArgs + {
+        "containerStyleStr":titleContainerStyle, 
+        "containerElemType":titleContainerElemType, 
+        "containerClass":titleContainerClass, 
+        
+        "styleStr":titleStyle,
+        "elemType":titleElemType,
+        "class":titleClass,
+        
+        "isHeadingElem":isHeadingElem,
+        "level":headingLevel,
+        "relLevel":relHeadingLevel,
+        
+        "argsStr":titleArgsStr
+    }>
+</#function>
+
 
 <#-- 
 *************

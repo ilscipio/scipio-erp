@@ -28,30 +28,16 @@ Cato: Common HTML macro library code
     <#local idText = ""/>
     <#if id?has_content><#local idText = " id=\"${id}\""/></#if>
     <#if style?has_content>
-      <#-- Cato: also support both style and class split by ":" -->
-      <#local styleParts = style?split(":")>
-      <#if (styleParts?size <= 1)>
-        <#local elemType = style?lower_case>
-        <#local class = true>
-      <#else>
-        <#local elemType = styleParts?first?lower_case>
-        <#local class = style?substring(elemType?length + 1)>
-      </#if>
-      <#local res = elemType?matches(r'(heading|h)(\+)?(\d*)')>
-      <#if res>
-        <#if res?groups[2]?has_content>
-          <#if res?groups[3]?has_content>
-            <@heading relLevel=res?groups[3]?number class=class id=id>${text}</@heading>
-          <#else>
-            <@heading class=class id=id>${text}</@heading>
-          </#if>
-        <#else>
-          <#if res?groups[3]?has_content>
-            <@heading level=res?groups[3]?number class=class id=id>${text}</@heading>
-          <#else>
-            <@heading class=class id=id>${text}</@heading>
-          </#if>
-        </#if>
+      <#-- Cato: can pass class and consumeLevel this way: "h2:class;consumeLevel=true" -->
+      <#-- don't specify allowedElemTypes because we go through them ourselves below, redundant -->
+      <#local headingArgs = getHeadingElemSpecFromStyleStr(style, "", ["h","heading"], true, ["div"])>
+      <#local elemType = headingArgs.elemType> <#-- don't translate for macro; not passed; just for us -->
+      <#local class = translateStyleStrClassesArg(headingArgs.class!"", true)>
+      <#if headingArgs.isHeadingElem>
+        <@heading level=headingArgs.level relLevel=headingArgs.relLevel 
+            class=class id=id consumeLevel=translateStyleStrBoolArg(headingArgs.consumeLevel!"", "")
+            containerElemType=translateStyleStrClassesArg(headingArgs.containerElemType!"", false)
+            containerClass=translateStyleStrClassesArg(headingArgs.containerClass!"", true)>${text}</@heading>
       <#elseif elemType=="p">
         <p${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</p>
       <#elseif elemType=="span">

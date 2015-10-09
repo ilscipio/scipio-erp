@@ -147,7 +147,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#-- Cato:
      fromWidgets: hint of whether called by renderer or ftl macros
      hasContent: hint to say there will be content, workaround for styling -->
-<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel=2 addClasses="">
+<#macro renderScreenletBegin id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" titleConsumeLevel=true autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" addClasses="">
 
 <#-- level logic begin -->
     <#-- note: request obj only available because of macro renderer initial context mod -->
@@ -159,68 +159,35 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#-- title-style parsing begin -->
     <#-- titleContainerStyle can be inlined as prefix in titleStyle, separated by ;, as workaround 
          full string can look like:
-           e.g. titleStyle="div:containerClass;h4:titleClass", titleStyle="div;h5"-->
-    <#local titleStyleParts = titleStyle?split(";")>
-    <#if (titleStyleParts?size > 1)>
-      <#local titleContainerStyle = titleStyleParts?first>
-      <#local titleStyle = titleStyleParts?last>
+           e.g. titleStyle="div:+containerClass;h4:+titleClass", titleStyle="div;h5"
+                titleStyle="div;h+1;consumeLevel=true"-->
+  <#if titleStyle?has_content>
+    <#local titleStyleArgs = getHeadingElemSpecFromStyleStr(titleStyle, titleContainerStyle,
+        ["h","heading"], ['div','span','p','raw'], ['div'])>
+
+    <#-- overrides (so style from screen affects heading calc and consume) -->
+    <#if titleStyleArgs.level?is_number>
+      <#local headingLevel = titleStyleArgs.level>
     </#if>
-    
-    <#local titleContainerElemType = "">
-    <#local titleContainerClass = "">
-    <#if titleContainerStyle?has_content>
-      <#local titleContainerStyleLower = titleContainerStyle?lower_case>
-      <#if titleContainerStyleLower?starts_with("div:")>
-        <#local titleContainerClass = titleContainerStyle?substring("div:"?length)>
-      <#elseif titleContainerStyleLower == "div">
-        <#local titleContainerClass = "">
-      <#else>
-        <#local titleContainerClass = titleContainerStyle>
-      </#if>
+    <#if titleStyleArgs.relLevel?is_number>
+      <#local relHeadingLevel = titleStyleArgs.relLevel>
     </#if>
-    
-    <#local titleElemType = "">
-    <#local titleClass = true>
-    <#if titleStyle?has_content>
-      <#local titleStyleParts = titleStyle?split(":")>
-      <#if (titleStyleParts?size <= 1)>
-        <#-- here titleStyle is either an elem or class, can't tell yet -->
-        <#local titleElemType = titleStyle?lower_case>
-        <#local titleClass = titleStyle>
-      <#else>
-        <#local titleElemType = titleStyleParts?first?lower_case>
-        <#local titleClass = titleStyle?substring(titleElemType?length + 1)>
-      </#if>
-    
-      <#local res = titleElemType?matches(r'(heading|h)(\+)?(\d*)')>
-      <#if res>
-        <#if res?groups[2]?has_content>
-          <#if res?groups[3]?has_content>
-            <#local relHeadingLevel = res?groups[3]?number>
-          </#if>
-        <#else>
-          <#if res?groups[3]?has_content>
-            <#-- overrides headingLevel (so style from screen affects heading calc) -->
-            <#local headingLevel = res?groups[3]?number>
-          </#if>
-        </#if>
-        <#if (titleStyleParts?size <= 1)>
-          <#local titleClass = true>
-        </#if>
-        <#local titleElemType = "">
-      <#elseif ['div','span','p','raw']?seq_contains(titleElemType)>
-        <#if (titleStyleParts?size <= 1)>
-          <#local titleClass = true>
-        </#if>
-      <#else>
-        <#local titleElemType = "">
-        <#-- if invalid type found, use the full string as class, in case ":" char is important somehow -->
-        <#local titleClass = titleStyle>
-      </#if>
-    </#if>
+    <#local titleConsumeLevel = translateStyleStrBoolArg(titleStyleArgs.consumeLevel!"", true)>
+  <#else>
+    <#local titleStyleArgs = {}>
+  </#if>
+    <#local titleElemType = translateStyleStrClassesArg(titleStyleArgs.elemType!"", true)>
+    <#local titleClass = translateStyleStrClassesArg(titleStyleArgs.class!"", true)>
+    <#local titleContainerElemType = translateStyleStrClassesArg(titleStyleArgs.containerElemType!"", false)>
+    <#local titleContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerClass!"", true)>
+
 <#-- title-style parsing end -->
 
 <#-- auto-heading-level logic begin -->
+    <#if !defaultHeadingLevel?is_number>
+      <#local defaultHeadingLevel = getDefaultHeadingLevel()>
+    </#if>
+
     <#local explicitHeadingLevel = false>
     <#local updatedHeadingLevel = false> <#-- just so consistent -->
     <#local prevHeadingLevel = "">
@@ -237,6 +204,7 @@ not "current" context (too intrusive in current renderer design). still relies o
         <#if relHeadingLevel?has_content>
           <#local hLevel = hLevel + relHeadingLevel>
         </#if>
+      <#if titleConsumeLevel>
         <#if title?has_content>
             <#local dummy = setCurrentHeadingLevel(hLevel + 1)>
             <#local updatedHeadingLevel = true>
@@ -245,6 +213,7 @@ not "current" context (too intrusive in current renderer design). still relies o
             <#local dummy = setCurrentHeadingLevel(hLevel)>
             <#local updatedHeadingLevel = true>
         </#if>
+      </#if>
     <#else>
         <#if headingLevel?has_content>
             <#local hLevel = headingLevel>
@@ -345,40 +314,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#if hasTitle>
 <#local titleContent>
-  <#if titleContainerStyle?has_content>
-    <#if titleContainerElemType?has_content>
-      <#local tcElem = titleContainerElemType>
-    <#else>
-      <#local tcElem = "div">
-    </#if>
-    <${tcElem} class="heading-level-${hLevel}<#if titleContainerClass?has_content> ${titleContainerClass}</#if>">
-  </#if>
-  
-  <#if titleElemType?has_content>
-    <#-- special case: raw! -->
-    <#if titleElemType == "raw">
-      <#local tElem = "">
-    <#else>
-      <#local tElem = titleElemType>
-    </#if>
-  <#else>
-    <#-- standard case. -->
-    <#if (hLevel < 1)>
-      <#local tElem = "h1">
-    <#elseif (hLevel > 6)>
-      <#local tElem = "h6">
-      <#--<#local tElem = "div">-->
-    <#else>
-      <#local tElem = "h${hLevel}">
-    </#if>
-  </#if>
-    <#local titleClasses = makeClassesArg(titleClass, "")>
-
-    <#if tElem?has_content><${tElem} class="heading-level-${hLevel}<#if titleClasses?has_content> ${titleClasses}</#if>"></#if>${title}<#if tElem?has_content></${tElem}></#if>
-  
-  <#if titleContainerStyle?has_content>
-    </${tcElem}>
-  </#if>
+  <@heading level=hLevel elemType=titleElemType class=titleClass containerElemType=titleContainerElemType containerClass=titleContainerClass>${title}</@heading>
 </#local>
 </#if>    
 

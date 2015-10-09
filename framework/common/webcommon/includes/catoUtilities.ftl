@@ -145,6 +145,31 @@ Adds parameters from a hash to a URL param string (no full URL logic).
 
 <#-- 
 *************
+* splitStrParams function
+************
+Extracts parameters from a string in the format and returns as a hash:
+    name1=val1DELIMname2=val2DELIMname3=val3
+where DELIM is specified delimiter (& &amp; , ; etc.)
+                    
+   * Parameters *
+    paramStr        = Escaped param string
+    paramDelim      = Param delimiter ("&amp;" by default)
+-->
+<#function splitStrParams paramStr paramDelim="&amp;">
+  <#-- TODO: should do this in java; inefficient -->
+  <#local res = {}>
+  <#local pairs = paramStr?split(paramDelim)>
+  <#list pairs as pair>
+    <#local parts = pair?split("=")>
+    <#if (parts?size >= 2)>
+      <#local res = res + {parts[0] : parts[1]}>
+    </#if>
+  </#list>
+  <#return res>
+</#function> 
+
+<#-- 
+*************
 * trimParamStrDelims function
 ************
 Strips leading and trailing param delims from a URL param string.
@@ -380,13 +405,18 @@ Currently must be a function because global var is not always set and request at
   <#if !hLevel?has_content>
     <#if defaultVal?is_boolean>
       <#if defaultVal>
-        <#local hLevel = 2>
+        <#local hLevel = getDefaultHeadingLevel()>
+      <#-- else method being used to get true value -->
       </#if>
     <#else>
       <#local hLevel = defaultVal>
     </#if>
   </#if>
   <#return hLevel>
+</#function> 
+
+<#function getDefaultHeadingLevel>
+  <#return 2>
 </#function> 
 
 <#-- 
@@ -518,6 +548,7 @@ so currently these functions do the following:
 - accept boolean value for class. true means use non-essential defaults,
   false means don't use non-essential defaults
   should put class=true as macro default on macros.
+  NOW ALSO accepts string repr of booleans.
 - empty string means don't use non-essentail defaults, same as class=false
   (i.e. if you specify class="" it's like saying "I want empty class")
   could change this and use class=false only... tbd
@@ -548,12 +579,6 @@ where my-macro-default is what you'd have had as arg default in the macro def
 <#function makeClassesArg class defaultVal>
   <#if class?is_boolean>
     <#return class?string(defaultVal, "")>
-  <#elseif class?is_string>
-    <#if class?starts_with("+")>
-      <#return (defaultVal + " " + class?substring(1))?trim>
-    <#else>
-      <#return class>
-    </#if>
   <#elseif class?is_sequence>
     <#if class?has_content>
       <#if class?first == "+">
@@ -563,6 +588,13 @@ where my-macro-default is what you'd have had as arg default in the macro def
       </#if>
     <#else>
       <#return "">
+    </#if>
+  <#-- check string last because ?is_string doesn't always behave as expected -->
+  <#elseif class?is_string>
+    <#if class?starts_with("+")>
+      <#return (defaultVal + " " + class?substring(1))?trim>
+    <#else>
+      <#return class>
     </#if>
   <#else>
     <#-- invalid -->
@@ -617,6 +649,55 @@ where my-macro-default is what you'd have had as arg default in the macro def
 <#function isClassArgUseDefault class>
   <#return (class?is_string && class?starts_with("+")) || (class?is_boolean && class == false)>
 </#function>-->
+
+<#-- 
+*************
+* translateStyleStrClassesArg function
+************
+Translates a class arg from a string-only representation to a FTL value which can be passed as
+macro args processed by makeClassesArg.
+
+usually those macro args take true or false by default.
+
+Needed for string repr of booleans and because empty string "" in style string means "not specified"
+and not "omit" as usually specified on macros. also translates booleans.
+
+see makeClassesArg, results of getElemSpecFromStyleStr.
+-->
+<#function translateStyleStrClassesArg val defaultVal=true>
+  <#if !val?has_content>
+    <#return defaultVal>
+  <#elseif val == "true">
+    <#return true>
+  <#elseif val == "false">
+    <#return false>
+  <#else>
+    <#return val>
+  </#if>    
+</#function>
+
+<#-- 
+*************
+* translateStyleStrBoolArg function
+************
+Translates a bool arg from a string-only representation to a FTL value which can be passed as
+macro args expected to be booleans.
+
+usually those macro args take "" by default, to mean default.
+
+see makeClassesArg, results of getElemSpecFromStyleStr.
+-->
+<#function translateStyleStrBoolArg val defaultVal="">
+  <#if !val?has_content>
+    <#return defaultVal>
+  <#elseif val == "true">
+    <#return true>
+  <#elseif val == "false">
+    <#return false>
+  <#else>
+    <#return val>
+  </#if>    
+</#function>
 
 <#-- 
 *************

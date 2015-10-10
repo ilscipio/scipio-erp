@@ -54,7 +54,7 @@ public class RenderContentTransform implements TemplateTransformModel {
 
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) {
-        final Environment env = Environment.getCurrentEnvironment();
+        final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
         final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);

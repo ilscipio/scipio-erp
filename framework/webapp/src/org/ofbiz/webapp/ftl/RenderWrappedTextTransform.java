@@ -39,7 +39,7 @@ public class RenderWrappedTextTransform implements  TemplateTransformModel {
 
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) {
-        final Environment env = Environment.getCurrentEnvironment();
+        final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         Map<String, Object> ctx = checkMap(FreeMarkerWorker.getWrappedObject("context", env), String.class, Object.class);
         final String wrappedFTL = FreeMarkerWorker.getArg(checkMap(args, String.class, Object.class), "wrappedFTL", ctx);
 

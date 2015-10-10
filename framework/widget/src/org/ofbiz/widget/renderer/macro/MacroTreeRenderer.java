@@ -88,7 +88,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
             Template template = new Template((new java.util.Date()).toString(), templateReader,
                     FreeMarkerWorker.getDefaultOfbizConfig());
             templateReader.close();
-            environment.include(template);
+            FreeMarkerWorker.includeTemplate(template, environment);
         } catch (TemplateException e) {
             Debug.logError(e, "Error rendering tree thru ftl", module);
         } catch (IOException e) {

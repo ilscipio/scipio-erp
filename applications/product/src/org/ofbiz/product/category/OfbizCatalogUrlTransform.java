@@ -24,6 +24,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ofbiz.base.util.template.FreeMarkerWorker;
+
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.StringModel;
@@ -64,7 +66,7 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
             @Override
             public void close() throws IOException {
                 try {
-                    Environment env = Environment.getCurrentEnvironment();
+                    Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     BeanModel req = (BeanModel) env.getVariable("request");
                     if (req != null) {
                         String productId = getStringArg(args, "productId");

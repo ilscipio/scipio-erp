@@ -105,7 +105,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         String templateName = toString().concat("_") + macroCount;
         Template template = new Template(templateName, templateReader, FreeMarkerWorker.getDefaultOfbizConfig());
         templateReader.close();
-        environment.include(template);
+        FreeMarkerWorker.includeTemplate(template, environment);
     }
 
     private void executeMacro(Appendable writer, String macroName, Map<String, Object> macroParameters) throws IOException, TemplateException {

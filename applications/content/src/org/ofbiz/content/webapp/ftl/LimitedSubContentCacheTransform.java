@@ -89,7 +89,7 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
     public Writer getWriter(final Writer out, Map args) {
         //Profiler.begin("Limited");
         final StringBuilder buf = new StringBuilder();
-        final Environment env = Environment.getCurrentEnvironment();
+        final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         final Map<String, Object> templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);

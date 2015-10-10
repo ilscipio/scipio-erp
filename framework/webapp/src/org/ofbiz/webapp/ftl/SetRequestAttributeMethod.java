@@ -21,6 +21,8 @@ package org.ofbiz.webapp.ftl;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
+import org.ofbiz.base.util.template.FreeMarkerWorker;
+
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.SimpleScalar;
@@ -48,7 +50,7 @@ public class SetRequestAttributeMethod implements TemplateMethodModelEx {
         if (!(args.get(1) instanceof BeanModel) && !(args.get(1) instanceof TemplateNumberModel) && !(args.get(1) instanceof TemplateScalarModel))
             throw new TemplateModelException("Second argument not an instance of BeanModel nor TemplateNumberModel nor TemplateScalarModel");
 
-        Environment env = Environment.getCurrentEnvironment();
+        Environment env = FreeMarkerWorker.getCurrentEnvironment();
         BeanModel req = (BeanModel)env.getVariable("request");
         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
 

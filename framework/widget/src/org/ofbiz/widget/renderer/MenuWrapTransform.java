@@ -72,7 +72,7 @@ public class MenuWrapTransform implements TemplateTransformModel {
 
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) {
-        final Environment env = Environment.getCurrentEnvironment();
+        final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
         final HttpServletResponse response = FreeMarkerWorker.getWrappedObject("response", env);

@@ -38,6 +38,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
 
@@ -129,7 +130,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
         // someplace else (i.e. an integration)
         Integer roundingNumber = getInteger(args, "rounding");
         String scaleEnabled = "N";
-        Environment env = Environment.getCurrentEnvironment();
+        Environment env = FreeMarkerWorker.getCurrentEnvironment();
         BeanModel req = null;
         try {
             req = (BeanModel) env.getVariable("request");
@@ -173,7 +174,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
                     if (Debug.verboseOn()) Debug.logVerbose("parms: " + amount + " " + isoCode + " " + locale, module);
                     if (locale.length() < 1) {
                         // Load the locale from the session
-                        Environment env = Environment.getCurrentEnvironment();
+                        Environment env = FreeMarkerWorker.getCurrentEnvironment();
                         BeanModel req = (BeanModel) env.getVariable("request");
                         if (req != null) {
                             HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();

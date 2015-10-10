@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.content.content.ContentUrlFilter;
 
 import freemarker.core.Environment;
@@ -75,7 +76,7 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
             @Override
             public void close() throws IOException {
                 try {
-                    Environment env = Environment.getCurrentEnvironment();
+                    Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     BeanModel req = (BeanModel) env.getVariable("request");
                     BeanModel res = (BeanModel) env.getVariable("response");
                     if (req != null) {

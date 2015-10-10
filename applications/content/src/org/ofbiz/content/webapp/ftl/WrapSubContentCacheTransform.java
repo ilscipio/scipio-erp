@@ -82,7 +82,7 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) {
         final StringBuilder buf = new StringBuilder();
-        final Environment env = Environment.getCurrentEnvironment();
+        final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         Map<String, Object> envContext = FreeMarkerWorker.getWrappedObject("context", env);
         final Map<String, Object> templateCtx;
         if (envContext == null) {

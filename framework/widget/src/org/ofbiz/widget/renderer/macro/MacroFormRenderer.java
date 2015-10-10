@@ -143,7 +143,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             Reader templateReader = new StringReader(macro);
             Template template = new Template(new UID().toString(), templateReader, FreeMarkerWorker.getDefaultOfbizConfig());
             templateReader.close();
-            environment.include(template);
+            FreeMarkerWorker.includeTemplate(template, environment);
         } catch (TemplateException e) {
             Debug.logError(e, "Error rendering screen thru ftl macro: " + macro, module);
         } catch (IOException e) {

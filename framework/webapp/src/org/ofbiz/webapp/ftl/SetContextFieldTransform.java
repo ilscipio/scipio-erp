@@ -25,6 +25,8 @@ import freemarker.template.*;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.template.FreeMarkerWorker;
+
 /**
  * SetRequestAttributeMethod - Freemarker Method for setting context fields
  */
@@ -44,7 +46,7 @@ public class SetContextFieldTransform implements TemplateMethodModelEx {
         if (!(args.get(1) instanceof BeanModel) && !(args.get(1) instanceof TemplateNumberModel) && !(args.get(1) instanceof TemplateScalarModel))
             throw new TemplateModelException("Second argument not an instance of BeanModel nor TemplateNumberModel nor TemplateScalarModel");
 
-        Environment env = Environment.getCurrentEnvironment();
+        Environment env = FreeMarkerWorker.getCurrentEnvironment();
         BeanModel req = (BeanModel)env.getVariable("context");
         Map context = (Map) req.getWrappedObject();
 

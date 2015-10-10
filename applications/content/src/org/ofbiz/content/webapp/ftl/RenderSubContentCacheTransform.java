@@ -59,7 +59,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) {
         // final StringBuilder buf = new StringBuilder();
-        final Environment env = Environment.getCurrentEnvironment();
+        final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         //final Map templateCtx = FreeMarkerWorker.getWrappedObject("context", env);
         //final Map templateCtx = FastMap.newInstance();
         final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);

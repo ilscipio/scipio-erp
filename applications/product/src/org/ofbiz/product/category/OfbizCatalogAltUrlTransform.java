@@ -100,7 +100,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
             @Override
             public void close() throws IOException {
                 try {
-                    Environment env = Environment.getCurrentEnvironment();
+                    Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     BeanModel req = (BeanModel) env.getVariable("request");
                     String previousCategoryId = getStringArg(args, "previousCategoryId");
                     String productCategoryId = getStringArg(args, "productCategoryId");

@@ -36,6 +36,7 @@ import freemarker.template.TemplateTransformModel;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 /**
  * OfbizAmountTransform - Freemarker Transform for content links
@@ -117,7 +118,7 @@ public class OfbizAmountTransform implements TemplateTransformModel {
                     Locale localeObj = null;
                     if (locale.length() < 1) {
                         // Load the locale from the session
-                        Environment env = Environment.getCurrentEnvironment();
+                        Environment env = FreeMarkerWorker.getCurrentEnvironment();
                         BeanModel req = (BeanModel) env.getVariable("request");
                         if (req != null) {
                             HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();

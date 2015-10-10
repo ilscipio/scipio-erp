@@ -78,7 +78,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) {
         final StringBuilder buf = new StringBuilder();
-        final Environment env = Environment.getCurrentEnvironment();
+        final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         Map<String, Object> ctx = FreeMarkerWorker.getWrappedObject("context", env);
         final String editTemplate = FreeMarkerWorker.getArg(args, "editTemplate", ctx);
         final String wrapTemplateId = FreeMarkerWorker.getArg(args, "wrapTemplateId", ctx);

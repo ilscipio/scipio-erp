@@ -104,7 +104,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
             @Override
             public void close() throws IOException {
                 try {
-                    Environment env = Environment.getCurrentEnvironment();
+                    Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     // Handle prefix.
                     String prefixString = convertToString(env.getVariable("urlPrefix"));
                     if (!prefixString.isEmpty()) {

@@ -189,7 +189,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             // FIXME: I am using a Date as an hack to provide a unique name for the template...
             Template template = new Template((new java.util.Date()).toString(), templateReader, FreeMarkerWorker.getDefaultOfbizConfig());
             templateReader.close();
-            environment.include(template);
+            FreeMarkerWorker.includeTemplate(template, environment);
         } catch (TemplateException e) {
             Debug.logError(e, "Error rendering screen macro [" + macro + "] thru ftl", module);
         } catch (IOException e) {

@@ -84,6 +84,12 @@ public class FreeMarkerWorker {
     private static final BeansWrapper defaultOfbizWrapper = new BeansWrapperBuilder(version).build();
     private static final Configuration defaultOfbizConfig = makeConfiguration(defaultOfbizWrapper);
 
+    /**
+     * Cato: A copy of the current thread Environment.
+     * @see #getCurrentEnvironment
+     */
+    private static final ThreadLocal<Environment> threadEnv = new ThreadLocal<Environment>();
+    
     public static BeansWrapper getDefaultOfbizWrapper() {
         return defaultOfbizWrapper;
     }
@@ -726,4 +732,43 @@ public class FreeMarkerWorker {
     public static String encodeDoubleQuotes(String htmlString) {
         return htmlString.replaceAll("\"", "\\\\\"");
     }
+    
+    /**
+     * Cato: Returns the Freemarker environment associated with current thread, or null
+     * if no rendering.
+     * <em>All transforms should use this call instead of <code>Environment.getCurrentEnvironment</code> directly!</em>
+     * <p>
+     * <strong>IMPORTANT</strong>: This exists as a workaround for quirks in Freemarker/Ofbiz rendering.
+     * Normally calling <code>Environment.getCurrentEnvironment</code> should be enough,
+     * but Ofbiz macro renderer uses <code>Environment.include</code> to render macros as opposed to 
+     * <code>Environment.process</code>, and in those cases the calls return null and inevitable crash.
+     * So a patch to the renderer is required so the environment is accessible from macros, and
+     * all transforms must use this method.
+     * @see #includeTemplate
+     */
+    public static Environment getCurrentEnvironment() {
+        Environment env = Environment.getCurrentEnvironment();
+        if (env == null) {
+            env = threadEnv.get();
+        }
+        return env;
+    }
+    
+    /**
+     * Cato: Includes the given template with the given environment.
+     * <em>All macro renderer template include calls must be wrapped with this method! 
+     * See {@link #getCurrentEnvironment}.</em>
+     * @see #getCurrentEnvironment
+     */
+    public static void includeTemplate(Template template, Environment env) throws TemplateException, IOException {
+        Environment savedEnv = threadEnv.get();
+        threadEnv.set(env);
+        try {
+            env.include(template);
+        }
+        finally {
+            threadEnv.set(savedEnv);
+        }
+    }
+    
 }

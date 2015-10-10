@@ -856,7 +856,7 @@ Prints a string of element attributes. (HTML, FO, XML)
 -->
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[]>
   <#if attribs?is_hash_ex>
-    <#t>${Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].makeElemAttribStr(attribs, includeEmpty, emptyValToken, exclude)}
+    <#t>${StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].makeElemAttribStr(attribs, includeEmpty, emptyValToken, exclude))}
     <#-- old FTL impl (broken!)
     <#if exclude?has_content>
       <#if includeEmpty>

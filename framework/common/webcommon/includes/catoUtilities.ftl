@@ -711,89 +711,11 @@ see makeClassesArg, results of getElemSpecFromStyleStr.
 
 <#-- 
 *************
-* createStack
-************
-Creates a stack. Often not necessary.
-FTL kludge for special use cases and internal use.
-WARNING: stack type/format is subject to change; assume unknown.
-    Usage example:  
-     <#global myGlobalStack = createStack()>
--->
-<#function createStack>
-  <#return []>
-</#function>
-
-<#-- 
-*************
-* pushStack
-************
-Pushes a value onto the given stack. The stack will be modified in-place _if possible_ and returned, but
-return value should always be used instead of the original to guarantee function.
-If variable is a non-stack, will be created as necessary.
-FTL kludge for special use cases and internal use.
-WARNING: stack type/format is subject to change; assume unknown.
-    Usage example:  
-     <#global myGlobalStack = pushStack(myGlobalStack!, {"attr1": "val1"})>
--->
-<#function pushStack stack val>
-  <#-- FIXME: currently uses an FTL list, this is highly suboptimal... -->
-  <#if stack?has_content>
-    <#local stack = stack + [val]>
-  <#else>
-    <#local stack = [val]>
-  </#if>
-  <#return stack>
-</#function>
-
-<#-- 
-*************
-* readStack function
-************
-Reads the last value from the given stack. The stack is not modified.
-FTL kludge for special use cases and internal use.
-WARNING: stack type/format is subject to change; assume unknown.
-    Usage example:  
-     <#local val = readStack(myGlobalStack!)>
--->
-<#function readStack stack defaultVal="">
-  <#if stack?has_content>
-    <#return stack?last>
-  <#else>
-    <#return defaultVal>
-  </#if>
-</#function>
-
-<#-- 
-*************
-* popStack function
-************
-Pops the given stack. The stack will be modified in-place _if possible_ and returned, but
-return value should always be used instead of the original to guarantee function. 
-FTL kludge for special use cases and internal use. Use readStack to get value.
-WARNING: stack type/format is subject to change; assume unknown.
-    Usage example:  
-     <#global myGlobalStack = popStack(myGlobalStack!)>
--->
-<#function popStack stack>
-  <#-- FIXME: this is highly suboptimal way to use stack... -->
-  <#if stack?has_content && (stack?size > 1)>
-    <#local stackSize = stack?size>
-    <#return stack[0..<(stackSize-1)]>
-  <#else>
-    <#return []>
-  </#if>
-</#function>
-
-<#-- 
-*************
 * pushRequestStack
 ************
 Pushes a value onto a global stack variable in request scope (request attributes, or if no request, FTL globals).
 
-Dev note: currently no pushGlobalStack version of this exists for FTL globals only; 
-can be achieved with pushStack/readStack/popStack instead, but in most cases pushRequestStack is better anyhow.
-
-TODO: this is highly suboptimal; should move much of this to a java method.
+TODO: this is highly suboptimal; should move much of this to a java transform.
 -->
 <#function pushRequestStack stackName val>
 <#if request??>

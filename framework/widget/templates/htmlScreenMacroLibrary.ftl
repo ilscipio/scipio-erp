@@ -225,7 +225,7 @@ not "current" context (too intrusive in current renderer design). still relies o
           <#local hLevel = hLevel + relHeadingLevel>
         </#if>
     </#if>
-    <#global renderScreenletValuesStack = pushStack(renderScreenletValuesStack!, {"autoHeadingLevel":autoHeadingLevel, "updatedHeadingLevel":updatedHeadingLevel, "prevHeadingLevel":prevHeadingLevel, "prevSectionLevel":prevSectionLevel})>
+    <#local dummy = pushRequestStack("renderScreenletStack", {"autoHeadingLevel":autoHeadingLevel, "updatedHeadingLevel":updatedHeadingLevel, "prevHeadingLevel":prevHeadingLevel, "prevSectionLevel":prevSectionLevel})>
 <#-- auto-heading-level logic end -->
 
 <#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
@@ -358,8 +358,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderScreenletEnd>
 <#-- auto-heading-level logic begin -->
-    <#local stackValues = readStack(renderScreenletValuesStack!)>
-    <#global renderScreenletValuesStack = popStack(renderScreenletValuesStack!)>
+    <#local stackValues = popRequestStack("renderScreenletStack", {})>
     
     <#local autoHeadingLevel = stackValues.autoHeadingLevel>
     <#local updatedHeadingLevel = stackValues.updatedHeadingLevel>

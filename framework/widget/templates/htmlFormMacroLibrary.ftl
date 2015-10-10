@@ -565,7 +565,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#local scrollable = true>
     <#local style = removeStyleNames(style, "scrollable")>
   </#if>
-  <#global renderFormatListWrapperStack = pushStack(renderFormatListWrapperStack!, {"formName":formName, "style":style, "scrollable":scrollable})>
+  <#local dummy = pushRequestStack("renderFormatListWrapperStack", {"formName":formName, "style":style, "scrollable":scrollable})>
   <#if scrollable>
   <#-- TODO: change this to something more foundation-like.
        this is a custom workaround to get scrolling, nothing else working. -->
@@ -575,8 +575,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatListWrapperClose formName>
-  <#local stackValues = readStack(renderFormatListWrapperStack!)>
-  <#global renderFormatListWrapperStack = popStack(renderFormatListWrapperStack!)>
+  <#local stackValues = popRequestStack("renderFormatListWrapperStack", {})>
   <#local scrollable = stackValues.scrollable>
   </table><#lt/>
   <#if scrollable>

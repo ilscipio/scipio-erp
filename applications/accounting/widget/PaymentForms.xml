@@ -88,11 +88,11 @@ under the License.
                  -->
             </display-entity>
         </field>
-        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="PaymentType"/></field>
         <field name="effectiveDate"><display type="date"/></field>
         <field name="currencyUomId"><hidden/></field>
-        <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
-        <field name="amountToApply"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+        <field name="amountToApply" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
     </form>
 
     <form name="EditPaymentAttributes" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml">
@@ -319,9 +319,9 @@ under the License.
         </field>
         <field name="description"><display/></field>
         <field name="invoiceDate"><display type="date"/></field>
-        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="amountApplied" parameter-name="dummy"><display  type="currency" currency="${currencyUomId}"/></field>
-        <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
+        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amountApplied" widget-area-style="amount" title-area-style="align-right" parameter-name="dummy"><display  type="currency" currency="${currencyUomId}"/></field>
+        <field name="amountToApply" widget-area-style="amount" title-area-style="align-right" parameter-name="amountApplied"><text size="10"/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
         <field name="applyAction" widget-style="smallSubmit">
@@ -340,9 +340,9 @@ under the License.
             </hyperlink>
         </field>
         <field name="effectiveDate"><display/></field>
-        <field name="amount"><display  type="currency" currency="${currencyUomId}"/></field>
-        <field name="amountApplied" parameter-name="dummy"><display  type="currency" currency="${currencyUomId}"/></field>
-        <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
+        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display  type="currency" currency="${currencyUomId}"/></field>
+        <field name="amountApplied" widget-area-style="amount" title-area-style="align-right" parameter-name="dummy"><display  type="currency" currency="${currencyUomId}"/></field>
+        <field name="amountToApply" widget-area-style="amount" title-area-style="align-right" parameter-name="amountApplied"><text size="10"/></field>
         <field name="applyAction" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -379,8 +379,8 @@ under the License.
             </service>
         </actions>
         <field name="paymentId"><hidden/></field>
-        <field name="paymentTypeId" position="1"><display-entity entity-name="PaymentType"/></field>
-        <field name="paymentMethodTypeId" position="2"><display-entity entity-name="PaymentMethodType"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1"><display-entity entity-name="PaymentType"/></field>
+        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonMethod}" position="2"><display-entity entity-name="PaymentMethodType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1"><display-entity entity-name="StatusItem"/></field>
         <field name="paymentMethodId" position="2"><display-entity entity-name="PaymentMethod" description="${description} [${paymentMethodId}]"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" position="1">
@@ -447,26 +447,28 @@ under the License.
             </hyperlink>
         </field>
         <field name="taxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName}"></display-entity></field>
-        <field name="amountApplied"><display type="currency" currency="${payment.currencyUomId}"/></field>
+        <field name="amountApplied" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${payment.currencyUomId}"/></field>
     </form>
 
     <form name="AcctgTransAndEntries" type="list" list-name="AcctgTransAndEntries"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="invoiceId"><hidden/></field>
-        <field name="paymentId" widget-style="${styles.link_default}">
+        <field name="invoiceId" title="${uiLabelMap.AccountingInvoice}" widget-style="${styles.link_default}">
+            <hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/>
+        </field>
+        <field name="paymentId" title="${uiLabelMap.AccountingPayment}" widget-style="${styles.link_default}">
             <hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/>
         </field>
-        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="origAmount"><display type="currency" currency="${origCurrencyUomId}"/></field>
+        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="origAmount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${origCurrencyUomId}"/></field>
         <field name="acctgTransId" widget-style="${styles.link_default}">
             <hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/>
         </field>
-        <field name="acctgTransTypeId"><display-entity entity-name="AcctgTransType"/></field>
+        <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="AcctgTransType"/></field>
         <field name="glJournalId"><display-entity entity-name="GlJournal" description="${glJournalName}"/></field>
         <field name="glAccountTypeId" title="${uiLabelMap.FormFieldTitle_glAccountType}"><display-entity entity-name="GlAccountType"/></field>
         <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><display-entity entity-name="GlAccountClass" description="${description}"/></field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><display-entity entity-name="PartyNameView" description="${lastName} ${groupName}"/></field>
-        <field name="reconcileStatusId"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="reconcileStatusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="origCurrencyUomId"><ignored/></field>
         <field name="currencyUomId"><ignored/></field>
         <field name="shipmentId"><ignored/></field>
@@ -476,9 +478,6 @@ under the License.
         <field name="physicalInventoryId"><ignored/></field>
         <field name="transDescription"><ignored/></field>
         <field name="paymentId"><hidden/></field>
-        <field name="invoiceId" widget-style="${styles.link_default}">
-            <hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/>
-        </field>
         <sort-order>
             <sort-field name="acctgTransId"/>
             <sort-field name="acctgTransEntrySeqId"/>
@@ -495,7 +494,7 @@ under the License.
         <field name="partyIdTo" title="${uiLabelMap.PartyPartyTo}">
           <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId"/>
         </field>
-        <field name="amount" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" widget-area-style="amount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="effectiveDate"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitAction" title="${uiLabelMap.CommonPrint}" widget-style="smallSubmit">
@@ -513,7 +512,7 @@ under the License.
         <field name="partyIdTo" title="${uiLabelMap.PartyPartyTo}">
           <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId"/>
         </field>
-        <field name="amount" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" widget-area-style="amount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="effectiveDate"><display/></field>
         <field name="paymentRefNum"><text/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
@@ -571,7 +570,7 @@ under the License.
     </form>
     <form name="FinAccountTransAssociatedWithPayment" type="single" default-map-name="finAccountTrans" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="finAccountTransId" position="1"><display/></field>
-        <field name="finAccountTransTypeId" title="${uiLabelMap.FormFieldTitle_finAccountTransType}" position="2">
+        <field name="finAccountTransTypeId" title="${uiLabelMap.CommonType}" position="2">
             <display-entity entity-name="FinAccountTransType" description="${description}"/>
         </field>
         <field name="amount" position="1"><display type="currency" currency="${payment.currencyUomId}"/></field>

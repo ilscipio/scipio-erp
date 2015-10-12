@@ -322,10 +322,10 @@ under the License.
             <hyperlink target="/catalog/control/EditProductSuppliers?productId=${productId}" description="${supplierProductId}" target-type="inter-app"/>
         </field>
         <field name="idValue" title="${uiLabelMap.ProductUPCA}"><display/></field>
-        <field name="minimumOrderQuantity" widget-area-style="align-text"><display/></field>
-        <field name="lastPrice" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="minimumOrderQuantity" widget-area-style="amount"><display/></field>
+        <field name="lastPrice" widget-area-style="amount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="requiredByDate"><display/></field>
-        <field name="quantity" widget-area-style="align-text"><display/></field>
+        <field name="quantity" widget-area-style="amount"><display/></field>
         <field name="comments"><display/></field>
     </form>
     <form name="ApprovedProductRequirements" type="multi" use-row-submit="true" target="quickPurchaseOrderEntry" title="" list-name="requirementsForSupplier"
@@ -353,12 +353,12 @@ under the License.
         <field name="supplierCurrencyUomId" entry-name="parameters.supplierCurrencyUomId"><display/></field>
         <field name="supplierProductId" title="${uiLabelMap.ProductSupplierProductId}"><display/></field>
         <field name="idValue" title="${uiLabelMap.ProductUPCA}"><display/></field>
-        <field name="minimumOrderQuantity" title="${uiLabelMap.FormFieldTitle_minimumOrderQuantity}" widget-area-style="align-text"><display/></field>
-        <field name="lastPrice" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="minimumOrderQuantity" title="${uiLabelMap.FormFieldTitle_minimumOrderQuantity}" widget-area-style="amount"><display/></field>
+        <field name="lastPrice" widget-area-style="aount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="requiredByDate"><display/></field>
-        <field name="atp" title="${uiLabelMap.ProductAtp}" widget-area-style="align-text"><display/></field>
-        <field name="qoh" title="${uiLabelMap.ProductQoh}" widget-area-style="align-text"><display/></field>
-        <field name="qtySold" title="${uiLabelMap.OrderQuantitySold}" widget-area-style="align-text"><display/></field>
+        <field name="atp" title="${uiLabelMap.ProductAtp}" widget-area-style="amount"><display/></field>
+        <field name="qoh" title="${uiLabelMap.ProductQoh}" widget-area-style="amount"><display/></field>
+        <field name="qtySold" title="${uiLabelMap.OrderQuantitySold}" widget-area-style="amount"><display/></field>
         <field name="quantity"><text size="4"/></field>
         <field name="comments"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>

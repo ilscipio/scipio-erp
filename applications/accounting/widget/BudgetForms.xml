@@ -37,7 +37,7 @@ under the License.
                 <parameter param-name="budgetId"/>
             </hyperlink>
         </field>
-        <field name="budgetTypeId" sort-field="true"><display-entity entity-name="BudgetType"/></field>
+        <field name="budgetTypeId"  title="${uiLabelMap.CommonType}" sort-field="true"><display-entity entity-name="BudgetType"/></field>
         <field name="customTimePeriodId" sort-field="true">
             <display/>
         </field>
@@ -58,7 +58,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="budget == null" target="createBudget"/>
         <field use-when="budget != null" name="budgetId"><display/></field>
-        <field name="budgetTypeId">
+        <field name="budgetTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="BudgetType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -74,7 +74,7 @@ under the License.
     <form name="BudgetHeader" type="single" title="Budget header information" default-map-name="budget"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="budgetId"><hidden/></field>
-        <field position="1" name="budgetTypeId"><display-entity entity-name="BudgetType"/></field>
+        <field position="1" name="budgetTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="BudgetType"/></field>
         <field name="customTimePeriodId" position="2"><display/></field>
         <field position="1" name="comments"><display/></field>
     </form>
@@ -82,23 +82,23 @@ under the License.
     <form name="BudgetStatus" list-name="budgetStatuses" target="" title="" type="list" separate-columns="true" paginate-target="budgetOverview"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="budgetId"><hidden/></field>
-        <field name="statusDate"><display/></field>
-        <field name="statusId" title="${uiLabelMap.AccountingBudgetStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusDate"><display type="date"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
     </form>
     
     <form name="BudgetRoles" type="list" use-row-submit="true" title="" list-name="budgetRoles" paginate-target="BudgetOverview"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
         <field name="budgetId"><hidden/></field>
-        <field name="partyId" widget-style="${styles.link_default}">
+        <field name="partyId" title="${uiLabelMap.PartyParty}" widget-style="${styles.link_default}">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="name" entry-name="partyId">
+        <field name="name" title="${uiLabelMap.PartyParty}" entry-name="partyId">
             <display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${firstName} ${lastName}"/>
         </field>
-        <field name="roleTypeId">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <display-entity also-hidden="false" entity-name="RoleType"/>
         </field>
     </form>
@@ -108,8 +108,8 @@ under the License.
         <auto-fields-entity entity-name="BudgetItem" default-field-type="display"/>
         <field name="budgetId"><hidden/></field>
         <field name="budgetItemSeqId"><display/></field>
-        <field name="budgetItemTypeId"><display-entity entity-name="BudgetItemType"/></field>
-        <field name="amount" ><display/></field>
+        <field name="budgetItemTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="BudgetItemType"/></field>
+        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display/></field>
         <field name="purpose" ><display/></field>
         <field name="justification" ><display/></field>
     </form>
@@ -142,7 +142,7 @@ under the License.
                 <parameter param-name="budgetItemSeqId"/>
             </hyperlink>
         </field>
-       <field name="budgetItemTypeId">
+       <field name="budgetItemTypeId" title=${uiLabelMap.CommonType}>
            <drop-down allow-empty="false">
                <entity-options entity-name="BudgetItemType" description="${description}" key-field-name="budgetItemTypeId"/>
            </drop-down>
@@ -164,7 +164,7 @@ under the License.
     <form name="EditBudgetItem" type="single" target="createBudgetItem" title="" default-map-name="budgetItem" default-entity-name="BudgetItem"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="budgetId"><hidden/></field>
-       <field name="budgetItemTypeId">
+       <field name="budgetItemTypeId" title="${uiLabelMap.CommonType}">
            <drop-down allow-empty="false">
                <entity-options entity-name="BudgetItemType" description="${description}" key-field-name="budgetItemTypeId"/>
            </drop-down>
@@ -185,7 +185,7 @@ under the License.
         <auto-fields-entity entity-name="BudgetRole"/>
         <field name="budgetId"><hidden/></field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="roleTypeId">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="RoleType">
                     <entity-order-by field-name="description"/>
@@ -206,7 +206,7 @@ under the License.
         <field name="name" entry-name="partyId">
             <display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${firstName} ${lastName}"/>
         </field>
-        <field name="roleTypeId">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <display-entity also-hidden="false" entity-name="RoleType"/>
         </field>
         <field name="removeAction" widget-style="${styles.button_default}">
@@ -223,7 +223,7 @@ under the License.
     <form name="EditBudgetReview" type="single" target="createBudgetReview" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="budgetId"><hidden/></field>
-        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="budgetReviewResultTypeId" title="${uiLabelMap.AccountingBudgetReviewResult}">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="BudgetReviewResultType">

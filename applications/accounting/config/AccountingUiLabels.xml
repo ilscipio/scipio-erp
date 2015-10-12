@@ -16777,7 +16777,7 @@
     </property>
     <property key="FormFieldTitle_debitCreditFlag">
         <value xml:lang="ar">علامة الدين القرض</value>
-        <value xml:lang="en">Debit Credit Flag</value>
+        <value xml:lang="en">D/C</value>
         <value xml:lang="es">Bandera de débito/crédito</value>
         <value xml:lang="fr">Débit ou crédit</value>
         <value xml:lang="hi_IN">जमा नामे फ्लैग</value>

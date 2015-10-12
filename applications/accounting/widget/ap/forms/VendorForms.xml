@@ -71,7 +71,7 @@ under the License.
     </form>
     <form name="FindApPayments" type="single" target="FindApPayments" extends="FindPayments" extends-resource="component://accounting/widget/PaymentForms.xml">
         <field name="parentTypeId"><hidden value="DISBURSEMENT"/></field>
-        <field name="paymentTypeId" position="1">
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PaymentType" description="${description}">
                     <entity-constraint name="parentTypeId" value="DISBURSEMENT"/>

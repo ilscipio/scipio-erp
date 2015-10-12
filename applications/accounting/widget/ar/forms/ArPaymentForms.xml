@@ -26,7 +26,7 @@ under the License.
             <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
             <set field="noConditionFind" value="Y"/>
         </actions>
-        <field name="paymentMethodTypeId" title="${uiLabelMap.FormFieldTitle_paymentMethodTypeId}">
+        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonMethod}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PaymentMethodType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -55,7 +55,7 @@ under the License.
     </form>
     <form name="FindArPayments" type="single" target="findPayments" extends="FindPayments" extends-resource="component://accounting/widget/PaymentForms.xml">
         <field name="parentTypeId"><hidden value="RECEIPT"/></field>
-        <field name="paymentTypeId" position="1">
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PaymentType" description="${description}">
                     <entity-constraint name="parentTypeId" value="RECEIPT"/>

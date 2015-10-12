@@ -78,60 +78,59 @@ under the License.
             </service>
             <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
         </actions>
-        <field name="accountCode" title="${uiLabelMap.CommonCode}" widget-style="${styles.link_default}">
+        <field name="accountCode" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${accountCode}" target="GlAccountNavigate">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
         </field>
-        <field name="accountName" entry-name="glAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountName}"/></field>
-        <field name="parentGlAccountId">
-            <display-entity entity-name="GlAccount" description="${accountName}" key-field-name="glAccountId">
-                <sub-hyperlink target="GlAccountNavigate" description="[${parentGlAccountId}]" use-when="parentGlAccountId!=null">
+        <field name="accountName" title="${uiLabelMap.CommonName}" entry-name="glAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountName}"/></field>
+        <field name="parentGlAccountId" title="${uiLabelMap.CommonParent}">
+            <display-entity entity-name="GlAccount" description=" " key-field-name="glAccountId">
+                <sub-hyperlink target="GlAccountNavigate" description="${parentGlAccountId} ${accountName}" use-when="parentGlAccountId!=null">
                     <parameter param-name="glAccountId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="glAccountTypeId"><display-entity entity-name="GlAccountType"/></field>
-        <field name="glAccountClassId"><display-entity entity-name="GlAccountClass"/></field>
-        <field name="glResourceTypeId"><display-entity entity-name="GlResourceType"/></field>
-        <field name="glXbrlClassId"><display-entity entity-name="GlXbrlClass"/></field>
+        <field name="glAccountTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="GlAccountType"/></field>
+        <field name="glAccountClassId" title="${uiLabelMap.CommonClass}"><display-entity entity-name="GlAccountClass"/></field>
+        <field name="glResourceTypeId" title="${uiLabelMap.CommonResource}"><display-entity entity-name="GlResourceType"/></field>
+        <field name="glXbrlClassId" title="XBRL ${uiLabelMap.CommonClass}"><display-entity entity-name="GlXbrlClass"/></field>
 
         <field name="description"><display/></field>
-        <field name="productId"><display-entity entity-name="Product"/></field>
+        <field name="productId" title="${uiLabelMap.CommonProduct}"><display-entity entity-name="Product"/></field>
         <field name="externalId"><display/></field>
     </form>
 
     <form name="EditGlAccount" type="single" target="updateGlAccount" title="" default-map-name="glAccount"
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="glAccount==null" target="createGlAccount"/>
-        <auto-fields-service service-name="updateGlAccount" map-name=""/>
-
         <field name="glAccountId"><display/></field>
         <field use-when="glAccount==null&amp;&amp;glAccountId!=null" name="glAccountId" tooltip="${uiLabelMap.AccountingCouldNotFindGlAccount} [${glAccountId}]"><display/></field>
         <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
-
-        <field name="glAccountTypeId">
+        <field name="accountCode" position="2"><text/></field>
+        <field name="accountName" title="${uiLabelMap.CommonName}"><text/></field>
+        <field name="glAccountTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false" no-current-selected-key="_NA_">
                 <entity-options entity-name="GlAccountType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glAccountClassId">
+        <field name="glAccountClassId" title="${uiLabelMap.CommonClass}" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="GlAccountClass" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glResourceTypeId">
+        <field name="glResourceTypeId" title="${uiLabelMap.CommonResource}">
             <drop-down allow-empty="false" no-current-selected-key="_NA_">
                 <entity-options entity-name="GlResourceType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glXbrlClassId">
+        <field name="glXbrlClassId" title="XBRL ${uiLabelMap.CommonClass}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="GlXbrlClass" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -140,12 +139,20 @@ under the License.
         </field>
         <field name="parentGlAccountId">
             <drop-down allow-empty="true">
-                <entity-options key-field-name="glAccountId" entity-name="GlAccount" description="${accountCode} - ${accountName} [${glAccountId}]">
+                <entity-options key-field-name="glAccountId" entity-name="GlAccount" description="${accountCode} - ${accountName}">
                     <entity-order-by field-name="accountCode"/>
                 </entity-options>
             </drop-down>
         </field>
-
+        <field name="productId" title="${uiLabelMap.CommonProduct}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Product" description="${productId} - ${internalName}">
+                    <entity-order-by field-name="productId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="externalId" position="2"><text/></field>
+        <field name="description"><textarea/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" use-when="glAccount==null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -222,6 +229,7 @@ under the License.
         <field name="acctgTransEntrySeqId"><display/></field>
         <field name="reconciledAmount"><display/></field>
     </form>
+    
     <form name="ListRateAmounts" type="list" target="deleteRateAmount" paginate-target="viewRateAmounts"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -232,20 +240,22 @@ under the License.
                 <order-by field-name="periodTypeId"/>
             </entity-condition>
         </actions>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden/></field>
         <field name="rateTypeId"><hidden/></field>
         <field name="rateCurrencyUomId"><hidden/></field>
         <field name="rateDescription"><display/></field>
-        <field name="periodTypeId"><display description="${periodDescription}"/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}" sort-field="true">
+        <field name="periodTypeId" title="${uiLabelMap.CommonPeriod}"><display description="${periodDescription}"/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}" sort-field="true">
             <hyperlink target="/partymgr/control/viewprofile" description="${groupName}${lastName} ${firstName} ${middleName}" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <field name="workEffortId" sort-field="true"><display description="${workEffortName}"/></field>
-        <field name="emplPositionTypeId" sort-field="true"><display description="${employeePositionDescription}"/></field>
-        <field name="rateAmount"><display type="currency" currency="${rateCurrencyUomId}"/></field>
-        <field name="delete" title="${uiLabelMap.CommonDelete}"><submit/></field>
+        <field name="emplPositionTypeId" title="${uiLabelMap.CommonPosition}" sort-field="true"><display description="${employeePositionDescription}"/></field>
+        <field name="rateAmount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${rateCurrencyUomId}"/></field>
+        
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" ><display type="date"/></field>
+        <field name="delete" title="${uiLabelMap.CommonExpire}"><submit/></field>
     </form>
 
     <form name="updateRateAmount" type="single" target="updateRateAmount" default-service-name="updateRateAmount"
@@ -253,14 +263,14 @@ under the License.
         <actions>
             <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
         </actions>
-        <field name="rateTypeId">
+        <field name="rateTypeId" title="${uiLabelMap.CommonType}">
             <drop-down>
                 <entity-options entity-name="RateType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="periodTypeId" position="2">
+        <field name="periodTypeId" title="${uiLabelMap.CommonPeriod}" position="2">
             <drop-down>
                 <entity-options entity-name="PeriodType" description="${description}">
                     <entity-constraint name="periodTypeId" operator="like" value="RATE_%"/>
@@ -269,7 +279,8 @@ under the License.
             </drop-down>
         </field>
         <field name="rateAmount" position="1"><text/></field>
-        <field name="rateCurrencyUomId" position="2">
+        <field name="rateCurrencyUomId" title="${uiLabelMap.Currency}" position="2">
+       
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -277,9 +288,9 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyId"><lookup target-form-name="LookupPartyName"></lookup></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"></lookup></field>
         <field name="workEffortId"><lookup target-form-name="LookupWorkEffort"><sub-hyperlink target="ww" description="${workEffortName}"/></lookup></field>
-        <field name="emplPositionTypeId" position="2">
+        <field name="emplPositionTypeId" title="${uiLabelMap.CommonPosition}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="EmplPositionType" description="${description}">
                     <entity-constraint name="emplPositionTypeId" operator="not-equals" value="_NA_"/>

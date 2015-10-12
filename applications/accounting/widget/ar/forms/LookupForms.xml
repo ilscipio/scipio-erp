@@ -24,7 +24,7 @@ under the License.
     <form name="LookupInvoice" target="LookupInvoice" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <field position="1" name="invoiceId"><text-find/></field>
-        <field position="1" name="invoiceTypeId">
+        <field position="1" name="invoiceTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true" no-current-selected-key="SALES_INVOICE">
                 <entity-options description="${description}" entity-name="InvoiceType" key-field-name="invoiceTypeId">
                     <entity-constraint name="parentTypeId" operator="equals" value="SALES_INVOICE"/>
@@ -52,7 +52,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="Payment" default-field-type="hidden"/>
         <field name="paymentId" title="${uiLabelMap.AccountingPaymentID}"><text-find/></field>
-        <field name="paymentTypeId">
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true" no-current-selected-key="CUSTOMER_PAYMENT">
                 <entity-options description="${description}" entity-name="PaymentType" key-field-name="paymentTypeId">
                     <entity-constraint name="parentTypeId" operator="equals" value="RECEIPT"/>

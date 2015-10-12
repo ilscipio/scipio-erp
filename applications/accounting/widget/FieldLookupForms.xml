@@ -26,7 +26,7 @@ under the License.
         <auto-fields-entity entity-name="FixedAsset" default-field-type="hidden"/>
         <field name="fixedAssetId"><text-find/></field>
         <field name="fixedAssetName"><text-find/></field>
-        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}">
+        <field name="fixedAssetTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="FixedAssetType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -50,13 +50,14 @@ under the License.
             <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.CommonName}"><display/></field>
-        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}"><display-entity entity-name="FixedAssetType"/></field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="FixedAssetType"/></field>
     </form>
+    
     <form name="lookupBudget" target="LookupBudget" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="Budget" default-field-type="hidden"/>
         <field name="budgetId"><text-find/></field>
-        <field name="budgetTypeId" title="${uiLabelMap.AccountingBudgetType}">
+        <field name="budgetTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="BudgetType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -124,7 +125,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}">
+        <field name="glAccountClassId" title="${uiLabelMap.CommonClass}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="GlAccountClass" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -261,7 +262,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="agreementId"><text-find/></field>
         <field name="agreementItemSeqId"><text-find/></field>
-        <field name="agreementItemTypeId" title="${uiLabelMap.FormFieldTitle_agreementItemType}">
+        <field name="agreementItemTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="AgreementItemType"/>
             </drop-down>
@@ -283,7 +284,7 @@ under the License.
         <field name="agreementItemSeqId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${agreementItemSeqId}" target="javascript:set_value('${agreementItemSeqId}')"/>
         </field>
-        <field name="agreementItemTypeId"><display/></field>
+        <field name="agreementItemTypeId" title="${uiLabelMap.CommonType}"><display/></field>
         <field name="currencyUomId"><display/></field>
     </form>
 

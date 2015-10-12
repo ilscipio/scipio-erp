@@ -41,22 +41,22 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="billingAccountId" widget-style="${styles.link_default}">
+        <field name="billingAccountId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
             <hyperlink description="${billingAccountId}" target="EditBillingAccount">
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
         </field>
-        <field name="accountLimit">
+        <field name="accountLimit" widget-area-style="amount" title-area-style="align-right">
             <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
         <field name="description"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
     </form>
 
     <form name="ListBillingAccountsByParty" type="list" list-name="billingAccounts" paginate-target="FindBillingAccount"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="billingAccountId" widget-style="${styles.link_default}">
+        <field name="billingAccountId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
             <hyperlink description="${billingAccountId}" target="EditBillingAccount">
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
@@ -64,12 +64,12 @@ under the License.
         <field name="accountLimit">
             <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
-        <field name="accountBalance"><display type="currency"/></field>
+        <field name="accountBalance" widget-area-style="amount" title-area-style="align-right"><display type="currency"/></field>
         <field name="description"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><display description="${parameters.partyId}"/></field>
-        <field name="roleTypeId" title="${uiLabelMap.AccountingRoleType}"><display-entity entity-name="RoleType"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><display description="${parameters.partyId}"/></field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}"><display-entity entity-name="RoleType"/></field>
     </form>
 
     <form name="ListBillingAccountInvoices" type="list" list-name="billingAccountInvoices" paginate-target="BillingAccountInvoices" default-entity-name="Invoice"
@@ -107,15 +107,14 @@ under the License.
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="invoiceTypeId"><display-entity entity-name="InvoiceType"/></field>
-        <field name="invoiceDate"><display/></field>
+        <field name="invoiceTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="InvoiceType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="description"><display/></field>
         <field name="partyIdFrom"><display description="${partyNameResultFrom.fullName} [${partyIdFrom}]"/></field>
         <field name="partyIdTo" parameter-name="partyId"><display description="${partyNameResultTo.fullName} [${partyId}]"/></field>
         <field name="invoiceDate"><display description="${groovy:invoiceDate.toString().substring(0,10)}"/></field>
-        <field name="total" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="amountToApply" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="total" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amountToApply" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="capture" use-when="${groovy:!paidInvoice}" widget-style="${styles.button_default}">
             <hyperlink target="capturePaymentsByInvoice" description="${uiLabelMap.AccountingCapture}">
                 <parameter param-name="invoiceId"/>
@@ -142,7 +141,7 @@ under the License.
         <field name="partyId" use-when="partyId == null" title="${uiLabelMap.AccountingPartyBilledTo}"><lookup target-form-name="LookupPartyName"/></field>
         <field use-when="roleTypeId == null" name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
 
-        <field name="accountCurrencyUomId" position="2">
+        <field name="accountCurrencyUomId" title="${uiLabelMap.CommonCurrency}" position="2">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -185,14 +184,14 @@ under the License.
         <auto-fields-service service-name="updateBillingAccountRole" default-field-type="edit"/>
 
         <field name="billingAccountId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
+        <field name="partyId" title="${uiLabelMap.PartyParty}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_default}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole">
             <display-entity entity-name="RoleType" description="${description}"/>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
@@ -211,14 +210,14 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createBillingAccountRole"/>
         <field name="billingAccountId"><hidden/></field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole">
             <drop-down allow-empty="false" no-current-selected-key="BILL_TO_CUSTOMER">
                 <entity-options entity-name="RoleType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -230,7 +229,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="billingAccountId"><hidden/></field>
-        <field name="termTypeId" title="${uiLabelMap.PartyTermType}">
+        <field name="termTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="TermType" description="${description}"/>
         </field>
         <field name="termValue" title="${uiLabelMap.CommonValue}"><display/></field>
@@ -250,12 +249,13 @@ under the License.
             </hyperlink>
         </field>
     </form>
+    
     <form name="EditBillingAccountTerms" type="single" target="updateBillingAccountTerm" title="" default-map-name="billingAccountTerm"
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="billingAccountTermId==null" target="createBillingAccountTerm"/>
         <field name="billingAccountId"><hidden/></field>
         <field use-when="billingAccountTermId!=null" name="billingAccountTermId"><hidden/></field>
-        <field name="termTypeId" title="${uiLabelMap.PartyTermType}">
+        <field name="termTypeId" title="${uiLabelMap.CommonType}">
             <drop-down>
                 <entity-options entity-name="TermType" description="${description}">
                     <entity-constraint name="parentTypeId" value="FINANCIAL_TERM"/>
@@ -273,6 +273,7 @@ under the License.
         <field name="termValue" title="${uiLabelMap.PartyTermValue}"><text size="10"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="ListBillingAccountPayments" type="list" list-name="payments" paginate-target="BillingAccountPayments"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -290,11 +291,11 @@ under the License.
         </field>
         <field name="invoiceId"><display/></field>
         <field name="invoiceItemSeqId"><display/></field>
-        <field name="effectiveDate"><display/></field>
-        <field name="amountApplied">
+        <field name="effectiveDate"><display type="date"/></field>
+        <field name="amountApplied" widget-area-style="amount" title-area-style="align-right">
             <display type="currency" currency="${currencyUomId}"/>
         </field>
-        <field name="amount">
+        <field name="amount" widget-area-style="amount" title-area-style="align-right">
             <display type="currency" currency="${currencyUomId}"/>
         </field>
     </form>
@@ -322,7 +323,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="paymentMethodTypeId">
+        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonMethod}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentMethodType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -337,19 +338,19 @@ under the License.
     <form name="ListBillingAccountOrders" type="list" list-name="orderPaymentPreferencesList" paginate-target="BillingAccountOrders"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="billingAccountId"><hidden/></field>
-        <field name="orderId" widget-style="${styles.link_default}">
+        <field name="orderId" title="${uiLabelMap.CommonOrder}" widget-style="${styles.link_default}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}" also-hidden="false">
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
-        <field name="orderDate"><display/></field>
-        <field name="paymentMethodTypeId">
+        <field name="orderDate"><display type="date"/></field>
+        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonMethod}">
             <display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId"/>
         </field>
         <field name="paymentStatusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
-        <field name="maxAmount">
+        <field name="maxAmount" widget-area-style="amount" title-area-style="align-right">
             <display type="currency" currency="${currencyUomId}"/>
         </field>
     </form>

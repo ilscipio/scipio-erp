@@ -45,8 +45,8 @@ under the License.
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="invoiceTypeId"><display-entity entity-name="InvoiceType"/></field>
-        <field name="invoiceDate"><display/></field>
+        <field name="invoiceTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="InvoiceType"/></field>
+        <field name="invoiceDate"><display type="date"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="description"><display/></field>
         <field name="partyIdFrom">
@@ -59,15 +59,14 @@ under the License.
                 <parameter param-name="partyId" from-field="partyId"/>
             </hyperlink>
         </field>
-        <field name="invoiceDate"><display/></field>
-        <field name="dueDate"><display/></field>
-        <field name="total" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="amountToApply" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="dueDate"><display type="date"/></field>
+        <field name="total" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amountToApply" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
    </form>
     
     <form name="FindApInvoices" type="single" target="FindApInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/InvoiceForms.xml">
         <field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>
-        <field position="1" name="invoiceTypeId">
+        <field position="1" name="invoiceTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="InvoiceType" description="${description}">
                     <entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
@@ -93,7 +92,7 @@ under the License.
         <field name="thruInvoiceDate" position="2"><date-time/></field>
         <field name="fromDueDate" position="1"><date-time/></field>
         <field name="thruDueDate" position="2"><date-time/></field>
-        <field name="invoiceTypeId" position="1">
+        <field name="invoiceTypeId" title="${uiLabelMap.CommonType}" position="1">
             <drop-down allow-empty="false">
                 <entity-options entity-name="InvoiceType" description="${description}">
                     <entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>

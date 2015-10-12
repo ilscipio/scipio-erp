@@ -1709,6 +1709,9 @@
         <value xml:lang="zh_CN">城市</value>
         <value xml:lang="zh_TW">城市</value>
     </property>
+    <property key="CommonClass">
+        <value xml:lang="en">Class</value>
+    </property>
     <property key="CommonClear">
         <value xml:lang="ar">محو</value>
         <value xml:lang="cs">Vyčistit</value>
@@ -1839,6 +1842,9 @@
         <value xml:lang="zh">-</value>
         <value xml:lang="zh_CN">关</value>
         <value xml:lang="zh_TW">關</value>
+    </property>
+    <property key="CommonCode">
+        <value xml:lang="en">Code </value>
     </property>
     <property key="CommonCollapse">
         <value xml:lang="ar">طوي</value>
@@ -8010,6 +8016,9 @@
         <value xml:lang="zh_CN">订单</value>
         <value xml:lang="zh_TW">訂單</value>
     </property>
+    <property key="CommonOrganisation">
+        <value xml:lang="en">Organisation</value>
+    </property>
     <property key="CommonOrganizationLogo">
         <value xml:lang="ar">شعار المنظمة</value>
         <value xml:lang="cs">Logo organizace</value>
@@ -8076,6 +8085,9 @@
         <value xml:lang="vi">Xem qua</value>
         <value xml:lang="zh">概览</value>
         <value xml:lang="zh_TW">概覽</value>
+    </property>
+    <property key="CommonOwner">
+        <value xml:lang="en">Owner</value>
     </property>
     <property key="CommonPage">
         <value xml:lang="ar">صفحة</value>
@@ -8342,6 +8354,9 @@
         <value xml:lang="zh">执行</value>
         <value xml:lang="zh_CN">执行</value>
         <value xml:lang="zh_TW">執行</value>
+    </property>
+    <property key="CommonPeriod">
+        <value xml:lang="en">Period</value>
     </property>
     <property key="CommonPermissionError">
         <value xml:lang="ar">خطأ في الصلاحية</value>
@@ -8611,6 +8626,9 @@
         <value xml:lang="vi">Trang hiển thị của Ứng dụng</value>
         <value xml:lang="zh">应用程序门户页面</value>
         <value xml:lang="zh_TW">應用程式入口網頁面</value>
+    </property>
+    <property key="CommonPosition">
+        <value xml:lang="en">Position</value>
     </property>
     <property key="CommonPostedBy">
         <value xml:lang="ar">مرسلة من</value>
@@ -9196,6 +9214,9 @@
         <value xml:lang="zh">原因</value>
         <value xml:lang="zh_TW">原因</value>
     </property>
+    <property key="CommonReceipt">
+        <value xml:lang="en">Receipt</value>
+    </property>
     <property key="CommonReceive">
         <value xml:lang="ar">استقبال</value>
         <value xml:lang="cs">Přijmout</value>
@@ -9595,6 +9616,9 @@
         <value xml:lang="zh">重新设置</value>
         <value xml:lang="zh_CN">重置</value>
         <value xml:lang="zh_TW">重設</value>
+    </property>
+    <property key="CommonResource">
+        <value  xml:lang="en">Resource</value>
     </property>
     <property key="CommonResultLookup">
         <value xml:lang="ar">نتيجة البحث</value>
@@ -10434,6 +10458,9 @@
         <value xml:lang="zh">(如果空，将设置为当前时间)</value>
         <value xml:lang="zh_CN">(如果为空就按当前日期赋值)</value>
         <value xml:lang="zh_TW">(如果是空值,將設定為目前時間)</value>
+    </property>
+    <property key="CommonShipment">
+        <value xml:lang="en">Shipment</value>
     </property>
     <property key="CommonShipping">
         <value xml:lang="ar">الشحن</value>

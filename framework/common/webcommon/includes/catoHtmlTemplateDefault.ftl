@@ -2414,7 +2414,10 @@ Usage example:
      TODO?: to be confirmed, but I think these could remain static includes even if ofbiz is to support
      per-site macro library overrides; the implementations in this file depend on the 
      implementation details of the default stock macros, and this is an implementation detail itself. 
-     instead we would have per-site cato lib overrides. debatable... -->
+     instead we would have per-site cato lib overrides. debatable... 
+     EDIT: this will on depend on the implementation of macros like @field. if it's split up,
+     then static includes make sense. but if it's left as-is and the stock macros are the only way
+     to have per-field-type markup overrides, then might want a per-site macro lib loading here... -->
 <#-- use the stock htmlTemplate.ftl file to import all; changes nothing, simply faster
 <#import "component://widget/templates/htmlFormMacroLibrary.ftl" as formlib>
 <#import "component://widget/templates/htmlScreenMacroLibrary.ftl" as screenlib> 

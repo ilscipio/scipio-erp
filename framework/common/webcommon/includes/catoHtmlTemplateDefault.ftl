@@ -2409,9 +2409,18 @@ Usage example:
 -->
 
 <#-- Macro library imports. These must be included at end due to circular dependencies (FIXME?).
-     In a sense the widget macros depend on Cato markup, but Cato macros currently call widget macros. -->
-<#-- FIXME: these should probably use a mechanism to include widget macros dynamically because ofbiz will
-     support per-store widget macros and must be same. see catoIncludes.ftl (put dynamic code there? move all this there?) -->
+     In a sense the widget macros depend on Cato markup, but Cato macros currently call widget macros. 
+     
+     TODO?: to be confirmed, but I think these could remain static includes even if ofbiz is to support
+     per-site macro library overrides; the implementations in this file depend on the 
+     implementation details of the default stock macros, and this is an implementation detail itself. 
+     instead we would have per-site cato lib overrides. debatable... -->
+<#-- use the stock htmlTemplate.ftl file to import all; changes nothing, simply faster
 <#import "component://widget/templates/htmlFormMacroLibrary.ftl" as formlib>
 <#import "component://widget/templates/htmlScreenMacroLibrary.ftl" as screenlib> 
-<#import "component://widget/templates/htmlMenuMacroLibrary.ftl" as menulib>
+<#import "component://widget/templates/htmlMenuMacroLibrary.ftl" as menulib>-->
+<#import "component://common/webcommon/includes/htmlTemplate.ftl" as formlib>
+<#import "component://common/webcommon/includes/htmlTemplate.ftl" as screenlib> 
+<#import "component://common/webcommon/includes/htmlTemplate.ftl" as menulib>
+
+

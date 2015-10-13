@@ -345,11 +345,14 @@
     </@fields>
   </@section>
 
-  <@section title="Default form fields (with labels) (again)">
-      <@field type="input" label="Input 1" />
-      <@field type="input" label="Input 2" />
-      <@field type="display">Display value</@field>
-      <@field type="input" label="Input 3" />
+  <@section title="Default form fields (with labels) with parent/child fields">
+      <@field type="generic" label="Multi-fields">
+        <@field type="input" />
+        <@field type="display">Child display value</@field>
+        <@field type="input" />
+      </@field>
+      <@field type="input" label="Regular field" />
+      <@field type="display">Regular display field</@field>
       <@field type="submitarea">
         <input type="submit" value="Submit" disabled="disabled" />
       </@field>

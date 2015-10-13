@@ -521,6 +521,8 @@ Not associated with an HTML element as is @fieldset.
 <#local parentFieldInfo = readRequestStack("catoCurrentFieldInfo")!{}>
 <#local hasParentField = ((parentFieldInfo.type)!"")?has_content>
 <#local isTopLevelField = !hasParentField>
+<#local isChildField = hasParentField>
+
 <#-- this field's info (popped at end) -->
 <#local dummy = pushRequestStack("catoCurrentFieldInfo", 
     {"type":type})>
@@ -561,6 +563,9 @@ Not associated with an HTML element as is @fieldset.
     <#if labelArea?is_boolean>
       <#local labelAreaDefault = labelArea>
     <#elseif labelType == "none" || labelLayout == "none">
+      <#local labelAreaDefault = false>
+    <#elseif isChildField>
+      <#-- based on current usage, a child field should never really have a label area by default (requires explicit)... -->
       <#local labelAreaDefault = false>
     <#else>
       <#local labelAreaDefault = (fieldsInfo.labelArea)!false>

@@ -10331,6 +10331,20 @@
         <value xml:lang="zh_CN">序列</value>
         <value xml:lang="zh_TW">序號</value>
     </property>
+    <property key="CommonSeqNum">
+        <value xml:lang="de">Seq. Nummer</value>
+        <value xml:lang="en">Seq Num</value>
+        <value xml:lang="es">Nº sec.</value>
+        <value xml:lang="fr">N° de séq.</value>
+        <value xml:lang="it">Num Seq</value>
+        <value xml:lang="ja">連番</value>
+        <value xml:lang="ro">Num Secventa</value>
+        <value xml:lang="ru">Посл. ном.</value>
+        <value xml:lang="th">หมายเลขรายการ</value>
+        <value xml:lang="vi">Số thứ tự</value>
+        <value xml:lang="zh">序号</value>
+        <value xml:lang="zh_TW">序號</value>
+    </property>
     <property key="CommonSequenceNum">
         <value xml:lang="ar">رقم التسلسل</value>
         <value xml:lang="cs">Pořadové číslo</value>

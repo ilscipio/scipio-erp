@@ -45,3 +45,20 @@
 @import "tiles";
 @import "pizza";
 @import "chartsjs";
+
+
+// OFBiz align-right definition 
+.align-right {
+  text-align: right;
+  word-break: normal;
+}
+
+.align-center {
+  text-align: center;
+  word-break: normal;
+}
+
+.amount {
+  text-align: right;
+  word-break: normal;
+}

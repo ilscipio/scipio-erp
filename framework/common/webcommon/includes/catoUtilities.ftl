@@ -358,22 +358,19 @@ Gets current @section level.
 Currently must be a function because global var is not always set and request attrib is messy. 
 
    * Parameters *
-    defaultVal      = default number to return if no section level define, or boolean:
-                      true: return cato default number value, false: return nothing (empty string)
-                      template code should leave this to true.
+    useDefault      = default true; if true, if no heading defined, return default; else return void
 -->
-<#function getCurrentSectionLevel defaultVal=true>
+<#function getCurrentSectionLevel useDefault=true>
   <#local sLevel = getRequestVar("catoCurrentSectionLevel")!"">
-  <#if !sLevel?has_content>
-    <#if defaultVal?is_boolean>
-      <#if defaultVal>
-        <#local sLevel = 1>
-      </#if>
-    <#else>
-      <#local sLevel = defaultVal>
-    </#if>
+  <#if sLevel?has_content>
+    <#return sLevel>
+  <#elseif useDefault>
+    <#return getDefaultSectionLevel()>
   </#if>
-  <#return sLevel>
+</#function> 
+
+<#function getDefaultSectionLevel>
+  <#return 1>
 </#function> 
 
 <#-- 
@@ -398,23 +395,15 @@ Gets current heading level.
 Currently must be a function because global var is not always set and request attrib is messy. 
 
    * Parameters *
-    defaultVal      = default number to return if no section level define, or boolean:
-                      true: return cato default number value, false: return nothing (empty string)
-                      template code should leave this to true.
+    useDefault      = default true; if true, if no heading defined, return default; else return void
 -->
-<#function getCurrentHeadingLevel defaultVal=true>
+<#function getCurrentHeadingLevel useDefault=true>
   <#local hLevel = getRequestVar("catoCurrentHeadingLevel")!"">
-  <#if !hLevel?has_content>
-    <#if defaultVal?is_boolean>
-      <#if defaultVal>
-        <#local hLevel = getDefaultHeadingLevel()>
-      <#-- else method being used to get true value -->
-      </#if>
-    <#else>
-      <#local hLevel = defaultVal>
-    </#if>
+  <#if hLevel?has_content>
+    <#return hLevel>
+  <#elseif useDefault>
+    <#return getDefaultHeadingLevel()>
   </#if>
-  <#return hLevel>
 </#function> 
 
 <#function getDefaultHeadingLevel>
@@ -666,15 +655,13 @@ and not "omit" as usually specified on macros. also translates booleans.
 
 see makeClassesArg, results of getElemSpecFromStyleStr.
 -->
-<#function translateStyleStrClassesArg val defaultVal=true>
-  <#if !val?has_content>
-    <#return defaultVal>
+<#function translateStyleStrClassesArg val>
+  <#if val?has_content>
+    <#return val>
   <#elseif val == "true">
     <#return true>
   <#elseif val == "false">
     <#return false>
-  <#else>
-    <#return val>
   </#if>    
 </#function>
 
@@ -689,22 +676,18 @@ usually those macro args take "" by default, to mean default.
 
 see makeClassesArg, results of getElemSpecFromStyleStr.
 -->
-<#function translateStyleStrBoolArg val defaultVal="">
-  <#if !val?has_content>
-    <#return defaultVal>
+<#function translateStyleStrBoolArg val>
+  <#if val?has_content>
+    <#return val>
   <#elseif val == "true">
     <#return true>
   <#elseif val == "false">
     <#return false>
-  <#else>
-    <#return val>
   </#if>    
 </#function>
 
-<#function translateStyleStrNumberArg val defaultVal="">
-  <#if !val?has_content>
-    <#return defaultVal>
-  <#else>
+<#function translateStyleStrNumberArg val>
+  <#if val?has_content>
     <#return val?number>
   </#if>    
 </#function>
@@ -715,7 +698,7 @@ see makeClassesArg, results of getElemSpecFromStyleStr.
 ************
 Pushes a value onto a global stack variable in request scope (request attributes, or if no request, globals).
 
-   * General Attributes *
+   * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
     val         = value
@@ -732,7 +715,7 @@ Pushes a value onto a global stack variable in request scope (request attributes
 Reads the last value added to the named global stack variable in request scope
 (request attributes, or if no request, globals), without popping.
 
-   * General Attributes *
+   * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
 
@@ -747,7 +730,7 @@ Reads the last value added to the named global stack variable in request scope
 ************
 Pops a global stack variable in request scope (request attributes, or if no request, globals).
 
-   * General Attributes *
+   * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
     
@@ -763,7 +746,7 @@ Pops a global stack variable in request scope (request attributes, or if no requ
 Sets a global var in request scope (request attributes, or if no request, globals).
 Values set by this method must be read using getRequestVar.
 
-   * General Attributes *
+   * Parameters *
     name        = global request var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
     val         = value
@@ -781,7 +764,7 @@ Gets a global var from request scope (request attributes, or if no request, glob
 Should only be used to read values set by setRequestVar.
 Not meant to be used on regular request attributes.
 
-   * General Attributes *
+   * Parameters *
     name        = global request var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
 

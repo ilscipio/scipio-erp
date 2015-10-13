@@ -172,14 +172,14 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#if titleStyleArgs.relLevel?has_content>
       <#local relHeadingLevel = titleStyleArgs.relLevel?number>
     </#if>
-    <#local titleConsumeLevel = translateStyleStrBoolArg(titleStyleArgs.consumeLevel!"", true)>
+    <#local titleConsumeLevel = translateStyleStrBoolArg(titleStyleArgs.consumeLevel!"")!true>
   <#else>
     <#local titleStyleArgs = {}>
   </#if>
-    <#local titleElemType = translateStyleStrClassesArg(titleStyleArgs.elemType!"", true)>
-    <#local titleClass = translateStyleStrClassesArg(titleStyleArgs.elemClass!"", true)>
-    <#local titleContainerElemType = translateStyleStrClassesArg(titleStyleArgs.containerElemType!"", false)>
-    <#local titleContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerElemClass!"", true)>
+    <#local titleElemType = translateStyleStrClassesArg(titleStyleArgs.elemType!"")!true>
+    <#local titleClass = translateStyleStrClassesArg(titleStyleArgs.elemClass!"")!true>
+    <#local titleContainerElemType = translateStyleStrClassesArg(titleStyleArgs.containerElemType!"")!false>
+    <#local titleContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerElemClass!"")!true>
 
 <#-- title-style parsing end -->
 
@@ -192,7 +192,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#local updatedHeadingLevel = false> <#-- just so consistent -->
     <#local prevHeadingLevel = "">
     <#if autoHeadingLevel>
-        <#local prevHeadingLevel = getCurrentHeadingLevel(false)>
+        <#local prevHeadingLevel = getCurrentHeadingLevel(false)!"">
         <#if headingLevel?has_content>
             <#local hLevel = headingLevel>
             <#local explicitHeadingLevel = true>

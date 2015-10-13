@@ -422,7 +422,45 @@ not "current" context (too intrusive in current renderer design). still relies o
   </#list>
 </#macro>
 
-<#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false>
+<#-- Cato: new macro to factor out progress markup; note: uses #nested but support nestedContent arg pattern -->
+<#macro renderSubmitFieldAreaProgress progressOptions nestedContent=true>
+  <#if !nestedContent?is_string>
+    <#if nestedContent?is_boolean && nestedContent == false>
+      <#local nestedContent = "">
+    <#else>
+      <#local nestedContent><#nested></#local>
+    </#if>
+  </#if>
+
+  <#local rowClass>submit-progress-row<#if buttonMarkup?has_content> has-submit-button<#else> no-submit-button</#if></#local>
+  <@row class=("+" + rowClass)>
+    <#if nestedContent?has_content>
+      <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
+        ${nestedContent}
+      </@cell>
+    </#if>
+    <#if progressOptions.progBarId?has_content>
+      <#-- with progress bar, optional text -->
+      <#local subclasses = progressOptions.progTextBoxId?has_content?string("${styles.grid_small!}6 ${styles.grid_large!}6", "${styles.grid_small!}9 ${styles.grid_large!}10 ${styles.grid_end!}")>
+      <@cell class=subclasses>
+        <@progress id=progressOptions.progBarId type="info" wrapperClass="+${styles.hidden!}" progressOptions=progressOptions/>
+      </@cell>
+      <#if progressOptions.progTextBoxId?has_content>
+        <#local subclasses = "${styles.grid_small!}3 ${styles.grid_large!}4 ${styles.grid_end!}">
+        <@cell class=subclasses id=progressOptions.progTextBoxId>
+        </@cell>
+      </#if>
+    <#elseif progressOptions.progTextBoxId?has_content>
+       <#-- text progress only -->
+       <#local subclasses = "${styles.grid_small!}9 ${styles.grid_large!}10 ${styles.grid_end!}">
+       <@cell class=subclasses id=progressOptions.progTextBoxId>
+       </@cell>
+       <@progressScript options=progressOptions htmlwrap=true />
+    </#if>
+  </@row>
+</#macro>
+
+<#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
   <#if buttonType!="image">
@@ -437,63 +475,58 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#else>
   <#local buttonMarkup>
   <#if buttonType=="text-link">
-    <a <@renderClass className alert /> href="javascript:document.${formName}.submit()" <#if confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>><#if title?has_content>${title}</#if> </a>
+    <a <@renderClass className alert /><#if disabled> disabled="disabled" href="javascript:void(0)"<#else> href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
   <#elseif buttonType=="image">
-    <input type="image" src="${imgSrc}" <@renderClass className alert /><#if name?has_content> name="${name}"</#if>
+    <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}" <@renderClass className alert /> <#if name?has_content> name="${name}"</#if>
     <#if title?has_content> alt="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
-    <#if confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>/>
+    <#if disabled> disabled="disabled"<#else>
+      <#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
+    </#if>/>
   <#else>
-    <input type="<#if containerId?has_content>button<#else>submit</#if>" <@renderClass className alert />
-    <#if name??> name="${name}"</#if><#if title?has_content> value="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
-    <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"
-      <#else><#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if>
+    <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>" <@renderClass className alert />
+    <#if name?has_content> name="${name}"</#if><#if title?has_content> value="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
+    <#if disabled> disabled="disabled"<#else>
+      <#if onClick?has_content> onclick="${onClick}"<#else>
+        <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else>
+        <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if>
+        </#if>
+      </#if>
     </#if>/>
   </#if>
   </#local>
 </#if>
-  <#if (htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true>
-      <#local baseId = htmlFormRenderFormInfo.name + "_catouplprogform">
-      <#local rowClass>submit-progress-row<#if buttonMarkup?has_content> has-submit-button<#else> no-submit-button</#if></#local>
-      <@row class=rowClass>
-      <#if buttonMarkup?has_content>
-        <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
-          ${buttonMarkup}
-        </@cell>
+  <#if !(showProgress?is_boolean && showProgress == false) && 
+       ((showProgress?is_boolean && showProgress == true) ||
+        ((htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true))>
+      <#local baseId = htmlFormRenderFormInfo.name!"" + "_catouplprogform">       
+      <#local progressOptions = {
+        "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
+        "progBarId" : "${baseId}_progbar",
+        "progTextBoxId" : "${baseId}_textbox",
+        
+        "expectedResultContainerSel" : "#main-content",
+        "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
+        "errorResultAddWrapper" : false
+      }>
+      <#local action = htmlFormRenderFormInfo.progressSuccessAction!"">
+      <#if action?starts_with("redirect;")>
+        <#local progressOptions = progressOptions + { "successRedirectUrl" : action?substring("redirect;"?length) }>
+      <#elseif action == "reload" || action?starts_with("reload:")>
+        <#local progressOptions = progressOptions + { "successReloadWindow" : true }>
       </#if>
-        <@cell class="${styles.grid_small!}6 ${styles.grid_large!}6">
-          
-          <#local progressOptions = {
-            "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
-            "progTextBoxId" : "${baseId}_textbox",
-            
-            "expectedResultContainerSel" : "#main-content",
-            "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
-            "errorResultAddWrapper" : false
-          }>
-          <#local action = htmlFormRenderFormInfo.progressSuccessAction!"">
-          <#if action?starts_with("redirect;")>
-            <#local progressOptions = progressOptions + { "successRedirectUrl" : action?substring("redirect;"?length) }>
-          <#elseif action == "reload" || action?starts_with("reload:")>
-            <#local progressOptions = progressOptions + { "successReloadWindow" : true }>
-          </#if>
-          
-          <#if htmlFormRenderFormInfo.progressOptions?has_content>
-            <#-- json is valid freemarker map -->
-            <#local addOpts = ("{" + htmlFormRenderFormInfo.progressOptions + "}")?eval>
-            <#if addOpts?has_content>
-              <#local progressOptions = progressOptions + addOpts>  
-            </#if>
-          </#if>
-          
-          <@progress id="${baseId}_progbar" type="info" wrapperClass="+${styles.hidden!}" progressOptions=progressOptions/>
-        </@cell>
-        <@cell class="${styles.grid_small!}3 ${styles.grid_large!}4 ${styles.grid_end!}" id="${baseId}_textbox">
-        </@cell>
-      </@row>
+      
+      <#if htmlFormRenderFormInfo.progressOptions?has_content>
+        <#-- json is valid freemarker map -->
+        <#local addOpts = ("{" + htmlFormRenderFormInfo.progressOptions + "}")?eval>
+        <#if addOpts?has_content>
+          <#local progressOptions = progressOptions + addOpts>  
+        </#if>
+      </#if>
+        
+      <@renderSubmitFieldAreaProgress progressOptions=progressOptions nestedContent=buttonMarkup />
   <#else>
       ${buttonMarkup}
   </#if>
-
 </#macro>
 
 <#macro renderResetField className alert name title="" fieldType="" fieldTitleBlank=false>

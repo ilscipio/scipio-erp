@@ -58,6 +58,8 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="catalogs"/>
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
+                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -71,7 +73,7 @@ under the License.
                             </widgets>
                         </section>
                         <include-screen name="leftbar"/>
-                    </decorator-section>                    
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>

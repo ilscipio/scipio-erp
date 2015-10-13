@@ -49,13 +49,12 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProdCatalog">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCatalog"/>
                 <set field="tabButtonItem" value="ProductCatalog"/>
-                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
-                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
@@ -69,6 +68,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProdCatalogSection">
         <section>
             <actions>
@@ -92,6 +92,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProdCatalogCategories">
         <section>
             <actions>
@@ -110,11 +111,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductCatalogCategories}">
-                            <include-form name="EditProdCatalogCategories" location="component://product/widget/catalog/CatalogForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.ProductAddCatalogProdCat}">
                             <include-form name="addProductCategoryToProdCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditProductCatalogCategories}">
+                            <include-form name="EditProdCatalogCategories" location="component://product/widget/catalog/CatalogForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

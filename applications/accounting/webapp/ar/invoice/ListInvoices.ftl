@@ -148,7 +148,8 @@ under the License.
         <@tr class="header-row-2">
           <@td>${uiLabelMap.AccountingInvoice}</@td>
           <@td>${uiLabelMap.CommonDate}</@td>
-          <@td>${uiLabelMap.FormFieldTitle_invoiceTypeId}</@td>
+          <@td>${uiLabelMap.AccountingDueDate}</@td>
+          <@td>${uiLabelMap.CommonType}</@td>
           <@td>${uiLabelMap.CommonStatus}</@td>
           <@td>${uiLabelMap.CommonDescription}</@td>
           <@td>${uiLabelMap.AccountingVendorParty}</@td>
@@ -166,6 +167,8 @@ under the License.
             <@tr valign="middle">
               <@td><a class="${styles.link_default!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
               <@td>${(invoice.invoiceDate?date?string.short)!}</@td>
+              <@td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date?string.short}</#if></@td>
+            
               <@td>
                 <#assign invoiceType = delegator.findOne("InvoiceType", {"invoiceTypeId" : invoice.invoiceTypeId}, true) />
                 ${invoiceType.description?default(invoice.invoiceTypeId)}

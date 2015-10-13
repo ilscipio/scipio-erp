@@ -19,9 +19,6 @@
 package com.ilscipio.cato.webapp.ftl;
 
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateMethodModelEx;
@@ -42,6 +39,7 @@ public class GetRequestVarMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
         if (args == null || args.size() < 1 || args.size() > 2) {
@@ -54,28 +52,11 @@ public class GetRequestVarMethod implements TemplateMethodModelEx {
         // the default value is a throwback to the #function definition version; doesn't hurt
         TemplateModel defaultValModel = (args.size() >= 2) ? (TemplateModel) args.get(1) : null;
 
-        String name = ((TemplateScalarModel) nameModel).getAsString();
-        
         Environment env = FtlTransformUtil.getCurrentEnvironment();
-        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Object res = CommonFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), 
+                FtlTransformUtil.getRequest(env), FtlTransformUtil.getGlobalContext(env), env);
         
-        Object res = null;
-        
-        // NOTE: result gets automatically wrapped by Freemarker on need basis
-        if (request != null) {
-            res = request.getAttribute(name);
-        }
-        else {
-            Map<String, Object> globalContext = FtlTransformUtil.getGlobalContext(env);
-            if (globalContext != null) {    
-                res = globalContext.get(name);
-            }
-            else {
-                res = env.getGlobalVariable(name);
-            }
-        }
- 
-        return FtlTransformUtil.getDefaultIfNull(res, defaultValModel);
+        return FtlTransformUtil.getDefaultIfNull(res, defaultValModel); // NOTE: result gets automatically wrapped by Freemarker on need basis
     }
 
 }

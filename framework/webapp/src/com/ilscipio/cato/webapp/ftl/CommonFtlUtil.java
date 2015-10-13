@@ -1,13 +1,17 @@
 package com.ilscipio.cato.webapp.ftl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
@@ -15,19 +19,25 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 
+import freemarker.core.Environment;
+import freemarker.template.SimpleSequence;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 import javolution.util.FastMap;
 
 /**
  * Cato: Common generic Freemarker templating utility methods.
  * <p>
- * Java language analog of component://common/webcommon/includes/catoUtilities.ftl.
+ * Java language analog of <code>component://common/webcommon/includes/catoUtilities.ftl</code>.
  * <p>
- * <em>NOTE:</em> This is for common, generic code only (generic utilities). Code that implements
- * template macro (e.g. catoHtmlTemplateDefault.ftl) logic belongs in separate class.
+ * <em>NOTE</em>: This is for common, general-purpose code only (generic utilities). Code that implements
+ * template macro markup (e.g. catoHtmlTemplateDefault.ftl) logic belongs in separate class.
  */
 public final class CommonFtlUtil {
     
     public static final String module = CommonFtlUtil.class.getName();
+    
+    public static final int REQUEST_STACK_INITIAL_CAPACITY = 10; 
     
     private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
             UtilCache.createUtilCache("com.ilscipio.cato.webapp.ftl.CommonFtlUtil.headingElemSpecFromStyleStrCache");
@@ -323,4 +333,286 @@ public final class CommonFtlUtil {
         return sb.toString();
     }
     
+    
+    /**
+     * Method for setting request-scope variables, with fallback to globals.
+     * <p> 
+     * Values set by this method should only be read using {@link #getRequestVar} (or a transform that calls it).
+     * The values set in request and context may be stored wrapped as <code>TemplateModel</code> or raw object at 
+     * implementation's discretion. Likewise in general values read back may be either wrapped or raw object and caller
+     * has to check and handle (get/read methods do not convert result), which freemarker calls do anyway.
+     * <p>
+     * Name should be globally unique across request attribs, screen contexts and FTL context at same time.
+     * <p>
+     * Currently this sets request attributes above all. If request is missing, tries to set a var in screen globalContext
+     * (from passed context; if context null, fished out of FTL env). If globalContext is missing, last resort is to set
+     * an FTL #global var. i.e. tries to use longest-lived scope possible.
+     * <p>
+     * <em>NOTE</em>: decision to use request, globalContext or FTL globals is based
+     * on whether these contexts are passed, so "statically". it's not based on whether var itself exists.
+     * <p>
+     * <em>DEV NOTE</em>: could also have set var in all contexts every time but then pushRequestStack
+     * has to do the same for consistency and there it would affect performance.
+     * setting in all contexts I think would only hide renderer bugs anyway.
+     * <p>
+     * <em>DEV NOTE</em>: could also set all these vars in their own separate map which is then stored
+     * in req attribs/globals. help to avoid name clashes but don't see need yet.
+     * 
+     * @param name the multi-context unique global var name
+     * @param value the value, either raw or <code>TemplateModel</code>
+     * @param request the servlet request, or null if not available
+     * @param context the screen context, or null if not available
+     * @param env the Freemarker environment, or null if not available
+     * @throws TemplateModelException
+     * @see #getRequestVar
+     */
+    public static void setRequestVar(String name, Object value, HttpServletRequest request, 
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        if (request != null) {
+            // WARNING: unwrapping inconsistent with pushRequestStack, but wanted here for compatibility and debugging
+            //request.setAttribute(name, value);
+            request.setAttribute(name, FtlTransformUtil.unwrap(value));
+            //Debug.logInfo("setRequestVar: request attrib (name: " + name + ")", module);
+        }
+        else {
+            Map<String, Object> globalContext = FtlTransformUtil.getGlobalContext(context, env);
+            if (globalContext != null) {
+                // WARNING: unwrapping inconsistent with pushRequestStack, but wanted here for compatibility and debugging
+                //globalContext.put(name, value);
+                globalContext.put(name, FtlTransformUtil.unwrap(value));
+                //Debug.logInfo("setRequestVar: globalContext var (name: " + name + ")", module);
+            }
+            else if (env != null) {
+                env.setGlobalVariable(name, (value instanceof TemplateModel) ? 
+                        (TemplateModel) value : env.getObjectWrapper().wrap(value));
+                //Debug.logInfo("setRequestVar: ftl global var (name: " + name + ")", module);
+            }
+            else {
+                throw new IllegalArgumentException("No request, context or ftl environment to set request scope var (name: " + name + ")");
+            }
+        }
+    }    
+    
+    /**
+     * Method for getting request-scope variables, with fallback to globals.
+     * <p>
+     * Must and should only be used to read values set by {@link #setRequestVar}.
+     * <p>
+     * Return value may or may not be a <code>TemplateModel</code>; caller must wrap or unwrap as needed.
+     * Can use {@link com.ilscipio.cato.webapp.ftl.FtlTransformUtil#unwrap(Object)}.
+     * 
+     * @see #setRequestVar
+     */
+    public static Object getRequestVar(String name, HttpServletRequest request, 
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        Object res = null;
+
+        if (request != null) {
+            res = request.getAttribute(name);
+            //Debug.logInfo("getRequestVar: request attrib (name: " + name + ")", module);
+        }
+        else {
+            Map<String, Object> globalContext = FtlTransformUtil.getGlobalContext(context, env);
+            if (globalContext != null) {    
+                res = globalContext.get(name);
+                //Debug.logInfo("getRequestVar: globalContext var (name: " + name + ")", module);
+            }
+            else if (env != null) {
+                res = env.getGlobalVariable(name);
+                //Debug.logInfo("getRequestVar: ftl global var (name: " + name + ")", module);
+            }
+            else {
+                throw new IllegalArgumentException("No request, context or ftl environment to get request scope var (name: " + name + ")");
+            }
+        }
+        
+        return res;
+    }
+    
+    /**
+     * Method providing support for a stack structure having request scope, with fallback to globals.
+     * <p>
+     * <strong>Do not access underlying structure directly.</strong>
+     * 
+     * @see #setRequestVar
+     */
+    public static void pushRequestStack(String name, Object value, HttpServletRequest request, 
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        // WARNING: currently I don't see any need to wrap OR unwrap the value, no matter how inconsistent
+        // it makes the list, so don't do it for performance reasons, but in future it could be needed.
+        // caller should always check result from read/popRequestStack so that's where convert should happen;
+        // minimizes deep conversions.
+        // if non env.setGlobalVariable: 
+        //if (value instanceof TemplateModel) {
+        //    value = FtlTransformUtil.unwrap((TemplateModel) value);
+        //}
+        // if env.setGlobalVariable: 
+        //[wrapping code]
+
+        if (request != null) {
+            List<Object> stack;
+            Object stackObj = request.getAttribute(name);
+            if (stackObj instanceof List) {
+                stack = UtilGenerics.checkList(stackObj);
+            }
+            else {
+                if (stackObj != null) {
+                    Debug.logWarning("Overriding request attribute with new stack (name: " + name + ")", module);
+                }
+                stack = new ArrayList<Object>(REQUEST_STACK_INITIAL_CAPACITY);
+            }
+            
+            stack.add(value);
+
+            request.setAttribute(name, stack);
+            //Debug.logInfo("pushRequestStack: request attrib (name: " + name + ")", module);
+        }
+        else {
+            Map<String, Object> globalContext = FtlTransformUtil.getGlobalContext(context, env);
+            if (globalContext != null) {   
+                List<Object> stack;
+                Object stackObj = globalContext.get(name);
+                if (stackObj instanceof List) {
+                    stack = UtilGenerics.checkList(stackObj);
+                }
+                else {
+                    if (stackObj != null) {
+                        Debug.logWarning("Overriding globalContext var with new stack (name: " + name + ")", module);
+                    }
+                    stack = new ArrayList<Object>(REQUEST_STACK_INITIAL_CAPACITY);
+                }
+                
+                stack.add(value);
+                
+                globalContext.put(name, stack);
+                //Debug.logInfo("pushRequestStack: globalContext var (name: " + name + ")", module);
+            }
+            else if (env != null) {
+                SimpleSequence stack;
+                Object stackObj = env.getGlobalVariable(name);
+                if (stackObj instanceof SimpleSequence) {
+                    stack = (SimpleSequence) stackObj;
+                }
+                else {
+                    if (stackObj != null) {
+                        Debug.logWarning("Overriding FTL globals var with new stack (name: " + name + ")", module);
+                    }
+                    stack = new SimpleSequence(REQUEST_STACK_INITIAL_CAPACITY, env.getObjectWrapper());
+                }
+                
+                // WARN: this sort of violates freemarker language by modifying list in-place after initial construction,
+                // but no one should ever be accessing this list directly anyway apart from these methods
+                stack.add(value);
+                
+                env.setGlobalVariable(name, stack);
+                //Debug.logInfo("pushRequestStack: ftl global var (name: " + name + ")", module);
+            }
+            else {
+                throw new IllegalArgumentException("No request, context or ftl environment to push request scope stack (name: " + name + ")");
+            }
+        }
+    }
+    
+    /**
+     * Method providing support for a stack structure having request scope, with fallback to globals.
+     * <p>
+     * <strong>Do not access underlying structure directly.</strong>
+     * <p>
+     * Return value may or may not be a <code>TemplateModel</code>; caller must wrap or unwrap as needed.
+     * 
+     * @see #setRequestVar
+     */
+    public static Object readRequestStack(String name, HttpServletRequest request, 
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        return readRequestStack(name, false, request, context, env);
+    }
+    
+    static Object readRequestStack(String name, boolean pop, HttpServletRequest request, 
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        Object res = null;
+
+        if (request != null) {
+            List<Object> stack = null;
+            Object stackObj = request.getAttribute(name);
+            if (stackObj instanceof List) {
+                stack = UtilGenerics.checkList(stackObj);
+            }
+            if (stack != null && !stack.isEmpty()) {
+                res = pop ? stack.remove(stack.size() - 1) : stack.get(stack.size() - 1);
+                if (pop) {
+                    request.setAttribute(name, stack); // for correctness
+                }
+            }
+            else if (pop) {
+                Debug.logError("Trying to pop empty request attrib stack (name: " + name + ")", module);
+            }
+            //Debug.logInfo((pop ? "pop" : "read") + "RequestStack: request attrib (name: " + name + ")", module);
+        }
+        else {
+            Map<String, Object> globalContext = FtlTransformUtil.getGlobalContext(context, env);
+            if (globalContext != null) {   
+                List<Object> stack = null;
+                Object stackObj = globalContext.get(name);
+                if (stackObj instanceof List) {
+                    stack = UtilGenerics.checkList(stackObj);
+                }
+                if (stack != null && !stack.isEmpty()) {
+                    res = pop ? stack.remove(stack.size() - 1) : stack.get(stack.size() - 1);
+                    if (pop) {
+                        globalContext.put(name, stack); // for correctness
+                    }
+                }
+                else if (pop) {
+                    Debug.logError("Trying to pop empty globalContext stack (name: " + name + ")", module);
+                }
+                //Debug.logInfo((pop ? "pop" : "read") + "RequestStack: globalContext var (name: " + name + ")", module);
+            }
+            else if (env != null) {
+                SimpleSequence stack = null;
+                Object stackObj = env.getGlobalVariable(name);
+                if (stackObj instanceof SimpleSequence) {
+                    stack = (SimpleSequence) stackObj;
+                }
+                if (stack != null && stack.size() >= 1) {
+                    res = stack.get(stack.size() - 1);
+                    if (pop) {
+                        if (stack.size() <= 1) {
+                            env.setGlobalVariable(name, null);
+                        }
+                        else {
+                            // unfortunately this part is poor performance, but it's the only slow op
+                            // in all of this (apart from recursive wrapping/unwrapping), so not big deal
+                            SimpleSequence newStack = new SimpleSequence(REQUEST_STACK_INITIAL_CAPACITY, env.getObjectWrapper());
+                            for(int i=0; i < (stack.size() - 1); i++) {
+                                newStack.add(stack.get(i));
+                            }
+                            env.setGlobalVariable(name, newStack);
+                        }
+                    }
+                }
+                else if (pop) {
+                    Debug.logError("Trying to pop empty FTL globals stack (name: " + name + ")", module);
+                }
+                //Debug.logInfo((pop ? "pop" : "read") + "RequestStack: ftl global var (name: " + name + ")", module);
+            }
+            else {
+                throw new IllegalArgumentException("No request, context or ftl environment to " + (pop ? "pop" : "read") + " request scope stack (name: " + name + ")");
+            }
+        }
+        return res;
+    }
+    
+    /**
+     * Method providing support for a stack structure having request scope, with fallback to globals.
+     * <p>
+     * <strong>Do not access underlying structure directly.</strong>
+     * <p>
+     * Return value may or may not be a <code>TemplateModel</code>; caller must wrap or unwrap as needed.
+     * 
+     * @see #setRequestVar
+     */ 
+    public static Object popRequestStack(String name, HttpServletRequest request, 
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        return readRequestStack(name, true, request, context, env);
+    }
 }

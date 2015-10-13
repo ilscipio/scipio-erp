@@ -19,9 +19,6 @@
 package com.ilscipio.cato.webapp.ftl;
 
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
@@ -35,6 +32,8 @@ import freemarker.template.TemplateScalarModel;
  * with fallback to globals.
  * <p>
  * Values set by this transform should only be read using {@link GetRequestVarMethod}.
+ * 
+ * @see com.ilscipio.cato.webapp.ftl.CommonFtlUtil#setRequestVar
  */
 public class SetRequestVarMethod implements TemplateMethodModelEx {
 
@@ -43,6 +42,7 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
         if (args == null || args.size() != 2) {
@@ -54,26 +54,10 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
         }
         TemplateModel valueModel = (TemplateModel) args.get(1);
 
-        String name = ((TemplateScalarModel) nameModel).getAsString();
-        
         Environment env = FtlTransformUtil.getCurrentEnvironment();
-        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        CommonFtlUtil.setRequestVar(((TemplateScalarModel) nameModel).getAsString(), valueModel, 
+                FtlTransformUtil.getRequest(env), FtlTransformUtil.getGlobalContext(env), env);
 
-        if (request != null) {
-            request.setAttribute(name, FtlTransformUtil.unwrap(valueModel));
-        }
-        else {
-            // check if globalContext exists
-            Map<String, Object> globalContext = FtlTransformUtil.getGlobalContext(env);
-            if (globalContext != null) {
-                globalContext.put(name, FtlTransformUtil.unwrap(valueModel));
-            }
-            else {
-                // all we have is global FTL vars
-                env.setGlobalVariable(name, valueModel);
-            }
-        }
-        
         return new SimpleScalar("");
     }
 

@@ -713,10 +713,10 @@ see makeClassesArg, results of getElemSpecFromStyleStr.
 *************
 * pushRequestStack
 ************
-Pushes a value onto a global stack variable in request scope (request attributes, or if no request, FTL globals).
+Pushes a value onto a global stack variable in request scope (request attributes, or if no request, globals).
 
-TODO: this is highly suboptimal; should move much of this to a java transform.
--->
+MOVED: Now implemented as java transform.
+
 <#function pushRequestStack stackName val>
 <#if request??>
   <#local stack = request.getAttribute(stackName)!"">
@@ -728,7 +728,7 @@ TODO: this is highly suboptimal; should move much of this to a java transform.
   <#local dummy = request.setAttribute(stackName, stack)!>
   <#return val>
 <#else>
-  <#-- fallback to globals -->
+  <#- fallback to globals ->
   <#local stack = .globals[stackName]!"">
   <#if stack?has_content>
     <#local stack = stack + [val]>
@@ -739,14 +739,17 @@ TODO: this is highly suboptimal; should move much of this to a java transform.
   <#return val>
 </#if>
 </#function>
+-->
 
 <#-- 
 *************
 * readRequestStack function
 ************
 Reads the last value added to the named global stack variable in request scope
-(request attributes, or if no request, FTL globals), without popping.
--->
+(request attributes, or if no request, globals), without popping.
+
+MOVED: Now implemented as java transform.
+
 <#function readRequestStack stackName defaultVal="">
 <#if request??>
   <#local stack = request.getAttribute(stackName)!"">
@@ -756,7 +759,7 @@ Reads the last value added to the named global stack variable in request scope
     <#return defaultVal>
   </#if>
 <#else>
-  <#-- fallback to globals -->
+  <#- fallback to globals ->
   <#local stack = .globals[stackName]!"">
   <#if stack?has_content>
     <#return stack?last>
@@ -765,19 +768,19 @@ Reads the last value added to the named global stack variable in request scope
   </#if>
 </#if>
 </#function>
+-->
 
 <#-- 
 *************
 * popRequestStack function
 ************
-Pops a global stack variable in request scope (request attributes, or if no request, FTL globals).
-note: differs from popStack, which returns the stack.
+Pops a global stack variable in request scope (request attributes, or if no request, globals).
 
-TODO: this is highly suboptimal; should move much of this to a java method.
--->
+MOVED: Now implemented as java transform.
+
 <#function popRequestStack stackName defaultVal="">
 <#if request??>
-  <#local stack = request.getAttribute(stackName)!""> <#-- should be list -->
+  <#local stack = request.getAttribute(stackName)!""> <#- should be list ->
   <#if stack?has_content>
     <#local res = stack?last>
     <#local stackSize = stack?size>
@@ -791,7 +794,7 @@ TODO: this is highly suboptimal; should move much of this to a java method.
   </#if>
   <#return res>
 <#else>
-  <#-- fallback to globals -->
+  <#- fallback to globals ->
   <#local stack = .globals[stackName]!"">
   <#if stack?has_content>
     <#local res = stack?last>
@@ -808,37 +811,47 @@ TODO: this is highly suboptimal; should move much of this to a java method.
   <#return res>
 </#if>
 </#function>
+-->
 
 <#-- 
 *************
 * setRequestVar function
 ************
-Sets a global var in request scope (request attributes, or if no request, FTL globals).
--->
+Sets a global var in request scope (request attributes, or if no request, globals).
+Values set by this method must be read using getRequestVar.
+
+MOVED: Now implemented as java transform.
+
 <#function setRequestVar varName val>
 <#if request??>
   <#local dummy = request.setAttribute(varName, val)!>
 <#else>
-  <#-- fallback to globals -->
+  <#- fallback to globals ->
   <@"<#global ${varName}=val>"?interpret />
 </#if>
   <#return val>
 </#function>
+-->
 
 <#-- 
 *************
 * getRequestVar function
 ************
-Gets a global var from request scope (request attributes, or if no request, FTL globals).
--->
+MOVED: Now implemented as java transform.
+
+Gets a global var from request scope (request attributes, or if no request, globals).
+Should only be used to read values set by setRequestVar.
+Not meant to be used on regular request attributes.
+
 <#function getRequestVar varName defaultVal="">
 <#if request??>
   <#return request.getAttribute(varName)!defaultVal>
 <#else>
-  <#-- fallback to globals -->
+  <#- fallback to globals ->
   <#return .globals[varName]!defaultVal>
 </#if>
 </#function>
+-->
 
 <#-- 
 *************

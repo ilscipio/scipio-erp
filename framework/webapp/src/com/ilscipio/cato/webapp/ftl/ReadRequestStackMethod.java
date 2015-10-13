@@ -33,6 +33,7 @@ public class ReadRequestStackMethod extends RequestStackMethod {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
         return execRead(args, false);

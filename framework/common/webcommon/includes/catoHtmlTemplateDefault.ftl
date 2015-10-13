@@ -503,7 +503,7 @@ Not associated with an HTML element as is @fieldset.
 -->
 <#macro field type="generic" label="" labelDetail="" name="" value="" valueType="generic" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
-        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false nocontainer=false
+        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false nocontainer=""
         fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="">
@@ -586,11 +586,18 @@ Not associated with an HTML element as is @fieldset.
 
 <#if !catoFieldNoContainerChildren??>
   <#global catoFieldNoContainerChildren = {
-    "submit":true
+   <#-- "submit":true --> <#-- only if parent is submitarea -->
+  }>
+  <#global catoFieldNoContainerParent = {
+    "submitarea":true
   }>
 </#if>
-<#if isChildField && catoFieldNoContainerChildren[type]??>
-  <#local nocontainer = true>
+<#if !nocontainer?is_boolean>
+  <#if isChildField && (catoFieldNoContainerChildren[type]?? || catoFieldNoContainerParent[parentFieldInfo.type!]??)>
+    <#local nocontainer = true>
+  <#else> 
+    <#local nocontainer = false>
+  </#if>
 </#if>
 
 <@row collapse=collapse!false norows=(norows || nocontainer) class="form-field-entry">

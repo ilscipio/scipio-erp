@@ -99,7 +99,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="search" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="CommissionRun" type="single" target="CommissionRun">

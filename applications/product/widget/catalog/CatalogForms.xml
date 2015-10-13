@@ -90,14 +90,17 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="addProdCatalogToParty"/>
         <field name="prodCatalogId" map-name="prodCatalog"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"></lookup></field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRole}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"></lookup></field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRole}" position="2">
             <drop-down no-current-selected-key="_NA_">
                 <entity-options entity-name="RoleType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2"/>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     

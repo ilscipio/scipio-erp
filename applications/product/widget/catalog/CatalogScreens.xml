@@ -136,11 +136,11 @@ under the License.
             <widgets>
                  <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductCatalogParties}">
-                            <include-form name="UpdateProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleAddProductCatalogParties}">
                             <include-form name="AddProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditProductCatalogParties}">
+                            <include-form name="UpdateProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

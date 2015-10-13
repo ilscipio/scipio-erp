@@ -1008,13 +1008,14 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProductAssoc">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductAssociations"/>
                 <set field="tabButtonItem" value="EditProductAssoc"/>
                 <set field="labelTitleProperty" value="ProductAssociations"/>
-
+                
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductAssoc.groovy"/>
             </actions>
             <widgets>
@@ -1023,9 +1024,36 @@ under the License.
                         <container>
                             <section>
                                 <widgets>
-                                    <platform-specific>
-                                        <html><html-template location="component://product/webapp/catalog/product/EditProductAssoc.ftl"/></html>
-                                    </platform-specific>
+                                    <!-- 
+                                    
+                                    <screenlet title="${uiLabelMap.ProductAssociationsFromProduct}">
+                                        <include-form location="component://product/widget/catalog/ProductForms.xml" name="ListProductAssocs"/>
+                                    </screenlet>
+                                    <screenlet title="${uiLabelMap.ProductAssociationsToProduct}">
+                                        <include-form location="component://product/widget/catalog/ProductForms.xml" name="ListProductAssocsTo"/>
+                                    </screenlet>
+                                     -->
+                                     <section>
+                                        <condition>
+                                            <if-empty field="productAssoc"/>
+                                        </condition>
+                                        <widgets>
+                                            <include-form location="component://product/widget/catalog/ProductForms.xml" name="AddProductAssoc"/>
+                                        </widgets>
+                                        <fail-widgets>
+                                            <include-form location="component://product/widget/catalog/ProductForms.xml" name="EditProductAssoc"/>
+                                        </fail-widgets>
+                                     </section>
+                                     <screenlet title="${uiLabelMap.ProductAssociationsFromProduct}">
+                                        <platform-specific>
+                                            <html><html-template location="component://product/webapp/catalog/product/ProductFromAssocs.ftl"/></html>
+                                        </platform-specific>
+                                     </screenlet>
+                                     <screenlet title="${uiLabelMap.ProductAssociationsToProduct}">
+                                        <platform-specific>
+                                            <html><html-template location="component://product/webapp/catalog/product/ProductToAssocs.ftl"/></html>
+                                        </platform-specific>
+                                     </screenlet>
                                 </widgets>
                             </section>
                         </container>

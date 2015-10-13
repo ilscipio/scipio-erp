@@ -26,6 +26,186 @@ under the License.
         <field name="submitForm" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     
+    <form name="AddCategoryCatalog" type="single" target="category_addProductCategoryToProdCatalog">
+        <field name="productCategoryId"><hidden/></field>
+        <field name="prodCatalogId" title="${uiLabelMap.ProductCatalog}">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ProdCatalog" description="${catalogName}">
+                    <entity-order-by field-name="catalogName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="prodCatalogCategoryTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ProdCatalogCategoryType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="AddCategoryChild" type="single" target="addProductCategoryToCategory">
+        <field name="showProductCategoryId"><hidden/></field>
+        <field name="parentProductCategoryId"><hidden value="${showProductCategoryId}"/></field>
+        <field name="productCategoryId" title="${uiLabelMap.ProductCategory}" required-field="true">
+            <lookup target-form-name="LookupProductCategory" default-value="${nullField}"/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="AddCategoryParent" type="single" target="addProductCategoryToCategory">
+        <field name="showProductCategoryId"><hidden/></field>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="parentProductCategoryId" title="${uiLabelMap.ProductCategory}" required-field="true">
+            <lookup target-form-name="LookupProductCategory"></lookup>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="AddCategoryParty" type="single" target="addPartyToCategory">
+        <field name="productCategoryId"><hidden/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}">
+            <lookup target-form-name="LookupPartyName"></lookup>
+        </field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}" position="2">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="RoleType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="comment" title="${uiLabelMap.CommonComment}"><textarea/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="UpdateCategoryCatalogs" type="list" target="category_updateProductCategoryToProdCatalog" list-name="prodCatalogCategories"
+        odd-row-style="alternate-row" default-table-style="basic-table">
+        <row-actions>
+            <entity-one value-field="categoryCatalog" entity-name="ProdCatalog"></entity-one>
+        </row-actions>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="prodCatalogId" title="${uiLabelMap.ProductCatalog}">
+            <display-entity entity-name="ProdCatalog" description=" " also-hidden="true" cache="true">
+                <sub-hyperlink link-style="${styles.link_default}" target="EditProdCatalog" description="${categoryCatalog.catalogName}">
+                    <parameter param-name="prodCatalogId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="prodCatalogCategoryTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="ProdCatalogCategoryType"></display-entity>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+            <hyperlink target="category_removeProductCategoryFromProdCatalog" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+              <parameter param-name="productCategoryId"/>
+              <parameter param-name="prodCatalogCategoryTypeId"/>
+              <parameter param-name="prodCatalogId"/>
+              <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <form name="UpdateCategoryChild" type="list" target="updateProductCategoryToCategory" list-name="parentProductCategoryRollups"
+        odd-row-style="alternate-row" default-table-style="basic-table">
+        <row-actions>
+            <set field="productCategoryId" from-field="productCategoryId"/>
+            <entity-one value-field="category" entity-name="ProductCategory"/>
+        </row-actions>
+        <field name="showProductCategoryId"><hidden/></field>
+        <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
+            <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
+                <sub-hyperlink link-style="${styles.link_default}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
+                    <parameter param-name="productCategoryId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
+        <field name="comment" title="${uiLabelMap.CommonComment}"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+            <hyperlink target="removeProductCategoryFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+              <parameter param-name="showproductCategoryId"/>
+              <parameter param-name="productCategoryId"/>
+              <parameter param-name="parentProductCategoryId"/>
+              <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <form name="UpdateCategoryParent" type="list" target="updateProductCategoryToCategory" list-name="currentProductCategoryRollups"
+        odd-row-style="alternate-row" default-table-style="basic-table">
+        <row-actions>
+            <set field="productCategoryId" from-field="parentProductCategoryId"/>
+            <entity-one value-field="category" entity-name="ProductCategory"/>
+        </row-actions>
+        <field name="showProductCategoryId"><hidden/></field>
+        <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
+            <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
+                <sub-hyperlink link-style="${styles.link_default}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
+                    <parameter param-name="productCategoryId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
+        <field name="comment" title="${uiLabelMap.CommonComment}"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+            <hyperlink target="removeProductCategoryFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+              <parameter param-name="showProductCategoryId"/>
+              <parameter param-name="productCategoryId" value="${showProductCategoryId}"/>
+              <parameter param-name="parentProductCategoryId"/>
+              <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <form name="UpdateCategoryParties" type="list" target="updatePartyToCategory" list-name="productCategoryRoles"
+        odd-row-style="alternate-row" default-table-style="basic-table">
+        <row-actions>
+            <entity-one value-field="categoryParty" entity-name="PartyNameView"></entity-one>
+        </row-actions>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}">
+            <display-entity entity-name="PartyNameView" description=" " also-hidden="true" cache="true">
+                <sub-hyperlink link-style="${styles.link_default}" target="/partymgr/control/viewprofile" target-type="inter-app" target-window="_blank" description="${categoryParty.groupName}${categoryParty.firstName} ${categoryParty.middleInitial} ${categoryParty.lastName}">
+                    <parameter param-name="partyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="RoleType"></display-entity>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
+        <field name="comment" title="${uiLabelMap.CommonComment}"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+            <hyperlink target="category_removeProductCategoryFromProdCatalog" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+              <parameter param-name="productCategoryId"/>
+              <parameter param-name="prodCatalogCategoryTypeId"/>
+              <parameter param-name="prodCatalogId"/>
+              <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    
     <form name="EditProductCategoryAttributes" odd-row-style="alternate-row" default-table-style="basic-table" type="list" target="updateProductCategoryAttribute" title="" list-name="categoryAttributes">
         <auto-fields-service service-name="updateProductCategoryAttribute" default-field-type="display"/>
         <field name="productCategoryId"><hidden/></field>
@@ -38,7 +218,7 @@ under the License.
             </hyperlink>
         </field>
     </form>
-
+    
     <!-- Product Category Content Forms  -->
     <form name="AddCategoryContentAssoc" type="single" target="addContentToCategory" title="${uiLabelMap.ProductAddProductCategoryContentFromDate}"
         header-row-style="header-row" default-table-style="basic-table">

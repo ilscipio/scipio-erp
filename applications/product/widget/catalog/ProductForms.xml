@@ -1145,21 +1145,83 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <!-- UNUSED FORMS
-    <form name="ListProductAssocs" type="list" use-row-submit="true" title="" list-name="productAssocs"
+    <!-- UNUSED FORMS  -->
+    <form name="AddProductAssoc" type="single" target="UpdateProductAssoc">
+        <field name="productId"><display/></field>
+        <field name="productIdTo" position="2" required-field="true">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="productAssocTypeId" title="${uiLabelMap.CommonType}" required-field="true" position="2">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ProductAssocType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSeqNum}"><text/></field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}" position="2"><text/></field>
+        <field name="instruction"><textarea/></field>
+        <field name="reason" position="2"><textarea/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="EditProductAssoc" type="single" target="UpdateProductAssoc">
+        <field name="productId"><display/></field>
+        <field name="productIdTo" position="2">
+            <display-entity entity-name="Product" description="${description} [${productIdTo}]" key-field-name="productId"/>
+        </field>
+        <field name="productAssocTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <display-entity entity-name="ProductAssocType"/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSeqNum}"><text/></field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}" position="2"><text/></field>
+        <field name="instruction"><textarea/></field>
+        <field name="reason" position="2"><textarea/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="ListProductAssocs" type="list" use-row-submit="true" title="" list-name="assocFromProducts"
         odd-row-style="alternate-row" default-table-style="basic-table" paginate-target="EditProductAssoc">
-        <auto-fields-entity entity-name="ProductAssoc" default-field-type="display"/>
+        <row-actions>
+            <entity-one value-field="productAssoc" entity-name="Product">
+                <field-map field-name="productId" value="${productIdTo}"/>
+            </entity-one>
+        </row-actions>
         <field name="productId"><hidden/></field>
-        <field name="productIdTo" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_default}">
-            <hyperlink also-hidden="false" description="${productIdTo}" target="EditProduct">
+        <field name="productIdTo" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_default}">
+            <hyperlink also-hidden="false" description="${productAssoc.internalName}" target="EditProduct">
                 <parameter param-name="productId" from-field="productIdTo"/>
             </hyperlink>
         </field>
-
+        <field name="productAssocTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="ProductAssocType"/>
+        </field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSeqNum}" widget-area-style="amount" title-area-style="align-right"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
+        <field name="quantity" title="${uiLabelMap.CommonQty}" widget-area-style="amount" title-area-style="align-right"><display/></field>
+        <field name="editAction" title=" " widget-style="${styles.button_default}">
+            <hyperlink description="${uiLabelMap.CommonEdit}" target="EditTaxAuthority" also-hidden="false">
+                <parameter param-name="productId"/>
+                <parameter param-name="productIdTo"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+            <hyperlink target="removeAgreementItem" description="${uiLabelMap.CommonRemove}" also-hidden="false">
+                <parameter param-name="productId"/>
+                <parameter param-name="productIdTo"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
     </form>
-    <form name="ListProductAssocsTo" type="list" use-row-submit="true" title="" list-name="productAssocsTo"
+    
+    <form name="ListProductAssocsTo" type="list" use-row-submit="true" title="" list-name="assocToProduct"
         odd-row-style="alternate-row" default-table-style="basic-table" paginate-target="EditProductAssoc">
-        <auto-fields-entity entity-name="ProductAssoc" default-field-type="display"/>
         <field name="productIdTo"><hidden/></field>
         <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
@@ -1167,7 +1229,6 @@ under the License.
             </hyperlink>
         </field>
     </form>
-    -->
 
     <form name="ListProductComponents" type="list" use-row-submit="true" title="" list-name="components"
         odd-row-style="alternate-row" default-table-style="basic-table" paginate-target="ViewProductManufacturing">

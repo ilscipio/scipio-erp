@@ -87,13 +87,4 @@ public final class FtlTransformUtil {
         return (templateModel instanceof TemplateModel) ? DeepUnwrap.unwrap((TemplateModel) templateModel) : templateModel;
     }
     
-    public static Object getDefaultIfNull(Object obj, TemplateModel defaultVal) throws TemplateModelException {
-        if ((obj == null || obj == TemplateModel.NOTHING) && defaultVal != null) {
-            return defaultVal;
-        }
-        else {
-            return obj;
-        }
-    }
-    
 }

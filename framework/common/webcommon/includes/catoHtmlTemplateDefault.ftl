@@ -508,7 +508,7 @@ Not associated with an HTML element as is @fieldset.
 </#if>
 
 <#-- parent @fields group elem info (if any; may be omitted) -->
-<#local fieldsInfo = readRequestStack("catoCurrentFieldsInfo", {})>
+<#local fieldsInfo = readRequestStack("catoCurrentFieldsInfo")!{}>
 <#if !fieldsInfo.type??>
   <#if !catoDefaultFieldsInfo?has_content>
     <#-- optimization -->
@@ -518,7 +518,7 @@ Not associated with an HTML element as is @fieldset.
 </#if>
 
 <#-- parent @field elem info (if any; is possible) -->
-<#local parentFieldInfo = readRequestStack("catoCurrentFieldInfo", {})>
+<#local parentFieldInfo = readRequestStack("catoCurrentFieldInfo")!{}>
 <#local hasParentField = ((parentFieldInfo.type)!"")?has_content>
 <#local isTopLevelField = !hasParentField>
 <#-- this field's info (popped at end) -->
@@ -527,7 +527,7 @@ Not associated with an HTML element as is @fieldset.
 
 <#-- fieldIdNum will always increment throughout the page 
      now stored in request attributes so survived screens.render though still accessible as a global -->
-<#local fieldIdNum = getRequestVar("catoFieldIdNum", 0)>
+<#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
 <#local fieldIdNum = fieldIdNum + 1 />
 <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
 
@@ -1251,7 +1251,7 @@ Since this is very foundation specific, this function may be dropped in future i
 -->
 <#macro grid type="" class=true columns=4>
     <#if type=="tiles" || type="freetiles">
-        <#local freewallNum = getRequestVar("catoFreewallIdNum", 0)>
+        <#local freewallNum = getRequestVar("catoFreewallIdNum")!0>
         <#local freewallNum = freewallNum + 1 />
         <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
         <#local id="freewall_id_${freewallNum!0}">
@@ -1426,11 +1426,11 @@ Helps define table. Required wrapper for all table sub-elem macros.
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#-- save previous globals, for nesting -->
-  <#local prevTableInfo = getRequestVar("catoCurrentTableInfo", {})>
-  <#local prevSectionInfo = getRequestVar("catoCurrentTableSectionInfo", {})>
-  <#local prevRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag", "")> <#-- used to keep track of state (always boolean) -->
-  <#local prevCurrentRowAlt = getRequestVar("catoCurrentTableCurrentRowAlt", "")> <#-- the actual alt value of current row (may be empty) -->
-  <#local prevLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt", "")> <#-- the actual alt value of "last" row (may be empty) -->
+  <#local prevTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
+  <#local prevSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+  <#local prevRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!""> <#-- used to keep track of state (always boolean) -->
+  <#local prevCurrentRowAlt = getRequestVar("catoCurrentTableCurrentRowAlt")!""> <#-- the actual alt value of current row (may be empty) -->
+  <#local prevLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!""> <#-- the actual alt value of "last" row (may be empty) -->
   <#if !autoAltRows?is_boolean>
     <#-- don't enable for all data-list tables by default for now, not sure wanted...
     <#local autoAltRows = (type == "data-list") || inheritAltRows>-->
@@ -1491,7 +1491,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
 <#if close>
   <#-- need to get values back from stack if close-only! -->
   <#if !open>
-    <#local stackValues = popRequestStack("catoCurrentTableStack", {})>
+    <#local stackValues = popRequestStack("catoCurrentTableStack")!{}>
     <#local prevTableInfo = stackValues.prevTableInfo>
     <#local prevSectionInfo = stackValues.prevSectionInfo>
     <#local prevRowAltFlag = stackValues.prevRowAltFlag>
@@ -1516,7 +1516,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#local classes = makeClassesArg(class, "")>
-  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo", {})>
+  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
   <#local catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
   <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- need to save values on a stack if open-only! -->
@@ -1530,7 +1530,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
 <#if close>
   <#-- need to get values back from stack if close-only! -->
   <#if !open>
-    <#local stackValues = popRequestStack("catoCurrentTableHeadStack", {})>
+    <#local stackValues = popRequestStack("catoCurrentTableHeadStack")!{}>
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </thead>
@@ -1543,7 +1543,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#local classes = makeClassesArg(class, "")>
-  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo", {})>
+  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
   <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
   <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- need to save values on a stack if open-only! -->
@@ -1557,7 +1557,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
 <#if close>
   <#-- need to get values back from stack if close-only! -->
   <#if !open>
-    <#local stackValues = popRequestStack("catoCurrentTableBodyStack", {})>
+    <#local stackValues = popRequestStack("catoCurrentTableBodyStack")!{}>
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </tbody>
@@ -1570,7 +1570,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
 <#local close = wrapIf && !openOnly>
 <#if open>
   <#local classes = makeClassesArg(class, "")>
-  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo", {})>
+  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
   <#local catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
   <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
   <#-- need to save values on a stack if open-only! -->
@@ -1584,7 +1584,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
 <#if close>
   <#-- need to get values back from stack if close-only! -->
   <#if !open>
-    <#local stackValues = popRequestStack("catoCurrentTableFootStack", {})>
+    <#local stackValues = popRequestStack("catoCurrentTableFootStack")!{}>
     <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
   </#if>
   </tfoot>
@@ -1630,10 +1630,10 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 <#macro tr type="" class=true id="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
-<#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo", {})>
-<#local catoCurrentTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo", {})>
-<#local catoCurrentTableRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag", false)>
-<#local catoCurrentTableLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt", "")>
+<#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
+<#local catoCurrentTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+<#local catoCurrentTableRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!false>
+<#local catoCurrentTableLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!"">
 <#if open>
   <#local tableType = (catoCurrentTableInfo.type)!"generic">
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
@@ -1681,7 +1681,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 <#if close>
   <#-- need to get values back from stack if close-only! -->
   <#if !open>
-    <#local stackValues = popRequestStack("catoCurrentTableRowStack", {})>
+    <#local stackValues = popRequestStack("catoCurrentTableRowStack")!{}>
     <#local type = stackValues.type>
     <#local useAlt = stackValues.useAlt>
     <#local alt = stackValues.alt>
@@ -1822,7 +1822,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     title          = Data Title  (default:empty)
 -->
 <#macro chart type="pie" library="foundation" title="">
-    <#local fieldIdNum = getRequestVar("catoFieldIdNum", 0)>
+    <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
     <#local fieldIdNum = fieldIdNum + 1 />
     <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
     <#global chartLibrary = library!"foundation"/>

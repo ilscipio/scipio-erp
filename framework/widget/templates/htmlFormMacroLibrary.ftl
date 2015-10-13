@@ -575,7 +575,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatListWrapperClose formName>
-  <#local stackValues = popRequestStack("renderFormatListWrapperStack", {})>
+  <#local stackValues = popRequestStack("renderFormatListWrapperStack")!{}>
   <#local scrollable = stackValues.scrollable>
   </table><#lt/>
   <#if scrollable>

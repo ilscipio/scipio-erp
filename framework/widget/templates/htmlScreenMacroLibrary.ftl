@@ -358,7 +358,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderScreenletEnd>
 <#-- auto-heading-level logic begin -->
-    <#local stackValues = popRequestStack("renderScreenletStack", {})>
+    <#local stackValues = popRequestStack("renderScreenletStack")!{}>
     
     <#local autoHeadingLevel = stackValues.autoHeadingLevel>
     <#local updatedHeadingLevel = stackValues.updatedHeadingLevel>

@@ -332,7 +332,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
     url             = controller request uri
 -->
 <#macro requireScriptOfbizUrl uri htmlwrap=false>
-  <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls", [])>
+  <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")![]>
   <#if !requiredScriptOfbizUrls?seq_contains(uri)>
     <#if htmlwrap>
 <script language="JavaScript" type="text/javascript">
@@ -363,7 +363,7 @@ Currently must be a function because global var is not always set and request at
                       template code should leave this to true.
 -->
 <#function getCurrentSectionLevel defaultVal=true>
-  <#local sLevel = getRequestVar("catoCurrentSectionLevel", "")>
+  <#local sLevel = getRequestVar("catoCurrentSectionLevel")!"">
   <#if !sLevel?has_content>
     <#if defaultVal?is_boolean>
       <#if defaultVal>
@@ -403,7 +403,7 @@ Currently must be a function because global var is not always set and request at
                       template code should leave this to true.
 -->
 <#function getCurrentHeadingLevel defaultVal=true>
-  <#local hLevel = getRequestVar("catoCurrentHeadingLevel", "")>
+  <#local hLevel = getRequestVar("catoCurrentHeadingLevel")!"">
   <#if !hLevel?has_content>
     <#if defaultVal?is_boolean>
       <#if defaultVal>
@@ -715,29 +715,13 @@ see makeClassesArg, results of getElemSpecFromStyleStr.
 ************
 Pushes a value onto a global stack variable in request scope (request attributes, or if no request, globals).
 
-MOVED: Now implemented as java transform.
-
-<#function pushRequestStack stackName val>
-<#if request??>
-  <#local stack = request.getAttribute(stackName)!"">
-  <#if stack?has_content>
-    <#local stack = stack + [val]>
-  <#else>
-    <#local stack = [val]>
-  </#if>
-  <#local dummy = request.setAttribute(stackName, stack)!>
-  <#return val>
-<#else>
-  <#- fallback to globals ->
-  <#local stack = .globals[stackName]!"">
-  <#if stack?has_content>
-    <#local stack = stack + [val]>
-  <#else>
-    <#local stack = [val]>
-  </#if>
-  <@"<#global ${stackName}=stack>"?interpret />
-  <#return val>
-</#if>
+   * General Attributes *
+    name        = global request stack var name; must be unique 
+                  across all known types of contexts (request attribs, screen context, FTL globals)
+    val         = value
+    
+<#function pushRequestStack name val>
+- implemented as java transform -
 </#function>
 -->
 
@@ -748,25 +732,12 @@ MOVED: Now implemented as java transform.
 Reads the last value added to the named global stack variable in request scope
 (request attributes, or if no request, globals), without popping.
 
-MOVED: Now implemented as java transform.
+   * General Attributes *
+    name        = global request stack var name; must be unique 
+                  across all known types of contexts (request attribs, screen context, FTL globals)
 
-<#function readRequestStack stackName defaultVal="">
-<#if request??>
-  <#local stack = request.getAttribute(stackName)!"">
-  <#if stack?has_content>
-    <#return stack?last>
-  <#else>
-    <#return defaultVal>
-  </#if>
-<#else>
-  <#- fallback to globals ->
-  <#local stack = .globals[stackName]!"">
-  <#if stack?has_content>
-    <#return stack?last>
-  <#else>
-    <#return defaultVal>
-  </#if>
-</#if>
+<#function readRequestStack name>
+- implemented as java transform -
 </#function>
 -->
 
@@ -776,40 +747,12 @@ MOVED: Now implemented as java transform.
 ************
 Pops a global stack variable in request scope (request attributes, or if no request, globals).
 
-MOVED: Now implemented as java transform.
-
-<#function popRequestStack stackName defaultVal="">
-<#if request??>
-  <#local stack = request.getAttribute(stackName)!""> <#- should be list ->
-  <#if stack?has_content>
-    <#local res = stack?last>
-    <#local stackSize = stack?size>
-    <#if (stackSize > 1)>
-      <#local dummy = request.setAttribute(stackName, stack[0..<(stackSize-1)])!>
-    <#else>
-      <#local dummy = request.removeAttribute(stackName)!>
-    </#if>
-  <#else>
-    <#local res = defaultVal>
-  </#if>
-  <#return res>
-<#else>
-  <#- fallback to globals ->
-  <#local stack = .globals[stackName]!"">
-  <#if stack?has_content>
-    <#local res = stack?last>
-    <#local stackSize = stack?size>
-    <#if (stackSize > 1)>
-      <#local newStack = stack[0..<(stackSize-1)]>
-      <@"<#global ${stackName}=newStack>"?interpret />
-    <#else>
-      <@"<#global ${stackName}=''>"?interpret />
-    </#if>
-  <#else>
-    <#local res = defaultVal>
-  </#if>
-  <#return res>
-</#if>
+   * General Attributes *
+    name        = global request stack var name; must be unique 
+                  across all known types of contexts (request attribs, screen context, FTL globals)
+    
+<#function popRequestStack name>
+- implemented as java transform -
 </#function>
 -->
 
@@ -820,16 +763,13 @@ MOVED: Now implemented as java transform.
 Sets a global var in request scope (request attributes, or if no request, globals).
 Values set by this method must be read using getRequestVar.
 
-MOVED: Now implemented as java transform.
-
-<#function setRequestVar varName val>
-<#if request??>
-  <#local dummy = request.setAttribute(varName, val)!>
-<#else>
-  <#- fallback to globals ->
-  <@"<#global ${varName}=val>"?interpret />
-</#if>
-  <#return val>
+   * General Attributes *
+    name        = global request var name; must be unique 
+                  across all known types of contexts (request attribs, screen context, FTL globals)
+    val         = value
+    
+<#function setRequestVar name val>
+- implemented as java transform -
 </#function>
 -->
 
@@ -837,19 +777,16 @@ MOVED: Now implemented as java transform.
 *************
 * getRequestVar function
 ************
-MOVED: Now implemented as java transform.
-
 Gets a global var from request scope (request attributes, or if no request, globals).
 Should only be used to read values set by setRequestVar.
 Not meant to be used on regular request attributes.
 
-<#function getRequestVar varName defaultVal="">
-<#if request??>
-  <#return request.getAttribute(varName)!defaultVal>
-<#else>
-  <#- fallback to globals ->
-  <#return .globals[varName]!defaultVal>
-</#if>
+   * General Attributes *
+    name        = global request var name; must be unique 
+                  across all known types of contexts (request attribs, screen context, FTL globals)
+
+<#function getRequestVar name>
+- implemented as java transform -
 </#function>
 -->
 
@@ -870,30 +807,6 @@ Prints a string of element attributes. (HTML, FO, XML)
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[]>
   <#if attribs?is_hash_ex>
     <#t>${StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].makeElemAttribStr(attribs, includeEmpty, emptyValToken, exclude))}
-    <#-- old FTL impl (broken!)
-    <#if exclude?has_content>
-      <#if includeEmpty>
-        <#t><#list attribs?keys as name> ${name}="${attribs[name]?string}"</#list>
-      <#elseif emptyValToken?has_content>
-        <#t><#list attribs?keys as name><#if attribs[name]?has_content || emptyValToken?string == attribs[name]?string> ${name}="${attribs[name]?string}"</#if></#list>
-      <#else>
-        <#t><#list attribs?keys as name><#if attribs[name]?has_content> ${name}="${attribs[name]?string}"</#if></#list>
-      </#if>
-    <#else>
-      <#if exclude?is_string>
-        <#local exclude = Static["org.ofbiz.base.util.UtilMisc"].toSet(exclude)>
-      <#else>
-        <#local exclude = Static["org.ofbiz.base.util.UtilMisc"].toSet(exclude)>
-      </#if>
-      <#if includeEmpty>
-        <#t><#list attribs?keys as name><#if !exclude.contains(name)> ${name}="${attribs[name]?string}"</#if></#list>
-      <#elseif emptyValToken?has_content>
-        <#t><#list attribs?keys as name><#if !exclude.contains(name) && (attribs[name]?has_content || emptyValToken?string == attribs[name]?string)> ${name}="${attribs[name]?string}"</#if></#list>
-      <#else>
-        <#t><#list attribs?keys as name><#if !exclude.contains(name) && attribs[name]?has_content> ${name}="${attribs[name]?string}"</#if></#list>
-      </#if>
-    </#if>
-    -->
   <#elseif attribs?is_string>
     <#t> ${attribs?string}
   </#if>

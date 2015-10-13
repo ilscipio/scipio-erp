@@ -54,20 +54,18 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
 
     @SuppressWarnings("unchecked")
     protected Object execRead(List args, boolean pop) throws TemplateModelException {
-        if (args == null || args.size() < 1 || args.size() > 2) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
+        if (args == null || args.size() != 1) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
         }
         TemplateModel nameModel = (TemplateModel) args.get(0);
         if (!(nameModel instanceof TemplateScalarModel)) {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
-        // the default value is a throwback to the #function definition version; doesn't hurt
-        TemplateModel defaultValModel = (args.size() >= 2) ? (TemplateModel) args.get(1) : null;
 
         Environment env = FtlTransformUtil.getCurrentEnvironment();
         Object res = CommonFtlUtil.readRequestStack(((TemplateScalarModel) nameModel).getAsString(), pop, env);
  
-        return FtlTransformUtil.getDefaultIfNull(res, defaultValModel); // NOTE: result automatically wrapped as needed by freemarker
+        return res; // NOTE: result automatically wrapped as needed by freemarker
     }
     
 }

@@ -475,7 +475,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#else>
   <#local buttonMarkup>
   <#if buttonType=="text-link">
-    <a <@renderClass className alert /><#if disabled> disabled="disabled" href="javascript:void(0)"<#else> href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
+    <a <@renderClass className alert /> href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
   <#elseif buttonType=="image">
     <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}" <@renderClass className alert /> <#if name?has_content> name="${name}"</#if>
     <#if title?has_content> alt="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>

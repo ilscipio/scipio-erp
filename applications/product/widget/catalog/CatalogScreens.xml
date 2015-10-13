@@ -54,6 +54,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCatalog"/>
                 <set field="tabButtonItem" value="ProductCatalog"/>
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
                 <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
             </actions>
             <widgets>

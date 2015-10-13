@@ -316,3 +316,73 @@
 <@requireScriptOfbizUrl "entitymaint" />
 <@requireScriptOfbizUrl "ServiceList" />
 </script>
+
+
+<@section title="Fields">
+  <#-- TODO: submitarea -> submit (but not to remove submitarea; still important) -->
+
+  <@section title="Default form fields (with labels)">
+    <@fields type="default"> <#-- note: @fields currently optional for type="default"-->
+      <@field type="input" label="Input 1" />
+      <@field type="input" label="Input 2" />
+      <@field type="display">Display value</@field>
+      <@field type="input" label="Input 3" />
+      <@field type="submitarea">
+        <input type="submit" value="Submit" disabled="disabled" />
+      </@field>
+    </@fields>
+  </@section>
+
+  <@section title="Default form fields (without labels)">
+    <@fields type="default-nolabels">
+      <@field type="input"/>
+      <@field type="input"  />
+      <@field type="display">Display value</@field>
+      <@field type="input" />
+      <@field type="submitarea">
+        <input type="submit" value="Submit" disabled="disabled" />
+      </@field>
+    </@fields>
+  </@section>
+
+  <@section title="Default form fields (with labels) (again)">
+      <@field type="input" label="Input 1" />
+      <@field type="input" label="Input 2" />
+      <@field type="display">Display value</@field>
+      <@field type="input" label="Input 3" />
+      <@field type="submitarea">
+        <input type="submit" value="Submit" disabled="disabled" />
+      </@field>
+  </@section>
+
+  <@section title="Custom arranged form fields">
+    <@fields type="generic">
+      <@row>
+        <@cell columns=6>
+          <@field type="input" label="Input 1 and 2" />
+        </@cell>
+        <@cell columns=6>
+          <@field type="input" />
+        </@cell>
+      </@row>
+      <@row>
+        <@cell columns=6>
+          <@field type="display">Display value</@field>
+          <@field type="display" labelArea=true>Display value with label area</@field>
+        </@cell>
+        <@cell columns=6>
+          <@field type="input" label="Input 3" />
+        </@cell>
+      </@row>      
+      <@row>
+        <@cell offset=6 columns=6>      
+          <@field type="submitarea">
+            <input type="submit" value="Submit" disabled="disabled" />
+          </@field>
+        </@cell>
+      </@row>          
+    </@fields>
+  </@section>
+
+</@section>
+

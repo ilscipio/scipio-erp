@@ -393,6 +393,20 @@ public final class CommonFtlUtil {
         }
     }    
     
+    public static void setRequestVar(String name, Object value, Environment env) throws TemplateModelException {
+        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) { // optimization: don't need to look this up if has request (true in most cases now)
+            context = FtlTransformUtil.getContext(env);
+        }
+        setRequestVar(name, value, request, context, env);
+    }
+    
+    public static void setRequestVar(String name, Object value, HttpServletRequest request, 
+            Map<String, Object> context) throws TemplateModelException {
+        setRequestVar(name, value, request, context, null);
+    }
+    
     /**
      * Method for getting request-scope variables, with fallback to globals.
      * <p>
@@ -427,6 +441,19 @@ public final class CommonFtlUtil {
         }
         
         return res;
+    }
+    
+    public static Object getRequestVar(String name, Environment env) throws TemplateModelException {
+        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) {
+            context = FtlTransformUtil.getContext(env);
+        }
+        return getRequestVar(name, request, context, env);
+    }
+    
+    public static Object getRequestVar(String name, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
+        return getRequestVar(name, request, context, null);
     }
     
     /**
@@ -513,6 +540,19 @@ public final class CommonFtlUtil {
         }
     }
     
+    public static void pushRequestStack(String name, Object value, Environment env) throws TemplateModelException {
+        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) {
+            context = FtlTransformUtil.getContext(env);
+        }
+        pushRequestStack(name, value, request, context, env);
+    }
+    
+    public static void pushRequestStack(String name, Object value, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
+        pushRequestStack(name, value, request, context, null);
+    }
+    
     /**
      * Method providing support for a stack structure having request scope, with fallback to globals.
      * <p>
@@ -525,6 +565,19 @@ public final class CommonFtlUtil {
     public static Object readRequestStack(String name, HttpServletRequest request, 
             Map<String, Object> context, Environment env) throws TemplateModelException {
         return readRequestStack(name, false, request, context, env);
+    }
+    
+    public static Object readRequestStack(String name, Environment env) throws TemplateModelException {
+        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) {
+            context = FtlTransformUtil.getContext(env);
+        }
+        return readRequestStack(name, false, request, context, env);
+    }
+    
+    public static Object readRequestStack(String name, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
+        return readRequestStack(name, false, request, context, null);
     }
     
     static Object readRequestStack(String name, boolean pop, HttpServletRequest request, 
@@ -602,6 +655,19 @@ public final class CommonFtlUtil {
         return res;
     }
     
+    static Object readRequestStack(String name, boolean pop, Environment env) throws TemplateModelException {
+        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) {
+            context = FtlTransformUtil.getContext(env);
+        }
+        return readRequestStack(name, pop, request, context, env);
+    }
+    
+    static Object readRequestStack(String name, boolean pop, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
+        return readRequestStack(name, pop, request, context, null);
+    }
+    
     /**
      * Method providing support for a stack structure having request scope, with fallback to globals.
      * <p>
@@ -614,5 +680,18 @@ public final class CommonFtlUtil {
     public static Object popRequestStack(String name, HttpServletRequest request, 
             Map<String, Object> context, Environment env) throws TemplateModelException {
         return readRequestStack(name, true, request, context, env);
+    }
+    
+    public static Object popRequestStack(String name, Environment env) throws TemplateModelException {
+        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) {
+            context = FtlTransformUtil.getContext(env);
+        }
+        return readRequestStack(name, true, request, context, env);
+    }
+    
+    public static Object popRequestStack(String name, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
+        return readRequestStack(name, true, request, context, null);
     }
 }

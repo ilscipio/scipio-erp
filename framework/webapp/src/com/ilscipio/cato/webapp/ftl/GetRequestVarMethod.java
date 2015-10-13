@@ -53,8 +53,7 @@ public class GetRequestVarMethod implements TemplateMethodModelEx {
         TemplateModel defaultValModel = (args.size() >= 2) ? (TemplateModel) args.get(1) : null;
 
         Environment env = FtlTransformUtil.getCurrentEnvironment();
-        Object res = CommonFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), 
-                FtlTransformUtil.getRequest(env), FtlTransformUtil.getGlobalContext(env), env);
+        Object res = CommonFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env);
         
         return FtlTransformUtil.getDefaultIfNull(res, defaultValModel); // NOTE: result gets automatically wrapped by Freemarker on need basis
     }

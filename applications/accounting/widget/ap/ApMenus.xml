@@ -37,9 +37,6 @@ under the License.
         <menu-item name="viewInvoices" title="${uiLabelMap.CommonMain}">
             <link target="FindApInvoices"/>
         </menu-item>
-        <menu-item name="purchaseInvoices" title="${uiLabelMap.AccountingPurchaseInvoices}">
-            <link target="FindPurchaseInvoices"/>
-        </menu-item>
         <menu-item name="commissionRun" title="${uiLabelMap.AccountingCommissionRun}">
             <link target="CommissionRun"/>
         </menu-item>

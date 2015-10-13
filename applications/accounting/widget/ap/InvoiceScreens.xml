@@ -64,6 +64,12 @@ under the License.
             <actions>
                 <set field="titleProperty" value="AccountingFindApInvoices"/>
                 <set field="tabButtonItem" value="viewInvoices"/>
+                <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="parameters"/>
+                    <field-map field-name="entityName" value="InvoiceAndType"/>
+                    <field-map field-name="orderBy" value="invoiceDate DESC"/>
+                </service>
+                <set field="invoices" from-field="result.listIt"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
@@ -78,50 +84,6 @@ under the License.
                                     </decorator-section>
                                     <decorator-section name="search-options">
                                         <include-form name="FindApInvoices" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListInvoices" location="component://accounting/widget/InvoiceForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="FindPurchaseInvoices">
-        <section>
-            <actions>
-                <set field="titleProperty" value="AccountingFindPurchaseInvoices"/>
-                <set field="tabButtonItem" value="purchaseInvoices"/>
-                <entity-condition entity-name="Invoice" list="invoices">
-                    <condition-list combine="and">
-                        <condition-expr field-name="invoiceTypeId" operator="equals" from-field="parameters.invoiceTypeId" ignore-if-empty="false"/>
-                        <condition-expr field-name="partyIdFrom" operator="equals" from-field="parameters.partyIdFrom" ignore-if-empty="true"/>
-                        <condition-expr field-name="invoiceDate" operator="greater-equals" from-field="parameters.fromInvoiceDate" ignore-if-empty="true"/>
-                        <condition-expr field-name="invoiceDate" operator="less-equals" from-field="parameters.thruInvoiceDate" ignore-if-empty="true"/>
-                        <condition-expr field-name="dueDate" operator="greater-equals" from-field="parameters.fromDueDate" ignore-if-empty="true"/>
-                        <condition-expr field-name="dueDate" operator="less-equals" from-field="parameters.thruDueDate" ignore-if-empty="true"/>
-                        <condition-expr field-name="statusId" operator="equals" from-field="parameters.statusId" ignore-if-empty="true"/>
-                    </condition-list>
-                    <order-by field-name="partyIdFrom"/>
-                </entity-condition>
-                <set field="paymentPartyId" from-field="parameters.partyIdFrom" default-value="${parameters.organizationPartyId}"/>
-                <entity-and entity-name="PaymentMethod" list="paymentMethods">
-                    <field-map field-name="partyId" from-field="paymentPartyId"/>
-                </entity-and>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindPurchaseInvoices" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
                                         <platform-specific>

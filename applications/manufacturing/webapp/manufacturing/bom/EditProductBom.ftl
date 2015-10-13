@@ -132,7 +132,7 @@ function lookupBom() {
               <#if curProductAssocType??>${(curProductAssocType.get("description",locale))!}<#else> ${productAssocTypeId!}</#if>
           </@field>
           <@field type="generic" label="${uiLabelMap.CommonFromDate}">
-              ${fromDate!}
+              ${fromDate?date?string.short!}
           </@field>
     </#if>
     

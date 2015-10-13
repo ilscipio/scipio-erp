@@ -18,6 +18,25 @@ under the License.
 -->
 
 <#if productCategoryId?has_content>
+
+    <@section title="${uiLabelMap.ProductAddCategoryParent} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
+        <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" name="addParentForm">
+          <@fields type="default-nolabels">
+            <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
+            <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
+            <@field type="generic">
+                <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="addParentForm" name="parentProductCategoryId" id="parentProductCategoryId" fieldFormName="LookupProductCategory"/>
+            </@field>
+            <@field type="generic">
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+            </@field>
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.CommonAdd}" />
+            </@field>
+          </@fields>
+        </form>
+    </@section>
+
     <@section title="${uiLabelMap.ProductCategoryRollupParentCategories}">
         <#if (currentProductCategoryRollups.size() <= 0)>
             <@resultMsg>${uiLabelMap.ProductNoParentCategoriesFound}.</@resultMsg>
@@ -92,16 +111,16 @@ under the License.
         </#if>      
     </@section>
 
-    <@section title="${uiLabelMap.ProductAddCategoryParent} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
-        <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" name="addParentForm">
+    <@section title="${uiLabelMap.ProductAddCategoryChild} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
+        <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" name="addChildForm">
           <@fields type="default-nolabels">
-            <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
             <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
+            <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}" />
             <@field type="generic">
-                <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="addParentForm" name="parentProductCategoryId" id="parentProductCategoryId" fieldFormName="LookupProductCategory"/>
+                <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="addChildForm" name="productCategoryId" id="productCategoryId" fieldFormName="LookupProductCategory"/>
             </@field>
             <@field type="generic">
-                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
             </@field>
             <@field type="submitarea">
                 <input type="submit" value="${uiLabelMap.CommonAdd}" />
@@ -109,7 +128,7 @@ under the License.
           </@fields>
         </form>
     </@section>
-
+    
     <@section title="${uiLabelMap.ProductCategoryRollupChildCategories}">
         <#if parentProductCategoryRollups.size() == 0>
             <@resultMsg>${uiLabelMap.ProductNoChildCategoriesFound}.</@resultMsg>
@@ -186,21 +205,4 @@ under the License.
         </#if>
     </@section>
 
-    <@section title="${uiLabelMap.ProductAddCategoryChild} ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}">
-        <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" name="addChildForm">
-          <@fields type="default-nolabels">
-            <input type="hidden" name="showProductCategoryId" value="${productCategoryId}" />
-            <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}" />
-            <@field type="generic">
-                <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="addChildForm" name="productCategoryId" id="productCategoryId" fieldFormName="LookupProductCategory"/>
-            </@field>
-            <@field type="generic">
-                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </@field>
-            <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.CommonAdd}" />
-            </@field>
-          </@fields>
-        </form>
-    </@section>
 </#if>

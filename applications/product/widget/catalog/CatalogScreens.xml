@@ -161,11 +161,11 @@ under the License.
             <widgets>
                  <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductCatalogStores}">
-                            <include-form name="UpdateProductStoreCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleAddProductCatalogStores}">
                             <include-form name="CreateProductStoreCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditProductCatalogStores}">
+                            <include-form name="UpdateProductStoreCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

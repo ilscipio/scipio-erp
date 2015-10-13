@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
@@ -243,7 +244,7 @@ public final class CommonFtlUtil {
                 res = "";
             }
             else {
-                res = String.join("|", argColl);
+                res = StringUtils.join(argColl,"|");
             }
         }
         return res;

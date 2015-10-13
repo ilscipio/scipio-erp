@@ -327,9 +327,7 @@
       <@field type="input" label="Input 2" />
       <@field type="display">Display value</@field>
       <@field type="input" label="Input 3" />
-      <@field type="submitarea">
-        <input type="submit" value="Submit" disabled="disabled" />
-      </@field>
+      <@field type="submit" submitType="submit" text="Submit" disabled=true />
     </@fields>
   </@section>
 
@@ -339,9 +337,7 @@
       <@field type="input"  />
       <@field type="display">Display value</@field>
       <@field type="input" />
-      <@field type="submitarea">
-        <input type="submit" value="Submit" disabled="disabled" />
-      </@field>
+      <@field type="submit" submitType="button" text="Submit" disabled=true />
     </@fields>
   </@section>
 
@@ -354,7 +350,8 @@
       <@field type="input" label="Regular field" />
       <@field type="display">Regular display field</@field>
       <@field type="submitarea">
-        <input type="submit" value="Submit" disabled="disabled" />
+        <@field type="submit" submitType="link" text="Save" disabled=true />
+        <@field type="submit" submitType="link" text="Cancel" disabled=true />
       </@field>
   </@section>
 
@@ -380,7 +377,7 @@
       <@row>
         <@cell offset=6 columns=6>      
           <@field type="submitarea">
-            <input type="submit" value="Submit" disabled="disabled" />
+            <@field type="submit" submitType="button" text="Submit" disabled=true />
           </@field>
         </@cell>
       </@row>          

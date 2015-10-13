@@ -351,16 +351,18 @@ Not associated with an HTML element as is @fieldset.
     labelArea       = boolean, defaults specified in styles variables based on fields type. overrides whether fields are expected to have a label area or not, mainly when label omitted. 
                       logic is influenced by other arguments.
                       note that this is weaker than labelArea arg of @field macro, but stronger than other args of this macro.
-    labelAreaExceptions = string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type                 
+    labelAreaExceptions = string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type  
+    formName            = the form name the child fields should assume  
+    formId              = the form ID the child fields should assume             
 -->
-<#macro fields type="default" labelType="" labelLayout="" labelArea="" labelAreaExceptions=true>
-    <#local fieldsInfo = makeFieldsInfo(type, labelType, labelLayout, labelArea, labelAreaExceptions)>
+<#macro fields type="default" labelType="" labelLayout="" labelArea="" labelAreaExceptions=true formName="" formId="">
+    <#local fieldsInfo = makeFieldsInfo(type, labelType, labelLayout, labelArea, labelAreaExceptions, formName, formId)>
     <#local dummy = pushRequestStack("catoCurrentFieldsInfo", fieldsInfo)>
     <#nested>
     <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
 </#macro>
 
-<#function makeFieldsInfo type labelType="" labelLayout="" labelArea="" labelAreaExceptions=true>
+<#function makeFieldsInfo type labelType="" labelLayout="" labelArea="" labelAreaExceptions=true formName="" formId="">
     <#local stylesType = type?replace("-","_")>
     <#local stylesPrefix = "fields_" + stylesType + "_">
     <#if !styles[stylesPrefix + "labeltype"]??>
@@ -398,7 +400,8 @@ Not associated with an HTML element as is @fieldset.
         <#local labelAreaExceptions = []>
       </#if>
     </#if>
-    <#return {"type":type, "labelType":labelType, "labelLayout":labelLayout, "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions}>
+    <#return {"type":type, "labelType":labelType, "labelLayout":labelLayout, 
+        "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, "formName":formName, "formId":formId}>
 </#function>
 
 <#-- 
@@ -414,13 +417,13 @@ Not associated with an HTML element as is @fieldset.
                       (discouraged; prefer specific; but sometimes required and useful
                       for transition)
     label           = field label
-                      note: title/label area behavior may also be influenced by containing macros such as @form
+                      note: label area behavior may also be influenced by containing macros such as @fields
     labelDetail     = extra content (HTML) inserted with (after) label
-    labelType       = [] reserved for future use.
-    labelLayout     = [] reserved for future use.
+    labelType       = explicit label type (see @fields)
+    labelLayout     = explicit label layout (see @fields)
     labelArea       = boolean, default empty string (use @fields type default).
-                      if true, forces a title/label area.
-                      if false, prevents a title/label area.
+                      if true, forces a label area.
+                      if false, prevents a label area.
     tooltip         = Small field description - to be displayed to the customer
     description     = alternative to tooltip
     name            = field name
@@ -481,9 +484,16 @@ Not associated with an HTML element as is @fieldset.
     autocomplete    = true/false, default true (false to prevent)
     
     * submitarea *
-    <#nested>       = button(s) (<input, <a, <button) to include
+    <#nested>       = button(s) (<@field type="submit"> or manual <input, <a, <button) to include
     progressOptions = if this is an upload form, specify progress upload options, enables progress next to buttons. 
                       see @progress[Script] macro[s]. should specify formSel, (progBarId and/or progTextBoxId), and others.
+                      
+    * submit *
+    submitType      = [submit|link|button|image], default submit (<input type="submit">)  
+    text            = display text (also value for submitType=="submit")                
+    href            = href for submitType=="link"  
+    src             = image url for submitType=="image"    
+    confirmMsg      = confirmation message            
                       
     * display *
     valueType       = [image|text|currency|date|date-time|accounting-number|generic], default generic (treated as text)
@@ -493,9 +503,10 @@ Not associated with an HTML element as is @fieldset.
 -->
 <#macro field type="generic" label="" labelDetail="" name="" value="" valueType="generic" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
-        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false
-        fieldFormName="" formName="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
-        labelType="" labelLayout="" labelArea="" description="">
+        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false nocontainer=false
+        fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
+        labelType="" labelLayout="" labelArea="" description=""
+        submitType="input" text="" href="" src="" confirmMsg="">
 <#-- treat these as synonyms for now -->
 <#if tooltip?has_content>
   <#if !description?has_content>
@@ -523,9 +534,27 @@ Not associated with an HTML element as is @fieldset.
 <#local isTopLevelField = !hasParentField>
 <#local isChildField = hasParentField>
 
+<#local formInfo = readRequestStack("catoCurrentFormInfo")!{}>
+
 <#-- this field's info (popped at end) -->
 <#local dummy = pushRequestStack("catoCurrentFieldInfo", 
     {"type":type})>
+
+<#-- get form name and id -->
+<#if !formName?has_content>
+  <#if fieldsInfo.formName?has_content>
+    <#local formName = fieldsInfo.formName>
+  <#elseif formInfo.name?has_content>
+    <#local formName = formInfo.formName>
+  </#if>
+</#if>
+<#if !formId?has_content>
+  <#if fieldsInfo.formId?has_content>
+    <#local formId = fieldsInfo.formName>
+  <#elseif formInfo.id?has_content>
+    <#local formId = formInfo.id>
+  </#if>
+</#if>
 
 <#-- fieldIdNum will always increment throughout the page 
      now stored in request attributes so survived screens.render though still accessible as a global -->
@@ -555,7 +584,16 @@ Not associated with an HTML element as is @fieldset.
     <#local class = (class + " required")?trim>
 </#if>
 
-<@row collapse=collapse!false norows=norows class="form-field-entry">
+<#if !catoFieldNoContainerChildren??>
+  <#global catoFieldNoContainerChildren = {
+    "submit":true
+  }>
+</#if>
+<#if isChildField && catoFieldNoContainerChildren[type]??>
+  <#local nocontainer = true>
+</#if>
+
+<@row collapse=collapse!false norows=(norows || nocontainer) class="form-field-entry">
 
     <#-- TODO: right now most of the fieldsInfo parameters are not fully exploited.
          assumes labelType=="gridarea" (unless "none" which influences labelArea) and 
@@ -598,7 +636,7 @@ Not associated with an HTML element as is @fieldset.
         </#if>
         
         <#if !radioSingle>
-            <@cell class=(subclasses+" field-entry-title")?trim nocells=nocells>
+            <@cell class=(subclasses+" field-entry-title")?trim nocells=(nocells || nocontainer)>
               <#if label?has_content>
                 <#if type=="checkbox" || collapse==false>
                     <label class="form-field-label"<#if id?has_content> for="${id}"</#if>>${label}</label>
@@ -614,7 +652,7 @@ Not associated with an HTML element as is @fieldset.
             </@cell>
         </#if>
     </#if>
-    <@cell class=("${classes!}"+" field-entry-widget")?trim nocells=nocells>
+    <@cell class=("${classes!}"+" field-entry-widget")?trim nocells=(nocells || nocontainer)>
         <#switch type>
           <#case "input">
             <@formlib.renderTextField name=name 
@@ -741,38 +779,31 @@ Not associated with an HTML element as is @fieldset.
           <#case "password">
             <@formlib.renderPasswordField className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") />
             <#break> 
+          <#case "submit">
           <#case "submitarea">
-            <@row>
-              <#local hasProgress = (progressOptions.formSel)?has_content>
-              <#if hasProgress>
-                <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
-              <#else>
-                <#local subclasses="${styles.grid_small!}12 ${styles.grid_large!}12"/>
-              </#if>
-              <@cell class=subclasses>
-                <#nested>
-              </@cell>
-              <#if hasProgress>
-                <#if progressOptions.progBarId?has_content>
-                  <#-- with progress bar, optional text -->
-                  <#local subclasses = progressOptions.progTextBoxId?has_content?string("${styles.grid_small!}6 ${styles.grid_large!}6", "${styles.grid_small!}9 ${styles.grid_large!}10")>
-                  <@cell class=subclasses>
-                    <@progress id=progressOptions.progBarId type="info" wrapperClass="+${styles.hidden!}" progressOptions=progressOptions/>
-                  </@cell>
-                  <#if progressOptions.progTextBoxId?has_content>
-                    <#local subclasses = "${styles.grid_small!}3 ${styles.grid_large!}4">
-                    <@cell class=subclasses id=progressOptions.progTextBoxId>
-                    </@cell>
-                  </#if>
-                <#elseif progressOptions.progTextBoxId?has_content>
-                   <#-- text progress only -->
-                   <#local subclasses = "${styles.grid_small!}9 ${styles.grid_large!}10">
-                   <@cell class=subclasses id=progressOptions.progTextBoxId>
-                   </@cell>
-                   <@progressScript options=progressOptions htmlwrap=true />
+            <#local hasProgress = (progressOptions.formSel)?has_content>
+            <#local content>
+              <#if type == "submit">
+                <#if !catoSubmitFieldTypeButtonMap??>
+                  <#global catoSubmitFieldButtonTypeMap = {
+                    "submit":"button", "button":"button", "link":"text-link", "image":"image"
+                  }>
+                  <#global catoSubmitFieldInputTypeMap = {
+                    "submit":"submit", "button":"button", "link":"", "image":"image"
+                  }>
                 </#if>
+                <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
+                <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"">
+                <@formlib.renderSubmitField buttonType=buttonType className=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
+              <#else>
+                <#nested>
               </#if>
-            </@row>
+            </#local>
+            <#if hasProgress>
+              <@formlib.renderSubmitFieldAreaProgress progressOptions=progressOptions nestedContent=content />
+            <#else>
+              ${content}
+            </#if>
             <#break> 
           <#case "display">
             <#-- TODO? may need formatting here based on valueType... not done by renderDisplayField... done in java OOTB... 
@@ -827,6 +858,8 @@ Not associated with an HTML element as is @fieldset.
 *************
 * Fieldset Macro
 ************
+A fieldset including the HTML element.
+
     Usage example:  
     <@fieldset title="">
         Inner Content
@@ -851,7 +884,7 @@ Not associated with an HTML element as is @fieldset.
 * Form Macro
 ************
     Usage example:  
-    <@form>
+    <@form name="myform">
       <@fields>
         <input type="hidden" ... />
         <@field ... />
@@ -867,11 +900,14 @@ Not associated with an HTML element as is @fieldset.
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
 -->
-<#macro form type="input" class=true attribs={} inlineAttribs...>
+<#macro form type="input" name="" id="" class=true attribs={} inlineAttribs...>
+    <#local formInfo = {"type":type, "name":name, "id":id}>
+    <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
     <#local classes = makeClassesArg(class, "")>
-    <form<#if classes?has_content> class="${classes}</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+    <form<#if classes?has_content> class="${classes}</#if><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
       <#nested>
     </form>
+    <#local dummy = popRequestStack("catoCurrentFormInfo")>
 </#macro>
 
 <#-- 

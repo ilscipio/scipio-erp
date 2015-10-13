@@ -174,8 +174,8 @@ function runAction() {
     <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
       <@thead>
       <@tr class="header-row-2">
-        <@td>${uiLabelMap.FormFieldTitle_invoiceId}</@td>
-        <@td>${uiLabelMap.AccountingInvoiceDate}</@td>
+        <@td>${uiLabelMap.AccountingInvoice}</@td>
+        <@td>${uiLabelMap.CommonDate}</@td>
         <@td>${uiLabelMap.AccountingDueDate}</@td>
         <@td>${uiLabelMap.CommonStatus}</@td>
         <@td>${uiLabelMap.AccountingReferenceNumber}</@td>
@@ -193,9 +193,9 @@ function runAction() {
         <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
           <#assign statusItem = invoice.getRelatedOne("StatusItem", true)>
           <@tr valign="middle">
-            <@td><a class="${styles.button_default!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
-            <@td><#if invoice.get("invoiceDate")?has_content>${invoice.get("invoiceDate")?date}</#if></@td>
-            <@td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date}</#if></@td>
+            <@td><a class="${styles.link_default!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
+            <@td><#if invoice.get("invoiceDate")?has_content>${invoice.get("invoiceDate")?date?string.short}</#if></@td>
+            <@td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date?string.short}</#if></@td>
             <@td>${statusItem.description?default(invoice.statusId)}</@td>
             <@td>${invoice.get("referenceNumber")!}</@td>
             <@td>${(invoice.description)!}</@td>

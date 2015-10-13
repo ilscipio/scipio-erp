@@ -145,7 +145,7 @@ function runAction() {
       <input id="submitButton" type="button" onclick="javascript:runAction();" value="${uiLabelMap.CommonRun}" disabled="disabled" />
     </div>
     <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
-    <input type="hidden" name="organizationPartyId" value="${organizationPartyId}"/>
+    <input type="hidden" name="organizationPartyId" value="${defaultOrganizationPartyId!}"/>
     <input type="hidden" name="partyIdFrom" value="${parameters.partyIdFrom!}"/>
     <input type="hidden" name="statusId" id="statusId" value="${parameters.statusId!}"/>
     <input type="hidden" name="fromInvoiceDate" value="${parameters.fromInvoiceDate!}"/>
@@ -182,9 +182,9 @@ function runAction() {
         <@td>${uiLabelMap.CommonDescription}</@td>
         <@td>${uiLabelMap.AccountingVendorParty}</@td>
         <@td>${uiLabelMap.AccountingToParty}</@td>
-        <@td>${uiLabelMap.AccountingAmount}</@td>
-        <@td>${uiLabelMap.FormFieldTitle_paidAmount}</@td>
-        <@td>${uiLabelMap.FormFieldTitle_outstandingAmount}</@td> 
+        <@td class="align-right">${uiLabelMap.AccountingAmount}</@td>
+        <@td class="align-right">${uiLabelMap.FormFieldTitle_paidAmount}</@td>
+        <@td class="align-right">${uiLabelMap.FormFieldTitle_outstandingAmount}</@td> 
         <@td>${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></@td>
       </@tr>
       </@thead>
@@ -201,9 +201,9 @@ function runAction() {
             <@td>${(invoice.description)!}</@td>
             <@td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}] </a></@td>
             <@td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></@td>
-            <@td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
-            <@td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
-            <@td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
+            <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
+            <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
+            <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
             <@td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></@td>
           </@tr>
       </#list>

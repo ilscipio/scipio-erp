@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -21,12 +20,12 @@ under the License.
   <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
     <@thead>
     <@tr class="header-row">
-      <@th>${uiLabelMap.FormFieldTitle_glAccountId}</@th>
-      <@th>${uiLabelMap.FormFieldTitle_accountCode}</@th>
-      <@th>${uiLabelMap.FormFieldTitle_accountName}</@th>
-      <@th>${uiLabelMap.FormFieldTitle_postedBalance} - (${currencyUomId})</@th>
+      <@th>${uiLabelMap.CommonId}</@th>
+      <@th>${uiLabelMap.CommonCode}</@th>
+      <@th>${uiLabelMap.CommonName}</@th>
+      <@th class="align-right">${uiLabelMap.FormFieldTitle_postedBalance} - (${currencyUomId})</@th>
       <#list glAccountCategories as glAccountCategory>
-        <@th>${glAccountCategory.description!} - (${currencyUomId})</@th>
+        <@th class="align-right">${glAccountCategory.description!} - (${currencyUomId})</@th>
       </#list>
     </@tr>
     </@thead>
@@ -35,9 +34,9 @@ under the License.
           <@td>${glAcctBalanceByCostCenter.glAccountId!}</@td>
           <@td>${glAcctBalanceByCostCenter.accountCode!}</@td>
           <@td>${glAcctBalanceByCostCenter.accountName!}</@td>
-          <@td>${glAcctBalanceByCostCenter.balance!}</@td>
+          <@td class="amount">${glAcctBalanceByCostCenter.balance!}</@td>
           <#list glAccountCategories as glAccountCategory>
-            <@td>${(glAcctBalanceByCostCenter[glAccountCategory.glAccountCategoryId!]!)}</@td>
+            <@td classs="amount">${(glAcctBalanceByCostCenter[glAccountCategory.glAccountCategoryId!]!)}</@td>
           </#list>
         </@tr>
     </#list>

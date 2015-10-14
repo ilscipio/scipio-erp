@@ -550,10 +550,10 @@ under the License.
             </hyperlink>
         </field>
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
-        <field name="openingBalance" title="${uiLabelMap.AccountingOpeningBalance}" widget-style="tabletextright"><display description="${openingBalance}" type="currency" currency="${currencyUomId}"/></field>
-        <field name="postedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${postedDebits}" type="currency" currency="${currencyUomId}"/></field>
-        <field name="postedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display description="${postedCredits}" type="currency" currency="${currencyUomId}"/></field>
-        <field name="endingBalance" title="${uiLabelMap.AccountingEndingBalance}" widget-style="tabletextright"><display description="${endingBalance}" type="currency" currency="${currencyUomId}"/></field>
+        <field name="openingBalance" title="${uiLabelMap.AccountingOpeningBalance}" widget-area-style="amount" title-area-style="align-right"><display description="${openingBalance}" type="currency" currency="${currencyUomId}"/></field>
+        <field name="postedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-area-style="amount" title-area-style="align-right"><display description="${postedDebits}" type="currency" currency="${currencyUomId}"/></field>
+        <field name="postedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-area-style="amount" title-area-style="align-right"><display description="${postedCredits}" type="currency" currency="${currencyUomId}"/></field>
+        <field name="endingBalance" title="${uiLabelMap.AccountingEndingBalance}" widget-area-style="amount" title-area-style="align-right"><display description="${endingBalance}" type="currency" currency="${currencyUomId}"/></field>
     </form>
 
     <form name="CashFlowStatementParameters" type="single" header-row-style="header-row" default-table-style="basic-table">

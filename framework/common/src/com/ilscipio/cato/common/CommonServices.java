@@ -109,7 +109,8 @@ public class CommonServices {
                     
                     if (UtilValidate.isNotEmpty(themeFileLocations)) {
                         delegator.removeByAnd("VisualThemeResource", UtilMisc.toMap("visualThemeId", visualThemeId));
-                        delegator.removeByAnd("VisualTheme", UtilMisc.toMap("visualThemeId", visualThemeId));
+                        // Don't do this line because technically violates foreign keys on other tables; not really needed anyway
+                        //delegator.removeByAnd("VisualTheme", UtilMisc.toMap("visualThemeId", visualThemeId));
                         
                         for(String themeFileLocation : themeFileLocations) {
                             List<String> messages = new ArrayList<String>();

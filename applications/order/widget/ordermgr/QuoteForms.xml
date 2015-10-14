@@ -22,25 +22,16 @@ under the License.
 
     <form name="FindQuotes" target="FindQuote" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
+        <!-- 
         <auto-fields-entity entity-name="Quote" default-field-type="find"/>
-        <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}"></field>
-        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
+         -->
+        <field name="quoteId" title="${uiLabelMap.CommonId}"><text-find/></field>
+        <field name="quoteTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="QuoteType" key-field-name="quoteTypeId"/>
             </drop-down>
         </field>
-        <field name="salesChannelEnumId" title="${uiLabelMap.OrderSalesChannel}">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
-                    <entity-constraint name="enumTypeId" value="ORDER_SALES_CHANNEL"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
-        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
+        <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"><text-find></text-find></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}">
@@ -49,7 +40,11 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}" position="2"><date-find type="date"/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}" position="2">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -57,7 +52,6 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description"><hidden/></field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
@@ -68,38 +62,56 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="salesChannelEnumId" title="${uiLabelMap.OrderSalesChannel}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="ORDER_SALES_CHANNEL"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     </form>
+    
     <form name="ListQuotes" list-name="listIt" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="FindQuote">
-          <actions>
+        <actions>
               <service service-name="performFind" result-map="result" result-map-list="listIt">
                   <field-map field-name="inputFields" from-field="parameters"/>
                   <field-map field-name="entityName" value="Quote"/>
                   <field-map field-name="viewIndex" from-field="viewIndex"/>
                   <field-map field-name="viewSize" from-field="viewSize"/>
               </service>
-          </actions>
+        </actions>
+        <!-- 
         <auto-fields-entity entity-name="Quote" default-field-type="display"/>
-        <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}" widget-style="${styles.link_default}">
+         -->
+        <field name="quoteId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${quoteId}" target="ViewQuote">
                 <parameter param-name="quoteId"/>
             </hyperlink>
         </field>
-        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}"><display-entity entity-name="QuoteType"/></field>
+        <field name="issueDate" title="${uiLabelMap.CommonDate}"><display type="date"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity also-hidden="false" entity-name="StatusItem"/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"></field>
-        <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"></field>
-        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}"></field>
-        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}"></field>
-        <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"></field>
-        <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
+        <field name="quoteTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="QuoteType"/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}">
+            <display-entity entity-name="PartyNameView" description="${groupName}${firstName} ${middleInitial} ${lastName}"></display-entity>
+        </field>
+        <field name="quoteName" title="${uiLabelMap.CommonName}"><display/></field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}"><display/></field>
+        <field name="productStoreId" title="${uiLabelMap.ProductStore}">
+        <display-entity entity-name="ProductStore" description="${storeName}"/>
+        </field>
+        <field name="salesChannelEnumId" title="${uiLabelMap.OrderSalesChannel}">
+            <display-entity entity-name="Enumeration" key-field-name="enumId"/>
+        </field>
+        <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"><display type="date"/></field>
+        <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"><display type="date"/></field>
     </form>
+    
     <form name="EditQuote" type="single" target="updateQuote" title="" default-map-name="quote"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
@@ -108,16 +120,33 @@ under the License.
             </entity-one>
         </actions>
         <alt-target use-when="quote==null" target="createQuote"/>
-        <auto-fields-entity entity-name="Quote" default-field-type="edit"/>
-        <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}"><display/></field>
-        <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
+        <!-- <auto-fields-entity entity-name="Quote" default-field-type="edit"/> -->
+        <field name="quoteId" title="${uiLabelMap.CommonId}"><display/></field>
+        <field name="quoteTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="QuoteType" key-field-name="quoteTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="salesChannelEnumId" title="${uiLabelMap.OrderSalesChannel}">
+        <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"><text/></field>
+        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"><date-time type="date"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="false" current-description="${currentStatus.description}">
+                <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
+                    <entity-constraint name="statusId" value="${quote.statusId}"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productStoreId" title="${uiLabelMap.ProductStore}">
+            <drop-down allow-empty="false">
+                <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId">
+                    <entity-order-by field-name="storeName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="salesChannelEnumId" title="${uiLabelMap.OrderSalesChannel}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" value="ORDER_SALES_CHANNEL"/>
@@ -126,23 +155,7 @@ under the License.
             </drop-down>
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
-            <drop-down allow-empty="false" current-description="${currentStatus.description}">
-                <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
-                    <entity-constraint name="statusId" value="${quote.statusId}"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="productStoreId" title="${uiLabelMap.ProductProductStore}">
-            <drop-down allow-empty="false">
-                <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId">
-                    <entity-order-by field-name="storeName"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}" position="2">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -150,10 +163,9 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"></field>
-        <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}"></field>
-        <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"></field>
+        <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"><date-time type="date"/></field>
+        <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}" position="2"><date-time type="date"/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><textarea/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListQuoteRoles" target="" title="" type="list" list-name="quoteRoles"

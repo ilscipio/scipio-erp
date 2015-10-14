@@ -20,27 +20,12 @@
 <#assign catoOrigMainNsNamesSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(.main?keys)>
 
 <#function getRenderContextType>
-  <#local res = "">
-  <#-- check cache -->
-  <#if request??>
-    <#local res = request.getAttribute("catoRenderContextType")!"">
-  <#else>
-    <#local res = .globals["catoRenderContextType"]!"">
-  </#if>
+  <#local res = getRequestVar("catoRenderContextType")!"">
   <#if res?has_content>
     <#return res>
   <#else>
     <#-- FIXME?: this detection is primitive... not sure covers all possible cases... -->
     <#if request??>
-        <#-- ideally will have per-webapp <WebSite> visual theme loading support, and
-             don't want to hardcode this.
-        <#if (application.getAttribute("webSiteId")!"") == "WebStore" ||
-            (application.getAttribute("localDispatcherName")!"") == "ecommerce">
-            <#local res = "web-frontend">
-        <#else>
-            <#local res = "web-backend">
-        </#if>
-         -->
         <#local res = "web">
     <#else>
         <#if baseUrl??>
@@ -50,11 +35,8 @@
         </#if>
     </#if>
 
-    <#-- save in cache -->
-    <#if request??>
-      <#local dummy = request.setAttribute("catoRenderContextType", res)!>
-    </#if>
-    <#global catoRenderContextType = res>
+    <#-- save -->
+    <#local dummy = setRequestVar("catoRenderContextType", res)!>
     <#return res>
   </#if>
 </#function>
@@ -63,18 +45,39 @@
 <#-- catoRenderContextType: ${catoRenderContextType} -->
 <#-- request present? ${(request??)?c} -->
 
-<#include 'component://common/webcommon/includes/catoUtilities.ftl'>
+<#-- cache this so it only needs to happen once in a request -->
+<#assign catoVariablesLibraryPath = getRequestVar("catoVariablesLibraryPath")!"">
+<#assign catoTemplateLibraryPath = getRequestVar("catoTemplateLibraryPath")!"">
 
-<#-- TODO: should have support for per-context-type and per-site loading -->
-<#switch catoRenderContextType>
-<#case "web">
-<#case "email">
-<#case "general">
-<#default>
-    <@"<#include 'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl'>"?interpret />
-    <@"<#include 'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl'>"?interpret />
-<#break>
-</#switch>
+<#if !catoVariablesLibraryPath?has_content || !catoTemplateLibraryPath?has_content>
+
+    <#-- note: rendererVisualThemeResources is set by cato-patched renderer -->
+
+    <#switch catoRenderContextType>
+    <#case "web">
+        <#-- TODO: web-specific resources -->
+        <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["TODO"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
+        <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["TODO"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
+        <#break>
+    <#case "email">
+        <#-- TODO: email-specific resources -->
+        <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["TODO"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
+        <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["TODO"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
+        <#break>
+    <#--<#case "general">-->
+    <#default>
+        <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
+        <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
+        <#break>
+    </#switch>
+
+    <#assign dummy = setRequestVar("catoVariablesLibraryPath", catoVariablesLibraryPath)>
+    <#assign dummy = setRequestVar("catoTemplateLibraryPath", catoTemplateLibraryPath)>
+</#if>
+
+<#include 'component://common/webcommon/includes/catoUtilities.ftl'>
+<@('<#include "' + catoVariablesLibraryPath + '">')?interpret />
+<@('<#include "' + catoTemplateLibraryPath + '">')?interpret />
 
 <#-- FIXME? For now we must copy/dump all cato macro and function defs from main namespace into the global namespace manually.
      Easier with a loop for now but this assumes all are meant to be public (not true)...

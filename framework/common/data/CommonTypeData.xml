@@ -108,7 +108,8 @@ under the License.
 
     <!-- Cato: new visual theme types -->
     <Enumeration enumId="VT_THEME_DATA_RES" description="Theme seed data resource location" enumTypeId="VT_RES_TYPE" sequenceId="50"/>
-    <Enumeration enumId="VT_STL_TMPLT_LOC" description="Style Template Location used to include theme specific macros" enumTypeId="VT_RES_TYPE" sequenceId="51"/>
+    <Enumeration enumId="VT_STL_VAR_LOC" description="Style Template Location used to include theme specific variables and override defaults" enumTypeId="VT_RES_TYPE" sequenceId="51"/>
+    <Enumeration enumId="VT_STL_TMPLT_LOC" description="Style Template Location used to include theme specific templating macros and override defaults" enumTypeId="VT_RES_TYPE" sequenceId="52"/>
 
     <VisualThemeSet visualThemeSetId="BACKOFFICE" description="Themes to be used for backoffice applications"/>
     <VisualThemeSet visualThemeSetId="ECOMMERCE"  description="Themes to be used for ECommerce applications"/>

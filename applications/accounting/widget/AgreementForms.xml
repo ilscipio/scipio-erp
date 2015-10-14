@@ -443,7 +443,7 @@ under the License.
         <auto-fields-entity entity-name="AgreementProductAppl" default-field-type="edit"/>
         <field name="agreementId"><hidden/></field>
         <field name="agreementItemSeqId"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct" }use-when="agreementProductAppl==null">
+        <field name="productId" title="${uiLabelMap.CommonProduct" use-when="agreementProductAppl==null">
             <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="productId" title="${uiLabelMap.CommonProduct}" use-when="agreementProductAppl!=null"><display/></field>

@@ -129,6 +129,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         this(macroLibraryPath, request, response);
     }
 
+    /**
+     * Cato: Returns macro library path used for this renderer. 
+     */
+    public String getMacroLibraryPath() {
+        return macroLibrary.getName();
+    }
+    
     public boolean getRenderPagination() {
         return this.renderPagination;
     }

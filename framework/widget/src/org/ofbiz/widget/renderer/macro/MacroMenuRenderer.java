@@ -69,6 +69,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         this.response = response;
     }
 
+    /**
+     * Cato: Returns macro library path used for this renderer. 
+     */
+    public String getMacroLibraryPath() {
+        return macroLibrary.getName();
+    }
+    
     // Made this a separate method so it can be externalized and reused.
     private Map<String, Object> createImageParameters(Map<String, Object> context, Image image) {
         Map<String, Object> parameters = new HashMap<String, Object>();

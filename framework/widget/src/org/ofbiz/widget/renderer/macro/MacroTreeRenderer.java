@@ -80,6 +80,13 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         this(macroLibraryPath);
     }
     
+    /**
+     * Cato: Returns macro library path used for this renderer. 
+     */
+    public String getMacroLibraryPath() {
+        return macroLibrary.getName();
+    }
+    
     private void executeMacro(Appendable writer, String macro) throws IOException {
         try {
             Environment environment = getEnvironment(writer);

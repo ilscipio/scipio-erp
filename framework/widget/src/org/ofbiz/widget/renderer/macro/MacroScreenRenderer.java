@@ -177,6 +177,13 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         this(name, macroLibraryPath);
     }
 
+    /**
+     * Cato: Returns macro library path used for this renderer. 
+     */
+    public String getMacroLibraryPath() {
+        return macroLibrary.getName();
+    }
+    
     private String getNextElementId() {
         elementId++;
         return "hsr" + elementId;

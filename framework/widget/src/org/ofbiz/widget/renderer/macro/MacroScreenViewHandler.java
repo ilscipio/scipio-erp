@@ -115,18 +115,22 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         if (!formMacroLibraryPath.isEmpty()) {
             FormStringRenderer formStringRenderer = new MacroFormRenderer(formMacroLibraryPath, request, response);
             context.put("formStringRenderer", formStringRenderer);
+            context.put("formMacroLibraryPath", formMacroLibraryPath);
         }
         if (!treeMacroLibraryPath.isEmpty()) {
             TreeStringRenderer treeStringRenderer = new MacroTreeRenderer(treeMacroLibraryPath, writer);
             context.put("treeStringRenderer", treeStringRenderer);
+            context.put("treeMacroLibraryPath", treeMacroLibraryPath);
         }
         if (!menuMacroLibraryPath.isEmpty()) {
             MenuStringRenderer menuStringRenderer = new MacroMenuRenderer(menuMacroLibraryPath, request, response);
             context.put("menuStringRenderer", menuStringRenderer);
+            context.put("menuMacroLibraryPath", menuMacroLibraryPath);
         }
         
         // Cato: Also add screenStringRenderer
         context.put("screenStringRenderer", screenStringRenderer);
+        context.put("screenMacroLibraryPath", screenMacroLibraryPath);
         
         return screenStringRenderer;
     }

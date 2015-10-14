@@ -52,51 +52,51 @@ under the License.
                             <fo:table-column column-width="25mm"/>
                             <fo:table-header>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                                    <fo:block text-align="center" font-size="6pt">${uiLabelMap.FormFieldTitle_theirAcctgTransId}</fo:block>
+                                    <fo:block text-align="left" text-indent="0.5em" font-size="6pt">${uiLabelMap.CommonId}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border="2pt solid" border-width=".1mm">
-                                    <fo:block text-align="center" font-size="6pt">${uiLabelMap.FormFieldTitle_transactionDate}</fo:block>
+                                    <fo:block text-align="left" text-indent="0.5em" font-size="6pt">${uiLabelMap.FormFieldTitle_transactionDate}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                                    <fo:block text-align="center" font-size="6pt">${uiLabelMap.FormFieldTitle_acctgTransTypeId}</fo:block>
+                                    <fo:block text-align="left" text-indent="0.5em" font-size="6pt">${uiLabelMap.CommonType}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                                    <fo:block text-align="center" font-size="6pt">${uiLabelMap.FormFieldTitle_glFiscalTypeId}</fo:block>
+                                    <fo:block text-align="left" text-indent="0.5em" font-size="6pt">${uiLabelMap.FormFieldTitle_glFiscalTypeId}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                                    <fo:block text-align="center" font-size="6pt">${uiLabelMap.FormFieldTitle_invoiceId}</fo:block>
+                                    <fo:block text-align="left" text-indent="0.5em" font-size="6pt">${uiLabelMap.AccountingInvoice}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                                    <fo:block text-align="center" font-size="6pt">${uiLabelMap.FormFieldTitle_paymentId} - (${uiLabelMap.AccountingPaymentType})</fo:block>
+                                    <fo:block text-align="left" text-indent="0.5em" font-size="6pt">${uiLabelMap.AccountingPayment}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                                    <fo:block text-align="center" font-size="6pt">${uiLabelMap.FormFieldTitle_workEffortId}</fo:block>
+                                    <fo:block text-align="left" text-indent="0.5em" font-size="6pt">${uiLabelMap.WorkEffort}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                                    <fo:block text-align="center" font-size="6pt">${uiLabelMap.FormFieldTitle_shipmentId}</fo:block>
+                                    <fo:block text-align="left" text-indent="0.5em" font-size="6pt">${uiLabelMap.CommonShipment}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                                    <fo:block text-align="center" font-size="6pt">${uiLabelMap.FormFieldTitle_isPosted}</fo:block>
+                                    <fo:block text-align="center" text-indent="0.5em" font-size="6pt">${uiLabelMap.FormFieldTitle_isPosted}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                                    <fo:block text-align="center" font-size="6pt">${uiLabelMap.FormFieldTitle_postedDate}</fo:block>
+                                    <fo:block text-align="left" text-indent="0.5em" font-size="6pt">${uiLabelMap.FormFieldTitle_postedDate}</fo:block>
                                 </fo:table-cell>
                             </fo:table-header>
                             <fo:table-body>
                                 <#list acctgTransList as acctgTrans>
                                     <fo:table-row>
                                         <fo:table-cell border="1pt solid" border-width=".1mm">
-                                            <fo:block text-align="center" font-size="5pt">${(acctgTrans.acctgTransId)!}</fo:block>
+                                            <fo:block text-align="left" text-indent="0.5em" font-size="5pt">${(acctgTrans.acctgTransId)!}</fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell border="1pt solid" border-width=".1mm">
-                                            <fo:block text-align="center" font-size="5pt">
+                                            <fo:block text-align="left" text-indent="0.5em" font-size="5pt">
                                                 <#assign dateFormat = Static["java.text.DateFormat"].LONG/>
                                                 <#assign transactionDate = Static["java.text.DateFormat"].getDateInstance(dateFormat, locale).format((acctgTrans.transactionDate)!)/>
                                                 ${(transactionDate)!}
                                             </fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell border="1pt solid" border-width=".1mm">
-                                            <fo:block text-align="center" font-size="5pt">
+                                            <fo:block text-align="left" text-indent="0.5em" font-size="5pt">
                                                 <#if (acctgTrans.acctgTransTypeId)??>
                                                     <#assign acctgTransType = (delegator.findOne("AcctgTransType", {"acctgTransTypeId" : (acctgTrans.acctgTransTypeId)!}, false))!/>
                                                     <#if acctgTransType?has_content>${acctgTransType.description}</#if>
@@ -112,25 +112,25 @@ under the License.
                                             </fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell border="1pt solid" border-width=".1mm">
-                                            <fo:block text-align="center" font-size="5pt">
+                                            <fo:block text-align="left" text-indent="0.5em" font-size="5pt">
                                                 ${(acctgTrans.invoiceId)!}
                                             </fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell border="1pt solid" border-width=".1mm">
-                                            <fo:block text-align="center" font-size="5pt">
+                                            <fo:block text-align="left" text-indent="0.5em" font-size="5pt">
                                                 <#if (acctgTrans.paymentId)??>
                                                     <#assign paymentType = (delegator.findOne("Payment", {"paymentId" : (acctgTrans.paymentId)!}, false)).getRelatedOne("PaymentType", false)/>
-                                                    ${(acctgTrans.paymentId)!}<#if (paymentType?has_content)> -(${(paymentType.description)!})</#if>
+                                                    ${(acctgTrans.paymentId)!}<#if (paymentType?has_content)> - ${paymentType.description!}</#if>
                                                 </#if>
                                             </fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell border="1pt solid" border-width=".1mm">
-                                            <fo:block text-align="center" font-size="5pt">
+                                            <fo:block text-align="left" text-indent="0.5em" font-size="5pt">
                                                 ${(acctgTrans.workEffortId)!}
                                             </fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell border="1pt solid" border-width=".1mm">
-                                            <fo:block text-align="center" font-size="5pt">
+                                            <fo:block text-align="left" text-indent="0.5em" font-size="5pt">
                                                 ${(acctgTrans.shipmentId)!}
                                             </fo:block>
                                         </fo:table-cell>
@@ -140,7 +140,7 @@ under the License.
                                             </fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell border="1pt solid" border-width=".1mm">
-                                            <fo:block text-align="center" font-size="5pt">
+                                            <fo:block text-align="left" text-indent="0.5em" font-size="5pt">
                                                 <#if acctgTrans.postedDate?has_content>
                                                     <#assign dateFormat = Static["java.text.DateFormat"].LONG/>
                                                     <#assign postedDate = Static["java.text.DateFormat"].getDateInstance(dateFormat, locale).format((acctgTrans.postedDate)!)/>

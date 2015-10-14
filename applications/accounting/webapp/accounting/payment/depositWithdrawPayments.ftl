@@ -98,13 +98,13 @@ function getPaymentRunningTotal() {
                     </@thead>
                     <#list paymentList as payment>
                         <@tr>
-                            <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>">${payment.paymentId}</a></@td>
+                            <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl> class="${styles.link_default}">${payment.paymentId}</a></@td>
                             <@td>${payment.paymentTypeDesc!}</@td>
                             <@td>${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}</@td>
                             <@td>${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}</@td>
                             <@td><@ofbizCurrency amount=payment.amount isoCode=payment.currencyUomId/></@td>
                             <@td>${payment.effectiveDate!}</@td>
-                            <@td align="right">${uiLabelMap.AccountingDeposit}<input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getPaymentRunningTotal();"/></@td>
+                            <@td class="align-right">${uiLabelMap.AccountingDeposit}<input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getPaymentRunningTotal();"/></@td>
                         </@tr>
                     </#list>
                     <div align="right">

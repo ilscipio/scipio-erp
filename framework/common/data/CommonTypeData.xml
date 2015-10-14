@@ -105,7 +105,10 @@ under the License.
     <Enumeration enumId="VT_NAV_CLOSE_TMPLT" description="Closing Navigation Template Location" enumTypeId="VT_RES_TYPE" sequenceId="14"/>
     <Enumeration enumId="VT_MSG_TMPLT_LOC" description="Main Messages Template Location" enumTypeId="VT_RES_TYPE" sequenceId="15"/>
     <Enumeration enumId="VT_SCREENSHOT" description="Theme Preview Screenshot" enumTypeId="VT_RES_TYPE" sequenceId="16"/>
-    <Enumeration enumId="VT_STL_TMPLT_LOC" description="Style Template Location used to include theme specific macros" enumTypeId="VT_RES_TYPE" sequenceId="17"/><!-- Cato specific -->
+
+    <!-- Cato: new visual theme types -->
+    <Enumeration enumId="VT_THEME_DATA_RES" description="Theme seed data resource location" enumTypeId="VT_RES_TYPE" sequenceId="50"/>
+    <Enumeration enumId="VT_STL_TMPLT_LOC" description="Style Template Location used to include theme specific macros" enumTypeId="VT_RES_TYPE" sequenceId="51"/>
 
     <VisualThemeSet visualThemeSetId="BACKOFFICE" description="Themes to be used for backoffice applications"/>
     <VisualThemeSet visualThemeSetId="ECOMMERCE"  description="Themes to be used for ECommerce applications"/>

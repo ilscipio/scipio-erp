@@ -20,6 +20,8 @@ under the License.
 
 <entity-engine-xml>
     <VisualTheme visualThemeId="BASE" visualThemeSetId="BACKOFFICE" description="Base - Foundation CSS Based Magic"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="component://base-theme/data/BaseThemeData.xml" sequenceId="01"/>
+    
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAME" resourceValue="BASE" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/base-theme/screenshot.jpg" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://base-theme/includes/header.ftl" sequenceId="01"/>

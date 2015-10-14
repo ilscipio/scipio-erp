@@ -21,6 +21,9 @@ under the License.
 <entity-engine-xml>
     <!-- Ecommerce Default Visual Theme -->
     <VisualTheme visualThemeId="EC_DEFAULT" visualThemeSetId="ECOMMERCE" description="OFBiz Ecommerce Standard Floating Layout"/>
+    <!-- Cato: WARN: don't add non-visual theme data to this file; make theme-specific file and move this there if needed -->
+    <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="component://ecommerce/data/EcommerceTypeData.xml" sequenceId="01"/>
+    
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/ecommerce/images/blog.css" sequenceId="01"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/images/ecommain.css" sequenceId="02"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/content/images/contentForum.css" sequenceId="03"/>

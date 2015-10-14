@@ -17,10 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#-- Cato: use same ones loaded by renderer
 <#include "component://widget/templates/htmlFormMacroLibrary.ftl"/>
 <#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")> 
-<#include StringUtil.wrapString("component://widget/templates/htmlMenuMacroLibrary.ftl")> 
-
+<#include StringUtil.wrapString("component://widget/templates/htmlMenuMacroLibrary.ftl")>-->
+<@('<#include "' + (StringUtil.wrapString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '">')?interpret />
+<@('<#include "' + (StringUtil.wrapString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '">')?interpret />
+<@('<#include "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret />
 
 <#macro lookupField className="" alert="" name="" value="" size="20" maxlength="20" id="" event="" action="" readonly="" autocomplete="" descriptionFieldName="" formName="" fieldFormName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled="" presentation="layer" width="" height="" position="topleft" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="">
     <#if (!ajaxEnabled?has_content)>

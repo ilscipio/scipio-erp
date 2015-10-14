@@ -294,7 +294,7 @@ under the License.
         <field name="shipmentId" title="${uiLabelMap.CommonShipment}" position="2"/>
         <field name="receiptId" title="${uiLabelMap.CommonReceipt}" position="1"/>
         <field name="theirAcctgTransId" position="2"/>
-        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAsset}"position="1"/>
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAsset}" position="1"/>
         <field name="workEffortId" position="2"/>
         <field name="voucherRef" position="1"/>
         <field name="voucherDate" position="2"/>

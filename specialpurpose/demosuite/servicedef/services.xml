@@ -5,7 +5,7 @@
     <vendor></vendor>
     <version>1.0</version>
 
-        <service name="createOrderData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/OrderData.groovy" invoke="createDemoOrder">
+    <service name="createOrderData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/OrderData.groovy" invoke="createDemoOrder">
         <description>Creates a number of demo data</description>
         <attribute name="num" type="Integer" mode="IN" optional="false"/>
         <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>

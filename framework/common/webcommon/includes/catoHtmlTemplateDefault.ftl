@@ -2448,7 +2448,6 @@ Usage example:
 </#macro>
 
 
-
 <#-- 
 *************************************
 * END OF FILE INCLUDES *
@@ -2459,19 +2458,21 @@ Usage example:
 <#-- Macro library imports. These must be included at end due to circular dependencies (FIXME?).
      In a sense the widget macros depend on Cato markup, but Cato macros currently call widget macros. 
      
-     TODO?: to be confirmed, but I think these could remain static includes even if ofbiz is to support
-     per-site macro library overrides; the implementations in this file depend on the 
+     TODO?: to be confirmed, but I think these could remain static includes even when support
+     per-site macro libs; the implementations in this file depend on the 
      implementation details of the default stock macros, and this is an implementation detail itself. 
      instead we would have per-site cato lib overrides. debatable... 
      EDIT: this will on depend on the implementation of macros like @field. if it's split up,
      then static includes make sense. but if it's left as-is and the stock macros are the only way
-     to have per-field-type markup overrides, then might want a per-site macro lib loading here... -->
-<#-- use the stock htmlTemplate.ftl file to import all; changes nothing, simply faster
+     to have per-field-type markup overrides, then might want a per-site macro lib loading here... 
+     EDIT 2: added code to load the per-site macros for time being, but in future could want back to static?
+     in any, please leave these includes in this file, it's up to this file to decide (not catoIncludes.ftl)
+     -->
+<#--
 <#import "component://widget/templates/htmlFormMacroLibrary.ftl" as formlib>
 <#import "component://widget/templates/htmlScreenMacroLibrary.ftl" as screenlib> 
-<#import "component://widget/templates/htmlMenuMacroLibrary.ftl" as menulib>-->
-<#import "component://common/webcommon/includes/htmlTemplate.ftl" as formlib>
-<#import "component://common/webcommon/includes/htmlTemplate.ftl" as screenlib> 
-<#import "component://common/webcommon/includes/htmlTemplate.ftl" as menulib>
-
+<#import "component://widget/templates/htmlMenuMacroLibrary.ftl" as menulib> -->
+<@('<#import "' + (StringUtil.wrapString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '" as formlib>')?interpret />
+<@('<#import "' + (StringUtil.wrapString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '" as screenlib>')?interpret />
+<@('<#import "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '" as menulib>')?interpret />
 

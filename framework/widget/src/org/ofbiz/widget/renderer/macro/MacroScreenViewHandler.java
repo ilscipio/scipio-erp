@@ -107,6 +107,9 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
                             menuMacroLibraryPath = macroLibraryPath;
                         }
                     }
+                    
+                    // Cato: scripts downstream need this, and MUST match resources used for macro libs
+                    context.put("rendererVisualThemeResources", themeResources);
                 }
             }
         }

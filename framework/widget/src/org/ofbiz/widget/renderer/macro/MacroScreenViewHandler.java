@@ -69,7 +69,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         String treeMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".treerenderer");
         String menuMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".menurenderer");
         
-        Map<String, List<String>> themeResources = ScreenRenderer.getSetVisualThemeResources(context, true);
+        Map<String, List<String>> themeResources = ScreenRenderer.getSetVisualThemeResources(context, false);
         if (themeResources != null) {
             List<String> resourceList = UtilGenerics.cast(themeResources.get("VT_SCRN_MACRO_LIB"));
             if (resourceList != null && !resourceList.isEmpty()) {

@@ -42,11 +42,11 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true"/>
                 <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}"/>
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.dateTime.getFilePath(initialLocaleComplete)}" global="true"/>
-                <!-- Replaced by foundation datepicker <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" />-->
-                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>                
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>
+                
+                <!-- Replaced by foundation datepicker <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" />-->
+                
+                <!-- ToDo: Remove?
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true"/>-->
 
                 <script location="component://ecommerce/widget/EcommerceSetup.groovy"/>
 
@@ -262,7 +262,7 @@ under the License.
 
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>                
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>                
                 
 
                 <script location="component://ecommerce/widget/EcommerceSetup.groovy"/>

@@ -29,6 +29,10 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="applicationMenuName" value="HumanResAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://humanres/widget/HumanresMenus.xml" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap.HumanResManagerApplication}" global="true"/>
+                
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.HumanResCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.HumanResCompanySubtitle" global="true"/>
                 <!-- layoutSettings.headerImageUrl can be used to specify an application specific logo; if not set,
@@ -38,11 +42,10 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/partymgr.js" global="true"/>
                 <set field="layoutSettings.styleSheets[]" value="/partymgr/static/partymgr.css" global="true"/>
                 <set field="layoutSettings.styleSheets[]" value="/images/humanres/humanres.css" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/styles/base/bower_components/jstree/dist/jstree.min.js" global="true"/>
-                <set field="applicationMenuName" value="HumanResAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://humanres/widget/HumanresMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.HumanResManagerApplication}" global="true"/>
+
+                <!-- ToDo: Move to themes? -->
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">

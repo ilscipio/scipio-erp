@@ -20,10 +20,31 @@ under the License.
 <#-- Cato: use same ones loaded by renderer
 <#include "component://widget/templates/htmlFormMacroLibrary.ftl"/>
 <#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")> 
-<#include StringUtil.wrapString("component://widget/templates/htmlMenuMacroLibrary.ftl")>-->
+<#include StringUtil.wrapString("component://widget/templates/htmlMenuMacroLibrary.ftl")>
+... and use ones with caching of the directives so only interpreted once per request
 <@('<#include "' + (StringUtil.wrapString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '">')?interpret />
 <@('<#include "' + (StringUtil.wrapString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '">')?interpret />
-<@('<#include "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret />
+<@('<#include "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret />-->
+
+<#assign formMacroLibIncludeDirective = getRequestVar("formMacroLibIncludeDirective")!"">
+
+<#if formMacroLibIncludeDirective?is_directive>
+    <#assign screenMacroLibIncludeDirective = getRequestVar("screenMacroLibIncludeDirective")!"">
+    <#assign menuMacroLibIncludeDirective = getRequestVar("menuMacroLibIncludeDirective")!"">
+<#else>
+    <#assign formMacroLibIncludeDirective = ('<#include "' + (StringUtil.wrapString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '">')?interpret>
+    <#assign screenMacroLibIncludeDirective = ('<#include "' + (StringUtil.wrapString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '">')?interpret>
+    <#assign menuMacroLibIncludeDirective = ('<#include "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret>
+
+    <#assign dummy = setRequestVar("formMacroLibIncludeDirective", formMacroLibIncludeDirective)>
+    <#assign dummy = setRequestVar("screenMacroLibIncludeDirective", screenMacroLibIncludeDirective)>
+    <#assign dummy = setRequestVar("menuMacroLibIncludeDirective", menuMacroLibIncludeDirective)>
+</#if>
+
+<@formMacroLibIncludeDirective />
+<@screenMacroLibIncludeDirective />
+<@menuMacroLibIncludeDirective />
+
 
 <#macro lookupField className="" alert="" name="" value="" size="20" maxlength="20" id="" event="" action="" readonly="" autocomplete="" descriptionFieldName="" formName="" fieldFormName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled="" presentation="layer" width="" height="" position="topleft" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="">
     <#if (!ajaxEnabled?has_content)>

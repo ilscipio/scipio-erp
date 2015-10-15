@@ -45,37 +45,51 @@
 <#-- catoRenderContextType: ${catoRenderContextType} -->
 <#-- request present? ${(request??)?c} -->
 
-<#-- cache this so it only needs to happen once in a request -->
-<#assign catoVariablesLibraryPath = getRequestVar("catoVariablesLibraryPath")!"">
-<#assign catoTemplateLibraryPath = getRequestVar("catoTemplateLibraryPath")!"">
+<#-- cache these template interprets so they only need to happen once in a request -->
+<#assign catoVariablesIncludeDirective = getRequestVar("catoVariablesIncludeDirective")!"">
 
-<#if !catoVariablesLibraryPath?has_content || !catoTemplateLibraryPath?has_content>
+<#if catoVariablesIncludeDirective?is_directive && false>
+    <#assign catoTemplateIncludeDirective = getRequestVar("catoTemplateIncludeDirective")!"">
+<#else>
+    <#-- cache these var lookups so it only needs to happen once in a request -->
+    <#assign catoVariablesLibraryPath = getRequestVar("catoVariablesLibraryPath")!"">
+    
+    <#if catoVariablesLibraryPath?has_content>
+        <#assign catoTemplateLibraryPath = getRequestVar("catoTemplateLibraryPath")!"">
+    <#else>
+        <#-- note: rendererVisualThemeResources is set by cato-patched renderer -->
+        <#switch catoRenderContextType>
+        <#case "web">
+            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_WEB"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
+            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_WEB"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
+            <#break>
+        <#case "email">
+            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_MAIL"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
+            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_MAIL"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
+            <#break>
+        <#--<#case "general">-->
+        <#default>
+            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
+            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
+            <#break>
+        </#switch>
+    
+        <#assign dummy = setRequestVar("catoVariablesLibraryPath", catoVariablesLibraryPath)>
+        <#assign dummy = setRequestVar("catoTemplateLibraryPath", catoTemplateLibraryPath)>
+    </#if>
 
-    <#-- note: rendererVisualThemeResources is set by cato-patched renderer -->
+    <#assign catoVariablesIncludeDirective = ('<#include "' + catoVariablesLibraryPath + '">')?interpret>
+    <#assign catoTemplateIncludeDirective = ('<#include "' + catoTemplateLibraryPath + '">')?interpret>
 
-    <#switch catoRenderContextType>
-    <#case "web">
-        <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_WEB"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
-        <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_WEB"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
-        <#break>
-    <#case "email">
-        <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_MAIL"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
-        <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_MAIL"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
-        <#break>
-    <#--<#case "general">-->
-    <#default>
-        <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
-        <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
-        <#break>
-    </#switch>
-
-    <#assign dummy = setRequestVar("catoVariablesLibraryPath", catoVariablesLibraryPath)>
-    <#assign dummy = setRequestVar("catoTemplateLibraryPath", catoTemplateLibraryPath)>
+    <#assign dummy = setRequestVar("catoVariablesIncludeDirective", catoVariablesIncludeDirective)>
+    <#assign dummy = setRequestVar("catoTemplateIncludeDirective", catoTemplateIncludeDirective)>
 </#if>
 
 <#include 'component://common/webcommon/includes/catoUtilities.ftl'>
-<@('<#include "' + catoVariablesLibraryPath + '">')?interpret />
-<@('<#include "' + catoTemplateLibraryPath + '">')?interpret />
+<@catoVariablesIncludeDirective />
+<@catoTemplateIncludeDirective />
+
+
 
 <#-- FIXME? For now we must copy/dump all cato macro and function defs from main namespace into the global namespace manually.
      Easier with a loop for now but this assumes all are meant to be public (not true)...

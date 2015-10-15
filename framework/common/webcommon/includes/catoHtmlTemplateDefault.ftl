@@ -2473,7 +2473,24 @@ Usage example:
 <#import "component://widget/templates/htmlFormMacroLibrary.ftl" as formlib>
 <#import "component://widget/templates/htmlScreenMacroLibrary.ftl" as screenlib> 
 <#import "component://widget/templates/htmlMenuMacroLibrary.ftl" as menulib> -->
-<@('<#import "' + (StringUtil.wrapString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '" as formlib>')?interpret />
-<@('<#import "' + (StringUtil.wrapString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '" as screenlib>')?interpret />
-<@('<#import "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '" as menulib>')?interpret />
+
+<#assign catoFormLibImportDirective = getRequestVar("catoFormLibImportDirective")!"">
+
+<#if catoFormLibImportDirective?is_directive>
+    <#assign catoScreenLibImportDirective = getRequestVar("catoScreenLibImportDirective")!"">
+    <#assign catoMenuLibImportDirective = getRequestVar("catoMenuLibImportDirective")!"">
+<#else>
+    <#assign catoFormLibImportDirective = ('<#import "' + (StringUtil.wrapString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '" as formlib>')?interpret>
+    <#assign catoScreenLibImportDirective = ('<#import "' + (StringUtil.wrapString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '" as screenlib>')?interpret>
+    <#assign catoMenuLibImportDirective = ('<#import "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '" as menulib>')?interpret>
+
+    <#assign dummy = setRequestVar("catoFormLibImportDirective", catoFormLibImportDirective)>
+    <#assign dummy = setRequestVar("catoScreenLibImportDirective", catoScreenLibImportDirective)>
+    <#assign dummy = setRequestVar("catoMenuLibImportDirective", catoMenuLibImportDirective)>
+</#if>
+
+<@catoFormLibImportDirective />
+<@catoScreenLibImportDirective />
+<@catoMenuLibImportDirective />
+
 

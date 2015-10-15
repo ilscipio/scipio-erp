@@ -55,14 +55,12 @@
 
     <#switch catoRenderContextType>
     <#case "web">
-        <#-- TODO: web-specific resources -->
-        <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["TODO"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
-        <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["TODO"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
+        <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_WEB"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
+        <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_WEB"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
         <#break>
     <#case "email">
-        <#-- TODO: email-specific resources -->
-        <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["TODO"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
-        <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["TODO"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
+        <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_MAIL"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl')>
+        <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_MAIL"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl')>
         <#break>
     <#--<#case "general">-->
     <#default>

@@ -166,6 +166,27 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty field="orderId"/></not>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="OrderSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <widgets>

@@ -25,7 +25,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -55,7 +55,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <!--
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> 
                         <include-screen name="leftbarCatalog"/>

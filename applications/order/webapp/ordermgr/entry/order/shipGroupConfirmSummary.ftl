@@ -48,12 +48,14 @@ standard order confirmation page and to be re-usable by other screens.
       -->
 
       <#list cart.getShipGroups() as cartShipInfo>
-      <#assign numberOfItems = cartShipInfo.getShipItems().size()>
+      <#assign shipItems = cartShipInfo.getShipItems()>
+      <#assign numberOfItems = shipItems.size()>
       <#if (numberOfItems > 0)>
+      <#assign shipItems = Static["org.ofbiz.base.util.UtilMisc"].toList(shipItems)>
 
       <#-- spacer goes here -->
 
-      <@tr openOnly=true />
+      <@tr>
 
         <#-- address destination column (spans a number of rows = number of cart items in it) -->
 
@@ -92,19 +94,21 @@ standard order confirmation page and to be re-usable by other screens.
 
         <#-- list each ShoppingCartItem in this group -->
 
-        <#assign itemIndex = 0 />
-        <#list cartShipInfo.getShipItems() as shoppingCartItem>
-        <#-- FIXME: avoid openOnly/closeOnly structure, and something is weird here... -->
-        <#if (itemIndex > 0)> <@tr openOnly=true /> </#if>
-
+      <#macro cartItemCells shoppingCartItem cartShipInfo>
         <@td valign="top"> ${shoppingCartItem.getProductId()?default("")} - ${shoppingCartItem.getName()?default("")} </@td>
         <@td valign="top"> ${cartShipInfo.getShipItemInfo(shoppingCartItem).getItemQuantity()?default("0")} </@td>
+      </#macro>
 
-        <#if (itemIndex == 0)> <@tr closeOnly=true /> </#if>
-        <#assign itemIndex = itemIndex + 1 />
-        </#list>
+        <@cartItemCells shoppingCartItem=shipItems?first cartShipInfo=cartShipInfo/>
+      </@tr>
 
-      <@tr closeOnly=true />
+    <#if (numberOfItems > 1)>
+      <#list shipItems[1..] as shoppingCartItem>
+      <@tr>
+        <@cartItemCells shoppingCartItem=shoppingCartItem cartShipInfo=cartShipInfo/>
+      </@tr>
+      </#list>
+    </#if>
 
       </#if>
       </#list>

@@ -68,51 +68,39 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         String formMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".formrenderer");
         String treeMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".treerenderer");
         String menuMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".menurenderer");
-        Map<String, Object> userPreferences = UtilGenerics.cast(context.get("userPreferences"));
-        if (userPreferences != null) {
-            String visualThemeId = (String) userPreferences.get("VISUAL_THEME");
-            if (visualThemeId != null) {
-                LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
-                Map<String, Object> serviceCtx = dispatcher.getDispatchContext().makeValidContext("getVisualThemeResources",
-                        ModelService.IN_PARAM, context);
-                serviceCtx.put("visualThemeId", visualThemeId);
-                Map<String, Object> serviceResult = dispatcher.runSync("getVisualThemeResources", serviceCtx);
-                if (ServiceUtil.isSuccess(serviceResult)) {
-                    Map<String, List<String>> themeResources = UtilGenerics.cast(serviceResult.get("themeResources"));
-                    List<String> resourceList = UtilGenerics.cast(themeResources.get("VT_SCRN_MACRO_LIB"));
-                    if (resourceList != null && !resourceList.isEmpty()) {
-                        String macroLibraryPath = resourceList.get(0);
-                        if (macroLibraryPath != null) {
-                            screenMacroLibraryPath = macroLibraryPath;
-                        }
-                    }
-                    resourceList = UtilGenerics.cast(themeResources.get("VT_FORM_MACRO_LIB"));
-                    if (resourceList != null && !resourceList.isEmpty()) {
-                        String macroLibraryPath = resourceList.get(0);
-                        if (macroLibraryPath != null) {
-                            formMacroLibraryPath = macroLibraryPath;
-                        }
-                    }
-                    resourceList = UtilGenerics.cast(themeResources.get("VT_TREE_MACRO_LIB"));
-                    if (resourceList != null && !resourceList.isEmpty()) {
-                        String macroLibraryPath = resourceList.get(0);
-                        if (macroLibraryPath != null) {
-                            treeMacroLibraryPath = macroLibraryPath;
-                        }
-                    }
-                    resourceList = UtilGenerics.cast(themeResources.get("VT_MENU_MACRO_LIB"));
-                    if (resourceList != null && !resourceList.isEmpty()) {
-                        String macroLibraryPath = resourceList.get(0);
-                        if (macroLibraryPath != null) {
-                            menuMacroLibraryPath = macroLibraryPath;
-                        }
-                    }
-                    
-                    // Cato: scripts downstream need this, and MUST match resources used for macro libs
-                    context.put("rendererVisualThemeResources", themeResources);
+        
+        Map<String, List<String>> themeResources = ScreenRenderer.getSetVisualThemeResources(context, true);
+        if (themeResources != null) {
+            List<String> resourceList = UtilGenerics.cast(themeResources.get("VT_SCRN_MACRO_LIB"));
+            if (resourceList != null && !resourceList.isEmpty()) {
+                String macroLibraryPath = resourceList.get(0);
+                if (macroLibraryPath != null) {
+                    screenMacroLibraryPath = macroLibraryPath;
+                }
+            }
+            resourceList = UtilGenerics.cast(themeResources.get("VT_FORM_MACRO_LIB"));
+            if (resourceList != null && !resourceList.isEmpty()) {
+                String macroLibraryPath = resourceList.get(0);
+                if (macroLibraryPath != null) {
+                    formMacroLibraryPath = macroLibraryPath;
+                }
+            }
+            resourceList = UtilGenerics.cast(themeResources.get("VT_TREE_MACRO_LIB"));
+            if (resourceList != null && !resourceList.isEmpty()) {
+                String macroLibraryPath = resourceList.get(0);
+                if (macroLibraryPath != null) {
+                    treeMacroLibraryPath = macroLibraryPath;
+                }
+            }
+            resourceList = UtilGenerics.cast(themeResources.get("VT_MENU_MACRO_LIB"));
+            if (resourceList != null && !resourceList.isEmpty()) {
+                String macroLibraryPath = resourceList.get(0);
+                if (macroLibraryPath != null) {
+                    menuMacroLibraryPath = macroLibraryPath;
                 }
             }
         }
+        
         ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(UtilProperties.getPropertyValue("widget", getName()
                 + ".name"), screenMacroLibraryPath);
         if (!formMacroLibraryPath.isEmpty()) {

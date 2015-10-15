@@ -57,6 +57,8 @@ import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.LoginWorker;
 import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.widget.WidgetWorker;
@@ -367,5 +369,50 @@ public class ScreenRenderer {
                 dctx.getSecurity(), (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin"));
         
         populateContextScripts(serviceContext);
+    }
+    
+    /**
+     * Cato: Gets appropriate visual theme resources based on values in context, best-effort, 
+     * using as generalized logic as possible, and saves in context.
+     * If <code>useCache</code> true, resources are read from <code>rendererVisualThemeResources</code> context variable.
+     * Result is stored in this same variable.
+     */
+    public static Map<String, List<String>> getSetVisualThemeResources(Map<String, Object> context, boolean useCache) throws GenericServiceException {
+        Map<String, List<String>> themeResources = null;
+        
+        if (useCache && Boolean.TRUE.equals((Boolean) context.get("rendererVisualThemeResourcesChecked"))) {
+            themeResources = UtilGenerics.cast(context.get("rendererVisualThemeResources"));
+        }
+        else {
+            themeResources = loadVisualThemeResources(context);
+
+            context.put("rendererVisualThemeResources", themeResources);
+            context.put("rendererVisualThemeResourcesChecked", Boolean.TRUE);
+        }
+        return themeResources;
+    }
+    
+    /**
+     * Cato: Loads visual theme resources from context, best-effort, using as generalized logic as possible.
+     * <p>
+     * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers(HttpServletRequest, HttpServletResponse, Map<String, Object>, Writer)}.
+     * Original code only checked for preference of userPreferences.
+     */    
+    public static Map<String, List<String>> loadVisualThemeResources(Map<String, Object> context) throws GenericServiceException {
+        Map<String, Object> userPreferences = UtilGenerics.cast(context.get("userPreferences"));
+        if (userPreferences != null) {
+            String visualThemeId = (String) userPreferences.get("VISUAL_THEME");
+            if (visualThemeId != null) {
+                LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
+                Map<String, Object> serviceCtx = dispatcher.getDispatchContext().makeValidContext("getVisualThemeResources",
+                        ModelService.IN_PARAM, context);
+                serviceCtx.put("visualThemeId", visualThemeId);
+                Map<String, Object> serviceResult = dispatcher.runSync("getVisualThemeResources", serviceCtx);
+                if (ServiceUtil.isSuccess(serviceResult)) {
+                    return UtilGenerics.cast(serviceResult.get("themeResources"));
+                }
+            }
+        }
+        return null;
     }
 }

@@ -178,7 +178,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         </#list>
     </#if>
     
-    <#-- No matter where JS includes end up, VT_TOP_JAVASCRIPT has to come before all others -->
+    <#-- VT_TOP_JAVASCRIPT must always come before all others and at top of document -->
     <#if layoutSettings.VT_TOP_JAVASCRIPT?has_content>
         <#assign javaScriptsSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(layoutSettings.VT_TOP_JAVASCRIPT)/>
         <#list layoutSettings.VT_TOP_JAVASCRIPT as javaScript>

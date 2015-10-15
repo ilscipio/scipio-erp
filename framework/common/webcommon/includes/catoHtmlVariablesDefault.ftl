@@ -16,6 +16,7 @@
 
 <#global styles = {
   <#-- Misc -->
+    "framework" : "foundation",
     "disabled" : "disabled",
     "active" : "active",
     "button" : "button",
@@ -48,10 +49,12 @@
     "menu_button_item" : "",
     "menu_button_itemlink" : "button tiny",
     <#-- Main navigation menus -->
-    "menu_main" : "dropdown",  
+    "menu_main" : "dropdown",
+    "menu_main_wrap" : "has-dropdown not-click active",        
     "menu_main_item" : "",
     "menu_main_itemlink" : "", 
-    "menu_sidebar" : "side-nav", 
+    "menu_sidebar" : "side-nav",
+    "menu_sidebar_wrap" :"", 
     "menu_sidebar_item" : "",
     "menu_sidebar_itemlink" : "", 
     <#-- Tab and secondary navigation menus-->
@@ -133,6 +136,11 @@
     "grid_small_centered" : "small-centered",
     "grid_medium_centered" : "medium-centered",
     "grid_large_centered" : "large-centered",
+    "grid_sidebar_0_main" : "large-12 columns",
+    "grid_sidebar_1_main" : "large-10 medium-9 columns",
+    "grid_sidebar_1_side" : "large-2 medium-3 columns",
+    "grid_sidebar_2_main" : "large-8 medium-6 columns",
+    "grid_sidebar_2_side" : "large-2 medium-3 columns",
 
   <#-- Floats -->
     "float_left" : "left",

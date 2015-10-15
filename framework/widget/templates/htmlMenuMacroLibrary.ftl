@@ -37,7 +37,8 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
   <#if !inlineEntries>
     <#if styleSet.contains("menu-main")>
       <#local remStyle = removeStyleNames(style, "menu-main")>
-        <li class="has-dropdown not-click active"><a href="#">${title!}</a>
+        <li class="${styles.menu_main_wrap!}"><a href="${styles.menu_main_itemlink!"#"}" class="${styles.menu_main_item!}"
+            <#if styles.framework?has_content && styles.framework =="bootstrap"> data-toggle="dropdown"</#if>>${title!}<#if styles.framework?has_content && styles.framework =="bootstrap"> <i class="fa fa-fw fa-caret-down"></i></#if></a>
       <#local classes = joinStyleNames(styles.menu_main!, remStyle)>
     <#elseif styleSet.contains("menu-sidebar")>
       <#local remStyle = removeStyleNames(style, "menu-sidebar")>
@@ -63,7 +64,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
            not sure should keep that behavior or not, but might not consistent with foundation styles? -->
       <#local classes = joinStyleNames(styles.menu_default!, style)>
     </#if>
-        <ul<#if classes?has_content> class="${classes}"</#if>>
+        <ul<#if classes?has_content> id="${id!"test"}" class="${classes}"</#if>>
   </#if>
 </#macro>
 

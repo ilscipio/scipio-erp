@@ -18,21 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="CommonOrderReportDecorator">
-        <section>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+    
     <screen name="OrderReportList">
         <section>
             <actions>
@@ -41,7 +27,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/ReportList.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderReportDecorator">
+                <decorator-screen name="CommonReportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/reports/reportlist.ftl"/></html>

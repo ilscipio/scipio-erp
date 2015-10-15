@@ -24,10 +24,12 @@ under the License.
         <section>
             <actions>
                 <set field="activeApp" value="ordermgr" global="true"/>
+                
                 <!-- base/top/specific map first, then more common map added for shared labels -->
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderErrorUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
@@ -67,9 +69,6 @@ under the License.
                 <set field="headerItem" value="quote"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="titleProperty" value="${uiLabelMap.OrderOrderQuote}: ${quote.quoteId} - ${quote.quoteName}"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -79,8 +78,19 @@ under the License.
                                 <not><if-empty field="quoteId"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="QuoteSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="QuoteSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                    </widgets>
+                                </section>
                             </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                     <decorator-section name="body">
@@ -110,43 +120,67 @@ under the License.
         </section>
     </screen>
     
-    <screen name="CommonRequestDecorator">
+    <screen name="CommonOrderDecorator">
         <section>
-            <actions>
-                <set field="custRequestId" from-field="parameters.custRequestId"/>
-                <entity-one entity-name="CustRequest" value-field="custRequest"/>
-            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
-                                <not><if-empty field="custRequest"/></not>
+                                <not><if-empty field="orderId"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="RequestSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="OrderSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                    </widgets>
+                                </section>
                             </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                     <decorator-section name="body">
-                        <include-menu name="RequestSubTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
-                        <container>
-                            <section>
-                                <condition>
-                                    <not><if-empty field="custRequest"/></not>
-                                </condition>
-                                <widgets>
-                                    <label style="heading">${custRequest.custRequestName} [${uiLabelMap.CommonId}:${custRequest.custRequestId}] </label>
-                                </widgets>
-                            </section>
-                        </container>
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-
+    
+    <screen name="CommonOrderCheckoutDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="orderentry"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.groovy"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetCheckOutTabBar.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryCheckOutTabBar.ftl"/></html>
+                                </platform-specific>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="CommonPartyDecorator">
         <section>
             <widgets>
@@ -179,6 +213,192 @@ under the License.
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonReportDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <widgets>
+                                <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonRequestDecorator">
+        <section>
+            <actions>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty field="custRequest"/></not>
+                            </condition>
+                            <widgets>
+                                <include-menu name="RequestSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <include-menu name="RequestSubTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                        <container>
+                            <section>
+                                <condition>
+                                    <not><if-empty field="custRequest"/></not>
+                                </condition>
+                                <widgets>
+                                    <label style="heading">${custRequest.custRequestName} [${uiLabelMap.CommonId}:${custRequest.custRequestId}] </label>
+                                </widgets>
+                            </section>
+                        </container>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonRequirementDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty field="requirementId"/></not>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="RequirementSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field="requirement"/></not></condition>
+                                    <widgets>
+                                        <label style="heading">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonRequirementsDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <widgets>
+                                <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for ORDERMGR, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="RequirementsTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                <container>
+                                    <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="${styles.button_default}"/>
+                                </container>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonReturnDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}"><decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty field="returnId"/></not>
+                            </condition>
+                            <widgets>
+                                <include-menu name="ReturnSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="component://order/webapp/ordermgr/return/returnLinks.ftl"/>
+                                    </html>
+                                </platform-specific>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

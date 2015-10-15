@@ -46,7 +46,7 @@ under the License.
                 <set field="asm_listField[]" from-field="salesChannelEnumId"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -97,7 +97,7 @@ under the License.
                 <entity-condition entity-name="CustRequestAndContent" list="custRequestAndContents">
                     <condition-list combine="and">
                         <condition-expr field-name="custRequestId" from-field="custRequestId"/>
-                        <condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimestamp"/>                        
+                        <condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimestamp"/>
                         <condition-list combine="or">
                             <condition-expr field-name="thruDate" operator="greater-equals" from-field="nowTimestamp"/>
                             <condition-expr field-name="thruDate" from-field="null"/>

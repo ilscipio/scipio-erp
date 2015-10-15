@@ -26,7 +26,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckInits.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkinits.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -34,6 +34,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="OrderAgreements">
         <section>
             <actions>

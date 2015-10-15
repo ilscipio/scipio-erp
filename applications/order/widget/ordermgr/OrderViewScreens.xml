@@ -18,21 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="CommonOrderViewDecorator">
-        <section>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+    
     <screen name="Main">
         <section>
             <actions>
@@ -40,7 +26,7 @@ under the License.
                 <set field="titleProperty" value="OrderManager"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}4 ${styles.grid_cell}">
@@ -63,6 +49,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="OrderHeaderView">
         <section>
             <actions>
@@ -75,8 +62,9 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderViewWebSecure.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <include-menu location="component://order/widget/ordermgr/OrderMenus.xml" name="OrderSubTabBar"/>
                         <include-screen name="orderHeader"/>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
@@ -96,6 +84,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="orderHeader">
         <section>
             <condition>
@@ -134,6 +123,7 @@ under the License.
             </fail-widgets>
         </section>
     </screen>
+    
     <screen name="orderinfo">
         <section>
             <widgets>
@@ -143,6 +133,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="orderterms">
         <section>
             <widgets>
@@ -152,6 +143,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="orderpaymentinfo">
         <section>
             <widgets>
@@ -161,6 +153,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="projectAssoOrder">
         <section>
             <condition>
@@ -191,6 +184,7 @@ under the License.
             <fail-widgets></fail-widgets>
         </section>
     </screen>
+    
     <screen name="ordercontactinfo">
         <section>
             <widgets>
@@ -200,6 +194,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="ordershippinginfo">
         <section>
             <widgets>
@@ -209,6 +204,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="orderactions">
         <section>
             <widgets>
@@ -218,6 +214,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="OrderSalesReps">
         <section>
             <widgets>
@@ -227,6 +224,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="OrderHeaderListView">
         <section>
             <actions>
@@ -237,7 +235,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/FilterOrderList.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/order/orderlist.ftl"/></html>
@@ -247,6 +245,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="OrderItemEdit">
         <section>
             <actions>
@@ -256,7 +255,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderViewWebSecure.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="orderHeader"/>
                         <container style="clear"/>
@@ -271,6 +270,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="OrderFindOrder">
         <section>
             <actions>
@@ -286,11 +286,11 @@ under the License.
                 <set field="asm_asmListItemPercentOfForm" value="95"/>
                 <set field="asm_sortable" value="false"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="asm_title" value="${uiLabelMap.OrderPartySelectRoleForParty}"/>                
+                <set field="asm_title" value="${uiLabelMap.OrderPartySelectRoleForParty}"/>
                 
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://common/webcommon/includes/setMultipleSelectJs.ftl"/></html></platform-specific>                        
                         <platform-specific>
@@ -301,6 +301,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="OrderNewNote">
         <section>
             <condition>
@@ -312,7 +313,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/NewNote.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderAddNote}">
                             <container>
@@ -328,6 +329,7 @@ under the License.
             </fail-widgets>
         </section>
     </screen>
+    
     <screen name="OrderDeliveryScheduleInfo">
         <section>
             <actions>
@@ -340,7 +342,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderDeliveryScheduleInfo.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/order/OrderDeliveryScheduleInfo.ftl"/></html>
@@ -358,17 +360,18 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderStats.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="DashboardStatsOrderTotal" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/order/orderstats.ftl"/></html>
-                        </platform-specific>                         
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    
     <screen name="OrderReceivePayment">
         <section>
             <actions>
@@ -384,7 +387,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/order/receivepayment.ftl"/></html>
@@ -394,6 +397,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="ViewImage">
         <section>
             <actions>
@@ -405,6 +409,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="SendOrderConfirmation">
         <section>
             <actions>
@@ -414,7 +419,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/SendConfirmationEmail.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/order/sendconfirmationemail.ftl"/></html>
@@ -424,6 +429,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="SendOrderCompletion">
         <section>
             <actions>
@@ -433,7 +439,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/SendConfirmationEmail.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/order/sendconfirmationemail.ftl"/></html>
@@ -443,6 +449,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="ListOrderTerms">
         <section>
             <actions>
@@ -453,7 +460,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddOrderTermPanel" title="${uiLabelMap.CommonAdd} ${uiLabelMap.OrderOrderTerms}" collapsible="true">
                             <include-form name="AddOrderTerm" location="component://order/widget/ordermgr/OrderForms.xml"/>
@@ -472,7 +479,7 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderHistory.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderViewDecorator">
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label style="heading" text="${uiLabelMap.OrderOrderHistory} #${orderId}"/>
                         <screenlet>

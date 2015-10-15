@@ -29,7 +29,7 @@ under the License.
                 <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonReportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label style="message">${uiLabelMap.BirtOrderReportsWarning}</label>
                         <container style="${styles.grid_large}12 ${styles.grid_cell}">

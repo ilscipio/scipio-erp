@@ -371,7 +371,7 @@ public final class CommonFtlUtil {
         if (request != null) {
             // WARNING: unwrapping inconsistent with pushRequestStack, but wanted here for compatibility and debugging
             //request.setAttribute(name, value);
-            request.setAttribute(name, FtlTransformUtil.unwrap(value));
+            request.setAttribute(name, FtlTransformUtil.unwrapPermissive(value));
             //Debug.logInfo("setRequestVar: request attrib (name: " + name + ")", module);
         }
         else {
@@ -379,7 +379,7 @@ public final class CommonFtlUtil {
             if (globalContext != null) {
                 // WARNING: unwrapping inconsistent with pushRequestStack, but wanted here for compatibility and debugging
                 //globalContext.put(name, value);
-                globalContext.put(name, FtlTransformUtil.unwrap(value));
+                globalContext.put(name, FtlTransformUtil.unwrapPermissive(value));
                 //Debug.logInfo("setRequestVar: globalContext var (name: " + name + ")", module);
             }
             else if (env != null) {
@@ -413,7 +413,7 @@ public final class CommonFtlUtil {
      * Must and should only be used to read values set by {@link #setRequestVar}.
      * <p>
      * Return value may or may not be a <code>TemplateModel</code>; caller must wrap or unwrap as needed.
-     * Can use {@link com.ilscipio.cato.webapp.ftl.FtlTransformUtil#unwrap(Object)}.
+     * Can use {@link com.ilscipio.cato.webapp.ftl.FtlTransformUtil} <code>unwrapXxx</code> methods.
      * 
      * @see #setRequestVar
      */
@@ -471,7 +471,7 @@ public final class CommonFtlUtil {
         // minimizes deep conversions.
         // if non env.setGlobalVariable: 
         //if (value instanceof TemplateModel) {
-        //    value = FtlTransformUtil.unwrap((TemplateModel) value);
+        //    value = FtlTransformUtil.unwrapPermissive((TemplateModel) value);
         //}
         // if env.setGlobalVariable: 
         //[wrapping code]

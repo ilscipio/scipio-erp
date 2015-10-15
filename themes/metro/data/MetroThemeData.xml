@@ -33,7 +33,7 @@ under the License.
     <!-- GENERAL -->
     <!-- Styles -->
     <!-- Scripts -->
-    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery/dist/jquery.min.js" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery/dist/jquery.min.js" sequenceId="01"/>
     
     
     <!-- THEME SPECIFIC --> <!-- ToDo: Migrate to own subfolders -->

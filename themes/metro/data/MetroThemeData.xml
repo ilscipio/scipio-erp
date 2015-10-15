@@ -30,11 +30,13 @@ under the License.
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://metro-theme/includes/appbar.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://metro-theme/includes/appbarOpen.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://metro-theme/includes/appbarClose.ftl" sequenceId="01"/>
+    
     <!-- GENERAL -->
     <!-- Styles -->
     <!-- Scripts -->
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery/dist/jquery.min.js" sequenceId="01"/>
-    
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" sequenceId="02"/>
+
     
     <!-- THEME SPECIFIC --> <!-- ToDo: Migrate to own subfolders -->
     <!-- Styles -->
@@ -50,7 +52,6 @@ under the License.
     
     <!-- Scripts -->
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/modernizr/modernizr.js" sequenceId="02"/>
-    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" sequenceId="03"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/js/freetile.min.js" sequenceId="04"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/gridster/dist/jquery.gridster.with-extras.min.js" sequenceId="05"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/sass-to-js/js/dist/sass-to-js.min.js" sequenceId="06"/>

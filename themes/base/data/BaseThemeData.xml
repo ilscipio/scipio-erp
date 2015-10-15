@@ -36,7 +36,7 @@ under the License.
     <!-- Styles -->
     <!-- Scripts -->
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery/dist/jquery.min.js" sequenceId="01"/>
-    
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" sequenceId="02"/>
     
     <!-- THEME SPECIFIC -->
     <!-- Styles -->
@@ -49,7 +49,6 @@ under the License.
     
     <!-- Scripts -->
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/modernizr/modernizr.js" sequenceId="02"/>
-    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" sequenceId="03"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/js/freetile.min.js" sequenceId="04"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/gridster/dist/jquery.gridster.with-extras.min.js" sequenceId="05"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/sass-to-js/js/dist/sass-to-js.min.js" sequenceId="06"/>

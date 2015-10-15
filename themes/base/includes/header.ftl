@@ -178,6 +178,15 @@ so for now we have to split the screens in half and rely on the menu widget rend
         </#list>
     </#if>
     
+    <#if layoutSettings.VT_TOP_JAVASCRIPT?has_content>
+        <#assign javaScriptsSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(layoutSettings.VT_TOP_JAVASCRIPT)/>
+        <#list layoutSettings.VT_TOP_JAVASCRIPT as javaScript>
+            <#if javaScriptsSet.contains(javaScript)>
+                <#assign nothing = javaScriptsSet.remove(javaScript)/>
+                <script src="<@ofbizContentUrl>${StringUtil.wrapString(javaScript)}</@ofbizContentUrl>" type="text/javascript"></script>
+            </#if>
+        </#list>
+    </#if>
     <#if layoutSettings.javaScripts?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#-- use a Set to make sure each javascript is declared only once, but iterate the list to maintain the correct order -->

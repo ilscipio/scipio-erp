@@ -114,7 +114,8 @@ under the License.
     <Enumeration enumId="VT_STL_TMPLT_WEB" description="Style Template Location used to include theme specific templating macros and override defaults - webapp requests only" enumTypeId="VT_RES_TYPE" sequenceId="54"/>
     <Enumeration enumId="VT_STL_VAR_MAIL" description="Style Template Location used to include theme specific variables and override defaults - emails only" enumTypeId="VT_RES_TYPE" sequenceId="55"/>
     <Enumeration enumId="VT_STL_TMPLT_MAIL" description="Style Template Location used to include theme specific templating macros and override defaults - emails only" enumTypeId="VT_RES_TYPE" sequenceId="56"/>
-
+    <Enumeration enumId="VT_TOP_JAVASCRIPT" description="Priority JavaScript File URL, included before all others" enumTypeId="VT_RES_TYPE" sequenceId="70"/>
+    
     <VisualThemeSet visualThemeSetId="BACKOFFICE" description="Themes to be used for backoffice applications"/>
     <VisualThemeSet visualThemeSetId="ECOMMERCE"  description="Themes to be used for ECommerce applications"/>
 

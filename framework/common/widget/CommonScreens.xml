@@ -83,9 +83,9 @@ under the License.
                      Can be forced to put some theme scripts here if apps depend heavily on them -->
                 
                 <!-- Legacy jQuery; TODO: Remove once possible -->
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
                 
                 <!--  Foundation jQuery + extras > Moved to themes
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/modernizr/modernizr.js" global="true" />
@@ -93,11 +93,11 @@ under the License.
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery/dist/jquery.min.js" global="true" />
                 -->
                 <!-- Legacy JS; TODO: Remove once possible -->
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/selectall.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/fieldlookup.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/miscAjaxFunctions.js" global="true" />               
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/selectMultipleRelatedValues.js" global="true" />
-                <set field="layoutSettings.VT_FTR_JAVASCRIPT[]" value="/images/util.js" global="true" />
+                <set field="layoutSettings.javaScriptsFooter[]" value="/images/selectall.js" global="true" />
+                <set field="layoutSettings.javaScriptsFooter[]" value="/images/fieldlookup.js" global="true" />
+                <set field="layoutSettings.javaScriptsFooter[]" value="/images/miscAjaxFunctions.js" global="true" />               
+                <set field="layoutSettings.javaScriptsFooter[]" value="/images/selectMultipleRelatedValues.js" global="true" />
+                <set field="layoutSettings.javaScriptsFooter[]" value="/images/util.js" global="true" />
                   
                 <!-- Can now be set in footer
                 <set field="layoutSettings.javaScriptsFooter[]" value="" global="true" />
@@ -134,11 +134,6 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/images/util.js" global="true" />
                 <set field="layoutSettings.javaScripts[]" value="/images/date/FromThruDateCheck.js" global="true"/>                
                 -->     
-                
-                
-                <!-- Theme styles (common to all themes) - included after layoutSettings.styleSheets (which should be rarely used) -->
-                
-
                                   
                 <!-- Note: Must be run last after all layoutSettings assignments due to a Ofbiz widget vars bug -->    
                 <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />

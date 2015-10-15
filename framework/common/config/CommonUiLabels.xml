@@ -1071,6 +1071,24 @@
         <value xml:lang="zh_CN">注</value>
         <value xml:lang="zh_TW">至</value>
     </property>
+    <property key="CommonAttribute">
+        <value xml:lang="de">Attribut</value>
+        <value xml:lang="en">Attribute</value>
+    </property>
+    <property key="CommonAttributes">
+        <value xml:lang="de">Attribute</value>
+        <value xml:lang="en">Attributes</value>
+        <value xml:lang="es">Atributos</value>
+        <value xml:lang="fr">Attributs</value>
+        <value xml:lang="it">Attributi</value>
+        <value xml:lang="ja">属性</value>
+        <value xml:lang="ro">Atribute</value>
+        <value xml:lang="ru">Атрибуты</value>
+        <value xml:lang="th">ลักษณะ</value>
+        <value xml:lang="vi">Thuộc tính</value>
+        <value xml:lang="zh">属性</value>
+        <value xml:lang="zh_TW">屬性</value>
+    </property>
     <property key="CommonAugust">
         <value xml:lang="ar">أغسطس</value>
         <value xml:lang="cs">Srpen</value>
@@ -5083,6 +5101,10 @@
         <value xml:lang="zh_CN">组</value>
         <value xml:lang="zh_TW">群組</value>
     </property>
+    <property key="CommonHeader">
+        <value xml:lang="en">Header</value>
+        <value xml:lang="zh_TW">表頭</value>
+    </property>
     <property key="CommonHeight">
         <value xml:lang="ar">ارتفاع</value>
         <value xml:lang="cs">Výška</value>
@@ -8466,6 +8488,9 @@
         <value xml:lang="zh">人员</value>
         <value xml:lang="zh_CN">人员</value>
         <value xml:lang="zh_TW">人員</value>
+    </property>
+    <property key="CommonPersons">
+        <value xml:lang="en">Persons</value>
     </property>
     <property key="CommonPingDatasourceCannotConnect">
         <value xml:lang="ar">غير قادر على الإتصال بمصدر المعلومة</value>

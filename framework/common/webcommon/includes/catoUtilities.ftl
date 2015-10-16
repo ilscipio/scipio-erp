@@ -330,8 +330,10 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
          
    * Parameters *
     url             = controller request uri
+    forceInline     = if true, the include must be inlined in the markup where the macro is used
+                      and should never be delegated. in most cases this should be omitted.    
 -->
-<#macro requireScriptOfbizUrl uri htmlwrap=false>
+<#macro requireScriptOfbizUrl uri htmlwrap=false forceInline=false>
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")![]>
   <#if !requiredScriptOfbizUrls?seq_contains(uri)>
     <#if htmlwrap>

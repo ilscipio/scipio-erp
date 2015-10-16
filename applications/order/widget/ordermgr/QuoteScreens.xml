@@ -87,11 +87,6 @@ under the License.
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderOrderQuoteListRoles}">
-                            <container>
-                                <link target="EditQuoteRole" text="${uiLabelMap.OrderCreateOrderQuoteRole}" style="${styles.button_default}">
-                                    <parameter param-name="quoteId" from-field="quote.quoteId"/>
-                                </link>
-                            </container>
                             <include-form name="ListQuoteRoles" location="component://order/widget/forms/QuoteForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -344,6 +339,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="ListQuoteAdjustments">
         <section>
             <actions>
@@ -378,6 +374,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditQuoteAdjustment">
         <section>
             <actions>
@@ -456,6 +453,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.CommonHeader}">
+                            <include-form location="component://order/widget/forms/QuoteForms.xml" name="QuoteHeader" />
+                        </screenlet>
                         <include-screen name="ViewQuoteTemplate"/>
                         <screenlet title="${uiLabelMap.OrderCopyQuote}">
                             <platform-specific>
@@ -481,13 +481,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.CommonHeader}">
-                    <include-form location="component://order/widget/forms/QuoteForms.xml" name="QuoteHeader" />
-                </screenlet>
-                    <include-screen name="ListQuoteInfo"/>
-                <container style="${styles.grid_large}6">
-                    <include-screen name="ViewQuoteItemInfo"/>
-                </container>
+                    <include-screen name="QuoteTermsInfo"/>
             </widgets>
         </section>
     </screen>
@@ -565,7 +559,10 @@ under the License.
                 <label text="${note}"/>
                 <include-screen name="ViewQuoteInfo"/>
                 <container style="clear"/>
+                <screenlet title="${uiLabelMap.CommonItems}">
+                    <include-menu location="component://order/widget/QuoteMenus.xml" name="QuoteItemsSubTabBar"/>
                     <include-screen name="ViewQuoteItemInfo"/>
+                </screenlet>
             </widgets>
             <fail-widgets>
                 <label style="error-msg">${uiLabelMap.OrderNoQuoteFound}</label>
@@ -671,13 +668,13 @@ under the License.
         </section>
     </screen>
     
-    <screen name="ListQuoteInfo">
+    <screen name="QuoteTermsInfo">
         <section>
             <condition>
                 <not><if-empty field="quoteTerms"/></not>
             </condition>
             <widgets>
-                <screenlet title="${uiLabelMap.OrderOrderQuoteTermList}">
+                <screenlet title="${uiLabelMap.CommonTerms}">
                     <include-form name="ListQuoteInfo" location="component://order/widget/forms/QuoteForms.xml"/>
                 </screenlet>
             </widgets>
@@ -718,6 +715,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditQuoteTerm">
         <section>
             <actions>
@@ -783,7 +781,6 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="quoteTermSubTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                         <screenlet title="${uiLabelMap.OrderOrderQuoteTermList}">
                             <include-form name="ListQuoteTerms" location="component://order/widget/forms/QuoteForms.xml"/>
                         </screenlet>
@@ -808,11 +805,6 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="button-bar button-style-1">
-                            <link style="${styles.button_default}" target="createnewquotenote" text="${uiLabelMap.OrderCreateOrderQuoteNote}">
-                                <parameter param-name="quoteId" from-field="quote.quoteId"/>
-                            </link>
-                        </container>
                         <include-form name="ListQuoteNotes" location="component://order/widget/forms/QuoteForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -832,7 +824,7 @@ under the License.
                 <entity-one entity-name="Quote" value-field="quote"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonQuoteDecorator">
+                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="AddOrEditQuoteNote" location="component://order/widget/forms/QuoteForms.xml"/>
                     </decorator-section>
@@ -861,7 +853,7 @@ under the License.
                 <entity-one entity-name="QuoteNoteView" value-field="quoteNoteData"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonQuoteDecorator">
+                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="AddOrEditQuoteNote" location="component://order/widget/forms/QuoteForms.xml"/>
                     </decorator-section>

@@ -42,7 +42,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
       <#local classes = joinStyleNames(styles.menu_main!, remStyle)>
     <#elseif styleSet.contains("menu-sidebar")>
       <#local remStyle = removeStyleNames(style, "menu-sidebar")>
-        <nav>
+        <nav class="${styles.nav_sidenav!""}">
             <h2>${navigation!}</h2>
       <#local classes = joinStyleNames(styles.menu_sidebar!, remStyle)>
     <#elseif styleSet.contains("menu-button")>

@@ -150,6 +150,7 @@
     
   <#-- Navigation -->
     "nav_subnav" : "sub-nav",
+    "nav_sidenav" : "navbar-inverse collapse navbar-collapse navbar-ex1-collapse ",
 
   <#-- Lists -->
     "list_inline" : "inline-list",

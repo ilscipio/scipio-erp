@@ -835,6 +835,25 @@ Not meant to be used on regular request attributes.
 
 <#-- 
 *************
+* getRenderContextType function
+************
+Tries to figure out if this is web render, email, or other general.
+-->
+<#function getRenderContextType>
+  <#-- FIXME?: this detection is primitive... not sure covers all possible cases... -->
+  <#local res = "general">
+  <#if request??>
+    <#local res = "web">
+  <#else>
+    <#if baseUrl??>
+      <#local res = "email">
+    </#if>
+  </#if>
+  <#return res>
+</#function>
+
+<#-- 
+*************
 * elemAttribStr macro
 ************
 Prints a string of element attributes. (HTML, FO, XML)

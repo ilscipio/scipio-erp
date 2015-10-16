@@ -582,6 +582,7 @@ where my-macro-default is what you'd have had as arg default in the macro def
     </#if>
   <#-- check string last because ?is_string doesn't always behave as expected -->
   <#elseif class?is_string>
+    <#local class = class?trim> <#-- for convenience, trim the class here, though may hide minor errors -->
     <#if class?starts_with("+")>
       <#return (defaultVal + " " + class?substring(1))?trim>
     <#else>

@@ -1245,7 +1245,7 @@ Since this is very foundation specific, this function may be dropped in future i
 
     Usage example:  
     <@pul >
-        <#pli>Text or <a href="">Anchor</a></#pli>
+        <@pli>Text or <a href="">Anchor</a></@pli>
     </@pul>            
                     
    * General Attributes *
@@ -1292,7 +1292,7 @@ Since this is very foundation specific, this function may be dropped in future i
     </@grid>            
                     
    * General Attributes *
-    class           = Adds classes - please use "(small|medium|large)-${styles.grid_block!}#"
+    class           = Adds classes - please use "${styles.grid_block_prefix!}(small|medium|large)${styles.grid_block_postfix!}#"
                       (FIXME: prepend with "+" to append only, i.e. never replace non-essential defaults)
     columns         = Number of columns (default 5)
     type            = (tiles|) default:empty
@@ -1331,11 +1331,11 @@ Since this is very foundation specific, this function may be dropped in future i
         <#-- FIXME: the "class" arg is not even used...
         <#local classes = makeClassesArg(class, "...")>
         -->
-        <#local defaultClass="${styles.grid_small!}${styles.grid_block!}2 ${styles.grid_medium!}${styles.grid_block!}4 ${styles.grid_large!}${styles.grid_block!}5">
+        <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">
             <#if (columns-2 > 0)>
-                <#local class="${styles.grid_small!}${styles.grid_block!}${columns-2} ${styles.grid_medium!}${styles.grid_block!}${columns-1} ${styles.grid_large!}${styles.grid_block!}${columns}"/>
+                <#local class="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}"/>
             <#else>
-                <#local class="${styles.grid_large!}${styles.grid_block!}${columns}"/>
+                <#local class="${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}"/>
             </#if>
           <ul class="${class!defaultClass!}">
               <#nested>

@@ -227,6 +227,9 @@ under the License.
       <field name="secureContentPrefix" type="url"></field>
       <field name="cookieDomain" type="long-varchar"></field>
       <field name="visualThemeSetId" type="id"></field>
+      <field name="visualThemeSelectorScript" type="long-varchar">
+        <description>Cato: Location of a script tasked with selecting a visual theme at every new render</description>
+      </field>
       <prim-key field="webSiteId"/>
       <relation type="one" fk-name="WEB_SITE_THEME_SET" rel-entity-name="VisualThemeSet">
         <key-map field-name="visualThemeSetId"/>

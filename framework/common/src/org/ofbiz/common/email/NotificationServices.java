@@ -267,5 +267,10 @@ public class NotificationServices {
                 Debug.logWarning(e, "Exception thrown while adding baseUrl to context: ", module);
             }
         }
+        
+        // Cato: use this method to also store a baseWebSiteId in the context, so template has knowledge
+        if (!context.containsKey("baseWebSiteId")) {
+            context.put("baseWebSiteId", webSiteId);
+        }
     }
 }

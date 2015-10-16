@@ -331,23 +331,57 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
    * Parameters *
     url             = controller request uri
     forceInline     = if true, the include must be inlined in the markup where the macro is used
-                      and should never be delegated. in most cases this should be omitted.    
+                      and should never be delegated. in most cases this should be omitted.  
+                      DEV NOTE: if false (default) for now simply accumulates the names  
+                      and will be included by decorator in footer
 -->
 <#macro requireScriptOfbizUrl uri htmlwrap=false forceInline=false>
-  <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")![]>
-  <#if !requiredScriptOfbizUrls?seq_contains(uri)>
+  <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
+  <#if requiredScriptOfbizUrls?is_boolean || !requiredScriptOfbizUrls.contains(uri)>
+    <#if forceInline>
+      <#if htmlwrap>
+<script language="JavaScript" type="text/javascript">
+<!-- //
+      </#if>
+      <#if requiredScriptOfbizUrls?is_boolean>
+    if (typeof variable === 'undefined') {
+        var commonOfbizUrls = {};
+    }
+      </#if>
+
+    commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
+      <#if htmlwrap>
+// -->
+</script>
+      </#if>
+    </#if>
+    <#if requiredScriptOfbizUrls?is_boolean>
+      <#local requiredScriptOfbizUrls = Static["org.ofbiz.base.util.UtilMisc"].toSet(uri)>
+    <#else>
+      <#local dummy = requiredScriptOfbizUrls.add(uri)!>
+    </#if>
+    <#local dummy = setRequestVar("requiredScriptOfbizUrls", requiredScriptOfbizUrls)>
+  </#if>
+</#macro>
+
+<#macro includeRecordedScriptOfbizUrls htmlwrap=false>
+  <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
+  <#if !requiredScriptOfbizUrls?is_boolean || (!requiredScriptOfbizUrls.isEmpty())>
     <#if htmlwrap>
 <script language="JavaScript" type="text/javascript">
 <!-- //
     </#if>
+    if (typeof variable === 'undefined') {
+        var commonOfbizUrls = {};
+    }
+
+    <#list requiredScriptOfbizUrls as uri>
     commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
+    </#list>
     <#if htmlwrap>
 // -->
 </script>
     </#if>
-    <#-- FIXME: inefficient -->
-    <#local requiredScriptOfbizUrls = requiredScriptOfbizUrls + [uri]>
-    <#local dummy = setRequestVar("requiredScriptOfbizUrls", requiredScriptOfbizUrls)>
   </#if>
 </#macro>
 

@@ -2,10 +2,6 @@
 <script language="JavaScript" type="text/javascript">
 <!-- //
 
-    if (typeof variable === 'undefined') {
-        var commonOfbizUrls = {};
-    }
-
     <#-- Common Ofbiz URIs for use in javascript -->
     <@requireScriptOfbizUrl uri="getJSONuiLabelArray" />
     <@requireScriptOfbizUrl uri="getJSONuiLabel" />

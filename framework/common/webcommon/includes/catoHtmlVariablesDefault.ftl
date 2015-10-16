@@ -80,6 +80,7 @@
        with their prefix are used for default table class and attribute lookups by the @table macro,
        based on table type. -->  
   <#-- Data and Tables -->
+    "table" : "basic-table",
     "table_basic" : "basic-table",  
     "table_default" : "basic-table",
     "table_default_cellspacing" : "",

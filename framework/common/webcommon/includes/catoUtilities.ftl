@@ -96,6 +96,29 @@ Returns empty string if no label is found
 
 <#-- 
 *************
+* getPropertyValue function
+************
+Gets property or empty string if missing (same behavior as UtilProperties).
+-->
+<#function getPropertyValue resource name>
+  <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))>
+</#function>
+
+<#-- 
+*************
+* getPropertyValueOrNull function
+************
+Gets property or void if missing (use default operator).
+-->
+<#function getPropertyValueOrNull resource name>
+  <#local value = StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))>
+  <#if value?has_content>
+    <#return value>
+  </#if>
+</#function>
+
+<#-- 
+*************
 * addParamDelimToUrl function
 ************
 Adds a param delimiter to end of url if needed.

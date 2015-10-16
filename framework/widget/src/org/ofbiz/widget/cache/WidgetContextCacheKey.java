@@ -76,6 +76,19 @@ public final class WidgetContextCacheKey {
         // parameters
         fieldNamesToSkip.add("visit");
         fieldNamesToSkip.add("visitor");
+        
+        // Cato: additional names to skip (some new, some bugfixes)
+        fieldNamesToSkip.add("rendererVisualThemeResourcesChecked");
+        fieldNamesToSkip.add("rendererVisualThemeResources");
+        fieldNamesToSkip.add("formStringRenderer"); 
+        fieldNamesToSkip.add("formMacroLibraryPath"); 
+        fieldNamesToSkip.add("treeStringRenderer"); 
+        fieldNamesToSkip.add("treeMacroLibraryPath"); 
+        fieldNamesToSkip.add("menuStringRenderer"); 
+        fieldNamesToSkip.add("menuMacroLibraryPath"); 
+        fieldNamesToSkip.add("screenStringRenderer"); 
+        fieldNamesToSkip.add("screenMacroLibraryPath"); 
+        
         return Collections.unmodifiableSet(fieldNamesToSkip);
     }
 

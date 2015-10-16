@@ -74,7 +74,10 @@
     "menu_section_inline_item" : "",
     "menu_section_inline_itemlink" : "button tiny", 
     
-  <#-- Data and Tables -->  
+  <#-- Data and Tables 
+       table_default, table_data_list, table_data_complex, table_summary and table_fields and names
+       with their prefix are used for default table class and attribute lookups by the @table macro,
+       based on table type. -->  
     "table_default" : "basic-table",
     "table_default_cellspacing" : "",
     "table_data_list" : "basic-table",

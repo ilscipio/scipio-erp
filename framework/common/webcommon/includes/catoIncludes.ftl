@@ -57,6 +57,8 @@
     <#if catoVariablesLibraryPath?has_content>
         <#assign catoTemplateLibraryPath = getRequestVar("catoTemplateLibraryPath")!"">
     <#else>
+        <#-- WARN: currently we ALWAYS load HTML versions of our styles and template files, regardless of renderer or if using
+                a non-HTML renderer (note: this is okay for catoUtilities.ftl since it's supposed to be platform-agnostic) -->
         <#-- note: rendererVisualThemeResources is set by cato-patched renderer -->
         <#switch catoRenderContextType>
         <#case "web">
@@ -88,7 +90,6 @@
 <#include 'component://common/webcommon/includes/catoUtilities.ftl'>
 <@catoVariablesIncludeDirective />
 <@catoTemplateIncludeDirective />
-
 
 
 <#-- FIXME? For now we must copy/dump all cato macro and function defs from main namespace into the global namespace manually.

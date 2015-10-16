@@ -19,7 +19,7 @@ under the License.
 
 <@section title="${uiLabelMap.OrderOrderList}">
       <#if orders?has_content>
-        <@table type="data-list" class="basic-table hover-bar">
+        <@table type="data-list" class="${styles.table_default!} hover-bar">
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.OrderOrderId}</@th>

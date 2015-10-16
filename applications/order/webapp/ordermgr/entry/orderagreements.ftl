@@ -32,7 +32,7 @@ under the License.
       <input type='hidden' name='hasAgreements' value='N'/>
     </#if>
     
-    <@table type="fields" class="basic-table">
+    <@table type="fields" class="${styles.table_default!}">
       <#if agreements??>     
       <@field type="generic" label="${uiLabelMap.OrderSelectAgreement}">
             <select name="agreementId">

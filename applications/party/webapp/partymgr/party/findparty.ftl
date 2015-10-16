@@ -159,7 +159,7 @@ under the License.
     <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": hideFields!"", "sortField" : sortField!""}, "&amp;", false)>
     <@paginate mode="content" url=makeOfbizUrl("findparty") viewSize=viewSize!1 viewIndex=viewIndex! listSize=partyListSize!0 altParam=false paramStr=paramStr viewIndexFirst=0>
     
-    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+    <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing="0">
      <@thead>
       <@tr class="header-row-2">
         <@th>${uiLabelMap.PartyPartyId}</@th>

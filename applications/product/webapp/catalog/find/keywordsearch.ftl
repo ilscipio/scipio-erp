@@ -103,7 +103,7 @@ under the License.
 
     <form method="post" name="products">
       <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
-      <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
+      <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
         <@thead>
           <@tr>
             <@th><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);"/> ${uiLabelMap.ProductProduct}</@th>

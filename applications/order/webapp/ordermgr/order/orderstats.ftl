@@ -19,7 +19,7 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
   <@section>
-    <@table type="summary" class="basic-table" cellspacing='0'>
+    <@table type="summary" class="${styles.table_default!}" cellspacing='0'>
         <@thead>
           <@tr>
             <@th>&nbsp;</@th>

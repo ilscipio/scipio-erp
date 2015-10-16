@@ -29,7 +29,7 @@ under the License.
   <@section title="${uiLabelMap.OrderNotes}" menuHtml=menuHtml>
  
   <#if orderNotes?has_content>
-    <@table type="fields" class="basic-table" cellspacing='0'>
+    <@table type="fields" class="${styles.table_default!}" cellspacing='0'>
       <#list orderNotes as note>
         <@tr>
           <@td valign="top" width="35%">

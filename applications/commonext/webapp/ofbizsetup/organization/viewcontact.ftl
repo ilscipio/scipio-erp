@@ -26,7 +26,7 @@ under the License.
   </#assign>
   <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}" menuHtml=menuHtml>
       <#if contactMeches?has_content>
-        <@table type="data-list" class="basic-table" cellspacing="0">
+        <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
           <@tr>
             <@th>${uiLabelMap.PartyContactType}</@th>
             <@th>${uiLabelMap.PartyContactInformation}</@th>

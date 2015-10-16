@@ -209,7 +209,7 @@ under the License.
             </@field>
 
         <#-- TODO? convert? -->
-        <@table type="fields" cellspacing="0" class="basic-table">
+        <@table type="fields" cellspacing="0" class="${styles.table_default!}">
             <@tr>
               <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreChangeFont}</@td>
               <@td valign="middle">

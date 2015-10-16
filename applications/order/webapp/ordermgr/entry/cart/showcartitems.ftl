@@ -37,7 +37,7 @@ under the License.
         <input type="hidden" name="finalizeReqPayInfo" value="false"/>
         <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
       </#if>
-      <@table type="data-complex" autoAltRows=true class="basic-table" cellspacing="0" cellpadding="1" border="0">
+      <@table type="data-complex" autoAltRows=true class="${styles.table_default!}" cellspacing="0" cellpadding="1" border="0">
         <@thead>
         <@tr>
           <@th>&nbsp;</@th>
@@ -71,7 +71,7 @@ under the License.
           <@tr valign="top">
             <@td>&nbsp;</@td>
             <@td>
-          <@table type="fields" inheritAltRows=true class="basic-table" border="0">
+          <@table type="fields" inheritAltRows=true class="${styles.table_default!}" border="0">
           <@tr><@td colspan="2">
                   <#if cartLine.getProductId()??>
                     <#-- product item -->
@@ -183,7 +183,7 @@ under the License.
             <#-- ship before/after date -->
             <@tr>
               <@td colspan="2">
-               <@table type="fields" class="basic-table" inheritAltRows=true border="0" cellpadding="0" cellspacing="0" width="100%">
+               <@table type="fields" class="${styles.table_default!}" inheritAltRows=true border="0" cellpadding="0" cellspacing="0" width="100%">
                <@tr>
                 <@td>
                   ${uiLabelMap.OrderShipAfterDate}

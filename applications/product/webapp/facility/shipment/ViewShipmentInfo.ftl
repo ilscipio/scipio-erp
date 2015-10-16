@@ -18,7 +18,7 @@ under the License.
 -->
 <#if shipment??>
 <@section title="${uiLabelMap.PageTitleViewShipment}">
-        <@table type="fields" border="0" cellpadding="2" cellspacing="0" class="basic-table">
+        <@table type="fields" border="0" cellpadding="2" cellspacing="0" class="${styles.table_default!}">
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.ProductShipmentId}</@td>
             <@td width="80%">${shipment.shipmentId}</@td>

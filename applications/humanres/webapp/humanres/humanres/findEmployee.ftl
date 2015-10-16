@@ -131,7 +131,7 @@ under the License.
     </#assign>
     <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}" menuHtml=menuHtml>
     <#if partyList?has_content>
-        <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
+        <@table type="data-list" autoAltRows=true class="${styles.table_default!}" cellspacing="0">
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.PartyPartyId}</@th>

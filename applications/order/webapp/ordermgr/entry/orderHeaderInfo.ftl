@@ -54,7 +54,7 @@ under the License.
                 </@row>
             </#if>
             
-        <@table type="fields" class="basic-table">
+        <@table type="fields" class="${styles.table_default!}">
             <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.Party}</@td>
                 <@td>

@@ -76,7 +76,7 @@ document.lookupinventory.productId.focus();
           </@cell>
         </@row>
 
-      <@table type="data-complex" autoAltRows=false class="basic-table" cellspacing="0">
+      <@table type="data-complex" autoAltRows=false class="${styles.table_default!}" cellspacing="0">
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.CommonType}</@th>

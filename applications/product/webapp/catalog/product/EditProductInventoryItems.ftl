@@ -33,7 +33,7 @@ under the License.
 <@section title=sectionTitle menuHtml=menuHtml>
   <#if product??>
         <#if productId??>
-          <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
+          <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
             <@thead>
               <@tr class="header-row">
                 <@th>${uiLabelMap.ProductItemId}</@th>

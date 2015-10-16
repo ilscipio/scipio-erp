@@ -26,7 +26,7 @@ under the License.
   <@heading><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>">${orderId}</a> ${externalOrder!}</@heading>
    <#--${screens.render("component://order/widget/ordermgr/OrderViewScreens.xml#orderactions")}-->
 
-  <@table type="fields" class="basic-table">
+  <@table type="fields" class="${styles.table_default!}">
   
   <#if orderHeader.orderName?has_content>
     <@tr>

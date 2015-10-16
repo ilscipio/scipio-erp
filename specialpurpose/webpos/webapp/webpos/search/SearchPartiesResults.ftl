@@ -60,7 +60,7 @@ under the License.
         <@td width="25%" colspan="2"></@td>
       </@tr>
     </@table>
-    <@table type="data-list" cellspacing="0" cellpadding="2" class="basic-table">
+    <@table type="data-list" cellspacing="0" cellpadding="2" class="${styles.table_default!}">
       <@thead class="searchPartiesResultsHead">
         <@tr class="header-row">
           <@th>&nbsp;</@th>

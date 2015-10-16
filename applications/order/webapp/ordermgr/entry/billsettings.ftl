@@ -45,7 +45,7 @@ function makeExpDate() {
           <#-- initial screen when we have a associated party -->
           <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="payment"/>
-            <@table type="fields" class="basic-table">
+            <@table type="fields" class="${styles.table_default!}">
              
               
               <#if billingAccountList?has_content>
@@ -173,7 +173,7 @@ function makeExpDate() {
             <input type="hidden" name="contactMechId" value="${postalFields.contactMechId}"/>
           </#if>
 
-          <@table type="fields" class="basic-table">
+          <@table type="fields" class="${styles.table_default!}">
             <#if cart.getShippingContactMechId()??>
             <@tr>
               <@td width="26%" class="text-right" valign="top">

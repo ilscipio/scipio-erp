@@ -18,7 +18,7 @@ under the License.
 -->
 
 <@section title="${uiLabelMap.OrderRequestItems}">
-        <@table type="data-list" autoAltRows=true cellspacing="0" class="basic-table">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
           <@thead>
             <@tr valign="bottom" class="header-row">
                 <@th width="10%">${uiLabelMap.ProductItem}</@th>

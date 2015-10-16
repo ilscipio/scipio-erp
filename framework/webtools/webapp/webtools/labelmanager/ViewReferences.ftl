@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@heading>${uiLabelMap.WebtoolsLabelManagerViewReferences}</@heading>
-        <@table type="data-list" autoAltRows=true class="basic-table" cellspacing="0">
+        <@table type="data-list" autoAltRows=true class="${styles.table_default!}" cellspacing="0">
         <@thead>
             <@tr>
                 <@th>${uiLabelMap.WebtoolsLabelManagerKey}</@th>

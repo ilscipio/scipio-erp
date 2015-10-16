@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.OrderOrderQuoteId}&nbsp;${quote.quoteId}&nbsp;${uiLabelMap.CommonInformation}">
-        <@table type="fields" cellspacing="0" class="basic-table">
+        <@table type="fields" cellspacing="0" class="${styles.table_default!}">
             <#-- quote header information -->
             <@tr>
                 <@td align="right" valign="top" width="20%">

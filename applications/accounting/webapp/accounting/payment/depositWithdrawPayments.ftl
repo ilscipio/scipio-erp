@@ -91,7 +91,7 @@ function getPaymentRunningTotal() {
                         <input type="checkbox" name="groupInOneTransaction" value="Y" checked="checked" />
                         <input id="submitButton" type="button"  onclick="javascript:document.depositWithdrawPaymentsForm.submit();" value="${uiLabelMap.AccountingDepositWithdraw}" disabled="disabled"/>
                     </div>
-                <@table type="data-list" autoAltRows=true class="basic-table">
+                <@table type="data-list" autoAltRows=true class="${styles.table_default!}">
                   <@thead>
                     <@tr class="header-row-2">
                         <@th>${uiLabelMap.AccountingPayment}</@th>

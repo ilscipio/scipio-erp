@@ -18,7 +18,7 @@ under the License.
 -->
 
 <@section title="${uiLabelMap.ProductIssueInventoryItemsToShipment}: [${shipmentId!}]">
-    <@table type="data-list" cellspacing="0" cellpadding="2" class="basic-table hover-bar">
+    <@table type="data-list" cellspacing="0" cellpadding="2" class="${styles.table_default!} hover-bar">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonReturn} ${uiLabelMap.CommonDescription}</@th>

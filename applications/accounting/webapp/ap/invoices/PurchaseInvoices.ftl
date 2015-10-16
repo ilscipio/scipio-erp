@@ -171,7 +171,7 @@ function runAction() {
       <span>${uiLabelMap.AccountingCheckNumber}</span>
       <input type="text" name="checkStartNumber"/>
     </div>
-    <@table type="data-list" autoAltRows=true class="basic-table hover-bar" cellspacing="0">
+    <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing="0">
       <@thead>
       <@tr class="header-row-2">
         <@td>${uiLabelMap.AccountingInvoice}</@td>

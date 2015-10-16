@@ -39,7 +39,7 @@ under the License.
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroups.first.shipGroupSeqId}"/>
             </#if>
              
-            <@table type="fields" class="basic-table" cellspacing="0">
+            <@table type="fields" class="${styles.table_default!}" cellspacing="0">
               <#if catalogCol?has_content && (catalogCol?size > 1)>
                 <@tr>
                   <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.ProductChooseCatalog}</@td>

@@ -18,7 +18,7 @@ under the License.
 -->
 <#if glAcctgAndAmountPercentageList?has_content && glAccountCategories?has_content>
   <form id="costCenters" method="post" action="<@ofbizUrl>createUpdateCostCenter</@ofbizUrl>">
-    <@table type="data-list" autoAltRows=true class="basic-table hover-bar">
+    <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.FormFieldTitle_organizationPartyId}</@th>

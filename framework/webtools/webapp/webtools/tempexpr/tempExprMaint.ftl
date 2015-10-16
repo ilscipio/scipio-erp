@@ -25,7 +25,7 @@ under the License.
       <input type="hidden" name="tempExprId" value="${temporalExpression.tempExprId}"/>
       <input type="hidden" name="tempExprTypeId" value="${temporalExpression.tempExprTypeId}"/>
   </#if>
-  <@table type="fields" class="basic-table" cellspacing="0">
+  <@table type="fields" class="${styles.table_default!}" cellspacing="0">
     <@tr>
       <@td>${uiLabelMap.TemporalExpressionId}</@td>
       <@td>${temporalExpression.tempExprId}</@td>
@@ -147,7 +147,7 @@ under the License.
 <#macro CreateForm expressionTypeId="" formContents=NullMacro>
   <form name="${expressionTypeId}" method="post" action="<@ofbizUrl>createTemporalExpression</@ofbizUrl>">
     <input type="hidden" name="tempExprTypeId" value="${expressionTypeId}"/>
-    <@table type="fields" class="basic-table" cellspacing="0">
+    <@table type="fields" class="${styles.table_default!}" cellspacing="0">
       <#assign mapExpression = "TemporalExpression_" + expressionTypeId/>
       <#assign headingText = uiLabelMap[mapExpression]/>
       <@tr><@td colspan="2" class="h2">${headingText}</@td></@tr>

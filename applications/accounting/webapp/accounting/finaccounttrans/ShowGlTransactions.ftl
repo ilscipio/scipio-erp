@@ -20,7 +20,7 @@ under the License.
 <div id="displayGlTransactions_${finAccountTrans.finAccountTransId}" style="display: none; width: 1150px;">
   <#assign acctgTransAndEntries = dispatcher.runSync("getAssociatedAcctgTransEntriesWithFinAccountTrans", Static["org.ofbiz.base.util.UtilMisc"].toMap("finAccountTransId", finAccountTrans.finAccountTransId, "userLogin", userLogin))/>
   <#assign acctgTransAndEntries = acctgTransAndEntries.acctgTransAndEntries>
-   <@table type="data-list" class="basic-table hover-bar">
+   <@table type="data-list" class="${styles.table_default!} hover-bar">
     <@thead>
      <@tr class="header-row-2">
        <@th>${uiLabelMap.FormFieldTitle_acctgTransId}</@th>

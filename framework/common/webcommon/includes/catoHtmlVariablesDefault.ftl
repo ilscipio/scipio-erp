@@ -75,7 +75,7 @@
     "menu_section_inline_itemlink" : "button tiny", 
     
   <#-- Data and Tables -->  
-    "table_default" : "",
+    "table_default" : "basic-table",
     "table_default_cellspacing" : "",
     "table_data_list" : "basic-table",
     "table_data_list_cellspacing" : 0,

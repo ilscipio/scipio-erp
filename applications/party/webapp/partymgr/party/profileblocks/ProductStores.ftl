@@ -19,7 +19,7 @@ under the License.
 
 <@section id="partyProductStores" title="${uiLabelMap.ProductStores}">
     <#if productStoreRoles?has_content>
-      <@table type="data-list" class="basic-table" cellspacing="0">
+      <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
         <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.ProductStoreNameId}</@th>

@@ -73,7 +73,7 @@ under the License.
   </@section>
   <@section title="${uiLabelMap.AccountingFinAcctTransAssociatedToGlReconciliation}">
       <#if finAccountTransList?has_content>
-        <@table type="data-list" autoAltRows=true class="basic-table hover-bar">
+        <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar">
          <@thead>   
           <@tr class="header-row-2">
             <@th>${uiLabelMap.FormFieldTitle_finAccountTransId}</@th>

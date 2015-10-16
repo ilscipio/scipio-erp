@@ -25,7 +25,7 @@ under the License.
           </#if>
         </@menu>
         
-        <@table type="data-complex" cellspacing="0" class="basic-table">
+        <@table type="data-complex" cellspacing="0" class="${styles.table_default!}">
           <@thead>
           <@tr>
             <#assign prodColWidth = "65%">

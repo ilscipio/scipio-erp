@@ -48,7 +48,7 @@ under the License.
         </@td>
       </@tr>
     </@table>
-    <@table type="data-list" cellspacing="0" cellpadding="2" class="basic-table">
+    <@table type="data-list" cellspacing="0" cellpadding="2" class="${styles.table_default!}">
       <@thead class="searchProductsResultsHead">
         <@tr class="header-row">
           <@th nowrap>&nbsp;</@th>

@@ -80,7 +80,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="QuoteSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                        <include-menu name="QuoteSideBar" location="component://order/widget/QuoteMenus.xml"/>
                                     </widgets>
                                 </section>
                             </widgets>
@@ -105,7 +105,7 @@ under the License.
                                         <not><if-empty field="quoteId"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="QuoteSubTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                                        <include-menu name="QuoteSubTabBar" location="component://order/widget/QuoteMenus.xml"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

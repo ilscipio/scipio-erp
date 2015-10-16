@@ -17,7 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- Cato: use same ones loaded by renderer
+<#-- Cato: use same ones loaded by renderer 
+     WARN: ability to use same ones as renderer currently depends on rendering context;
+        currently may only work for web requests specifically using macro renderer, and not other contexts such as emails,
+        but in general in stock code this file was used in regular screens, so not fatal. 
+        This file should be avoided in favor of cato macros.
 <#include "component://widget/templates/htmlFormMacroLibrary.ftl"/>
 <#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")> 
 <#include StringUtil.wrapString("component://widget/templates/htmlMenuMacroLibrary.ftl")>

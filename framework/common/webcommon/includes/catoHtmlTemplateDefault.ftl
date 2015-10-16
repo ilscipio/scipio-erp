@@ -27,7 +27,74 @@
 *
 -->
 
-<#-- note: assumes catoUtilities.ftl included. see end of file for additional includes. -->
+<#-- 
+*************************************
+* IMPORTS AND INCLUDES *
+*************************************
+* NOTE: Assumes catoUtilities.ftl included.
+-->
+
+<#-- Macro library imports. 
+     WARN: These suffer from circular dependency (FIXME?). In a sense the widget macros depend on Cato markup, 
+        but Cato macros currently call widget macros to implement. But in current macro lib impl. they can now be at top of file.
+     
+     NOTE: these are back to being static imports. in each individual theme,
+        it is up to the theme maker to make sure these imports in its html templates file (specified by VisualThemeResource VT_STL_TMPLT_LOC, or this one)
+        match the VisualThemeResource VT_SCRN_MACRO_LIB, VT_FORM_MACRO_LIB, VT_MENU_MACRO_LIB, VT_TREE_MACRO_LIB script locations.
+        the easiest way to do this is to import the macro libraries and then include the default file: 
+        themeTemplate.ftl
+          <#import "[[VT_SCRN_MACRO_LIB location]]" as screenlib> 
+          <#import "[[VT_FORM_MACRO_LIB location]]" as formlib>
+          <#import "[[VT_MENU_MACRO_LIB location]]" as menulib>
+          <#import "[[VT_TREE_MACRO_LIB location]]" as treelib>
+          <#include "component://common/webcommon/includes/catoHtmlTemplateDefault.ftl">
+        but there are many other ways possible (including redefining individual cato macros, or having a themeTemplate.ftl
+        that does not use macro lib files at all).
+        Note these static imports bypass widget.properties, intentionally; the default template file should be
+        changed with another mechanism, and the new file's static macro lib imports would be different.
+        
+     DEV NOTE: these make sense as static imports in general because the macro libs used in this file are an implementation
+        detail of the default cato macros. i.e. you would override the whole @field macro instead of the form lib field macros.
+        but there is another problem; the xxxMacroLibraryPath variables are only set for web requests, and/so in general
+        the dynamic loading method is unreliable (including trying to replicate the lib selection logic outside of
+        macro view handler, which is impossible using stock code). not worth it, and it's still perfectly possible to override
+        the imported libs as above.
+-->
+
+<#if !(screenlib?? && screenlib?is_hash)>
+  <#import "component://widget/templates/htmlScreenMacroLibrary.ftl" as screenlib> 
+</#if>
+<#if !(formlib?? && formlib?is_hash)>
+  <#import "component://widget/templates/htmlFormMacroLibrary.ftl" as formlib>
+</#if>
+<#if !(menulib?? && menulib?is_hash)>
+  <#import "component://widget/templates/htmlMenuMacroLibrary.ftl" as menulib>
+</#if>
+<#if !(treelib?? && treelib?is_hash)>
+  <#import "component://widget/templates/htmlTreeMacroLibrary.ftl" as treelib>
+</#if>
+
+<#-- previous (caching) dynamic macro import code
+<#assign catoFormLibImportDirective = getRequestVar("catoFormLibImportDirective")!"">
+
+<#if catoFormLibImportDirective?is_directive>
+    <#assign catoScreenLibImportDirective = getRequestVar("catoScreenLibImportDirective")!"">
+    <#assign catoMenuLibImportDirective = getRequestVar("catoMenuLibImportDirective")!"">
+<#else>
+    <#assign catoFormLibImportDirective = ('<#import "' + (StringUtil.wrapString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '" as formlib>')?interpret>
+    <#assign catoScreenLibImportDirective = ('<#import "' + (StringUtil.wrapString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '" as screenlib>')?interpret>
+    <#assign catoMenuLibImportDirective = ('<#import "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '" as menulib>')?interpret>
+
+    <#assign dummy = setRequestVar("catoFormLibImportDirective", catoFormLibImportDirective)>
+    <#assign dummy = setRequestVar("catoScreenLibImportDirective", catoScreenLibImportDirective)>
+    <#assign dummy = setRequestVar("catoMenuLibImportDirective", catoMenuLibImportDirective)>
+</#if>
+
+<@catoFormLibImportDirective />
+<@catoScreenLibImportDirective />
+<@catoMenuLibImportDirective />
+-->
+
 
 <#-- 
 *************************************
@@ -2447,50 +2514,3 @@ Usage example:
   <#else>
   </#if>
 </#macro>
-
-
-<#-- 
-*************************************
-* END OF FILE INCLUDES *
-*************************************
-* Files that must be included at end.
--->
-
-<#-- Macro library imports. These must be included at end due to circular dependencies (FIXME?).
-     In a sense the widget macros depend on Cato markup, but Cato macros currently call widget macros. 
-     
-     TODO?: to be confirmed, but I think these could remain static includes even when support
-     per-site macro libs; the implementations in this file depend on the 
-     implementation details of the default stock macros, and this is an implementation detail itself. 
-     instead we would have per-site cato lib overrides. debatable... 
-     EDIT: this will on depend on the implementation of macros like @field. if it's split up,
-     then static includes make sense. but if it's left as-is and the stock macros are the only way
-     to have per-field-type markup overrides, then might want a per-site macro lib loading here... 
-     EDIT 2: added code to load the per-site macros for time being, but in future could want back to static?
-     in any, please leave these includes in this file, it's up to this file to decide (not catoIncludes.ftl)
-     -->
-<#--
-<#import "component://widget/templates/htmlFormMacroLibrary.ftl" as formlib>
-<#import "component://widget/templates/htmlScreenMacroLibrary.ftl" as screenlib> 
-<#import "component://widget/templates/htmlMenuMacroLibrary.ftl" as menulib> -->
-
-<#assign catoFormLibImportDirective = getRequestVar("catoFormLibImportDirective")!"">
-
-<#if catoFormLibImportDirective?is_directive>
-    <#assign catoScreenLibImportDirective = getRequestVar("catoScreenLibImportDirective")!"">
-    <#assign catoMenuLibImportDirective = getRequestVar("catoMenuLibImportDirective")!"">
-<#else>
-    <#assign catoFormLibImportDirective = ('<#import "' + (StringUtil.wrapString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '" as formlib>')?interpret>
-    <#assign catoScreenLibImportDirective = ('<#import "' + (StringUtil.wrapString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '" as screenlib>')?interpret>
-    <#assign catoMenuLibImportDirective = ('<#import "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '" as menulib>')?interpret>
-
-    <#assign dummy = setRequestVar("catoFormLibImportDirective", catoFormLibImportDirective)>
-    <#assign dummy = setRequestVar("catoScreenLibImportDirective", catoScreenLibImportDirective)>
-    <#assign dummy = setRequestVar("catoMenuLibImportDirective", catoMenuLibImportDirective)>
-</#if>
-
-<@catoFormLibImportDirective />
-<@catoScreenLibImportDirective />
-<@catoMenuLibImportDirective />
-
-

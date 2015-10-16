@@ -25,7 +25,7 @@ under the License.
         <@row>
             <@cell class="${styles.grid_large!}6">
                         <#if orderTerms?has_content && parameters.createNew?default('') != 'Y'>
-                            <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar">
+                            <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar">
                               <@thead>
                                 <@tr class="header-row">
                                   <@th>${uiLabelMap.OrderOrderTermType}</@th>
@@ -62,7 +62,7 @@ under the License.
                         <#else>
                             <form method="post" action="<@ofbizUrl>addOrderTerm</@ofbizUrl>" name="termform">
                                 <input type="hidden" name="termIndex" value="${termIndex!}" />
-                                <@table type="fields" class="${styles.table_default!}">
+                                <@table type="fields" class="${styles.table!}">
                                     <@tr>
                                         <@td class="${styles.grid_large!}3">
                                             ${uiLabelMap.OrderOrderTermType}

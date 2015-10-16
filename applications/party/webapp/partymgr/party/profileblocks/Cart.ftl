@@ -32,7 +32,7 @@ under the License.
     </#assign>
     <@section id="partyShoppingCart" title="${uiLabelMap.PartyCurrentShoppingCart}">
         <#if savedCartItems?has_content>
-          <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
+          <@table type="data-list" class="${styles.table!}" cellspacing="0">
            <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.PartySequenceId}</@th>

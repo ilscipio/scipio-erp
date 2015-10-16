@@ -26,7 +26,7 @@ under the License.
   </#assign>
   <@section id="partyUserLogins" title="${uiLabelMap.PartyUserName}" menuHtml=menuHtml>
       <#if userLogins?has_content>
-        <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
+        <@table type="data-list" class="${styles.table!}" cellspacing="0">
           <@tbody>
           <#list userLogins as userUserLogin>
             <@tr>

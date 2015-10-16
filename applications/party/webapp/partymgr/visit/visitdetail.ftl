@@ -18,7 +18,7 @@ under the License.
 -->
 
 <@section title="${uiLabelMap.PartyVisitDetail}">
-      <@table type="fields" class="${styles.table_default!}" cellspacing="0">
+      <@table type="fields" class="${styles.table!}" cellspacing="0">
         <@tr>
           <@td>${uiLabelMap.PartyVisitIDSessionID}</@td>
           <@td>${visit.visitId!} / ${visit.sessionId!}</@td>
@@ -92,7 +92,7 @@ under the License.
           <#assign paginated = true>
         </#if>
       </#if>
-      <@table type="data-list" class="${styles.table_default!} hover-bar" cellspacing="0">
+      <@table type="data-list" class="${styles.table!} hover-bar" cellspacing="0">
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyContentId}</@th>
@@ -144,7 +144,7 @@ https://issues.apache.org/jira/browse/OFBIZ-4488
 *******************************************************************************
 <@section title="${uiLabelMap.PartyPagePushFollowing}">
       <#if security.hasPermission("SEND_CONTROL_APPLET", session)>
-        <@table type="fields" class="${styles.table_default!}" cellspacing="0">
+        <@table type="fields" class="${styles.table!}" cellspacing="0">
             <@tr>
               <@th>${uiLabelMap.PartyPushURL}</@th>
               <@td>

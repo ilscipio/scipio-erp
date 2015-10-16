@@ -18,7 +18,7 @@ under the License.
 -->
 
   <#if days?has_content>
-    <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing="0">
+    <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar" cellspacing="0">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonStartDateTime}</@th>

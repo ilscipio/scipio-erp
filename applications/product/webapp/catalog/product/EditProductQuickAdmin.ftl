@@ -104,7 +104,7 @@ function doPublish() {
         <form action="<@ofbizUrl>updateProductQuickAdminSelFeat</@ofbizUrl>" method="post" name="selectableFeature">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
-        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductProductId}</@th>
@@ -141,7 +141,7 @@ function doPublish() {
             <@tr>
                 <@td colspan="2">&nbsp;</@td>
                 <@td>
-                    <@table type="data-list" cellspacing="0" class="${styles.table_default!}">
+                    <@table type="data-list" cellspacing="0" class="${styles.table!}">
                         <#list selectableFeatureTypes as selectableFeatureType>
                         <@tr><@td nowrap="nowrap"><a class="${styles.button_default!}" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
                             <a class="${styles.button_default!}" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)!}&amp;productId=${product.productId!}</@ofbizUrl>">${(selectableFeatureType.get("description",locale))!}</a></@td></@tr>
@@ -165,7 +165,7 @@ function doPublish() {
     <@section title="${uiLabelMap.ProductDistinguishingFeatures}">
         <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method="post" name="distFeature">
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+            <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
               <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductProductId}</@th>
@@ -196,7 +196,7 @@ function doPublish() {
             <input type="hidden" name="widthUomId" value="LEN_in"/>
             <input type="hidden" name="depthUomId" value="LEN_in"/>
             <input type="hidden" name="weightUomId" value="WT_oz"/>
-            <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+            <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
               <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductProductHeight}</@th>
@@ -267,7 +267,7 @@ function doPublish() {
     <@row>
       <@cell>
         <#if addedFeatureTypeIds?has_content || standardFeatureAppls?has_content>
-        <@table type="generic" cellspacing="0" class="${styles.table_default!}">
+        <@table type="generic" cellspacing="0" class="${styles.table!}">
         <@tr>
         <@td>
             <#if addedFeatureTypeIds?has_content>
@@ -275,7 +275,7 @@ function doPublish() {
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="productFeatureApplTypeId" value="STANDARD_FEATURE"/>
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
-            <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+            <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
                 <#list addedFeatureTypeIds as addedFeatureTypeId>
                     <@tr valign="middle">
                         <@td align="right">${addedFeatureTypes.get(addedFeatureTypeId).description}</@td>
@@ -299,7 +299,7 @@ function doPublish() {
         <@td width="20">&nbsp;</@td>
         <@td valign="top">
             <#if standardFeatureAppls?has_content>
-            <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+            <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
                 <#list standardFeatureAppls as standardFeatureAppl>
                     <#assign featureId = standardFeatureAppl.productFeatureId/>
                     <@tr valign="middle">
@@ -362,7 +362,7 @@ function doPublish() {
     </@row>
     <@row>
       <@cell>
-          <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+          <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
             <#list productCategoryMembers as prodCatMemb>
                 <#assign prodCat = prodCatMemb.getRelatedOne("ProductCategory", false)/>
                 <@tr valign="middle">

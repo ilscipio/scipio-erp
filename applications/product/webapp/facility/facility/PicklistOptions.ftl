@@ -56,7 +56,7 @@ under the License.
 </#assign>
 <@section title="${uiLabelMap.ProductFindOrdersToPick}" menuHtml=menuHtml>
   <#if pickMoveInfoList?has_content>
-    <@table type="data-complex" autoAltRows=false cellspacing="0" class="${styles.table_default!}">
+    <@table type="data-complex" autoAltRows=false cellspacing="0" class="${styles.table!}">
       <#if pickMoveInfoList?has_content || rushOrderInfo?has_content>
        <@thead>
         <@tr class="header-row">
@@ -260,7 +260,7 @@ under the License.
 
 <#if toPickList?has_content>
   <@section title="${uiLabelMap.ProductPickingDetail}">
-      <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+      <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
       <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.ProductOrderId}</@th>

@@ -27,7 +27,7 @@ under the License.
 </#assign>
 <@section title="${uiLabelMap.ProductInventorySummary}" menuHtml=menuHtml>
   <#if product??>
-        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductFacility}</@th>

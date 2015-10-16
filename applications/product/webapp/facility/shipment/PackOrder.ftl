@@ -127,7 +127,7 @@ under the License.
                   <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
                 </#if>
                 <#assign carrier = orderItemShipGroup.carrierPartyId?default("N/A")>
-                <@table type="fields" cellpadding="4" cellspacing="4" class="${styles.table_default!}">
+                <@table type="fields" cellpadding="4" cellspacing="4" class="${styles.table!}">
                   <@tr>
                     <@td valign="top">
                       <#if postalAddress?exists >
@@ -225,7 +225,7 @@ under the License.
                   <input type="hidden" name="originFacilityId" value="${facilityId!}" />
                   <input type="hidden" name="hideGrid" value="${hideGrid}"/>
 
-                  <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
+                  <@table type="data-list" class="${styles.table!}" cellspacing="0">
                    <@thead>
                     <@tr class="header-row">
                       <@th>&nbsp;</@th>
@@ -338,7 +338,7 @@ under the License.
                   <input type="hidden" name="weightUomId" value="${defaultWeightUomId}"/>
                   <input type="hidden" name="showInput" value="N"/>
                   <hr/>
-                  <@table type="fields" class="${styles.table_default!}" cellpadding="2" cellspacing="0">
+                  <@table type="fields" class="${styles.table!}" cellpadding="2" cellspacing="0">
                     <@tr>
                         <#assign packageSeqIds = packingSession.getPackageSeqIds()/>
                         <#if packageSeqIds?has_content>
@@ -414,7 +414,7 @@ under the License.
               <#if packedLines?has_content>
                 <#assign packedLine = packedLines.get(0)!>
                 <p style="font-size:1.2em">${uiLabelMap.ProductPackage}&nbsp;${packedLine.getPackageSeq()!}</p>
-                <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
+                <@table type="data-list" class="${styles.table!}" cellspacing="0">
                   <@tr class="header-row">
                     <@td>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@td>
                     <@td>${uiLabelMap.ProductProductId}</@td>
@@ -450,7 +450,7 @@ under the License.
     <#assign packedLines = packingSession.getLines()!>
     <#if packedLines?has_content>
       <@section title="${uiLabelMap.ProductItems} (${uiLabelMap.ProductPackages}): ${packedLines.size()!}">
-            <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
+            <@table type="data-list" class="${styles.table!}" cellspacing="0">
               <@tr class="header-row">
                   <@td>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@td>
                   <@td>${uiLabelMap.ProductProductId}</@td>

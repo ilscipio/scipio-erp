@@ -36,7 +36,7 @@ under the License.
         </@cell>
     </@row>
     </#if>
-  <@table type="data-list" autoAltRows=true class="${styles.table_default!} responsive ${styles.grid_large!}12">
+  <@table type="data-list" autoAltRows=true class="${styles.table!} responsive ${styles.grid_large!}12">
    <@thead>
     <@tr class="header-row">
       <#--<@th>${uiLabelMap.WebtoolsLabelManagerRow}</@th>-->

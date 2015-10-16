@@ -21,7 +21,7 @@ under the License.
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
-      <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+      <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
         <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.CommonDescription}</@th>

@@ -132,7 +132,7 @@ function lookupShipments() {
   </#assign>
   <@section id="findOrders_2" title="${uiLabelMap.ProductShipmentsFound}" menuHtml=menuHtml>
       <#if shipmentList?has_content>  
-        <@table type="data-list" autoAltRows=true cellspacing="0" cellpadding="2" class="${styles.table_default!} hover-bar">
+        <@table type="data-list" autoAltRows=true cellspacing="0" cellpadding="2" class="${styles.table!} hover-bar">
         <@thead>
           <@tr class="header-row">
             <@th width="5%">${uiLabelMap.ProductShipmentId}</@th>

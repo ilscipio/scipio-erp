@@ -374,7 +374,7 @@ document.lookuporder.orderId.focus();
           </@row>
       </#macro>
       <@massOrderChangeButton id="1"/>
-      <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing='0'>
+      <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar" cellspacing='0'>
        <@thead>
         <@tr class="header-row">
           <@th width="5%">

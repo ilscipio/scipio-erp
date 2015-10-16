@@ -18,7 +18,7 @@ under the License.
 -->
 <#if showPromoText?? && showPromoText>
     <@section title="${uiLabelMap.OrderSpecialOffers}">
-        <@table type="data-list" class="${styles.table_default!}">
+        <@table type="data-list" class="${styles.table!}">
           <#-- show promotions text -->
           <#list productPromos as productPromo>
             <@tr>

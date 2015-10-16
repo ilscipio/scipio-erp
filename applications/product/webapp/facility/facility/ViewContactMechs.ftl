@@ -19,7 +19,7 @@ under the License.
 
 <div>
   <#if contactMeches?has_content>
-    <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
+    <@table type="data-list" class="${styles.table!}" cellspacing="0">
       <#list contactMeches as contactMechMap>
           <#assign contactMech = contactMechMap.contactMech>
           <#assign facilityContactMech = contactMechMap.facilityContactMech>

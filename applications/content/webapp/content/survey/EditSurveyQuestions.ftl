@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.PageTitleEditSurveyQuestions} ${uiLabelMap.ContentSurveySurveyId} ${surveyId}">
-      <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing="0">
+      <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar" cellspacing="0">
         <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.CommonId}</@th>
@@ -130,7 +130,7 @@ under the License.
 <#if surveyQuestionCategory?has_content>
     <@section title="${uiLabelMap.ContentSurveyApplyQuestionFromCategory} - ${surveyQuestionCategory.description!} [${surveyQuestionCategory.surveyQuestionCategoryId}]">
         <a name="appl">
-        <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing="0">
+        <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar" cellspacing="0">
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.CommonId}</@th>
@@ -246,7 +246,7 @@ under the License.
 
 <#if (surveyQuestion?has_content && surveyQuestion.surveyQuestionTypeId?default("") == "OPTION")>
   <@section title="${uiLabelMap.ContentSurveyOptions} - ${uiLabelMap.CommonId} ${surveyQuestion.surveyQuestionId!}">
-    <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing="0">
+    <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar" cellspacing="0">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonDescription}</@th>

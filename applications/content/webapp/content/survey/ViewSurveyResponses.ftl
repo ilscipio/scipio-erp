@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <@table type="data-complex" class="${styles.table_default!} hover-bar" cellspacing="0">
+  <@table type="data-complex" class="${styles.table!} hover-bar" cellspacing="0">
     <#assign questions = surveyWrapper.getSurveyQuestionAndAppls()>
     <#assign surveyResults = surveyWrapper.getResults(questions)>
 

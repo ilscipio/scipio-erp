@@ -47,7 +47,7 @@ under the License.
         <form method="post" action="<@ofbizUrl>updateCustomTimePeriod</@ofbizUrl>" name="updateCustomTimePeriodForm">
           <input type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}" />
           <input type="hidden" name="customTimePeriodId" value="${currentCustomTimePeriodId!}" />
-      <@table type="data-list" class="${styles.table_default!}">
+      <@table type="data-list" class="${styles.table!}">
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.CommonId}</@th>
@@ -136,7 +136,7 @@ under the License.
   
   <@section title="${uiLabelMap.AccountingChildPeriods}">
     <#if customTimePeriods?has_content>
-      <@table type="data-list" class="${styles.table_default!}">
+      <@table type="data-list" class="${styles.table!}">
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.CommonId}</@th>

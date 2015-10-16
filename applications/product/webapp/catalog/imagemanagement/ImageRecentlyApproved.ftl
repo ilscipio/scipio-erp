@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
         
-<@table type="generic" cellspacing="0" class="${styles.table_default!}">
+<@table type="generic" cellspacing="0" class="${styles.table!}">
   <@tr>
     <@td style="vertical-align:top;">
         <@table type="data-complex" class="" cellspacing="">

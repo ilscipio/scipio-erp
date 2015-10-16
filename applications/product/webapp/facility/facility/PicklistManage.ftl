@@ -138,7 +138,7 @@ under the License.
             </div>
             <#if picklistBinInfo.picklistItemInfoList?has_content>
               <div style="margin-left: 30px;">
-                <@table type="data-list" autoAltRows=true class="${styles.table_default!}" cellspacing="0">
+                <@table type="data-list" autoAltRows=true class="${styles.table!}" cellspacing="0">
                  <@thead>
                   <@tr class="header-row">
                     <@th>${uiLabelMap.ProductOrderId}</@th>
@@ -191,7 +191,7 @@ under the License.
               </div>
               <#if picklistBinInfo.productStore.managedByLot?? && picklistBinInfo.productStore.managedByLot = "Y">
                 <div style="margin-left: 30px;">
-                  <@table type="data-list" autoAltRows=true class="${styles.table_default!}" cellspacing="0">
+                  <@table type="data-list" autoAltRows=true class="${styles.table!}" cellspacing="0">
                     <@thead>
                     <@tr class="header-row">                   
                           <@th>${uiLabelMap.ProductOrderId}</@th>

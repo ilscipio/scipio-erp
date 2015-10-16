@@ -65,7 +65,7 @@ under the License.
         </#if>
           <#assign label><#if "CUSTOMER_RETURN" == returnHeaderTypeId>${uiLabelMap.OrderReturnShipFromAddress}<#else>${uiLabelMap["checkhelper.select_shipping_destination"]}</#if></#assign>
           <@field type="generic" label=label>
-                <@table type="data-list" cellspacing="0" class="${styles.table_default!}">
+                <@table type="data-list" cellspacing="0" class="${styles.table!}">
                   <#list shippingContactMechList as shippingContactMech>
                     <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                     <@tr>

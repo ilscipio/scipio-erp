@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.OrderRequest}&nbsp;${custRequest.custRequestId}&nbsp;${uiLabelMap.CommonInformation}" class="+screenlet">
-        <@table cellspacing="0" class="${styles.table_default!}">
+        <@table cellspacing="0" class="${styles.table!}">
             <#-- request header information -->
             <@tr>
                 <@td align="right" valign="top" width="15%" class="label">

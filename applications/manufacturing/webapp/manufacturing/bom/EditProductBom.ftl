@@ -197,7 +197,7 @@ function lookupBom() {
 <#if productId?? && product??>
   <@section title="${uiLabelMap.ManufacturingProductComponents}">
     <a name="components"></a>
-    <@table type="data-list" autoAltRows=true class="${styles.table_default!}" cellspacing="0">
+    <@table type="data-list" autoAltRows=true class="${styles.table!}" cellspacing="0">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.ProductProductId}</@th>
@@ -242,7 +242,7 @@ function lookupBom() {
   </@section>
   <@section title="${uiLabelMap.ManufacturingProductComponentOf}">
     <#if assocToProducts?has_content>
-    <@table type="data-list" autoAltRows=true class="${styles.table_default!}" cellspacing="0">
+    <@table type="data-list" autoAltRows=true class="${styles.table!}" cellspacing="0">
       <@thead>
         <@tr class="header-row">
             <@th>${uiLabelMap.ProductProductId}</@th>

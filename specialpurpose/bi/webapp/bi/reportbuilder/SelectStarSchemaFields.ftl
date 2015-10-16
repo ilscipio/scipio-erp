@@ -19,7 +19,7 @@ under the License.
 
 <form action="<@ofbizUrl>ReportBuilderRenderStarSchemaReport</@ofbizUrl>">
     <input type="hidden" name="starSchemaName" value="${starSchemaName}"/>
-    <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!} hover-bar">
+    <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!} hover-bar">
       <@thead>    
         <@tr class="header-row">
             <@th>

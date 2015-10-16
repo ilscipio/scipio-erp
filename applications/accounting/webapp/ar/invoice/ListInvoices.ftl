@@ -143,7 +143,7 @@ under the License.
       <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
     </div>
 
-    <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing="0">
+    <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar" cellspacing="0">
       <@thead>
         <@tr class="header-row-2">
           <@td>${uiLabelMap.AccountingInvoice}</@td>

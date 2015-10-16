@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section>
-    <@table type="fields" class="${styles.table_default!}" cellspacing="3">
+    <@table type="fields" class="${styles.table!}" cellspacing="3">
         <@tr>
             <@td>${uiLabelMap.WebtoolsLabelManagerKey}</@td>
             <@td>${parameters.sourceKey!}</@td>

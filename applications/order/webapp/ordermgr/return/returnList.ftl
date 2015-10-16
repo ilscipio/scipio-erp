@@ -24,7 +24,7 @@ under the License.
 </#assign>
 <@section title="${uiLabelMap.OrderReturnsCurrent}" menuHtml=menuHtml>
   <#if returnList?has_content>
-    <@table type="data-list" cellspacing="0" class="${styles.table_default!}">
+    <@table type="data-list" cellspacing="0" class="${styles.table!}">
       <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.OrderReturnId} ${uiLabelMap.CommonNbr}</@th>

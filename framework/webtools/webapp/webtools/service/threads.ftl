@@ -20,7 +20,7 @@ under the License.
 
     <p>${uiLabelMap.WebtoolsThisThread}<b> ${Static["java.lang.Thread"].currentThread().getName()} (${Static["java.lang.Thread"].currentThread().getId()})</b></p>
    
-    <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing="0">
+    <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar" cellspacing="0">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.WebtoolsGroup}</@th>

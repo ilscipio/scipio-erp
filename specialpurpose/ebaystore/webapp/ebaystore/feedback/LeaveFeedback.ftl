@@ -51,7 +51,7 @@ under the License.
 </script>
 <form name="leaveFeedback" action="<@ofbizUrl>sendLeaveFeedback</@ofbizUrl>" method="post">
     <input type="hidden" value="${parameters.productStoreId}" name="productStoreId"/>
-<@table type="data-complex" autoAltRows=false cellspacing="0" class="${styles.table_default!}">
+<@table type="data-complex" autoAltRows=false cellspacing="0" class="${styles.table!}">
     <@tbody>
       <@thead>
         <@tr class="header-row">

@@ -22,7 +22,7 @@ under the License.
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.ProductGlobalPriceRule}" menuHtml=menuHtml>
-    <@table type="data-list" cellspacing="0" class="${styles.table_default!}">
+    <@table type="data-list" cellspacing="0" class="${styles.table!}">
         <@thead>
           <@tr class="header-row">
             <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
@@ -65,7 +65,7 @@ under the License.
           <@tr valign="top">
             <@td align="right">${uiLabelMap.ProductConditions}</@td>
             <@td colspan="2">
-                <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+                <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
                 <@thead>
                   <@tr class="header-row">
                     <@th width="5%">${uiLabelMap.ProductSeqId}</@th>
@@ -149,7 +149,7 @@ under the License.
           <@tr valign="top">
             <@td align="right">${uiLabelMap.ProductActions}</@td>
             <@td colspan="2">
-                <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+                <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
                   <@tr class="header-row">
                     <@th width="5%">${uiLabelMap.ProductSeqId}</@th>
                     <@th width="85%">${uiLabelMap.ProductActionTypeAmount}</@th>

@@ -54,7 +54,7 @@ under the License.
 
     <@row>
         <@cell>
-        <@table type="fields" class="${styles.table_default!}" cellspacing="0">
+        <@table type="fields" class="${styles.table!}" cellspacing="0">
         <@thead>
           <@tr>
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>
@@ -111,7 +111,7 @@ under the License.
     <@cell>
         <@heading>${uiLabelMap.SecurityGroups}</@heading>
       <#if selectedServiceMap.permissionGroups != 'NA'>
-        <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
+        <@table type="data-list" class="${styles.table!}" cellspacing="0">
          <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsNameOrRole}</@th>
@@ -162,7 +162,7 @@ under the License.
 <@row>
    <@cell>
           <@heading>${uiLabelMap.WebtoolsServiceECA}</@heading>
-        <@table type="data-complex" class="${styles.table_default!}" cellspacing="0">
+        <@table type="data-complex" class="${styles.table!}" cellspacing="0">
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsEventName}</@th>
@@ -189,7 +189,7 @@ under the License.
               <#if ecaMap.actions?has_content>
                 <@td>
                   <#list ecaMap.actions as action>
-                    <@table type="fields" class="${styles.table_default!}" cellspacing="0">
+                    <@table type="fields" class="${styles.table!}" cellspacing="0">
                       <@tr>
                         <@td colspan="2"><a href='<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>'>${action.serviceName?default(uiLabelMap.CommonNA)}</a></@td>
                       </@tr>
@@ -216,7 +216,7 @@ under the License.
               <#if ecaMap.conditions?has_content>
                 <@td>
                   <#list ecaMap.conditions as condition>
-                    <@table type="fields" class='${styles.table_default!}' cellspacing="0">
+                    <@table type="fields" class='${styles.table!}' cellspacing="0">
                       <@tr>
                         <@td>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType?default(uiLabelMap.CommonNA)}</@td>
                         <@td>
@@ -251,7 +251,7 @@ under the License.
               <#if ecaMap.sets?has_content>
                 <@td>
                   <#list ecaMap.sets as set>
-                    <@table type="fields" class='${styles.table_default!}' cellspacing="0">
+                    <@table type="fields" class='${styles.table!}' cellspacing="0">
                       <@tr>
                         <@td>${uiLabelMap.WebtoolsFieldName}</b> ${set.fieldName?default(uiLabelMap.CommonNA)}</@td>
                         <@td>&nbsp;</@td>
@@ -299,7 +299,7 @@ under the License.
           <@heading>${paramList.title}</@heading>
 
         <#if paramList.paramList?? && paramList.paramList?has_content>
-          <@table type="data-list" class="${styles.table_default!} param-table" cellspacing="0">
+          <@table type="data-list" class="${styles.table!} param-table" cellspacing="0">
             <@thead>
               <@tr class="header-row">
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>
@@ -367,7 +367,7 @@ under the License.
   <@section menuHtml=menuHtml>
       <#--
       ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
-      <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing="0">
+      <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar" cellspacing="0">
         <@thead>
         <@tr class="header-row">
           <@th id="Service_all">${uiLabelMap.WebtoolsServiceName}</@th>

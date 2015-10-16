@@ -37,7 +37,7 @@ under the License.
        </#list>
      </#if>
 
-      <@table type="data-list" autoAltRows=true class="${styles.table_default!}" cellspacing="0">
+      <@table type="data-list" autoAltRows=true class="${styles.table!}" cellspacing="0">
        <@thead>
         <@tr class="header-row">
           <@th width="10%">${uiLabelMap.ManufacturingProductLevel}</@th>
@@ -91,7 +91,7 @@ under the License.
         </#if>
       </@table>
     
-      <@table type="data-list" autoAltRows=true class="${styles.table_default!}" cellspacing="0">
+      <@table type="data-list" autoAltRows=true class="${styles.table!}" cellspacing="0">
        <@thead>
         <@tr class="header-row">
           <@th width="20%">${uiLabelMap.ProductProductId}</@th>

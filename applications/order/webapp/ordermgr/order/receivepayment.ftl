@@ -29,7 +29,7 @@ under the License.
         <input type="hidden" name="partyId" value="${orderRoles[0].partyId}" />
 
         <#if paymentMethods?has_content>
-        <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
+        <@table type="data-list" class="${styles.table!}" cellspacing="0">
          <@thead>
           <@tr class="header-row">
             <@th width="30%" align="right">${uiLabelMap.PaymentMethod}</@th>
@@ -52,7 +52,7 @@ under the License.
         </#if>
         
         <#if paymentMethodTypes?has_content>
-        <@table type="data-list" class="${styles.table_default!}" cellspacing='0'>
+        <@table type="data-list" class="${styles.table!}" cellspacing='0'>
          <@thead>
           <@tr class="header-row">
             <@th width="30%" align="right">${uiLabelMap.OrderPaymentType}</@th>

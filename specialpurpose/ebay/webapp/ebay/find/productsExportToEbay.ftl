@@ -95,7 +95,7 @@ under the License.
                 <input type="text" name="webSiteUrl" size="100" value="${webSiteUrl!}"/>
             </@field>
             <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodsAccepted}">
-                    <@table type="fields" class="${styles.table_default!}" cellspacing="0">
+                    <@table type="fields" class="${styles.table!}" cellspacing="0">
                         <@tr>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentPayPal}</@td>
                             <@td width="2%"><input type="checkbox" name="paymentPayPal" <#if parameters.paymentPayPal??>checked="checked"</#if> /></@td>

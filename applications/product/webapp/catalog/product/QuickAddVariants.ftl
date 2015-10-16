@@ -53,7 +53,7 @@ function clickAll(e) {
             <input type="hidden" name="productId" value="${productId}" />
             <input type="hidden" name="_useRowSubmit" value="Y" />
             <input type="hidden" name="_checkGlobalScope" value="Y" />
-      <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+      <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
         <#assign rowCount = 0>
         <@thead>
           <@tr class="header-row">

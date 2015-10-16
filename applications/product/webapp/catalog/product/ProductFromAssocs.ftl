@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if productId?? && product??>
-        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table_default!}">
+        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
          <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.CommonProduct}</@th>

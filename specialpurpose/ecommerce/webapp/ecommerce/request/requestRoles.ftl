@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.OrderRequestRoles}" class="+screenlet">
-        <@table cellspacing="0" class="${styles.table_default!}">
+        <@table cellspacing="0" class="${styles.table!}">
          <#assign row = 1>
          <#list requestParties as requestParty>
             <#assign roleType = requestParty.getRelatedOne("RoleType", false)>

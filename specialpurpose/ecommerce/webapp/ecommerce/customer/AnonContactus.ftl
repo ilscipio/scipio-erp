@@ -39,7 +39,7 @@ under the License.
             <input type="hidden" name="communicationEventTypeId" value="WEB_SITE_COMMUNICATI" />
             <input type="hidden" name="productStoreId" value="${productStore.productStoreId}" />
             <input type="hidden" name="emailType" value="CONT_NOTI_EMAIL" />
-            <@table class="${styles.table_default!}" cellspacing="0">
+            <@table class="${styles.table!}" cellspacing="0">
                 <@tbody>
                     <@tr>
                        <@td class="label">${uiLabelMap.EcommerceSubject}</@td>

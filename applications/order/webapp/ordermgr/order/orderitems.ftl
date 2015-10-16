@@ -19,7 +19,7 @@ under the License.
 
 <#if orderHeader?has_content>
 <@section title="${uiLabelMap.OrderOrderItems}">
-            <@table type="data-complex" class="${styles.table_default!}" cellspacing="0" role="grid">
+            <@table type="data-complex" class="${styles.table!}" cellspacing="0" role="grid">
               <@thead>
                 <@tr valign="bottom" class="header-row">
                     <@th width="35%">${uiLabelMap.ProductProduct}</@th>
@@ -686,7 +686,7 @@ target="facility"
                             <@td>&nbsp;</@td>
                             <@td colspan="4">
                               <@section>
-                                  <@table type="data-list" class="${styles.table_default!}" cellspacing="0">
+                                  <@table type="data-list" class="${styles.table!}" cellspacing="0">
                                     <@tr>
                                       <@td class="text-right" nowrap="nowrap">
                                         ${uiLabelMap.CommonComments}

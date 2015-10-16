@@ -33,7 +33,7 @@ function uploadTrackingCode(orderId, productStoreId) {
   <form name="listOrdersImported" method="post">
       <input type="hidden" name="viewSize"/>
       <input type="hidden" name="viewIndex"/>
-      <@table type="data-list" autoAltRows=true class="${styles.table_default!} hover-bar" cellspacing="0">
+      <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar" cellspacing="0">
        <@thead>
         <@tr class="header-row">
           <@th width="5%">${uiLabelMap.OrderOrderType}</@th>

@@ -24,7 +24,7 @@ under the License.
   <#if !newCalEventUrl??>
     <#assign newCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
-<@table type="data-list" cellspacing="0" class="${styles.table_default!} calendar">
+<@table type="data-list" cellspacing="0" class="${styles.table!} calendar">
   <@thead>
   <@tr class="header-row">
     <@th width="1%">&nbsp;</@th>

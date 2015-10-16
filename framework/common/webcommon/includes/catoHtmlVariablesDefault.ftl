@@ -40,7 +40,8 @@
     "icon_arrow" : "fi-arrow-right",
     "icon_list" : "fi-list",
     
-  <#-- Menus -->  
+  <#-- Menus 
+       menu_xxx classes are looked up by the @menu and @menuitem macros as defaults for each menu type. -->  
     <#-- Generic menu types -->
     "menu_default" : "",  
     "menu_default_item" : "", 
@@ -202,7 +203,9 @@
     "progress_wrap" : "",           <#-- Bootstrap: "progress-bar" -->
     "progress_bar" : "meter",       <#-- Bootstrap: "sr-only" -->
 
-  <#-- Fields -->
+  <#-- Fields 
+       fields_xxx classes and settings are looked up by the @fields and @field macros as defaults for
+       fields type and field type. -->
     "fields_default_labeltype" : "gridarea",
     "fields_default_labellayout" : "left",
     "fields_default_labelarea" : true,

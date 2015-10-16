@@ -372,10 +372,10 @@ public class ScreenRenderer {
     }
     
     /**
-     * Cato: Gets appropriate visual theme resources from context or if missing, calculates based on values in context, best-effort, 
-     * using as generalized logic as possible, and saves in context.
-     * If <code>useCache</code> true, resources are read from <code>rendererVisualThemeResources</code> context variable.
-     * Result is stored in this same variable.
+     * Cato: Gets visual theme resources from context or if missing, calculates appropriate
+     * based on values in context, best-effort, using as generalized logic as possible, saves in context and returns.
+     * <p>
+     * Resources are read from and stored in <code>rendererVisualThemeResources</code> context variable.
      */
     public static Map<String, List<String>> getVisualThemeResources(Map<String, Object> context) throws GenericServiceException {
         Map<String, List<String>> themeResources = null;

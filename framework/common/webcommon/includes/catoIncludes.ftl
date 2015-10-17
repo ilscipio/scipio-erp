@@ -23,36 +23,37 @@
 <#include 'component://common/webcommon/includes/catoUtilities.ftl'>
 
 <#-- cache these template interprets so they only need to happen once in a request -->
-<#assign catoVariablesIncludeDirective = getRequestVar("catoVariablesIncludeDirective")!"">
+<#assign catoVariablesIncludeDirective = getRequestVar("catoVariablesIncludeDirective")!false>
 
-<#if catoVariablesIncludeDirective?is_directive && false>
-    <#assign catoTemplateIncludeDirective = getRequestVar("catoTemplateIncludeDirective")!"">
+<#if catoVariablesIncludeDirective?is_directive>
+    <#assign catoTemplateIncludeDirective = getRequestVar("catoTemplateIncludeDirective")>
 <#else>
     <#-- cache these var lookups so it only needs to happen once in a request -->
-    <#assign catoVariablesLibraryPath = getRequestVar("catoVariablesLibraryPath")!"">
+    <#assign catoVariablesLibraryPath = getRequestVar("catoVariablesLibraryPath")!false>
     
-    <#if catoVariablesLibraryPath?has_content>
+    <#if catoVariablesLibraryPath?is_string>
         <#assign catoTemplateLibraryPath = getRequestVar("catoTemplateLibraryPath")!"">
     <#else>
-        <#-- WARN: currently we ALWAYS load HTML versions of our styles and template files, regardless of renderer or if using
-                a non-HTML renderer (note: this is okay for catoUtilities.ftl since it's supposed to be platform-agnostic) -->
-        <#assign defaultCatoVariablesLibraryPath = 'component://common/webcommon/includes/catoHtmlVariablesDefault.ftl'>
-        <#assign defaultCatoTemplateLibraryPath = 'component://common/webcommon/includes/catoHtmlTemplateDefault.ftl'>
-        
         <#-- note: rendererVisualThemeResources is set by cato-patched renderer -->
-        <#switch getRenderContextType()>
+        <#assign renderPlatformType = getRenderPlatformType()!"default">
+        <#assign renderContextType = getRenderContextType()!"general">
+
+        <#switch renderContextType>
         <#case "web">
-            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_WEB"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!defaultCatoVariablesLibraryPath)>
-            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_WEB"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!defaultCatoTemplateLibraryPath)>
+            <#-- note: visual theme resources are locations are currently assumed to apply as html and default platform only;
+                have no overrides for xml, fo, etc.; not supported for now
+                FIXME?: despite this, currently the VT resources will always load for all platforms... -->
+            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_WEB"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!getDefaultCatoLibLocation("variables", renderPlatformType, renderContextType)!"")?string>
+            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_WEB"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!getDefaultCatoLibLocation("template", renderPlatformType, renderContextType)!"")?string>
             <#break>
         <#case "email">
-            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_MAIL"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!defaultCatoVariablesLibraryPath)>
-            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_MAIL"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!defaultCatoTemplateLibraryPath)>
+            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_MAIL"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!getDefaultCatoLibLocation("variables", renderPlatformType, renderContextType)!"")?string>
+            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_MAIL"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!getDefaultCatoLibLocation("template", renderPlatformType, renderContextType)!"")?string>
             <#break>
         <#--<#case "general">-->
         <#default>
-            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!defaultCatoVariablesLibraryPath)>
-            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!defaultCatoTemplateLibraryPath)>
+            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!getDefaultCatoLibLocation("variables", renderPlatformType, renderContextType)!"")?string>
+            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!getDefaultCatoLibLocation("template", renderPlatformType, renderContextType)!"")?string>
             <#break>
         </#switch>
     
@@ -60,8 +61,16 @@
         <#assign dummy = setRequestVar("catoTemplateLibraryPath", catoTemplateLibraryPath)>
     </#if>
 
-    <#assign catoVariablesIncludeDirective = ('<#include "' + catoVariablesLibraryPath + '">')?interpret>
-    <#assign catoTemplateIncludeDirective = ('<#include "' + catoTemplateLibraryPath + '">')?interpret>
+    <#if catoVariablesLibraryPath?has_content>
+        <#assign catoVariablesIncludeDirective = ('<#include "' + catoVariablesLibraryPath + '">')?interpret>
+    <#else>
+        <#assign catoVariablesIncludeDirective = ('<#assign dummy = "">')?interpret>
+    </#if>
+    <#if catoTemplateLibraryPath?has_content>
+        <#assign catoTemplateIncludeDirective = ('<#include "' + catoTemplateLibraryPath + '">')?interpret>
+    <#else>
+        <#assign catoTemplateIncludeDirective = ('<#assign dummy = "">')?interpret>
+    </#if>
 
     <#assign dummy = setRequestVar("catoVariablesIncludeDirective", catoVariablesIncludeDirective)>
     <#assign dummy = setRequestVar("catoTemplateIncludeDirective", catoTemplateIncludeDirective)>

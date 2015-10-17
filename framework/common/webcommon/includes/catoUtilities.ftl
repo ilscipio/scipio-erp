@@ -99,9 +99,10 @@ Returns empty string if no label is found
 * getPropertyValue function
 ************
 Gets property or empty string if missing (same behavior as UtilProperties).
+note: the ?string kludge is to get rid of the wrapString wrapper which can break.
 -->
 <#function getPropertyValue resource name>
-  <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))>
+  <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))?string>
 </#function>
 
 <#-- 
@@ -111,7 +112,7 @@ Gets property or empty string if missing (same behavior as UtilProperties).
 Gets property or void if missing (use default operator).
 -->
 <#function getPropertyValueOrNull resource name>
-  <#local value = StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))>
+  <#local value = StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))?string>
   <#if value?has_content>
     <#return value>
   </#if>
@@ -575,6 +576,7 @@ TODO: doesn't handle dates (ambiguous?)
 
 <#global objectAsJsonTreatInvalidNonFatal = true>
 
+
 <#-- 
 *************************************
 * API-WRITING UTILITIES *
@@ -835,25 +837,6 @@ Not meant to be used on regular request attributes.
 
 <#-- 
 *************
-* getRenderContextType function
-************
-Tries to figure out if this is web render, email, or other general.
--->
-<#function getRenderContextType>
-  <#-- FIXME?: this detection is primitive... not sure covers all possible cases... -->
-  <#local res = "general">
-  <#if request??>
-    <#local res = "web">
-  <#else>
-    <#if baseUrl??>
-      <#local res = "email">
-    </#if>
-  </#if>
-  <#return res>
-</#function>
-
-<#-- 
-*************
 * elemAttribStr macro
 ************
 Prints a string of element attributes. (HTML, FO, XML)
@@ -1023,6 +1006,81 @@ Note that the class portions may be prefixed with "+" as well for append-not-rep
         "argsStr":titleArgsStr
     }>
 -->
+</#function>
+
+
+<#-- 
+*************************************
+* CONTEXT AND SYSTEM UTILITIES *
+*************************************
+* Context and system utilities.
+-->
+
+<#-- 
+*************
+* getRenderContextType function
+************
+Tries to figure out if this is web render, email, or other general.
+-->
+<#function getRenderContextType>
+  <#-- FIXME?: this detection is primitive... not sure covers all possible cases... -->
+  <#local res = "general">
+  <#if request??>
+    <#local res = "web">
+  <#else>
+    <#if baseUrl??>
+      <#local res = "email">
+    </#if>
+  </#if>
+  <#return res>
+</#function>
+
+<#-- 
+*************
+* getRenderPlatformType function
+************
+html, xml, etc.; best-effort.
+-->
+<#function getRenderPlatformType>
+  <#if screens??>
+    <#return StringUtil.wrapString(screens.getScreenStringRenderer().getRendererName()!"")?string>
+  </#if>
+</#function>
+
+<#-- 
+*************
+* getDefaultCatoLibLocation function
+************
+supported names: "variables", "template"
+note: this is currently render context-unaware
+returns void if nothing.
+
+   * Parameters *
+    libName             = [variables|template]
+    renderPlatformType  = just call getRenderPlatformType()
+    renderContextType   = just call getRenderContextType()
+-->
+<#function getDefaultCatoLibLocation libName renderPlatformType="default" renderContextType="general">
+  <#local res = getPropertyValue("catorender", "cato.templating.lib." + renderPlatformType + "." + libName + "."  + renderContextType  + ".location")!"">
+  <#if res?has_content>
+    <#return res>
+  </#if>
+  <#if renderContextType != "general">
+    <#local res = getPropertyValue("catorender", "cato.templating.lib." + renderPlatformType + "." + libName + ".general.location")!"">
+    <#if res?has_content>
+      <#return res>
+    </#if>
+  </#if>
+  <#if platform != "default">
+    <#local res = getPropertyValue("catorender", "cato.templating.lib.default." + libName + "." + renderContextType + ".location")!"">
+    <#if res?has_content>
+      <#return res>
+    </#if>
+  </#if>
+  <#local res = getPropertyValue("catorender", "cato.templating.lib.default." + libName + "general.location")!"">
+  <#if res?has_content>
+    <#return res>
+  </#if>
 </#function>
 
 <#-- 

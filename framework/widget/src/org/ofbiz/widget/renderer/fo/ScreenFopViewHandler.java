@@ -83,9 +83,6 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             ScreenRenderer screens = new ScreenRenderer(writer, null, screenStringRenderer);
             screens.populateContextForRequest(request, response, servletContext);
 
-            // Cato: Also add screenStringRenderer
-            screens.getContext().put("screenStringRenderer", screenStringRenderer);
-            
             // this is the object used to render forms from their definitions
             screens.getContext().put("formStringRenderer", formStringRenderer);
             screens.getContext().put("simpleEncoder", UtilCodec.getEncoder(EntityUtilProperties.getPropertyValue("widget", getName() + ".encoder", delegator)));

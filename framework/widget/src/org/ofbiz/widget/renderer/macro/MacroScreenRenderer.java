@@ -93,8 +93,6 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
      * not values from the current context. access to current context from macros is not possible without
      * intrusive changes (changing all methods params; also problem that environment is shared
      * so context stack wouldn't work so each macro call would need its own env, way too heavy).
-     * <p>
-     * relies on "screenStringRenderer" being in context (added in another Cato patch).
      */
     static class ContextHandler {
 
@@ -107,8 +105,9 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         }
 
         private void registerScreenRenderer(Appendable writer, Map<String, Object> context) throws IOException {
-            if (screenRenderer == null && context.get("screenStringRenderer") != null) {
-                screenRenderer = (MacroScreenRenderer) context.get("screenStringRenderer");
+            if (screenRenderer == null && context.get("screens") != null) {
+                org.ofbiz.widget.renderer.ScreenRenderer screens = (org.ofbiz.widget.renderer.ScreenRenderer) context.get("screens");
+                screenRenderer = (MacroScreenRenderer) screens.getScreenStringRenderer();
             }
         }
         

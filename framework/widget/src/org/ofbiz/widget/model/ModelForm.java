@@ -52,6 +52,7 @@ import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.renderer.FormStringRenderer;
+import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.w3c.dom.Element;
 
@@ -1141,9 +1142,9 @@ public abstract class ModelForm extends ModelWidget {
         }
         String val = null;
         // screenStringRenderer available since Cato Ofbiz patch
-        ScreenStringRenderer renderer = (ScreenStringRenderer) context.get("screenStringRenderer");
-        if (renderer != null) {
-            String renderType = renderer.getRendererName();
+        ScreenRenderer screens = (ScreenRenderer) context.get("screens");
+        if (screens != null) {
+            String renderType = screens.getScreenStringRenderer().getRendererName();
             if (UtilValidate.isNotEmpty(renderType)) {
                 if (props != null) {
                     val = props.getProperty("widget.defs.form." + propName + ".default." + renderType);

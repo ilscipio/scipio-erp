@@ -36,9 +36,14 @@ under the License.
     <#assign screenMacroLibIncludeDirective = getRequestVar("screenMacroLibIncludeDirective")!"">
     <#assign menuMacroLibIncludeDirective = getRequestVar("menuMacroLibIncludeDirective")!"">
 <#else>
-    <#assign formMacroLibIncludeDirective = ('<#include "' + (StringUtil.wrapString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '">')?interpret>
-    <#assign screenMacroLibIncludeDirective = ('<#include "' + (StringUtil.wrapString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '">')?interpret>
-    <#assign menuMacroLibIncludeDirective = ('<#include "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret>
+    <#-- note: getMacroLibraryPath only available since cato renderer mod -->
+    <#assign formMacroLibraryPath = StringUtil.wrapString((formStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlFormMacroLibrary.ftl')>
+    <#assign screenMacroLibraryPath = StringUtil.wrapString((screens.getScreenStringRenderer().getMacroLibraryPath())!'component://widget/templates/htmlScreenMacroLibrary.ftl')>
+    <#assign menuMacroLibraryPath = StringUtil.wrapString((menuStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlMenuMacroLibrary.ftl')>
+
+    <#assign formMacroLibIncludeDirective = ('<#include "' + formMacroLibraryPath + '">')?interpret>
+    <#assign screenMacroLibIncludeDirective = ('<#include "' + screenMacroLibraryPath + '">')?interpret>
+    <#assign menuMacroLibIncludeDirective = ('<#include "' + menuMacroLibraryPath + '">')?interpret>
 
     <#assign dummy = setRequestVar("formMacroLibIncludeDirective", formMacroLibIncludeDirective)>
     <#assign dummy = setRequestVar("screenMacroLibIncludeDirective", screenMacroLibIncludeDirective)>

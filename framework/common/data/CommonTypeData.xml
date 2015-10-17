@@ -112,12 +112,8 @@ under the License.
 
     <!-- Cato: new visual theme types -->
     <Enumeration enumId="VT_THEME_DATA_RES" description="Theme seed data resource location" enumTypeId="VT_RES_TYPE" sequenceId="50"/>
-    <Enumeration enumId="VT_STL_VAR_LOC" description="Style Template Location used to include theme specific variables and override defaults - default/general" enumTypeId="VT_RES_TYPE" sequenceId="51"/>
-    <Enumeration enumId="VT_STL_TMPLT_LOC" description="Style Template Location used to include theme specific templating macros and override defaults - default/general" enumTypeId="VT_RES_TYPE" sequenceId="52"/>
-    <Enumeration enumId="VT_STL_VAR_WEB" description="Style Template Location used to include theme specific variables and override defaults - webapp requests only" enumTypeId="VT_RES_TYPE" sequenceId="53"/>
-    <Enumeration enumId="VT_STL_TMPLT_WEB" description="Style Template Location used to include theme specific templating macros and override defaults - webapp requests only" enumTypeId="VT_RES_TYPE" sequenceId="54"/>
-    <Enumeration enumId="VT_STL_VAR_MAIL" description="Style Template Location used to include theme specific variables and override defaults - emails only" enumTypeId="VT_RES_TYPE" sequenceId="55"/>
-    <Enumeration enumId="VT_STL_TMPLT_MAIL" description="Style Template Location used to include theme specific templating macros and override defaults - emails only" enumTypeId="VT_RES_TYPE" sequenceId="56"/>
+    <Enumeration enumId="VT_STL_VAR_LOC" description="Style Template Location used to include theme specific variables and override defaults" enumTypeId="VT_RES_TYPE" sequenceId="51"/>
+    <Enumeration enumId="VT_STL_TMPLT_LOC" description="Style Template Location used to include theme specific templating macros and override defaults" enumTypeId="VT_RES_TYPE" sequenceId="52"/>
     <Enumeration enumId="VT_TOP_JAVASCRIPT" description="Priority JavaScript File URL, included before all others always at top of document" enumTypeId="VT_RES_TYPE" sequenceId="70"/>
     <Enumeration enumId="VT_PRIO_JAVASCRIPT" description="Priority JavaScript File URL, included before screen javaScripts (but no guarantee of absolute position)" enumTypeId="VT_RES_TYPE" sequenceId="71"/>
     

@@ -32,6 +32,8 @@
     "expand" : "expand",
     "collapse" : "collapse",
     "collapsed" : "collapsed",
+    "prefix" : "prefix",
+    "postfix" : "postfix",
     "hidden" : "hide",
     "icon" : "fi",
     "icon_button" : "fi-widget",
@@ -158,6 +160,18 @@
   <#-- Navigation -->
     "nav_subnav" : "sub-nav",
     "nav_sidenav" : "navbar-inverse collapse navbar-collapse navbar-ex1-collapse ",
+  
+  <#-- Pagination -->
+    "pagination_wrap" : "pagination-centered",
+    "pagination_list" : "pagination",
+    "pagination_control" : "",
+    "pagination_item" : "",
+    "pagination_item_first" : "nav-first",
+    "pagination_item_last" : "nav-last",
+    "pagination_item_previous" : "nav-previous",
+    "pagination_item_next" : "nav-next",
+    "pagination_item_active" : "current",
+    "pagination_item_disabled" : "unavailable",
 
   <#-- Lists -->
     "list_inline" : "inline-list",
@@ -209,6 +223,8 @@
   <#-- Fields 
        fields_xxx classes and settings are looked up by the @fields and @field macros as defaults for
        fields type and field type. -->
+    "fields_wrap" : "collapse",
+    "fields_label" : "prefix",
     "fields_default_labeltype" : "gridarea",
     "fields_default_labellayout" : "left",
     "fields_default_labelarea" : true,

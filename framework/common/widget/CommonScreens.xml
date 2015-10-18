@@ -602,7 +602,7 @@ under the License.
     <screen name="column-left">
         <section>
             <widgets>
-                <container style="${columnLeftStyle}" id="sidebar">
+                <container style="${columnLeftStyle}" id="left-sidebar">
                     <container style="sidebar">
                         <decorator-section-include name="menu-bar" />
                         <decorator-section-include name="left-column" />

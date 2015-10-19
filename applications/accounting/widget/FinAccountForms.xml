@@ -358,6 +358,7 @@ under the License.
             </drop-down>
         </field>
     </form>
+    
     <form name="EditDepositPayment" extends="EditPayment" 
             extends-resource="component://accounting/widget/PaymentForms.xml" target="createDepositPayment">
         <actions>
@@ -430,6 +431,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
+    
     <form name="ListFinAccountReconciliations" type="list" list-name="glReconciliations" list-entry-name="glReconciliation" separate-columns="true"
             odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <row-actions>
@@ -439,14 +441,15 @@ under the License.
             <set field="currencyUomId" from-field="defaultOrganizationPartyCurrencyUomId"/>
         </row-actions>
         <auto-fields-service service-name="updateGlReconciliation" default-field-type="display" map-name="glReconciliation"/>
-        <field name="glReconciliationId">
+        <field name="glReconciliationId" title="${uiLabelMap.CommonId}">
             <hyperlink target="ViewGlReconciliationWithTransaction" description="${glReconciliation.glReconciliationId}">
                 <parameter param-name="glReconciliationId" from-field="glReconciliation.glReconciliationId"/>
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
+        <field name="glReconciliationName" title="${uiLabelMap.CommonName}"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="organizationPartyId" title="${uiLabelMap.PartyParty}">
+        <field name="organizationPartyId" title="${uiLabelMap.CommonParty}">
             <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyName.firstName} ${partyName.lastName}${partyName.groupName} [${partyName.partyId}]">
                 <parameter param-name="partyId" from-field="partyName.partyId"/>
             </hyperlink>
@@ -457,9 +460,10 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="reconciledBalance"><display type="currency" currency="${currencyUomId}"></display></field>
-        <field name="openingBalance"><display type="currency" currency="${currencyUomId}"></display></field>
+        <field name="reconciledBalance" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"></display></field>
+        <field name="openingBalance" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"></display></field>
     </form>
+    
     <form name="FindBankReconciliation" type="single" target="FindFinAccountReconciliations">
         <field name="finAccountId"><hidden value="${parameters.finAccountId}"/></field>
         <field name="glReconciliationId"><lookup target-form-name="LookupGlReconciliation"/></field>

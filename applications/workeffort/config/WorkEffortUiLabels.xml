@@ -2486,6 +2486,12 @@
         <value xml:lang="zh">安全错误：要运行这个操作你必须具有 ${resourceDescription} WORKEFFORTMGR_DELETE 或 WORKEFFORTMGR_ADMIN 权限</value>
         <value xml:lang="zh_TW">安全錯誤:要執行這個操作你必須具有 ${resourceDescription} WORKEFFORTMGR_DELETE 或 WORKEFFORTMGR_ADMIN 權限</value>
     </property>
+    <property key="WorkEffortDeliverable">
+        <value xml:lang="en">Deliverable</value>
+    </property>
+    <property key="WorkEffortDeliverableType">
+        <value xml:lang="en">Deliverable Type</value>
+    </property>
     <property key="WorkEffortDuplicateWorkEffort">
         <value xml:lang="de">Dupliziere Arbeitseinsatz</value>
         <value xml:lang="en">Duplicate Work Effort</value>
@@ -4596,6 +4602,9 @@
         <value xml:lang="vi">Phiên bản</value>
         <value xml:lang="zh">修订</value>
         <value xml:lang="zh_TW">修訂</value>
+    </property>
+    <property key="WorkEfforts">
+        <value xml:lang="en">Work Efforts</value>
     </property>
     <property key="WorkEffortSearchWorkEfforts">
         <value xml:lang="de">Suche Arbeitseinsätze</value>

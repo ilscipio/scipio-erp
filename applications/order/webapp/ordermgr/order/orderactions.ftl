@@ -4,11 +4,6 @@
         <#if security.hasEntityPermission("FACILITY", "_CREATE", session) && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
           <#-- Special shipment options -->
           <#if orderHeader.orderTypeId == "SALES_ORDER">
-            <@menuitem type="link" href="javascript:document.quickShipOrder.submit()" text="${uiLabelMap.OrderQuickShipEntireOrder}">
-              <form name="quickShipOrder" method="post" action="<@ofbizUrl>quickShipOrder</@ofbizUrl>">
-                <input type="hidden" name="orderId" value="${orderId}"/>
-              </form>
-            </@menuitem>
           <#else> <#-- PURCHASE_ORDER -->
             <#--<#if orderHeader.orderTypeId == "PURCHASE_ORDER">${uiLabelMap.ProductDestinationFacility}</#if>-->
             <#if ownedFacilities?has_content>
@@ -87,49 +82,6 @@
             </#if>
           </#if>
         </#if>
-        <#-- Refunds/Returns for Sales Orders and Delivery Schedules -->
-        <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
-          <@menuitem type="link" href=makeOfbizUrl("OrderDeliveryScheduleInfo?orderId=${orderId}") text="${uiLabelMap.OrderViewEditDeliveryScheduleInfo}" />
-        </#if>
-        <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session) && orderHeader.statusId == "ORDER_COMPLETED">
-          <#if returnableItems?has_content>
-            <@menuitem type="link" href="javascript:document.quickRefundOrder.submit()" text="${uiLabelMap.OrderQuickRefundEntireOrder}">
-              <form name="quickRefundOrder" method="post" action="<@ofbizUrl>quickRefundOrder</@ofbizUrl>">
-                <input type="hidden" name="orderId" value="${orderId}"/>
-                <input type="hidden" name="receiveReturn" value="true"/>
-                <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId}"/>
-              </form>
-            </@menuitem>
-            <@menuitem type="link" href="javascript:document.quickreturn.submit()" text="${uiLabelMap.OrderCreateReturn}">
-              <form name="quickreturn" method="post" action="<@ofbizUrl>quickreturn</@ofbizUrl>">
-                <input type="hidden" name="orderId" value="${orderId}"/>
-                <input type="hidden" name="party_id" value="${partyId!}"/>
-                <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId}"/>
-                <input type="hidden" name="needsInventoryReceive" value="${needsInventoryReceive?default("N")}"/>
-              </form>
-            </@menuitem>
-          </#if>
-        </#if>
-
-        <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED">
-          <#if orderHeader.statusId != "ORDER_COMPLETED">
-            <#--
-              <@menuitem type="link" href=makeOfbizUrl("cancelOrderItem?${paramString}") text="${uiLabelMap.OrderCancelAllItems}" />
-            -->
-            <@menuitem type="link" href=makeOfbizUrl("editOrderItems?${paramString}") text="${uiLabelMap.OrderEditItems}" />
-            <@menuitem type="link" href="javascript:document.createOrderItemShipGroup.submit()" text="${uiLabelMap.OrderCreateShipGroup}">
-              <form name="createOrderItemShipGroup" method="post" action="<@ofbizUrl>createOrderItemShipGroup</@ofbizUrl>">
-                <input type="hidden" name="orderId" value="${orderId}"/>
-              </form>
-            </@menuitem>
-          </#if>
-          <@menuitem type="link" href=makeOfbizUrl("loadCartFromOrder?${paramString}&amp;finalizeMode=init") text="${uiLabelMap.OrderCreateAsNewOrder}" />
-          <#if orderHeader.statusId == "ORDER_COMPLETED">
-            <@menuitem type="link" href=makeOfbizUrl("loadCartForReplacementOrder?${paramString}") text="${uiLabelMap.OrderCreateReplacementOrder}" />
-          </#if>
-        </#if>
-        <@menuitem type="link" href=makeOfbizUrl("OrderHistory?orderId=${orderId}") text="${uiLabelMap.OrderViewOrderHistory}" />
-        <@menuitem type="link" href=makeOfbizUrl("order.pdf?orderId=${orderId}") text="PDF" target="_blank" />
       </@menu>
       
       <@menu type="button">

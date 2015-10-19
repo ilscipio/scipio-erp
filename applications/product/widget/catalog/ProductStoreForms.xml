@@ -27,7 +27,7 @@
         <auto-fields-service service-name="updateProductStore" map-name=""/>
         
         <field use-when="productStore!=null" name="productStoreId"><display/></field>
-        <field name="storeName" title="${uiLabelMap.ProductStoreName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" position="2"><text size="30" maxlength="100"/></field>
+        <field name="storeName" title="${uiLabelMap.ProductStoreName}" required-field="true" position="2"><text size="30" maxlength="100"/></field>
         
         <field name="primaryStoreGroupId">
             <drop-down allow-empty="true">

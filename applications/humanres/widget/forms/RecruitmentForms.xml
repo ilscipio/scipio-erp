@@ -101,9 +101,9 @@ under the License.
         <field name="jobRequisitionId" use-when="jobRequisition==null"><ignored/></field>
         <field use-when="jobRequisition!=null" name="jobRequisitionId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="jobDescription" title="${uiLabelMap.CommonDescription}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
-        <field name="jobLocation" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="jobLocation" required-field="true"><text/></field>
         <field name="age"><text/></field>
-        <field name="noOfResources" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="noOfResources" required-field="true"><text/></field>
         <field name="gender">
             <drop-down allow-empty="true">
                 <option key="M" description="${uiLabelMap.CommonMale}"/>
@@ -128,15 +128,15 @@ under the License.
             </drop-down>
         </field>
         <field name="skillCriteria" title="${uiLabelMap.HumanResSkills} ${uiLabelMap.CommonRequired}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
-        <field name="skillTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="skillTypeId" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="SkillType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="experienceMonths" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
-        <field name="experienceYears" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="experienceMonths" required-field="true"><text/></field>
+        <field name="experienceYears" required-field="true"><text/></field>
         <field name="jobPostingTypeEnumId"><hidden value="JOB_POSTING_INTR"/></field>
         <field name="submitAction" use-when="jobRequisition==null" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitAction" use-when="jobRequisition!=null" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>

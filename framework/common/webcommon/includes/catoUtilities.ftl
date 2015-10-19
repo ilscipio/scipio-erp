@@ -1061,26 +1061,66 @@ returns void if nothing.
     renderContextType   = just call getRenderContextType()
 -->
 <#function getDefaultCatoLibLocation libName renderPlatformType="default" renderContextType="general">
-  <#local res = getPropertyValue("catorender", "cato.templating.lib." + renderPlatformType + "." + libName + "."  + renderContextType  + ".location")!"">
+  <#local res = getPropertyValue("catorender", "cato.templating.lib." + renderContextType + "." + renderPlatformType + "."  + libName  + ".location")!"">
   <#if res?has_content>
     <#return res>
   </#if>
   <#if renderContextType != "general">
-    <#local res = getPropertyValue("catorender", "cato.templating.lib." + renderPlatformType + "." + libName + ".general.location")!"">
+    <#local res = getPropertyValue("catorender", "cato.templating.lib.general." + renderPlatformType  + "." + libName + ".location")!"">
     <#if res?has_content>
       <#return res>
     </#if>
   </#if>
-  <#if platform != "default">
-    <#local res = getPropertyValue("catorender", "cato.templating.lib.default." + libName + "." + renderContextType + ".location")!"">
+  <#if renderPlatformType != "default">
+    <#local res = getPropertyValue("catorender", "cato.templating.lib." + renderContextType + ".default." + libName + ".location")!"">
     <#if res?has_content>
       <#return res>
     </#if>
   </#if>
-  <#local res = getPropertyValue("catorender", "cato.templating.lib.default." + libName + "general.location")!"">
+  <#local res = getPropertyValue("catorender", "cato.templating.lib.general.default." + libName + ".location")!"">
   <#if res?has_content>
     <#return res>
   </#if>
+</#function>
+
+<#-- 
+*************
+* getCatoLibLocationFromExpr function
+************
+Gets a lib location from an expression, which can be either a straight component:// location
+meant as "general" context and for "html" and "default" platforms, or a JSON-like map in string format following:
+{'[platform]':'component://...', ...}
+e.g. {'html':'component://...', 'xml':'component://...', 'default':'component://...'}
+Intended for use with VT_STL_VAR_LOC and VT_STL_TMPLT_LOC.
+-->
+<#function getCatoLibLocationFromExpr locationExpr renderPlatformType="default">
+<#if locationExpr?has_content>
+  <#if locationExpr?is_string>
+    <#local locationExpr = locationExpr?trim>
+    <#if locationExpr?has_content>
+      <#if locationExpr?starts_with("{")>
+        <#-- a json-like map -->
+        <#local locationExpr = locationExpr?eval>
+      <#else>
+        <#-- simple location. meant for platform "html" mostly, 
+             but for now simply always return even for unrelated platforms (also acts as "default"). -->
+        <#return locationExpr>
+      </#if>
+    </#if>
+  </#if>
+  <#if locationExpr?is_hash>
+    <#local res = locationExpr[renderPlatformType]!"">
+    <#if res?has_content>
+      <#return res>
+    </#if>
+    <#if renderPlatformType != "default">
+      <#local res = locationExpr["default"]!"">
+      <#if res?has_content>
+        <#return res>
+      </#if>
+    </#if>
+  </#if>
+</#if>
 </#function>
 
 <#-- 

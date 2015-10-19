@@ -91,6 +91,35 @@ under the License.
         <include-elements menu-name="AgreementTabBar" recursive="includes-only" />
     </menu>
     
+    <menu name="AgreementSubTabBar"  extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="button-bar button-style-2">
+        <menu-item name="EditAgreement" title="${uiLabelMap.CommonEdit}">
+            <link target="EditAgreement">
+                <parameter param-name="agreementId" from-field="agreement.agreementId"/>
+            </link>
+        </menu-item>
+        <menu-item name="NewItem" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonItem}" widget-style="+create">
+            <link target="EditAgreementItem">
+                <parameter param-name="agreementId" from-field="agreement.agreementId"/>
+            </link>
+        </menu-item>
+        <menu-item name="NewRole" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonParty}">
+            <link target="EditAgreementRole">
+                <parameter param-name="agreementId" from-field="agreement.agreementId"/>
+            </link>
+        </menu-item>
+        <menu-item name="NewTerm" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTerm}">
+            <link target="EditAgreementTerms">
+                <parameter param-name="agreementId" from-field="agreement.agreementId"/>
+            </link>
+        </menu-item>
+        <menu-item name="NewWorkEffort" title="${uiLabelMap.CommonNew} ${uiLabelMap.WorkEffort}">
+            <link target="EditAgreementTerms">
+                <parameter param-name="agreementId" from-field="agreement.agreementId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
     <menu name="AgreementItemTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="buttonBarItem">
         <menu-item name="EditAgreementItem" title="${uiLabelMap.AccountingAgreementItem}">

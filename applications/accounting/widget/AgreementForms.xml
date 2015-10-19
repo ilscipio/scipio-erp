@@ -153,13 +153,14 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="AgreementItem" default-field-type="display"/>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
-        <field name="agreementItemSeqId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_default}">
+        <field name="agreementItemSeqId"  title="${uiLabelMap.CommonItem} ${uiLabelMap.ProductSeqId}" 
+        widget-style="${styles.link_default}" widget-area-style="align-right" title-area-style="align-right">
             <hyperlink also-hidden="false" description="${agreementItemSeqId}" target="EditAgreementItem">
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
             </hyperlink>
         </field>
-        <field name="agreementItemTypeId" title="${uiLabelMap.commonType}">
+        <field name="agreementItemTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="AgreementItemType"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -182,9 +183,9 @@ under the License.
                 <entity-options description="${description}" entity-name="AgreementItemType" key-field-name="agreementItemTypeId"/>
             </drop-down>
         </field>
-        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}" position="2">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
-                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
+                <entity-options key-field-name="uomId" description="${uomId} - ${description}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
@@ -210,7 +211,7 @@ under the License.
         <field name="termTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="TermType"/>
         </field>
-        <field name="invoiceItemTypeId">
+        <field name="invoiceItemTypeId" title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonType}">
             <display-entity entity-name="InvoiceItemType"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -231,21 +232,33 @@ under the License.
                 <order-by field-name="agreementTermId"/>
             </entity-and>
         </actions>
+        <!-- 
         <auto-fields-service service-name="updateAgreementTerm"/>
+         -->
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementTermId" ><display/></field>
-        <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}">
+        <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}" position="2">
             <display/>
         </field>
         <field name="termTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="TermType"/>
         </field>
-        <field name="invoiceItemTypeId">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="InvoiceItemType" description="${description}">
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
+        <field name="invoiceItemTypeId" title="${uiLabelMap.AccountingInvoice}  ${uiLabelMap.CommonType}" position="2">
+            <display-entity entity-name="InvoiceItemType" description="${description}"/>
+        </field>
+        <field name="minQuantity" title="${uiLabelMap.Qty}" widget-area-style="amount" title-area-style="align-right"><display/></field>
+        <field name="maxQuantity" title=" " widget-area-style="amount" title-area-style="align-right" position="2"><display/></field>
+        <field name="termValue" title="${uiLabelMap.CommonValue}" widget-area-style="amount" title-area-style="align-right"><display/></field>
+        <field name="termDays" title="${uiLabelMap.CommonDays}" widget-area-style="amount" title-area-style="align-right" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display type="date"/></field>
+        <field name="textValue"><display/></field>
+        <field name="description" position="2"><display/></field>
+        <field name="editAction" title=" " widget-style="${styles.button_default}">
+            <hyperlink target="editAgreementTerm" description="${uiLabelMap.CommonEdit}" also-hidden="false">
+                <parameter param-name="agreementTermId"/>
+                <parameter param-name="agreementId"/>
+            </hyperlink>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteAgreementTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
@@ -253,7 +266,6 @@ under the License.
                 <parameter param-name="agreementId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="AddAgreementTerm" type="single" target="createAgreementTerm" title="" default-map-name="agreementTerm"
@@ -266,7 +278,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="invoiceItemTypeId" position="2">
+        <field name="invoiceItemTypeId" title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonType}" position="2" >
             <drop-down allow-empty="true">
                 <entity-options entity-name="InvoiceItemType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -298,7 +310,7 @@ under the License.
                 <entity-options entity-name="TermType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="invoiceItemTypeId" position="2">
+        <field name="invoiceItemTypeId" title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="InvoiceItemType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -332,7 +344,7 @@ under the License.
         <field name="internalName" entry-name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${internalName}"/>
         </field>
-        <field name="price"><display type="currency" currency="${agreementItem.currencyUomId}"/></field>
+        <field name="price" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${agreementItem.currencyUomId}"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeAgreementItemProduct" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="productId"/>
@@ -387,7 +399,7 @@ under the License.
         <field name="internalName" entry-name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${internalName}"/>
         </field>
-        <field name="lastPrice"><display type="currency" currency="${agreementItem.currencyUomId}"/></field>
+        <field name="lastPrice" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${agreementItem.currencyUomId}"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeAgreementItemSupplierProduct" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="minimumOrderQuantity"/>
@@ -424,7 +436,7 @@ under the License.
         <field name="internalName" entry-name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${internalName}"/>
         </field>
-        <field name="price" title-area-style="tableheadmedium"><display type="currency" currency="${agreementItem.currencyUomId}"/></field>
+        <field name="price" widget-area-style="amount" title-area-style="tableheadmedium"><display type="currency" currency="${agreementItem.currencyUomId}"/></field>
     </form>
     
     <form name="ListAgreementItemSupplierProductsForReport" list-name="agreementProducts" target="" title="" type="list"
@@ -434,7 +446,7 @@ under the License.
         <field name="internalName" entry-name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${internalName}"/>
         </field>
-        <field name="lastPrice" title-area-style="tableheadmedium"><display type="currency" currency="${agreementItem.currencyUomId}"/></field>
+        <field name="lastPrice" widget-area-style="amount" title-area-style="tableheadmedium"><display type="currency" currency="${agreementItem.currencyUomId}"/></field>
     </form>
     
     <form name="EditAgreementItemProduct" type="single" target="updateAgreementItemProduct" title="" default-map-name="agreementProductAppl"
@@ -643,7 +655,7 @@ under the License.
     <form name="AddAgreementWorkEffortApplic" target="createAgreementWorkEffortApplic" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="agreementId"><hidden value="${agreementId}"/></field>
-        <field name="agreementItemSeqId">
+        <field name="agreementItemSeqId" title="${uiLabelMap.CommonItem} ${uiLabelMap.ProductSeqId}">
             <drop-down allow-empty="false">
                 <option key="_NA_" description="${uiLabelMap.CommonNA}"/>
                 <entity-options entity-name="AgreementItem" description="${agreementItemSeqId}">
@@ -652,7 +664,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="workEffortId">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2">
             <lookup target-form-name="LookupWorkEffort"/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -664,8 +676,23 @@ under the License.
                 <field-map from-field="agreementId" field-name="agreementId"/>
             </entity-and>
         </actions>
-        <field name="agreementItemSeqId"><display/></field>
-        <field name="workEffortId"><display/></field>
+        <row-actions>
+            <entity-one value-field="workEffort" entity-name="WorkEffort">
+                <field-map field-name="workEffortId"/>
+            </entity-one>
+            <set field="statusId" from-field="workEffort.currentStatusId"/>
+            <set field="workEffortTypeId" from-field="workEffort.workEffortTypeId"/>
+        </row-actions>
+        <field name="agreementItemSeqId" title="${uiLabelMap.CommonItem} ${uiLabelMap.ProductSeqId}"><display/></field>
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}">
+            <display-entity entity-name="WorkEffort" description="${workEffortName}"></display-entity>
+        </field>
+        <field name="workEffortTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="WorkEffortType" description="${description}"/>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem" description="${description}"/>
+        </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteAgreementWorkEffortApplic">
                 <parameter param-name="agreementId"/>
@@ -683,8 +710,12 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="AgreementRole" default-field-type="display"/>
         <field name="agreementId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><display/></field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}"><display/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
+        </field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
+            <display-entity entity-name="RoleType" description="${description}"/>
+        </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteAgreementRole" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="agreementId"/>
@@ -697,10 +728,12 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="AgreementRole" default-field-type="edit"/>
         <field name="agreementId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>

@@ -2037,6 +2037,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 </#macro>
 
 <#macro chartdata title value value2="">
+    <#if !chartLibrary?has_content> <#local chartLibrary = "foundation"/></#if>
     <#if chartLibrary=="foundation">
         <li <#if value2?has_content>data-y="${value!}" data-x="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
     <#else>

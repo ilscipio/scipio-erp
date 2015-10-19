@@ -40,20 +40,17 @@
 
         <#switch renderContextType>
         <#case "web">
-            <#-- note: visual theme resources are locations are currently assumed to apply as html and default platform only;
-                have no overrides for xml, fo, etc.; not supported for now
-                FIXME?: despite this, currently the VT resources will always load for all platforms... -->
-            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_WEB"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!getDefaultCatoLibLocation("variables", renderPlatformType, renderContextType)!"")?string>
-            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_WEB"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!getDefaultCatoLibLocation("template", renderPlatformType, renderContextType)!"")?string>
+            <#assign catoVariablesLibraryPath = getMacroLibraryLocationStaticFromResources(renderPlatformType, rendererVisualThemeResources!, "VT_STL_VAR_WEB", "VT_STL_VAR_LOC")!getDefaultCatoLibLocation("variables", renderPlatformType, renderContextType)!"">
+            <#assign catoTemplateLibraryPath = getMacroLibraryLocationStaticFromResources(renderPlatformType, rendererVisualThemeResources!, "VT_STL_TMPLT_WEB", "VT_STL_TMPLT_LOC")!getDefaultCatoLibLocation("template", renderPlatformType, renderContextType)!"">
             <#break>
         <#case "email">
-            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_MAIL"][0])!(rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!getDefaultCatoLibLocation("variables", renderPlatformType, renderContextType)!"")?string>
-            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_MAIL"][0])!(rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!getDefaultCatoLibLocation("template", renderPlatformType, renderContextType)!"")?string>
+            <#assign catoVariablesLibraryPath = getMacroLibraryLocationStaticFromResources(renderPlatformType, rendererVisualThemeResources!, "VT_STL_VAR_MAIL", "VT_STL_VAR_LOC")!getDefaultCatoLibLocation("variables", renderPlatformType, renderContextType)!"">
+            <#assign catoTemplateLibraryPath = getMacroLibraryLocationStaticFromResources(renderPlatformType, rendererVisualThemeResources!, "VT_STL_TMPLT_MAIL", "VT_STL_TMPLT_LOC")!getDefaultCatoLibLocation("template", renderPlatformType, renderContextType)!"">
             <#break>
         <#--<#case "general">-->
         <#default>
-            <#assign catoVariablesLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_VAR_LOC"][0])!getDefaultCatoLibLocation("variables", renderPlatformType, renderContextType)!"")?string>
-            <#assign catoTemplateLibraryPath = StringUtil.wrapString((rendererVisualThemeResources["VT_STL_TMPLT_LOC"][0])!getDefaultCatoLibLocation("template", renderPlatformType, renderContextType)!"")?string>
+            <#assign catoVariablesLibraryPath = getMacroLibraryLocationStaticFromResources(renderPlatformType, rendererVisualThemeResources!, "VT_STL_VAR_LOC")!getDefaultCatoLibLocation("variables", renderPlatformType, renderContextType)!"">
+            <#assign catoTemplateLibraryPath = getMacroLibraryLocationStaticFromResources(renderPlatformType, rendererVisualThemeResources!, "VT_STL_TMPLT_LOC")!getDefaultCatoLibLocation("template", renderPlatformType, renderContextType)!"">
             <#break>
         </#switch>
     

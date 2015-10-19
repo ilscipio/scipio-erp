@@ -1085,42 +1085,21 @@ returns void if nothing.
 
 <#-- 
 *************
-* getCatoLibLocationFromExpr function
+* getMacroLibraryLocationStaticFromResources function
 ************
-Gets a lib location from an expression, which can be either a straight component:// location
-meant as "general" context and for "html" and "default" platforms, or a JSON-like map in string format following:
-{'[platform]':'component://...', ...}
-e.g. {'html':'component://...', 'xml':'component://...', 'default':'component://...'}
-Intended for use with VT_STL_VAR_LOC and VT_STL_TMPLT_LOC.
+Gets a lib location from a theme resources variable which contains an expression, which can be either a straight component:// location
+meant as "general" context and for "html" and "default" platforms, or a EL-defined map in format such as:
+${['[platform]':'component://...', ...]}
+e.g. ${[''html':'component://...', 'xml':'component://...', 'default':'component://...']}
+Intended for use with VT_STL_VAR_LOC and VT_STL_TMPLT_LOC and variants.
+Checks the resourceNames in the given order.
+"default" is a special map key; usually best avoided.
 -->
-<#function getCatoLibLocationFromExpr locationExpr renderPlatformType="default">
-<#if locationExpr?has_content>
-  <#if locationExpr?is_string>
-    <#local locationExpr = locationExpr?trim>
-    <#if locationExpr?has_content>
-      <#if locationExpr?starts_with("{")>
-        <#-- a json-like map -->
-        <#local locationExpr = locationExpr?eval>
-      <#else>
-        <#-- simple location. meant for platform "html" mostly, 
-             but for now simply always return even for unrelated platforms (also acts as "default"). -->
-        <#return locationExpr>
-      </#if>
-    </#if>
+<#function getMacroLibraryLocationStaticFromResources renderPlatformType resources resourceNames...>
+  <#local res = Static["org.ofbiz.widget.renderer.VisualThemeWorker"].getMacroLibraryLocationStaticFromResources(renderPlatformType, rendererVisualThemeResources!, resourceNames)!"">
+  <#if res?has_content>
+    <#return StringUtil.wrapString(res)?string>
   </#if>
-  <#if locationExpr?is_hash>
-    <#local res = locationExpr[renderPlatformType]!"">
-    <#if res?has_content>
-      <#return res>
-    </#if>
-    <#if renderPlatformType != "default">
-      <#local res = locationExpr["default"]!"">
-      <#if res?has_content>
-        <#return res>
-      </#if>
-    </#if>
-  </#if>
-</#if>
 </#function>
 
 <#-- 

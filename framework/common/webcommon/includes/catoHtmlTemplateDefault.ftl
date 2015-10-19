@@ -1939,11 +1939,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     title          = Data Title  (default:empty)
 -->
 <#macro chart type="pie" library="foundation" title="">
+    <#global chartLibrary = library!"foundation"/>
     <#local nestedContent><#nested><#t></#local>
     <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
     <#local fieldIdNum = fieldIdNum + 1 />
     <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
-    <#global chartLibrary = library!"foundation"/>
     <#if chartLibrary=="foundation">
         <@row>
         <@cell columns=3>    

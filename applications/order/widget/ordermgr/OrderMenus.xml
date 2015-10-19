@@ -178,6 +178,7 @@ under the License.
         <menu-item name="CreateReturn" title="${uiLabelMap.OrderCreateReturn}">
             <condition>
                 <and>
+                    <not><if-empty field="returnableItems"/></not>
                     <if-has-permission permission="ORDERMGR" action="_RETURN"/>
                     <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_COMPLETED"/>
                 </and>

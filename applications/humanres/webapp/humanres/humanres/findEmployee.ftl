@@ -41,15 +41,9 @@ under the License.
             <input type="hidden" name="hideFields" value="Y"/>
                 <@field type="generic" label="${uiLabelMap.PartyContactInformation}">
                     <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked="checked"</#if>/>${uiLabelMap.CommonNone}&nbsp;
-                        <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked="checked"</#if>/>${uiLabelMap.PartyPostal}&nbsp;
-                        <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked="checked"</#if>/>${uiLabelMap.PartyTelecom}&nbsp;
-                        <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked="checked"</#if>/>${uiLabelMap.CommonOther}&nbsp;
-                </@field>
-                <@field type="generic" label="${uiLabelMap.PartyPartyId}">
-                    <@htmlTemplate.lookupField value='${requestParameters.partyId!}' formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
-                </@field>
-                <@field type="generic" label="${uiLabelMap.PartyUserLogin}">
-                    <input type="text" name="userLoginId" value="${parameters.userLoginId!}"/>
+                    <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked="checked"</#if>/>${uiLabelMap.PartyPostal}&nbsp;
+                    <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked="checked"</#if>/>${uiLabelMap.PartyTelecom}&nbsp;
+                    <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked="checked"</#if>/>${uiLabelMap.CommonOther}&nbsp;
                 </@field>
                 <@field type="generic" label="${uiLabelMap.PartyLastName}">
                     <input type="text" name="lastName" value="${parameters.lastName!}"/>
@@ -57,8 +51,15 @@ under the License.
                 <@field type="generic" label="${uiLabelMap.PartyFirstName}">
                     <input type="text" name="firstName" value="${parameters.firstName!}"/>
                 </@field>
+                <@field type="generic" label="${uiLabelMap.PartyPartyId}">
+                    <@htmlTemplate.lookupField value='${requestParameters.partyId!}' formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
+                </@field>
+                <@field type="generic" label="${uiLabelMap.PartyUserLogin}">
+                    <input type="text" name="userLoginId" value="${parameters.userLoginId!}"/>
+                </@field>
                 <@field type="generic"><input type="hidden" name="groupName" value="${parameters.groupName!}"/></@field>
                 <@field type="generic"><input type="hidden" name="roleTypeId" value="EMPLOYEE"/></@field>
+                
             <#if extInfo == "P">
                 <hr />
                 <@field type="generic" label="${uiLabelMap.CommonAddress1}">
@@ -105,7 +106,7 @@ under the License.
                 <hr />
                 <@field type="submitarea">
                     <input type="submit" value="${uiLabelMap.PartyLookupParty}" onclick="javascript:document.lookupparty.submit();"/>
-                        <a href="<@ofbizUrl>findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y</@ofbizUrl>" class="smallSubmit ${styles.button_default!}">${uiLabelMap.CommonShowAllRecords}</a>
+                    <a href="<@ofbizUrl>findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y</@ofbizUrl>" class="smallSubmit ${styles.button_default!}">${uiLabelMap.CommonShowAllRecords}</a>
                 </@field>
         </form>
     </#if>
@@ -134,9 +135,8 @@ under the License.
         <@table type="data-list" autoAltRows=true class="${styles.table!}" cellspacing="0">
           <@thead>
             <@tr class="header-row">
-                <@th>${uiLabelMap.PartyPartyId}</@th>
-                <@th>${uiLabelMap.PartyUserLogin}</@th>
                 <@th>${uiLabelMap.PartyName}</@th>
+                <@th>${uiLabelMap.PartyPartyId}</@th>
                 <#if extInfo?default("") == "P" >
                     <@th>${uiLabelMap.PartyCity}</@th>
                 </#if>
@@ -146,43 +146,25 @@ under the License.
                 <#if extInfo?default("") == "T">
                     <@th>${uiLabelMap.PartyAreaCode}</@th>
                 </#if>
-                <@th>${uiLabelMap.PartyType}</@th>
-                <@th>&nbsp;</@th>
             </@tr>
             </@thead>
             <#list partyList as partyRow>
             <#assign partyType = partyRow.getRelatedOne("PartyType", false)!>
             <@tr valign="middle">
-                <@td><a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.button_default!}">${partyRow.partyId}</a></@td>
-                <@td><#if partyRow.containsKey("userLoginId")>
-                        ${partyRow.userLoginId?default("N/A")}
-                    <#else>
-                    <#assign userLogins = partyRow.getRelated("UserLogin", null, null, false)>
-                    <#if (userLogins.size() > 0)>
-                        <#if (userLogins.size() > 1)>
-                            (${uiLabelMap.CommonMany})
-                        <#else>
-                        <#assign userLogin = userLogins.get(0)>
-                            ${userLogin.userLoginId}
-                        </#if>
-                        <#else>
-                            (${uiLabelMap.CommonNone})
-                        </#if>
-                    </#if>
-                </@td>
                 <@td><#if partyRow.getModelEntity().isField("lastName") && lastName?has_content>
-                        ${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if>
+                        <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_default!}">${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if></a>
                     <#elseif partyRow.getModelEntity().isField("groupName") && partyRow.groupName?has_content>
-                        ${partyRow.groupName}
+                        <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_default!}">${partyRow.groupName}</a>
                     <#else>
-                    <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(partyRow, true)>
-                    <#if partyName?has_content>
-                        ${partyName}
-                    <#else>
-                        (${uiLabelMap.PartyNoNameFound})
-                    </#if>
+                        <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(partyRow, true)>
+                        <#if partyName?has_content>
+                            <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_default!}">${partyName}</a>
+                        <#else>
+                            (${uiLabelMap.PartyNoNameFound})
+                        </#if>
                     </#if>
                 </@td>
+                <@td><a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_default!}">${partyRow.partyId}</a></@td>
                 <#if extInfo?default("") == "T">
                     <@td>${partyRow.areaCode!}</@td>
                 </#if>
@@ -192,10 +174,6 @@ under the License.
                 <#if extInfo?default("") == "P">
                     <@td>${partyRow.postalCode!}</@td>
                 </#if>
-                <@td><#if partyType.description??>${partyType.get("description", locale)}<#else>???</#if></@td>
-                <@td class="button-col align-float">
-                    <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDetails}</a>
-                </@td>
             </@tr>
             </#list>
         </@table>

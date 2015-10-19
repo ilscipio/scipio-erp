@@ -31,6 +31,35 @@ under the License.
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://base-theme/includes/appbarOpen.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://base-theme/includes/appbarClose.ftl" sequenceId="01"/>
     
+    <!-- 
+    Cato: Optional renderer stock macro library and cato library location overrides 
+    
+    Each of these can specify a simple template location (format: "component://...") 
+    or a mapping of rendering platforms to template locations (format: "[html=component://...,xsl-fo=component://...]"; intermediate spaces are automatically 
+    stripped, but the first character must be "[" with no space).
+    In Cato-patched Ofbiz renderer, simple locations only apply to "html" platform (fixes stock Ofbiz behavior).
+    mapping platform names can be found in widget.properties as "screen*.name=" entries.
+    It is also possible to use flexible expression to define mappings (format: "${groovy: ['html':'component://...']}"),
+    but as of now there is no good reason (all mappings must be static; results are cached globally).
+    Mappings support a "default" key that will cause all platforms with no entries to default 
+    to its specified template; in general this should not be used unless the intent is for the template
+    to be manually written to be platform-agnostic, or if the platform cannot be detected for some reason.
+    The "default" key represents the stock Ofbiz behavior of the VT_XXXX_MACRO_LIB simple locations, 
+    which is corrected in Cato because usually undesirable (likely break the non-html platforms). -->
+    <!-- Stock macro library locations
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_SCRN_MACRO_LIB" resourceValue="component://widget/templates/htmlScreenMacroLibrary.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FORM_MACRO_LIB" resourceValue="component://widget/templates/htmlFormMacroLibrary.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_MENU_MACRO_LIB" resourceValue="component://widget/templates/htmlMenuMacroLibrary.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_TREE_MACRO_LIB" resourceValue="component://widget/templates/htmlTreeMacroLibrary.ftl" sequenceId="01"/>-->
+    <!-- Cato library locations for web request render context only (frontend and backend)
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_WEB" resourceValue="component://common/webcommon/includes/catoHtmlVariablesDefault.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_TMPLT_WEB" resourceValue="component://common/webcommon/includes/catoHtmlTemplateDefault.ftl" sequenceId="01"/>-->
+    <!-- Cato library locations for email render context only
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_MAIL" resourceValue="component://common/webcommon/includes/catoHtmlVariablesDefault.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_TMPLT_MAIL" resourceValue="component://common/webcommon/includes/catoHtmlTemplateDefault.ftl" sequenceId="01"/>-->
+    <!-- Cato library locations used when no web-specific or e-mail-specific locations specified and for any other/unrecognized render contexts 
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://common/webcommon/includes/catoHtmlVariablesDefault.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://common/webcommon/includes/catoHtmlTemplateDefault.ftl" sequenceId="01"/>-->
     
     <!-- GENERAL -->
     <!-- Styles -->

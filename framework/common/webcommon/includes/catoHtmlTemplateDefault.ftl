@@ -1229,10 +1229,11 @@ it's an unexpected result, error or one that requires user action. See other mac
 -->
 <#macro alert type="info" class=true id="">
 <#local classes = makeClassesArg(class, "${styles.grid_large!}12")>
+<#local typeClass = "alert_type_${type!}"/>
 <#if type="error"><#local type = "alert"></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
    <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
-       <div data-alert class="${styles.alert_wrap!} ${styles.alert_prefix_type!}${type}">
+       <div data-alert class="${styles.alert_wrap!} ${styles[typeClass]!}">
            <div class="${styles.grid_row!}">
               <div class="<#if classes?has_content>${classes} </#if>${styles.grid_cell!}">
                   <#nested>

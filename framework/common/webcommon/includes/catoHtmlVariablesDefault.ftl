@@ -200,6 +200,12 @@
   <#-- Alert Box -->
     "alert_wrap" : "alert-box",    <#-- Bootstrap: "alert" -->
     "alert_prefix_type" : "",             <#-- Bootstrap: "alert-" -->
+    "alert_type_info" : "info",
+    "alert_type_success" : "success",
+    "alert_type__warning" : "warning",
+    "alert_type_secondary" : "secondary",  
+    "alert_type_alert" : "alert",        
+    "alert_type_error" : "alert",
 
   <#-- Pricing Tables -->
     "pricing_wrap" : "pricing-table",

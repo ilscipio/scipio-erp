@@ -20,6 +20,7 @@
     "disabled" : "disabled",
     "active" : "active",
     "button" : "button",
+    "button_prefix" : "",
     "button_group" : "button-group",
     "button_force" : "force-button",
     "button_default" : "button tiny",
@@ -109,12 +110,20 @@
     "color_green" : "success",
     "color_red" : "alert",
     "color_grey" : "secondary",
+    "color_primary" : "primary",
     "color_secondary" : "secondary",
     "color_info" : "info",
     "color_warning" : "warning",
     "color_success" : "success",  
     "color_alert" : "alert",        <#-- Bootstrap: "danger" -->
     "color_error" : "alert",
+    "button_color_default" : "",
+    "button_color_primary" : "primary",
+    "button_color_secondary" : "secondary",
+    "button_color_success" : "success",
+    "button_color_info" : "info",
+    "button_color_warning" : "warning",
+    "button_color_alert" : "alert",
     
   <#-- Grid -->
     "grid_row" : "row",
@@ -199,7 +208,7 @@
 
   <#-- Alert Box -->
     "alert_wrap" : "alert-box",    <#-- Bootstrap: "alert" -->
-    "alert_prefix_type" : "",             <#-- Bootstrap: "alert-" -->
+    "alert_prefix_type" : "",             <#-- Bootstrap: "alert-"; Note: This may be removed -->
     "alert_type_info" : "info",
     "alert_type_success" : "success",
     "alert_type__warning" : "warning",

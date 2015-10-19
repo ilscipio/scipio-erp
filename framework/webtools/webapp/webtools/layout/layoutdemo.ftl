@@ -95,22 +95,22 @@
 <@heading level=6>h6.</@heading>
 
 <@heading relLevel=+1>Shapes</@heading>
-<a href="#" class="${styles.button!} ${styles.tiny!}">Tiny Button</a>
-<a href="#" class="${styles.button!} ${styles.small!}">Small Button</a>
-<a href="#" class="${styles.button!}">Default Button</a>
-<a href="#" class="${styles.button!} ${styles.disabled!}">Disabled Button</a>
-<a href="#" class="${styles.button!} ${styles.large!}">Large Button</a>
-<a href="#" class="${styles.button!} ${styles.expand!}">Expanded Button</a>
-<a href="#" class="button round">Round Button</a>
-<a href="#" class="button radius">Radius Button</a>
+<a href="#" class="${styles.button!} ${styles.tiny!} ${styles.button_color_default}">Tiny Button</a>
+<a href="#" class="${styles.button!} ${styles.small!} ${styles.button_color_default}">Small Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_default}">Default Button</a>
+<a href="#" class="${styles.button!} ${styles.disabled!} ${styles.button_color_default}">Disabled Button</a>
+<a href="#" class="${styles.button!} ${styles.large!} ${styles.button_color_default}">Large Button</a>
+<a href="#" class="${styles.button!} ${styles.expand!} ${styles.button_color_default}">Expanded Button</a>
+<a href="#" class="${styles.button!} ${styles.round!} ${styles.button_color_default}">Round Button</a>
+<a href="#" class="${styles.button!} ${styles.radius!} ${styles.button_color_default}">Radius Button</a>
 
 <@heading relLevel=+1>Colors</@heading>
-<a href="#" class="${styles.button!}">Default Button</a>
-<a href="#" class="${styles.button!} ${styles.color_green!}">Success Button</a>
-<a href="#" class="${styles.button!} ${styles.color_grey!}">Secondary Button</a>
-<a href="#" class="${styles.button!} ${styles.color_red!}">Alert Button</a>
-<a href="#" class="${styles.button!} ${styles.color_info!}">Info Button</a>
-<a href="#" class="${styles.button!} ${styles.disabled}">Disabled Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_default}">Default Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_success!}">Success Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_primary!}">Secondary Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_alert!}">Alert Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_info!}">Info Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_default} ${styles.disabled}">Disabled Button</a>
 
 <@heading relLevel=+1>Button Groups</@heading>
 <ul class="${styles.button_group} ${styles.button_force!}">

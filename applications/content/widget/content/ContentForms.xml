@@ -48,7 +48,7 @@ under the License.
         <field name="ownerContentId" position="2">
             <lookup target-form-name="LookupContent"/>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="CONTENT_STATUS"/>
@@ -91,7 +91,7 @@ under the License.
             </display-entity>
         </field>
         <field name="description" sort-field="true"><display/></field>
-        <field name="statusId" sort-field="true"><display-entity entity-name="StatusItem"></display-entity></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true"><display-entity entity-name="StatusItem"></display-entity></field>
         <field name="localeString" sort-field="true"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}[${countryCode}]"></display-entity></field>
         <field name="contentTypeId" sort-field="true"><display-entity entity-name="ContentType"></display-entity></field>
         <field name="mimeTypeId" sort-field="true"><display-entity entity-name="MimeType"></display-entity></field>
@@ -205,7 +205,7 @@ under the License.
             </drop-down>
         </field>
         <field name="statusId" use-when="currentValue==null"><ignored/></field>
-        <field name="statusId" use-when="currentValue!=null">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="currentValue!=null">
                 <drop-down allow-empty="false" current-description="${currentStatus.description}">
                 <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
                     <entity-constraint name="statusId" value="${currentValue.statusId}"/>
@@ -563,7 +563,7 @@ under the License.
         <field name="mimeTypeId">
             <display-entity entity-name="MimeType" key-field-name="mimeTypeId" description="${description}"/>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
         <field name="caCreatedDate"><display/></field>

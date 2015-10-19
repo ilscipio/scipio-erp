@@ -331,7 +331,7 @@ under the License.
             <display-entity entity-name="ShipmentType"/>
         </field>
         <field name="primaryShipGroupSeqId" title="${uiLabelMap.ProductPrimaryShipGroupSeqId}"><display/></field>
-        <field name="statusId" title="${uiLabelMap.ProductStatusId}" position="2">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <display-entity entity-name="StatusItem"/>
         </field>
         

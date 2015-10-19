@@ -72,8 +72,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" use-when="person==null"><hidden/></field>
-        <field name="statusId" use-when="person!=null &amp;&amp; leadDescription==null">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="person==null"><hidden/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="person!=null &amp;&amp; leadDescription==null">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" value="PARTY_STATUS"/>
@@ -81,7 +81,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" use-when="person!=null &amp;&amp; leadDescription!=null">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="person!=null &amp;&amp; leadDescription!=null">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="StatusItem">
                     <entity-constraint name="statusId" operator="in" value="LEAD_ASSIGNED,PARTY_ENABLED,PARTY_DISABLED"/>
@@ -115,8 +115,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" use-when="partyGroup==null"><hidden/></field>
-        <field name="statusId" use-when="partyGroup!=null">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="partyGroup==null"><hidden/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="partyGroup!=null">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" value="PARTY_STATUS"/>
@@ -164,7 +164,7 @@ under the License.
         <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName}"/></field>
         <field name="comments" title="${uiLabelMap.PartyComments}"><display/></field>
         <field name="externalId"><display/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
     </form>
 
     <form name="ViewPartyPersonHistory" type="list" list-name="partyNameHistoryList"
@@ -594,7 +594,7 @@ under the License.
                 <entity-options description="${description}" entity-name="ContentType"/>
             </drop-down>
         </field>
-        <field name="statusId" use-when="content==null">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="content==null">
             <drop-down allow-empty="false" no-current-selected-key="CTNT_AVAILABLE">
                 <entity-options description="${description}" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" value="CONTENT_STATUS"/>
@@ -602,7 +602,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" use-when="content!=null">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="content!=null">
             <drop-down allow-empty="false" current-description="${currentStatus.description}" no-current-selected-key="CTNT_AVAILABLE">
                 <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
                     <entity-constraint name="statusId" value="${content.statusId}"/>
@@ -660,7 +660,7 @@ under the License.
         </field>
         <field name="partyContentTypeId"><display-entity entity-name="PartyContentType"/></field>
         <field name="description"><display/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem"></display-entity></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"></display-entity></field>
         <field name="localeString"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}${countryCode}"></display-entity></field>
         <field name="contentTypeId"><display-entity entity-name="ContentType"></display-entity></field>
         <field name="mimeTypeId"><display-entity entity-name="MimeType"></display-entity></field>
@@ -1087,7 +1087,7 @@ under the License.
     </form>
     <form name="PartyReturns" type="list" list-name="returnList" default-table-style="basic-table hover-bar">
         <field name="returnId"><display/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="fromPartyId"><display/></field>
         <field name="toPartyId"><display/></field>
     </form>

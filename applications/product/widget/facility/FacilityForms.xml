@@ -72,7 +72,7 @@ under the License.
         <field name="productId"><text-find/></field>
         <field name="internalName"><text-find/></field>
         <field name="inventoryItemId"><text-find/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" operator="equals" value="INV_NON_SER_STTS"/>
@@ -114,7 +114,7 @@ under the License.
         <field name="inventoryItemTypeId" title="${uiLabelMap.ProductInventoryItemTypeId}">
             <display-entity entity-name="InventoryItemType"/>
         </field>
-        <field name="statusId"><display-entity entity-name="StatusItem"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="datetimeReceived"><display/></field>
         <field name="expireDate" title="${uiLabelMap.ProductExpireDate}"><display/></field>
         <field name="productId" widget-style="${styles.link_default}">
@@ -157,7 +157,7 @@ under the License.
         <field name="inventoryItemTypeId" title="${uiLabelMap.ProductInventoryItemTypeId}">
             <display-entity entity-name="InventoryItemType"/>
         </field>
-        <field name="statusId"><display/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display/></field>
         <field name="datetimeReceived"><display/></field>
         <field name="expireDate" title="${uiLabelMap.ProductExpireDate}"><display/></field>
         <field name="productId" widget-style="${styles.link_default}">
@@ -418,7 +418,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" operator="equals" value="INV_NON_SER_STTS"/>
@@ -758,7 +758,7 @@ under the License.
         <field name="locationSeqIdTo"><display/></field>
         <field name="sendDate"><display/></field>
         <field name="receiveDate"><display/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem"/>
         </field>
     </form>
@@ -802,7 +802,7 @@ under the License.
         <field name="locationSeqId"><display/></field>
         <field name="sendDate"><display/></field>
         <field name="receiveDate"><display/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem"/>
         </field>
     </form>
@@ -847,7 +847,7 @@ under the License.
         <field name="locationSeqId"><display also-hidden="false"/></field>
         <field name="sendDate"><display also-hidden="false"/></field>
         <field name="receiveDate"><display also-hidden="false"/></field>
-        <field name="statusId"><hidden value="IXF_COMPLETE"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><hidden value="IXF_COMPLETE"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
             <submit/>

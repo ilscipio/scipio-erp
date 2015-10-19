@@ -291,8 +291,8 @@ under the License.
     <form name="lookupPaymentGroupMember" target="LookupPaymentGroupMember" title="" type="single" header-row-style="header-row" default-table-style="basic-table">
         <field name="paymentGroupId"><text-find/></field>
         <field name="paymentId"><text-find/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="sequenceNum"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -356,8 +356,8 @@ under the License.
         </field>
         <field name="periodNum"><text-find/></field>
         <field name="periodName"><text-find/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="isClosed">
             <drop-down allow-empty="true">
                 <option key="Y" description="${uiLabelMap.CommonY}"/>

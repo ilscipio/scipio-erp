@@ -70,6 +70,9 @@ under the License.
                     <field-map field-name="orderBy" value="invoiceDate DESC"/>
                 </service>
                 <set field="invoices" from-field="result.listIt"/>
+                
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
+                <set field="paymentPartyId" from-field="parameters.partyIdFrom" default-value="${parameters.organizationPartyId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">

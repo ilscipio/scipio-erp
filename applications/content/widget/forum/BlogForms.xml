@@ -29,7 +29,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="description"><display/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem"></display-entity></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"></display-entity></field>
         <field name="localeString"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}[${countryCode}]"></display-entity></field>
         <field name="contentTypeId"><display-entity entity-name="ContentType"></display-entity></field>
         <field name="lastModifiedDate"><display type="date"/></field>
@@ -46,7 +46,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="description"><display/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem"></display-entity></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"></display-entity></field>
         <field name="localeString"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}[${countryCode}]"></display-entity></field>
         <field name="contentTypeId"><display-entity entity-name="ContentType"></display-entity></field>
     </form>

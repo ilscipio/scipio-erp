@@ -103,7 +103,7 @@ under the License.
                 <entity-options description="${description}" entity-name="ShipmentType"/>
             </drop-down>
         </field>
-        <field position="2" name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="SHIPMENT_STATUS"/>
@@ -112,8 +112,8 @@ under the License.
         </field>
         <field position="1" name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}"><text-find/></field>
         <field position="1" name="partyIdTo" title="${uiLabelMap.PartyPartyTo}"><text-find/></field>
-        <field position="1" name="Datefrom" title="${uiLabelMap.CommonFrom}"><date-time/></field>
-        <field position="2" name="DateThru" title="${uiLabelMap.CommonThru}"><date-time/></field>
+        <field position="1" name="Datefrom" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field position="2" name="DateThru" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -131,7 +131,7 @@ under the License.
             <hyperlink also-hidden="false" target-type="plain" description="${shipmentId}" target="javascript:set_value('${shipmentId}')"/>
         </field>
         <field name="shipmentTypeId"><display-entity entity-name="ShipmentType"/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
         <field name="partyIdTo" title="${uiLabelMap.PartyPartyTo}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
     </form>

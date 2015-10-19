@@ -196,7 +196,7 @@ under the License.
         </field>
         <field name="paymentTypeId" title="${uiLabelMap.OrderPaymentType}"><display-entity entity-name="PaymentType" description="${description}"/></field>
         <field name="statusId" title="${uiLabelMap.AccountingPaymentStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="amount"><display also-hidden="false" type="currency" currency="${payment.currencyUomId}"/></field>
+        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${payment.currencyUomId}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
     </form>

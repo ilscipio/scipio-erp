@@ -31,7 +31,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="HR_DEGREE_STATUS"/>
@@ -74,7 +74,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="qualificationDesc"><text/></field>
         <field name="title"><text/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="HR_DEGREE_STATUS"/>
@@ -114,7 +114,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="HR_DEGREE_STATUS"/>

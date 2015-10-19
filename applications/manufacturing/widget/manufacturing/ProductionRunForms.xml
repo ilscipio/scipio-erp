@@ -154,9 +154,9 @@ under the License.
             </hyperlink>
         </field>
         <field name="lotId" map-name="inventoryItem"><display/></field>
-        <field name="statusId" map-name="inventoryItem"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
-        <field name="unitCost" map-name="inventoryItem"><display/></field>
-        <field name="quantity" entry-name="quantityOnHandDiff"><display/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" map-name="inventoryItem"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+        <field name="unitCost" widget-area-style="amount" title-area-style="align-right" map-name="inventoryItem"><display/></field>
+        <field name="quantity" widget-area-style="amount" title-area-style="align-right" entry-name="quantityOnHandDiff"><display/></field>
         <field name="datetimeReceived" map-name="inventoryItem"><display/></field>
     </form>
 
@@ -685,7 +685,7 @@ under the License.
         <field name="fixedAssetId">
             <display-entity entity-name="FixedAsset" description="${fixedAssetName}"/>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem"/>
         </field>
     </form>
@@ -725,7 +725,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="${actionIsAdd}==null">
             <display />
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <!-- Statuses are not yet defined for the WorkEffortFixedAssetAssign entity
                 so this field will be hidden meanwhile
             <drop-down>
@@ -755,7 +755,7 @@ under the License.
                 <entity-options entity-name="FixedAsset" description="${fixedAssetName} [${fixedAssetId}]"/>
             </drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <!-- Statuses are not yet defined for the WorkEffortFixedAssetAssign entity
                 so this field will be hidden meanwhile
             <drop-down>
@@ -812,7 +812,7 @@ under the License.
                 <parameter param-name="shipmentId" from-field="shipmentId"/>
             </hyperlink>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
         <field name="estimatedShipDate" sort-field="true"><display/></field>

@@ -28,7 +28,7 @@ under the License.
         <field position="2" name="toName"><text-find ignore-case="true"/></field>
         <field position="1" name="emailAddress"><text-find ignore-case="true"/></field>
         <field position="2" name="datefrom" title="${uiLabelMap.CommonFrom}"><date-time/></field>
-        <field name="statusId" position="1">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
@@ -66,7 +66,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><display/></field>
         <field name="toName" title="${uiLabelMap.PartyToName}"><display/></field>
         <field name="emailAddress" title="${uiLabelMap.PartyEmailAddress}"><display/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="lastInviteDate"><display/></field>
         <field name="removeAction" title=" " widget-style="${styles.link_default}">
             <hyperlink target="deletePartyInvitation" description="${uiLabelMap.CommonDelete}">
@@ -86,7 +86,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <lookup target-form-name="LookupPartyName"/>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>

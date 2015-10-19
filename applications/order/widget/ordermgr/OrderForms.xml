@@ -92,7 +92,7 @@ under the License.
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
-        <field name="statusId"> <display-entity entity-name="StatusItem"/> </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"> <display-entity entity-name="StatusItem"/> </field>
         <field name="productStoreId"> <display-entity entity-name="ProductStore"/> </field>
     </form>
     <form name="ListOrderTerms" type="list" list-name="orderTerms" target="updateOrderTerm" title=""
@@ -176,7 +176,7 @@ under the License.
     
     <!-- Forms Specific to portlet -->
     <form name="EditOrderByCustomer" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml">
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down>
                 <option key="ORDER_CREATED" description="${uiLabelMap.CommonCreated}"/>
                 <option key="ORDER_PROCESSING" description="${uiLabelMap.CommonProcessing}"/>
@@ -212,7 +212,7 @@ under the License.
         <field name="orderName" title="${uiLabelMap.OrderOrderName}"><display/></field>
         <field name="remainingSubTotal" title="${uiLabelMap.FormFieldTitle_remainingSubTotal}"><display/></field>
         <field name="grandTotal" title="${uiLabelMap.OrderGrandTotal}"><display/></field>
-        <field name="statusId"><display/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display/></field>
         <field name="orderDate" title="${uiLabelMap.OrderOrderDate}"><display/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><display/></field>
         <field name="roleTypeId" title="${uiLabelMap.FormFieldTitle_roleTypeId}"><display/></field>
@@ -237,7 +237,7 @@ under the License.
         <field name="orderName" title="${uiLabelMap.OrderOrderName}"><display/></field>
         <field name="remainingSubTotal" title="${uiLabelMap.FormFieldTitle_remainingSubTotal}"><display/></field>
         <field name="grandTotal" title="${uiLabelMap.OrderGrandTotal}"><display/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
         <field name="orderDate" title="${uiLabelMap.OrderOrderDate}"><display/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity entity-name="PartyNameView" description="${groupName}"/>

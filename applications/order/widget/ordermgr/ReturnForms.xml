@@ -37,7 +37,7 @@ under the License.
                 <entity-options entity-name="ReturnHeaderType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="statusId" use-when="returnHeader==null" id-name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="returnHeader==null" id-name="statusId">
             <drop-down>
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" value="ORDER_RETURN_STTS"/>
@@ -46,7 +46,7 @@ under the License.
                 <list-options key-name="statusIdTo" list-name="returnStatus" description="${transitionName}"/>
             </drop-down>
         </field>
-        <field name="statusId" use-when="returnHeader!=null">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="returnHeader!=null">
             <drop-down current-description="${currentStatus.description}">
                 <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
                     <entity-constraint name="statusId" env-name="returnHeader.statusId"/>
@@ -189,7 +189,7 @@ under the License.
             odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="returnId"><display/></field>
         <field name="returnItemSeqId"><display/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="statusDatetime" title="${uiLabelMap.CommonDate}"><display/></field>
         <field name="changeByUserLoginId" title="${uiLabelMap.FormFieldTitle_modifiedByUserLoginId}"><display/></field>
     </form>

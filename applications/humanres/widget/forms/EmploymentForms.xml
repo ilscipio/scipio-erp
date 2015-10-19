@@ -351,7 +351,7 @@
         <field name="roleTypeIdFrom"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="description"><text size="12"/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="EMPL_POSITION_STATUS"/>
@@ -376,7 +376,7 @@
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createUnemploymentClaim"/>
         <field name="unemploymentClaimId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupUnemploymentClaim"/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="EMPL_POSITION_STATUS"/>

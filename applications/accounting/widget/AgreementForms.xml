@@ -408,8 +408,8 @@ under the License.
         <field name="partyIdTo">
             <display-entity entity-name="PartyGroup" key-field-name="partyId" description="${partyId} - ${groupName}"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
-        <field name="thruDate" title="${uiLabelMap.AccountingThruDate}" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.AccountingThruDate}" position="2"><display type="date"/></field>
         <field name="description"><display/></field>
     </form>
     <form name="ViewAgreementItemInfoForReport" type="single" title="" default-map-name="agreementItem"

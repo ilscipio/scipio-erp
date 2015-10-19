@@ -48,7 +48,7 @@ under the License.
             </drop-down>
         </field>
         <field name="terminalId"><text size="10" maxlength="20"/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="false" no-current-selected-key="ORDER_COMPLETED">
                 <option key="" description="- ${uiLabelMap.CommonAny} -"/>
                 <entity-options entity-name="StatusItem" description="${description}">

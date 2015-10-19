@@ -713,7 +713,7 @@ under the License.
                 <parameter param-name="invoiceIdToCopyFrom" from-field="invoiceId"/>
             </link>
         </menu-item>
-        <menu-item name="pdf" title="${uiLabelMap.AccountingInvoicePDF}">
+        <menu-item name="pdf" title="${uiLabelMap.CommonPdf}">
             <condition>
                     <not><if-empty field="invoice.invoiceId"/></not>
             </condition>
@@ -888,7 +888,7 @@ under the License.
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
             </link>
         </menu-item>
-        <menu-item name="acctgTransEntriesPdf" title="Acctg Trans Entries PDF">
+        <menu-item name="acctgTransEntriesPdf" title="${uiLabelMap.CommonPdf}">
             <condition>
                 <and>
                     <not><if-empty field="invoice.invoiceId"/></not>
@@ -1320,7 +1320,7 @@ under the License.
                 <parameter param-name="paymentId" from-field="payment.paymentId"/>
             </link>
         </menu-item>
-        <menu-item name="acctgTransEntriesPDF" title="Acctg Trans Entries PDF">
+        <menu-item name="acctgTransEntriesPDF" title="${uiLabelMap.CommonPdf}">
             <condition>
                 <and>
                     <not><if-empty field="payment.paymentId"/></not>

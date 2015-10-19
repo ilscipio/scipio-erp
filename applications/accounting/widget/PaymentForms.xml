@@ -98,7 +98,7 @@ under the License.
     <form name="EditPaymentAttributes" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml">
         <field name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="statusId" entry-name="attributeMap.statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" entry-name="attributeMap.statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/>
@@ -227,7 +227,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" position="2">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <display-entity entity-name="StatusItem"/>
         </field>
         <field name="paymentMethodId" title="${uiLabelMap.AccountingPaymentMethodId}" position="1">

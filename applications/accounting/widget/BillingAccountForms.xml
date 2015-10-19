@@ -25,8 +25,8 @@ under the License.
         <field name="billingAccountId"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
         <field name="accountLimit"><text/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -66,8 +66,8 @@ under the License.
         </field>
         <field name="accountBalance" widget-area-style="amount" title-area-style="align-right"><display type="currency"/></field>
         <field name="description"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><display description="${parameters.partyId}"/></field>
         <field name="roleTypeId" title="${uiLabelMap.CommonRole}"><display-entity entity-name="RoleType"/></field>
     </form>

@@ -85,7 +85,7 @@ under the License.
         <field name="partyId"><hidden value="${parameters.userLogin.partyId}" /></field>
         <field name="fixedAssetId"><hidden value="${parameters.fixedAssetId}" /></field>
         <field name="roleTypeId" use-when="workEffort==null"><hidden value="CAL_OWNER" /></field>
-        <field name="statusId" use-when="workEffort==null"><hidden value="PRTYASGN_ASSIGNED" /></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="workEffort==null"><hidden value="PRTYASGN_ASSIGNED" /></field>
         <field name="workEffortName" title="${uiLabelMap.WorkEffortEventName}"><text /></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text /></field>
         <!-- This is wrong. A calendar item work effort type is an EVENT. "Meeting" is a work effort purpose. -->
@@ -164,7 +164,7 @@ under the License.
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName} ${firstName} ${middleName}"/>
         </field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
-        <field name="statusId" use-when="workEffort!=null">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="workEffort!=null">
             <display-entity entity-name="StatusItem" description="${description}"/>
         </field>
     </form>
@@ -173,7 +173,7 @@ under the License.
     </form>
     <form name="addCalEventRole" type="single" target="createWorkEffortPartyAssign">
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
-        <field name="statusId"><hidden value="PRTYASGN_ASSIGNED"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><hidden value="PRTYASGN_ASSIGNED"/></field>
         <field name="partyId" position="1"><lookup target-form-name="LookupPartyName" size="10"></lookup></field>
         <field name="roleTypeId" position="2">
             <drop-down no-current-selected-key="CAL_ATTENDEE">

@@ -43,7 +43,7 @@ under the License.
     <form name="ListRunningMrpJobs" list-name="mrpActiveJobs" title="" type="list"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="JobSandbox" default-field-type="display"/>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" description="${description}"></display-entity>
         </field>
         <field name="poolId"><hidden/></field>
@@ -62,7 +62,7 @@ under the License.
     <form name="ListFinishedMrpJobs" list-name="lastFinishedJobs" title="" type="list"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="JobSandbox" default-field-type="display"/>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" description="${description}"></display-entity>
         </field>
         <field name="poolId"><hidden/></field>

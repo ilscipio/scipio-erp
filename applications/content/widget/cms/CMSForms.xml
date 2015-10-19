@@ -106,7 +106,7 @@ under the License.
         </field>
 
         <field name="textData" id-name="textData"><textarea rows="20" cols="60"/></field>
-        <field name="statusId" >
+        <field name="statusId"  title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="false" no-current-selected-key="SUBSCRIBE_BRONZE">
                 <list-options list-name="statusList" key-name="statusId" description="${description}"/>
             </drop-down>
@@ -166,7 +166,7 @@ under the License.
         <field name="imgDataResourceId" >
             <hidden />
         </field>
-        <field name="statusId" >
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <hidden />
         </field>
        <field name="contentPurposeString" >
@@ -216,7 +216,7 @@ under the License.
                     entity-name="RoleType" key-field-name="roleTypeId"/>
             </drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="false">
                 <option key="_NA_" description="${uiLabelMap.CommonNA}"/>
                 <entity-options description="${description}"
@@ -481,7 +481,7 @@ under the License.
         <field name="localeString" position="3">
             <text/>
         </field>
-        <field name="statusId" position="1">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true" >
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" value="PUBLISH_STATUS"/>

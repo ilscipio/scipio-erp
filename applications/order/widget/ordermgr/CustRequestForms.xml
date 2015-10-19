@@ -25,7 +25,7 @@ under the License.
         <auto-fields-entity entity-name="CustRequest" default-field-type="find"/>
         
         <field name="fromPartyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="statusId" position="2">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" operator="equals" value="CUSTREQ_STTS"/>
@@ -160,7 +160,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="statusId" sort-field="true">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
         <field name="lastModifiedDate" sort-field="true"><display/></field>
@@ -188,7 +188,7 @@ under the License.
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
         <field name="custRequestResolutionId"><hidden/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
         <field name="addNote" use-when="!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_CANCELLED&quot;)&amp;&amp;!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_COMPLETED&quot;)" widget-style="${styles.button_default}">
@@ -255,7 +255,7 @@ under the License.
         <auto-fields-entity entity-name="CustRequestStatus" default-field-type="display"/>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestStatusId"><hidden/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
     </form>
 
     <form name="ViewRequestRoles" type="list"
@@ -268,7 +268,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="CustRequestParty" default-field-type="display"/>
         <field name="custRequestId"><hidden/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
@@ -671,7 +671,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" use-when="contentId==void">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="contentId==void">
             <drop-down allow-empty="false" no-current-selected-key="CTNT_AVAILABLE">
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" value="CONTENT_STATUS"/>
@@ -679,7 +679,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" use-when="contentId!=void">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="contentId!=void">
             <drop-down allow-empty="false" current-description="${currentStatus.description}" no-current-selected-key="CTNT_AVAILABLE">
                 <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
                     <entity-constraint name="statusId" value="${content.statusId}"/>
@@ -757,7 +757,7 @@ under the License.
         <field name="fromPartyId">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${fromPartyId}])"/>
         </field>
-        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="priority" use-when="statusGroup!=&quot;OPEN&quot;"><display also-hidden="false"/></field>
         <field name="currentStatusId" map-name="taskResult.taskInfo" title="${uiLabelMap.MyPortalTaskStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="estimatedStartDate" map-name="taskResult.taskInfo" title="${uiLabelMap.MyPortalTaskPlanStartDate}"><display type="date"/></field>
@@ -780,7 +780,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="custRequestDate" title="${uiLabelMap.CommonDate}"><display type="date"/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="priority" use-when="!statusId.equals(&quot;CRQ_COMPLETED&quot;)">
             <drop-down allow-empty="true">
                 <option key="1" description="${uiLabelMap.WorkEffortPriorityOne}"/>
@@ -820,7 +820,7 @@ under the License.
         </sort-order>
     </form>
     <form name="EditCustRetStatusId" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml">
-        <field name="statusId" entry-name="attributeMap.statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" entry-name="attributeMap.statusId">
             <drop-down>
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" operator="equals" value="ORDER_RETURN_STTS"/>
@@ -841,6 +841,6 @@ under the License.
         <field name="returnId" title="${uiLabelMap.OrderReturnId}"><display/></field>
         <field name="entryDate" title="${uiLabelMap.OrderEntryDate}"><display/></field>
         <field name="destinationFacilityId" title="${uiLabelMap.OrderReturnDestinationFacility}"><display/></field>
-        <field name="statusId"><display/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display/></field>
     </form>
 </forms>

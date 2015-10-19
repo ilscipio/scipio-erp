@@ -296,7 +296,7 @@ under the License.
         <field name="priority"><display/></field>
         <field name="custRequestResolutionId"><display-entity also-hidden="false" entity-name="CustRequestResolution"/></field>
         <field name="productId"><display-entity also-hidden="false" entity-name="Product"/></field>
-        <field name="statusId"><display-entity also-hidden="false" entity-name="StatusItem"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity also-hidden="false" entity-name="StatusItem"/></field>
     </form>
 
     <form name="lookupQuote" target="LookupQuote" title="" type="single"

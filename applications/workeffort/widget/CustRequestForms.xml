@@ -31,7 +31,7 @@ under the License.
         <field name="priority"><display/></field>
         <field name="responseRequiredDate"><display/></field>
         <field name="partyId"><display/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
         <field name="roleTypeId">

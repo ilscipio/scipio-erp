@@ -2026,7 +2026,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
                     <entity-constraint name="statusTypeId" value="KEYWORD_STATUS"/>
@@ -2055,7 +2055,7 @@ under the License.
             <display-entity entity-name="Enumeration" description="${description}" key-field-name="enumId"/>
         </field>
         <field name="relevancyWeight"><display/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
                     <entity-constraint name="statusTypeId" value="KEYWORD_STATUS"/>
@@ -2318,7 +2318,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="keyword" title="${uiLabelMap.ProductTag}"><display/></field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
                     <entity-constraint name="statusTypeId" value="KEYWORD_STATUS"/>

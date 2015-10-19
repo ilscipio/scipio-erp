@@ -64,6 +64,9 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
 
     private ScreenStringRenderer loadRenderers(HttpServletRequest request, HttpServletResponse response,
             Map<String, Object> context, Writer writer) throws GeneralException, TemplateException, IOException {
+        // Cato: need this name early, check if html
+        String screenRendererName = UtilProperties.getPropertyValue("widget", getName() + ".name");
+        
         String screenMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".screenrenderer");
         String formMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".formrenderer");
         String treeMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".treerenderer");
@@ -71,38 +74,48 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         
         Map<String, List<String>> themeResources = ScreenRenderer.getVisualThemeResources(context);
         if (themeResources != null) {
+            // Cato: only set overrides if html
+            boolean isHtml = "html".equals(screenRendererName);
+            
             List<String> resourceList = UtilGenerics.cast(themeResources.get("VT_SCRN_MACRO_LIB"));
             if (resourceList != null && !resourceList.isEmpty()) {
                 String macroLibraryPath = resourceList.get(0);
                 if (macroLibraryPath != null) {
-                    screenMacroLibraryPath = macroLibraryPath;
+                    if (isHtml) {
+                        screenMacroLibraryPath = macroLibraryPath;
+                    }
                 }
             }
             resourceList = UtilGenerics.cast(themeResources.get("VT_FORM_MACRO_LIB"));
             if (resourceList != null && !resourceList.isEmpty()) {
                 String macroLibraryPath = resourceList.get(0);
                 if (macroLibraryPath != null) {
-                    formMacroLibraryPath = macroLibraryPath;
+                    if (isHtml) {
+                        formMacroLibraryPath = macroLibraryPath;
+                    }
                 }
             }
             resourceList = UtilGenerics.cast(themeResources.get("VT_TREE_MACRO_LIB"));
             if (resourceList != null && !resourceList.isEmpty()) {
                 String macroLibraryPath = resourceList.get(0);
                 if (macroLibraryPath != null) {
-                    treeMacroLibraryPath = macroLibraryPath;
+                    if (isHtml) {
+                        treeMacroLibraryPath = macroLibraryPath;
+                    }
                 }
             }
             resourceList = UtilGenerics.cast(themeResources.get("VT_MENU_MACRO_LIB"));
             if (resourceList != null && !resourceList.isEmpty()) {
                 String macroLibraryPath = resourceList.get(0);
                 if (macroLibraryPath != null) {
-                    menuMacroLibraryPath = macroLibraryPath;
+                    if (isHtml) {
+                        menuMacroLibraryPath = macroLibraryPath;
+                    }
                 }
             }
         }
         
-        ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(UtilProperties.getPropertyValue("widget", getName()
-                + ".name"), screenMacroLibraryPath);
+        ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(screenRendererName, screenMacroLibraryPath);
         if (!formMacroLibraryPath.isEmpty()) {
             FormStringRenderer formStringRenderer = new MacroFormRenderer(formMacroLibraryPath, request, response);
             context.put("formStringRenderer", formStringRenderer);

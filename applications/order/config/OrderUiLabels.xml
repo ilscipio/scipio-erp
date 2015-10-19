@@ -3193,7 +3193,7 @@
     <property key="OrderCreateOrderQuote">
         <value xml:lang="de">Neues Angebot erstellen</value>
         <value xml:lang="de_CH">Neue Offerte erstellen</value>
-        <value xml:lang="en">Create New Quote</value>
+        <value xml:lang="en">New Quote</value>
         <value xml:lang="es">Crear nuevo presupuesto</value>
         <value xml:lang="fr">Créer un nouveau devis</value>
         <value xml:lang="it">Creare Nuovo Preventivo</value>
@@ -3210,7 +3210,7 @@
     </property>
     <property key="OrderCreateOrderQuoteAdjustment">
         <value xml:lang="de">Manuelle Anpassung erstellen</value>
-        <value xml:lang="en">Create Manual Adjustment</value>
+        <value xml:lang="en">New Adjustment</value>
         <value xml:lang="es">Crear ajuste manual</value>
         <value xml:lang="fr">Créer un ajustement manuel</value>
         <value xml:lang="it">Creare Aggiustamenti Manuali</value>
@@ -3228,7 +3228,7 @@
     <property key="OrderCreateOrderQuoteAttribute">
         <value xml:lang="de">Neues Angebotsattribut erstellen</value>
         <value xml:lang="de_CH">Neues Offertattribut erstellen</value>
-        <value xml:lang="en">Create New Quote Attribute</value>
+        <value xml:lang="en">New Attribute</value>
         <value xml:lang="es">Crear nuevo atributo</value>
         <value xml:lang="fr">Créer une nouvelle donnée</value>
         <value xml:lang="it">Creare Nuovo Attributo Preventivo</value>
@@ -3264,7 +3264,7 @@
     <property key="OrderCreateOrderQuoteItem">
         <value xml:lang="de">Neues Angebotselement erstellen</value>
         <value xml:lang="de_CH">Neues Offertelement erstellen</value>
-        <value xml:lang="en">Create New Quote Item</value>
+        <value xml:lang="en">New Item</value>
         <value xml:lang="es">Crear nuevo ítem de presupuesto</value>
         <value xml:lang="fr">Créer une nouvelle ligne de devis</value>
         <value xml:lang="it">Creare Nuova Riga Preventivo</value>
@@ -3282,14 +3282,14 @@
     <property key="OrderCreateOrderQuoteNote">
         <value xml:lang="de">Neue Anmerkung zu Angebot erstellen</value>
         <value xml:lang="de_CH">Neue Anmerkung zu Offerte erstellen</value>
-        <value xml:lang="en">Create New Quote Note</value>
+        <value xml:lang="en">New Note</value>
         <value xml:lang="zh">新建询价便笺</value>
         <value xml:lang="zh_TW">新建詢價便箋</value>
     </property>
     <property key="OrderCreateOrderQuoteRole">
         <value xml:lang="de">Neue Angebotsrolle erstellen</value>
         <value xml:lang="de_CH">Neue Offertrolle erstellen</value>
-        <value xml:lang="en">Create New Quote Role</value>
+        <value xml:lang="en">New Role</value>
         <value xml:lang="es">Crear un nuevo rol</value>
         <value xml:lang="fr">Créer un nouveau rôle</value>
         <value xml:lang="it">Creare Nuovo Ruolo Preventivo</value>
@@ -3306,7 +3306,7 @@
     </property>
     <property key="OrderCreateOrderQuoteTerm">
         <value xml:lang="de">Neue Bedingung für Angebot erstellen</value>
-        <value xml:lang="en">Create New Quote Term</value>
+        <value xml:lang="en">New Term</value>
         <value xml:lang="fr">Créer une condition de réglement de devis</value>
         <value xml:lang="zh">新建询价条款</value>
         <value xml:lang="zh_TW">新建詢價條款</value>
@@ -3314,7 +3314,7 @@
     <property key="OrderCreateOrderQuoteWorkEfforts">
         <value xml:lang="de">Angebot für Arbeitsaufwand erstellen</value>
         <value xml:lang="de_CH">Offerte Arbeitseinsatz erstellen</value>
-        <value xml:lang="en">Create Quote Work Efforts</value>
+        <value xml:lang="en">New Work Efforts</value>
         <value xml:lang="es">Crear presupuesto de esfuerzo de trabajo</value>
         <value xml:lang="fr">Créer un devis liés à une tâche</value>
         <value xml:lang="it">Creare Preventivo Impegno di Lavoro</value>
@@ -3381,7 +3381,7 @@
     <property key="OrderCreateQuoteWorkEffort">
         <value xml:lang="de">Neues Angebot für Arbeitsaufwand erstellen</value>
         <value xml:lang="de_CH">Neuen Offertarbeitseinsatz erstellen</value>
-        <value xml:lang="en">Create new Quote Workeffort</value>
+        <value xml:lang="en">New Workeffort</value>
         <value xml:lang="es">Crear nuevo esfuerzo de trabajo de presupuesto</value>
         <value xml:lang="fr">Créer un nouveau devis lié à une tâche</value>
         <value xml:lang="it">Creare nuovo Preventivo Impegno di Lavoro</value>
@@ -5805,7 +5805,7 @@
     <property key="OrderNewQuote">
         <value xml:lang="de">Neues Angebot</value>
         <value xml:lang="de_CH">Neue Offerte</value>
-        <value xml:lang="en">New quote</value>
+        <value xml:lang="en">New Quote</value>
         <value xml:lang="es">Nuevo presupesto</value>
         <value xml:lang="fr">Nouveau devis</value>
         <value xml:lang="it">Nuovo preventivo</value>

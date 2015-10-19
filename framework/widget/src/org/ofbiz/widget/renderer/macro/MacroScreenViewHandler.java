@@ -47,6 +47,7 @@ import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
+import org.ofbiz.widget.renderer.VisualThemeWorker;
 import org.xml.sax.SAXException;
 
 import freemarker.template.TemplateException;
@@ -72,7 +73,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         String treeMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".treerenderer");
         String menuMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".menurenderer");
         
-        Map<String, List<String>> themeResources = ScreenRenderer.getVisualThemeResources(context);
+        Map<String, List<String>> themeResources = VisualThemeWorker.getVisualThemeResources(context);
         if (themeResources != null) {
             // Cato: only set overrides if html
             boolean isHtml = "html".equals(screenRendererName);

@@ -1711,7 +1711,7 @@ under the License.
         <form name="FindProduct" type="single" target="EditProduct">
             <field name="productId"><text></text></field>
             <field name="internalName" title="${uiLabelMap.ScrumProductName}"><text/></field>
-            <field name="statusId" parameter-name="statusId">
+            <field name="statusId" title="${uiLabelMap.CommonStatus}" parameter-name="statusId">
                 <drop-down allow-empty="false">
                     <option key="Any" description="${uiLabelMap.CommonAny}"/>
                     <entity-options entity-name="StatusItem" description="${description}">

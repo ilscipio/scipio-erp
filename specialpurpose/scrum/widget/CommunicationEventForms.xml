@@ -64,7 +64,7 @@ under the License.
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </hyperlink>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity description="${description}" entity-name="StatusItem" key-field-name="statusId"/>
         </field>
         <field name="partyIdFrom" title="${uiLabelMap.CommonFrom}">

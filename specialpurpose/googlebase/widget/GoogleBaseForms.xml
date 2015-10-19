@@ -44,7 +44,7 @@ under the License.
                 <option key="delete" description="${uiLabelMap.CommonDelete}"/>
             </drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down no-current-selected-key="draft">
                 <!--
                 <option key="deactivate" description="${uiLabelMap.GoogleBaseExportDeactivated}"/>
@@ -118,7 +118,7 @@ under the License.
         <field name="backInStock" title="Update if product is back into stock"><display/></field>
         <field name="webSiteUrl"><display/></field>
         <field name="actionType"><display/></field>
-        <field name="statusId"><display/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display/></field>
         <field name="outOfStock"><display/></field>
         <field name="testMode"><display/></field>
         <field name="webSiteMountPoint"><display/></field>

@@ -580,7 +580,7 @@
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
             <display-entity entity-name="RoleType"/>
         </field>
-        <field name="statusId"><display-entity entity-name="StatusItem"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="deleteAction" widget-style="smallSubmit"><submit button-type="button"/></field>

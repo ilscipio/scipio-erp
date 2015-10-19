@@ -49,7 +49,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" operator="equals" value="INV_NON_SER_STTS"/>

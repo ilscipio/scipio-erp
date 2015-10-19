@@ -463,7 +463,7 @@
         </field>
         <field name="orderName"><display/></field>
         <field name="orderTypeId"><display-entity entity-name="OrderType" description="${description}"/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="orderDate"><display/></field>
         <field name="entryDate"><display/></field>
         <field name="linkProjectOrderAction" title=" " widget-style="${styles.button_default}" use-when="headerItem.equals(&quot;editProjectOrders&quot;)">

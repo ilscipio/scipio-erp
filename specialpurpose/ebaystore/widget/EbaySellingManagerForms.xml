@@ -549,7 +549,7 @@ under the License.
                 <option key="SALES_ORDER" description="Sales Order"/>
             </drop-down>
         </field>
-        <field name="statusId" title="Status">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down>
                 <option key="" description="All Status"/>
                 <entity-options entity-name="StatusItem" description="${description}">

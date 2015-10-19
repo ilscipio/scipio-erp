@@ -75,44 +75,27 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         
         Map<String, List<String>> themeResources = VisualThemeWorker.getVisualThemeResources(context);
         if (themeResources != null) {
-            // Cato: only set overrides if html
-            boolean isHtml = "html".equals(screenRendererName);
+            // Cato: all these lookups modified to go through platform and expression checks
+            String macroLibraryPath;
             
-            List<String> resourceList = UtilGenerics.cast(themeResources.get("VT_SCRN_MACRO_LIB"));
-            if (resourceList != null && !resourceList.isEmpty()) {
-                String macroLibraryPath = resourceList.get(0);
-                if (macroLibraryPath != null) {
-                    if (isHtml) {
-                        screenMacroLibraryPath = macroLibraryPath;
-                    }
-                }
+            macroLibraryPath = VisualThemeWorker.getMacroLibraryLocationStaticFromResources(screenRendererName, themeResources, "VT_SCRN_MACRO_LIB");
+            if (macroLibraryPath != null) {
+                screenMacroLibraryPath = macroLibraryPath;
             }
-            resourceList = UtilGenerics.cast(themeResources.get("VT_FORM_MACRO_LIB"));
-            if (resourceList != null && !resourceList.isEmpty()) {
-                String macroLibraryPath = resourceList.get(0);
-                if (macroLibraryPath != null) {
-                    if (isHtml) {
-                        formMacroLibraryPath = macroLibraryPath;
-                    }
-                }
+            
+            macroLibraryPath = VisualThemeWorker.getMacroLibraryLocationStaticFromResources(screenRendererName, themeResources, "VT_FORM_MACRO_LIB");
+            if (macroLibraryPath != null) {
+                formMacroLibraryPath = macroLibraryPath;
             }
-            resourceList = UtilGenerics.cast(themeResources.get("VT_TREE_MACRO_LIB"));
-            if (resourceList != null && !resourceList.isEmpty()) {
-                String macroLibraryPath = resourceList.get(0);
-                if (macroLibraryPath != null) {
-                    if (isHtml) {
-                        treeMacroLibraryPath = macroLibraryPath;
-                    }
-                }
+            
+            macroLibraryPath = VisualThemeWorker.getMacroLibraryLocationStaticFromResources(screenRendererName, themeResources, "VT_TREE_MACRO_LIB");
+            if (macroLibraryPath != null) {
+                treeMacroLibraryPath = macroLibraryPath;
             }
-            resourceList = UtilGenerics.cast(themeResources.get("VT_MENU_MACRO_LIB"));
-            if (resourceList != null && !resourceList.isEmpty()) {
-                String macroLibraryPath = resourceList.get(0);
-                if (macroLibraryPath != null) {
-                    if (isHtml) {
-                        menuMacroLibraryPath = macroLibraryPath;
-                    }
-                }
+            
+            macroLibraryPath = VisualThemeWorker.getMacroLibraryLocationStaticFromResources(screenRendererName, themeResources, "VT_MENU_MACRO_LIB");
+            if (macroLibraryPath != null) {
+                menuMacroLibraryPath = macroLibraryPath;
             }
         }
         

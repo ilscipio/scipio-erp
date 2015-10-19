@@ -1,5 +1,6 @@
 package org.ofbiz.widget.renderer;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ScriptUtil;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
@@ -24,6 +28,9 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 public class VisualThemeWorker {
 
+    private static final UtilCache<String, String> libLocationExprCache = UtilCache.createUtilCache("renderer.visualtheme.resources.liblocation");
+    private static final Map<String, Object> emptyContext = Collections.unmodifiableMap(new HashMap<String, Object>());
+    
     /**
      * Cato: Gets visual theme resources from context or if missing, calculates appropriate
      * based on values in context, best-effort, using as generalized logic as possible, saves in context and returns.
@@ -172,4 +179,116 @@ public class VisualThemeWorker {
         return null;
     }
 
+ 
+    /**
+     * Cato: Gets a library location from a library location expression for the given rendering platform.
+     * <p>
+     * The values returned from this method are cached in a global cache, so they should
+     * not be used for arbitrary inputs.
+     * 
+     * @param locationExpr the location expression
+     * @param platform the current rendering platform name, e.g. "html", "xml", etc.
+     * @return the location or null if not present and no default
+     * @see #getMacroLibraryLocation(String, String, Map)
+     */
+    public static String getMacroLibraryLocationStatic(String locationExpr, String platform) {
+        if (locationExpr == null || locationExpr.isEmpty()) {
+            return null;
+        }
+        final String cacheKey = locationExpr + "::" + (platform != null ? platform : "");
+        String res = libLocationExprCache.get(cacheKey);
+        if (res == null) {
+            res = getMacroLibraryLocation(locationExpr, platform, emptyContext);
+            // empty string marks the lookup
+            libLocationExprCache.put(cacheKey, (res != null ? res : ""));
+        }
+        return res.isEmpty() ? null : res;
+    }
+    
+    public static String getMacroLibraryLocationStaticFromResources(String platform, Map<String, List<String>> themeResources, 
+            String... resourceNames) {
+        if (themeResources == null) {
+            return null;
+        }
+        for(String resourceName : resourceNames) {
+            List<String> resourceList = UtilGenerics.cast(themeResources.get(resourceName));
+            if (resourceList != null && !resourceList.isEmpty()) {
+                String macroLibraryPath = getMacroLibraryLocationStatic(resourceList.get(0), platform);
+                if (macroLibraryPath != null && !macroLibraryPath.isEmpty()) {
+                    return macroLibraryPath;
+                }
+            }
+        }
+        return null;
+    }    
+    
+    /**
+     * Cato: Gets a library location from a library location expression for the given rendering platform.
+     * <p>
+     * The expression is either a simple location or a flexible EL defining a map.
+     * The map maps platform names to locations.
+     * If the location is simple, it is only returned if the platform is "html".
+     * The map expression supports an additional "default" key that will be used in case platform
+     * matches nothing else.
+     * 
+     * @param locationExpr the location expression
+     * @param platform the current rendering platform name, e.g. "html", "xml", etc.
+     * @return the location or null if not present and no default
+     */    
+    public static String getMacroLibraryLocation(String locationExpr, String platform, Map<String, Object> context) {
+        if (locationExpr == null || locationExpr.isEmpty()) {
+            return null;
+        }
+        Object expanded;
+        if (locationExpr.startsWith(FlexibleStringExpander.openBracket)) {
+            FlexibleStringExpander ex = FlexibleStringExpander.getInstance(locationExpr);
+            expanded = ex.expand(context);
+            if (expanded == null) {
+                return null;
+            }
+        }
+        else if (locationExpr.startsWith("{")) {
+            expanded = StringUtil.toMap(locationExpr.replaceAll("\\s+", ""));
+        }
+        else {
+            expanded = locationExpr;
+        }
+        
+        if (expanded instanceof String) {
+            // simple location, meant for html
+            if ("html".equals(platform)) {
+                String res = (String) expanded;
+                return res.isEmpty() ? null : res;
+            }
+            else {
+                return null;
+            }
+        }
+        else if (expanded instanceof Map) {
+            return getMacroLibraryLocation(UtilGenerics.<Map<String, String>>cast(expanded), platform);
+        }
+        else {
+            return null;
+        }
+    }
+        
+    public static String getMacroLibraryLocation(Map<String, String> platformLocationMap, String platform) {
+        if (platform == null) {
+            platform = "";
+        }
+        String res = platformLocationMap.get(platform);
+        if (res != null && !res.isEmpty()) {
+            return res;
+        }
+        else {
+            res = platformLocationMap.get("default");
+            if (res != null && !res.isEmpty()) {
+                return res;
+            }
+            else {
+                return null;
+            }
+        }
+    }
+    
 }

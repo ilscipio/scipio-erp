@@ -325,7 +325,21 @@ public class ScreenRenderer {
         // to preserve these values, push the MapStack
         context.push();
     }
+    
+    public Map<String, Object> getContext() {
+        return context;
+    }
 
+    public void populateContextForService(DispatchContext dctx, Map<String, Object> serviceContext) {
+        this.populateBasicContext(serviceContext, dctx.getDelegator(), dctx.getDispatcher(),
+                dctx.getSecurity(), (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin"));
+        
+        // Cato: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
+        getVisualThemeResources(context);
+        
+        populateContextScripts(serviceContext);
+    }
+    
     /**
      * Cato: Calls scripts defined in widgetContextScripts.properties to help populate root context.
      * <p>
@@ -361,20 +375,6 @@ public class ScreenRenderer {
                 }
             }
         }
-    }
-    
-    public Map<String, Object> getContext() {
-        return context;
-    }
-
-    public void populateContextForService(DispatchContext dctx, Map<String, Object> serviceContext) {
-        this.populateBasicContext(serviceContext, dctx.getDelegator(), dctx.getDispatcher(),
-                dctx.getSecurity(), (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin"));
-        
-        // Cato: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
-        getVisualThemeResources(context);
-        
-        populateContextScripts(serviceContext);
     }
     
     /**

@@ -2901,6 +2901,9 @@
         <value xml:lang="zh">技能类型编号</value>
         <value xml:lang="zh_TW">技能類型識別</value>
     </property>
+    <property key="HumanResSkill">
+        <value xml:lang="en">Skill</value>
+    </property>
     <property key="HumanResSkills">
         <value xml:lang="en">Skills</value>
         <value xml:lang="fr">Compétences</value>

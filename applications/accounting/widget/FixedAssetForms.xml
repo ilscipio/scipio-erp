@@ -542,18 +542,18 @@ under the License.
         </actions>
         <auto-fields-service service-name="updatePartyFixedAssetAssignment"/>
         <field name="fixedAssetId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.link_default}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="roleTypeId" title="${uiLabelMap.FormFieldTitle_roleTypeId}"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="allocatedDate"><date-time/></field>
-        <field name="statusId" title="${uiLabelMap.FormFieldTitle_statusId}">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
+        <field name="allocatedDate"><date-time type="date"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="false">
                  <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                      <entity-constraint name="statusTypeId" value="PRTYASGN_STATUS"/>
@@ -577,19 +577,19 @@ under the License.
 
     <form name="AddPartyFixedAssetAssignment" type="single" target="createPartyFixedAssetAssignment"
          header-row-style="header-row" default-table-style="basic-table">
-         <auto-fields-service service-name="createPartyFixedAssetAssignment"/>
+         
          <field name="fixedAssetId"><hidden/></field>
-         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
+         <field name="partyId" title="${uiLabelMap.CommonParty}">
              <lookup target-form-name="LookupPartyName"/>
          </field>
-         <field name="roleTypeId">
+         <field name="roleTypeId" title="${uiLabelMap.CommonRole}" position="2">
              <drop-down allow-empty="true">
                  <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
                      <entity-order-by field-name="roleTypeId"/>
                  </entity-options>
              </drop-down>
          </field>
-         <field name="statusId">
+         <field name="statusId" title="${uiLabelMap.CommonStatus}">
              <drop-down allow-empty="false">
                  <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                      <entity-constraint name="statusTypeId" value="PRTYASGN_STATUS"/>
@@ -597,6 +597,11 @@ under the License.
                  </entity-options>
              </drop-down>
          </field>
+         <field name="allocatedDate" position="2"><date-time type="date"/></field>
+
+         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+         
          <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 

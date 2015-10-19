@@ -258,7 +258,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="effectiveDate" position="2"><date-time/></field>
+        <field name="effectiveDate" position="2"><date-time type="date"/></field>
         <field name="paymentRefNum" position="1"><text/></field>
         <field name="comments" position="2"><text/></field>
         <field name="paymentPreferenceId"><ignored/></field>

@@ -25057,6 +25057,12 @@
         <value xml:lang="zh">以前浏览的产品</value>
         <value xml:lang="zh_TW">以前檢視的產品</value>
     </property>
+    <property key="ProductPromo">
+        <value xml:lang="en">Promo</value>
+    </property>
+    <property key="ProductPromoAction">
+        <value xml:lang="en">Action</value>
+    </property>
     <property key="ProductPromoCodeBlank">
         <value xml:lang="de">Leer lassen um automatisch einen eindeutigen Aktionscode zu erstellen</value>
         <value xml:lang="en">Leave blank to auto-generate a unique promo code</value>
@@ -25195,6 +25201,9 @@
         <value xml:lang="vi">Tên [mã] khuyến mại</value>
         <value xml:lang="zh">促销名称 [标识]</value>
         <value xml:lang="zh_TW">促銷名稱 [識別]</value>
+    </property>
+    <property key="ProductPromoRule">
+        <value xml:lang="en">Rule</value>
     </property>
     <property key="ProductPromoShowToCustomer">
         <value xml:lang="de">Aktion wird dem Kunden angezeigt</value>

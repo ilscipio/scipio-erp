@@ -1525,9 +1525,13 @@ Helps define table. Required wrapper for all table sub-elem macros.
                               this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
                               legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
                               ultimately belong as @field and @row/@cell.
-    class           = manual classes to add, as string, default "basic-table" for data, 
-                      if specified as string replaces defaults (class=false prevents class)
+    class           = manual classes to add, as string, default depends on table type
+                      if specified as string, replaces defaults (class=false prevents class), unless prefixed with "+"
                       (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      defaults are looked up in the styles hash using:
+                      styles["table_" + type?replace("-","_")]
+                      where type is the table type above. if the given hash entry does not exist, the default is instead determined by:
+                      styles["table_default"]
     id              = table id
     autoAltRows     = default false for now (temporarily false for type="data-list" as well, tbd)
     firstRowAlt     = default false
@@ -2210,8 +2214,12 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
    * General Attributes *
     type            = menu type: [generic|section|section-inline|main|tab|subtab|button|...], default generic (but discouraged; prefer specific)
     inlineItems     = boolean, if true, generate only items, not menu container
-    class           = menu class style. can be boolean true/false or string, if string
+    class           = menu class style, default based on menu type. 
+                      can be boolean true/false or string, if string
                       starts with "+" the classes are in addition to defaults, otherwise replace defaults.
+                      defaults are based on:
+                      styles["menu_" + type?replace("-","_")], or if missing from hash, falls back to
+                      styles["menu_default"]
     id              = menu id
     style           = legacy menu style (for <ul element)
     attribs         = hash of other menu attribs (for <ul element, especially those with dashes)

@@ -93,7 +93,7 @@
     it currently marks the tables that had "basic-table" class attribute in legacy ofbiz code -->
      
     <#-- table type-based styles -->
-    "table_generic" : "basic-table",
+    "table_generic" : "basic-table", <#-- TODO? review if this should have basic-table or left empty by default... (mostly represents free-form <table>) -->
     "table_generic_cellspacing" : "",
     "table_data_list" : "basic-table",
     "table_data_list_cellspacing" : 0,

@@ -42,16 +42,16 @@ under the License.
   <#assign tasksFound = false>
   <@section title="${uiLabelMap.OrderOrderNeedingAttention}">
         <#-- FIXME: pure structure table, should keep innermost tables only -->
-        <@table type="generic" autoAltRows=false cellspacing="0" class="${styles.table!}">
+        <@table type="generic" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
             <@tr>
               <@td width='100%'>
                 <#if poList?has_content>
                   <#assign tasksFound = true>
-                  <@table type="generic" autoAltRows=false cellspacing="0" class="${styles.table!}">
+                  <@table type="generic" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
                     <@tr>
                       <@td>
                         <@heading>${uiLabelMap.OrderOrderPurchaseToBeScheduled}</@heading>
-                        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!} hover-bar">
+                        <@table type="data-list" autoAltRows=true cellspacing="0" class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
                          <@thead>
                           <@tr class="header-row">
                             <@th>${uiLabelMap.OrderOrderNumber}</@th>
@@ -109,11 +109,11 @@ under the License.
 
                 <#if partyTasks?has_content>
                   <#assign tasksFound = true>
-                  <@table type="generic" autoAltRows=false cellspacing="0" class="${styles.table!} hover-bar">
+                  <@table type="generic" autoAltRows=false cellspacing="0" class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
                     <@tr>
                       <@td>
                         <@heading>${uiLabelMap.OrderWorkflow}</@heading>
-                        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
+                        <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
                          <@thead>
                           <@tr class="header-row">
                             <@th><a href="<@ofbizUrl>tasklist?sort=orderId</@ofbizUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
@@ -170,11 +170,11 @@ under the License.
 
                 <#if roleTasks?has_content>
                   <#assign tasksFound = true>
-                  <@table type="generic" autoAltRows=false cellspacing="0" class="${styles.table!}">
+                  <@table type="generic" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
                     <@tr>
                       <@td>
                         <@heading>${uiLabelMap.CommonWorkflowActivityUserRole}</@heading>
-                        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!} hover-bar">
+                        <@table type="data-list" autoAltRows=true cellspacing="0" class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
                          <@thead>
                           <@tr class="header-row">
                             <@th><a href="<@ofbizUrl>tasklist?sort=orderId</@ofbizUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>

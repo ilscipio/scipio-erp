@@ -31,7 +31,7 @@
     <#-- custom logo or text can be inserted here -->
     <br />
     <@section title="${uiLabelMap.OagisInventoryDescription}">
-      <@table type="data-complex" autoAltRows=false class="${styles.table!}" cellspacing="0">
+      <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
         <@thead>
         <@tr valign="bottom" class="header-row">
           <@th width="10%">${uiLabelMap.ProductProduct}</@th>

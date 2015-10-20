@@ -19,7 +19,7 @@ under the License.
 
   <@section id="partyContentList">
       <#if partyContent?has_content>
-        <@table type="data-list" class="${styles.table!}" cellspacing="0">
+        <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
           <@tbody>
           <#list partyContent as pContent>
             <#assign content = pContent.getRelatedOne("Content", false)>

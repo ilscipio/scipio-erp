@@ -21,7 +21,7 @@ under the License.
       <input type="hidden" name="${scheduleOption.name}" value="${scheduleOption.value}"/>
     </#list>
 
-    <@table type="fields" class="${styles.table!}" cellspacing="0">
+    <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
 
     <#list serviceParameters as serviceParameter>
       <@tr>

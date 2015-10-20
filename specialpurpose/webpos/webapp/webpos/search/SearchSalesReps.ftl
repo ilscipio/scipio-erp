@@ -19,7 +19,7 @@ under the License.
 <div>
   <div id="SearchSalesRepsList">
     <#if salesReps?? && salesReps?has_content>
-      <@table type="data-complex" autoAltRows=false id="salesRepsResults" name="salesRepsResults" cellspacing="0" cellpadding="2" class="${styles.table!}">
+      <@table type="data-complex" autoAltRows=false id="salesRepsResults" name="salesRepsResults" cellspacing="0" cellpadding="2"> <#-- orig: class="basic-table" -->
       <#assign alt_row = false>
         <#list salesReps as salesRep>
           <#assign salesRepInCart = false>

@@ -89,7 +89,7 @@ under the License.
           <#if !(shipmentPackages?has_content)>
             <@section>
             <#if packedLines?has_content>
-              <@table type="data-list" class="${styles.table!}" cellpadding="2" cellspacing="0">
+              <@table type="data-list" cellpadding="2" cellspacing="0"> <#-- orig: class="basic-table" -->
                 <@thead>
                 <@tr>
                   <@th>
@@ -158,7 +158,7 @@ under the License.
               </form>
             </#if>
             <#if (orderedQuantity > packedLines.size())>
-            <@table type="fields" class="${styles.table!}" cellpadding="2" cellspacing="0">
+            <@table type="fields" cellpadding="2" cellspacing="0"> <#-- orig: class="basic-table" -->
               <form name="weightPackageForm" method ="post" action="<@ofbizUrl>setPackageInfo</@ofbizUrl>">
                 <input type="hidden" name = "shipGroupSeqId" value = "${shipGroupSeqId!}"/>
                 <input type="hidden" name = "facilityId" value = "${(facility.facilityId)!}"/>
@@ -200,7 +200,7 @@ under the License.
             </@section>
           <#else>
             <@section>
-            <@table type="data-list" class="${styles.table!}" cellpadding="2" cellspacing="0"> 
+            <@table type="data-list" cellpadding="2" cellspacing="0">  <#-- orig: class="basic-table" -->
              <@thead>
              <@tr>
                 <@th>

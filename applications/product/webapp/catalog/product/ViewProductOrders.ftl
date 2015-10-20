@@ -49,7 +49,7 @@ under the License.
       </#if>
     </form>
   <#if orderList?has_content && productId??>
-    <@table type="data-list" class="${styles.table!} hover-bar" cellspacing="0">
+    <@table type="data-list" class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.OrderOrderId}</@th>

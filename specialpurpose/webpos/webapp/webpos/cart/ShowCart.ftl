@@ -21,7 +21,7 @@ under the License.
 
 <#if (shoppingCartSize > 0)>
 <div id="CartHeader">
-  <@table type="fields" class="${styles.table!}" cellspacing="1" cellpadding="1">
+  <@table type="fields" cellspacing="1" cellpadding="1"> <#-- orig: class="basic-table" -->
     <input type="hidden" id="totalDue" value="${totalDue}"/>
     <input type="hidden" id="totalCash" value="${cashAmount}"/>
     <input type="hidden" id="totalCheck" value="${checkAmount}"/>
@@ -76,7 +76,7 @@ under the License.
 </div>
 </#if>
 <div id="Cart">
-  <@table type="data-complex" autoAltRows=false class="${styles.table!}" cellspacing="0">
+  <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
     <@thead class="CartHead">
       <@tr class="header-row">
         <@th nowrap>${uiLabelMap.OrderProduct}</@th>

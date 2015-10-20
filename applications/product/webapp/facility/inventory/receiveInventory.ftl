@@ -33,7 +33,7 @@ under the License.
         <#-- Receiving Results -->
         <#if receivedItems?has_content>
           <@section title="${uiLabelMap.ProductReceiptPurchaseOrder} ${purchaseOrder.orderId}">
-          <@table type="data-list" class="${styles.table!}" cellspacing="0">
+          <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
            <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.ProductShipmentId}</@th>
@@ -209,7 +209,7 @@ under the License.
             <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
             <input type="hidden" name="partialReceive" value="${partialReceive!}"/>
-            <@table type="generic" class="${styles.table!}" cellspacing="0">
+            <@table type="generic" cellspacing="0"> <#-- orig: class="basic-table" -->
               <#list shipments! as shipment>
                 <#assign originFacility = shipment.getRelatedOne("OriginFacility", true)!/>
                 <#assign destinationFacility = shipment.getRelatedOne("DestinationFacility", true)!/>
@@ -221,7 +221,7 @@ under the License.
                 </@tr>
                 <@tr>
                   <@td>
-                    <@table type="fields" class="${styles.table!}" cellspacing="0">
+                    <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
                       <@tr>
                         <@td width="5%" nowrap="nowrap"><input type="radio" name="shipmentId" value="${shipment.shipmentId}" /></@td>
                         <@td width="5%" nowrap="nowrap">${shipment.shipmentId}</@td>
@@ -240,7 +240,7 @@ under the License.
               </@tr>
               <@tr>
                 <@td>
-                  <@table type="fields" class="${styles.table!}" cellspacing="0">
+                  <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
                     <@tr>
                       <@td width="5%" nowrap="nowrap"><input type="radio" name="shipmentId" value="_NA_" /></@td>
                       <@td width="5%" nowrap="nowrap">${uiLabelMap.ProductNoSpecificShipment}</@td>
@@ -273,7 +273,7 @@ under the License.
           <#if !purchaseOrderItems?? || purchaseOrderItems.size() == 0>
             <@resultMsg>${uiLabelMap.ProductNoItemsPoReceive}.</@resultMsg>
           <#else>
-            <@table type="fields" class="${styles.table!}" cellspacing="0">
+            <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
                 <@tr>
                   <@td>
                     <@heading>${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId}</@heading>
@@ -318,7 +318,7 @@ under the License.
                   </@tr>
                   <@tr>
                     <@td>
-                      <@table type="fields" class="${styles.table!}" cellspacing="0">
+                      <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
                         <@tr>
                           <#if orderItem.productId??>
                             <#assign product = orderItem.getRelatedOne("Product", true)/>

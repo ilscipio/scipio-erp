@@ -86,7 +86,7 @@ under the License.
     <#else>
         <#if mechMap.purposeTypes?has_content>
         <@field type="generic" label="${uiLabelMap.PartyContactPurposes}">
-            <@table type="data-list" autoAltRows=true class="${styles.table!}" cellspacing="0">
+            <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
             <#if mechMap.facilityContactMechPurposes?has_content>
               <#list mechMap.facilityContactMechPurposes as facilityContactMechPurpose>
                 <#assign contactMechPurposeType = facilityContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>

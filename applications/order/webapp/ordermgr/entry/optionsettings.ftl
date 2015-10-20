@@ -61,7 +61,7 @@ under the License.
   <@section title=sectionTitle>   
     <@row>
         <@cell class="${styles.grid_large!}6">
-            <@table type="fields" class="${styles.table!}">  
+            <@table type="fields">   <#-- orig: class="basic-table" -->
                <#if cart.getOrderType() != "PURCHASE_ORDER">
 
               <@tr>

@@ -32,7 +32,7 @@ under the License.
               <@cell>
                 <form method="post" action="<@ofbizUrl>assignItemToShipGroups</@ofbizUrl>" name="assignitemtoshipgroup${shipGroupIndex}">
                   <input type="hidden" name="_useRowSubmit" value="N" />
-                <@table type="data-list" class="${styles.table!}">
+                <@table type="data-list"> <#-- orig: class="basic-table" -->
                   <@thead>
                     <@tr>
                       <@th>

@@ -107,7 +107,7 @@ function ShowTab(lname) {
           <form action='<@ofbizUrl>UpdateGeneric?entityName=${entityName}</@ofbizUrl>' method="post" name="updateForm">
             <#assign showFields = true>
             <#-- FIXME: inputs within table elems -->
-            <@table type="fields" autoAltRows=true class="${styles.table!}" cellspacing="0">
+            <@table type="fields" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
               <#if value?has_content>
                 <#if hasUpdatePermission>
                   <#if newFieldPkList?has_content>
@@ -224,7 +224,7 @@ function ShowTab(lname) {
             <@cell>
               <@heading id="current-view" attribs={"data-magellan-destination":"current-view"}>${uiLabelMap.WebtoolsEntityCurrentValue}</@heading>
               <#if value?has_content>
-                <@table type="fields" autoAltRows=true class="${styles.table!} ${styles.grid_large!}12" cellspacing="0">
+                <@table type="fields" autoAltRows=true class="+${styles.grid_large!}12" cellspacing="0"> <#-- orig: class="basic-table ${styles.grid_large!}12" -->
                   <@thead>
                   <@tr>
                     <@th class="${styles.grid_large!}3">${uiLabelMap.WebtoolsFieldName}</@th>

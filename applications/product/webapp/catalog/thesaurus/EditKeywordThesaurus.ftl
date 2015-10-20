@@ -38,7 +38,7 @@ under the License.
         
       <#assign lastkeyword = "">
       <#if keywordThesauruses?has_content>
-        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
+        <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
             <#-- TODO: rewrite this somehow without need for openOnly/closeOnly -->
             <#list keywordThesauruses as keyword>
               <#assign relationship = keyword.getRelatedOne("RelationshipEnumeration", true)>

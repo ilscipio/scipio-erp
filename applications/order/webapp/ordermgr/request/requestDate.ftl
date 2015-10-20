@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.CommonDate}">
-        <@table type="fields" cellspacing="0" class="${styles.table!}">
+        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
             <@tr>
                 <@td align="right" valign="top" width="25%">
                     &nbsp;${uiLabelMap.OrderRequestDate}

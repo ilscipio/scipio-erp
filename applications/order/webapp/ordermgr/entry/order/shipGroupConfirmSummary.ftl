@@ -28,7 +28,7 @@ standard order confirmation page and to be re-usable by other screens.
 
 <#if cart??>
   <@section title="${uiLabelMap.OrderShippingInformation}">
-    <@table type="data-list" class="${styles.table!}">
+    <@table type="data-list"> <#-- orig: class="basic-table" -->
 
       <#-- header -->
       <@thead>

@@ -51,7 +51,7 @@ under the License.
 <#if variantProducts??>
   <@row>
     <@cell>
-    <@table type="data-list" cellspacing="0" class="${styles.table!}">
+    <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
        <@thead>
         <@tr class="header-row">
             <@td>${uiLabelMap.ProductProductId}</@td>

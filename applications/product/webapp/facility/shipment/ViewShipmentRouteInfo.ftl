@@ -18,7 +18,7 @@ under the License.
 -->
 <#if shipmentRouteSegmentDatas?has_content>
 <@section>
-        <@table type="data-complex" autoAltRows=true cellspacing="0" cellpadding="2"  class="${styles.table!}">
+        <@table type="data-complex" autoAltRows=true cellspacing="0" cellpadding="2" > <#-- orig: class="basic-table" -->
          <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductSegment}</@th>

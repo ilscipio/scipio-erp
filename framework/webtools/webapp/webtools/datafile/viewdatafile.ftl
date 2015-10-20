@@ -20,7 +20,7 @@ under the License.
 
     <#if security.hasPermission("DATAFILE_MAINT", session)>
       <form method="post" action="<@ofbizUrl>viewdatafile</@ofbizUrl>">
-        <@table type="fields" class="${styles.table!}" cellspacing="0">
+        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
           <@tr>
             <@td>${uiLabelMap.WebtoolsDataDefinitionFileName}</@td>
             <@td><input name="DEFINITION_LOCATION" type="text" size="60" value="${parameters.DEFINITION_LOCATION!}" /></@td>
@@ -83,7 +83,7 @@ under the License.
             <#if lastRecordName??>
               <@table closeOnly=true />
             </#if>
-            <@table type="fields" class="${styles.table!} hover-bar" cellspacing="0">
+            <@table type="fields" class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
               <@tr>
                 <@td><b>Record: ${modelRecord.name}</b></@td>
                 <#if (modelRecord.parentName)?has_content>
@@ -120,7 +120,7 @@ under the License.
 
       <#if dataFile?has_content && modelDataFile?has_content && (!parameters.ENTITYXML_FILE_SAVE?has_content || parameters.ENTITYXML_FILE_SAVE.length() == 0) && (parameters.DATAFILE_SAVE == null || parameters.DATAFILE_SAVE.length() == 0)>
         <hr />
-        <@table type="fields" class="${styles.table!}" cellspacing="0">
+        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
          <@thead>
           <@tr class="header-row">
             <@th>Name</@th>

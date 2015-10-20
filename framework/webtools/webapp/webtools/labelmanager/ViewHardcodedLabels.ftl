@@ -18,7 +18,7 @@ under the License.
 -->
 <@section>
   <#if parameters.searchLabels??>
-  <@table type="data-list" autoAltRows=true class="${styles.table!} hover-bar">
+  <@table type="data-list" autoAltRows=true class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
     <@thead>
       <@tr class="header-row">
           <@th>${uiLabelMap.WebtoolsLabelManagerRow}</@th>

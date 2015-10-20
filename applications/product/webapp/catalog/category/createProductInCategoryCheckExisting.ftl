@@ -38,7 +38,7 @@ under the License.
 </#assign>
 <@section title=sectionTitle menuHtml=menuHtml>
       <#if products?has_content>
-        <@table type="data-list" cellspacing="0" class="${styles.table!}">
+        <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
           <@thead>
             <@tr>
                 <@td>${uiLabelMap.ProductInternalName}</@td>

@@ -37,7 +37,7 @@ under the License.
    <#assign orderTypeId = orderReadHelper.getOrderTypeId()>
 
   <#if orderTypeId == "PURCHASE_ORDER">
-  <@table type="data-complex" class="${styles.table!}">
+  <@table type="data-complex"> <#-- orig: class="basic-table" -->
     <#if orderPaymentPreferences?has_content || invoices?has_content>
       <@thead>
         <@tr>
@@ -92,7 +92,7 @@ under the License.
      </#if>
   </@table>       
   <#else>
-  <@table type="data-complex" class="${styles.table!}">
+  <@table type="data-complex"> <#-- orig: class="basic-table" -->
      <#-- order payment status -->
      <@tr>
        <@td scope="row" class="${styles.grid_large!}3">&nbsp;${uiLabelMap.OrderStatusHistory}</@td>
@@ -151,7 +151,7 @@ under the License.
                           </div>
                     </@td>
                     <@td colspan="2">
-                        <@table type="fields" class="${styles.table!}" cellspacing='0'>
+                        <@table type="fields" cellspacing='0'> <#-- orig: class="basic-table" -->
                             <@tr>
                                 <@td valign="top">
                                     ${uiLabelMap.CommonNbr}<a href="/accounting/control/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}${StringUtil.wrapString(externalKeyParam)}">${billingAccount.billingAccountId}</a>  - ${billingAccount.description!}

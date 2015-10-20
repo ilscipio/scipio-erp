@@ -24,7 +24,7 @@ under the License.
 </script>
 <@section>
     <form method="post" action="<@ofbizUrl>SaveLabelsToXmlFile</@ofbizUrl>" name="UpdateLabelForm">
-        <@table type="fields" class="${styles.table!}" cellspacing="3">
+        <@table type="fields" cellspacing="3"> <#-- orig: class="basic-table" -->
             <@tr>
                 <@td colspan="2">&nbsp;</@td>
             </@tr>

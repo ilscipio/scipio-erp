@@ -35,7 +35,7 @@ under the License.
 <center>
   <@section title="${uiLabelMap.CommonRegistered}" class="+login-screenlet">
       <form method="post" action="<@ofbizUrl>Login${previousParams!}</@ofbizUrl>" name="loginform">
-        <@table type="fields" class="${styles.table!}" cellspacing="0">
+        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
           <@tr>
             <@td>${uiLabelMap.CommonUsername}</@td>
             <@td><input type="text" name="USERNAME" value="${username}" size="20"/></@td>

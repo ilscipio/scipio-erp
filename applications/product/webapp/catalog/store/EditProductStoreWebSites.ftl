@@ -22,7 +22,7 @@ under the License.
   </@menu>
 </#assign>
 <@section title="${uiLabelMap.PageTitleEditProductStoreWebSites}" menuHtml=menuHtml>
-        <@table type="data-list" autoAltRows=true cellspacing="0" class="${styles.table!}">
+        <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
           <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.ProductWebSiteId}</@th>

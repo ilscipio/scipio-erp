@@ -65,7 +65,7 @@ under the License.
   <#else>  
       <#if mechMap.purposeTypes?has_content>
         <@field type="generic" label="${uiLabelMap.PartyContactPurposes}">
-          <@table type="data-list" class="${styles.table!}" cellspacing="0">
+          <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
             <@tbody>
               <#if mechMap.partyContactMechPurposes?has_content>
                 <#list mechMap.partyContactMechPurposes as partyContactMechPurpose>

@@ -18,7 +18,7 @@ under the License.
 -->
 <form method="post" action="createInvoiceItemPayrol">
 <input type="hidden" name="invoiceId" value="${invoice.invoiceId}" />
-<@table type="data-complex" class="${styles.table!} hover-bar" cellspacing="0">
+<@table type="data-complex" class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
 
 <#if PayrolGroup?has_content>
 <#list PayrolGroup as payrolGroup>

@@ -19,7 +19,7 @@ under the License.
 
 <#if shipment??>
 <@section title="${uiLabelMap.PageTitleEditShipmentItems}">
-        <@table type="data-complex" autoAltRows=false cellspacing="0" class="${styles.table!}">
+        <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductItem}</@th>

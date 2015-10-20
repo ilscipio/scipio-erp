@@ -135,7 +135,7 @@ under the License.
       <#assign tabCol = 1>
       <div<#if categoryImageUrl?string?has_content> style="position: relative; margin-top: ${height}px;"</#if>
           class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
-      <@table type="data-list" class="" autoAltRows=false wrapIf=(numCol?int > 1)>
+      <@table type="data-list" autoAltRows=false wrapIf=(numCol?int > 1)> <#-- orig: class="" -->
         <#list productCategoryMembers as productCategoryMember>
           <#if (numCol?int == 1)>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)}

@@ -28,7 +28,7 @@ under the License.
 
 <#if productList?has_content>
     <span>Products Found:</span>
-    <@table type="data-list" class="" cellspacing="">
+    <@table type="data-list" cellspacing=""> <#-- orig: class="" -->
         <#list productList as product>
             <@tr>
                 <@td><b>${product.productId}</b>

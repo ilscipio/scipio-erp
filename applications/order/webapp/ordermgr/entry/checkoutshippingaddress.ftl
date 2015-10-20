@@ -60,7 +60,7 @@ function toggleBillingAccount(box) {
 <form method="post" name="checkoutInfoForm">
   <fieldset>
     <input type="hidden" name="checkoutpage" value="shippingaddress"/>
-            <@table type="fields" class="" width="100%" border="0" cellpadding="1" cellspacing="0">
+            <@table type="fields" width="100%" border="0" cellpadding="1" cellspacing="0"> <#-- orig: class="" -->
               <@tr>
                 <@td colspan="2">
                   <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderSplitShipment}</a>
@@ -96,7 +96,7 @@ function toggleBillingAccount(box) {
                </#if>
               </@table>
              <div>&nbsp;${uiLabelMap.AccountingAgreementInformation}</div>
-               <@table type="fields" class="" cellspacing="">
+               <@table type="fields" cellspacing=""> <#-- orig: class="" -->
                  <#if agreements??>
                    <#if agreements.size()!=1>
                      <@tr>

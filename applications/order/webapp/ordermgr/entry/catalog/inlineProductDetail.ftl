@@ -358,7 +358,7 @@ ${virtualJavaScript!}
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
         <p>&nbsp;</p>
-        <@table type="fields" class="" cellspacing="0" cellpadding="0">
+        <@table type="fields" cellspacing="0" cellpadding="0"> <#- orig: class="" ->
           <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>

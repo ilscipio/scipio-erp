@@ -276,7 +276,7 @@ under the License.
                                  <@table type="generic" width="100%" cellspacing="0">
                                      <@tr>
                                      <@td width="60%"  valign="top">
-                                        <@table type="fields" class="" cellspacing="0">
+                                        <@table type="fields" cellspacing="0"> <#-- orig: class="" -->
                                         <@tr>
                                             <@td>SiteId</@td>
                                             <@td>
@@ -441,7 +441,7 @@ under the License.
                                      </@table>
                                     </@td>
                                     <@td width="40%"  valign="top">
-                                    <@table type="fields" class="" width="100%" height="100%" id="table2" cellspacing="0">
+                                    <@table type="fields" width="100%" height="100%" id="table2" cellspacing="0"> <#-- orig: class="" -->
                                         <@tr>
                                                     <@td>
                                                         <img src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image"/><br />
@@ -459,7 +459,7 @@ under the License.
                           <#if primaryCate?has_content && primaryCate.getCategoryID()?? && listingTypes?has_content>
                              <#if checkSpecific == "true">
                              <@section title="Item specifices">
-                                        <@table type="fields" class="" width="50%" height="100%" id="table2"  cellspacing="0">
+                                        <@table type="fields" width="50%" height="100%" id="table2"  cellspacing="0"> <#-- orig: class="" -->
                                         <#list categorySpecifix?keys as key>
                                             <#assign values = categorySpecifix.get(key)!/>
                                             <#assign i = 0/>
@@ -492,7 +492,7 @@ under the License.
                                     <@table type="generic" width="100%" height="100%" cellspacing="0">
                                         <@tr>
                                             <@td width="60%" valign="top">
-                                                 <@table type="fields" class="" cellspacing="0">
+                                                 <@table type="fields" cellspacing="0"> <#-- orig: class="" -->
                                                     <@tr><@td>
                                                         <script language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/js/elrte.min.js</@ofbizContentUrl>" type="text/javascript"></script>
                                                         <#if language?has_content && language != "en">
@@ -518,7 +518,7 @@ under the License.
                                                  </@table>
                                             </@td>
                                             <@td width="30%" valign="top">
-                                                <@table type="fields" class="" align="left" width="60%"  height="100%" cellspacing="0">
+                                                <@table type="fields" align="left" width="60%"  height="100%" cellspacing="0"> <#-- orig: class="" -->
                                                     <@tr>
                                                         <@td></@td>
                                                         <@td><input type="checkbox" value="Y" onclick="javascript:enabledItemTemplate(this.value);" id="enabledTheme" name="enabledTheme" /><b>Add a theme</b></checkbox></@td>
@@ -597,7 +597,7 @@ under the License.
                                         <#if listingType.type.equals("Chinese") > <#assign tabName = "Auction"></#if>
                                         <#if listingType.type.equals("FixedPriceItem") ><#assign tabName = "Fixed Price"></#if>
                                        <div id="tabContent${id}" class="tabContent" <#if id != 1>style="display:none;"</#if>>
-                                            <@table type="fields" class="" width="50%" height="100%" id="table2" cellspacing="0">
+                                            <@table type="fields" width="50%" height="100%" id="table2" cellspacing="0"> <#-- orig: class="" -->
                                                     <@tr>
                                                          <@td></@td>
                                                         <@td>
@@ -698,7 +698,7 @@ under the License.
                           <!-- payment section -->
                           <#if primaryCate?has_content && primaryCate.getCategoryID()?? && listingTypes?has_content>
                              <@section title="Payment">
-                                     <@table type="fields" class="" width="50%" height="100%" id="table2" cellspacing="0">
+                                     <@table type="fields" width="50%" height="100%" id="table2" cellspacing="0"> <#-- orig: class="" -->
                                         <@tr><@td colspan="4"><br /></@td></@tr>
                                                      <@tr>
                                                         <@td colspan="4">
@@ -710,7 +710,7 @@ under the License.
                                                         <@td colspan="4">
                                                             <#assign is_payPal = false>
                                                             <#if paymentMethods?has_content>
-                                                                <@table type="fields" class="" cellspacing="">
+                                                                <@table type="fields" cellspacing=""> <#-- orig: class="" -->
                                                                     <#assign j = 0>
                                                                     <#list paymentMethods as paymentMethod>
                                                                         <#if paymentMethod.value()??>
@@ -751,7 +751,7 @@ under the License.
                           </#if>
                           <#if primaryCate?has_content && primaryCate.getCategoryID()?? && listingTypes?has_content>
                              <@section title="Shipping Service">
-                                    <@table type="fields" class="" cellSpacing="0" cellPadding="0" width="100%" border="0">
+                                    <@table type="fields" cellSpacing="0" cellPadding="0" width="100%" border="0"> <#-- orig: class="" -->
                                         <@tr>
                                           <@td></@td>
                                           <@td width="100%"><b>Demestic Shipping Service</b></@td>
@@ -778,14 +778,14 @@ under the License.
                                           <@td><img height="1" src="http://pics.ebaystatic.com/aw/pics/tbx/s.gif" width="10" alt="" /></@td>
                                         </@tr>
                                     </@table>
-                                    <@table type="fields" class="" cellspacing="0" cellpadding="0" width="100%" border="0">
+                                    <@table type="fields" cellspacing="0" cellpadding="0" width="100%" border="0"> <#-- orig: class="" -->
                                          <@tr>
                                            <@td style="WIDTH: 150px"><b>Ships to locations:</b></@td>
                                          </@tr>
                                          <@tr>
                                            <@td>
                                              <#if shippingLocationDetails?has_content>
-                                             <@table type="fields" class="" cellspacing="">
+                                             <@table type="fields" cellspacing=""> <#-- orig: class="" -->
                                                     <#assign j=0>
                                                     <#list shippingLocationDetails as shippingLocationDetail>
                                                         <#assign shippingLocation = shippingLocationDetail.getShippingLocation()!>

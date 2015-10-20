@@ -27,7 +27,7 @@ under the License.
 <h1>Attention!</h1>
 <div>&nbsp;</div>
 
-<@table type="fields" cellspacing="" class="" width="70%">
+<@table type="fields" cellspacing="" width="70%"> <#-- orig: class="" -->
   <@tr>
     <@td align="right"><b>Order #:</b></@td>
     <@td>${orderId!}</@td>

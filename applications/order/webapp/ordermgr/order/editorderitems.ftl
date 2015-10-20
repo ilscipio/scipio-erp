@@ -176,7 +176,7 @@ under the License.
                                   <#assign remainingQuantity = ((orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - shippedQuantity?double)>
                                 </#if>
                                 <@modal id="${productId}_q" label="${orderItem.quantity?default(0)?string.number}">    
-                                            <@table type="fields" class="" cellspacing="">
+                                            <@table type="fields" cellspacing=""> <#-- orig: class="" -->
                                                 <@tr valign="top">
                                                     
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>

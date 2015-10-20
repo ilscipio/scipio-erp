@@ -30,7 +30,7 @@ under the License.
         <@tr>
           <@td>
             <#if workEffortNoteandDetails?has_content>
-            <@table type="data-complex" class="" width="100%" border="0" cellpadding="1">
+            <@table type="data-complex" width="100%" border="0" cellpadding="1"> <#-- orig: class="" -->
               <#list workEffortNoteandDetails as note>
                 <@tr>
                   <@td valign="top" width="35%">

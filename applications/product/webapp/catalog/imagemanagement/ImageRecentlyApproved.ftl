@@ -20,7 +20,7 @@ under the License.
 <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
   <@tr>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_0?has_content>
                 <@tr><@td>${date0}</@td></@tr>
                 <#list approved_0 as show>
@@ -34,7 +34,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_1?has_content>
                 <@tr><@td>${date1}</@td></@tr>
                 <#list approved_1 as show>
@@ -48,7 +48,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_2?has_content>
                 <@tr><@td>${date2}</@td></@tr>
                 <#list approved_2 as show>
@@ -62,7 +62,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_3?has_content>
                 <@tr><@td>${date3}</@td></@tr>
                 <#list approved_3 as show>
@@ -76,7 +76,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_4?has_content>
                 <@tr><@td>${date4}</@td></@tr>
                 <#list approved_4 as show>
@@ -90,7 +90,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_5?has_content>
                 <@tr><@td>${date5}</@td></@tr>
                 <#list approved_5 as show>
@@ -104,7 +104,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_6?has_content>
                 <@tr><@td>${date6}</@td></@tr>
                 <#list approved_6 as show>
@@ -118,7 +118,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_7?has_content>
                 <@tr><@td>${date7}</@td></@tr>
                 <#list approved_7 as show>
@@ -132,7 +132,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_8?has_content>
                 <@tr><@td>${date8}</@td></@tr>
                 <#list approved_8 as show>
@@ -146,7 +146,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_9?has_content>
                 <@tr><@td>${date9}</@td></@tr>
                 <#list approved_9 as show>
@@ -160,7 +160,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_10?has_content>
                 <@tr><@td>${date10}</@td></@tr>
                 <#list approved_10 as show>
@@ -174,7 +174,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_11?has_content>
                 <@tr><@td>${date11}</@td></@tr>
                 <#list approved_11 as show>
@@ -188,7 +188,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_12?has_content>
                 <@tr><@td>${date12}</@td></@tr>
                 <#list approved_12 as show>
@@ -202,7 +202,7 @@ under the License.
         </@table>
     </@td>
     <@td style="vertical-align:top;">
-        <@table type="data-complex" class="" cellspacing="">
+        <@table type="data-complex" cellspacing=""> <#-- orig: class="" -->
             <#if approved_13?has_content>
                 <@tr><@td>${date13}</@td></@tr>
                 <#list approved_13 as show>

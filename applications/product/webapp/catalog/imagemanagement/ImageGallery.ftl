@@ -29,7 +29,7 @@ under the License.
         <#list productImageList as productImage>
             <#if (imageIndex < 5)>
                 <@td style="vertical-align:bottom">
-                    <@table type="fields" cellspacing="" class="">
+                    <@table type="fields" cellspacing=""> <#-- orig: class="" -->
                         <@tbody>
                             <@tr valign="middle">
                                 <#-- <@td align="center"><a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a></@td> -->
@@ -47,7 +47,7 @@ under the License.
                 <#assign imageIndex = 0>
                 <@tr></@tr>
                 <@td style="vertical-align:bottom">
-                    <@table type="fields" cellspacing="" class="">
+                    <@table type="fields" cellspacing=""> <#-- orig: class="" -->
                         <@tbody>
                             <@tr valign="middle">
                                 <#-- <@td align="center"><a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a></@td> -->

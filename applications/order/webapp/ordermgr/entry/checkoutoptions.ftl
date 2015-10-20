@@ -87,7 +87,7 @@ function submitForm(form, mode, value) {
       </#if>
     </#assign>
     <@section title=sectionTitle>
-                <@table type="fields" class="" width="100%" border="0" cellpadding="1" cellspacing="0">
+                <@table type="fields" width="100%" border="0" cellpadding="1" cellspacing="0"> <#-- orig: class="" -->
                   <@tr>
                     <@td colspan="2">
                       <span>${uiLabelMap.OrderShipToParty}:</span>
@@ -158,7 +158,7 @@ function submitForm(form, mode, value) {
         </#if>
     </#assign>
     <@section title=sectionTitle>
-                <@table type="fields" class="" width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
+                <@table type="fields" width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0"> <#-- orig: class="" -->
                  <#if shipping == true>
                   <#list carrierShipmentMethodList as carrierShipmentMethod>
                     <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>

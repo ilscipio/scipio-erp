@@ -19,7 +19,7 @@ under the License.
 <@section title="${uiLabelMap.ProductCompareProducts}">
   <#assign productCompareList = Static["org.ofbiz.product.product.ProductEvents"].getProductCompareList(request)/>
   <#if productCompareList?has_content>
-    <@table type="data-list" class="" autoAltRows=false>
+    <@table type="data-list" autoAltRows=false> <#-- orig: class="" -->
     <#list productCompareList as product>
       <@tr>
         <@td>

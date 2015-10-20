@@ -52,7 +52,7 @@ under the License.
           <#list tree as node>
             <@tr valign="middle">
               <@td>
-              <@table type="generic" class="" cellspacing="1">
+              <@table type="generic" cellspacing="1"> <#-- orig: class="" -->
               <@tr>
               <@td>${node.depth}</@td>
               <#list 0..(node.depth) as level>
@@ -62,7 +62,7 @@ under the License.
               </@table>
               </@td>
               <@td>
-              <@table type="generic" class="" cellspacing="1">
+              <@table type="generic" cellspacing="1"> <#-- orig: class="" -->
               <@tr>
               <#list 0..(node.depth) as level>
               <@td>&nbsp;&nbsp;</@td>

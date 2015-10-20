@@ -58,7 +58,7 @@ under the License.
         <#if parameters.availabalityList?has_content>
         <@row>
           <@cell>
-          <@table type="data-list" class="" autoAltRows=false>
+          <@table type="data-list" autoAltRows=false> <#-- orig: class="" -->
             <@thead>
               <@tr>
                   <@th>${uiLabelMap.Facility}</@th>

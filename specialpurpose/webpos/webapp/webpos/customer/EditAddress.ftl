@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="editAddress" style="display:none">
-  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+  <@table type="fields" cellspacing="" border="0" width="100%"> <#-- orig: class="" -->
     <@tr>
       <@td width="100%" colspan="4">
         <br />

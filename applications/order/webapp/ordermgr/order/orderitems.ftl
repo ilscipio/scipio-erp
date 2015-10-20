@@ -162,7 +162,7 @@ under the License.
                                                         </#if>
                                                     </#list>
                                         <@modal id="${productId}_q" label="${orderItem.quantity?default(0)?string.number}">    
-                                            <@table type="data-complex" class="">
+                                            <@table type="data-complex"> <#-- orig: class="" -->
                                                 <@tr valign="top">
                                                     
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>

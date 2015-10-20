@@ -150,7 +150,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro moderateSite forumId rootForumId >
-<@table type="fields" class="" cellspacing="" width="100%" border="0">
+<@table type="fields" cellspacing="" width="100%" border="0"> <#-- orig: class="" -->
  <form name="mostrecent" method="post" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
   <#assign row=0/>
   <#list mostRecentList as content>
@@ -206,14 +206,14 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro grantSiteRoles forumId rootForumId >
-<@table type="fields" class="" cellspacing="" width="100%" border="0">
+<@table type="fields" cellspacing="" width="100%" border="0"> <#-- orig: class="" -->
   <@tr>
     <@td width='100%'>
       <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
       <input type="hidden" name="permRoleSiteId" value="${forumId}"/>
       <input type="hidden" name="forumId" value="${forumId}"/>
       <input type="hidden" name="rootForumId" value="${rootForumId}"/>
-      <@table type="fields" class="" cellspacing="" width="100%" border="0" cellspacing="0" cellpadding="4" class="+boxoutside"> <#-- orig: class="boxoutside" -->
+      <@table type="fields" cellspacing="" width="100%" border="0" cellspacing="0" cellpadding="4" class="+boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: class="" -->
         <@tr>
             <@td class="">User</@td>
             <#list blogRoleIdList as roleTypeId>

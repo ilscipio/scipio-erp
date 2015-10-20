@@ -18,7 +18,7 @@ under the License.
 -->
 <div id="paidOutAndIn" style="display:none">
   <input type="hidden" id="paidType" name="type"/>
-  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+  <@table type="fields" cellspacing="" border="0" width="100%"> <#-- orig: class="" -->
     <@tr>
       <@td colspan="2">&nbsp;</@td>
     </@tr>

@@ -18,7 +18,7 @@ under the License.
 -->
 <div id="searchProductsResults" style="display:none">
   <form method="post" action="javascript:void(0);" id="SearchProductsResultsForm" name="SearchProductsResultsForm">
-    <@table type="fields" class="" cellspacing="">
+    <@table type="fields" cellspacing=""> <#-- orig: class="" -->
       <@tr>
         <@td width="25%">
           <label for="searchByProductIdValue"><b>&nbsp;${uiLabelMap.ProductGoodIdentification}</b></label>

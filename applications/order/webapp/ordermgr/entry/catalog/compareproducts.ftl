@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@table type="fields" class="" cellspacing="">
+<@table type="fields" cellspacing=""> <#-- orig: class="" -->
 <#-- Header row, contains product small image, product name, price -->
     <@tr>
         <@td>&nbsp;</@td>

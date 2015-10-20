@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="payCheck" style="display:none">
-  <@table type="fields" class="" cellspacing="" border="0" width="100%">
+  <@table type="fields" cellspacing="" border="0" width="100%"> <#-- orig: class="" -->
     <@tr rowspan="2">
       <@td colspan="2">&nbsp;</@td>
     </@tr>

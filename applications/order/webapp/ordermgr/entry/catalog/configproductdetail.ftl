@@ -387,7 +387,7 @@ function getConfigDetails() {
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
 
-        <@table type="data-complex" class="" cellspacing="0" cellpadding="0">
+        <@table type="data-complex" cellspacing="0" cellpadding="0"> <#-- orig: class="" -->
           <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>
@@ -437,7 +437,7 @@ function getConfigDetails() {
         <input type='hidden' name='quantity' value='1' />
 
         <input type='hidden' name='product_id' value='${product.productId}' />
-        <@table type="fields" class="" cellspacing="">
+        <@table type="fields" cellspacing=""> <#-- orig: class="" -->
           <@tr>
             <@td>
                 <a href="javascript:verifyConfig();" class="${styles.button_default!}">${uiLabelMap.OrderVerifyConfiguration}</a>

@@ -132,7 +132,7 @@ under the License.
                             <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                             <br />80 characters left<br /><br />
                             <b>Rate details about this purchase</b>
-                            <@table type="fields" cellspacing="" class="">
+                            <@table type="fields" cellspacing=""> <#-- orig: class="" -->
                                 <@tr>
                                     <@td>
                                         How accurate was the item description?
@@ -291,7 +291,7 @@ under the License.
                         <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                         <br />80 characters left<br /><br />
                         <b>Rate details about this purchase</b>
-                        <@table type="fields" class="" cellspacing="">
+                        <@table type="fields" cellspacing=""> <#-- orig: class="" -->
                             <@tr>
                                 <@td>
                                     How accurate was the item description?
@@ -423,7 +423,7 @@ under the License.
                         <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                         <br />80 characters left<br /><br />
                         <b>Rate details about this purchase</b>
-                        <@table type="fields" class="" cellspacing="">
+                        <@table type="fields" cellspacing=""> <#-- orig: class="" -->
                             <@tr>
                                 <@td>
                                     How accurate was the item description?

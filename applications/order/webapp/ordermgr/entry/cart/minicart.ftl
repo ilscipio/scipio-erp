@@ -39,7 +39,7 @@ under the License.
             <@cartLinks />
           </#if>
           
-          <@table type="data-complex" class="">
+          <@table type="data-complex"> <#-- orig: class="" -->
             <@thead>
               <@tr>
                 <@th>${uiLabelMap.OrderQty}</@th>

@@ -88,7 +88,7 @@ under the License.
         <#if artifactInfo.modelEntity.getFieldsUnmodifiable()?has_content>
             <@section title="Entity Fields">
                 <a href="<@ofbizUrl>FindGeneric?entityName=${artifactInfo.modelEntity.getEntityName()}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>">All Entity Data</a>
-                <@table type="data-list" class="" cellspacing="">
+                <@table type="data-list" cellspacing=""> <#-- orig: class="" -->
                 <#list artifactInfo.modelEntity.getFieldsUnmodifiable() as modelField>
                     <@tr><@td>${modelField.getName()}<#if modelField.getIsPk()>*</#if></@td><@td>${modelField.getType()}</@td><@td>${modelField.getDescription()!}</@td></@tr>
                 </#list>
@@ -145,7 +145,7 @@ under the License.
         
         <#if artifactInfo.modelService.getAllParamNames()?has_content>
             <@section title="Service Parameters">
-                <@table type="data-list" class="" cellspacing="">
+                <@table type="data-list" cellspacing=""> <#-- orig: class="" -->
                     <@thead><@tr><@td>Name</@td><@td>Type</@td><@td>Optional</@td><@td>Mode</@td><@td>Entity.field</@td></@tr></@thead>
                   <#list artifactInfo.modelService.getAllParamNames() as paramName>
                     <#assign modelParam = artifactInfo.modelService.getParam(paramName)/>
@@ -437,7 +437,7 @@ under the License.
     </#if>
     <#if serviceEcaArtifactInfo.serviceEcaRule.getEcaActionList()?has_content>
         <h4>ECA Rule Actions</h4>
-        <@table type="data-list" class="" cellspacing="">
+        <@table type="data-list" cellspacing=""> <#-- orig: class="" -->
         <#list serviceEcaArtifactInfo.serviceEcaRule.getEcaActionList() as ecaAction>
             <@tr>
                 <@td><a href="<@ofbizUrl>ArtifactInfo?type=${artifactInfo.getType()}&amp;uniqueId=${ecaAction.getServiceName()}</@ofbizUrl>">${ecaAction.getServiceName()}</a></@td>

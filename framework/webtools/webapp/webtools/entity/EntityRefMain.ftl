@@ -54,7 +54,7 @@ under the License.
         <#list packagesList as package>
             <hr /><div id='${package.packageName}' class='packagetext'>${package.packageName}</div><hr />
             <#list package.entitiesList as entity>
-                <@table type="data-list" class="" width="95%" border="1" cellpadding='2' cellspacing='0'>
+                <@table type="data-list" class="" width="95%" border="1" cellpadding="2" cellspacing="0">
                     <@tr class='entityheader'>
                         <@td colspan="5">
                             <div id='${entity.entityName}' class="titletext">

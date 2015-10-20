@@ -52,7 +52,7 @@ under the License.
         </#if>
         
         <#if paymentMethodTypes?has_content>
-        <@table type="data-list" cellspacing='0'> <#-- orig: class="basic-table" -->
+        <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
          <@thead>
           <@tr class="header-row">
             <@th width="30%" align="right">${uiLabelMap.OrderPaymentType}</@th>

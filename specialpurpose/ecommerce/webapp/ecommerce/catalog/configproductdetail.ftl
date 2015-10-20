@@ -611,7 +611,7 @@ function getConfigDetails(event) {
       <#assign postedPerson = postedUserLogin.getRelatedOne("Person", false)!>
       <@tr>
         <@td colspan="2">
-          <@table border="0" cellpadding="0" cellspacing='0'>
+          <@table border="0" cellpadding="0" cellspacing="0">
             <@tr>
               <@td>${uiLabelMap.CommonBy}: <#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.OrderAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if>
               </@td>

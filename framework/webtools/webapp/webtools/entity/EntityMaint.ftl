@@ -52,7 +52,7 @@ under the License.
       </#list>
          </@nav>
         <#assign firstChar = "*">
-        <@table type="data-complex" autoAltRows=false class="+hover-bar" cellspacing='0'> <#-- orig: class="basic-table hover-bar" -->
+        <@table type="data-complex" autoAltRows=false class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsEntityName}</@th>

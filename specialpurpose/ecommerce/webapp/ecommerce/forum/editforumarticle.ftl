@@ -20,7 +20,7 @@ under the License.
 <@blog.renderAncestryPath trail=ancestorList?default([]) endIndexOffset=1/>
 <#-- Main Heading -->
 <#--
-<@table width='100%' cellpadding='0' cellspacing='0' border='0'>
+<@table width="100%" cellpadding="0" cellspacing="0" border="0">
   <@tr>
     <@td>
       <h1>${contentIdTo!}
@@ -85,7 +85,7 @@ ${summaryData!}
         </div>
         <h3>&nbsp;${uiLabelMap.EcommerceArticleInformation}</h3>
     <div class="screenlet-body">
-  <@table width="100%" border="0" cellpadding="0" cellspacing='0'>
+  <@table width="100%" border="0" cellpadding="0" cellspacing="0">
     <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Article</b></div></@td><@td>&nbsp;</@td><@td><div class="tabletext">
 ${textData!}
 <div></@td></@tr>

@@ -54,11 +54,11 @@ function call_fieldlookup3(view_name) {
 
 <#-- ============================================================= -->
 
-<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class="+boxoutside"> <#-- orig: class="boxoutside" -->
+<@table type="generic" border="0" width="100%" cellspacing="0" cellpadding="0" class="+boxoutside"> <#-- orig: class="boxoutside" -->
   <@tr>
     <@td width='100%'>
       <form name="userform" method="post" action="<@ofbizUrl>UserPermissions</@ofbizUrl>" >
-      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class="+appTitle"> <#-- orig: class="appTitle" -->
+      <@table type="fields" width="100%" border="0" cellspacing="0" cellpadding="0" class="+appTitle"> <#-- orig: class="appTitle" -->
         <@tr>
           <@td colspan="1" valign="middle" align="right">
             <div class="boxhead">&nbsp; WebSitePublishPoint&nbsp;&nbsp; </div>
@@ -79,7 +79,7 @@ function call_fieldlookup3(view_name) {
   <@tr>
     <@td width='100%'>
       <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
-      <@table type="data-list" width='100%' border='0' cellspacing='0' cellpadding='4' class="+boxoutside"> <#-- orig: class="boxoutside" -->
+      <@table type="data-list" width="100%" border="0" cellspacing="0" cellpadding="4" class="+boxoutside"> <#-- orig: class="boxoutside" -->
         <@tr>
             <@td class="">${uiLabelMap.ContentWebSite}</@td>
             <#list blogRoleIdList as roleTypeId>

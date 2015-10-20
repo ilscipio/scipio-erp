@@ -50,7 +50,7 @@ under the License.
           </#if>
           <input type="hidden" name="origCommEventId" value="${orgComm}"/>
         </#if>
-        <@table width="100%" border='0' cellspacing='0' cellpadding='0' class="+boxbottom"> <#-- orig: class="boxbottom" -->
+        <@table width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
           <@tr>
             <@td colspan="2">&nbsp;</@td>
           </@tr>

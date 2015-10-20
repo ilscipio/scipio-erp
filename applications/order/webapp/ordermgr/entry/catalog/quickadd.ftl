@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if productCategory?has_content>
-  <@table type="generic" border='0' cellpadding='3' cellspacing='0'>
+  <@table type="generic" border="0" cellpadding="3" cellspacing="0">
     <@tr>
       <@td>
         <@heading>${productCategory.categoryName!}</@heading>

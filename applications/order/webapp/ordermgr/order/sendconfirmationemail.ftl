@@ -38,7 +38,7 @@ under the License.
         </#if>
         <input type="hidden" name="partyId" value="${partyId!}" />
         <input type="hidden" name="contentType" value="${productStoreEmailSetting.contentType?default("")}" />
-        <@table type="fields" cellspacing='0'> <#-- orig: class="basic-table" -->
+        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
             <@tr>
                 <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailSubject}&nbsp;</@td>
                 <@td>

@@ -151,7 +151,7 @@ under the License.
                           </div>
                     </@td>
                     <@td colspan="2">
-                        <@table type="fields" cellspacing='0'> <#-- orig: class="basic-table" -->
+                        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
                             <@tr>
                                 <@td valign="top">
                                     ${uiLabelMap.CommonNbr}<a href="/accounting/control/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}${StringUtil.wrapString(externalKeyParam)}">${billingAccount.billingAccountId}</a>  - ${billingAccount.description!}

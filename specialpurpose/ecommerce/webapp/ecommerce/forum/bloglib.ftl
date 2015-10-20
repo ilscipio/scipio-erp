@@ -92,7 +92,7 @@ under the License.
 <@wrapSubContentCache subContentId=contentIdx wrapTemplateId=stdWrapId contentPurposeList="ARTICLE">
 </@wrapSubContentCache>
 </@table>
-<@table border="0" class="summary">
+<@table border="0" class="+summary"> <#-- orig: class="summary" -->
 <#assign targOp="HAS_USER_ROLE"/>
 <#assign pageTargOp=targetOperation!/>
 <#if pageTargOp?has_content>

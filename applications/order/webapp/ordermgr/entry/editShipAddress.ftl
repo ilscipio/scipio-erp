@@ -22,7 +22,7 @@ under the License.
   <@section>
     <@row>
       <@cell class="${styles.grid_large!}12">
-      <@table type="generic" class="${styles.grid_large!}12" cellspacing="0">
+      <@table type="generic" class="+${styles.grid_large!}12" cellspacing="0">
         <@tr>
           <@td>
               <#if postalAddress?has_content>

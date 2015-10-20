@@ -37,10 +37,10 @@ under the License.
     </#if>
 </head>
 <body>
-<@table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
+<@table border="0" width="100%" cellspacing="0" cellpadding="0" class="+headerboxoutside"> <#-- orig: class="headerboxoutside" -->
   <@tr>
     <@td width="100%">
-      <@table width="100%" border="0" cellspacing="0" cellpadding="0" class="headerboxtop">
+      <@table width="100%" border="0" cellspacing="0" cellpadding="0" class="+headerboxtop"> <#-- orig: class="headerboxtop" -->
         <@tr>
           <#if layoutSettings.headerImageUrl??>
           <@td width="1%"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>"/></@td>

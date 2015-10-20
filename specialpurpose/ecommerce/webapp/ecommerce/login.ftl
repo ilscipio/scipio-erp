@@ -51,7 +51,7 @@ under the License.
 <div class="screenlet">
   <div class="screenlet-title-bar"><h3>${uiLabelMap.CommonRegistered}</h3></div>
   <div class="screenlet-body">
-  <@table width="100%" class="Signlogin">
+  <@table width="100%" class="+Signlogin"> <#-- orig: class="Signlogin" -->
       <@tr>
           <@td>
           <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform" class="horizontal">

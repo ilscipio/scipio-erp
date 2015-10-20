@@ -42,7 +42,7 @@ under the License.
 <#if !thisContentId?has_content>
     <#assign thisContentId=contentId!>
 </#if>
-<@table border="0" width="100%" class="blogtext">
+<@table border="0" width="100%" class="+blogtext"> <#-- orig: class="blogtext" -->
     <@tr>
     <@td width="40">&nbsp;</@td>
     <@td>
@@ -64,7 +64,7 @@ under the License.
 </@checkPermission>
 -->
 
-<@table border="0" width="100%" class="tableheadtext">
+<@table border="0" width="100%" class="+tableheadtext"> <#-- orig: class="tableheadtext" -->
 <!-- Note that the "...When" arguments in the loopSubContent must be compatible with those in
      any embedded transformSubContent, because it will assume that the first node has already
      had its conditions checked.

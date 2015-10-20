@@ -19,7 +19,7 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
   <@section>
-      <@table type="generic" width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <@table type="generic" width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <form name="checkoutsetupform" method="post" action="<@ofbizUrl>createCustomer</@ofbizUrl>">
         <input type="hidden" name="finalizeMode" value="cust" />
         <input type="hidden" name="finalizeReqNewShipAddress" value="true" />

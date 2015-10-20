@@ -59,7 +59,7 @@ under the License.
 <#assign dummy=Static["org.ofbiz.base.util.Debug"].logInfo("in viewcontent, subContent:" + subContent, "")/>
 <br />
 <h1>${uiLabelMap.EcommerceContentFor} [${subContentId}] ${subContent.contentName!} - ${subContent.description!}:</h1><br />
-<@table border="0" class="blogtext">
+<@table border="0" class="+blogtext"> <#-- orig: class="blogtext" -->
     <@tr>
     <@td width="40">&nbsp;</@td>
     <@td>

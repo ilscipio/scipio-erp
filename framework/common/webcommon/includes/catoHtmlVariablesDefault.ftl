@@ -88,7 +88,7 @@
        based on table type. -->  
   <#-- Data and Tables -->
     <#-- free-form styles (currently used directly in templates) -->
-    "table" : "basic-table",
+    "table" : "basic-table", <#-- TODO: this should be removed along with all occurrences in templates, once all tables are properly identified by type and checked over for styling exceptions -->
      
     <#-- table type-based styles -->
     <#-- default entry is used by @table for any encountered table types that have no specific entries in this hash. 

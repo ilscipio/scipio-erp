@@ -90,6 +90,7 @@
     "table_generic_rowtype" : "generic",    <#-- the default row type is normally "content", but generic tables need "generic" -->
     "table_data_list" : "basic-table",  <#-- analogous to ofbiz "list" type form widgets -->
     "table_data_list_cellspacing" : 0,
+    <#-- not enabled, but may be desirable: "table_data_list_autoaltrows" : true, -->
     "table_data_complex" : "basic-table", <#-- like data_list but with complex structure (no form widget equivalent) -->
     "table_data_complex_cellspacing" : 0,
     "table_summary" : "basic-table",
@@ -100,6 +101,7 @@
          in other words, it is the default style for table types that this theme does not recognize, or "all others". -->    
     "table_default" : "basic-table",
     "table_default_cellspacing" : "",
+    "table_default_autoaltrows" : false,    <#-- this is also default autoAltRows for any table type that doesn't specify it above -->
     "table_default_rowtype" : "content",    <#-- this is also default row type for any table type that doesn't specify it above -->
     
     <#-- free-form and other table-related styles -->

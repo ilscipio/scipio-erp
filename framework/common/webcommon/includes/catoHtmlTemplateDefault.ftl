@@ -1554,15 +1554,12 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#local prevRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!""> <#-- used to keep track of state (always boolean) -->
   <#local prevCurrentRowAlt = getRequestVar("catoCurrentTableCurrentRowAlt")!""> <#-- the actual alt value of current row (may be empty) -->
   <#local prevLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!""> <#-- the actual alt value of "last" row (may be empty) -->
-  <#if !autoAltRows?is_boolean>
-    <#-- don't enable for all data-list tables by default for now, not sure wanted...
-         TODO: should be configurable through styles hash anyway
-    <#local autoAltRows = (type == "data-list") || inheritAltRows>-->
-    <#local autoAltRows = inheritAltRows>
-  </#if>
   <#local styleName = type?replace("-","_")>
   <#if (!styleName?has_content) || (!(styles["table_" + styleName]!false)?is_string)>
     <#local styleName = "default">
+  </#if>
+  <#if !autoAltRows?is_boolean>
+    <#local autoAltRows = inheritAltRows || (styles["table_" + styleName + "_autoaltrows"]!styles["table_default_autoaltrows"]!false)>
   </#if>
   <#local defaultClass = styles["table_" + styleName]!"">
   <#local classes = makeClassesArg(class, defaultClass)>

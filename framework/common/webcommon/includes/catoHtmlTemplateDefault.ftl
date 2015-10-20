@@ -1554,7 +1554,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <#local autoAltRows = inheritAltRows>
   </#if>
   <#local styleName = type?replace("-","_")>
-  <#if (!styleName?has_content) || styleName == "generic" || (!(styles["table_" + styleName]!false)?is_string)>
+  <#if (!styleName?has_content) || (!(styles["table_" + styleName]!false)?is_string)>
     <#local styleName = "default">
   </#if>
   <#local defaultClass = styles["table_" + styleName]!"">
@@ -2262,7 +2262,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#local prevMenuInfo = catoCurrentMenuInfo!>
   <#local prevMenuItemIndex = catoCurrentMenuItemIndex!>
   <#local styleName = type?replace("-","_")>
-  <#if (!styleName?has_content) || styleName == "generic" || (!(styles["menu_" + styleName]!false)?is_string)>
+  <#if (!styleName?has_content) || (!(styles["menu_" + styleName]!false)?is_string)>
     <#local styleName = "default">
   </#if>
   <#local menuInfo = {"type":type, "styleName":styleName, 

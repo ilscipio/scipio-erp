@@ -44,11 +44,15 @@
     "icon_list" : "fi-list",
     
   <#-- Menus 
-       menu_xxx classes are looked up by the @menu and @menuitem macros as defaults for each menu type. -->  
-    <#-- Generic menu types -->
+       menu_xxx classes are looked up by the @menu and @menuitem macros as defaults for each menu type. --> 
+    <#-- default entry is used for any encountered menu types that have no specific entries in this hash -->    
     "menu_default" : "",  
     "menu_default_item" : "", 
-    "menu_default_itemlink" : "", 
+    "menu_default_itemlink" : "",  
+    <#-- Generic menu types -->
+    "menu_generic" : "",  
+    "menu_generic_item" : "", 
+    "menu_generic_itemlink" : "", 
     "menu_button" : "button-group force-button",
     "menu_button_item" : "",
     "menu_button_itemlink" : "button tiny",
@@ -79,14 +83,19 @@
     "menu_section_inline_itemlink" : "button tiny", 
     
   <#-- Data and Tables 
-       table_default, table_data_list, table_data_complex, table_summary and table_fields and names
+       table_default, table_generic, table_data_list, table_data_complex, table_summary and table_fields and names
        with their prefix are used for default table class and attribute lookups by the @table macro,
        based on table type. -->  
   <#-- Data and Tables -->
+    <#-- free-form styles (currently used directly in templates) -->
     "table" : "basic-table",
     "table_basic" : "basic-table",  
+    <#-- table type-based styles -->
+    <#-- default entry is used for any encountered table types that have no specific entries in this hash -->    
     "table_default" : "basic-table",
     "table_default_cellspacing" : "",
+    "table_generic" : "basic-table",
+    "table_generic_cellspacing" : "",
     "table_data_list" : "basic-table",
     "table_data_list_cellspacing" : 0,
     "table_data_complex" : "basic-table",

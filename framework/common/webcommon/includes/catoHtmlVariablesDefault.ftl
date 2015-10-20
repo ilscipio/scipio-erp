@@ -89,7 +89,6 @@
   <#-- Data and Tables -->
     <#-- free-form styles (currently used directly in templates) -->
     "table" : "basic-table",
-    "table_basic" : "basic-table", 
      
     <#-- table type-based styles -->
     <#-- default entry is used by @table for any encountered table types that have no specific entries in this hash. 

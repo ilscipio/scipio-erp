@@ -101,6 +101,7 @@
     "table_default_cellspacing" : "",
     
     <#-- free-form and other table-related styles -->
+    "table_basic" : "basic-table",  <#-- this is not a table type, but simply the basic-table style -->
     "row_reg" : "even",
     "row_alt" : "odd",
     "row_selected" : "selected",

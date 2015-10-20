@@ -374,16 +374,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
                     <decorator-section name="body">
-                        <container>
-                            <link target="EditAgreementItemProduct" text="${uiLabelMap.ProductNewProduct}" style="${styles.button_default}">
-                                <parameter param-name="agreementId" from-field="agreement.agreementId"/>
-                                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId"/>
-                            </link>
-                            <link target="ListAgreementItemProductsReport" text="${uiLabelMap.CommonPrint}" style="${styles.button_default}">
-                                <parameter param-name="agreementId" from-field="agreement.agreementId"/>
-                                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId"/>
-                            </link>
-                        </container>
+                        <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AgreementItemSubTabBar"/>
                         <screenlet title="${uiLabelMap.PageTitleListAgreementItemProducts}">
                             <include-form name="ListAgreementItemProducts" location="component://accounting/widget/AgreementForms.xml"/>
                         </screenlet>

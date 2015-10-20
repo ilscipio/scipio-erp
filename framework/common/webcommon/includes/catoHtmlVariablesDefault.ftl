@@ -85,7 +85,7 @@
   <#-- Data and Tables -->  
     <#-- table type-based styles 
          used for default table class and attribute lookups by the @table macro, based on table type. -->
-    "table_generic" : "basic-table",    <#-- represents free-form <table>. TODO? review if this should have basic-table or left empty by default... -->
+    "table_generic" : "",    <#-- represents free-form <table>. probably should have no class (let template decide). -->
     "table_generic_cellspacing" : "",
     "table_data_list" : "basic-table",  <#-- analogous to ofbiz "list" type form widgets -->
     "table_data_list_cellspacing" : 0,

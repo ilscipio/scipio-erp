@@ -40,7 +40,7 @@ under the License.
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
-        <@table type="generic" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
         <@tbody>
         ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
         <@tr>

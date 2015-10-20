@@ -267,7 +267,7 @@ function doPublish() {
     <@row>
       <@cell>
         <#if addedFeatureTypeIds?has_content || standardFeatureAppls?has_content>
-        <@table type="generic" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
         <@tr>
         <@td>
             <#if addedFeatureTypeIds?has_content>

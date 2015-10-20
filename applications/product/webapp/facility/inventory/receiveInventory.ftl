@@ -209,7 +209,7 @@ under the License.
             <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
             <input type="hidden" name="partialReceive" value="${partialReceive!}"/>
-            <@table type="generic" cellspacing="0"> <#-- orig: class="basic-table" -->
+            <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
               <#list shipments! as shipment>
                 <#assign originFacility = shipment.getRelatedOne("OriginFacility", true)!/>
                 <#assign destinationFacility = shipment.getRelatedOne("DestinationFacility", true)!/>

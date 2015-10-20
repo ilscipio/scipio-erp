@@ -42,12 +42,12 @@ under the License.
   <#assign tasksFound = false>
   <@section title="${uiLabelMap.OrderOrderNeedingAttention}">
         <#-- FIXME: pure structure table, should keep innermost tables only -->
-        <@table type="generic" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="generic" class="${styles.table_basic!}" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
             <@tr>
               <@td width='100%'>
                 <#if poList?has_content>
                   <#assign tasksFound = true>
-                  <@table type="generic" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
+                  <@table type="generic" class="${styles.table_basic!}" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
                     <@tr>
                       <@td>
                         <@heading>${uiLabelMap.OrderOrderPurchaseToBeScheduled}</@heading>
@@ -109,7 +109,7 @@ under the License.
 
                 <#if partyTasks?has_content>
                   <#assign tasksFound = true>
-                  <@table type="generic" autoAltRows=false cellspacing="0" class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
+                  <@table type="generic" class="${styles.table_basic!}" autoAltRows=false cellspacing="0" class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
                     <@tr>
                       <@td>
                         <@heading>${uiLabelMap.OrderWorkflow}</@heading>
@@ -170,7 +170,7 @@ under the License.
 
                 <#if roleTasks?has_content>
                   <#assign tasksFound = true>
-                  <@table type="generic" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
+                  <@table type="generic" class="${styles.table_basic!}" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
                     <@tr>
                       <@td>
                         <@heading>${uiLabelMap.CommonWorkflowActivityUserRole}</@heading>

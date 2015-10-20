@@ -203,7 +203,7 @@ under the License.
 <@section title="Items to export" menuHtml=menuHtml>
 <form id="ProductsExportToEbay" method="post" action="<@ofbizUrl>exportProductsFromEbayStore</@ofbizUrl>" name="ProductsExportToEbay">
     <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
-    <@table type="generic" cellspacing="0"> <#-- orig: class="basic-table" -->
+    <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
         <@tr><@td>
         <#if addItemObj?has_content>
             <@menu type="button">
@@ -809,7 +809,7 @@ under the License.
        </@td></@tr>
     </@table>
     <#--if addItemList?has_content>
-        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="fields" cellspacing="0"> <#- orig: class="basic-table" ->
             <@tr>
                 <@td align="center" colspan="2">
                     <a href="#" class="${styles.button_default!}">${uiLabelMap.EbayExportToEbay}</a>

@@ -1556,6 +1556,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#local prevLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!""> <#-- the actual alt value of "last" row (may be empty) -->
   <#if !autoAltRows?is_boolean>
     <#-- don't enable for all data-list tables by default for now, not sure wanted...
+         TODO: should be configurable through styles hash anyway
     <#local autoAltRows = (type == "data-list") || inheritAltRows>-->
     <#local autoAltRows = inheritAltRows>
   </#if>
@@ -1723,8 +1724,9 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
                      
    * General Attributes *
     type            = [generic|content|meta|util], default generic or content (depends on table type)
+                      TODO: the defaults (generic vs content) should be specifiable via styles hash
                       generic: free-form row with no assumptions on content.
-                               default for "generic" tables".
+                               default for "generic" tables and unrecognized table types.
                       content: normal data or content row. exact meaning depends on table type.
                                default for all non-"generic" tables.
                                note that for "data-complex" this definition is currently relaxed.

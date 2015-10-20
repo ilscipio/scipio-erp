@@ -88,7 +88,9 @@
        based on table type. -->  
   <#-- Data and Tables -->
     <#-- free-form styles (currently used directly in templates) -->
-    "table" : "basic-table", <#-- TODO: this should be removed along with all occurrences in templates, once all tables are properly identified by type and checked over for styling exceptions -->
+    "table" : "basic-table", <#-- TODO: this should be removed along with all occurrences in templates, 
+    once all tables are properly identified by type and checked over for styling exceptions; 
+    it currently marks the tables that had "basic-table" class attribute in legacy ofbiz code -->
      
     <#-- table type-based styles -->
     "table_generic" : "basic-table",

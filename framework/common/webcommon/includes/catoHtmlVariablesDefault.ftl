@@ -93,15 +93,15 @@
     it currently marks the tables that had "basic-table" class attribute in legacy ofbiz code -->
      
     <#-- table type-based styles -->
-    "table_generic" : "basic-table", <#-- TODO? review if this should have basic-table or left empty by default... (mostly represents free-form <table>) -->
+    "table_generic" : "basic-table",    <#-- represents free-form <table>. TODO? review if this should have basic-table or left empty by default... -->
     "table_generic_cellspacing" : "",
-    "table_data_list" : "basic-table",
+    "table_data_list" : "basic-table",  <#-- analogous to ofbiz "list" type form widgets -->
     "table_data_list_cellspacing" : 0,
-    "table_data_complex" : "basic-table",
+    "table_data_complex" : "basic-table", <#-- like data_list but with complex structure (no form widget equivalent) -->
     "table_data_complex_cellspacing" : 0,
     "table_summary" : "basic-table",
     "table_summary_cellspacing" : 0,
-    "table_fields" : "",
+    "table_fields" : "",    <#-- similar to ofbiz "single" type form widgets; may be acceptable for display-only fields -->
     "table_fields_cellspacing" : 0,
     <#-- default entry is used by @table for any encountered table types that have no specific entries in this hash. 
          in other words, it is the default style for table types that this theme does not recognize, or "all others". -->    

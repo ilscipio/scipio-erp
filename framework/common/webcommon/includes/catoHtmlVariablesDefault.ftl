@@ -92,7 +92,8 @@
     "table_basic" : "basic-table", 
      
     <#-- table type-based styles -->
-    <#-- default entry is used for any encountered table types that have no specific entries in this hash -->    
+    <#-- default entry is used by @table for any encountered table types that have no specific entries in this hash. 
+         in other words, it is the default style for table types that this theme does not recognize, or "all others". -->    
     "table_default" : "basic-table",
     "table_default_cellspacing" : "",
     "table_generic" : "basic-table",

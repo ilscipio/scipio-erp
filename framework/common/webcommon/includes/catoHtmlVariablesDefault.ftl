@@ -93,7 +93,7 @@
     "table_data_complex_cellspacing" : 0,
     "table_summary" : "basic-table",
     "table_summary_cellspacing" : 0,
-    "table_fields" : "",    <#-- similar to ofbiz "single" type form widgets; may be acceptable for display-only fields -->
+    "table_fields" : "basic-table",    <#-- similar to ofbiz "single" type form widgets; may be acceptable for display-only fields -->
     "table_fields_cellspacing" : 0,
     <#-- default entry is used by @table for any encountered table types that have no specific entries in this hash. 
          in other words, it is the default style for table types that this theme does not recognize, or "all others". -->    

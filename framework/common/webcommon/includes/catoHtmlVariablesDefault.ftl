@@ -83,11 +83,6 @@
     "menu_default_itemlink" : "",  
     
   <#-- Data and Tables -->  
-    <#-- free-form styles (used directly in templates) -->
-    "table" : "basic-table",    <#-- TODO: this should be removed along with all occurrences in templates, 
-        once all tables are properly identified by type and checked over for styling exceptions; 
-        it currently marks the tables that had "basic-table" class attribute in legacy ofbiz code -->
-     
     <#-- table type-based styles 
          used for default table class and attribute lookups by the @table macro, based on table type. -->
     "table_generic" : "basic-table",    <#-- represents free-form <table>. TODO? review if this should have basic-table or left empty by default... -->
@@ -105,7 +100,7 @@
     "table_default" : "basic-table",
     "table_default_cellspacing" : "",
     
-    <#-- other table-related styles -->
+    <#-- free-form and other table-related styles -->
     "row_reg" : "even",
     "row_alt" : "odd",
     "row_selected" : "selected",

@@ -121,16 +121,16 @@ function getFinAccountTransRunningTotalAndBalances() {
         <#-- Header Begins -->
         <@thead>
         <@tr class="header-row-2">
-          <@th>${uiLabelMap.FormFieldTitle_finAccountTransId}</@th>
-          <@th>${uiLabelMap.FormFieldTitle_finAccountTransTypeId}</@th>
-          <@th>${uiLabelMap.PartyParty}</@th>
-          <@th>${uiLabelMap.FormFieldTitle_glReconciliationName}</@th>
+          <@th>${uiLabelMap.CommonId}</@th>
+          <@th>${uiLabelMap.CommonType}</@th>
+          <@th>${uiLabelMap.CommonParty}</@th>
+          <@th>${uiLabelMap.CommonName}</@th>
           <@th>${uiLabelMap.FormFieldTitle_transactionDate}</@th>
           <@th>${uiLabelMap.FormFieldTitle_entryDate}</@th>
-          <@th>${uiLabelMap.CommonAmount}</@th>
+          <@th class="align-right">${uiLabelMap.CommonAmount}</@th>
           <@th>${uiLabelMap.FormFieldTitle_paymentId}</@th>
           <@th>${uiLabelMap.OrderPaymentType}</@th>
-          <@th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</@th>
+          <@th>${uiLabelMap.CommonMethod}</@th>
           <@th>${uiLabelMap.CommonStatus}</@th>
           <@th>${uiLabelMap.CommonComments}</@th>
           <#if grandTotal??>
@@ -189,8 +189,8 @@ function getFinAccountTransRunningTotalAndBalances() {
                       <@th>${uiLabelMap.AccountingDepositSlipId}</@th>
                       <@th>${uiLabelMap.FormFieldTitle_paymentId}</@th>
                       <@th>${uiLabelMap.OrderPaymentType}</@th>
-                      <@th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</@th>
-                      <@th>${uiLabelMap.CommonAmount}</@th>
+                      <@th>${uiLabelMap.CommonMethod}</@th>
+                      <@th class="align-right">${uiLabelMap.CommonAmount}</@th>
                       <@th>${uiLabelMap.PartyPartyFrom}</@th>
                       <@th>${uiLabelMap.PartyPartyTo}</@th>
                     </@tr>
@@ -246,7 +246,7 @@ function getFinAccountTransRunningTotalAndBalances() {
             <@td><#if glReconciliation?has_content>${glReconciliation.glReconciliationName!} <a href="ViewGlReconciliationWithTransaction?glReconciliationId=${glReconciliation.glReconciliationId!}&amp;finAccountId=${parameters.finAccountId!}" class="${styles.button_default!}">${glReconciliation.glReconciliationId!}</a></#if></@td>
             <@td>${finAccountTrans.transactionDate!}</@td>
             <@td>${finAccountTrans.entryDate!}</@td>
-            <@td>${finAccountTrans.amount!}</@td>
+            <@td class="amount">${finAccountTrans.amount!}</@td>
             <@td>
               <#if finAccountTrans.paymentId?has_content>
                 <a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>" class="${styles.link_default!}">${finAccountTrans.paymentId}</a>
@@ -305,18 +305,18 @@ function getFinAccountTransRunningTotalAndBalances() {
       <@table type="summary"> <#-- orig: class="basic-table" -->
         <@thead>
         <@tr>
-          <@th>${uiLabelMap.FormFieldTitle_grandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
-          <@th>${uiLabelMap.AccountingCreatedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
-          <@th>${uiLabelMap.AccountingApprovedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
-          <@th>${uiLabelMap.AccountingCreatedApprovedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
+          <@th class="align-right">${uiLabelMap.FormFieldTitle_grandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
+          <@th class="align-right">${uiLabelMap.AccountingCreatedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
+          <@th class="align-right">${uiLabelMap.AccountingApprovedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
+          <@th class="align-right">${uiLabelMap.AccountingCreatedApprovedGrandTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
         </@tr>
         </@thead>
         <@tbody>
         <@tr>
-          <@td>${grandTotal} / ${searchedNumberOfRecords}</@td>
-          <@td>${createdGrandTotal} / ${totalCreatedTransactions}</@td>
-          <@td>${approvedGrandTotal} / ${totalApprovedTransactions}</@td>
-          <@td>${createdApprovedGrandTotal} / ${totalCreatedApprovedTransactions}</@td>
+          <@td class="align-right">${grandTotal} / ${searchedNumberOfRecords}</@td>
+          <@td class="align-right">${createdGrandTotal} / ${totalCreatedTransactions}</@td>
+          <@td class="align-right">${approvedGrandTotal} / ${totalApprovedTransactions}</@td>
+          <@td class="align-right">${createdApprovedGrandTotal} / ${totalCreatedApprovedTransactions}</@td>
         </@tr>
         </@tbody>
       </@table>
@@ -324,10 +324,10 @@ function getFinAccountTransRunningTotalAndBalances() {
       <@table type="summary"> <#-- orig: class="basic-table" -->
         <@thead>
         <@tr>
-          <@th>${uiLabelMap.AccountingRunningTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
-          <@th>${uiLabelMap.AccountingOpeningBalance}</@th>
-          <@th>${uiLabelMap.FormFieldTitle_reconciledBalance}</@th>
-          <@th>${uiLabelMap.FormFieldTitle_closingBalance}</@th>
+          <@th class="align-right">${uiLabelMap.AccountingRunningTotal} / ${uiLabelMap.AccountingNumberOfTransaction}</@th>
+          <@th class="align-right">${uiLabelMap.AccountingOpeningBalance}</@th>
+          <@th class="align-right">${uiLabelMap.FormFieldTitle_reconciledBalance}</@th>
+          <@th class="align-right">${uiLabelMap.FormFieldTitle_closingBalance}</@th>
         </@tr>
         </@thead>
         <@tbody>

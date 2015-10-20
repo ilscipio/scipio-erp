@@ -61,28 +61,28 @@ under the License.
                                     <@td align="left">${(acctgTransAndEntry.transDescription)!}</@td>
                                     <@td align="left">${(acctgTransAndEntry.currencyUomId)!}</@td>
                                     <@td align="left">${(acctgTransAndEntry.origCurrencyUomId)!}</@td>
-                                    <@td align="right"><#if (acctgTransAndEntry.debitCreditFlag)! == "D">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
-                                    <@td align="right"><#if (acctgTransAndEntry.debitCreditFlag)! == "C">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
-                                    <@td align="right"></@td>
-                                    <@td align="right"></@td>
+                                    <@td class="align-center"><#if (acctgTransAndEntry.debitCreditFlag)! == "D">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
+                                    <@td class="align-right"><#if (acctgTransAndEntry.debitCreditFlag)! == "C">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
+                                    <@td class="align-right"></@td>
+                                    <@td class="align-right"></@td>
                                 </@tr>
                                 </#list>
                                 <@tfoot>
                                 <@tr class="header-row">
                                     <@td colspan=2></@td>
                                     <@td colspan=3 align="center"><b>${uiLabelMap.AccountingTotalOfTheCurrentMonth}</b></@td>
-                                    <@td align="right" colspan=1><b>${(glAcctgTrialBalance.debitTotal)!}</b></@td>
-                                    <@td align="right" colspan=1><b>${(glAcctgTrialBalance.creditTotal)!}</b></@td>
-                                    <@td align="right" colspan=1><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></@td>
-                                    <@td align="right" colspan=1><b>${(glAcctgTrialBalance.balance)!}</b></@td>
+                                    <@td class="amount" colspan=1><b>${(glAcctgTrialBalance.debitTotal)!}</b></@td>
+                                    <@td class="amount" colspan=1><b>${(glAcctgTrialBalance.creditTotal)!}</b></@td>
+                                    <@td class="align-center" colspan=1><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></@td>
+                                    <@td class="amount" colspan=1><b>${(glAcctgTrialBalance.balance)!}</b></@td>
                                 </@tr>
                                 <@tr class="header-row">
                                     <@td colspan=2></@td>
                                     <@td align="center" colspan=3><b>${uiLabelMap.AccountingTotalOfYearToDate}</b></@td>
-                                    <@td align="right"><b>${glAcctgTrialBalance.totalOfYearToDateDebit}</b></@td>
-                                    <@td align="right"><b>${glAcctgTrialBalance.totalOfYearToDateCredit}</b></@td>
-                                    <@td align="right"><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></@td>
-                                    <@td align="right"><b>${(glAcctgTrialBalance.balanceOfTheAcctgForYear)!}</b></@td>
+                                    <@td class="amount"><b>${glAcctgTrialBalance.totalOfYearToDateDebit}</b></@td>
+                                    <@td class="amount"><b>${glAcctgTrialBalance.totalOfYearToDateCredit}</b></@td>
+                                    <@td class="align-center"><b><#if (isDebitAccount)>${uiLabelMap.AccountingDebitFlag}<#else>${uiLabelMap.AccountingCreditFlag}</#if></b></@td>
+                                    <@td class="amount"><b>${(glAcctgTrialBalance.balanceOfTheAcctgForYear)!}</b></@td>
                                 </@tr>
                                 </@tfoot>
                             </#if>

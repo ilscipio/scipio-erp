@@ -1535,11 +1535,11 @@ Helps define table. Required wrapper for all table sub-elem macros.
                       where type is the table type above. if the given hash entry does not exist, the default is instead determined by:
                       styles["table_default"]
     id              = table id
-    autoAltRows     = default false for now (temporarily false for type="data-list" as well, tbd)
+    autoAltRows     = defaults specified in styles hash, but otherwise false
     firstRowAlt     = default false
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
-    cellspacing     = cellspacing, default 0 for most types except generic, set to "" to prevent setting.
+    cellspacing     = cellspacing, defaults specified in styles hash, set to "" to prevent setting.
     wrapIf/openOnly/closeOnly = advanced structure control, for esoteric cases
     attribs               = hash of other legacy <table attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <table attributes and values, inlined

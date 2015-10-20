@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -693,5 +694,16 @@ public final class CommonFtlUtil {
     
     public static Object popRequestStack(String name, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
         return readRequestStack(name, true, request, context, null);
+    }
+    
+    public static <K, V> Map<K, V> concatMaps(Map<? extends K, ? extends V> first, Map<? extends K, ? extends V> second) {
+        Map<K, V> res = new LinkedHashMap<K, V>();
+        if (first != null) {
+            res.putAll(first);
+        }
+        if (second != null) {
+            res.putAll(second);
+        }
+        return res;
     }
 }

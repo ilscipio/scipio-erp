@@ -89,7 +89,8 @@
   <#-- Data and Tables -->
     <#-- free-form styles (currently used directly in templates) -->
     "table" : "basic-table",
-    "table_basic" : "basic-table",  
+    "table_basic" : "basic-table", 
+     
     <#-- table type-based styles -->
     <#-- default entry is used for any encountered table types that have no specific entries in this hash -->    
     "table_default" : "basic-table",
@@ -104,6 +105,8 @@
     "table_summary_cellspacing" : 0,
     "table_fields" : "",
     "table_fields_cellspacing" : 0,
+    
+    <#-- other table-related styles -->
     "row_reg" : "even",
     "row_alt" : "odd",
     "row_selected" : "selected",

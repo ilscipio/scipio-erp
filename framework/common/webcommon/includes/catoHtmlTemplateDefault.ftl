@@ -1512,7 +1512,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
     </@table>
                     
    * General Attributes *
-    type            = [generic, data-list, data-complex, summary, fields], default generic
+    type            = [generic, data-list, data-complex, fields, summary], default generic
                       DEV NOTE: TODO: WARN: these are WIP types, may not be enough (important part is to label things for easy search)
                       generic: generic html table (free-form, complex), no features enabled by default
                       data-list: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
@@ -1520,11 +1520,13 @@ Helps define table. Required wrapper for all table sub-elem macros.
                       data-complex: record-containing table, but with complex structure (more than one row per record, separators, etc.)
                                     there is no form widget equivalent of these and usually need some custom alt-row work.
                       summary: usually table with one or a few set rows of summary totals
-                               e.g. order grand totals.
+                               e.g. order grand totals. 
+                               TODO? review need for this type (should be converted?)
                       fields: label-value pairs for display, side-by-side, usually no header, roughly
                               this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
                               legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
                               ultimately belong as @field and @row/@cell.
+                              TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
     class           = manual classes to add, as string, default depends on table type
                       if specified as string, replaces defaults (class=false prevents class), unless prefixed with "+"
                       (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)

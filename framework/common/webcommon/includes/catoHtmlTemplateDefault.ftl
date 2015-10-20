@@ -1573,7 +1573,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
       <#local cellspacing = "">
     </#if>
   </#if>
-  <#local catoCurrentTableInfo = {"type": type, "autoAltRows": autoAltRows,
+  <#local catoCurrentTableInfo = {"type": type, "styleName": styleName, "autoAltRows": autoAltRows,
     "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
   <#local dummy = setRequestVar("catoCurrentTableInfo", catoCurrentTableInfo)!>
   <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
@@ -1723,12 +1723,11 @@ Helps define table. Required wrapper for all table sub-elem macros.
 Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
                      
    * General Attributes *
-    type            = [generic|content|meta|util], default generic or content (depends on table type)
-                      TODO: the defaults (generic vs content) should be specifiable via styles hash
+    type            = [generic|content|meta|util], default depends on table type and styles hash; 
+                          in complete absence of styles hash, default is "generic";
+                          in default cato styles, default is "generic" for "generic" tables, and "content" for all other table types.
                       generic: free-form row with no assumptions on content.
-                               default for "generic" tables and unrecognized table types.
                       content: normal data or content row. exact meaning depends on table type.
-                               default for all non-"generic" tables.
                                note that for "data-complex" this definition is currently relaxed.
                       meta: indicates this is a special info/status row (e.g. "No Records Found" message), not an actual content row.
                             meta rows are treated differently by default as are thead and tfoot rows.
@@ -1761,9 +1760,10 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 <#local catoCurrentTableLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!"">
 <#if open>
   <#local tableType = (catoCurrentTableInfo.type)!"generic">
+  <#local tableStyleName = (catoCurrentTableInfo.styleName)!tableType>
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
   <#if !type?has_content>
-    <#local type = (!tableType?has_content || tableType == "generic")?string("generic", "content")>
+    <#local type = styles["table_" + tableStyleName + "_rowtype"]!styles["table_default_rowtype"]!"generic">
   </#if>
   <#local metaRow = (type == "meta")>
   <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>

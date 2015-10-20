@@ -340,6 +340,29 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
 
 <#-- 
 *************
+* concatMaps function
+************
+Concatenates two maps similar to FTL "+" hash operator, but works with ofbiz maps as well.
+TODO: incomplete, doesn't actually work with ofbiz maps yet
+-->
+<#function concatMaps first second>
+  <#if first?is_hash>
+    <#if second?is_hash>
+      <#return first + second>
+    <#else>
+      <#return first>
+    </#if>
+  <#else>
+    <#if second?is_hash>
+      <#return second>
+    <#else>
+      <#return {}>
+    </#if>
+  </#if>
+</#function> 
+
+<#-- 
+*************
 * requireScriptOfbizUrl macro
 ************
 This informs the decorator that the given ofbiz URI must be made available to javascript

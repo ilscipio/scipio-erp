@@ -340,24 +340,42 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
 
 <#-- 
 *************
+* isObjectMap function
+************
+Perform special checks to make sure the given object is a hash or map.
+WARN: this is not trivial with bean objects from widget context; ?is_hash_ex will return true for non-map types.
+-->
+<#function isObjectMap object>
+  <#-- if there's no toString method, it must be an FTL hash or some other kind of simple hash -->
+  <#return object?is_hash && (!object.toString!?is_method || object.keySet!?is_method)>
+</#function>
+
+<#-- 
+*************
 * concatMaps function
 ************
 Concatenates two maps similar to FTL "+" hash operator, but works with ofbiz maps as well.
-TODO: incomplete, doesn't actually work with ofbiz maps yet
+Currently if either result is an ofbiz map, result is an ofbiz map.
+TODO? This is currently inefficient; but must guarantee immutability.
+    note currently have to implement in FTL (not java transform) if want to exploit "+" operator
 -->
 <#function concatMaps first second>
-  <#if first?is_hash>
-    <#if second?is_hash>
-      <#return first + second>
+  <#-- WARN: context objects implement ?is_hash, in particular strings, so needs extra checks... -->
+  <#if isObjectMap(first)>
+    <#if isObjectMap(second)>
+      <#if first.keySet!?is_method || second.keySet!?is_method>
+        <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].concatMaps(first, second)>
+      <#else>
+        <#-- probably both FTL hashes -->
+        <#return first + second>
+      </#if>
     <#else>
       <#return first>
     </#if>
+  <#elseif isObjectMap(second)>
+    <#return second>
   <#else>
-    <#if second?is_hash>
-      <#return second>
-    <#else>
-      <#return {}>
-    </#if>
+    <#return {}>
   </#if>
 </#function> 
 
@@ -530,22 +548,9 @@ TODO: doesn't handle dates (ambiguous?)
     escape          = escape characters in strings
 -->
 <#macro objectAsScript object lang wrap=true hasMore=false escape=true>
-    <#if object?is_hash && object.keySet?? && object.keySet?is_method>
-        <#-- Map from java/groovy; doesn't work properly with ?keys even though implements ?is_hash_ex -->
-        <#if wrap>{</#if><#lt>
-        <#list object.keySet() as key>
-            "${escapeScriptString(lang, key, escape)}}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
-        </#list> 
-        <#if wrap>}</#if><#rt>
-    <#elseif object?is_enumerable> 
-        <#-- check this early because some of these from groovy 
-             also implement ?string and ?is_hash_ex at same time (?).
-             but usually for those if ?is_enumerable it means it was a list-like type. -->
-        <#if wrap>[</#if><#lt>
-        <#list object as item> 
-            <#if item??><@objectAsScript lang=lang object=item wrap=true escape=escape /><#else>null</#if><#if item_has_next || hasMore>,</#if>
-        </#list> 
-        <#if wrap>]</#if><#rt>
+    <#if object?is_string && (!object?is_hash || object.toLowerCase!?is_method)>
+        <#-- WARN: context strings also implement ?is_hash when bean models -->
+        <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
     <#elseif object?is_number> 
         ${object}<#t>
     <#elseif object?is_boolean>
@@ -553,22 +558,39 @@ TODO: doesn't handle dates (ambiguous?)
     <#elseif object?is_date_like>
         <#-- TODO? -->
         <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
-    <#elseif object?is_hash_ex && !object?is_string> 
+    <#elseif object?is_enumerable> 
+        <#-- check this before string checks and hash because some of these from groovy 
+             also implement ?string and ?is_hash_ex at same time (?).
+             but usually for those if ?is_enumerable it means it was a list-like type. -->
+        <#if wrap>[</#if><#lt>
+        <#list object as item> 
+            <#if item??><@objectAsScript lang=lang object=item wrap=true escape=escape /><#else>null</#if><#if item_has_next || hasMore>,</#if>
+        </#list> 
+        <#if wrap>]</#if><#rt>
+    <#elseif object?is_hash && object.keySet!?is_method>
+        <#-- Map from java/groovy; doesn't work properly with ?keys even though implements ?is_hash_ex -->
+        <#if wrap>{</#if><#lt>
+        <#list object.keySet() as key>
+            "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
+        </#list> 
+        <#if wrap>}</#if><#rt>
+    <#elseif object?is_hash_ex && !object.toString!?is_method> <#-- if no toString method, is probably a simple FTL hash type -->
         <#-- check last because a lot of things implement ?is_hash_ex you might not expect - including strings... -->
         <#if wrap>{</#if><#lt>
         <#list object?keys as key> 
             "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
         </#list> 
         <#if wrap>}</#if><#rt>
-    <#-- the following are invalid/inconvertible types, but catch them because otherwise debugging impossible -->
+    <#elseif object?is_string> 
+        <#-- WARN: this may catch a lot of different context object types, but ones we care about are above -->
+        <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
+    <#-- some of the following are invalid/inconvertible types, but catch them because otherwise debugging impossible -->
     <#elseif objectAsJsonTreatInvalidNonFatal && object?is_hash && !object?is_string> 
         "__NONEXHASH__"<#t>
     <#elseif objectAsJsonTreatInvalidNonFatal && object?is_method>
         "__METHOD__"<#t>
     <#elseif objectAsJsonTreatInvalidNonFatal && object?is_directive>
         "__DIRECTIVE__"<#t>
-    <#elseif object?is_string>
-        <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
     <#else>
         <#-- fallback, best-effort. -->
         <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
@@ -863,6 +885,7 @@ Not meant to be used on regular request attributes.
 * elemAttribStr macro
 ************
 Prints a string of element attributes. (HTML, FO, XML)
+TODO: implement as transform instead
 
    * General Attributes *
     attribs         = hash of attribute-value pairs. 
@@ -873,7 +896,7 @@ Prints a string of element attributes. (HTML, FO, XML)
     exclude         = list of attrib names to skip
 -->
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[]>
-  <#if attribs?is_hash_ex>
+  <#if attribs?is_hash>
     <#t>${StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].makeElemAttribStr(attribs, includeEmpty, emptyValToken, exclude))}
   <#elseif attribs?is_string>
     <#t> ${attribs?string}

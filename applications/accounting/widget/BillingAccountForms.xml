@@ -47,9 +47,10 @@ under the License.
             </hyperlink>
         </field>
         <field name="accountLimit" widget-area-style="amount" title-area-style="align-right">
-            <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
+            <display type="currency" currency="${accountCurrencyUomId}"/>
         </field>
         <field name="description"><display/></field>
+        <field name="externalAccountId"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
     </form>
@@ -61,7 +62,7 @@ under the License.
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
         </field>
-        <field name="accountLimit">
+        <field name="accountLimit" widget-area-style="amount" title-area-style="align-right">
             <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
         <field name="accountBalance" widget-area-style="amount" title-area-style="align-right"><display type="currency"/></field>
@@ -165,7 +166,8 @@ under the License.
             <display description="${groovy:org.ofbiz.accounting.payment.BillingAccountWorker.getBillingAccountNetBalance(delegator, billingAccountId)}" type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
         -->
-        <field name="availableBalance" title="${uiLabelMap.AccountingBillingAvailableBalance}" tooltip="${uiLabelMap.AccountingBillingAvailableBalanceMessage}">
+        <field name="availableBalance" title="${uiLabelMap.AccountingBillingAvailableBalance}" tooltip="${uiLabelMap.AccountingBillingAvailableBalanceMessage}"
+            widget-area-style="amount" title-area-style="align-right">
             <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="billingAccount == null" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -191,10 +193,10 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="roleTypeId" title="${uiLabelMap.CommonRole">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <display-entity entity-name="RoleType" description="${description}"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
 
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -210,7 +212,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createBillingAccountRole"/>
         <field name="billingAccountId"><hidden/></field>
-        <field name="roleTypeId" title="${uiLabelMap.CommonRole">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <drop-down allow-empty="false" no-current-selected-key="BILL_TO_CUSTOMER">
                 <entity-options entity-name="RoleType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -229,18 +231,18 @@ under the License.
             </entity-condition>
         </actions>
         <field name="billingAccountId"><hidden/></field>
+        <field name="billingAccountTermId" title=" " widget-style="${styles.link_default}">
+            <hyperlink description="${uiLabelMap.billingAccountTermId}" target="EditBillingAccountTerms">
+                <parameter param-name="billingAccountId"/>
+                <parameter param-name="billingAccountTermId"/>
+            </hyperlink>
+        </field>
         <field name="termTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="TermType" description="${description}"/>
         </field>
         <field name="termValue" title="${uiLabelMap.CommonValue}"><display/></field>
         <field name="uomId" title="${uiLabelMap.CommonUom}">
             <display-entity entity-name="Uom" description="${description}"/>
-        </field>
-        <field name="billingAccountTermId" title=" " widget-style="${styles.link_default}">
-            <hyperlink description="${uiLabelMap.CommonEdit}" target="EditBillingAccountTerms">
-                <parameter param-name="billingAccountId"/>
-                <parameter param-name="billingAccountTermId"/>
-            </hyperlink>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="removeBillingAccountTerm">

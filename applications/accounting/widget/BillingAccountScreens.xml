@@ -176,9 +176,6 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.billingAccountDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditBillingAccountTerms} - ${uiLabelMap.AccountingAccountId} ${billingAccount.billingAccountId}">
-                            <include-form name="ListBillingAccountTerms" location="component://accounting/widget/BillingAccountForms.xml"/>
-                        </screenlet>
                         <section>
                             <condition>
                                 <not><if-empty field="parameters.billingAccountTermId"/></not>
@@ -190,11 +187,17 @@ under the License.
                                 <screenlet title="${uiLabelMap.PageTitleEditBillingAccountTerms}">
                                     <include-form name="EditBillingAccountTerms" location="component://accounting/widget/BillingAccountForms.xml"/>
                                 </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditBillingAccountTerms} - ${uiLabelMap.AccountingAccountId} ${billingAccount.billingAccountId}">
+                            <include-form name="ListBillingAccountTerms" location="component://accounting/widget/BillingAccountForms.xml"/>
+                        </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <screenlet title="${uiLabelMap.AccountingCreateBillingAccountTerm}">
                                     <include-form name="EditBillingAccountTerms" location="component://accounting/widget/BillingAccountForms.xml"/>
                                 </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditBillingAccountTerms} - ${uiLabelMap.AccountingAccountId} ${billingAccount.billingAccountId}">
+                            <include-form name="ListBillingAccountTerms" location="component://accounting/widget/BillingAccountForms.xml"/>
+                        </screenlet>
                             </fail-widgets>
                         </section>
                     </decorator-section>

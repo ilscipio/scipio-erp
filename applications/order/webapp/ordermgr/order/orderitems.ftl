@@ -305,7 +305,7 @@ under the License.
                                 <@td class="text-right" valign="top" nowrap="nowrap">
                                     <#assign modallabel><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></#assign>
                                     <@modal id="${productId}_adj" label=modallabel>
-                                        <@table type="data-complex" class="grid">
+                                        <@table type="data-complex" class="+grid"> <#-- orig: class="grid" -->
                                             <@thead>
                                                 <@tr>
                                                 <@th width="70%" colspan="2">${uiLabelMap.OrderAdjustments}</@th>

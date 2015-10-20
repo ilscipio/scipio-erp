@@ -1496,7 +1496,7 @@ Creates a very basic wrapper for code blocks
 Helps define table. Required wrapper for all table sub-elem macros.
 
     Usage example:  
-    <@table type="data-list" class="basic-table" id="my-table">
+    <@table type="data-list" id="my-table"> <#- orig: class="basic-table" ->
       <@thead>
         <@tr>
           <@th width="15%">col 1</@th>

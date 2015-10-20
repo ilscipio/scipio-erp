@@ -149,7 +149,7 @@ under the License.
                                 <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
                                     <@td colspan="2">
                                         Why weren't you satisfied with the item description?
-                                        <@table type="fields" class="answers" width="100%" border="0" cellpadding="0" cellspacing="0">
+                                        <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0" cellspacing="0"> <#-- orig: class="answers" -->
                                             <@tbody>
                                                 <@tr>
                                                     <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
@@ -308,7 +308,7 @@ under the License.
                             <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
                                 <@td colspan="2">
                                     Why weren't you satisfied with the item description?
-                                    <@table type="fields" class="answers" width="100%" border="0" cellpadding="0" cellspacing="0">
+                                    <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0" cellspacing="0"> <#-- orig: class="answers" -->
                                         <@tbody>
                                             <@tr>
                                                 <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
@@ -440,7 +440,7 @@ under the License.
                             <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
                                 <@td colspan="2">
                                     Why weren't you satisfied with the item description?
-                                    <@table type="fields" class="answers" width="100%" border="0" cellpadding="0" cellspacing="0">
+                                    <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0" cellspacing="0"> <#-- orig: class="answers" -->
                                         <@tbody>
                                             <@tr>
                                                 <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />

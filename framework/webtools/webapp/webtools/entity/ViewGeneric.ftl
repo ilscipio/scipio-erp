@@ -264,7 +264,7 @@ function ShowTab(lname) {
             <#if relation.valueRelated?has_content>
                             <@pli>
                               <@modal id="rel_${relation.relatedTable}" label="${uiLabelMap.CommonValues}">                                
-                                  <@table type="fields" autoAltRows=true cellspacing="0" class="${styles.grid_large!}12">
+                                  <@table type="fields" autoAltRows=true cellspacing="0" class="+${styles.grid_large!}12">
                                     <@thead>
                                         <@tr>
                                             <@th class="${styles.grid_large!}3">${uiLabelMap.WebtoolsFieldName}</@th>

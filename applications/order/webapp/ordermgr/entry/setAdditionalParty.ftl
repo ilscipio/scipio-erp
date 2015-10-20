@@ -31,7 +31,7 @@ under the License.
   </@tr>
   <@tr>
     <@td width="100%">
-      <@table type="fields" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <@table type="fields" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td align="right">
             <input type="radio" id="additionalPartyType_Person" name="additionalPartyType" value="Person" onclick="<#if additionalPartyType??>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if (additionalPartyType?? && additionalPartyType == "Person")> checked="checked"</#if> />
@@ -76,7 +76,7 @@ under the License.
 
   <@tr>
     <@td width="100%">
-      <@table type="fields" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <@table type="fields" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>${uiLabelMap.CommonIdentifier} :</@td>
           <@td>
@@ -103,7 +103,7 @@ under the License.
 
   <@tr>
     <@td width="100%">
-      <@table type="fields" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <@table type="fields" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <form method="post" action="<@ofbizUrl>addAdditionalParty</@ofbizUrl>" name="addAdditionalPartyForm" id="addAdditionalPartyForm">
         <@tr>
           <@td>&nbsp;</@td>

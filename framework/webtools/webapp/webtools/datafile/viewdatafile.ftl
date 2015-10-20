@@ -92,7 +92,7 @@ under the License.
                  <@td>${modelRecord.description}</@td>
               </@tr>
             </@table>
-            <@table type="fields" class="dark-grid" cellspacing="0" openOnly=true />
+            <@table type="fields" class="+dark-grid" cellspacing="0" openOnly=true /> <#-- orig: class="dark-grid" -->
               <@tr>
                 <#list modelRecord.fields as modelField>
                   <@td><b>${modelField.name}</b></@td>

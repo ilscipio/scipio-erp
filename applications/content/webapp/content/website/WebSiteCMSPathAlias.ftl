@@ -33,8 +33,8 @@
 </#if>
 
 
-    <@table type="data-list" border="1" cellpadding="2" cellspacing="0" class="calendarTable">
-     <@thead>
+    <@table type="data-list" border="1" cellpadding="2" cellspacing="0" class="+calendarTable"> <#-- orig: class="calendarTable" -->
+      <@thead>
       <@tr class="header-row">
         <@th>Web Site ID</@th>
         <@th>Path Alias</@th>

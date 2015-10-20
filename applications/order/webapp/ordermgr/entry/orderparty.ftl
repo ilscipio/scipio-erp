@@ -19,7 +19,7 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
   <@section title="${uiLabelMap.PartyParty}"> <#-- class='boxoutside' -->
-      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td align="center">
             <#if person?has_content>

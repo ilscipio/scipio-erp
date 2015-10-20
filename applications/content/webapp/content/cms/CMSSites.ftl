@@ -36,11 +36,11 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 </#if>
 <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_ADMIN" >
 
-<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class="+boxoutside"> <#-- orig: class="boxoutside" -->
   <@tr>
     <@td width='100%'>
       <form name="userform" method="post" action="<@ofbizUrl>CMSSites</@ofbizUrl>" >
-      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='appTitle'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class="+appTitle"> <#-- orig: class="appTitle" -->
         <@tr>
           <@td colspan="1" valign="middle" align="right">
             <div class="boxhead">&nbsp; Root Site ID&nbsp;&nbsp; </div>
@@ -60,7 +60,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>
             <form method="post" name="publishsite" action="<@ofbizUrl>linkContentToPubPt</@ofbizUrl>">
@@ -83,7 +83,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <#if requestParameters.moderatedSiteId?has_content>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <@table type="fields" border="0" width='100%' cellspacing='0' cellpadding='0' class="+boxoutside"> <#-- orig: class="boxoutside" -->
          <@tr type="util"><@td><hr /></@td></@tr>
          <@tr><@td align="center"><@heading>Unapproved entries for forum Id: ${requestParameters.moderatedSiteId}</@heading></@td></@tr>
          <@tr type="util"><@td><hr /></@td></@tr>
@@ -95,7 +95,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <#if requestParameters.permRoleSiteId?has_content>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <@table type="fields" border="0" width='100%' cellspacing='0' cellpadding='0' class="+boxoutside"> <#-- orig: class="boxoutside" -->
          <@tr type="util"><@td><hr /></@td></@tr>
          <@tr><@td align="center"><@heading>Associated roles for forum Id: ${requestParameters.permRoleSiteId}</@heading></@td></@tr>
          <@tr type="util"><@td><hr /></@td></@tr>
@@ -213,7 +213,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
       <input type="hidden" name="permRoleSiteId" value="${forumId}"/>
       <input type="hidden" name="forumId" value="${forumId}"/>
       <input type="hidden" name="rootForumId" value="${rootForumId}"/>
-      <@table type="fields" class="" cellspacing="" width='100%' border='0' cellspacing='0' cellpadding='4' class='boxoutside'>
+      <@table type="fields" class="" cellspacing="" width='100%' border='0' cellspacing='0' cellpadding='4' class="+boxoutside"> <#-- orig: class="boxoutside" -->
         <@tr>
             <@td class="">User</@td>
             <#list blogRoleIdList as roleTypeId>

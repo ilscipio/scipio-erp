@@ -26,7 +26,7 @@ under the License.
     </@menu>
   </#assign>
   <@section title="${uiLabelMap.WorkEffortNotes}" menuHtml=menuHtml>
-      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>
             <#if workEffortNoteandDetails?has_content>

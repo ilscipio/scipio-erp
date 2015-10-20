@@ -51,10 +51,10 @@ ${menuWrapper.renderMenuString()}
 -->
 <#-- ============================================================= -->
 
-<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class="+boxoutside"> <#-- orig: class="boxoutside" -->
   <@tr>
     <@td width='100%'>
-      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxtop"> <#-- orig: class="boxtop" -->
         <@tr>
           <@td valign="middle">
             <div class="boxhead">&nbsp; Links </div>
@@ -65,7 +65,7 @@ ${menuWrapper.renderMenuString()}
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>
             <form mode="post" name="publishsite" action="<@ofbizUrl>linkContentToPubPt</@ofbizUrl>">
@@ -92,10 +92,10 @@ ${menuWrapper.renderMenuString()}
   </@tr>
 </@table>
 
-<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class="+boxoutside"> <#-- orig: class="boxoutside" -->
   <@tr>
     <@td width='100%'>
-      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxtop"> <#-- orig: class="boxtop" -->
         <@tr>
           <@td valign="middle">
             <div class="boxhead">&nbsp; Features </div>
@@ -106,7 +106,7 @@ ${menuWrapper.renderMenuString()}
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>
             <form mode="post" name="updatefeatures" action="<@ofbizUrl>updateFeatures</@ofbizUrl>">
@@ -167,10 +167,10 @@ ${menuWrapper.renderMenuString()}
 </@table>
 
 <#--
-<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class="+boxoutside"> <#-- orig: class="boxoutside" -->
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxtop"> <#-- orig: class="boxtop" -->
         <@tr>
           <@td valign="middle">
             <div class="boxhead">&nbsp;Image Information</div>
@@ -184,7 +184,7 @@ ${menuWrapper.renderMenuString()}
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>
               <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
@@ -228,10 +228,10 @@ ${menuWrapper.renderMenuString()}
 
 <#macro renderTextData content textData >
     <#assign contentId=content.contentId!/>
-<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<@table type="generic" border="0" width='100%' cellspacing='0' cellpadding='0' class="+boxoutside"> <#-- orig: class="boxoutside" -->
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <@table type="fields" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxtop"> <#-- orig: class="boxtop" -->
         <@tr>
           <@td valign="middle">
             <div class="boxhead">&nbsp;</div>
@@ -245,7 +245,7 @@ ${menuWrapper.renderMenuString()}
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>
               <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>
@@ -259,7 +259,7 @@ ${menuWrapper.renderMenuString()}
   </@tr>
   <@tr>
     <@td type="generic" width='100%'>
-      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <@table type="generic" width='100%' border='0' cellspacing='0' cellpadding='0' class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>
               <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing='0'>

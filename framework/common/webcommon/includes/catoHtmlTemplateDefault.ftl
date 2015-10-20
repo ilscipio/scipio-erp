@@ -1559,7 +1559,17 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <#local styleName = "default">
   </#if>
   <#if !autoAltRows?is_boolean>
-    <#local autoAltRows = inheritAltRows || (styles["table_" + styleName + "_autoaltrows"]!styles["table_default_autoaltrows"]!false)>
+    <#if inheritAltRows>
+      <#local autoAltRows = true>
+    <#else>
+      <#local autoAltRows = styles["table_" + styleName + "_autoaltrows"]!"">
+      <#if !autoAltRows?is_boolean>
+        <#local autoAltRows = styles["table_default_autoaltrows"]!"">
+        <#if !autoAltRows?is_boolean>
+          <#local autoAltRows = false>
+        </#if>
+      </#if>
+    </#if>
   </#if>
   <#local defaultClass = styles["table_" + styleName]!"">
   <#local classes = makeClassesArg(class, defaultClass)>
@@ -1760,7 +1770,13 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#local tableStyleName = (catoCurrentTableInfo.styleName)!tableType>
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
   <#if !type?has_content>
-    <#local type = styles["table_" + tableStyleName + "_rowtype"]!styles["table_default_rowtype"]!"generic">
+    <#local type = styles["table_" + tableStyleName + "_rowtype"]!"">
+    <#if !type?has_content>
+      <#local type = styles["table_default_rowtype"]!"">
+      <#if !type?has_content>
+        <#local type = "generic">
+      </#if>
+    </#if>
   </#if>
   <#local metaRow = (type == "meta")>
   <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>

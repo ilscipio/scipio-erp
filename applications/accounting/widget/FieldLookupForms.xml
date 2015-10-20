@@ -186,8 +186,8 @@ under the License.
     <form name="lookupInvoice" target="LookupInvoice" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <!--auto-fields-entity entity-name="Invoice" default-field-type="hidden" /-->
-        <field position="1" name="invoiceId" ><text-find/></field>
-        <field position="1" name="invoiceTypeId">
+        <field name="invoiceId" title="${uiLabelMap.AccountingInvoice}"><text-find/></field>
+        <field name="invoiceTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="InvoiceType"/>
             </drop-down>
@@ -207,6 +207,7 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="listInvoice" list-name="listIt" title="" type="list" paginate-target="LookupInvoice"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
@@ -217,16 +218,16 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="invoiceId" widget-style="${styles.link_default}">
+        <field name="invoiceId"  title="${uiLabelMap.AccountingInvoice}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${invoiceId}" target="javascript:set_value('${invoiceId}')"/>
         </field>
-        <field name="invoiceTypeId"><display-entity entity-name="InvoiceType"/></field>
+        <field name="invoiceTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="InvoiceType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="description"><display/></field>
         <field name="partyIdFrom"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
         <field name="partyId" title="${uiLabelMap.AccountingPartyIdTo}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
-        <field name="amount"><display/></field>
-        <field name="currencyUomId"><display/></field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}"><display/></field>
+        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
 
     <form name="lookupAgreement" target="LookupAgreement" title="" type="single"

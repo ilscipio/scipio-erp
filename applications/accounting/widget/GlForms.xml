@@ -1059,6 +1059,7 @@ under the License.
         <field name="reconciledAmount"><display/></field>
         <field name="lastUpdatedStamp"><display/></field>
     </form>
+    
     <form name="FindGlAccountReconciliations" type="single" title="" target="findGlAccountReconciliations"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
@@ -1069,11 +1070,12 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
+    
     <form name="ListGlAccountReconciliations" type="list" default-entity-name="GlReconciliation"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
@@ -1085,17 +1087,15 @@ under the License.
                 </condition-list>
             </entity-condition>
         </actions>
-        <field name="glReconciliationId" widget-style="${styles.link_default}">
+        <field name="glReconciliationId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${glReconciliationId}" target="EditGlReconciliations">
                 <parameter param-name="glReconciliationId"/>
                 <parameter param-name="tabButtonItem" from-field="AccountReconciliations"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>
-        <field name="glReconciliationName"><display/></field>
+        <field name="glReconciliationName" title="${uiLabelMap.CommonName}"><display/></field>
         <field name="description"><display/></field>
-        <field name="createdByUserLogin"><display/></field>
-        <field name="lastModifiedByUserLogin"><display/></field>
         <field name="glAccountId" widget-style="${styles.link_default}">
             <hyperlink target="GlAccountNavigate" description="${glAccountId}">
                 <parameter param-name="glAccountId"/>
@@ -1106,7 +1106,10 @@ under the License.
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
         </field>
-        <field name="reconciledBalance"><display/></field>
+        <field name="reconciledBalance" widget-area-style="amount" title-area-style="align-right"><display/></field>
+        
+        <field name="createdByUserLogin"><display/></field>
+        <field name="lastModifiedByUserLogin"><display/></field>
     </form>
     
     <!-- Transaction Reports -->

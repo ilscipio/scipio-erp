@@ -1259,7 +1259,8 @@
         </menu-item>
     </menu>
 
-    <menu name="PartyGlShortCuts">
+    <menu name="PartyGlShortCuts" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="button-bar button-style-2">
         <menu-item name="CreateSalesAcctgTrans">
             <link target="CreateAcctgTransAndEntries" text="${uiLabelMap.AccountingCreateSalesAcctgTrans}" style="${styles.button_default}">
                 <parameter param-name="organizationPartyId" />

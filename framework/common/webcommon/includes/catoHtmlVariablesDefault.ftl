@@ -45,10 +45,6 @@
     
   <#-- Menus 
        menu_xxx classes are looked up by the @menu and @menuitem macros as defaults for each menu type. --> 
-    <#-- default entry is used for any encountered menu types that have no specific entries in this hash -->    
-    "menu_default" : "",  
-    "menu_default_item" : "", 
-    "menu_default_itemlink" : "",  
     <#-- Generic menu types -->
     "menu_generic" : "",  
     "menu_generic_item" : "", 
@@ -81,6 +77,10 @@
     "menu_section_inline" : "button-group",
     "menu_section_inline_item" : "",
     "menu_section_inline_itemlink" : "button tiny", 
+    <#-- default entry is used for any encountered menu types that have no specific entries in this hash -->    
+    "menu_default" : "",  
+    "menu_default_item" : "", 
+    "menu_default_itemlink" : "",  
     
   <#-- Data and Tables 
        table_default, table_generic, table_data_list, table_data_complex, table_summary and table_fields and names
@@ -91,10 +91,6 @@
     "table" : "basic-table", <#-- TODO: this should be removed along with all occurrences in templates, once all tables are properly identified by type and checked over for styling exceptions -->
      
     <#-- table type-based styles -->
-    <#-- default entry is used by @table for any encountered table types that have no specific entries in this hash. 
-         in other words, it is the default style for table types that this theme does not recognize, or "all others". -->    
-    "table_default" : "basic-table",
-    "table_default_cellspacing" : "",
     "table_generic" : "basic-table",
     "table_generic_cellspacing" : "",
     "table_data_list" : "basic-table",
@@ -105,6 +101,10 @@
     "table_summary_cellspacing" : 0,
     "table_fields" : "",
     "table_fields_cellspacing" : 0,
+    <#-- default entry is used by @table for any encountered table types that have no specific entries in this hash. 
+         in other words, it is the default style for table types that this theme does not recognize, or "all others". -->    
+    "table_default" : "basic-table",
+    "table_default_cellspacing" : "",
     
     <#-- other table-related styles -->
     "row_reg" : "even",

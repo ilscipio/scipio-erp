@@ -150,7 +150,7 @@ under the License.
             </#if>
             
     <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.OrderShipGroup}" />
+        <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text="${uiLabelMap.CommonNew} ${uiLabelMap.OrderShipGroup}" />
         <@menuitem type="link" href=makeOfbizUrl("EditShipAddress") text="${uiLabelMap.OrderCreateShippingAddress}" />
     </@menu> 
     

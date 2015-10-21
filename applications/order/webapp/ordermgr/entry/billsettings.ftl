@@ -39,7 +39,7 @@ function makeExpDate() {
         <@cell class="${styles.grid_large!}6">
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
          <@menu type="button">
-           <@menuitem type="link" href=makeOfbizUrl("setBilling?createNew=Y") text="${uiLabelMap.CommonCreateNew}" />
+           <@menuitem type="link" href=makeOfbizUrl("setBilling?createNew=Y") text="${uiLabelMap.CommonNew}" />
          </@menu>
         
           <#-- initial screen when we have a associated party -->
@@ -47,7 +47,6 @@ function makeExpDate() {
             <input type="hidden" name="finalizeMode" value="payment"/>
             <@table type="fields"> <#-- orig: class="basic-table" -->
              
-              
               <#if billingAccountList?has_content>
                 <@tr>
                   <@td class="${styles.grid_large!}3">

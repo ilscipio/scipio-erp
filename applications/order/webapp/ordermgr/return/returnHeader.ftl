@@ -172,7 +172,7 @@ under the License.
         <#else>
           <input type="hidden" name="statusId" value="RETURN_REQUESTED" />
           <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.CommonCreateNew}"/>
+              <input type="submit" value="${uiLabelMap.CommonNew}"/>
           </@field>
         </#if>
 

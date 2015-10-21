@@ -54,7 +54,7 @@ under the License.
                               <@tfoot>
                                 <@tr>
                                     <@td colspan="5">
-                                      <a href="<@ofbizUrl>setOrderTerm?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCreateNew}</a>
+                                      <a href="<@ofbizUrl>setOrderTerm?createNew=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNew}</a>
                                     </@td>
                                 </@tr>
                               </@tfoot>

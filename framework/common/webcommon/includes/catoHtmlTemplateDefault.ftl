@@ -1207,10 +1207,46 @@ A fieldset including the HTML element.
 -->
 <#macro fieldset id="" title="" class=true collapsed=false>
     <#local classes = makeClassesArg(class, "")>
-    <@formlib.renderFieldGroupOpen style=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip=""/>
+    <@fieldset_impl style=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="">
         <#nested />
-    <@formlib.renderFieldGroupClose style="" id="" title=""/>
+    </@fieldset_impl>
 </#macro>
+
+<#-- DEV NOTE: see @section_impl for details on pattern -->
+<#macro fieldset_impl style="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
+<div class="${styles.grid_row!}">
+  <div class="fieldgroup ${styles.grid_large!}12 ${styles.grid_cell!}<#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> ${styles.collapsed!}</#if></#if>"<#if id?has_content> id="${id}"</#if>>
+    <fieldset<#if style?has_content> class="${style!}"</#if>>
+      <#--<#if collapsible>
+        <ul>
+          <li class="<#if collapsed>${styles.collapsed!}">
+                      <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${expandToolTip}', '${collapseToolTip}');">
+                    <#else>expanded">
+                      <a onclick="javascript:toggleCollapsiblePanel(this, '${collapsibleAreaId}', '${expandToolTip}', '${collapseToolTip}');">
+                    </#if>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<#if title?has_content>${title}</#if></a>
+          </li>
+        </ul>
+      <#else>
+        <#if title?has_content>${title}</#if>
+      </#if><#rt/>
+    </div>
+    <div id="${collapsibleAreaId}" class="fieldgroup-body" <#if collapsed && collapsible> style="display: none;"</#if>>
+    -->
+    <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${title}</legend></#if>
+</#if>
+    <#nested>
+<#if close>
+    </fieldset>
+    </div>
+</div>
+</#if>
+</#macro>
+
+
 
 <#-- 
 *************

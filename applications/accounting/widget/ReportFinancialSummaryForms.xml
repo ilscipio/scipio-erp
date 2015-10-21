@@ -108,6 +108,7 @@ under the License.
         <field name="accountName" title="${uiLabelMap.CommonName}"><display description="${accountName}"/></field>
         <field name="balance" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
+    
     <form name="IncomeStatementExpenses" type="list" list-name="expenseAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="accountCode">
@@ -119,6 +120,7 @@ under the License.
         <field name="accountName" title="${uiLabelMap.CommonName}"><display description="${accountName}"/></field>
         <field name="balance" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
+    
     <form name="IncomeStatementIncome" type="list" list-name="incomeAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="accountCode">
@@ -130,6 +132,7 @@ under the License.
         <field name="accountName" title="${uiLabelMap.CommonName}"><display description="${accountName}"/></field>
         <field name="balance" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
+    
     <form name="ComparativeIncomeStatementParameters" type="single" target="ComparativeIncomeStatement" header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
         <field name="period1FromDate" title="${uiLabelMap.FormFieldTitle_period1FromDate}" required-field="true" position="1"><date-time type="timestamp"/></field>
@@ -152,6 +155,7 @@ under the License.
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <!-- This is required to render the date range in the PDF: the two columns layout is not supported -->
     <form name="ComparativeIncomeStatementParametersOneColumn" type="single" target="ComparativeIncomeStatement" header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
@@ -382,25 +386,26 @@ under the License.
         </field>
         <field name="submitAction" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="PostedTransactionTotalList" type="list" list-name="postedTransactionTotals"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <row-actions>
             <set field="closingD" value="${openingD + D}" type="BigDecimal"/>
             <set field="closingC" value="${openingC + C}" type="BigDecimal"/>
         </row-actions>
-        <field name="accountCode">
+        <field name="accountCode" title="${uiLabelMap.CommonCode}">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>
-        <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
-        <field name="openingD" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="openingC" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="D" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="C" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="closingD" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="closingC" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="accountName" title="${uiLabelMap.CommonName}"><display description="${accountName}"/></field>
+        <field name="openingD" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="openingC" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="D" title="${uiLabelMap.AccountingDebitFlag}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="C" title="${uiLabelMap.AccountingCreditFlag}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="closingD" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="closingC" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
     <form name="UnpostedTransactionTotalList" type="list" list-name="unpostedTransactionTotals"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" extends="PostedTransactionTotalList">
@@ -456,6 +461,7 @@ under the License.
         <field name="glAccountId"><display description="[${glAccountId}] [${glAccount.accountCode}] ${glAccount.accountName}"/></field>
         <field name="totalAmount"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
+    s
     <form name="GlAccountTrialBalance" type="single" target="GlAccountTrialBalance">
         <actions>
             <entity-and entity-name="CustomTimePeriod" list="customTimePeriods">
@@ -520,10 +526,12 @@ under the License.
                 <select-field field-name="accountingQuantitySum"/>
             </entity-condition>
         </actions>
-        <field name="productId"><display/></field>
+        <field name="productId" title="${uiLabelMap.CommonProduct}">
+            <display-entity entity-name="Product" description="${productId} - ${internalName}"/>
+        </field>
         <field name="unitCost" widget-area-style="amount" title-area-style="align-right"><display currency="${currencyUomId}" type="currency"/></field>
         <field name="accountingQuantitySum" title="${uiLabelMap.CommonQuantity}" widget-area-style="amount" title-area-style="align-right"><display/></field>
-        <field name="value" widget-area-style="amount" title-area-style="align-right"><display description="${accountingQuantitySum * unitCost}" currency="${currencyUomId}" type="currency"/></field>
+        <field name="value" title="${uiLabelMap.CommonValue}" widget-area-style="amount" title-area-style="align-right"><display description="${accountingQuantitySum * unitCost}" currency="${currencyUomId}" type="currency"/></field>
     </form>
 
     <form name="TrialBalanceFinancialTimePeriodSelection" type="single" header-row-style="header-row" target="TrialBalance" default-table-style="basic-table">

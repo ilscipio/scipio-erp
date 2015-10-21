@@ -25,6 +25,14 @@ under the License.
     <form name="FindPaymentGroup" type="single" target="FindPaymentGroup"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="PaymentGroup" default-field-type="find"/>
+        <field name="paymentGroupId" title="${uiLabelMap.CommonId}"><text-find/></field>
+        <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PaymentGroupType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -39,13 +47,13 @@ under the License.
                 <field-map field-name="paymentGroupId"/>
             </entity-and>
         </row-actions>
-        <field name="paymentGroupId" widget-style="${styles.link_default}">
+        <field name="paymentGroupId" title="${uiLabelMap.CommonId} - " widget-style="${styles.link_default}">
             <hyperlink description="${paymentGroupId}" target="PaymentGroupOverview">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
-        <field name="paymentGroupTypeId" title="${uiLabelMap.FormFieldTitle_paymentGroupType}"><display-entity entity-name="PaymentGroupType"/></field>
-        <field name="paymentGroupName"><display description="${paymentGroupName}"/></field>
+        <field name="paymentGroupName" title="${uiLabelMap.CommonName}"><display description="${paymentGroupName}"/></field>
+        <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="PaymentGroupType"/></field>
         <field name="depositSlipAction" title=" " widget-style="${styles.button_default}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="DepositSlip.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>

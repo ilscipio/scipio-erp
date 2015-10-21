@@ -1236,8 +1236,8 @@ it's an unexpected result, error or one that requires user action. See other mac
        <div data-alert class="${styles.alert_wrap!} ${styles[typeClass]!}">
            <div class="${styles.grid_row!}">
               <div class="<#if classes?has_content>${classes} </#if>${styles.grid_cell!}">
+                  <a href="#" class="close" data-dismiss="alert">&times;</a>
                   <#nested>
-                  <a href="#" class="close">&times;</a>
                   </div>
               </div>
            </div>

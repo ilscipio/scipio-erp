@@ -926,7 +926,8 @@ Not associated with an HTML element as is @fieldset.
   </#if>
 </#if>
 
-<@row collapse=collapse!false norows=(norows || nocontainer) class="form-field-entry">
+<#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
+<@row collapse=collapse!false norows=(norows || nocontainer) class=("+form-field-entry "+fieldEntryTypeClass)>
 
     <#-- TODO: right now most of the fieldsInfo parameters are not fully exploited.
          assumes labelType=="gridarea" (unless "none" which influences labelArea) and 
@@ -969,7 +970,7 @@ Not associated with an HTML element as is @fieldset.
         </#if>
         
         <#if !radioSingle>
-            <@cell class=(subclasses+" field-entry-title")?trim nocells=(nocells || nocontainer)>
+            <@cell class=(subclasses+" field-entry-title "+fieldEntryTypeClass)?trim nocells=(nocells || nocontainer)>
               <#if label?has_content>
                 <#if type=="checkbox" || collapse==false>
                     <label class="form-field-label"<#if id?has_content> for="${id}"</#if>>${label}</label>
@@ -985,7 +986,7 @@ Not associated with an HTML element as is @fieldset.
             </@cell>
         </#if>
     </#if>
-    <@cell class=("${classes!}"+" field-entry-widget")?trim nocells=(nocells || nocontainer)>
+    <@cell class=("${classes!}"+" field-entry-widget "+fieldEntryTypeClass)?trim nocells=(nocells || nocontainer)>
         <#switch type>
           <#case "input">
             <@formlib.renderTextField name=name 
@@ -1186,6 +1187,42 @@ Not associated with an HTML element as is @fieldset.
 <#-- pop field info when done -->
 <#local dummy = popRequestStack("catoCurrentFieldInfo")>
 </#macro>
+
+<#function mapCatoFieldTypeToStyleName fieldType>
+  <#return fieldType>
+</#function>
+
+<#function mapWidgetFieldTypeToStyleName fieldType>
+  <#if !widgetFieldTypeToStyleNameMap??>
+    <#-- FIXME: these need to match cato types to unify css classes; they don't -->
+    <#global widgetFieldTypeToStyleNameMap = {
+        "display": "display",
+        "hyperlink": "hyperlink",
+        "text": "input",
+        "textarea": "textarea",
+        "date-time": "datetime",
+        "drop-down": "dropdown",
+        "check": "checkbox",
+        "radio": "radio",
+        "submit": "submit",
+        "reset": "reset",
+        "hidden": "hidden",
+        "ignored": "ignored",
+        "text-find": "textfind",
+        "date-find": "datefind",
+        "range-find": "rangefind",
+        "lookup": "lookup",
+        "file": "file",
+        "password": "password",
+        "image": "image",
+        "display-entity": "displayentity",
+        "container": "container"
+    }>
+  </#if>
+  <#return widgetFieldTypeToStyleNameMap[fieldType]!"other">
+</#function>
+
+
 
 <#-- 
 *************

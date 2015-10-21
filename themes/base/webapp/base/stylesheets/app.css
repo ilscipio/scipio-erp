@@ -9680,7 +9680,7 @@ table.basic-table input {
 
 /* line 138, ../scss/_base.scss */
 td {
-  word-break: normal;
+  word-break: break-all;
 }
 
 /* line 139, ../scss/_base.scss */
@@ -9920,6 +9920,11 @@ div.scrollable-table-container {
 /* line 343, ../scss/_base.scss */
 div.scrollable-table-container > table {
   margin-bottom: 0;
+}
+
+/* line 348, ../scss/_base.scss */
+.field-entry-widget.field-entry-type-display:last-child {
+  margin-bottom: 1rem;
 }
 
 /* line 1, ../scss/_ui_autocomplete.scss */
@@ -10206,17 +10211,19 @@ ul[data-pie-id] {
   display: none;
 }
 
-/* OFBiz align-right definition */
+/* line 51, ../scss/app.scss */
 .align-right {
   text-align: right;
   word-break: normal;
 }
 
+/* line 56, ../scss/app.scss */
 .align-center {
   text-align: center;
   word-break: normal;
 }
 
+/* line 61, ../scss/app.scss */
 .amount {
   text-align: right;
   word-break: normal;

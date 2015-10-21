@@ -1157,14 +1157,11 @@ Not associated with an HTML element as is @fieldset.
               <#local imageLocation = "">
               <#local desc = value>
             </#if>
-            <#-- FIXME: maybe use div or span with a class instead of p, but this blends nicely for now -->
-            <p>
                 <@formlib.renderDisplayField type=displayType imageLocation=imageLocation idName="" description=desc title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=description/>
                 <#-- FIXME: tooltip too crappy -->
               <#if tooltip?has_content>
                 <span class="tooltip">${tooltip}</span>
               </#if>
-            </p>
             <#break> 
           <#default> <#-- "generic", empty or unrecognized -->
             <#if value?has_content>

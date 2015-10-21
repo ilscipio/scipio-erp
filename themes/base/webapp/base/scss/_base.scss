@@ -331,7 +331,7 @@ $pie-color: $primary-color; // chart-color
     
     .login-box {
       min-width: 0;
-      }
+    }
 }
 
 // quick custom workaround for be able to scroll tables.
@@ -342,5 +342,10 @@ div.scrollable-table-container {
 }
 div.scrollable-table-container > table {
   margin-bottom: 0;
+}
+
+// adds a margin to last elem inside "display" type fields, because all other types get a margin
+.field-entry-widget.field-entry-type-display:last-child {
+  margin-bottom: 1rem;
 }
 

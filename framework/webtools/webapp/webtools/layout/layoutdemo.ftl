@@ -11,7 +11,7 @@
     <li><a href="#">Home</a></li>
     <li><a href="#">Features</a></li>
     <li class="${styles.nav_breadcrumbs_disabled!}"><a href="#">Gene Splicing</a></li>
-    <li class="${styles.nav_breadcrumbs_active!}"><a href="#">Cloning</a></li>
+    <li class="${styles.nav_breadcrumbs_active!}">Cloning</li>
 </@nav>
 
 <@section>

@@ -303,7 +303,7 @@ levels manually, but most often should let @section menu handle them.
 </#macro>
 
 <#-- 
-    Transferred from old @renderScreenletBegin+renderScreenletEnd.
+    migrated from @renderScreenletBegin/End screen widget macro
     DEV NOTE: section_impl and similar macros ARE NOT a final implementation pattern. 
           it was created initially strictly to remove dependency of cato libs on ofbiz macro library. may need refinement.
     TODO: clean up macro arguments and dissect further
@@ -1246,7 +1246,8 @@ A fieldset including the HTML element.
     </@fieldset_impl>
 </#macro>
 
-<#-- DEV NOTE: see @section_impl for details on pattern -->
+<#-- DEV NOTE: see @section_impl for details on pattern 
+     migrated from @renderFieldGroupOpen/Close form widget macro -->
 <#macro fieldset_impl style="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
@@ -1511,6 +1512,7 @@ A fieldset including the HTML element.
 </#function>
 
 <#-- DEV NOTE: see @section_impl for details on pattern
+     migrated from @renderNextPrev form widget macro
      new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*
      paginate is a display hint, does not seem to mean guarantee data wasn't paginated -->
 <#macro paginate_impl paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false ajaxPaginateOnUrl="" paginateOnUrl="" paginateOnStyle="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffStyle="" paginateOffLabel="">

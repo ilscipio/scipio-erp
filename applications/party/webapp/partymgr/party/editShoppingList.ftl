@@ -19,7 +19,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" href="javascript:document.getElementById('createEmptyShoppingList').submit();" text="${uiLabelMap.CommonCreateNew}">
+    <@menuitem type="link" href="javascript:document.getElementById('createEmptyShoppingList').submit();" text="${uiLabelMap.CommonNew}">
       <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
         <input type="hidden" name="partyId" value="${partyId!}" />
       </form>

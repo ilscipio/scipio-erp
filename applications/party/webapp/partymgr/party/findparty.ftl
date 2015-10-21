@@ -37,7 +37,7 @@ under the License.
 
 <#assign menuHtml>
   <@menu type="section" inlineItems=true>
-    <@menuitem type="link" href=makeOfbizUrl("${createUrl}") text="${uiLabelMap.CommonCreateNew}" contentClass="+create" />
+    <@menuitem type="link" href=makeOfbizUrl("${createUrl}") text="${uiLabelMap.CommonNew}" contentClass="+create" />
 <#if partyList?has_content>    
   <#if hideFields == "Y">
     <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=N&amp;sortField=${sortField!}${paramList}") text="${uiLabelMap.CommonShowLookupFields}" class="+collapsed" />

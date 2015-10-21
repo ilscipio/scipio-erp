@@ -1191,14 +1191,14 @@ Not associated with an HTML element as is @fieldset.
 
 <#function mapWidgetFieldTypeToStyleName fieldType>
   <#if !widgetFieldTypeToStyleNameMap??>
-    <#-- FIXME: these need to match cato types to unify css classes; they don't -->
+    <#-- FIXME: these need to match cato types to unify css classes; they don't quite -->
     <#global widgetFieldTypeToStyleNameMap = {
         "display": "display",
         "hyperlink": "hyperlink",
         "text": "input",
         "textarea": "textarea",
         "date-time": "datetime",
-        "drop-down": "dropdown",
+        "drop-down": "select",
         "check": "checkbox",
         "radio": "radio",
         "submit": "submit",

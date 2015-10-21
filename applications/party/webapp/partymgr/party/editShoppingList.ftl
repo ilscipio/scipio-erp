@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href="javascript:document.getElementById('createEmptyShoppingList').submit();" text="${uiLabelMap.CommonNew}">
       <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
@@ -26,7 +26,7 @@ under the License.
     </@menuitem>
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.PartyShoppingLists}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.PartyShoppingLists}" menuContent=menuContent>
     <#if shoppingLists?has_content>
       <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
         <@fields type="default-nolabels">
@@ -54,7 +54,7 @@ under the License.
 
 <#if shoppingList?has_content>
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
       <@menuitem type="link" href="javascript:document.updateList.submit();" text="${uiLabelMap.CommonSave}" />
       <@menuitem type="link" href="javascript:document.createQuoteFromShoppingListForm.submit()" text="${uiLabelMap.PartyCreateNewQuote}">
@@ -67,7 +67,7 @@ under the License.
       <@menuitem type="link" href="/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" text="${uiLabelMap.OrderNewOrder}" />
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}" menuContent=menuContent>
     <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
@@ -119,12 +119,12 @@ under the License.
 </@section>
 
 <#if childShoppingListDatas?has_content>
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes") text="${uiLabelMap.PartyAddChildListsToCart}" />
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuContent=menuContent>
     <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
       <@thead>
         <@tr class="header-row">
@@ -148,12 +148,12 @@ under the License.
 </@section>
 </#if>
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
 <#-- <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") text="${uiLabelMap.PartyAddListToCart}" /> -->
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuContent=menuContent>
     <#if shoppingListItemDatas?has_content>
         <#-- Pagination -->
         <#include "component://common/webcommon/includes/htmlTemplate.ftl"/>

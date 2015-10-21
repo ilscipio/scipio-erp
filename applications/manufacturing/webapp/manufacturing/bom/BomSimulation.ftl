@@ -21,16 +21,16 @@ under the License.
 
 <#if selectedFeatures?has_content>
   <#assign sectionTitle>${uiLabelMap.ManufacturingSelectedFeatures}</#assign>
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true></@menu>
   </#assign>
 <#else>
   <#assign sectionTitle>${uiLabelMap.ManufacturingBomSimulation}</#assign>
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true></@menu>
   </#assign>
 </#if>
-  <@section title=sectionTitle menuHtml=menuHtml>
+  <@section title=sectionTitle menuContent=menuContent>
      <#if selectedFeatures?has_content>
        <#list selectedFeatures as selectedFeature>
          <p>${selectedFeature.productFeatureTypeId} = ${selectedFeature.description!} [${selectedFeature.productFeatureId}]</p>

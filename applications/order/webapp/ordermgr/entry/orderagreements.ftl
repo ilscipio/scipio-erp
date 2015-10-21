@@ -20,12 +20,12 @@ under the License.
 
 <form method="post" name="agreementForm" action="<@ofbizUrl>setOrderCurrencyAgreementShipDates</@ofbizUrl>">
 
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true>
       <@menuitem type="link" href="javascript:document.agreementForm.submit()" text="${uiLabelMap.CommonContinue}" />
     </@menu>
   </#assign>
-  <@section title="${uiLabelMap.OrderOrderEntryCurrencyAgreementShipDates}" menuHtml=menuHtml>
+  <@section title="${uiLabelMap.OrderOrderEntryCurrencyAgreementShipDates}" menuContent=menuContent>
     <#if agreements??>
       <input type='hidden' name='hasAgreements' value='Y'/>
     <#else>

@@ -17,13 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" contentClass="+create" />
     <@menuitem type="link" href=makeOfbizUrl("EditFacilityLocation?facilityId=${facilityId!}") text="${uiLabelMap.ProductNewFacilityLocation}" contentClass="+ create" />
   </@menu>
 </#assign>
-<@section menuHtml=menuHtml>
+<@section menuContent=menuContent>
     <form action="<@ofbizUrl>FindFacilityLocation</@ofbizUrl>" method="get" name="findFacilityLocation" class="basic-form">
         <#if (facilityId??)>
             <input type="hidden" name="facilityId" value="${facilityId}" />

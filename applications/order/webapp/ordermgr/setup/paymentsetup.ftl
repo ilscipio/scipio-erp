@@ -21,12 +21,12 @@ under the License.
 
 <#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
 
-    <#assign menuHtml>
+    <#assign menuContent>
       <@menu type="button" class="+button-style-1">
         <@menuitem type="link" href=makeOfbizUrl("paysetup") text="Payment Setup" selected=true />
       </@menu>
     </#assign>
-    <@section title="Payment Processor Setup" menuHtml=menuHtml>
+    <@section title="Payment Processor Setup" menuContent=menuContent>
         <#if paymentSetups?has_content> 
           <@table type="data-list" autoAltRows=false width="100%" cellpadding="2" cellspacing="2" border="0">
             <@thead>
@@ -74,7 +74,7 @@ under the License.
     </@section>
 
 <#if security.hasEntityPermission("PAYPROC", "_CREATE", session)>
-    <#assign menuHtml>
+    <#assign menuContent>
       <@menu type="section" inlineItems=true>
       <#if webSitePayment?has_content>
         <@menuitem type="link" href=makeOfbizUrl("paysetup") text="Add New" />
@@ -86,7 +86,7 @@ under the License.
     <#else>
       <#assign sectionTitle = "Add New Setting">
     </#if>
-    <@section title=sectionTitle menuHtml=menuHtml>
+    <@section title=sectionTitle menuContent=menuContent>
             <#if webSitePayment?has_content>
               <form method="post" action="<@ofbizUrl>updateWebSitePaymentSetting</@ofbizUrl>">
             <#else>

@@ -17,12 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href=makeOfbizUrl("returnMain") text="${uiLabelMap.OrderCreateReturn}" />
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.OrderReturnsCurrent}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.OrderReturnsCurrent}" menuContent=menuContent>
   <#if returnList?has_content>
     <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
       <@thead>

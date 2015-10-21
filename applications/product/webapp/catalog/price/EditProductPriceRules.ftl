@@ -16,12 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href=makeOfbizUrl("FindProductPriceRules") text="${uiLabelMap.ProductFindRule}" />
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.ProductGlobalPriceRule}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.ProductGlobalPriceRule}" menuContent=menuContent>
     <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
         <@thead>
           <@tr class="header-row">

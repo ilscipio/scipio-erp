@@ -17,12 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href=makeOfbizUrl("addressMatchMap") text="${uiLabelMap.PageTitleAddressMatchMap}" />
   </@menu>
 </#assign>
-<@section id="address-match-map" menuHtml=menuHtml>
+<@section id="address-match-map" menuContent=menuContent>
 
       <form name="matchform" method="post" action="<@ofbizUrl>findAddressMatch?match=true</@ofbizUrl>">
         <@field type="input" name="lastName" label="${uiLabelMap.PartyLastName}" value="${parameters.lastName!}" required=true />

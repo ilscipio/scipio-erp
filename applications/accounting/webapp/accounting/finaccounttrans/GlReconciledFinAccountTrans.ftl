@@ -24,7 +24,7 @@ under the License.
   <input name="finAccountId" type="hidden" value="${finAccountId}"/>
   <input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>
   
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true>
       <@menuitem type="link" href=makeOfbizUrl("EditFinAccountReconciliations?finAccountId=${finAccountId}&amp;glReconciliationId=${glReconciliationId}") text="${uiLabelMap.CommonEdit}" />
       <#assign finAcctTransCondList = delegator.findByAnd("FinAccountTrans", {"glReconciliationId" : glReconciliationId, "statusId" : "FINACT_TRNS_CREATED"}, null, false)>
@@ -33,7 +33,7 @@ under the License.
     </#if>
     </@menu>
   </#assign>
-  <@section title="${uiLabelMap.AccountingCurrentBankReconciliation}" menuHtml=menuHtml>
+  <@section title="${uiLabelMap.AccountingCurrentBankReconciliation}" menuContent=menuContent>
       
   </@section>
   <@section title="${uiLabelMap.AccountingPreviousBankReconciliation}">

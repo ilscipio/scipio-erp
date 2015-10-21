@@ -255,10 +255,10 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#local menuItemsInlined = menuString?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<li(\s|>).*', 'rs')>
   
   <#if !menuClass?has_content>
-    <#-- FIXME: for @section macro menuHtml arg, this is redundant and problematic
+    <#-- FIXME: for @section macro menuContent arg, this is redundant and problematic
         and pretty much hardcoded.
         currently have no good solution to avoid redundancy.  
-        on <#assign menuHtml><@menu type="section" ...> defintions, could omit
+        on <#assign menuContent><@menu type="section" ...> defintions, could omit
         inlineItems=true to generate the <ul> there, but then later impossible to append
         extra list items cleanly (used in stock ofbiz here) via preMenuItems/postMenuItems. 
         and specifying menuClass on @section defeats purpose of having menu type on @menu (having menu type

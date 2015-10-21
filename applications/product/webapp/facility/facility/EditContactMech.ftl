@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?facilityId=${facilityId}") text="${uiLabelMap.CommonGoBack}" />
   <#if (mechMap.contactMechTypeId)?has_content && (mechMap.contactMech)?has_content>
@@ -25,7 +25,7 @@ under the License.
   </#if>
   </@menu>
 </#assign>
-<@section menuHtml=menuHtml>
+<@section menuContent=menuContent>
 
 <#if !mechMap.facilityContactMech?? && mechMap.contactMech??>
   <@alert type="error">${uiLabelMap.PartyContactInfoNotBelongToYou}.</@alert>

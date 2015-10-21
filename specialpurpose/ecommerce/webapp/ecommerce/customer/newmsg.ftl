@@ -25,14 +25,14 @@ under the License.
             </#if>
         </div>
 -->
-<#assign menuHtml>
+<#assign menuContent>
     <@menu type="section-inline" inlineItems=true>
         <#if showMessageLinks?default("false")?upper_case == "TRUE">
           <@menuitem type="link" href=makeOfbizUrl("messagelist") text="${uiLabelMap.EcommerceViewList}" />
         </#if>
     </@menu>
 </#assign>
-<@section title="${pageHeader!}" menuHtml=menuHtml menuLayout="inline-title" class="+screenlet">
+<@section title="${pageHeader!}" menuContent=menuContent menuLayout="inline-title" class="+screenlet">
       <form name="contactus" method="post" action="<@ofbizUrl>${submitRequest}</@ofbizUrl>">
         <input type="hidden" name="partyIdFrom" value="${userLogin.partyId}"/>
         <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS"/>

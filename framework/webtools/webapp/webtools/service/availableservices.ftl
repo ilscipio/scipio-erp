@@ -359,12 +359,12 @@ under the License.
       </@nav>
   </#if>
 
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true>
       <@menuitem type="link" href=makeOfbizUrl("${url}") text="${uiLabelMap.CommonListAll}" />
     </@menu>
   </#assign>
-  <@section menuHtml=menuHtml>
+  <@section menuContent=menuContent>
       <#--
       ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
       <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->

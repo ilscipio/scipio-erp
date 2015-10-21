@@ -23,7 +23,7 @@ under the License.
 <#else>
   <#assign sectionTitle = "${uiLabelMap.AccountingEditCreditCard}">
 </#if>
-<@section title=sectionTitle menuHtml=menuHtml>
+<@section title=sectionTitle menuContent=menuContent>
     <#macro saveCancelMenu>
       <@menu type="button">
         <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text="${uiLabelMap.CommonCancelDone}" />

@@ -18,12 +18,12 @@ under the License.
 -->
 
 <#if commissionReportList?has_content>
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true>
       <@menuitem type="link" href=makeOfbizUrl("CommissionReport.pdf?isSearch=Y&amp;productId=${parameters.productId!}&amp;partyId=${parameters.partyId!}&amp;fromDate=${parameters.fromDate!}&amp;thruDate=${parameters.thruDate!}") text="${uiLabelMap.AccountingInvoicePDF}" target="_BLANK" />
     </@menu>
   </#assign>
-  <@section menuHtml=menuHtml>
+  <@section menuContent=menuContent>
   <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
     <@thead>
     <@tr class="header-row-2">

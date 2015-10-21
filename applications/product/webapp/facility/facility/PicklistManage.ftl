@@ -24,7 +24,7 @@ under the License.
     }
 </script>
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
   <#if picklistInfoList?has_content && (0 < picklistInfoList?size)>
     <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" text="${uiLabelMap.CommonNext}" disabled=(!(picklistCount > highIndex)) />
@@ -33,7 +33,7 @@ under the License.
   </#if>
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.ProductPicklistManage}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.ProductPicklistManage}" menuContent=menuContent>
 
   <form name="paginationForm" method="post" action="<@ofbizUrl>PicklistManage</@ofbizUrl>">
     <input type="hidden" name="viewSize" value="${viewSize}"/>

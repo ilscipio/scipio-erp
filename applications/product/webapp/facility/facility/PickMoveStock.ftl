@@ -30,12 +30,12 @@ under the License.
     }
 </script>
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}") text="${uiLabelMap.CommonPrint}" />
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.ProductStockMovesNeeded}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.ProductStockMovesNeeded}" menuContent=menuContent>
         <#if moveByOisgirInfoList?has_content || moveByPflInfoList?has_content>
           <form method="post" action="<@ofbizUrl>processPhysicalStockMove</@ofbizUrl>" name='selectAllForm'>
               <#-- general request fields -->

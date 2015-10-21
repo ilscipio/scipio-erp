@@ -20,12 +20,12 @@ under the License.
     function setNow(field) { eval('document.selectAllForm.' + field + '.value="${nowTimestamp}"'); }
 </script>
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" contentClass="+create" />
   </@menu>
 </#assign>
-<@section menuHtml=menuHtml>
+<@section menuContent=menuContent>
         <#if invalidProductId??>
             <@alert type="error">${invalidProductId}</@alert>
         </#if>

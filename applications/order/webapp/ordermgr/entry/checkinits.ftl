@@ -36,13 +36,13 @@ under the License.
     <#assign sectionTitle>
       ${uiLabelMap.OrderSalesOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgress}</#if>
     </#assign>
-    <#assign menuHtml>
+    <#assign menuContent>
       <@menu type="section" inlineItems=true>
         <@menuitem type="link" href="javascript:document.salesentryform.submit();" text="${uiLabelMap.CommonContinue}" />
         <@menuitem type="link" href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.PartyFindParty}" />
       </@menu>
     </#assign>
-    <@section class="${styles.grid_large!}9" title=sectionTitle menuHtml=menuHtml>
+    <@section class="${styles.grid_large!}9" title=sectionTitle menuContent=menuContent>
       <form method="post" name="salesentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
       <input type="hidden" name="originOrderId" value="${parameters.originOrderId!}"/>
       <input type="hidden" name="finalizeMode" value="type"/>
@@ -97,13 +97,13 @@ under the License.
     <#assign sectionTitle>
         ${uiLabelMap.OrderPurchaseOrder}<#if shoppingCart??>&nbsp;${uiLabelMap.OrderInProgress}</#if>
     </#assign>
-    <#assign menuHtml>
+    <#assign menuContent>
       <@menu type="section" inlineItems=true>
         <@menuitem type="link" href="javascript:document.poentryform.submit();" text="${uiLabelMap.CommonContinue}" />
         <@menuitem type="link" href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.PartyFindParty}" />
       </@menu>
     </#assign>
-    <@section title=sectionTitle class="${styles.grid_large!}9" menuHtml=menuHtml>
+    <@section title=sectionTitle class="${styles.grid_large!}9" menuContent=menuContent>
       <form method="post" name="poentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
       <input type='hidden' name='finalizeMode' value='type'/>
       <input type='hidden' name='orderMode' value='PURCHASE_ORDER'/>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
   <#if productCategoryId?has_content>
     <@menuitem type="link" href=makeOfbizUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${uiLabelMap.ProductBackToEditCategory}]" />
@@ -36,7 +36,7 @@ under the License.
         </#list>
     </#if>
 </#assign>
-<@section title=sectionTitle menuHtml=menuHtml>
+<@section title=sectionTitle menuContent=menuContent>
       <#if products?has_content>
         <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
           <@thead>

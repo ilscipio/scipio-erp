@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true>
       <#--if project?has_content>
         <@menuitem type="link" href=makeOfbizUrl("newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y") text="${uiLabelMap.ProjectMgrNotesCreateNew}" />
@@ -25,7 +25,7 @@ under the License.
       </#if-->
     </@menu>
   </#assign>
-  <@section title="${uiLabelMap.WorkEffortNotes}" menuHtml=menuHtml>
+  <@section title="${uiLabelMap.WorkEffortNotes}" menuContent=menuContent>
       <@table type="generic" width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>

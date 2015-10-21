@@ -25,7 +25,7 @@ under the License.
     }
 </script>
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
   <#if (orderList?has_content && 0 < orderList?size)>
     <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" text="${uiLabelMap.CommonNext}" disabled=(!(orderListSize > highIndex)) />
@@ -34,7 +34,7 @@ under the License.
   </#if>
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.OrderOrderFound}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.OrderOrderFound}" menuContent=menuContent>
     <form name="paginationForm" method="post" action="<@ofbizUrl>viewProductOrder</@ofbizUrl>">
       <input type="hidden" name="viewSize"/>
       <input type="hidden" name="viewIndex"/>

@@ -23,7 +23,7 @@ under the License.
   <#assign sectionTitleParty = uiLabelMap.PartyActive>
 </#if>
   
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
   <#if !partyId?? && showAll?lower_case == "true">
     <@menuitem type="link" href=makeOfbizUrl("showvisits?showAll=false") text="${uiLabelMap.PartyShowActive}" />
@@ -32,7 +32,7 @@ under the License.
   </#if>
   </@menu>
 </#assign>
-<@section title="${sectionTitleParty}&nbsp;${uiLabelMap.PartyVisitListing}" menuHtml=menuHtml>
+<@section title="${sectionTitleParty}&nbsp;${uiLabelMap.PartyVisitListing}" menuContent=menuContent>
   <#if visitList?has_content>
     
     <#assign paginated = false>

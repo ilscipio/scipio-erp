@@ -34,7 +34,7 @@ under the License.
   ${cardNumberDisplay!}
 </#macro>
 
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true>
     <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
       <@menuitem type="link" href=makeOfbizUrl("editeftaccount?partyId=${partyId}") text="${uiLabelMap.AccountingCreateNewEftAccount}" />
@@ -44,7 +44,7 @@ under the License.
     </#if>  
     </@menu>
   </#assign>
-  <@section id="partyPaymentMethod" title="${uiLabelMap.PartyPaymentMethodInformation}" menuHtml=menuHtml>
+  <@section id="partyPaymentMethod" title="${uiLabelMap.PartyPaymentMethodInformation}" menuContent=menuContent>
       <#if paymentMethodValueMaps?has_content || billingAccounts?has_content>
         <@table type="data-complex" cellspacing="0"> <#-- orig: class="basic-table" -->
         <@tbody>

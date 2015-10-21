@@ -59,7 +59,7 @@ under the License.
             </#if>
         </div>
 -->
-<#assign menuHtml>
+<#assign menuContent>
     <@menu type="section-inline" inlineItems=true>
         <#if parameters.showSent! == "true">
           <@menuitem type="link" href=makeOfbizUrl("messagelist") text="${uiLabelMap.EcommerceViewReceivedOnly}" />
@@ -68,7 +68,7 @@ under the License.
         </#if>
     </@menu>
 </#assign>
-<@section title="${uiLabelMap.CommonMessages}" menuHtml=menuHtml menuLayout="inline-title" class="+screenlet">
+<@section title="${uiLabelMap.CommonMessages}" menuContent=menuContent menuLayout="inline-title" class="+screenlet">
         <@table width="100%" border="0" cellpadding="1">
           <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
             <@tr><@td>${uiLabelMap.EcommerceNoMessages}.</@td></@tr>

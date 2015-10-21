@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
   <#if facilityId?? && locationSeqId??>
     <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" />
@@ -29,7 +29,7 @@ under the License.
   </#if>
   </@menu>
 </#assign>
-<@section menuHtml=menuHtml>
+<@section menuContent=menuContent>
 
 <#if facilityId?? && !(facilityLocation??)>
   <form action="<@ofbizUrl>CreateFacilityLocation</@ofbizUrl>" method="post">

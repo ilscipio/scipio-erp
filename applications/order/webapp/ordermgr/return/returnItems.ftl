@@ -67,7 +67,7 @@ under the License.
     </@tr>
 </#macro>
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <#if returnHeader?has_content>
       <#if returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId?starts_with("CUSTOMER_")>
@@ -87,7 +87,7 @@ under the License.
     </#if>
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.PageTitleReturnItems}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.PageTitleReturnItems}" menuContent=menuContent>
   <#-- if we're called with loadOrderItems or createReturn, then orderId would exist -->
   <#if !requestParameters.orderId?? && returnHeader?has_content>
           <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">

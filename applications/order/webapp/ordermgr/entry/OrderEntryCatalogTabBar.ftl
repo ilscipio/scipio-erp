@@ -28,10 +28,10 @@ under the License.
             ${uiLabelMap.OrderSalesOrder}
         </#if>
     </#assign>
-    <#assign menuHtml>
+    <#assign menuContent>
       <@menu type="section" inlineItems=true>
         <@menuitem type="link" href=makeOfbizUrl("orderentry") text="${uiLabelMap.OrderOrderItems}" />
       </@menu>
     </#assign>
-    <@section title=sectionTitle menuHtml=menuHtml />
+    <@section title=sectionTitle menuContent=menuContent />
   </#if>

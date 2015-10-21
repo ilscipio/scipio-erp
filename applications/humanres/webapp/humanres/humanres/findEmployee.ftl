@@ -19,7 +19,7 @@ under the License.
 
 <#assign extInfo = parameters.extInfo?default("N")>
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
   <#if parameters.hideFields?default("N") == "Y">
     <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text="${uiLabelMap.CommonShowLookupFields}" />
@@ -29,7 +29,7 @@ under the License.
   </#if>
   </@menu>
 </#assign>
-<@section id="findEmployee" title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" menuHtml=menuHtml>
+<@section id="findEmployee" title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" menuContent=menuContent>
     <#if parameters.hideFields?default("N") != "Y">
       <#-- NOTE: this form is setup to allow a search by partial partyId or userLoginId; to change it to go directly to
           the viewprofile page when these are entered add the follow attribute to the form element:
@@ -121,7 +121,7 @@ under the License.
   </#if>
     
   <#if partyList??>
-    <#assign menuHtml>
+    <#assign menuContent>
       <@menu type="section" inlineItems=true>
       <#if (partyListSize > 0)>
         <@menuitem type="link" href=makeOfbizUrl("findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}") text="${uiLabelMap.CommonNext}" contentClass="+nav-next" disabled=(!(partyListSize > highIndex)) />
@@ -130,7 +130,7 @@ under the License.
       </#if>
       </@menu>
     </#assign>
-    <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}" menuHtml=menuHtml>
+    <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}" menuContent=menuContent>
     <#if partyList?has_content>
         <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
           <@thead>

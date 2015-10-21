@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
   <#if (maySelectItems!"N") == "Y">
     <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" text="${uiLabelMap.OrderAddAllToCart}" />
@@ -24,7 +24,7 @@ under the License.
   </@menu>
 </#assign>
 
-<@section title="${uiLabelMap.OrderOrderQuoteItems}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.OrderOrderQuoteItems}" menuContent=menuContent>
 
     <@table type="data-complex" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
           <@thead>

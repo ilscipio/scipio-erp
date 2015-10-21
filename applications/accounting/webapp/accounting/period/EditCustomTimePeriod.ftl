@@ -33,18 +33,18 @@ under the License.
 
 
   <#if currentCustomTimePeriod?has_content>
-    <#assign menuHtml>
+    <#assign menuContent>
       <@menu type="section" inlineItems=true>
         <@menuitem type="link" href=makeOfbizUrl("EditCustomTimePeriod?findOrganizationPartyId=${findOrganizationPartyId!}") text="${uiLabelMap.CommonClearCurrent}" />
       </@menu>
     </#assign>
   <#else>
-    <#assign menuHtml>
+    <#assign menuContent>
       <@menu type="section" inlineItems=true>
       </@menu>
     </#assign>
   </#if>
-  <@section title="${uiLabelMap.AccountingCurrentCustomTimePeriod}" menuHtml=menuHtml>
+  <@section title="${uiLabelMap.AccountingCurrentCustomTimePeriod}" menuContent=menuContent>
     <#if currentCustomTimePeriod?has_content>
         <form method="post" action="<@ofbizUrl>updateCustomTimePeriod</@ofbizUrl>" name="updateCustomTimePeriodForm">
           <input type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}" />

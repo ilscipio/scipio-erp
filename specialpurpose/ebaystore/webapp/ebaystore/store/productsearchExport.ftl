@@ -192,7 +192,7 @@ under the License.
         }
     }
 </script>
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href=makeOfbizUrl("clearExpListing?productStoreId=${productStoreId!}") text="Clear Listing" />
     <#if isExportValid?? && isExportValid == "true">
@@ -200,7 +200,7 @@ under the License.
     </#if>
   </@menu>
 </#assign>
-<@section title="Items to export" menuHtml=menuHtml>
+<@section title="Items to export" menuContent=menuContent>
 <form id="ProductsExportToEbay" method="post" action="<@ofbizUrl>exportProductsFromEbayStore</@ofbizUrl>" name="ProductsExportToEbay">
     <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
     <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->

@@ -22,12 +22,12 @@ under the License.
 <#else>
   <#assign sectionTitle>${uiLabelMap.ManufacturingCreateCalendar}</#assign>
 </#if>
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href=makeOfbizUrl("EditCalendar") text="${uiLabelMap.ManufacturingNewCalendar}" />
   </@menu>
 </#assign>
-<@section title=sectionTitle menuHtml=menuHtml>
+<@section title=sectionTitle menuContent=menuContent>
 
 <#if techDataCalendar?has_content>
   <#assign formActionUrl><@ofbizUrl>UpdateCalendar</@ofbizUrl></#assign>

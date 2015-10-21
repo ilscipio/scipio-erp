@@ -21,12 +21,12 @@ under the License.
 <#assign lastViewedCategories = sessionAttributes.lastViewedCategories!/>
 <#if lastViewedCategories?has_content>
   <#if (lastViewedCategories?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedCategories?size-1)/></#if>
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true>
         <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") text="[${uiLabelMap.CommonClear}]" />
     </@menu>      
   </#assign>
-  <@section title="${uiLabelMap.EcommerceLastCategories}" menuHtml=menuHtml id="minilastviewedcategories" class="+screenlet">
+  <@section title="${uiLabelMap.EcommerceLastCategories}" menuContent=menuContent id="minilastviewedcategories" class="+screenlet">
       <ul class="browsecategorylist">
         <#list lastViewedCategories[0..limit] as categoryId>
           <#assign category = delegator.findOne("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", categoryId), true)!>

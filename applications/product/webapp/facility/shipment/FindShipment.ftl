@@ -29,7 +29,7 @@ function lookupShipments() {
 }
 // -->
 </script>
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
   <#if requestParameters.facilityId?has_content>
     <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${requestParameters.facilityId}") text="${uiLabelMap.ProductQuickShipOrder}" />
@@ -38,7 +38,7 @@ function lookupShipments() {
     <#--<@menuitem type="link" href="javascript:lookupShipments();" text="${uiLabelMap.ProductFindShipment}" />-->
   </@menu>
 </#assign>
-<@section id="findOrders" menuHtml=menuHtml> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->
+<@section id="findOrders" menuContent=menuContent> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->
         <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
               <@field type="generic" label="${uiLabelMap.ProductShipmentId}">
@@ -121,7 +121,7 @@ function lookupShipments() {
 </@section>
 
 <#if shipmentList??>
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true>
     <#if (0 < shipmentList?size)>
       <@menuitem type="link" href=makeOfbizUrl("FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y") text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 1)) contentClass="+nav-previous" />
@@ -130,7 +130,7 @@ function lookupShipments() {
     </#if>
     </@menu>
   </#assign>
-  <@section id="findOrders_2" title="${uiLabelMap.ProductShipmentsFound}" menuHtml=menuHtml>
+  <@section id="findOrders_2" title="${uiLabelMap.ProductShipmentsFound}" menuContent=menuContent>
       <#if shipmentList?has_content>  
         <@table type="data-list" autoAltRows=true cellspacing="0" cellpadding="2" class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
         <@thead>

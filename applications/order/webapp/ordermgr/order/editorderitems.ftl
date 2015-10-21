@@ -26,7 +26,7 @@ under the License.
       <#assign allowPriceChange = true/>
   </#if>
 
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true>
     <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
       <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
@@ -37,7 +37,7 @@ under the License.
     </#if>
     </@menu>
   </#assign>
-  <@section title="${uiLabelMap.OrderOrderItems}" menuHtml=menuHtml>
+  <@section title="${uiLabelMap.OrderOrderItems}" menuContent=menuContent>
 
         <#if !orderItemList?has_content>
             <@alert type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@alert>

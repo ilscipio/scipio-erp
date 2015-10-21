@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
   <#if activeOnly>
     <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false") text="${uiLabelMap.ProductActiveAndInactive}" />
@@ -26,7 +26,7 @@ under the License.
   </#if>
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.PageTitleEditCategoryProducts}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.PageTitleEditCategoryProducts}" menuContent=menuContent>
       <#macro categoryProductsNav>
         <@menu type="button">
           <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;activeOnly=${activeOnly.toString()}") text="${uiLabelMap.CommonPrevious}" disabled=(viewIndex <= 1) />

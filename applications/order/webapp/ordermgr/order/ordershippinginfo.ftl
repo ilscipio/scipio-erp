@@ -51,12 +51,12 @@ under the License.
 <#if shipGroups?has_content && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
   <#if parameters.view?has_content && parameters.view = "OISGA">
   <#-- New in Ofbiz 14.12 -->
-  <#assign menuHtml>
+  <#assign menuContent>
     <@menu type="section" inlineItems=true>
        <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text="${uiLabelMap.OrderShipmentInformationByOISG}" />
     </@menu>
   </#assign>
-  <@section title="${uiLabelMap.OrderShipmentInformation}" menuHtml=menuHtml>
+  <@section title="${uiLabelMap.OrderShipmentInformation}" menuContent=menuContent>
       <@table type="data-complex" cellspacing="0" role="grid"> <#-- orig: class="basic-table" -->
         <@thead>
           <@tr class="header-row">
@@ -209,7 +209,7 @@ under the License.
 <#list shipGroups as shipGroup>
   <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
-    <#assign menuHtml>
+    <#assign menuContent>
        <@menu type="section" inlineItems=true>
          <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" text="&nbsp;" title="Collapse" />-->
          <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" />
@@ -219,7 +219,7 @@ under the License.
          </#if>
        </@menu>
     </#assign>
-    <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}" menuHtml=menuHtml>
+    <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}" menuContent=menuContent>
     <div id="ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}">
           <form name="updateOrderItemShipGroup" method="post" action="<@ofbizUrl>updateShipGroupShipInfo</@ofbizUrl>">
         <input type="hidden" name="orderId" value="${orderId!}"/>

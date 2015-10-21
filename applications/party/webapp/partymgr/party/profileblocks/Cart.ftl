@@ -18,7 +18,7 @@ under the License.
 -->
 
   <#if savedCartItems?has_content>
-    <#assign menuHtml>
+    <#assign menuContent>
       <@menu type="section" inlineItems=true>
       <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
         <#if savedCartListId?has_content>

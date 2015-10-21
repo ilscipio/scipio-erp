@@ -24,7 +24,7 @@ function lookupInventory() {
 }
 // -->
 </script>
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
       <#if requestParameters.hideFields?default("N") == "Y">
         <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=N${paramList}") text="${uiLabelMap.CommonShowLookupFields}" />
@@ -35,7 +35,7 @@ function lookupInventory() {
       </#if>
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.PageTitleFindInventoryEventPlan}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.PageTitleFindInventoryEventPlan}" menuContent=menuContent>
     <form method="post" name="lookupinventory" action="<@ofbizUrl>FindInventoryEventPlan</@ofbizUrl>">
     <input type="hidden" name="lookupFlag" value="Y"/>
     <input type="hidden" name="hideFields" value="Y"/>

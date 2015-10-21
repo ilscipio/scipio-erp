@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
   <#if parameters.showAllFacilities??>
     <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductShowProductFacilities}" />
@@ -25,7 +25,7 @@ under the License.
   </#if>
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.ProductInventorySummary}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.ProductInventorySummary}" menuContent=menuContent>
   <#if product??>
         <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
           <@thead>

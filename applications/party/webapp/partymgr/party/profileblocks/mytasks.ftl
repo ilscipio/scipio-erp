@@ -20,12 +20,12 @@ under the License.
 <#setting locale = locale.toString()>
 <#setting time_zone = timeZone.getID()>
 
-<#assign menuHtml>
+<#assign menuContent>
   <@menu type="section" inlineItems=true>
     <@menuitem type="link" href="/workeffort/control/EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION" text="${uiLabelMap.WorkEffortNewTask}" />
   </@menu>
 </#assign>
-<@section title="${uiLabelMap.WorkEffortMyCurrentTaskList}" menuHtml=menuHtml>
+<@section title="${uiLabelMap.WorkEffortMyCurrentTaskList}" menuContent=menuContent>
 
   <@section title="${uiLabelMap.WorkEffortAssignedTasks}">
   <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->

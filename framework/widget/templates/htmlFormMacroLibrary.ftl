@@ -422,44 +422,6 @@ not "current" context (too intrusive in current renderer design). still relies o
   </#list>
 </#macro>
 
-<#-- Cato: new macro to factor out progress markup; note: uses #nested but support nestedContent arg pattern -->
-<#macro renderSubmitFieldAreaProgress progressOptions nestedContent=true>
-  <#if !nestedContent?is_string>
-    <#if nestedContent?is_boolean && nestedContent == false>
-      <#local nestedContent = "">
-    <#else>
-      <#local nestedContent><#nested></#local>
-    </#if>
-  </#if>
-
-  <#local rowClass>submit-progress-row<#if buttonMarkup?has_content> has-submit-button<#else> no-submit-button</#if></#local>
-  <@row class=("+" + rowClass)>
-    <#if nestedContent?has_content>
-      <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
-        ${nestedContent}
-      </@cell>
-    </#if>
-    <#if progressOptions.progBarId?has_content>
-      <#-- with progress bar, optional text -->
-      <#local subclasses = progressOptions.progTextBoxId?has_content?string("${styles.grid_small!}6 ${styles.grid_large!}6", "${styles.grid_small!}9 ${styles.grid_large!}10 ${styles.grid_end!}")>
-      <@cell class=subclasses>
-        <@progress id=progressOptions.progBarId type="info" wrapperClass="+${styles.hidden!}" progressOptions=progressOptions/>
-      </@cell>
-      <#if progressOptions.progTextBoxId?has_content>
-        <#local subclasses = "${styles.grid_small!}3 ${styles.grid_large!}4 ${styles.grid_end!}">
-        <@cell class=subclasses id=progressOptions.progTextBoxId>
-        </@cell>
-      </#if>
-    <#elseif progressOptions.progTextBoxId?has_content>
-       <#-- text progress only -->
-       <#local subclasses = "${styles.grid_small!}9 ${styles.grid_large!}10 ${styles.grid_end!}">
-       <@cell class=subclasses id=progressOptions.progTextBoxId>
-       </@cell>
-       <@progressScript options=progressOptions htmlwrap=true />
-    </#if>
-  </@row>
-</#macro>
-
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
@@ -523,7 +485,7 @@ not "current" context (too intrusive in current renderer design). still relies o
         </#if>
       </#if>
         
-      <@renderSubmitFieldAreaProgress progressOptions=progressOptions nestedContent=buttonMarkup />
+      <@fieldSubmitAreaProgress progressOptions=progressOptions nestedContent=buttonMarkup />
   <#else>
       ${buttonMarkup}
   </#if>

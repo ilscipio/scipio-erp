@@ -1102,7 +1102,7 @@ Not associated with an HTML element as is @fieldset.
                     <@formlib.renderRadioField items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
-                    <div<@formlib.renderClass class alert />>
+                    <div<@fieldClassStr class alert />>
                       <@formlib.renderRadioField items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
                     </div>
                 </#if>
@@ -1134,7 +1134,7 @@ Not associated with an HTML element as is @fieldset.
               </#if>
             </#local>
             <#if hasProgress>
-              <@formlib.renderSubmitFieldAreaProgress progressOptions=progressOptions nestedContent=content />
+              <@fieldSubmitAreaProgress progressOptions=progressOptions nestedContent=content />
             <#else>
               ${content}
             </#if>
@@ -1219,6 +1219,48 @@ Not associated with an HTML element as is @fieldset.
   <#return widgetFieldTypeToStyleNameMap[fieldType]!"other">
 </#function>
 
+<#-- migrated from renderClass form widget macro -->
+<#macro fieldClassStr className alert="false">
+  <#if className?has_content || alert?string == "true"> class="${className!}<#if alert?string == "true"> alert</#if>" </#if>
+</#macro>
+
+<#-- migrated from renderSubmitFieldAreaProgress form widget macro -->
+<#macro fieldSubmitAreaProgress progressOptions nestedContent=true>
+  <#if !nestedContent?is_string>
+    <#if nestedContent?is_boolean && nestedContent == false>
+      <#local nestedContent = "">
+    <#else>
+      <#local nestedContent><#nested></#local>
+    </#if>
+  </#if>
+
+  <#local rowClass>submit-progress-row<#if buttonMarkup?has_content> has-submit-button<#else> no-submit-button</#if></#local>
+  <@row class=("+" + rowClass)>
+    <#if nestedContent?has_content>
+      <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
+        ${nestedContent}
+      </@cell>
+    </#if>
+    <#if progressOptions.progBarId?has_content>
+      <#-- with progress bar, optional text -->
+      <#local subclasses = progressOptions.progTextBoxId?has_content?string("${styles.grid_small!}6 ${styles.grid_large!}6", "${styles.grid_small!}9 ${styles.grid_large!}10 ${styles.grid_end!}")>
+      <@cell class=subclasses>
+        <@progress id=progressOptions.progBarId type="info" wrapperClass="+${styles.hidden!}" progressOptions=progressOptions/>
+      </@cell>
+      <#if progressOptions.progTextBoxId?has_content>
+        <#local subclasses = "${styles.grid_small!}3 ${styles.grid_large!}4 ${styles.grid_end!}">
+        <@cell class=subclasses id=progressOptions.progTextBoxId>
+        </@cell>
+      </#if>
+    <#elseif progressOptions.progTextBoxId?has_content>
+       <#-- text progress only -->
+       <#local subclasses = "${styles.grid_small!}9 ${styles.grid_large!}10 ${styles.grid_end!}">
+       <@cell class=subclasses id=progressOptions.progTextBoxId>
+       </@cell>
+       <@progressScript options=progressOptions htmlwrap=true />
+    </#if>
+  </@row>
+</#macro>
 
 
 <#-- 

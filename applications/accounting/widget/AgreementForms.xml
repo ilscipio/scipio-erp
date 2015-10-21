@@ -22,27 +22,40 @@ under the License.
 
     <form name="FindAgreements" target="FindAgreement" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
-        <auto-fields-entity entity-name="Agreement" default-field-type="find"/>
-        <field name="productId" title="${uiLabelMap.CommonProduct}">
-            <lookup target-form-name="LookupProduct"/>
-        </field>
-        <field name="agreementTypeId" title="${uiLabelMap.CommonType}">
+        <field name="agreementId" title="${uiLabelMap.CommonId}"><text-find/></field>
+        <field name="agreementTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="AgreementType"/>
             </drop-down>
         </field>
-        <field name="partyIdFrom" title="${uiLabelMap.AccountingPartyIdFrom}">
+        <field name="agreementName" title="${uiLabelMap.CommonName}"><text-find/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.CommonParty} ${uiLabelMap.CommonFrom}">
             <lookup target-form-name="LookupPartyName"/>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.AccountingPartyIdTo}">
+        <field name="partyIdTo" title="${uiLabelMap.CommonParty} ${uiLabelMap.CommonTo}" position="2">
             <lookup target-form-name="LookupPartyName"/>
         </field>
-        <field name="roleTypeIdFrom" title="${uiLabelMap.AccountingRoleTypeIdFrom}"><hidden/></field>
-        <field name="roleTypeIdTo" title="${uiLabelMap.AccountingRoleTypeIdTo}"><hidden/></field>
+        <field name="roleTypeIdFrom" title="${uiLabelMap.CommonRole} ${uiLabelMap.CommonFrom}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" description="${description}" key-field-name="roleTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="roleTypeIdTo" title="${uiLabelMap.CommonRole} ${uiLabelMap.CommonTo}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" description="${description}" key-field-name="roleTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="agreementDate" title="${uiLabelMap.AccountingAgreementDate}"><hidden/></field>
-        <field name="description" title="${uiLabelMap.Description}"><hidden/></field>
-        <field name="textData" title="${uiLabelMap.AccountingTextData}"><hidden/></field>
-        <field name="thruDate" title="${uiLabelMap.AccountingThruDate}"><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-find type="date"/></field>
+        <field name="productId" title="${uiLabelMap.CommonProduct}">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
